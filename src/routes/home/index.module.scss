@@ -1,0 +1,64 @@
+.header {
+  display: flex;
+  align-items: center;
+}
+
+.project-list {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+
+  .project {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    margin-right: 12px;
+    color: #181f43;
+
+    &:hover {
+      .icons {
+        width: 44px;
+        padding-left: 4px;
+      }
+    }
+
+    &.active {
+      .name {
+        color: #fff;
+        background-color: #4c5cdb;
+        font-weight: 400;
+      }
+    }
+
+    .name {
+      padding: 0 6px;
+      border-radius: 3px;
+      line-height: 24px;
+      background-color: rgba(24, 31, 67, 0.04);
+      cursor: pointer;
+    }
+
+    .icons {
+      display: flex;
+      width: 0;
+      align-items: center;
+      line-height: 1;
+      overflow: hidden;
+      transition: width linear 0.15s;
+
+      .icon {
+        cursor: pointer;
+
+        &:hover {
+          color: #4c5cdb;
+        }
+
+        margin-right: 8px;
+
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+    }
+  }
+}
