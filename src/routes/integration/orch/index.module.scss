@@ -1,0 +1,12 @@
+@import '@styles/var.scss';
+@import '@styles/mixin.scss';
+
+.orch {
+  position: relative;
+  min-height: 50vh;
+  // min-height: $main-content-min-height;
+
+  .loading {
+    @include center('absolute');
+  }
+}

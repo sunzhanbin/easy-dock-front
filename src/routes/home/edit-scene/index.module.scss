@@ -1,0 +1,40 @@
+@import '@styles/mixin.scss';
+
+.form {
+  // width: 507px;
+}
+
+.images {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+  .col {
+    margin-bottom: 12px;
+  }
+
+  .box {
+    position: relative;
+    border-radius: 3px;
+    overflow: hidden;
+    cursor: pointer;
+
+    & > img {
+      width: 100%;
+    }
+
+    .mask {
+      @include center('flex');
+
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      justify-content: center;
+      color: #fff;
+      background-color: rgba(24, 31, 67, 0.55);
+      z-index: 1;
+    }
+  }
+}

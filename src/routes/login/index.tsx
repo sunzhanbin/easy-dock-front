@@ -22,7 +22,6 @@ export default function Login() {
 
       if (loginResponse.data) {
         localStorage('token', loginResponse.data.token);
-        localStorage('user', JSON.stringify(loginResponse.data.embedUser));
 
         history.replace('/');
       }

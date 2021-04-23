@@ -3,7 +3,7 @@ import Axios from 'axios';
 import { localStorage } from './localstorage';
 
 const instance = Axios.create({
-  baseURL: `${process.env.REACT_APP_MAIN_DOMAIN}`,
+  baseURL: `${process.env.REACT_APP_MAIN_DOMAIN}/enc-oss-easydock/api/builder/v1`,
   headers: {
     auth: localStorage('token'),
   },
@@ -11,30 +11,26 @@ const instance = Axios.create({
 
 instance.interceptors.response.use(
   function (response) {
-    const { data, config } = response;
-    if (data.resultCode === 0) {
-      return data;
-    } else {
-      if (!config.silence) {
-        message.error(data.resultMessage);
-      }
-
-      return Promise.reject(data);
-    }
+    return response.data;
   },
   function ({ config, message: errMsg, response }) {
-    if (!config.silence) {
-      if (response && response.status === 500) {
-        errMsg = '服务异常';
-      }
+    const { status, data } = response || {};
 
+    if (status === 500) {
+      errMsg = '服务异常';
+    } else if (data && data.resultMessage) {
+      // 后端统一错误信息字段
+      errMsg = data.resultMessage;
+    }
+
+    if (!config.silence) {
       message.error(errMsg);
     }
 
     return Promise.reject({
       code: -1,
       data: null,
-      resultMessage: (response && response.data && response.data.resultMessage) || errMsg,
+      resultMessage: errMsg,
     });
   },
 );

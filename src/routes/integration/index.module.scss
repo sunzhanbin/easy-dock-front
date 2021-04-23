@@ -1,0 +1,41 @@
+@import '@styles/var.scss';
+@import '@styles/mixin.scss';
+
+.integration {
+  .header {
+    @include center('flex');
+
+    height: 54px;
+    border-bottom: 1px solid rgba(24, 31, 67, 0.12);
+
+    .nav {
+      line-height: 20px;
+      color: rgba(24, 31, 67, 0.55);
+      font-size: 14px;
+      font-weight: 400;
+    }
+
+    .nav + .nav {
+      margin-left: 32px;
+    }
+
+    .active {
+      position: relative;
+      line-height: 25px;
+      color: #181f43;
+      font-size: 18px;
+      font-weight: 500;
+
+      &::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -15px;
+        height: 5px;
+        background-color: $primary-color;
+        z-index: 1;
+      }
+    }
+  }
+}

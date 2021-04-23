@@ -19,6 +19,8 @@ module.exports = {
       ['@consts']: path.resolve(__dirname, 'src/consts'),
       ['@layouts']: path.resolve(__dirname, 'src/layouts'),
       ['@assets']: path.resolve(__dirname, 'src/assets'),
+      ['@styles']: path.resolve(__dirname, 'src/styles'),
+      ['@hooks']: path.resolve(__dirname, 'src/hooks'),
     };
 
     return config;

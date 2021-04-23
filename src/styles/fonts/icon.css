@@ -11,6 +11,14 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icongou:before {
+  content: '\e766';
+}
+
+.iconguanbi:before {
+  content: '\e765';
+}
+
 .icongongpingbeifen2:before {
   content: '\e75c';
 }
