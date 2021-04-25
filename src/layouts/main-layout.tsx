@@ -2,16 +2,15 @@ import React, { Suspense, useEffect, useMemo, useState } from 'react';
 import { Route } from 'react-router-dom';
 import Header from '@components/header';
 import Loading from '@components/loading';
-import useMatchRoute from '@hooks/use-match-route';
 import { UserContext } from '@/context';
 import { axios } from '@utils';
+import ROUTES from '@utils/route';
 
 const HomePage = React.lazy(() => import(/* webpackChunkName: "home" */ '@routes/home/main'));
 const ScenePage = React.lazy(() => import(/* webpackChunkName: "scene" */ '@/routes/scene-detail'));
 const IntegrationPage = React.lazy(() => import(/* webpackChunkName: "scene" */ '@/routes/integration'));
 
 export default function PrimaryLayout() {
-  const mathedRoute = useMatchRoute();
   const [user, setUser] = useState<User>();
 
   useEffect(() => {
@@ -41,9 +40,9 @@ export default function PrimaryLayout() {
     <UserContext.Provider value={user}>
       <Header />
       <Suspense fallback={fallback}>
-        <Route path={[`${mathedRoute}/`, `${mathedRoute}/scenes`]} exact component={HomePage}></Route>
-        <Route path={`${mathedRoute}/scenes/:sceneId`} component={ScenePage}></Route>
-        <Route path={`${mathedRoute}/integration`} component={IntegrationPage}></Route>
+        <Route path={[ROUTES.INDEX, ROUTES.SCENE_MANAGE]} exact component={HomePage}></Route>
+        <Route path={ROUTES.SCENE_DETAIL} component={ScenePage}></Route>
+        <Route path={ROUTES.INTEGRATION} component={IntegrationPage}></Route>
       </Suspense>
     </UserContext.Provider>
   );

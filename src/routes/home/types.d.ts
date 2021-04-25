@@ -18,5 +18,4 @@ export interface SceneShape {
     id: number;
     version: string;
   };
-  projectId: number;
 }

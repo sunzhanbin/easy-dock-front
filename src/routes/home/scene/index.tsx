@@ -17,9 +17,13 @@ export interface SceneProps {
 export default function Scene(props: SceneProps) {
   const { data, onEdit, onStatusChange, onTapCover, className } = props;
   const [loading, setLoading] = useState(false);
-  const handleEditScene = useCallback(() => {
-    onEdit(data);
-  }, [onEdit, data]);
+  const handleEditScene = useCallback(
+    (event: React.MouseEvent) => {
+      event.stopPropagation();
+      onEdit(data);
+    },
+    [onEdit, data],
+  );
   const handleStatusChange = useCallback(
     async (checked: boolean) => {
       setLoading(true);
@@ -37,13 +41,17 @@ export default function Scene(props: SceneProps) {
     onTapCover(data);
   }, [onTapCover, data]);
 
+  const handleClickFooter = useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    event.stopPropagation();
+  }, []);
+
   return (
-    <div className={classnames(className, styles.card)}>
-      <img src={getSceneImageUrl(data.icon)} alt="iamge" onClick={handleClickCover} />
+    <div className={classnames(className, styles.card)} onClick={handleClickCover}>
+      <img src={getSceneImageUrl(data.icon)} alt="iamge" />
       <div className={styles.content}>
         <div className={styles.title}>{data.name}</div>
         <div className={styles.remark}>{data.remark || '--'}</div>
-        <div className={styles.footer}>
+        <div className={styles.footer} onClick={handleClickFooter}>
           <Switch
             checkedChildren="开启"
             unCheckedChildren="关闭"
@@ -51,9 +59,11 @@ export default function Scene(props: SceneProps) {
             onChange={handleStatusChange}
             loading={loading}
           />
-          <div className={styles.version}>{data.version?.version || '--'}</div>
+          <div className={styles.version}>{data.version?.version || '-'}</div>
         </div>
-        <Icon type="bianji" className={styles.icon} onClick={handleEditScene} />
+        <div className={styles.icon}>
+          <Icon type="bianji" onClick={handleEditScene} />
+        </div>
       </div>
     </div>
   );

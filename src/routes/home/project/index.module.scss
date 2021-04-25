@@ -36,9 +36,16 @@
     width: 0;
     align-items: center;
     line-height: 1;
-    color: #818a9e;
     overflow: hidden;
     transition: width linear 0.15s;
+
+    .icon-container {
+      margin-right: 8px;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
 
     .icon {
       cursor: pointer;
@@ -46,12 +53,6 @@
       &:hover,
       &.active {
         color: #4c5cdb;
-      }
-
-      margin-right: 8px;
-
-      &:last-child {
-        margin-right: 0;
       }
     }
   }

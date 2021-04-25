@@ -1,0 +1,15 @@
+.container {
+  position: relative;
+  height: 100%;
+
+  .list {
+    max-height: 100%;
+    overflow-y: auto;
+  }
+
+  .loading {
+    top: unset;
+    bottom: 16px;
+    transform: translate3d(-50%, 0, 0);
+  }
+}

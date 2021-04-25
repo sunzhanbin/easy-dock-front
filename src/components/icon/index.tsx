@@ -1,15 +1,20 @@
-import { useMemo } from 'react';
+import React from 'react';
+import classnames from 'classnames';
+import './iconfont';
+import styles from './index.module.scss';
 
 interface IconProps {
   type: string;
   className?: string;
-  onClick?(): void;
+  onClick?(event: React.MouseEvent): void;
 }
+
 export default function Icon(props: IconProps) {
   const { type, className, onClick } = props;
-  const classnames = useMemo(() => {
-    return `iconfont icon${type} ${className || ''}`.trim();
-  }, [type, className]);
 
-  return <i className={classnames} onClick={onClick}></i>;
+  return (
+    <svg className={classnames(styles.icon, className)} aria-hidden="true" onClick={onClick}>
+      <use xlinkHref={`#icon${type}`}></use>
+    </svg>
+  );
 }

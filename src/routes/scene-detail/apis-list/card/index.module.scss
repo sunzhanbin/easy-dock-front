@@ -1,0 +1,73 @@
+@import '@styles/mixin.scss';
+
+.card {
+  @include center('flex');
+
+  position: relative;
+  padding: 12px;
+  border-radius: 3px;
+  background-color: rgba(24, 39, 67, 0.03);
+  cursor: pointer;
+
+  .radio {
+    flex-shrink: 0;
+    margin-right: 12px;
+  }
+
+  .content {
+    flex: 1 1 0;
+
+    .title {
+      margin-bottom: 4px;
+      line-height: 22px;
+      color: rgba(24, 31, 67, 0.95);
+      font-size: 14px;
+      font-weight: 400;
+    }
+
+    .info {
+      @include center('flex');
+
+      line-height: 20px;
+      color: rgba(24, 31, 67, 0.55);
+      font-size: 12px;
+      font-weight: 400;
+
+      .type {
+        margin-right: 4px;
+      }
+
+      .version {
+        margin-right: 8px;
+      }
+
+      .separator {
+        margin-right: 8px;
+      }
+    }
+  }
+
+  .status {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 4px;
+    border-radius: 0px 3px 0px 3px;
+    line-height: 1;
+    color: #fff;
+    font-size: 10px;
+    z-index: 1;
+
+    &.editing {
+      background-color: rgba(236, 197, 140, 1);
+    }
+
+    &.deployed {
+      background-color: #06c498;
+    }
+
+    &.wait-deploy {
+      background-color: rgba(172, 191, 186, 1);
+    }
+  }
+}

@@ -80,11 +80,13 @@ const Project = (props: ProjectProps) => {
           placement="bottom"
           destroyTooltipOnHide
         >
-          <Icon
-            type="bianji"
-            className={classnames(styles.icon, { [styles.active]: isEditing })}
-            onClick={() => onStatusChange('editing')}
-          />
+          <div className={styles['icon-container']}>
+            <Icon
+              type="bianji"
+              className={classnames(styles.icon, { [styles.active]: isEditing })}
+              onClick={() => onStatusChange('editing')}
+            />
+          </div>
         </Popover>
         <Popover
           trigger="click"
@@ -95,11 +97,13 @@ const Project = (props: ProjectProps) => {
           content={deletePopoverContent}
           destroyTooltipOnHide
         >
-          <Icon
-            type="shanchu"
-            className={classnames(styles.icon, { [styles.active]: isDeleting })}
-            onClick={() => onStatusChange('deleting')}
-          />
+          <div className={styles['icon-container']}>
+            <Icon
+              type="shanchu"
+              className={classnames(styles.icon, { [styles.active]: isDeleting })}
+              onClick={() => onStatusChange('deleting')}
+            />
+          </div>
         </Popover>
       </div>
     </div>

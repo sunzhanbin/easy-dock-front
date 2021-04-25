@@ -43,7 +43,7 @@ function EditProject({ data, onSubmit, onCancel }: EditProjectProps) {
         name={data ? String(data.id) : 'new-project'}
       >
         <Form.Item label="项目名称" name="name" rules={nameRules}>
-          <Input placeholder="请填写项目名称" minLength={3} maxLength={20}></Input>
+          <Input placeholder="请填写项目名称" minLength={3} maxLength={20} size="large"></Input>
         </Form.Item>
       </Form>
     </ActionCard>

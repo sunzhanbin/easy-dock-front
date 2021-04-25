@@ -1,0 +1,5 @@
+.vscode/
+build/
+public/
+node_modules/
+src/components/icon/iconfont.js
