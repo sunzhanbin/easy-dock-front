@@ -1,5 +1,5 @@
 import { useCallback, useContext, useMemo } from 'react';
-import { NavLink, Link, NavLinkProps } from 'react-router-dom';
+import { NavLink, Link, NavLinkProps, useHistory } from 'react-router-dom';
 import classnames from 'classnames';
 import { Avatar, Dropdown, Menu } from 'antd';
 import { UserContext } from '@/context';
@@ -10,11 +10,13 @@ import { ROUTES } from '@consts';
 
 export default function AppHeader() {
   const loginUser = useContext(UserContext);
+  const history = useHistory();
   const logout = useCallback(async () => {
     await axios.get('/api/auth/v1/logout', { baseURL: process.env.REACT_APP_LOGIN_DOMAIN });
 
     localStorage.clear('token');
-  }, []);
+    history.replace(ROUTES.LOGIN);
+  }, [history]);
   const dropownOverlay = useMemo(() => {
     return (
       <Menu>

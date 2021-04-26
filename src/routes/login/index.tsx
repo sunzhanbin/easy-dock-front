@@ -21,7 +21,7 @@ export default function Login() {
 
       if (loginResponse.data) {
         localStorage.set('token', loginResponse.data.token);
-        axios.defaults.headers.token = loginResponse.data.token;
+        axios.defaults.headers.auth = loginResponse.data.token;
 
         history.replace('/');
       }
