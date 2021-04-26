@@ -33,7 +33,7 @@ module.exports = {
               mkdir: [`zip/${name}/dist`],
               copy: [
                 {
-                  source: path.resolve('dist'),
+                  source: path.resolve('build'),
                   destination: `zip/${name}/dist`,
                 },
               ],

@@ -16,8 +16,8 @@
     "typescript": "^4.1.2"
   },
   "scripts": {
-    "dev": "gulp",
     "start": "rescripts start",
+    "build:staging": "sh -ac '. .env.staging; rescripts build'",
     "build": "rescripts build",
     "eject": "rescripts eject"
   },
