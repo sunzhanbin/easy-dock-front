@@ -1,20 +1,31 @@
 import { useCallback, useContext, useMemo } from 'react';
-import { NavLink, Link, NavLinkProps } from 'react-router-dom';
+import { NavLink, Link, NavLinkProps, useHistory } from 'react-router-dom';
 import classnames from 'classnames';
 import { Avatar, Dropdown, Menu } from 'antd';
 import { UserContext } from '@/context';
 import logo from '@assets/logo.png';
 import styles from './header.module.scss';
+import { axios, localStorage } from '@utils';
+import { ROUTES } from '@consts';
 
 export default function AppHeader() {
   const loginUser = useContext(UserContext);
+  const history = useHistory();
+  const logout = useCallback(async () => {
+    await axios.get('/api/auth/v1/logout', { baseURL: process.env.REACT_APP_LOGIN_DOMAIN });
+
+    localStorage.clear('token');
+    history.replace(ROUTES.LOGIN);
+  }, [history]);
   const dropownOverlay = useMemo(() => {
     return (
       <Menu>
-        <Menu.Item key="1">退出登陆</Menu.Item>
+        <Menu.Item key="1" onClick={logout}>
+          退出登陆
+        </Menu.Item>
       </Menu>
     );
-  }, []);
+  }, [logout]);
 
   const indexNavIsActive: NavLinkProps['isActive'] = useCallback((match, location) => {
     if (match) {
@@ -37,7 +48,7 @@ export default function AppHeader() {
           <NavLink to="/scenes" isActive={indexNavIsActive} className={styles.nav} activeClassName={styles.active}>
             场景管理
           </NavLink>
-          <NavLink to="/tmpl" className={styles.nav} activeClassName={styles.active}>
+          <NavLink to={ROUTES.LOGIN} className={styles.nav} activeClassName={styles.active}>
             模版中心
           </NavLink>
           <NavLink to="/system" className={styles.nav} activeClassName={styles.active}>
