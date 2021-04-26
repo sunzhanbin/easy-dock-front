@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-anonymous-default-export
 export default {
   INDEX: '/',
   LOGIN: '/login',
@@ -10,10 +11,4 @@ export default {
   INTEGRATION_ORCH_EDIT_GENERATION_API: '/integration/orch/orch',
   INTEGRATION_DATA_MANAGE: '/integration/data-manage',
   INTEGRATION_MODEL_MANAGE: '/integration/model-manage',
-};
-
-export const link = {
-  toSceneDetail(sceneId: string) {
-    return `/scenes/${sceneId}`;
-  },
 };

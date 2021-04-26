@@ -2,11 +2,11 @@ import { useCallback, useEffect, useState } from 'react';
 import { axios } from '@utils';
 import LoadMore from '@components/load-more';
 import styles from './index.module.scss';
-import ApiCard, { ApiShape } from './card';
+import ApiCard, { ApiShape } from './api';
 
 interface ApiListProps {
-  value: number[];
-  onChange(value: number[]): void;
+  value: ApiShape[];
+  onChange(value: ApiShape[]): void;
 }
 
 export default function ApiList(props: ApiListProps) {
@@ -43,11 +43,11 @@ export default function ApiList(props: ApiListProps) {
   }, []);
 
   const handleValuesChange = useCallback(
-    (id: number, checked: boolean) => {
+    (api: ApiShape, checked: boolean) => {
       if (checked) {
-        onChange(value.concat(id));
+        onChange(value.concat(api));
       } else {
-        onChange(value.filter((val) => val !== id));
+        onChange(value.filter((item) => item.id !== api.id));
       }
     },
     [value, onChange],
@@ -60,7 +60,7 @@ export default function ApiList(props: ApiListProps) {
           className={styles.api}
           key={api.id}
           data={api}
-          checked={Boolean(value.find((id) => id === api.id))}
+          checked={Boolean(value.find((item) => item.id === api.id))}
           onChecked={handleValuesChange}
           showRadio
         />

@@ -1,5 +1,7 @@
 const path = require('path');
-const { name } = require('./package');
+const { name, version } = require('./package');
+const FileManagerPlugin = require('filemanager-webpack-plugin');
+const appPackageJson = require('./package.json');
 
 process.env.PORT = 8082;
 // process.env.FAST_REFRESH = 'false';
@@ -22,6 +24,41 @@ module.exports = {
       ['@styles']: path.resolve(__dirname, 'src/styles'),
       ['@hooks']: path.resolve(__dirname, 'src/hooks'),
     };
+
+    if (config.mode !== 'development') {
+      config.plugins = config.plugins.concat(
+        new FileManagerPlugin({
+          events: {
+            onEnd: {
+              mkdir: [`zip/${name}/dist`],
+              copy: [
+                {
+                  source: path.resolve('dist'),
+                  destination: `zip/${name}/dist`,
+                },
+              ],
+              archive: [
+                {
+                  source: `zip`,
+                  destination: `${name}-${version}-SNAPSHOT.tar.gz`,
+                  format: 'tar',
+                  options: {
+                    gzip: true,
+                    gzipOptions: {
+                      level: 1,
+                    },
+                    globOptions: {
+                      nomount: true,
+                    },
+                  },
+                },
+              ],
+              delete: ['zip'],
+            },
+          },
+        }),
+      );
+    }
 
     return config;
   },

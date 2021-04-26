@@ -1,0 +1,19 @@
+.state {
+  padding: 4px;
+  border-radius: 0px 3px 0px 3px;
+  line-height: 1;
+  color: #fff;
+  font-size: 12px;
+
+  &.editing {
+    background-color: rgba(236, 197, 140, 1);
+  }
+
+  &.success {
+    background-color: #06c498;
+  }
+
+  &.waiting {
+    background-color: rgba(172, 191, 186, 1);
+  }
+}

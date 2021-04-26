@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import Loading from '@components/loading';
 import classnames from 'classnames';
 import styles from './index.module.scss';
@@ -38,7 +38,10 @@ export default function LoadMore(props: LoadMoreProps) {
 
     function clear() {
       clearTimeout(timer);
-      scrollContainerRef.current?.removeEventListener('scroll', scroll);
+
+      if (scrollContainerRef.current) {
+        scrollContainerRef.current.removeEventListener('scroll', scroll);
+      }
     }
 
     if (done) {
@@ -50,8 +53,20 @@ export default function LoadMore(props: LoadMoreProps) {
     return clear;
   }, [done, loadmore, debounce, threshold]);
 
+  const hasChildren = useMemo(() => {
+    if (!children) {
+      return false;
+    }
+
+    if (Array.isArray(children)) {
+      return children.length > 0;
+    }
+
+    return true;
+  }, [children]);
+
   return (
-    <div className={classnames(styles.container)}>
+    <div className={classnames(styles.container, { [styles['not-empty']]: hasChildren })}>
       <div ref={scrollContainerRef} className={classnames(styles.list, className)}>
         {children}
       </div>

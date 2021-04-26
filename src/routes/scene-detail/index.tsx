@@ -1,14 +1,15 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
-import { Dropdown, Menu, Button, Drawer } from 'antd';
+import { Dropdown, Menu, Button, Drawer, message } from 'antd';
 import classnames from 'classnames';
+import Popover from '@components/confirm-popover';
 import { axios } from '@utils';
-import { MAIN_CONTENT_CLASSNAME } from '@consts';
+import { MAIN_CONTENT_CLASSNAME, ROUTES } from '@consts';
 import Icon from '@components/icon';
-// import Loading from '@components/loading';
+import Loading from '@components/loading';
 import ApiList from './apis-list';
-import ApiCard, { ApiShape } from './apis-list/card';
-import { SceneShape as SceneBaseType } from '../home/types';
+import ApiCard, { ApiShape } from './apis-list/api';
+import { SceneShape as SceneBaseType } from '../scenes/types';
 import styles from './index.module.scss';
 
 interface SceneShape extends SceneBaseType {
@@ -23,9 +24,12 @@ interface GridCloumnProps {
   children?: React.ReactNode;
   type: 'page' | 'data' | 'api';
   onAdd(type: GridCloumnProps['type']): void;
+  loading?: boolean;
+  className?: string;
 }
+
 function GridColumn(props: GridCloumnProps) {
-  const { icon, title, children, type, onAdd } = props;
+  const { icon, title, children, type, onAdd, loading, className } = props;
 
   const handleAdd = useCallback(() => {
     onAdd(type);
@@ -53,7 +57,7 @@ function GridColumn(props: GridCloumnProps) {
   }, [handleAdd]);
 
   return (
-    <div className={styles.column}>
+    <div className={classnames(styles.column, className)}>
       <div className={styles['column-header']}>
         <div className={styles.title}>
           <Icon className={styles['column-icon']} type={icon} />
@@ -62,7 +66,8 @@ function GridColumn(props: GridCloumnProps) {
         {isEmpty || addApisNode}
       </div>
       <div className={classnames(styles['column-content'], { [styles['column-empty']]: isEmpty })}>
-        {isEmpty && addApisNode}
+        {(isEmpty && addApisNode) || children}
+        {loading && <Loading />}
       </div>
     </div>
   );
@@ -74,24 +79,40 @@ export default function SceneDetail() {
   const [currentScene, setCurrentScene] = useState<SceneShape>();
   const [sceneMenusItems, setSceneMenusItems] = useState<SceneBaseType[]>([]);
   const [showAddApiDrawer, setShowAddApiDrawer] = useState(false);
-  const [addApiIds, setAddApiIds] = useState<number[]>([]);
+  const [checkApis, setCheckApis] = useState<ApiShape[]>([]);
   const [sceneApis, setSceneApis] = useState<ApiShape[]>([]);
+  const [apisSubmiting, setApisSubmiting] = useState(false);
+  const [fetchingSceneApis, setFetchingSceneApis] = useState(false);
 
   useEffect(() => {
     axios.get<SceneShape>(`/scene/${sceneId}`).then(({ data }) => {
       setCurrentScene(data);
 
-      axios.get<SceneBaseType[]>(`scene/${data.project.id}/list/all`).then(({ data }) => {
+      // 获取项目所有场景
+      axios.get<SceneBaseType[]>(`/scene/${data.project.id}/list/all`).then(({ data }) => {
         setSceneMenusItems(data);
       });
     });
+
+    setFetchingSceneApis(true);
+
+    axios
+      .get(`/meta_api/scene/${sceneId}/list/all`)
+      .then(({ data }) => {
+        setSceneApis(data);
+      })
+      .finally(() => {
+        setFetchingSceneApis(false);
+      });
   }, [sceneId]);
 
-  const handleLinkToDetail = useCallback(
+  const handleSwitchScene = useCallback(
     (id: number) => {
-      history.replace(`/scenes/${id}`);
+      if (id !== Number(sceneId)) {
+        history.replace(`/scenes/${id}`);
+      }
     },
-    [history],
+    [history, sceneId],
   );
 
   const dropdownOptions = useMemo(() => {
@@ -102,7 +123,7 @@ export default function SceneDetail() {
             <Menu.Item
               className={classnames(styles.scene, { [styles.active]: Number(sceneId) === item.id })}
               key={item.id}
-              onClick={() => handleLinkToDetail(item.id)}
+              onClick={() => handleSwitchScene(item.id)}
             >
               {item.name}
             </Menu.Item>
@@ -110,44 +131,95 @@ export default function SceneDetail() {
         })}
       </Menu>
     );
-  }, [sceneMenusItems, sceneId]);
+  }, [sceneMenusItems, sceneId, handleSwitchScene]);
 
   const handleAddPage = useCallback(() => {}, []);
   const handleAddData = useCallback(() => {}, []);
   const handleAddApi = useCallback(() => {
     setShowAddApiDrawer(true);
-  }, []);
+    setCheckApis([...sceneApis]);
+  }, [sceneApis]);
 
   const handleCloseApiDrawer = useCallback(() => {
-    setAddApiIds([]);
+    setCheckApis([]);
     setShowAddApiDrawer(false);
   }, []);
 
-  const handleAddApiChange = useCallback((ids: number[]) => {
-    setAddApiIds(ids);
+  const handleAddApiChange = useCallback((apis: ApiShape[]) => {
+    setCheckApis(apis);
   }, []);
 
-  const handleAddApiSubmit = useCallback(() => {
-    console.log(addApiIds);
-  }, [addApiIds]);
+  const handleAddApiSubmit = useCallback(async () => {
+    setApisSubmiting(true);
+
+    try {
+      await axios.post(`/meta_api/batch`, {
+        sceneId,
+        apiList: checkApis,
+      });
+
+      message.success('添加成功');
+      setShowAddApiDrawer(false);
+      setSceneApis([...checkApis]);
+    } finally {
+      setApisSubmiting(false);
+    }
+  }, [checkApis, sceneId]);
+
+  const handleLinkToRegistApi = useCallback(() => {
+    history.push(ROUTES.INTEGRATION_ORCH_REGIST_API);
+  }, [history]);
+
+  const handleLinkToGenerationApi = useCallback(() => {
+    history.push(ROUTES.INTEGRATION_ORCH_EDIT_GENERATION_API);
+  }, [history]);
 
   const addApiDrawerFooter = useMemo(() => {
     return (
       <div className={styles.buttons}>
         <div className={styles.group}>
-          <Button type="default" icon={<Icon type="zhucexinjiekou" className={styles['button-icon']} />} size="large">
+          <Button
+            type="default"
+            icon={<Icon type="zhucexinjiekou" className={styles['button-icon']} />}
+            size="large"
+            onClick={handleLinkToRegistApi}
+          >
             注册新接口
           </Button>
-          <Button icon={<Icon type="bianpai" className={styles['button-icon']} />} size="large">
+          <Button
+            icon={<Icon type="bianpai" className={styles['button-icon']} />}
+            size="large"
+            onClick={handleLinkToGenerationApi}
+          >
             编排新接口
           </Button>
         </div>
-        <Button type="primary" size="large" icon={<Icon type="bianpai" />} onClick={handleAddApiSubmit}>
+        <Button
+          type="primary"
+          size="large"
+          icon={<Icon type="bianpai" />}
+          onClick={handleAddApiSubmit}
+          loading={apisSubmiting}
+        >
           确定
         </Button>
       </div>
     );
-  }, [handleAddApiSubmit]);
+  }, [handleAddApiSubmit, apisSubmiting, handleLinkToRegistApi, handleLinkToGenerationApi]);
+
+  const handleDeleteApi = useCallback(
+    async (api: ApiShape) => {
+      await axios.delete('/meta_api', { data: { metaId: api.id, sceneId } });
+
+      message.success('删除成功');
+      setSceneApis((apis) => apis.filter((item) => item.id !== api.id));
+    },
+    [sceneId],
+  );
+
+  const handleDeploy = useCallback(async () => {
+    await axios.post('/scene/deploy', { sceneId });
+  }, [sceneId]);
 
   return (
     <div className={classnames(MAIN_CONTENT_CLASSNAME, styles.detail)}>
@@ -162,19 +234,29 @@ export default function SceneDetail() {
           </Dropdown>
         </div>
 
-        <Button type="primary" size="large">
-          发布
-        </Button>
+        <Popover content="确认发布吗" placement="left" onOk={handleDeploy} title="发布场景">
+          <Button type="primary" size="large">
+            发布
+          </Button>
+        </Popover>
       </div>
       <div className={styles.content}>
         <GridColumn icon="yemianbianpai" title="页面编排" type="page" onAdd={handleAddPage}></GridColumn>
         <GridColumn icon="shujubianpai" title="数据编排" type="data" onAdd={handleAddData}></GridColumn>
-        <GridColumn icon="api" title="API编排" type="api" onAdd={handleAddApi}>
+        <GridColumn
+          icon="api"
+          title="API编排"
+          type="api"
+          onAdd={handleAddApi}
+          loading={fetchingSceneApis}
+          className={styles.apis}
+        >
           {sceneApis.map((api) => (
-            <ApiCard data={api} />
+            <ApiCard className={styles.api} data={api} key={api.id} onDelete={handleDeleteApi} />
           ))}
         </GridColumn>
       </div>
+
       <Drawer
         title="新增API编排"
         placement="right"
@@ -185,7 +267,7 @@ export default function SceneDetail() {
         footer={addApiDrawerFooter}
         bodyStyle={{ padding: 0 }}
       >
-        <ApiList value={addApiIds} onChange={handleAddApiChange} />
+        <ApiList value={checkApis} onChange={handleAddApiChange} />
       </Drawer>
     </div>
   );

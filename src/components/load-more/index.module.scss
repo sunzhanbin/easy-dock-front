@@ -7,9 +7,11 @@
     overflow-y: auto;
   }
 
-  .loading {
-    top: unset;
-    bottom: 16px;
-    transform: translate3d(-50%, 0, 0);
+  &.not-empty {
+    .loading {
+      top: unset;
+      bottom: 16px;
+      transform: translate3d(-50%, 0, 0);
+    }
   }
 }

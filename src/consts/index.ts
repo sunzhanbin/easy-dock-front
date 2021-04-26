@@ -14,3 +14,5 @@ export const SCENE_IAMGES = {
   scene11: `scene11`,
   scene12: `scene12`,
 };
+
+export { default as ROUTES } from './route';

@@ -39,15 +39,12 @@
     overflow: hidden;
     transition: width linear 0.15s;
 
-    .icon-container {
-      margin-right: 8px;
-
-      &:last-child {
-        margin-right: 0;
-      }
+    &:last-child {
+      margin-right: 0;
     }
 
     .icon {
+      margin-right: 7px;
       cursor: pointer;
 
       &:hover,
@@ -59,7 +56,5 @@
 
   .tips {
     width: 232px;
-    margin-bottom: 24px;
-    color: rgba(24, 31, 67, 1);
   }
 }

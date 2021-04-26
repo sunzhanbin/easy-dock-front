@@ -113,7 +113,7 @@ function EditScene(props: EditSceneProps) {
       keyboard={false}
     >
       <Form form={form} className={styles.form} layout="vertical" autoComplete="off">
-        <Form.Item label="场景名称" name="name" rules={nameRules} getValueFromEvent={formatInputValue}>
+        <Form.Item label="场景名称" name="name" rules={nameRules}>
           <Input placeholder="请填写场景名称" size="large" maxLength={50} />
         </Form.Item>
         <Form.Item label="场景描述" name="remark" getValueFromEvent={formatInputValue}>

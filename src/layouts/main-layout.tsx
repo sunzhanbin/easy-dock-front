@@ -4,11 +4,11 @@ import Header from '@components/header';
 import Loading from '@components/loading';
 import { UserContext } from '@/context';
 import { axios } from '@utils';
-import ROUTES from '@utils/route';
+import ROUTES from '@/consts/route';
 
-const HomePage = React.lazy(() => import(/* webpackChunkName: "home" */ '@routes/home/main'));
-const ScenePage = React.lazy(() => import(/* webpackChunkName: "scene" */ '@/routes/scene-detail'));
-const IntegrationPage = React.lazy(() => import(/* webpackChunkName: "scene" */ '@/routes/integration'));
+const ScenesListPage = React.lazy(() => import(/* webpackChunkName: "scenes-list" */ '@/routes/scenes/main'));
+const ScenePage = React.lazy(() => import(/* webpackChunkName: "scene-detail" */ '@/routes/scene-detail'));
+const IntegrationPage = React.lazy(() => import(/* webpackChunkName: "integration" */ '@/routes/integration'));
 
 export default function PrimaryLayout() {
   const [user, setUser] = useState<User>();
@@ -40,7 +40,7 @@ export default function PrimaryLayout() {
     <UserContext.Provider value={user}>
       <Header />
       <Suspense fallback={fallback}>
-        <Route path={[ROUTES.INDEX, ROUTES.SCENE_MANAGE]} exact component={HomePage}></Route>
+        <Route path={[ROUTES.INDEX, ROUTES.SCENE_MANAGE]} exact component={ScenesListPage}></Route>
         <Route path={ROUTES.SCENE_DETAIL} component={ScenePage}></Route>
         <Route path={ROUTES.INTEGRATION} component={IntegrationPage}></Route>
       </Suspense>

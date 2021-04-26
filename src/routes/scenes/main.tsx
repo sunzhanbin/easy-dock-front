@@ -1,10 +1,12 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { Button, Spin, Popover, message } from 'antd';
+import { Button, Spin, message } from 'antd';
+import { FormInstance } from 'antd/lib/form';
 import classnames from 'classnames';
+import Popover from '@components/confirm-popover';
 import Icon from '@components/icon';
 import Project from './project';
-import EditProjectModal, { EditProjectProps } from './edit-project';
+import Form from './project/form';
 import emptyImage from '@assets/empty.png';
 import { axios } from '@utils';
 import { MAIN_CONTENT_CLASSNAME } from '@consts';
@@ -18,11 +20,11 @@ export default function Home() {
   const [fetching, setFetching] = useState(false);
   const [projects, setProjects] = useState<ProjectShape[]>([]);
   const [activeProjectId, setActiveProjectId] = useState<number>();
-  const [showAddProjectModal, setShowAddProjectModal] = useState(false);
   const [activeProjectStatus, setActiveProjectStatus] = useState<ActionStatus>();
   const [scenes, setScenes] = useState<SceneShape[]>([]);
   const [showEditSceneModal, setShowEditSceneModal] = useState(false);
   const [editingScene, setEditingScene] = useState<SceneShape>();
+  const formRef = useRef<FormInstance<{ name: string }>>();
   const fetchProjectListRef = useRef<() => Promise<void>>(async () => {
     setFetching(true);
     setActiveProjectStatus(undefined);
@@ -78,7 +80,7 @@ export default function Home() {
   }, []);
 
   // 新增或编辑
-  const handleEditProjectSubmit: EditProjectProps['onSubmit'] = useCallback(async (values) => {
+  const handleEditProjectSubmit = useCallback(async (values) => {
     if (values.id) {
       // 编辑项目
       await axios.put('/project', values);
@@ -91,11 +93,16 @@ export default function Home() {
 
       message.success('添加成功');
 
-      setShowAddProjectModal(false);
       setActiveProjectId(data.id);
       fetchProjectListRef.current();
     }
   }, []);
+
+  const handleAddProjectSubmit = useCallback(async () => {
+    if (formRef.current) {
+      await handleEditProjectSubmit(await formRef.current.validateFields());
+    }
+  }, [handleEditProjectSubmit]);
 
   const handleDelete = useCallback(async (id: number) => {
     await axios.delete(`/project/${id}`);
@@ -103,14 +110,6 @@ export default function Home() {
     message.success('删除成功');
     fetchProjectListRef.current();
   }, []);
-
-  const handleCancelAddProject = useCallback(() => {
-    setShowAddProjectModal(false);
-  }, []);
-
-  const addProjectPopoverContent = useMemo(() => {
-    return <EditProjectModal onSubmit={handleEditProjectSubmit} onCancel={handleCancelAddProject} />;
-  }, [handleCancelAddProject, handleEditProjectSubmit]);
 
   const handleAddScene = useCallback(() => {
     setShowEditSceneModal(true);
@@ -149,25 +148,19 @@ export default function Home() {
 
   const handleModifySceneStatus: SceneProps['onStatusChange'] = useCallback(
     async (status, id) => {
-      await axios.put('/scene/status', {
-        status,
-        id,
-      });
+      await axios.put('/scene/status', { status, id });
 
       message.success('修改成功');
 
-      const newScenes = scenes.map((scene) => {
-        if (scene.id === id) {
-          return {
-            ...scene,
-            status,
-          };
-        }
+      setScenes(
+        scenes.map((scene) => {
+          if (scene.id === id) {
+            return { ...scene, status };
+          }
 
-        return scene;
-      });
-
-      setScenes(newScenes);
+          return scene;
+        }),
+      );
     },
     [scenes],
   );
@@ -187,15 +180,7 @@ export default function Home() {
         <div className={styles.empty}>
           <img src={emptyImage} alt="empty" />
           <div className={styles.desc}>暂无项目，来创建一个吧</div>
-          <Popover
-            getPopupContainer={(c) => c}
-            trigger="click"
-            content={addProjectPopoverContent}
-            destroyTooltipOnHide
-            visible={showAddProjectModal}
-            onVisibleChange={setShowAddProjectModal}
-            placement="top"
-          >
+          <Popover content={<Form formRef={formRef} />} placement="top" title="新增项目" onOk={handleAddProjectSubmit}>
             <Button size="large" type="primary" icon={<Icon type="xinzengjiacu" />}>
               创建项目
             </Button>
@@ -222,13 +207,10 @@ export default function Home() {
           <div className={styles['actions-group']}>
             <div className={styles.mask}></div>
             <Popover
-              getPopupContainer={(c) => c}
-              trigger="click"
-              content={addProjectPopoverContent}
-              destroyTooltipOnHide
-              visible={showAddProjectModal}
-              onVisibleChange={setShowAddProjectModal}
               placement="bottom"
+              content={<Form formRef={formRef} />}
+              title="新增项目"
+              onOk={handleAddProjectSubmit}
             >
               <div className={styles.action}>
                 <Icon type="xinzengjiacu" className={styles.icon} />

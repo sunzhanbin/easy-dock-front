@@ -1,0 +1,47 @@
+@import '@styles/mixin.scss';
+
+.card {
+  @include center('flex');
+
+  position: relative;
+  padding: 12px;
+  border-radius: 3px;
+  background-color: rgba(24, 39, 67, 0.03);
+
+  &:hover,
+  &.show-delete {
+    .del {
+      display: block;
+    }
+  }
+
+  &.checkable {
+    cursor: pointer;
+  }
+
+  .radio {
+    flex-shrink: 0;
+    margin-right: 12px;
+  }
+
+  .content {
+    flex: 1 1 0;
+  }
+
+  .status {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1;
+  }
+
+  .del {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    display: none;
+    font-size: 20px;
+    z-index: 2;
+    cursor: pointer;
+  }
+}

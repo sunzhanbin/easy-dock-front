@@ -22,7 +22,10 @@ export default function Orch() {
       });
 
       orch.mountPromise.finally(() => {
-        setLoading(false);
+        // 防止页面跳走后才加载成功时setstate的警告;
+        if (orchRef.current) {
+          setLoading(false);
+        }
       });
 
       return () => {

@@ -1,16 +1,10 @@
 import { Route, NavLink } from 'react-router-dom';
 import classnames from 'classnames';
-import useMatchRoute from '@hooks/use-match-route';
-// import NotFound from '@components/not-found';
-import { MAIN_CONTENT_CLASSNAME } from '@consts';
-import ROUTES from '@utils/route';
+import { MAIN_CONTENT_CLASSNAME, ROUTES } from '@consts';
+import OrchMicro from './orch';
 import styles from './index.module.scss';
 
-import OrchMicro from './orch';
-
 export default function Integration() {
-  const mathedRoute = useMatchRoute();
-
   return (
     <div className={styles.integration}>
       <div className={classnames(MAIN_CONTENT_CLASSNAME, styles.header)}>

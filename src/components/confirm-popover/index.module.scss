@@ -19,7 +19,13 @@
     }
   }
 
+  .content {
+    min-width: 200px;
+    color: rgba(24, 31, 67, 1);
+  }
+
   .footer {
+    margin-top: 24px;
     text-align: right;
   }
 }
