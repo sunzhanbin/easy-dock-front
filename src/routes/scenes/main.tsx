@@ -9,7 +9,7 @@ import Project from './project';
 import Form from './project/form';
 import emptyImage from '@assets/empty.png';
 import { axios } from '@utils';
-import { MAIN_CONTENT_CLASSNAME } from '@consts';
+import { MAIN_CONTENT_CLASSNAME, dynamicRoutes } from '@consts';
 import Scene, { SceneProps } from './scene';
 import EditScene, { EditSceneProps } from './edit-scene';
 import { ProjectShape, ActionStatus, SceneShape } from './types';
@@ -167,7 +167,7 @@ export default function Home() {
 
   const handleLinkToSceceDetailPage = useCallback(
     (data: SceneShape) => {
-      history.push(`/scenes/${data.id}`);
+      history.push(dynamicRoutes.toSceneDetail(String(data.id)));
     },
     [history],
   );
@@ -248,7 +248,7 @@ export default function Home() {
                   data={scene}
                   onEdit={handleEditScene}
                   onStatusChange={handleModifySceneStatus}
-                  onTapCover={handleLinkToSceceDetailPage}
+                  onTapCard={handleLinkToSceceDetailPage}
                 />
               );
             })}

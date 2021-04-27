@@ -1,9 +1,8 @@
-// eslint-disable-next-line import/no-anonymous-default-export
-export default {
+const staticRoutes = {
   INDEX: '/',
   LOGIN: '/login',
-  SCENE_MANAGE: '/scenes',
-  SCENE_DETAIL: '/scenes/:sceneId',
+  SCENE_MANAGE: '/scenes-manage',
+  SCENE_DETAIL: '/scenes-detail/:sceneId',
   INTEGRATION: '/integration',
   INTEGRATION_ORCH_INDEX: '/integration/orch',
   INTEGRATION_ORCH_INTERFACE_LIST: '/integration/orch/interface-manage',
@@ -11,4 +10,12 @@ export default {
   INTEGRATION_ORCH_EDIT_GENERATION_API: '/integration/orch/orch',
   INTEGRATION_DATA_MANAGE: '/integration/data-manage',
   INTEGRATION_MODEL_MANAGE: '/integration/model-manage',
+};
+
+export default staticRoutes;
+
+export const dynamicRoutes = {
+  toSceneDetail(id: string) {
+    return staticRoutes.SCENE_DETAIL.replace(/:sceneId$/, id);
+  },
 };

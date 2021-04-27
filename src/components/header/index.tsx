@@ -46,7 +46,12 @@ export default function AppHeader() {
         </Link>
 
         <div className={styles.navs}>
-          <NavLink to="/scenes" isActive={indexNavIsActive} className={styles.nav} activeClassName={styles.active}>
+          <NavLink
+            to={ROUTES.SCENE_MANAGE}
+            isActive={indexNavIsActive}
+            className={styles.nav}
+            activeClassName={styles.active}
+          >
             场景管理
           </NavLink>
           <NavLink to={ROUTES.LOGIN} className={styles.nav} activeClassName={styles.active}>
