@@ -52,16 +52,12 @@
 
     .form {
       flex: 1 1 0;
-      padding: 60px;
+      padding: 60px 60px 18px;
       background-color: #fff;
 
       :global {
         .ant-form-item {
           width: 280px;
-        }
-
-        .ant-form-item:last-child {
-          margin-bottom: 0;
         }
       }
     }
