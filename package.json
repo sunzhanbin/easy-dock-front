@@ -17,7 +17,8 @@
   },
   "scripts": {
     "start": "rescripts start",
-    "build:staging": "sh -ac '. .env.staging; rescripts build'",
+    "build:test": "sh -ac '. .env.staging; rescripts build'",
+    "build:staging": "env-cmd -f .env.staging rescripts build",
     "build": "rescripts build",
     "eject": "rescripts eject"
   },
@@ -40,6 +41,7 @@
     "@rescripts/cli": "^0.0.16",
     "@types/react-router-dom": "^5.1.7",
     "@types/webpack-env": "^1.16.0",
+    "env-cmd": "^10.1.0",
     "filemanager-webpack-plugin": "^4.0.0",
     "node-sass": "^5.0.0",
     "sass-loader": "^11.0.1"

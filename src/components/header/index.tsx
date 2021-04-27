@@ -14,6 +14,7 @@ export default function AppHeader() {
   const logout = useCallback(async () => {
     await axios.get('/api/auth/v1/logout', { baseURL: process.env.REACT_APP_LOGIN_DOMAIN });
 
+    delete axios.defaults.headers.auth;
     localStorage.clear('token');
     history.replace(ROUTES.LOGIN);
   }, [history]);
