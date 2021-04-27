@@ -1,15 +1,79 @@
-.container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100vw;
-  height: 100vh;
+@import '@styles/mixin.scss';
 
-  .form {
-    width: 300px;
+.content {
+  @include center('absolute');
 
-    .footer {
-      text-align: center;
+  width: 1200px;
+
+  .image {
+    width: 100%;
+  }
+
+  .footer {
+    display: flex;
+    align-items: stretch;
+    position: absolute;
+    left: 50%;
+    bottom: -40px;
+    width: 964px;
+    transform: translateX(-50%);
+    z-index: 1;
+
+    .logo {
+      width: 65px;
+      position: absolute;
+      left: 60px;
+      top: 0;
+      transform: translateY(-50%);
+      border: 5px solid #fff;
+      border-radius: 50%;
+    }
+
+    .info {
+      flex: 1 1 0;
+      padding: 60px;
+      color: #fff;
+      border-top-left-radius: 5px;
+      border-bottom-left-radius: 5px;
+      background-color: #1e212c;
+
+      .welcome {
+        color: #e0e0e0;
+        font-size: 24px;
+        font-weight: 400;
+      }
+
+      .name {
+        margin-top: 20px;
+        font-size: 20px;
+        font-weight: 800;
+      }
+    }
+
+    .form {
+      flex: 1 1 0;
+      padding: 60px;
+      background-color: #fff;
+
+      :global {
+        .ant-form-item {
+          width: 280px;
+        }
+
+        .ant-form-item:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+
+    .login-icon {
+      width: unset;
+      position: absolute;
+      right: 40px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1;
+      cursor: pointer;
     }
   }
 }
