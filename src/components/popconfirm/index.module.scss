@@ -1,0 +1,39 @@
+.container {
+  .title {
+    margin-bottom: 12px;
+    line-height: 24px;
+    color: #181f43;
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .content {
+    line-height: 22px;
+    color: rgba(24, 31, 67, 0.75);
+    font-size: 14px;
+    font-weight: 400;
+  }
+}
+
+.popover {
+  :global {
+    .ant-popover-inner-content {
+      padding: 16px;
+
+      .ant-popover-message {
+        margin-bottom: 24px;
+        padding: 0;
+
+        .anticon {
+          top: 2px;
+          font-size: 20px;
+        }
+
+        .ant-popover-message-title {
+          min-width: 232px;
+          padding-left: 36px;
+        }
+      }
+    }
+  }
+}

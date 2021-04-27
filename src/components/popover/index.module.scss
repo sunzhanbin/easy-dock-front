@@ -29,3 +29,12 @@
     text-align: right;
   }
 }
+
+.popover {
+  :global {
+    .ant-popover-inner {
+      border-radius: 3px;
+      box-shadow: 0px 6px 24px 0px rgba(24, 31, 67, 0.1);
+    }
+  }
+}

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import { Dropdown, Menu, Button, Drawer, message } from 'antd';
 import classnames from 'classnames';
-import Popover from '@components/confirm-popover';
+import Popover from '@/components/popover';
 import { axios } from '@utils';
 import { MAIN_CONTENT_CLASSNAME, ROUTES } from '@consts';
 import Icon from '@components/icon';

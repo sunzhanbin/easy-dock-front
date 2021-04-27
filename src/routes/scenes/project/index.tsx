@@ -1,7 +1,7 @@
 import React, { useCallback, useRef } from 'react';
 import classnames from 'classnames';
 import Icon from '@components/icon';
-import Popover from '@components/confirm-popover';
+import Popover from '@/components/popover';
 import Form, { FormType } from './form';
 import { ProjectShape, ActionStatus } from '../types';
 import styles from './index.module.scss';

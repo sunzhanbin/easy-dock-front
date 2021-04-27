@@ -1,3 +1,8 @@
 $primary-color: #4c5cdb;
-$sub-text-color: rgba(24, 31, 67, 0.55);
 $main-content-min-height: calc(100vh - 65px);
+$primary-text-color: #181f43;
+$sub-text-color: rgba($primary-text-color, 0.55);
+$mask-color: #1a1b1e;
+$white: #fff;
+$disabled-color: rgba($white, 0.35);
+$deep-mask-color: rgba($mask-color, 0.85);

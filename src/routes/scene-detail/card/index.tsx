@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { Radio } from 'antd';
 import classnames from 'classnames';
-import Popover from '@components/confirm-popover';
+import Popover from '@/components/popover';
 import Icon from '@components/icon';
 import styles from './index.module.scss';
 
