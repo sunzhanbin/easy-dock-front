@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Form, Input, Button } from 'antd';
 import { localStorage, axios } from '@utils';
+import { ROUTES } from '@consts';
 import styles from './index.module.scss';
 
 export default function Login() {
@@ -23,7 +24,7 @@ export default function Login() {
         localStorage.set('token', loginResponse.data.token);
         axios.defaults.headers.auth = loginResponse.data.token;
 
-        history.replace('/');
+        history.replace(ROUTES.INDEX);
       }
     },
     [history],
