@@ -112,6 +112,7 @@ export default function Home() {
   }, []);
 
   const handleAddScene = useCallback(() => {
+    setEditingScene(undefined);
     setShowEditSceneModal(true);
   }, []);
 

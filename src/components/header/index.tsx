@@ -64,12 +64,14 @@ export default function AppHeader() {
 
         <div>
           {loginUser ? (
-            <Dropdown overlay={dropownOverlay} getPopupContainer={(c) => c} placement="bottomRight">
-              <div className={styles.user}>
-                <Avatar className={styles.avatar} size={32} src={loginUser.avatar}></Avatar>
-                <div className={styles.name}>{loginUser.cName}</div>
-              </div>
-            </Dropdown>
+            <div className={styles.user}>
+              <Dropdown overlay={dropownOverlay} getPopupContainer={(c) => c} placement="bottomCenter">
+                <div className={styles.avatar}>
+                  <Avatar size={32} src={loginUser.avatar} />
+                </div>
+              </Dropdown>
+              <div className={styles.name}>{loginUser.cName}</div>
+            </div>
           ) : (
             <NavLink to="/login">登陆</NavLink>
           )}

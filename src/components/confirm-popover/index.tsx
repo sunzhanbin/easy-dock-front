@@ -84,6 +84,7 @@ function PopoverConfirm(props: PopoverConfirmProps) {
       content={popoverContent}
       destroyTooltipOnHide
       placement={placement}
+      className={styles.popover}
     >
       <div className={styles.content} ref={containerRef}>
         {children}
