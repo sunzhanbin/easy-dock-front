@@ -35,6 +35,10 @@
       color: #fff;
       background-color: rgba(24, 31, 67, 0.55);
       z-index: 1;
+
+      svg {
+        color: inherit;
+      }
     }
   }
 }
