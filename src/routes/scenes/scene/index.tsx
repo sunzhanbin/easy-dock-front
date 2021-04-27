@@ -11,11 +11,11 @@ export interface SceneProps {
   className?: string;
   onEdit(data: SceneShape): void;
   onStatusChange(status: -1 | 1, id: number): Promise<void>;
-  onTapCover(data: SceneShape): void;
+  onTapCard(data: SceneShape): void;
 }
 
 export default function Scene(props: SceneProps) {
-  const { data, onEdit, onStatusChange, onTapCover, className } = props;
+  const { data, onEdit, onStatusChange, onTapCard, className } = props;
   const [loading, setLoading] = useState(false);
   const handleEditScene = useCallback(
     (event: React.MouseEvent) => {
@@ -37,16 +37,16 @@ export default function Scene(props: SceneProps) {
     [onStatusChange, data.id],
   );
 
-  const handleClickCover = useCallback(() => {
-    onTapCover(data);
-  }, [onTapCover, data]);
+  const handleClickCard = useCallback(() => {
+    onTapCard(data);
+  }, [onTapCard, data]);
 
   const handleClickFooter = useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
   }, []);
 
   return (
-    <div className={classnames(className, styles.card)} onClick={handleClickCover}>
+    <div className={classnames(className, styles.card)} onClick={handleClickCard}>
       <img src={getSceneImageUrl(data.icon)} alt="iamge" />
       <div className={styles.content}>
         <div className={styles.title}>{data.name}</div>
