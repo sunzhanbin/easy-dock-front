@@ -55,7 +55,7 @@ const Project = (props: ProjectProps) => {
           trigger="click"
           content={<Form data={data} formRef={formRef} />}
           placement="bottom"
-          title={data ? '新增项目' : '编辑项目'}
+          title="编辑项目"
           onOk={handleSubmit}
         >
           <Icon
