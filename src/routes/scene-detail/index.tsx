@@ -4,7 +4,7 @@ import { Dropdown, Menu, Button, Drawer, message } from 'antd';
 import classnames from 'classnames';
 import Popover from '@/components/popover';
 import { axios } from '@utils';
-import { MAIN_CONTENT_CLASSNAME, ROUTES } from '@consts';
+import { MAIN_CONTENT_CLASSNAME, ROUTES, dynamicRoutes } from '@consts';
 import Icon from '@components/icon';
 import Loading from '@components/loading';
 import ApiList from './apis-list';
@@ -109,7 +109,7 @@ export default function SceneDetail() {
   const handleSwitchScene = useCallback(
     (id: number) => {
       if (id !== Number(sceneId)) {
-        history.replace(`/scenes/${id}`);
+        history.replace(dynamicRoutes.toSceneDetail(String(id)));
       }
     },
     [history, sceneId],
