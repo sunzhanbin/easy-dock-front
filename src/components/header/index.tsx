@@ -18,6 +18,7 @@ export default function AppHeader() {
     localStorage.clear('token');
     history.replace(ROUTES.LOGIN);
   }, [history]);
+
   const dropownOverlay = useMemo(() => {
     return (
       <Menu>
@@ -54,10 +55,10 @@ export default function AppHeader() {
           >
             场景管理
           </NavLink>
-          <NavLink to={ROUTES.LOGIN} className={styles.nav} activeClassName={styles.active}>
+          <NavLink to={ROUTES.TMPLATE_CENTER} className={styles.nav} activeClassName={styles.active}>
             模版中心
           </NavLink>
-          <NavLink to="/system" className={styles.nav} activeClassName={styles.active}>
+          <NavLink to={ROUTES.SYSTEM_MANAGE} className={styles.nav} activeClassName={styles.active}>
             系统管理
           </NavLink>
         </div>
@@ -73,7 +74,7 @@ export default function AppHeader() {
               <div className={styles.name}>{loginUser.cName}</div>
             </div>
           ) : (
-            <NavLink to="/login">登陆</NavLink>
+            <NavLink to={ROUTES.LOGIN}>登陆</NavLink>
           )}
         </div>
       </div>

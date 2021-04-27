@@ -3,7 +3,7 @@ import { Link, useHistory } from 'react-router-dom';
 import { Button, Spin, message } from 'antd';
 import { FormInstance } from 'antd/lib/form';
 import classnames from 'classnames';
-import Popover from '@components/confirm-popover';
+import Popover from '@/components/popover';
 import Icon from '@components/icon';
 import Project from './project';
 import Form from './project/form';
@@ -147,24 +147,21 @@ export default function Home() {
     [activeProjectId, fetchSceneList],
   );
 
-  const handleModifySceneStatus: SceneProps['onStatusChange'] = useCallback(
-    async (status, id) => {
-      await axios.put('/scene/status', { status, id });
+  const handleModifySceneStatus: SceneProps['onStatusChange'] = useCallback(async (status, id) => {
+    await axios.put('/scene/status', { status, id });
 
-      message.success('修改成功');
+    message.success('修改成功');
 
-      setScenes(
-        scenes.map((scene) => {
-          if (scene.id === id) {
-            return { ...scene, status };
-          }
+    setScenes((scenes) => {
+      return scenes.map((scene) => {
+        if (scene.id === id) {
+          return { ...scene, status };
+        }
 
-          return scene;
-        }),
-      );
-    },
-    [scenes],
-  );
+        return scene;
+      });
+    });
+  }, []);
 
   const handleLinkToSceceDetailPage = useCallback(
     (data: SceneShape) => {
@@ -172,6 +169,15 @@ export default function Home() {
     },
     [history],
   );
+
+  const handledeleteScene = useCallback(async (data: SceneShape) => {
+    await axios.delete(`/scene/${data.id}`);
+    message.success('删除成功');
+
+    setScenes((scenes) => {
+      return scenes.filter((scene) => scene.id !== data.id);
+    });
+  }, []);
 
   return (
     <div className={classnames(styles.container, MAIN_CONTENT_CLASSNAME)}>
@@ -250,6 +256,7 @@ export default function Home() {
                   onEdit={handleEditScene}
                   onStatusChange={handleModifySceneStatus}
                   onTapCard={handleLinkToSceceDetailPage}
+                  onDelete={handledeleteScene}
                 />
               );
             })}

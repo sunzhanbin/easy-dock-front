@@ -10,6 +10,8 @@ const staticRoutes = {
   INTEGRATION_ORCH_EDIT_GENERATION_API: '/integration/orch/orch',
   INTEGRATION_DATA_MANAGE: '/integration/data-manage',
   INTEGRATION_MODEL_MANAGE: '/integration/model-manage',
+  TMPLATE_CENTER: '/tmpl',
+  SYSTEM_MANAGE: '/system',
 };
 
 export default staticRoutes;

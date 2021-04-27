@@ -16,3 +16,5 @@ export const SCENE_IAMGES = {
 };
 
 export { default as ROUTES, dynamicRoutes } from './route';
+
+export const stopPropagation = (e: React.MouseEvent) => e.stopPropagation();
