@@ -1,8 +1,9 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
-import Icon from '@components/icon';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import classnames from 'classnames';
-import { Button, Popover } from 'antd';
+import { Popover } from 'antd';
 import { AbstractTooltipProps } from 'antd/lib/tooltip';
+import Icon from '@components/icon';
+import { AsyncButton } from '@components';
 import styles from './index.module.scss';
 
 interface PopoverProps {
@@ -31,36 +32,14 @@ function EnnPopover(props: PopoverProps) {
     onVisibleChange,
     visible,
   } = props;
-  const [loading, setLoading] = useState(false);
   const [showPopover, setShowPopover] = useState(false);
-  const containerRef = useRef(null);
-  const handleOkClick = useCallback(async () => {
-    if (!onOk) {
-      return;
-    }
+  const hasUnmounted = useRef(false);
 
-    const okPromise = onOk();
-
-    if (!okPromise || !okPromise.then) {
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      await okPromise;
-
-      // 成功后关闭popover
-      if (containerRef.current) {
-        setShowPopover(false);
-      }
-    } finally {
-      // 防止卸载后继续setstate
-      if (containerRef.current) {
-        setLoading(false);
-      }
-    }
-  }, [onOk]);
+  useEffect(() => {
+    return () => {
+      hasUnmounted.current = true;
+    };
+  }, []);
 
   const handleCancel = useCallback(() => {
     if (typeof onVisibleChange === 'function') {
@@ -80,14 +59,14 @@ function EnnPopover(props: PopoverProps) {
         <div className={classnames(styles.content)}>{content}</div>
         {onOk && (
           <div className={styles.footer}>
-            <Button type="primary" size="large" loading={loading} onClick={handleOkClick}>
+            <AsyncButton type="primary" size="large" onClick={onOk}>
               {okText}
-            </Button>
+            </AsyncButton>
           </div>
         )}
       </div>
     );
-  }, [content, handleOkClick, handleCancel, loading, okText, onOk, title]);
+  }, [content, handleCancel, okText, onOk, title]);
 
   // 受控模式下由外层接管
   const isControlled = typeof onVisibleChange === 'function';
@@ -103,9 +82,7 @@ function EnnPopover(props: PopoverProps) {
       placement={placement}
       className={styles.popover}
     >
-      <div className={styles.content} ref={containerRef}>
-        {children}
-      </div>
+      {children}
     </Popover>
   );
 }

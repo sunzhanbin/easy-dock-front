@@ -2,6 +2,7 @@ import React, { useCallback, useRef, useState } from 'react';
 import classnames from 'classnames';
 import Icon from '@components/icon';
 import Popover from '@/components/popover';
+import PopConfirm from '@/components/popconfirm';
 import Form, { FormType } from './form';
 import { ProjectShape } from '../types';
 import styles from './index.module.scss';
@@ -69,17 +70,17 @@ const Project = (props: ProjectProps) => {
           <Icon type="bianji" className={classnames(styles.icon, { [styles.active]: currentProjectIsEditing })} />
         </Popover>
 
-        <Popover
+        <PopConfirm
           trigger="click"
           placement="bottom"
           content="删除后不可恢复，确认删除？"
           title="删除项目"
-          onOk={handleDelete}
+          onConfirm={handleDelete}
           visible={currentProjectIsDeleting}
           onVisibleChange={setCurrentProjectIsDeleting}
         >
           <Icon type="shanchu" className={classnames(styles.icon, { [styles.active]: currentProjectIsDeleting })} />
-        </Popover>
+        </PopConfirm>
       </div>
     </div>
   );
