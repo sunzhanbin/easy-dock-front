@@ -14,13 +14,14 @@ export interface SceneProps {
   onEdit(data: SceneShape): void;
   onStatusChange(status: -1 | 1, id: number): Promise<void>;
   onTapCard(data: SceneShape): void;
-  onDelete(data: SceneShape): void;
+  onDelete(data: SceneShape): Promise<void>;
 }
 
 export default function Scene(props: SceneProps) {
   const { data, onEdit, onStatusChange, onTapCard, className, onDelete } = props;
   const [loading, setLoading] = useState(false);
   const [showActionDropdown, setShowActionDropdown] = useState(false);
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   // 编辑场景
   const handleEditScene = useCallback(() => {
     setShowActionDropdown(false);
@@ -38,11 +39,39 @@ export default function Scene(props: SceneProps) {
     }
   }, [onStatusChange, data]);
 
-  const handleClickCard = useCallback(() => {
-    onTapCard(data);
-  }, [onTapCard, data]);
+  const handleClickCard = useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      let canTriggerCardTap = true;
+      let triggerNode: any = event.target;
+
+      while (triggerNode) {
+        if (triggerNode.classList.contains('ant-popover-content')) {
+          canTriggerCardTap = false;
+          break;
+        } else if (triggerNode.classList.contains(styles.card)) {
+          break;
+        } else {
+          triggerNode = triggerNode.parentNode;
+        }
+      }
+
+      if (canTriggerCardTap) {
+        onTapCard(data);
+      }
+    },
+    [onTapCard, data],
+  );
 
   const handleDeleteScene = useCallback(() => {
+    if (data.version) {
+      return;
+    }
+
+    setShowActionDropdown(false);
+    setShowConfirmDelete(true);
+  }, [data.version]);
+
+  const handleConfirmDelete = useCallback(() => {
     onDelete(data);
   }, [onDelete, data]);
 
@@ -62,8 +91,8 @@ export default function Scene(props: SceneProps) {
   }, [data.version, handleEditScene, handleDeleteScene]);
 
   return (
-    <div className={classnames(className, styles.card)}>
-      <img src={getSceneImageUrl(data.icon)} alt="iamge" onClick={handleClickCard} />
+    <div className={classnames(className, styles.card)} onClick={handleClickCard}>
+      <img src={getSceneImageUrl(data.icon)} alt="iamge" />
       <div className={styles.content}>
         <div className={styles.title}>{data.name}</div>
         <div className={styles.remark}>{data.remark || '这是一个场景'}</div>
@@ -71,6 +100,7 @@ export default function Scene(props: SceneProps) {
           {data.version ? (
             <Popconfirm
               title="提示"
+              key="switch-status"
               content={`确认${data.status === 1 ? '关闭' : '启用'}所选场景吗?`}
               onConfirm={handleStatusChange}
               okButtonProps={{ loading }}
@@ -82,19 +112,30 @@ export default function Scene(props: SceneProps) {
           ) : (
             <div className={styles.editing}>编辑中</div>
           )}
+
           {data.version && <div className={styles.version}>{data.version.version}</div>}
         </div>
-        <Dropdown
-          overlayClassName="dark"
-          overlay={dropownOverlay}
+        <Popconfirm
+          title="确认删除"
+          content="删除后不可恢复，确认删除？"
           placement="bottomRight"
-          visible={showActionDropdown}
-          onVisibleChange={setShowActionDropdown}
+          visible={showConfirmDelete}
+          trigger="null"
+          onVisibleChange={setShowConfirmDelete}
+          onConfirm={handleConfirmDelete}
         >
-          <div className={styles.action} onClick={stopPropagation}>
-            <Icon type="gengduo" />
-          </div>
-        </Dropdown>
+          <Dropdown
+            overlayClassName="dark"
+            overlay={dropownOverlay}
+            placement="bottomRight"
+            visible={showActionDropdown}
+            onVisibleChange={setShowActionDropdown}
+          >
+            <div className={styles.action} onClick={stopPropagation}>
+              <Icon type="gengduo" />
+            </div>
+          </Dropdown>
+        </Popconfirm>
       </div>
     </div>
   );

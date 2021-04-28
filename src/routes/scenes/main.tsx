@@ -177,6 +177,8 @@ export default function Home() {
     setScenes((scenes) => {
       return scenes.filter((scene) => scene.id !== data.id);
     });
+
+    fetchProjectListRef.current();
   }, []);
 
   return (
