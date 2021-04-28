@@ -2,7 +2,7 @@ import React, { useCallback, useRef, useState } from 'react';
 import classnames from 'classnames';
 import Icon from '@components/icon';
 import Popover from '@/components/popover';
-import PopConfirm from '@/components/popconfirm';
+import PopConfirm from '@/components/popover-confirm';
 import Form, { FormType } from './form';
 import { ProjectShape } from '../types';
 import styles from './index.module.scss';
@@ -81,7 +81,9 @@ const Project = (props: ProjectProps) => {
           visible={currentProjectIsDeleting}
           onVisibleChange={setCurrentProjectIsDeleting}
         >
-          <Icon type="shanchu" className={classnames(styles.icon, { [styles.active]: currentProjectIsDeleting })} />
+          <div>
+            <Icon type="shanchu" className={classnames(styles.icon, { [styles.active]: currentProjectIsDeleting })} />
+          </div>
         </PopConfirm>
       </div>
     </div>
