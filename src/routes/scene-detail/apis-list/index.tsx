@@ -24,7 +24,7 @@ export default function ApiList(props: ApiListProps) {
           pageNum: currentPage,
           pageSize: 30,
         },
-        { baseURL: process.env.REACT_APP_ORCH_DOMAIN },
+        { baseURL: window.ALGOR_ORCH_BASE_SERVICE_ENDPOINT },
       )
       .then(({ data }) => {
         if (data.pageIndex === currentPage) {

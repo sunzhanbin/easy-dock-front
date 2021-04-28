@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import classnames from 'classnames';
 import Icon from '@components/icon';
 import Popover from '@/components/popover';
@@ -21,6 +21,7 @@ const Project = (props: ProjectProps) => {
   const { data, isActive, onSelected, onUpdate, status, onStatusChange, onDelete, className } = props;
   const isEditing = isActive && status === 'editing';
   const isDeleting = isActive && status === 'deleting';
+  const [actionType, setActionType] = useState<ActionStatus>();
   const formRef = useRef<FormType>();
 
   // 选中项目
@@ -39,6 +40,12 @@ const Project = (props: ProjectProps) => {
     }
   }, [onUpdate, data]);
 
+  const handleEditPopoverVisibleChange = useCallback((visible: boolean) => {
+    if (visible) {
+      setActionType('editing');
+    }
+  }, []);
+
   return (
     <div
       onClick={handleSelectProject}
@@ -46,10 +53,13 @@ const Project = (props: ProjectProps) => {
         className,
         styles.project,
         { [styles.active]: isActive },
-        { [styles.editing]: isEditing || isDeleting },
+        { [styles.editing]: isEditing || isDeleting || '' },
       )}
     >
-      <div className={styles.name}>{`${data.name} ${data.sceneCount || 0}`}</div>
+      <div className={styles.content}>
+        <div className={styles.name}>{data.name}</div>
+        <div>{data.sceneCount || 0}</div>
+      </div>
       <div className={styles.icons}>
         <Popover
           trigger="click"
@@ -57,6 +67,7 @@ const Project = (props: ProjectProps) => {
           placement="bottom"
           title="编辑项目"
           onOk={handleSubmit}
+          onVisibleChange={handleEditPopoverVisibleChange}
         >
           <Icon
             type="bianji"

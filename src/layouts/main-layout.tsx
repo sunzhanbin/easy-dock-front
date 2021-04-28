@@ -16,7 +16,7 @@ export default function PrimaryLayout() {
   useEffect(() => {
     axios
       .get('/api/auth/v1/user/currentInfo', {
-        baseURL: process.env.REACT_APP_LOGIN_DOMAIN,
+        baseURL: window.REACT_APP_LOGIN_DOMAIN,
         silence: true,
       })
       .then(({ data }) => {

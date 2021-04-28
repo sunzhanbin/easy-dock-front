@@ -18,7 +18,7 @@
   "scripts": {
     "start": "rescripts start",
     "build:test": "sh -ac '. .env.staging; rescripts build'",
-    "build:staging": "env-cmd -f .env.staging rescripts build",
+    "build:staging": "REACT_APP_TARGET_ENV=staging rescripts build",
     "build": "rescripts build",
     "eject": "rescripts eject"
   },

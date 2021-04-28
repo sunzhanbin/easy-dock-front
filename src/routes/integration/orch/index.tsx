@@ -14,7 +14,7 @@ export default function Orch() {
     if (orchRef.current) {
       const orch = loadMicroApp({
         name: 'orch',
-        entry: process.env.REACT_APP_ORCH_ENTRY!,
+        entry: window.ALGOR_ORCH_FRONTEND_ENTRY,
         container: orchRef.current,
         props: {
           basename: matchedRoute,

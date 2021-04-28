@@ -3,7 +3,7 @@
 
 .card {
   @include center('flex');
-
+  position: relative;
   align-items: stretch;
   height: 128px;
   border-radius: 6px;
@@ -19,8 +19,7 @@
   img {
     width: 128px;
     height: 128px;
-    border-top-right-radius: 3px;
-    border-bottom-right-radius: 3px;
+    border-radius: 3px;
     object-fit: cover;
   }
 
@@ -71,18 +70,35 @@
       }
     }
 
-    .action {
+    .tool {
       position: absolute;
-      padding: 6px;
       top: 11px;
       right: 10px;
-      font-size: 20px;
       cursor: pointer;
       z-index: 1;
 
-      &:hover {
+      .del {
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1;
+      }
+
+      .more {
+        position: relative;
+        z-index: 2;
+        font-size: 0;
+
         & > svg {
-          color: $primary-color;
+          font-size: 20px;
+        }
+
+        &:hover {
+          & > svg {
+            color: $primary-color;
+          }
         }
       }
     }
@@ -94,8 +110,8 @@
   padding: 16px;
 
   .item {
-    display: flex;
-    align-items: center;
+    @include center('flex');
+
     color: #fff;
     cursor: pointer;
 
@@ -104,7 +120,7 @@
       cursor: not-allowed;
     }
 
-    svg {
+    & > svg {
       margin-right: 12px;
       color: inherit;
       font-size: 20px;

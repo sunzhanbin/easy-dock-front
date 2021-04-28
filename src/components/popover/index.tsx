@@ -20,7 +20,17 @@ interface PopoverConfirmProps {
 const getPopupContainer: AbstractTooltipProps['getTooltipContainer'] = (c) => c;
 
 function PopoverConfirm(props: PopoverConfirmProps) {
-  const { title, children, okText = '确认', onOk, content, placement, trigger = 'click' } = props;
+  const {
+    title,
+    children,
+    okText = '确认',
+    onOk,
+    content,
+    placement,
+    trigger = 'click',
+    onVisibleChange,
+    visible,
+  } = props;
   const [loading, setLoading] = useState(false);
   const [showPopover, setShowPopover] = useState(false);
   const containerRef = useRef(null);
@@ -75,12 +85,15 @@ function PopoverConfirm(props: PopoverConfirmProps) {
     );
   }, [content, handleOkClick, handleCancel, loading, okText, onOk, title]);
 
+  // 受控模式下由外层接管
+  const isControlled = typeof onVisibleChange === 'function';
+
   return (
     <Popover
       trigger={trigger}
-      visible={showPopover}
+      visible={isControlled ? visible : showPopover}
       getPopupContainer={getPopupContainer}
-      onVisibleChange={setShowPopover}
+      onVisibleChange={isControlled ? onVisibleChange : setShowPopover}
       content={popoverContent}
       destroyTooltipOnHide
       placement={placement}

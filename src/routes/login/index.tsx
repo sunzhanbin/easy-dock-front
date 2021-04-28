@@ -15,7 +15,7 @@ export default function Login() {
     const values = await form.validateFields();
     const data = Object.assign({}, { loginType: 1, appCode: 'easydock' }, values);
     const loginResponse = await axios.post('/api/auth/v1/login', data, {
-      baseURL: process.env.REACT_APP_LOGIN_DOMAIN,
+      baseURL: window.REACT_APP_LOGIN_DOMAIN,
     });
 
     if (loginResponse.data) {
