@@ -12,7 +12,7 @@ import { axios } from '@utils';
 import { MAIN_CONTENT_CLASSNAME, dynamicRoutes } from '@consts';
 import Scene, { SceneProps } from './scene';
 import EditScene, { EditSceneProps } from './edit-scene';
-import { ProjectShape, ActionStatus, SceneShape } from './types';
+import { ProjectShape, SceneShape } from './types';
 import styles from './index.module.scss';
 
 export default function Home() {
@@ -20,14 +20,12 @@ export default function Home() {
   const [fetching, setFetching] = useState(false);
   const [projects, setProjects] = useState<ProjectShape[]>([]);
   const [activeProjectId, setActiveProjectId] = useState<number>();
-  const [activeProjectStatus, setActiveProjectStatus] = useState<ActionStatus>();
   const [scenes, setScenes] = useState<SceneShape[]>([]);
   const [showEditSceneModal, setShowEditSceneModal] = useState(false);
   const [editingScene, setEditingScene] = useState<SceneShape>();
   const formRef = useRef<FormInstance<{ name: string }>>();
   const fetchProjectListRef = useRef<() => Promise<void>>(async () => {
     setFetching(true);
-    setActiveProjectStatus(undefined);
 
     try {
       const { data } = await axios.get<ProjectShape[]>('/project/list/all');
@@ -206,8 +204,6 @@ export default function Home() {
                   isActive={activeProjectId === project.id}
                   onSelected={setActiveProjectId}
                   onUpdate={handleEditProjectSubmit}
-                  status={activeProjectStatus}
-                  onStatusChange={setActiveProjectStatus}
                   onDelete={handleDelete}
                 />
               );

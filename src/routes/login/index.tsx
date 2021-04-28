@@ -5,7 +5,7 @@ import { UserOutlined, KeyOutlined } from '@ant-design/icons';
 import loginIcon from '@assets/login-icon.png';
 import logoIcon from '@assets/logo-icon.png';
 import { localStorage, axios } from '@utils';
-import { ROUTES } from '@consts';
+import { ROUTES, envs } from '@consts';
 import styles from './index.module.scss';
 
 export default function Login() {
@@ -15,7 +15,7 @@ export default function Login() {
     const values = await form.validateFields();
     const data = Object.assign({}, { loginType: 1, appCode: 'easydock' }, values);
     const loginResponse = await axios.post('/api/auth/v1/login', data, {
-      baseURL: window.REACT_APP_LOGIN_DOMAIN,
+      baseURL: envs.REACT_APP_LOGIN_DOMAIN,
     });
 
     if (loginResponse.data) {

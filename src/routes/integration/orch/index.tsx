@@ -3,6 +3,7 @@ import { loadMicroApp } from 'qiankun';
 import Loading from '@components/loading';
 import classnames from 'classnames';
 import useMatchRoute from '@hooks/use-match-route';
+import { envs } from '@consts';
 import styles from './index.module.scss';
 
 export default function Orch() {
@@ -14,7 +15,7 @@ export default function Orch() {
     if (orchRef.current) {
       const orch = loadMicroApp({
         name: 'orch',
-        entry: window.ALGOR_ORCH_FRONTEND_ENTRY,
+        entry: envs.ALGOR_ORCH_FRONTEND_ENTRY,
         container: orchRef.current,
         props: {
           basename: matchedRoute,

@@ -3,25 +3,22 @@ import classnames from 'classnames';
 import Icon from '@components/icon';
 import Popover from '@/components/popover';
 import Form, { FormType } from './form';
-import { ProjectShape, ActionStatus } from '../types';
+import { ProjectShape } from '../types';
 import styles from './index.module.scss';
 
 interface ProjectProps {
   data: ProjectShape;
   isActive: boolean;
   onSelected(id: number): void;
-  status?: ActionStatus;
-  onStatusChange(status: ActionStatus): void;
   onUpdate(values: ProjectShape & Omit<ProjectShape, 'id'>): Promise<void>;
   onDelete(id: number): Promise<void>;
   className?: string;
 }
 
 const Project = (props: ProjectProps) => {
-  const { data, isActive, onSelected, onUpdate, status, onStatusChange, onDelete, className } = props;
-  const isEditing = isActive && status === 'editing';
-  const isDeleting = isActive && status === 'deleting';
-  const [actionType, setActionType] = useState<ActionStatus>();
+  const { data, isActive, onSelected, onUpdate, onDelete, className } = props;
+  const [currentProjectIsEditing, setCurrentProjectIsEditing] = useState(false);
+  const [currentProjectIsDeleting, setCurrentProjectIsDeleting] = useState(false);
   const formRef = useRef<FormType>();
 
   // 选中项目
@@ -34,17 +31,16 @@ const Project = (props: ProjectProps) => {
     return onDelete(data.id);
   }, [onDelete, data.id]);
 
-  const handleSubmit = useCallback(async () => {
+  // 编辑项目
+  const handleEditing = useCallback(async () => {
     if (formRef.current) {
-      await onUpdate(Object.assign({}, data, await formRef.current.validateFields()));
+      try {
+        await onUpdate(Object.assign({}, data, await formRef.current.validateFields()));
+      } finally {
+        setCurrentProjectIsEditing(false);
+      }
     }
   }, [onUpdate, data]);
-
-  const handleEditPopoverVisibleChange = useCallback((visible: boolean) => {
-    if (visible) {
-      setActionType('editing');
-    }
-  }, []);
 
   return (
     <div
@@ -53,7 +49,7 @@ const Project = (props: ProjectProps) => {
         className,
         styles.project,
         { [styles.active]: isActive },
-        { [styles.editing]: isEditing || isDeleting || '' },
+        { [styles.editing]: currentProjectIsEditing || currentProjectIsDeleting },
       )}
     >
       <div className={styles.content}>
@@ -66,14 +62,11 @@ const Project = (props: ProjectProps) => {
           content={<Form data={data} formRef={formRef} />}
           placement="bottom"
           title="编辑项目"
-          onOk={handleSubmit}
-          onVisibleChange={handleEditPopoverVisibleChange}
+          onOk={handleEditing}
+          visible={currentProjectIsEditing}
+          onVisibleChange={setCurrentProjectIsEditing}
         >
-          <Icon
-            type="bianji"
-            className={classnames(styles.icon, { [styles.active]: isEditing })}
-            onClick={() => onStatusChange('editing')}
-          />
+          <Icon type="bianji" className={classnames(styles.icon, { [styles.active]: currentProjectIsEditing })} />
         </Popover>
 
         <Popover
@@ -82,12 +75,10 @@ const Project = (props: ProjectProps) => {
           content="删除后不可恢复，确认删除？"
           title="删除项目"
           onOk={handleDelete}
+          visible={currentProjectIsDeleting}
+          onVisibleChange={setCurrentProjectIsDeleting}
         >
-          <Icon
-            type="shanchu"
-            className={classnames(styles.icon, { [styles.active]: isDeleting })}
-            onClick={() => onStatusChange('deleting')}
-          />
+          <Icon type="shanchu" className={classnames(styles.icon, { [styles.active]: currentProjectIsDeleting })} />
         </Popover>
       </div>
     </div>

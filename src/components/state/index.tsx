@@ -1,5 +1,5 @@
+import React, { useMemo } from 'react';
 import classnames from 'classnames';
-import { useMemo } from 'react';
 import styles from './index.module.scss';
 
 export interface StateProps {
@@ -7,7 +7,8 @@ export interface StateProps {
   className?: string;
   children: React.ReactNode | string;
 }
-export default function State(props: StateProps) {
+
+function State(props: StateProps) {
   const { state, className, children } = props;
   const stateClassName = useMemo(() => {
     if (state === 'success') {
@@ -21,3 +22,5 @@ export default function State(props: StateProps) {
 
   return <div className={classnames(styles.state, stateClassName, className)}>{children}</div>;
 }
+
+export default React.memo(State);

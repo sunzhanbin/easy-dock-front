@@ -3,6 +3,7 @@ import { axios } from '@utils';
 import LoadMore from '@components/load-more';
 import styles from './index.module.scss';
 import ApiCard, { ApiShape } from './api';
+import { envs } from '@consts';
 
 interface ApiListProps {
   value: ApiShape[];
@@ -24,7 +25,7 @@ export default function ApiList(props: ApiListProps) {
           pageNum: currentPage,
           pageSize: 30,
         },
-        { baseURL: window.ALGOR_ORCH_BASE_SERVICE_ENDPOINT },
+        { baseURL: envs.ALGOR_ORCH_BASE_SERVICE_ENDPOINT },
       )
       .then(({ data }) => {
         if (data.pageIndex === currentPage) {

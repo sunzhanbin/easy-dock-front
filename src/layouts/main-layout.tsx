@@ -4,7 +4,7 @@ import Header from '@components/header';
 import Loading from '@components/loading';
 import { UserContext } from '@/context';
 import { axios } from '@utils';
-import ROUTES from '@/consts/route';
+import { ROUTES, envs } from '@consts';
 
 const ScenesListPage = React.lazy(() => import(/* webpackChunkName: "scenes-list" */ '@/routes/scenes/main'));
 const ScenePage = React.lazy(() => import(/* webpackChunkName: "scene-detail" */ '@/routes/scene-detail'));
@@ -16,7 +16,7 @@ export default function PrimaryLayout() {
   useEffect(() => {
     axios
       .get('/api/auth/v1/user/currentInfo', {
-        baseURL: window.REACT_APP_LOGIN_DOMAIN,
+        baseURL: envs.REACT_APP_LOGIN_DOMAIN,
         silence: true,
       })
       .then(({ data }) => {
