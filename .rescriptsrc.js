@@ -1,7 +1,6 @@
 const path = require('path');
-const { name, version } = require('./package');
 const FileManagerPlugin = require('filemanager-webpack-plugin');
-const appPackageJson = require('./package.json');
+const { name, version } = require('./package.json');
 
 process.env.PORT = 8082;
 // process.env.FAST_REFRESH = 'false';
@@ -36,6 +35,13 @@ module.exports = {
                   source: path.resolve('build'),
                   destination: `zip/${name}/dist`,
                 },
+                {
+                  source: path.resolve(
+                    __dirname,
+                    `conf${process.env.REACT_APP_TARGET_ENV === 'staging' ? '.staging.js' : '.production.js'}`,
+                  ),
+                  destination: path.resolve('build', 'conf.js'),
+                },
               ],
               archive: [
                 {
@@ -54,6 +60,21 @@ module.exports = {
                 },
               ],
               delete: ['zip'],
+            },
+          },
+        }),
+      );
+    } else {
+      config.plugins = config.plugins.concat(
+        new FileManagerPlugin({
+          events: {
+            onEnd: {
+              copy: [
+                {
+                  source: path.resolve(__dirname, 'conf.js'),
+                  destination: path.resolve('public', 'conf.js'),
+                },
+              ],
             },
           },
         }),

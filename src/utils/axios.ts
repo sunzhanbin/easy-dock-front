@@ -5,7 +5,7 @@ import history from './history';
 import { localStorage } from './localstorage';
 
 const instance = Axios.create({
-  baseURL: `${process.env.REACT_APP_MAIN_DOMAIN}/enc-oss-easydock/api/builder/v1`,
+  baseURL: `${window.EASY_DOCK_BASE_SERVICE_ENDPOINT}/enc-oss-easydock/api/builder/v1`,
   headers: {
     auth: localStorage.get('token'),
   },

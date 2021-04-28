@@ -1,4 +1,4 @@
-import { useCallback, useState, useMemo } from 'react';
+import { useCallback, useState, useMemo, useRef } from 'react';
 import { Switch, Dropdown } from 'antd';
 import classnames from 'classnames';
 import Icon from '@components/icon';
@@ -22,6 +22,7 @@ export default function Scene(props: SceneProps) {
   const [loading, setLoading] = useState(false);
   const [showActionDropdown, setShowActionDropdown] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
   // 编辑场景
   const handleEditScene = useCallback(() => {
     setShowActionDropdown(false);
@@ -90,8 +91,12 @@ export default function Scene(props: SceneProps) {
     );
   }, [data.version, handleEditScene, handleDeleteScene]);
 
+  const getPopupContainer = useMemo(() => {
+    return () => cardRef.current!;
+  }, []);
+
   return (
-    <div className={classnames(className, styles.card)} onClick={handleClickCard}>
+    <div className={classnames(className, styles.card)} onClick={handleClickCard} ref={cardRef}>
       <img src={getSceneImageUrl(data.icon)} alt="iamge" />
       <div className={styles.content}>
         <div className={styles.title}>{data.name}</div>
@@ -115,27 +120,32 @@ export default function Scene(props: SceneProps) {
 
           {data.version && <div className={styles.version}>{data.version.version}</div>}
         </div>
-        <Popconfirm
-          title="确认删除"
-          content="删除后不可恢复，确认删除？"
-          placement="bottomRight"
-          visible={showConfirmDelete}
-          trigger="null"
-          onVisibleChange={setShowConfirmDelete}
-          onConfirm={handleConfirmDelete}
-        >
+        <div className={styles.tool}>
+          <Popconfirm
+            title="确认删除"
+            content="删除后不可恢复，确认删除？"
+            placement="bottomRight"
+            visible={showConfirmDelete}
+            onVisibleChange={setShowConfirmDelete}
+            onConfirm={handleConfirmDelete}
+            getPopupContainer={getPopupContainer}
+          >
+            <div className={styles.del}></div>
+          </Popconfirm>
+
           <Dropdown
             overlayClassName="dark"
             overlay={dropownOverlay}
             placement="bottomRight"
             visible={showActionDropdown}
             onVisibleChange={setShowActionDropdown}
+            getPopupContainer={getPopupContainer}
           >
-            <div className={styles.action} onClick={stopPropagation}>
+            <div onClick={stopPropagation} className={styles.more}>
               <Icon type="gengduo" />
             </div>
           </Dropdown>
-        </Popconfirm>
+        </div>
       </div>
     </div>
   );
