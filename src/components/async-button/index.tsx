@@ -3,14 +3,14 @@ import { Button } from 'antd';
 import { ButtonProps } from 'antd/lib/button';
 
 interface AsyncButtonProps extends ButtonProps {
-  onClick(): Promise<void> | void;
+  onClick?(): Promise<void> | void;
 }
 
 function AsyncButton(props: AsyncButtonProps) {
   const { loading: outLoading, onClick, ...others } = props;
   const [loading, setLoading] = useState(outLoading || false);
   const hasUnmountedRef = useRef(false);
-  const isControlled = outLoading === undefined;
+  const isControlled = outLoading !== undefined;
 
   useEffect(() => {
     return () => {
