@@ -49,6 +49,22 @@ function EnnPopover(props: PopoverProps) {
     }
   }, [onVisibleChange]);
 
+  const handleClickOk = useMemo(() => {
+    if (onOk) {
+      return async () => {
+        await onOk();
+
+        if (onVisibleChange) {
+          onVisibleChange(false);
+        } else {
+          setShowPopover(false);
+        }
+      };
+    } else {
+      return undefined;
+    }
+  }, [onOk, onVisibleChange]);
+
   const popoverContent = useMemo(() => {
     return (
       <div className={styles.card}>
@@ -59,7 +75,7 @@ function EnnPopover(props: PopoverProps) {
         <div className={classnames(styles.content)}>{content}</div>
         {onOk && (
           <div className={styles.footer}>
-            <AsyncButton type="primary" size="large" onClick={onOk}>
+            <AsyncButton type="primary" size="large" onClick={handleClickOk}>
               {okText}
             </AsyncButton>
           </div>

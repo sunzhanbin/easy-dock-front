@@ -67,7 +67,9 @@ const Project = (props: ProjectProps) => {
           visible={currentProjectIsEditing}
           onVisibleChange={setCurrentProjectIsEditing}
         >
-          <Icon type="bianji" className={classnames(styles.icon, { [styles.active]: currentProjectIsEditing })} />
+          <div className={styles['edit-icon-container']}>
+            <Icon type="bianji" className={classnames(styles.icon, { [styles.active]: currentProjectIsEditing })} />
+          </div>
         </Popover>
 
         <PopConfirm
