@@ -19,8 +19,18 @@ interface PopoverProps {
 
 const getPopupContainer: AbstractTooltipProps['getTooltipContainer'] = (c) => c;
 
-function PopoverConfirm(props: PopoverProps) {
-  const { title, children, okText, onOk, content, placement, trigger = 'click', onVisibleChange, visible } = props;
+function EnnPopover(props: PopoverProps) {
+  const {
+    title,
+    children,
+    okText = '确认',
+    onOk,
+    content,
+    placement,
+    trigger = 'click',
+    onVisibleChange,
+    visible,
+  } = props;
   const [loading, setLoading] = useState(false);
   const [showPopover, setShowPopover] = useState(false);
   const containerRef = useRef(null);
@@ -96,4 +106,4 @@ function PopoverConfirm(props: PopoverProps) {
   );
 }
 
-export default React.memo(PopoverConfirm);
+export default React.memo(EnnPopover);
