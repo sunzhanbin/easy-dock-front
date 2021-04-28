@@ -2,7 +2,7 @@ import { useCallback, useState, useMemo, useRef } from 'react';
 import { Switch, Dropdown } from 'antd';
 import classnames from 'classnames';
 import Icon from '@components/icon';
-import Popconfirm from '@components/popconfirm';
+import Popconfirm from '@components/popover-confirm';
 import { getSceneImageUrl } from '@utils';
 import { stopPropagation } from '@consts';
 import { SceneShape } from '../types';
@@ -19,7 +19,6 @@ export interface SceneProps {
 
 export default function Scene(props: SceneProps) {
   const { data, onEdit, onStatusChange, onTapCard, className, onDelete } = props;
-  const [loading, setLoading] = useState(false);
   const [showActionDropdown, setShowActionDropdown] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -31,13 +30,7 @@ export default function Scene(props: SceneProps) {
 
   // 开关场景启用状态
   const handleStatusChange = useCallback(async () => {
-    setLoading(true);
-
-    try {
-      await onStatusChange(data.status === 1 ? -1 : 1, data.id);
-    } finally {
-      setLoading(false);
-    }
+    await onStatusChange(data.status === 1 ? -1 : 1, data.id);
   }, [onStatusChange, data]);
 
   const handleClickCard = useCallback(
@@ -63,17 +56,19 @@ export default function Scene(props: SceneProps) {
     [onTapCard, data],
   );
 
+  const canDelete = Boolean(!data.version || data.status === -1);
+
   const handleDeleteScene = useCallback(() => {
-    if (data.version) {
+    if (!canDelete) {
       return;
     }
 
     setShowActionDropdown(false);
     setShowConfirmDelete(true);
-  }, [data.version]);
+  }, [canDelete]);
 
   const handleConfirmDelete = useCallback(() => {
-    onDelete(data);
+    return onDelete(data);
   }, [onDelete, data]);
 
   const dropownOverlay = useMemo(() => {
@@ -83,16 +78,22 @@ export default function Scene(props: SceneProps) {
           <Icon type="bianji" />
           <span>编辑</span>
         </div>
-        <div className={classnames(styles.item, { [styles.disabled]: data.version })} onClick={handleDeleteScene}>
+        <div className={classnames(styles.item, { [styles.disabled]: !canDelete })} onClick={handleDeleteScene}>
           <Icon type="shanchu" />
           <span>删除</span>
         </div>
       </div>
     );
-  }, [data.version, handleEditScene, handleDeleteScene]);
+  }, [handleEditScene, canDelete, handleDeleteScene]);
 
   const getPopupContainer = useMemo(() => {
     return () => cardRef.current!;
+  }, []);
+
+  const handleDeleteConfirmVisibleChange = useCallback((visible: boolean) => {
+    if (cardRef.current) {
+      setShowConfirmDelete(visible);
+    }
   }, []);
 
   return (
@@ -108,7 +109,7 @@ export default function Scene(props: SceneProps) {
               key="switch-status"
               content={`确认${data.status === 1 ? '关闭' : '启用'}所选场景吗?`}
               onConfirm={handleStatusChange}
-              okButtonProps={{ loading }}
+              getPopupContainer={getPopupContainer}
             >
               <div onClick={stopPropagation}>
                 <Switch checkedChildren="开启" unCheckedChildren="关闭" checked={data.status === 1} />
@@ -126,7 +127,7 @@ export default function Scene(props: SceneProps) {
             content="删除后不可恢复，确认删除？"
             placement="bottomRight"
             visible={showConfirmDelete}
-            onVisibleChange={setShowConfirmDelete}
+            onVisibleChange={handleDeleteConfirmVisibleChange}
             onConfirm={handleConfirmDelete}
             getPopupContainer={getPopupContainer}
           >

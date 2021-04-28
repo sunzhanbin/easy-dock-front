@@ -102,7 +102,7 @@ export default function Home() {
     }
   }, [handleEditProjectSubmit]);
 
-  const handleDelete = useCallback(async (id: number) => {
+  const handleDeleteProject = useCallback(async (id: number) => {
     await axios.delete(`/project/${id}`);
 
     message.success('删除成功');
@@ -204,7 +204,7 @@ export default function Home() {
                   isActive={activeProjectId === project.id}
                   onSelected={setActiveProjectId}
                   onUpdate={handleEditProjectSubmit}
-                  onDelete={handleDelete}
+                  onDelete={handleDeleteProject}
                 />
               );
             })}

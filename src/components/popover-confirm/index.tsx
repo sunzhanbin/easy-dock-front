@@ -1,8 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import classnames from 'classnames';
-import { Popover } from 'antd';
+import { Popover, Button } from 'antd';
+import { ExclamationCircleFilled } from '@ant-design/icons';
 import { AbstractTooltipProps } from 'antd/lib/tooltip';
-import Icon from '@components/icon';
 import { AsyncButton } from '@components';
 import styles from './index.module.scss';
 
@@ -11,26 +10,28 @@ interface PopoverProps {
   children: React.ReactNode;
   content?: React.ReactNode;
   okText?: string;
-  onOk?(): Promise<void> | void;
+  onConfirm?(): Promise<void> | void;
   placement?: AbstractTooltipProps['placement'];
   trigger?: AbstractTooltipProps['trigger'];
   visible?: boolean;
   onVisibleChange?(visible: boolean): void;
+  getPopupContainer?: AbstractTooltipProps['getTooltipContainer'];
 }
 
-const getPopupContainer: AbstractTooltipProps['getTooltipContainer'] = (c) => c;
+const defaultGetPopupContainer: AbstractTooltipProps['getTooltipContainer'] = (c) => c;
 
 function EnnPopover(props: PopoverProps) {
   const {
     title,
     children,
     okText = '确认',
-    onOk,
+    onConfirm,
     content,
     placement,
     trigger = 'click',
     onVisibleChange,
     visible,
+    getPopupContainer = defaultGetPopupContainer,
   } = props;
   const [showPopover, setShowPopover] = useState(false);
   const hasUnmounted = useRef(false);
@@ -50,9 +51,9 @@ function EnnPopover(props: PopoverProps) {
   }, [onVisibleChange]);
 
   const handleClickOk = useMemo(() => {
-    if (onOk) {
+    if (onConfirm) {
       return async () => {
-        await onOk();
+        await onConfirm();
 
         if (onVisibleChange) {
           onVisibleChange(false);
@@ -63,18 +64,23 @@ function EnnPopover(props: PopoverProps) {
     } else {
       return undefined;
     }
-  }, [onOk, onVisibleChange]);
+  }, [onConfirm, onVisibleChange]);
 
   const popoverContent = useMemo(() => {
     return (
-      <div className={styles.card}>
+      <div className={styles.container}>
         <div className={styles.header}>
-          <div className={styles.title}>{title}</div>
-          <Icon type="guanbi" className={styles.close} onClick={handleCancel} />
+          <ExclamationCircleFilled className={styles.icon} />
+          <div className={styles.content}>
+            <div className={styles.title}>{title}</div>
+            {content}
+          </div>
         </div>
-        <div className={classnames(styles.content)}>{content}</div>
         <div className={styles.footer}>
-          <AsyncButton type="primary" size="large" onClick={handleClickOk}>
+          <Button className={styles.cancel} type="text" size="middle" onClick={handleCancel}>
+            取消
+          </Button>
+          <AsyncButton type="primary" size="middle" onClick={handleClickOk}>
             {okText}
           </AsyncButton>
         </div>
