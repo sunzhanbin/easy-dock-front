@@ -9,7 +9,7 @@
   border-radius: 6px;
   background-color: rgba(24, 31, 67, 0.03);
   transition: background-color linear 0.3s;
-  overflow: hidden;
+  cursor: pointer;
 
   &:hover {
     box-shadow: 0px 0px 16px 0px rgba(24, 31, 67, 0.08);
@@ -22,7 +22,6 @@
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
     object-fit: cover;
-    cursor: pointer;
   }
 
   .content {
@@ -77,13 +76,12 @@
       padding: 6px;
       top: 11px;
       right: 10px;
-      line-height: 1;
       font-size: 20px;
       cursor: pointer;
       z-index: 1;
 
       &:hover {
-        svg {
+        & > svg {
           color: $primary-color;
         }
       }
@@ -92,6 +90,7 @@
 }
 
 .menus {
+  width: 92px;
   padding: 16px;
 
   .item {
@@ -99,6 +98,11 @@
     align-items: center;
     color: #fff;
     cursor: pointer;
+
+    &.disabled {
+      color: $disabled-color;
+      cursor: not-allowed;
+    }
 
     svg {
       margin-right: 12px;
