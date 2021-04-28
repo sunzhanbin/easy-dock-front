@@ -5,7 +5,7 @@ import { Button, Popover } from 'antd';
 import { AbstractTooltipProps } from 'antd/lib/tooltip';
 import styles from './index.module.scss';
 
-interface PopoverConfirmProps {
+interface PopoverProps {
   title: string;
   children: React.ReactNode;
   content?: React.ReactNode;
@@ -19,18 +19,8 @@ interface PopoverConfirmProps {
 
 const getPopupContainer: AbstractTooltipProps['getTooltipContainer'] = (c) => c;
 
-function PopoverConfirm(props: PopoverConfirmProps) {
-  const {
-    title,
-    children,
-    okText = '确认',
-    onOk,
-    content,
-    placement,
-    trigger = 'click',
-    onVisibleChange,
-    visible,
-  } = props;
+function PopoverConfirm(props: PopoverProps) {
+  const { title, children, okText, onOk, content, placement, trigger = 'click', onVisibleChange, visible } = props;
   const [loading, setLoading] = useState(false);
   const [showPopover, setShowPopover] = useState(false);
   const containerRef = useRef(null);

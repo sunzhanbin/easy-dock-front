@@ -6,8 +6,6 @@ export interface ProjectShape {
   sceneCount: number;
 }
 
-export type ActionStatus = 'editing' | 'deleting' | undefined;
-
 export interface SceneShape {
   name: string;
   id: number;

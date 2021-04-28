@@ -3,16 +3,16 @@ import { NavLink, Link, NavLinkProps, useHistory } from 'react-router-dom';
 import classnames from 'classnames';
 import { Avatar, Dropdown, Menu } from 'antd';
 import { UserContext } from '@/context';
+import { axios, localStorage } from '@utils';
+import { ROUTES, envs } from '@consts';
 import logo from '@assets/logo.png';
 import styles from './header.module.scss';
-import { axios, localStorage } from '@utils';
-import { ROUTES } from '@consts';
 
 export default function AppHeader() {
   const loginUser = useContext(UserContext);
   const history = useHistory();
   const logout = useCallback(async () => {
-    await axios.get('/api/auth/v1/logout', { baseURL: window.REACT_APP_LOGIN_DOMAIN });
+    await axios.get('/api/auth/v1/logout', { baseURL: envs.REACT_APP_LOGIN_DOMAIN });
 
     delete axios.defaults.headers.auth;
     localStorage.clear('token');
