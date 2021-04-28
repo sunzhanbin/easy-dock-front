@@ -12,7 +12,7 @@
     &.editing,
     &:hover {
       .icons {
-        width: 44px;
+        width: 50px;
         padding-left: 4px;
       }
     }
@@ -58,6 +58,7 @@
 
     .icon {
       margin-right: 7px;
+      font-size: 16px;
       cursor: pointer;
 
       &:hover,

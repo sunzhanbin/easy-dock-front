@@ -40,7 +40,7 @@ module.exports = {
                     __dirname,
                     `conf${process.env.REACT_APP_TARGET_ENV === 'staging' ? '.staging.js' : '.production.js'}`,
                   ),
-                  destination: path.resolve('build', 'conf.js'),
+                  destination: path.resolve('build', 'envConf.js'),
                 },
               ],
               archive: [
@@ -72,7 +72,7 @@ module.exports = {
               copy: [
                 {
                   source: path.resolve(__dirname, 'conf.js'),
-                  destination: path.resolve('public', 'conf.js'),
+                  destination: path.resolve('public', 'envConf.js'),
                 },
               ],
             },
