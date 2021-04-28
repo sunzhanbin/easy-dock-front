@@ -63,8 +63,12 @@ function EnnPopover(props: PopoverProps) {
   }, [onOk]);
 
   const handleCancel = useCallback(() => {
-    setShowPopover(false);
-  }, []);
+    if (typeof onVisibleChange === 'function') {
+      onVisibleChange(false);
+    } else {
+      setShowPopover(false);
+    }
+  }, [onVisibleChange]);
 
   const popoverContent = useMemo(() => {
     return (
