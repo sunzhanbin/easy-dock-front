@@ -1,10 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { Button, Spin, message } from 'antd';
+import { Button, message } from 'antd';
 import { FormInstance } from 'antd/lib/form';
 import classnames from 'classnames';
-import Popover from '@/components/popover';
-import Icon from '@components/icon';
+import { Popover, Icon, Loading } from '@components';
 import Project from './project';
 import Form from './project/form';
 import emptyImage from '@assets/empty.png';
@@ -52,23 +51,29 @@ export default function Home() {
 
   // 获取场景列表
   const fetchSceneList = useCallback(
-    (projectId: number) => {
-      axios.get(`/scene/${projectId}/list/all`).then(({ data }) => {
+    async (projectId: number) => {
+      setFetching(true);
+
+      try {
+        const { data } = await axios.get(`/scene/${projectId}/list/all`);
+
         setActiveProjectId((prevActiveProjectIid) => {
+          // 当请求过于频繁时有可能先发出的接口后返回，在这里限制下
           if (prevActiveProjectIid === activeProjectId) {
             setScenes(data);
           }
 
           return prevActiveProjectIid;
         });
-      });
+      } finally {
+        setFetching(false);
+      }
     },
     [activeProjectId],
   );
 
   useEffect(() => {
     if (activeProjectId) {
-      setEditingScene(undefined);
       fetchSceneList(activeProjectId);
     }
   }, [activeProjectId, fetchSceneList]);
@@ -181,7 +186,7 @@ export default function Home() {
 
   return (
     <div className={classnames(styles.container, MAIN_CONTENT_CLASSNAME)}>
-      {fetching && <Spin className={styles.loading} />}
+      {fetching && <Loading />}
 
       {projects.length === 0 ? (
         <div className={styles.empty}>

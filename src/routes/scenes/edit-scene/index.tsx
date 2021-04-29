@@ -51,9 +51,7 @@ function EditScene(props: EditSceneProps) {
     setLoading(true);
 
     try {
-      const values = await form.validateFields();
-
-      onSubmit(Object.assign({}, data, values));
+      await onSubmit(Object.assign({}, data, await form.validateFields()));
     } finally {
       setLoading(false);
     }
