@@ -1,7 +1,28 @@
 @import '@styles/mixin.scss';
 
 .form {
-  // width: 507px;
+  display: flex;
+  align-items: center;
+
+  .column {
+    flex: 1 1 0;
+
+    :global {
+      .ant-form-item {
+        textarea.ant-input {
+          height: 160px;
+        }
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+
+  .column + .column {
+    margin-left: 48px;
+  }
 }
 
 .images {
@@ -33,7 +54,7 @@
       bottom: 0;
       justify-content: center;
       color: #fff;
-      background-color: rgba(24, 31, 67, 0.55);
+      background-color: rgba(#181f43, 0.75);
       z-index: 1;
 
       svg {

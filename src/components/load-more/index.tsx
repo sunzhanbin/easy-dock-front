@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef } from 'react';
+import throttle from 'lodash/throttle';
 import Loading from '@components/loading';
 import classnames from 'classnames';
 import styles from './index.module.scss';
@@ -22,25 +23,19 @@ export default function LoadMore(props: LoadMoreProps) {
       return;
     }
 
-    let timer: NodeJS.Timeout;
+    const handleScroll = throttle(() => {
+      const container = scrollContainerRef.current!;
 
-    function scroll() {
-      clearTimeout(timer);
-
-      timer = setTimeout(() => {
-        const container = scrollContainerRef.current!;
-
-        if (container.scrollHeight - container.offsetHeight - container.scrollTop < threshold) {
-          loadmore();
-        }
-      }, debounce);
-    }
+      if (container.scrollHeight - container.offsetHeight - container.scrollTop < threshold) {
+        loadmore();
+      }
+    }, debounce);
 
     function clear() {
-      clearTimeout(timer);
+      handleScroll.cancel();
 
       if (scrollContainerRef.current) {
-        scrollContainerRef.current.removeEventListener('scroll', scroll);
+        scrollContainerRef.current.removeEventListener('scroll', handleScroll);
       }
     }
 
@@ -48,7 +43,7 @@ export default function LoadMore(props: LoadMoreProps) {
       return clear();
     }
 
-    scrollContainerRef.current.addEventListener('scroll', scroll, false);
+    scrollContainerRef.current.addEventListener('scroll', handleScroll, false);
 
     return clear;
   }, [done, loadmore, debounce, threshold]);
