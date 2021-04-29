@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { Radio } from 'antd';
+import { Checkbox } from 'antd';
 import classnames from 'classnames';
 import Popover from '@/components/popover';
 import Icon from '@components/icon';
@@ -34,7 +34,7 @@ export default function Card(props: CardProps) {
       )}
       onClick={handleChecked}
     >
-      {onChecked && <Radio className={styles.radio} checked={checked} />}
+      {onChecked && <Checkbox className={styles.checkbox} checked={checked} />}
 
       <div className={styles.content}>
         <div className={styles.title}>{title}</div>

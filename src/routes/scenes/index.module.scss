@@ -2,6 +2,7 @@
 @import '@styles/mixin.scss';
 
 .container {
+  position: relative;
   display: flex;
   flex-direction: column;
   height: calc(100vh - 65px);
@@ -12,10 +13,6 @@
       display: none;
     }
   }
-}
-
-.loading {
-  @include center('absolute');
 }
 
 .header {
