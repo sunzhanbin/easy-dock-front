@@ -104,15 +104,20 @@ export default function Scene(props: SceneProps) {
     <div className={classnames(className, styles.card)} onClick={handleClickCard} ref={cardRef}>
       <img src={getSceneImageUrl(data.icon)} alt="iamge" />
       <div className={styles.content}>
-        <Tooltip title={data.name} getPopupContainer={getPopupContainer} placement="topLeft">
+        {data.name.length > 15 ? (
+          <Tooltip title={data.name} getPopupContainer={getPopupContainer} placement="topLeft">
+            <div className={styles.title}>{data.name}</div>
+          </Tooltip>
+        ) : (
           <div className={styles.title}>{data.name}</div>
-        </Tooltip>
-        {data.remark ? (
+        )}
+
+        {data.remark && data.remark.length > 15 ? (
           <Tooltip title={data.remark} placement="topLeft" getPopupContainer={getPopupContainer}>
             <div className={styles.remark}>{data.remark}</div>
           </Tooltip>
         ) : (
-          <div className={styles.remark}>这是一个场景</div>
+          <div className={styles.remark}>{data.remark || '这是一个场景'}</div>
         )}
         <div className={styles.footer}>
           {data.version ? (
