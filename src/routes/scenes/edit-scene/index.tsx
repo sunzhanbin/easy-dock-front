@@ -20,7 +20,7 @@ const SelectImage = React.memo(function SelectImage(props: SelectImageProps) {
         const image = getSceneImageUrl(key as keyof typeof SCENE_IAMGES);
 
         return (
-          <Col key={key} className={styles.col} span={3} onClick={onChange && (() => onChange(key))}>
+          <Col key={key} className={styles.col} span={6} onClick={onChange && (() => onChange(key))}>
             <div className={styles.box}>
               {value === key && (
                 <div className={styles.mask}>
@@ -62,7 +62,7 @@ function EditScene(props: EditSceneProps) {
       {
         validator(_: any, value: string) {
           if (!value || value.length > 50 || /[^\u4e00-\u9fa5_\d\w]/.test(value)) {
-            return Promise.reject(new Error('场景名为1-50位汉字、字母、数字、下划线！'));
+            return Promise.reject(new Error('场景名为1-50位汉字、字母、数字、下划线'));
           } else {
             return Promise.resolve();
           }
@@ -111,15 +111,19 @@ function EditScene(props: EditSceneProps) {
       keyboard={false}
     >
       <Form form={form} className={styles.form} layout="vertical" autoComplete="off">
-        <Form.Item label="场景名称" name="name" rules={nameRules}>
-          <Input placeholder="请填写场景名称" size="large" maxLength={50} />
-        </Form.Item>
-        <Form.Item label="场景描述" name="remark" getValueFromEvent={formatInputValue}>
-          <Input.TextArea size="large" placeholder="请填写场景描述" maxLength={200} />
-        </Form.Item>
-        <Form.Item label="封面图片" name="icon" required>
-          <SelectImage />
-        </Form.Item>
+        <div className={styles.column}>
+          <Form.Item label="场景名称" name="name" rules={nameRules}>
+            <Input placeholder="请填写场景名称" size="large" />
+          </Form.Item>
+          <Form.Item label="场景描述" name="remark" getValueFromEvent={formatInputValue}>
+            <Input.TextArea className={styles.textarea} size="large" placeholder="请填写场景描述" maxLength={200} />
+          </Form.Item>
+        </div>
+        <div className={styles.column}>
+          <Form.Item label="封面图片" name="icon" required>
+            <SelectImage />
+          </Form.Item>
+        </div>
       </Form>
     </Modal>
   );

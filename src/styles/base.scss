@@ -49,3 +49,10 @@ ol {
     width: 90%;
   }
 }
+
+::-webkit-scrollbar {
+  height: 5px;
+  width: 5px;
+  border-radius: 3px;
+  background-color: rgba(#181f43, 0.3);
+}

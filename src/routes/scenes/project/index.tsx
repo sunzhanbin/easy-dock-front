@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import classnames from 'classnames';
 import Icon from '@components/icon';
 import Popover from '@/components/popover';
@@ -43,6 +43,8 @@ const Project = (props: ProjectProps) => {
     }
   }, [onUpdate, data]);
 
+  const getPopupContainer = useMemo(() => () => document.body, []);
+
   return (
     <div
       onClick={handleSelectProject}
@@ -66,6 +68,7 @@ const Project = (props: ProjectProps) => {
           onOk={handleEditing}
           visible={currentProjectIsEditing}
           onVisibleChange={setCurrentProjectIsEditing}
+          getPopupContainer={getPopupContainer}
         >
           <div className={styles['edit-icon-container']}>
             <Icon type="bianji" className={classnames(styles.icon, { [styles.active]: currentProjectIsEditing })} />
@@ -80,6 +83,7 @@ const Project = (props: ProjectProps) => {
           onConfirm={handleDelete}
           visible={currentProjectIsDeleting}
           onVisibleChange={setCurrentProjectIsDeleting}
+          getPopupContainer={getPopupContainer}
         >
           <div>
             <Icon type="shanchu" className={classnames(styles.icon, { [styles.active]: currentProjectIsDeleting })} />
