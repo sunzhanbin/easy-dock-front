@@ -38,7 +38,7 @@ export default function Scene(props: SceneProps) {
       let canTriggerCardTap = true;
       let triggerNode: any = event.target;
 
-      while (triggerNode) {
+      while (triggerNode && triggerNode.classList) {
         if (triggerNode.classList.contains('ant-popover-content')) {
           canTriggerCardTap = false;
           break;
