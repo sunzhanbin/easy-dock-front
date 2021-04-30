@@ -21,4 +21,4 @@ yarn-error.log*
 
 *SNAPSHOT.tar.gz
 
-public/envConf.js
+public/config.js
