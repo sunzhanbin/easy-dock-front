@@ -54,8 +54,23 @@
   }
 }
 
+.ant-switch {
+  height: 24px;
+  line-height: 24px;
+  background-color: #c1d1cd;
+}
+
+.ant-switch-handle {
+  width: 20px;
+  height: 20px;
+}
+
 .ant-switch-checked {
   background-color: #06c498;
+
+  .ant-switch-handle {
+    left: calc(100% - 20px - 2px);
+  }
 }
 
 // 定制弹框
