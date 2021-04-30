@@ -1,0 +1,15 @@
+.container {
+  display: flex;
+  justify-content: center;
+  margin: 20vh;
+
+  .tip {
+    display: flex;
+    align-items: center;
+
+    .btn {
+      padding-left: 2px;
+      padding-right: 2px;
+    }
+  }
+}

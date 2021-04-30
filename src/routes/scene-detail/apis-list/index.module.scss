@@ -1,0 +1,14 @@
+.list {
+  padding-top: 12px;
+  padding-bottom: 30px;
+  padding-left: 32px;
+
+  .api {
+    margin-right: 32px;
+    margin-bottom: 12px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
