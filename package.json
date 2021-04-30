@@ -45,6 +45,7 @@
     "@types/webpack-env": "^1.16.0",
     "env-cmd": "^10.1.0",
     "filemanager-webpack-plugin": "^4.0.0",
+    "less-loader": "^6.2.0",
     "node-sass": "^5.0.0",
     "sass-loader": "^11.0.1"
   }
