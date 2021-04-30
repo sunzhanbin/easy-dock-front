@@ -1,8 +1,7 @@
 import { useCallback, useState, useMemo, useRef } from 'react';
-import { Switch, Dropdown } from 'antd';
+import { Switch, Dropdown, Tooltip } from 'antd';
 import classnames from 'classnames';
-import Icon from '@components/icon';
-import Popconfirm from '@components/popover-confirm';
+import { Popconfirm, Icon } from '@components';
 import { getSceneImageUrl } from '@utils';
 import { stopPropagation } from '@consts';
 import { SceneShape } from '../types';
@@ -15,10 +14,11 @@ export interface SceneProps {
   onStatusChange(status: -1 | 1, id: number): Promise<void>;
   onTapCard(data: SceneShape): void;
   onDelete(data: SceneShape): Promise<void>;
+  containerId?: string;
 }
 
 export default function Scene(props: SceneProps) {
-  const { data, onEdit, onStatusChange, onTapCard, className, onDelete } = props;
+  const { data, onEdit, onStatusChange, onTapCard, className, onDelete, containerId } = props;
   const [showActionDropdown, setShowActionDropdown] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -38,7 +38,7 @@ export default function Scene(props: SceneProps) {
       let canTriggerCardTap = true;
       let triggerNode: any = event.target;
 
-      while (triggerNode) {
+      while (triggerNode && triggerNode.classList) {
         if (triggerNode.classList.contains('ant-popover-content')) {
           canTriggerCardTap = false;
           break;
@@ -87,8 +87,12 @@ export default function Scene(props: SceneProps) {
   }, [handleEditScene, canDelete, handleDeleteScene]);
 
   const getPopupContainer = useMemo(() => {
+    if (containerId) {
+      return () => document.getElementById(containerId)!;
+    }
+
     return () => cardRef.current!;
-  }, []);
+  }, [containerId]);
 
   const handleDeleteConfirmVisibleChange = useCallback((visible: boolean) => {
     if (cardRef.current) {
@@ -100,8 +104,21 @@ export default function Scene(props: SceneProps) {
     <div className={classnames(className, styles.card)} onClick={handleClickCard} ref={cardRef}>
       <img src={getSceneImageUrl(data.icon)} alt="iamge" />
       <div className={styles.content}>
-        <div className={styles.title}>{data.name}</div>
-        <div className={styles.remark}>{data.remark || '这是一个场景'}</div>
+        {data.name.length > 15 ? (
+          <Tooltip title={data.name} getPopupContainer={getPopupContainer} placement="topLeft">
+            <div className={styles.title}>{data.name}</div>
+          </Tooltip>
+        ) : (
+          <div className={styles.title}>{data.name}</div>
+        )}
+
+        {data.remark && data.remark.length > 15 ? (
+          <Tooltip title={data.remark} placement="topLeft" getPopupContainer={getPopupContainer}>
+            <div className={styles.remark}>{data.remark}</div>
+          </Tooltip>
+        ) : (
+          <div className={styles.remark}>{data.remark || '这是一个场景'}</div>
+        )}
         <div className={styles.footer}>
           {data.version ? (
             <Popconfirm

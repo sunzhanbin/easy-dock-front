@@ -1,0 +1,25 @@
+.container {
+  position: relative;
+  max-width: 100%;
+
+  .content {
+    position: relative;
+    overflow: hidden;
+    word-break: break-all;
+
+    .shadow {
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+    }
+  }
+
+  .dot {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    padding-left: 2px;
+    z-index: 1;
+  }
+}

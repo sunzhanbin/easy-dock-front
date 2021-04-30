@@ -50,7 +50,9 @@ export default function Card(props: CardProps) {
           content="确认删除该API吗?"
           onOk={onDelete}
         >
-          <Icon type="shanchu" className={styles.del} />
+          <div className={styles.del}>
+            <Icon type="shanchu" />
+          </div>
         </Popover>
       )}
     </div>

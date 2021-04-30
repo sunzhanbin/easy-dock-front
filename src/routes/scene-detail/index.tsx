@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
-import { Dropdown, Menu, Button, Drawer, message } from 'antd';
+import { Dropdown, Menu, Button, Drawer, message, Modal, Form, Input } from 'antd';
 import classnames from 'classnames';
-import Popover from '@/components/popover';
 import { axios } from '@utils';
 import { MAIN_CONTENT_CLASSNAME, ROUTES, dynamicRoutes } from '@consts';
 import Icon from '@components/icon';
@@ -83,6 +82,9 @@ export default function SceneDetail() {
   const [sceneApis, setSceneApis] = useState<ApiShape[]>([]);
   const [apisSubmiting, setApisSubmiting] = useState(false);
   const [fetchingSceneApis, setFetchingSceneApis] = useState(false);
+  const [showDeployModal, setShowDeployModal] = useState(false);
+  const [deploying, setDeploying] = useState(false);
+  const [form] = Form.useForm();
 
   useEffect(() => {
     axios.get<SceneShape>(`/scene/${sceneId}`).then(({ data }) => {
@@ -218,8 +220,25 @@ export default function SceneDetail() {
   );
 
   const handleDeploy = useCallback(async () => {
-    await axios.post('/scene/deploy', { sceneId });
-  }, [sceneId]);
+    setDeploying(true);
+
+    try {
+      await axios.post('/scene/deploy', { sceneId, remark: form.getFieldValue('remark') });
+
+      message.success('发布成功');
+      setShowDeployModal(false);
+    } finally {
+      setDeploying(false);
+    }
+  }, [sceneId, form]);
+
+  const handleShowDeployModal = useCallback(() => {
+    setShowDeployModal(true);
+  }, []);
+
+  const handleCancelDeploy = useCallback(() => {
+    setShowDeployModal(false);
+  }, []);
 
   return (
     <div className={classnames(MAIN_CONTENT_CLASSNAME, styles.detail)}>
@@ -234,11 +253,9 @@ export default function SceneDetail() {
           </Dropdown>
         </div>
 
-        <Popover content="确认发布吗" placement="left" onOk={handleDeploy} title="发布场景">
-          <Button type="primary" size="large">
-            发布
-          </Button>
-        </Popover>
+        <Button type="primary" size="large" onClick={handleShowDeployModal}>
+          发布
+        </Button>
       </div>
       <div className={styles.content}>
         <GridColumn icon="yemianbianpai" title="页面编排" type="page" onAdd={handleAddPage}></GridColumn>
@@ -269,6 +286,24 @@ export default function SceneDetail() {
       >
         <ApiList value={checkApis} onChange={handleAddApiChange} />
       </Drawer>
+      <Modal
+        title="场景发布"
+        onOk={handleDeploy}
+        destroyOnClose
+        keyboard={false}
+        onCancel={handleCancelDeploy}
+        confirmLoading={deploying}
+        visible={showDeployModal}
+        width={352}
+        okButtonProps={{ size: 'large' }}
+        cancelButtonProps={{ size: 'large', type: 'text' }}
+      >
+        <Form form={form} layout="vertical" className={styles.form}>
+          <Form.Item label="发布说明" name="remark">
+            <Input.TextArea placeholder="请输入" maxLength={200} />
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
 }

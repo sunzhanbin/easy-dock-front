@@ -24,9 +24,11 @@
   .projects {
     @include center('flex');
 
+    position: relative;
     flex: 1 1 0;
     padding: 12px 0;
     overflow-x: auto;
+    // overflow-y: visible;
 
     &::-webkit-scrollbar {
       height: 0px; /*对水平流动条有效*/
@@ -106,6 +108,7 @@
 }
 
 .scenes {
+  position: relative;
   display: grid;
   grid-row-gap: 24px;
   grid-column-gap: 24px;

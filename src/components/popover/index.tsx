@@ -16,9 +16,10 @@ interface PopoverProps {
   trigger?: AbstractTooltipProps['trigger'];
   visible?: boolean;
   onVisibleChange?(visible: boolean): void;
+  getPopupContainer?: AbstractTooltipProps['getTooltipContainer'];
 }
 
-const getPopupContainer: AbstractTooltipProps['getTooltipContainer'] = (c) => c;
+const defaultGetPopupContainer: AbstractTooltipProps['getTooltipContainer'] = (c) => c;
 
 function EnnPopover(props: PopoverProps) {
   const {
@@ -31,6 +32,7 @@ function EnnPopover(props: PopoverProps) {
     trigger = 'click',
     onVisibleChange,
     visible,
+    getPopupContainer = defaultGetPopupContainer,
   } = props;
   const [showPopover, setShowPopover] = useState(false);
   const hasUnmounted = useRef(false);

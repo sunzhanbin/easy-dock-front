@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { Button, message } from 'antd';
 import { FormInstance } from 'antd/lib/form';
+import throttle from 'lodash/throttle';
 import classnames from 'classnames';
 import { Popover, Icon, Loading } from '@components';
 import Project from './project';
@@ -22,7 +23,9 @@ export default function Home() {
   const [scenes, setScenes] = useState<SceneShape[]>([]);
   const [showEditSceneModal, setShowEditSceneModal] = useState(false);
   const [editingScene, setEditingScene] = useState<SceneShape>();
+  const hasProjects = projects.length > 0;
   const formRef = useRef<FormInstance<{ name: string }>>();
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const fetchProjectListRef = useRef<() => Promise<void>>(async () => {
     setFetching(true);
 
@@ -48,6 +51,25 @@ export default function Home() {
       setFetching(false);
     }
   });
+
+  useEffect(() => {
+    if (/macintosh|mac os x/i.test(navigator.userAgent)) return;
+
+    const container = scrollContainerRef.current;
+
+    if (hasProjects && container) {
+      const scroll = throttle(function (e: WheelEvent) {
+        container.scrollTo(container.scrollLeft + e.deltaY * 3, 0);
+        e.preventDefault();
+      }, 50);
+
+      container.addEventListener('wheel', scroll, false);
+
+      return () => {
+        container.removeEventListener('wheel', scroll);
+      };
+    }
+  }, [hasProjects]);
 
   // 获取场景列表
   const fetchSceneList = useCallback(
@@ -188,19 +210,9 @@ export default function Home() {
     <div className={classnames(styles.container, MAIN_CONTENT_CLASSNAME)}>
       {fetching && <Loading />}
 
-      {projects.length === 0 ? (
-        <div className={styles.empty}>
-          <img src={emptyImage} alt="empty" />
-          <div className={styles.desc}>暂无项目，来创建一个吧</div>
-          <Popover content={<Form formRef={formRef} />} placement="top" title="新增项目" onOk={handleAddProjectSubmit}>
-            <Button size="large" type="primary" icon={<Icon type="xinzengjiacu" />}>
-              创建项目
-            </Button>
-          </Popover>
-        </div>
-      ) : (
+      {hasProjects ? (
         <div className={styles.header}>
-          <div className={styles.projects}>
+          <div className={styles.projects} ref={scrollContainerRef}>
             {projects.map((project) => {
               return (
                 <Project
@@ -234,11 +246,21 @@ export default function Home() {
             </Link>
           </div>
         </div>
+      ) : (
+        <div className={styles.empty}>
+          <img src={emptyImage} alt="empty" />
+          <div className={styles.desc}>暂无项目，来创建一个吧</div>
+          <Popover content={<Form formRef={formRef} />} placement="top" title="新增项目" onOk={handleAddProjectSubmit}>
+            <Button size="large" type="primary" icon={<Icon type="xinzengjiacu" />}>
+              创建项目
+            </Button>
+          </Popover>
+        </div>
       )}
 
       {projects.length > 0 && (
         <div className={styles.content}>
-          <div className={classnames(styles.scenes, { [styles['no-scene']]: scenes.length === 0 })}>
+          <div className={classnames(styles.scenes, { [styles['no-scene']]: scenes.length === 0 })} id="scenes-list">
             <div className={classnames(styles.card, styles.scene)}>
               <Button
                 className={styles.btn}
@@ -260,6 +282,7 @@ export default function Home() {
                   onStatusChange={handleModifySceneStatus}
                   onTapCard={handleLinkToSceceDetailPage}
                   onDelete={handledeleteScene}
+                  containerId="scenes-list"
                 />
               );
             })}

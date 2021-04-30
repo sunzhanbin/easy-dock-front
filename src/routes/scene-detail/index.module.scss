@@ -37,7 +37,11 @@
     margin-left: 24px;
 
     .name {
+      @include ellipsis;
+
+      max-width: 200px;
       margin-right: 4px;
+      cursor: pointer;
     }
   }
 }
@@ -150,6 +154,20 @@
 
     & > :first-child {
       margin-right: 12px;
+    }
+  }
+}
+
+.form {
+  :global {
+    .ant-form-item {
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .ant-input {
+        height: 87px;
+      }
     }
   }
 }

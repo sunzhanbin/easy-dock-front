@@ -54,8 +54,23 @@
   }
 }
 
+.ant-switch {
+  height: 24px;
+  line-height: 24px;
+  background-color: #c1d1cd;
+}
+
+.ant-switch-handle {
+  width: 20px;
+  height: 20px;
+}
+
 .ant-switch-checked {
   background-color: #06c498;
+
+  .ant-switch-handle {
+    left: calc(100% - 20px - 2px);
+  }
 }
 
 // 定制弹框
@@ -73,9 +88,9 @@
 
       .ant-modal-title {
         line-height: 24px;
-        color: rgba(24, 31, 67, 0.55);
+        color: rgba($primary-text-color, 0.75);
         font-size: 16px;
-        font-weight: 400;
+        font-weight: 500;
       }
     }
 
@@ -91,6 +106,7 @@
   }
 
   .ant-modal-body {
+    max-height: 330px;
     padding: 12px 0 24px;
   }
 
@@ -169,6 +185,23 @@
   .ant-input-affix-wrapper-focused {
     box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.2);
   }
+}
+
+.ant-form-item {
+  .ant-form-item-explain {
+    line-height: 20px;
+    font-size: 12px;
+    font-weight: 400;
+  }
+}
+
+.ant-tooltip-inner {
+  line-height: 22px;
+  border-radius: 3px;
+  color: #fff;
+  background-color: rgba(#1a1b1e, 0.85);
+  font-size: 14px;
+  font-weight: 400;
 }
 
 // 定制抽屉

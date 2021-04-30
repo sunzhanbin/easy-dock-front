@@ -19,7 +19,7 @@ function EditProjectForm(props: EditProjectFormProps) {
       {
         validator(_: any, value: string) {
           if (!value || value.length > 50 || /[^\u4e00-\u9fa5_\d\w]/.test(value)) {
-            return Promise.reject(new Error('项目名为3-20位汉字、字母、数字、下划线！'));
+            return Promise.reject(new Error('项目名为1-50位汉字、字母、数字、下划线'));
           } else {
             return Promise.resolve();
           }
@@ -38,7 +38,7 @@ function EditProjectForm(props: EditProjectFormProps) {
   return (
     <Form className={styles.form} layout="vertical" form={form} initialValues={data} autoComplete="off">
       <Form.Item label="项目名称" name="name" rules={nameRules}>
-        <Input placeholder="请填写项目名称" minLength={3} maxLength={20} size="large" />
+        <Input placeholder="请填写项目名称" size="large" />
       </Form.Item>
     </Form>
   );
