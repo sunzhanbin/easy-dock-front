@@ -76,7 +76,7 @@ module.exports = {
     } else {
       let needCopy = false;
       const sourcePath = path.resolve(__dirname, 'conf.js');
-      const destinationPath = path.resolve('public', 'envConf.js');
+      const destinationPath = path.resolve('public', 'config.js');
 
       try {
         const envSource = fs.readFileSync(sourcePath, { encoding: 'utf-8' });
