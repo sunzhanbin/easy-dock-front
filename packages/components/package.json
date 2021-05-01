@@ -1,41 +1,38 @@
 {
-  "name": "easy-dock-front",
+  "name": "@easydock/components",
   "version": "0.0.1",
-  "private": true,
+  "description": "> TODO: description",
+  "author": "jisi wang",
+  "license": "MIT",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./lib/index.d.ts",
+  "sideEffects": false,
   "scripts": {
-    "start": "rescripts start",
-    "build:test": "sh -ac '. .env.staging; rescripts build'",
-    "build:staging": "REACT_APP_TARGET_ENV=staging rescripts build",
-    "build": "rescripts build",
-    "eject": "rescripts eject"
+    "build": "tsc && rollup -c rollup.config.js",
+    "clean": "../../scripts/clean_package.sh",
+    "start": "tsc -w & rollup -c rollup.config.js -w",
+    "test": "jest --coverage"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app"
-    ]
+  "publishConfig": {
+    "access": "public"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version"
-    ]
+  "repository": {
+    "type": "git",
+    "url": ""
   },
   "dependencies": {
-    "@reduxjs/toolkit": "^1.5.1",
+    "@types/node": "^12.0.0",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
     "antd": "^4.15.2",
     "axios": "^0.21.1",
     "classnames": "^2.3.1",
     "lodash": "^4.17.21",
-    "qiankun": "^2.4.0",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2",
     "react-beautiful-dnd": "^13.1.0",
+    "react-dom": "^17.0.2",
     "react-loadable": "^5.5.0",
-    "react-redux": "^7.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "styled-component": "^2.8.0",
@@ -43,21 +40,15 @@
     "use-immer": "^0.5.1"
   },
   "devDependencies": {
-    "@types/node": "^12.0.0",
-    "@types/react": "^17.0.0",
-    "@types/react-dom": "^17.0.0",
-    "@rescripts/cli": "^0.0.16",
     "@types/classnames": "^2.3.1",
     "@types/lodash": "^4.14.168",
     "@types/react-beautiful-dnd": "^13.0.0",
     "@types/react-loadable": "^5.5.5",
-    "@types/react-redux": "^7.1.7",
     "@types/react-router-dom": "^5.1.7",
     "@types/webpack-env": "^1.16.0",
     "env-cmd": "^10.1.0",
     "filemanager-webpack-plugin": "^4.0.0",
     "node-sass": "^5.0.0",
-    "rescripts": "0.0.1-security",
     "sass-loader": "^11.0.1"
   }
 }
