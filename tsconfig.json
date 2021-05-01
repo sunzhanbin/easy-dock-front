@@ -1,28 +1,14 @@
 {
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
+    "incremental": true,
+    "baseUrl": ".",
     "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx",
-    "baseUrl": "."
+    "paths": {
+      "@canvas/core$": ["packages/core/index"],
+      "@canvas/core/*": ["packages/core/lib/*"],
+      "@components/*":["packages/components/*"]
+    }
   },
-  "include": [
-    "src"
-  ],
-  "extends": "./paths.json"
+  "exclude": ["**/node_modules/**", "**/lib/**", "node_modules"]
 }

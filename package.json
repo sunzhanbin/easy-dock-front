@@ -1,51 +1,92 @@
 {
-  "name": "easy-dock-front",
-  "version": "0.0.1",
+  "name": "root",
   "private": true,
-  "dependencies": {
-    "@types/node": "^12.0.0",
-    "@types/react": "^17.0.0",
-    "@types/react-dom": "^17.0.0",
-    "antd": "^4.15.2",
-    "axios": "^0.21.1",
-    "lodash": "^4.17.21",
-    "qiankun": "^2.4.0",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.3",
-    "typescript": "^4.1.2"
-  },
   "scripts": {
-    "start": "rescripts start",
-    "build:test": "sh -ac '. .env.staging; rescripts build'",
-    "build:staging": "REACT_APP_TARGET_ENV=staging rescripts build",
-    "build": "rescripts build",
-    "eject": "rescripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version"
-    ]
+    "start": "lerna run start",
+    "precommit": "lint-staged",
+    "bootstrap": "lerna bootstrap",
+    "publish": "lerna publish"
   },
   "devDependencies": {
-    "@rescripts/cli": "^0.0.16",
-    "@types/lodash": "^4.14.168",
-    "@types/react-router-dom": "^5.1.7",
-    "@types/webpack-env": "^1.16.0",
-    "env-cmd": "^10.1.0",
-    "filemanager-webpack-plugin": "^4.0.0",
-    "node-sass": "^5.0.0",
-    "sass-loader": "^11.0.1"
+    "@babel/cli": "^7.12.3",
+    "@babel/core": "^7.12.3",
+    "@babel/plugin-proposal-class-properties": "^7.7.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.7.4",
+    "@babel/preset-env": "^7.7.5",
+    "@babel/preset-typescript": "^7.10.1",
+    "@commitlint/cli": "^8.2.0",
+    "@commitlint/config-conventional": "^8.2.0",
+    "@rollup/plugin-babel": "^5.0.4",
+    "@rollup/plugin-commonjs": "^13.0.0",
+    "@rollup/plugin-image": "^2.0.5",
+    "@rollup/plugin-node-resolve": "^8.1.0",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/react-hooks": "^3.3.0",
+    "@testing-library/user-event": "^7.1.2",
+    "@types/axios": "^0.14.0",
+    "@types/jest": "^24.0.0",
+    "@types/node": "^12.0.0",
+    "@types/react": "^16.9.0",
+    "@types/react-dom": "^16.9.0",
+    "@typescript-eslint/eslint-plugin": "^4.5.0",
+    "@typescript-eslint/parser": "^4.5.0",
+    "babel-jest": "^26.6.0",
+    "eslint": "^7.11.0",
+    "eslint-config-prettier": "^6.7.0",
+    "eslint-config-react-app": "^6.0.0",
+    "eslint-plugin-flowtype": "^5.2.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest": "^24.1.0",
+    "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-react": "^7.21.5",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "eslint-plugin-testing-library": "^3.9.2",
+    "husky": "^4.2.5",
+    "inquirer": "^7.2.0",
+    "jest": "26.6.0",
+    "jest-circus": "26.6.0",
+    "jest-environment-jsdom-fourteen": "^1.0.1",
+    "jest-resolve": "26.6.0",
+    "jest-svg-transformer": "^1.0.0",
+    "jest-watch-typeahead": "0.6.1",
+    "lerna": "^3.22.1",
+    "lint-staged": "^10.2.11",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.0.5",
+    "pretty-quick": "^2.0.1",
+    "react-test-renderer": "^16.13.1",
+    "rollup": "^2.18.1",
+    "rollup-plugin-dts": "2.0.1",
+    "rollup-plugin-postcss": "^3.1.2",
+    "rollup-plugin-terser": "^6.1.0",
+    "rollup-plugin-typescript2": "^0.30.0",
+    "ts-jest": "^26.5.3",
+    "typescript": "~3.8.2"
+  },
+  "lint-staged": {
+    "packages/**/*.{ts,tsx,js,jsx}": [
+      "prettier --write",
+      "eslint",
+      "git add"
+    ],
+    "apps/**/*.{ts,tsx,js,jsx}": [
+      "prettier --write",
+      "eslint",
+      "git add"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run precommit"
+    }
+  },
+  "workspaces": [
+    "packages/*",
+    "packages/components/*",
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">= 10.0"
   }
 }
