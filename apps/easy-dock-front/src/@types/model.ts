@@ -1,9 +1,10 @@
-export type BaseField = {
+type BaseField = {
   readonly id: string;
   title: string;
   desc?: string;
   required: boolean;
   colSpace?: 1 | 2 | 3 | 4;
+  value: any;
 };
 
 type AppBindField = {
@@ -14,10 +15,10 @@ type AppBindField = {
 
 type CustomField = {
   type: "custom";
-  value: string;
+  data: string;
 };
 
-export type FieldValueSource = CustomField | AppBindField;
+type FieldValueSource = CustomField | AppBindField;
 
 export type SingleTextField = {
   type: "Input";
@@ -29,12 +30,17 @@ type FormLogicItem = {
   fields: string[];
 };
 
-export type FormLogic = {
+type FormLogic = {
   type: "visible";
   fields: Record<string, FormLogicItem>;
 };
 
 export type SelectBaseField = {
   type: "Radio | Select | Checkbox";
-  logic: FormLogicItem[];
+  logic: FormLogic[];
+} & DataBaseField &
+  BaseField;
+
+type DataBaseField = {
+  datasource: FieldValueSource;
 };
