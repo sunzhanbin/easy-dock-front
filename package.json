@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "start": "lerna run start",
+    "build": "lerna run build",
     "precommit": "lint-staged",
     "bootstrap": "lerna bootstrap",
     "publish": "lerna publish"
