@@ -107,12 +107,34 @@ const formDesign = createSlice({
         };
       },
     },
-    move(state, action: PayloadAction<{ id: string; sourceIndex: number; targetIndex: number }>) {
-      const { id, sourceIndex, targetIndex } = action.payload;
-      if (!state.byId[id]) return state;
-      state.layout.splice(targetIndex, 0, [id]);
+    moveRow(state, action: PayloadAction<{ sourceIndex: number; targetIndex: number }>) {
+      const { sourceIndex, targetIndex } = action.payload;
+      state.layout.splice(targetIndex, 0, [...state.layout[sourceIndex]]);
       let indexToDelete = sourceIndex > targetIndex ? sourceIndex + 1 : sourceIndex;
       state.layout.splice(indexToDelete, 1);
+      return state;
+    },
+    moveUp(state, action: PayloadAction<{ id: string }>) {
+      const { id } = action.payload;
+      let [row, col] = locateById(id, state.layout);
+      if (!state.byId[id] || row === 0) return state;
+      let rowLayout = state.layout[row];
+      let targetLayout = state.layout[row - 1];
+      if (targetLayout.length >= 4) return state;
+      rowLayout.splice(col, 1);
+      targetLayout.push(id);
+      if (rowLayout.length === 0) state.layout.splice(row, 1);
+      return state;
+    },
+    moveDown(state, action: PayloadAction<{ id: string }>) {
+      const { id } = action.payload;
+      let [row, col] = locateById(id, state.layout);
+      if (!state.byId[id]) return state;
+      let rowLayout = state.layout[row];
+      if (rowLayout.length === 1) return;
+      rowLayout.splice(col, 1);
+      state.layout.splice(row, 1);
+      state.layout.splice(row + 1, 0, [id]);
       return state;
     },
     //exchnage with the com on the left
