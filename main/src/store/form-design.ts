@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { uniqueId } from "lodash";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { uniqueId } from 'lodash';
 type BaseField = {
   id: string;
   title: string;
@@ -12,13 +12,13 @@ type BaseField = {
 };
 
 type AppBindField = {
-  type: "app";
+  type: 'app';
   appId: string;
   fieldId: string;
 };
 
 type CustomField = {
-  type: "custom";
+  type: 'custom';
   data: FieldOption[];
 };
 
@@ -36,7 +36,7 @@ type FormLogicItem = {
 };
 
 type FormLogic = {
-  type: "visible";
+  type: 'visible';
   fields: {
     [k: string]: FormLogicItem;
   };
@@ -54,13 +54,13 @@ type InputBaseField = {
 } & BaseField;
 
 type SingleTextField = {
-  type: "Input";
+  type: 'Input';
   prefix?: string;
   suffix?: string;
   reg?: string;
 } & InputBaseField;
 
-type MultipleTextField = { type: "Input.TextArea"; showCount: boolean } & InputBaseField;
+type MultipleTextField = { type: 'Input.TextArea'; showCount: boolean } & InputBaseField;
 
 type SelectBaseField = {
   logic: FormLogic[];
@@ -68,8 +68,8 @@ type SelectBaseField = {
   BaseField;
 
 type SelectField = {
-  type: "Select";
-  mode: "multipe" | "tag";
+  type: 'Select';
+  mode: 'multipe' | 'tag';
   allowClear: boolean;
   showArrow: boolean;
   showSearch: boolean;
@@ -86,7 +86,7 @@ type FormDesign = { byId: FormFieldMap; layout: string[][] };
 let initialState: FormDesign = {} as FormDesign;
 
 const formDesign = createSlice({
-  name: "formDesign",
+  name: 'formDesign',
   initialState,
   reducers: {
     comAdded: {

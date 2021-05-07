@@ -1,4 +1,4 @@
-export const MAIN_CONTENT_CLASSNAME = "easy-dock-content";
+export const MAIN_CONTENT_CLASSNAME = 'easy-dock-content';
 
 export const SCENE_IAMGES = {
   scene1: `scene1`,
@@ -15,8 +15,8 @@ export const SCENE_IAMGES = {
   scene12: `scene12`,
 };
 
-export { default as ROUTES, dynamicRoutes } from "./route";
+export { default as ROUTES, dynamicRoutes } from './route';
 
 export const stopPropagation = (e: React.MouseEvent) => e.stopPropagation();
 
-export { default as envs } from "./envs";
+export { default as envs } from './envs';

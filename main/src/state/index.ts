@@ -1,4 +1,4 @@
-import { initGlobalState, MicroAppStateActions } from "qiankun";
+import { initGlobalState, MicroAppStateActions } from 'qiankun';
 
 export const actions: MicroAppStateActions = initGlobalState({});
 
