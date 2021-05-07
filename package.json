@@ -17,11 +17,11 @@
   },
   "lint-staged": {
     "packages/**/*.{ts,tsx,js,jsx}": [
-      "prettier --write",
+      "prettier",
       "eslint"
     ],
     "main/**/*.{ts,tsx,js,jsx}": [
-      "prettier --write",
+      "prettier",
       "eslint"
     ]
   },
