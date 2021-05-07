@@ -1,5 +1,5 @@
 export default {
-  name: "component",
+  name: 'component',
   attr: {
     width: 12,
     height: 12,
