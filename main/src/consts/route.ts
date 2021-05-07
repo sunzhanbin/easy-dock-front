@@ -3,6 +3,7 @@ const staticRoutes = {
   LOGIN: '/login',
   SCENE_MANAGE: '/scenes-manage',
   SCENE_DETAIL: '/scenes-detail/:sceneId',
+  SCENE_EDITOR: '/scenes-editor/:sceneId?',
   INTEGRATION: '/integration',
   INTEGRATION_ORCH_INDEX: '/integration/orch',
   INTEGRATION_ORCH_INTERFACE_LIST: '/integration/orch/interface-manage',

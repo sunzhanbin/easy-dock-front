@@ -16,6 +16,10 @@ const IntegrationPage = React.lazy(
   () => import(/* webpackChunkName: "integration" */ '@/routes/integration'),
 );
 
+const SceneEditorPage = React.lazy(
+  () => import(/* webpackChunkName: "integration" */ '@/routes/scene-editor'),
+);
+
 export default function PrimaryLayout() {
   const [user, setUser] = useState<User>();
 
@@ -49,6 +53,7 @@ export default function PrimaryLayout() {
         <Route path={[ROUTES.INDEX, ROUTES.SCENE_MANAGE]} exact component={ScenesListPage}></Route>
         <Route path={ROUTES.SCENE_DETAIL} component={ScenePage}></Route>
         <Route path={ROUTES.INTEGRATION} component={IntegrationPage}></Route>
+        <Route path={ROUTES.SCENE_EDITOR} component={SceneEditorPage}></Route>
       </Suspense>
     </UserContext.Provider>
   );

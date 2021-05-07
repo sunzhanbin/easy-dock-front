@@ -1,18 +1,20 @@
 import { FC, memo, useCallback } from 'react';
 import { Steps } from 'antd';
-//import styled from "styled-component";
+import styled from 'styled-components';
 import { useState } from 'react';
-import { useHistory } from 'react-router';
+import { useHistory, useRouteMatch } from 'react-router';
 const { Step } = Steps;
 
-const routes = ['/scene-editor/form-design', '/scene-editor/flow-design'];
-
-/* const HeaderContainer = styled.div`
+const HeaderContainer = styled.div`
   min-height: 60px;
   width: 100%;
-`; */
+  padding: 30px 60px;
+  border-bottom: 1px solid rgba(24, 31, 67, 0.12);
+`;
 
 const EditorHeader: FC = () => {
+  const match = useRouteMatch();
+  const routes = [`${match.url}/form-design`, `${match.url}/flow-design`];
   const history = useHistory();
   const [current, setCurrent] = useState(0);
   const onChange = useCallback((current: number) => {
@@ -21,11 +23,13 @@ const EditorHeader: FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
-    <Steps current={current} onChange={onChange}>
-      <Step title="表单设计" />
-      <Step title="流程设计" />
-      <Step title="应用发布" />
-    </Steps>
+    <HeaderContainer>
+      <Steps current={current} onChange={onChange}>
+        <Step title="表单设计" />
+        <Step title="流程设计" />
+        <Step title="应用发布" />
+      </Steps>
+    </HeaderContainer>
   );
 };
 

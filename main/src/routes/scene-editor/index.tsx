@@ -12,6 +12,7 @@ const SceneEditor: FC = () => {
       <EditorHeader></EditorHeader>
       <Switch>
         <Route path={`${match.path}/form-design`} component={FormDesign}></Route>
+        <Route path={`${match.path}`} component={FormDesign}></Route>
       </Switch>
     </>
   );
