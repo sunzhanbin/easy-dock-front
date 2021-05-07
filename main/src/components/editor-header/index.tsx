@@ -1,11 +1,11 @@
-import { FC, memo, useCallback } from "react";
-import { Steps } from "antd";
+import { FC, memo, useCallback } from 'react';
+import { Steps } from 'antd';
 //import styled from "styled-component";
-import { useState } from "react";
-import { useHistory } from "react-router";
+import { useState } from 'react';
+import { useHistory } from 'react-router';
 const { Step } = Steps;
 
-const routes = ["/scene-editor/form-design", "/scene-editor/flow-design"];
+const routes = ['/scene-editor/form-design', '/scene-editor/flow-design'];
 
 /* const HeaderContainer = styled.div`
   min-height: 60px;
