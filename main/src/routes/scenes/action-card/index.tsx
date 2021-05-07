@@ -1,8 +1,8 @@
-import React, { useCallback, useRef, useState } from "react";
-import Icon from "@components/icon";
-import classnames from "classnames";
-import { Button } from "antd";
-import styles from "./index.module.scss";
+import React, { useCallback, useRef, useState } from 'react';
+import Icon from '@components/icon';
+import classnames from 'classnames';
+import { Button } from 'antd';
+import styles from './index.module.scss';
 
 interface ActionCardProps {
   title: string;
@@ -14,7 +14,7 @@ interface ActionCardProps {
 }
 
 function ActionCard(props: ActionCardProps) {
-  const { title, children, okText = "确认", onOk, onCancel, contentClassName } = props;
+  const { title, children, okText = '确认', onOk, onCancel, contentClassName } = props;
   const [loading, setLoading] = useState(false);
   const containerRef = useRef(null);
   const handleClick = useCallback(async () => {

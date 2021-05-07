@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState } from "react";
-import { loadMicroApp } from "qiankun";
-import Loading from "@components/loading";
-import classnames from "classnames";
-import useMatchRoute from "@hooks/use-match-route";
-import { envs } from "@consts";
-import styles from "./index.module.scss";
+import { useEffect, useRef, useState } from 'react';
+import { loadMicroApp } from 'qiankun';
+import Loading from '@components/loading';
+import classnames from 'classnames';
+import useMatchRoute from '@hooks/use-match-route';
+import { envs } from '@consts';
+import styles from './index.module.scss';
 
 export default function Orch() {
   const orchRef = useRef<HTMLDivElement>(null);
@@ -14,7 +14,7 @@ export default function Orch() {
   useEffect(() => {
     if (orchRef.current) {
       const orch = loadMicroApp({
-        name: "orch",
+        name: 'orch',
         entry: envs.ALGOR_ORCH_FRONTEND_ENTRY,
         container: orchRef.current,
         props: {

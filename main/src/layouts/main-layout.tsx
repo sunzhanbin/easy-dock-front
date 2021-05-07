@@ -1,19 +1,19 @@
-import React, { Suspense, useEffect, useMemo, useState } from "react";
-import { Route } from "react-router-dom";
-import Header from "@components/header";
-import Loading from "@components/loading";
-import { UserContext } from "@/context";
-import { axios } from "@utils";
-import { ROUTES, envs } from "@consts";
+import React, { Suspense, useEffect, useMemo, useState } from 'react';
+import { Route } from 'react-router-dom';
+import Header from '@components/header';
+import Loading from '@components/loading';
+import { UserContext } from '@/context';
+import { axios } from '@utils';
+import { ROUTES, envs } from '@consts';
 
 const ScenesListPage = React.lazy(
-  () => import(/* webpackChunkName: "scenes-list" */ "@/routes/scenes/main"),
+  () => import(/* webpackChunkName: "scenes-list" */ '@/routes/scenes/main'),
 );
 const ScenePage = React.lazy(
-  () => import(/* webpackChunkName: "scene-detail" */ "@/routes/scene-detail"),
+  () => import(/* webpackChunkName: "scene-detail" */ '@/routes/scene-detail'),
 );
 const IntegrationPage = React.lazy(
-  () => import(/* webpackChunkName: "integration" */ "@/routes/integration"),
+  () => import(/* webpackChunkName: "integration" */ '@/routes/integration'),
 );
 
 export default function PrimaryLayout() {
@@ -21,7 +21,7 @@ export default function PrimaryLayout() {
 
   useEffect(() => {
     axios
-      .get("/api/auth/v1/user/currentInfo", {
+      .get('/api/auth/v1/user/currentInfo', {
         baseURL: envs.REACT_APP_LOGIN_DOMAIN,
         silence: true,
       })

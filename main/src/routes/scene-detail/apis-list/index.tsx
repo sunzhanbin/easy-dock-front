@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useState } from "react";
-import { axios } from "@utils";
-import LoadMore from "@components/load-more";
-import styles from "./index.module.scss";
-import ApiCard, { ApiShape } from "./api";
-import { envs } from "@consts";
+import { useCallback, useEffect, useState } from 'react';
+import { axios } from '@utils';
+import LoadMore from '@components/load-more';
+import styles from './index.module.scss';
+import ApiCard, { ApiShape } from './api';
+import { envs } from '@consts';
 
 interface ApiListProps {
   value: ApiShape[];

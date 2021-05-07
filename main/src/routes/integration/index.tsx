@@ -1,9 +1,9 @@
-import { useMemo } from "react";
-import { Route, NavLink, useLocation } from "react-router-dom";
-import classnames from "classnames";
-import { MAIN_CONTENT_CLASSNAME, ROUTES } from "@consts";
-import OrchMicro from "./orch";
-import styles from "./index.module.scss";
+import { useMemo } from 'react';
+import { Route, NavLink, useLocation } from 'react-router-dom';
+import classnames from 'classnames';
+import { MAIN_CONTENT_CLASSNAME, ROUTES } from '@consts';
+import OrchMicro from './orch';
+import styles from './index.module.scss';
 
 export default function Integration() {
   const { pathname } = useLocation();

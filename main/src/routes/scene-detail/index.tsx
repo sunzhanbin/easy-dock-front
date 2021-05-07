@@ -1,15 +1,15 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useParams, useHistory } from "react-router-dom";
-import { Dropdown, Menu, Button, Drawer, message, Modal, Form, Input } from "antd";
-import classnames from "classnames";
-import { axios } from "@utils";
-import { MAIN_CONTENT_CLASSNAME, ROUTES, dynamicRoutes } from "@consts";
-import Icon from "@components/icon";
-import Loading from "@components/loading";
-import ApiList from "./apis-list";
-import ApiCard, { ApiShape } from "./apis-list/api";
-import { SceneShape as SceneBaseType } from "../scenes/types";
-import styles from "./index.module.scss";
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useParams, useHistory } from 'react-router-dom';
+import { Dropdown, Menu, Button, Drawer, message, Modal, Form, Input } from 'antd';
+import classnames from 'classnames';
+import { axios } from '@utils';
+import { MAIN_CONTENT_CLASSNAME, ROUTES, dynamicRoutes } from '@consts';
+import Icon from '@components/icon';
+import Loading from '@components/loading';
+import ApiList from './apis-list';
+import ApiCard, { ApiShape } from './apis-list/api';
+import { SceneShape as SceneBaseType } from '../scenes/types';
+import styles from './index.module.scss';
 
 interface SceneShape extends SceneBaseType {
   project: {
@@ -21,8 +21,8 @@ interface GridCloumnProps {
   icon: string;
   title: string;
   children?: React.ReactNode;
-  type: "page" | "data" | "api";
-  onAdd(type: GridCloumnProps["type"]): void;
+  type: 'page' | 'data' | 'api';
+  onAdd(type: GridCloumnProps['type']): void;
   loading?: boolean;
   className?: string;
 }
@@ -49,7 +49,7 @@ function GridColumn(props: GridCloumnProps) {
   const addApisNode = useMemo(() => {
     return (
       <div className={styles.add} onClick={handleAdd}>
-        <Icon type="xinzengjiacu" className={styles["add-icon"]} />
+        <Icon type="xinzengjiacu" className={styles['add-icon']} />
         <div>新增</div>
       </div>
     );
@@ -57,14 +57,14 @@ function GridColumn(props: GridCloumnProps) {
 
   return (
     <div className={classnames(styles.column, className)}>
-      <div className={styles["column-header"]}>
+      <div className={styles['column-header']}>
         <div className={styles.title}>
-          <Icon className={styles["column-icon"]} type={icon} />
+          <Icon className={styles['column-icon']} type={icon} />
           <div className={styles.text}>{title}</div>
         </div>
         {isEmpty || addApisNode}
       </div>
-      <div className={classnames(styles["column-content"], { [styles["column-empty"]]: isEmpty })}>
+      <div className={classnames(styles['column-content'], { [styles['column-empty']]: isEmpty })}>
         {(isEmpty && addApisNode) || children}
         {loading && <Loading />}
       </div>
@@ -160,7 +160,7 @@ export default function SceneDetail() {
         apiList: checkApis,
       });
 
-      message.success("添加成功");
+      message.success('添加成功');
       setShowAddApiDrawer(false);
       setSceneApis([...checkApis]);
     } finally {
@@ -182,14 +182,14 @@ export default function SceneDetail() {
         <div className={styles.group}>
           <Button
             type="default"
-            icon={<Icon type="zhucexinjiekou" className={styles["button-icon"]} />}
+            icon={<Icon type="zhucexinjiekou" className={styles['button-icon']} />}
             size="large"
             onClick={handleLinkToRegistApi}
           >
             注册新接口
           </Button>
           <Button
-            icon={<Icon type="bianpai" className={styles["button-icon"]} />}
+            icon={<Icon type="bianpai" className={styles['button-icon']} />}
             size="large"
             onClick={handleLinkToGenerationApi}
           >
@@ -211,9 +211,9 @@ export default function SceneDetail() {
 
   const handleDeleteApi = useCallback(
     async (api: ApiShape) => {
-      await axios.delete("/meta_api", { data: { metaId: api.id, sceneId } });
+      await axios.delete('/meta_api', { data: { metaId: api.id, sceneId } });
 
-      message.success("删除成功");
+      message.success('删除成功');
       setSceneApis((apis) => apis.filter((item) => item.id !== api.id));
     },
     [sceneId],
@@ -223,9 +223,9 @@ export default function SceneDetail() {
     setDeploying(true);
 
     try {
-      await axios.post("/scene/deploy", { sceneId, remark: form.getFieldValue("remark") });
+      await axios.post('/scene/deploy', { sceneId, remark: form.getFieldValue('remark') });
 
-      message.success("发布成功");
+      message.success('发布成功');
       setShowDeployModal(false);
     } finally {
       setDeploying(false);
@@ -309,8 +309,8 @@ export default function SceneDetail() {
         confirmLoading={deploying}
         visible={showDeployModal}
         width={352}
-        okButtonProps={{ size: "large" }}
-        cancelButtonProps={{ size: "large", type: "text" }}
+        okButtonProps={{ size: 'large' }}
+        cancelButtonProps={{ size: 'large', type: 'text' }}
       >
         <Form form={form} layout="vertical" className={styles.form}>
           <Form.Item label="发布说明" name="remark">

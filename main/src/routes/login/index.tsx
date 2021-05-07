@@ -1,25 +1,25 @@
-import { useCallback, useMemo } from "react";
-import { useHistory } from "react-router-dom";
-import { Form, Input } from "antd";
-import { UserOutlined, KeyOutlined } from "@ant-design/icons";
-import loginIcon from "@assets/login-icon.png";
-import logoIcon from "@assets/logo-icon.png";
-import { localStorage, axios } from "@utils";
-import { ROUTES, envs } from "@consts";
-import styles from "./index.module.scss";
+import { useCallback, useMemo } from 'react';
+import { useHistory } from 'react-router-dom';
+import { Form, Input } from 'antd';
+import { UserOutlined, KeyOutlined } from '@ant-design/icons';
+import loginIcon from '@assets/login-icon.png';
+import logoIcon from '@assets/logo-icon.png';
+import { localStorage, axios } from '@utils';
+import { ROUTES, envs } from '@consts';
+import styles from './index.module.scss';
 
 export default function Login() {
   const [form] = Form.useForm();
   const history = useHistory();
   const login = useCallback(async () => {
     const values = await form.validateFields();
-    const data = Object.assign({}, { loginType: 1, appCode: "easydock" }, values);
-    const loginResponse = await axios.post("/api/auth/v1/login", data, {
+    const data = Object.assign({}, { loginType: 1, appCode: 'easydock' }, values);
+    const loginResponse = await axios.post('/api/auth/v1/login', data, {
       baseURL: envs.REACT_APP_LOGIN_DOMAIN,
     });
 
     if (loginResponse.data) {
-      localStorage.set("token", loginResponse.data.token);
+      localStorage.set('token', loginResponse.data.token);
       axios.defaults.headers.auth = loginResponse.data.token;
 
       history.replace(ROUTES.INDEX);
@@ -32,7 +32,7 @@ export default function Login() {
         required: true,
         validator(_: any, value: string) {
           if (!value) {
-            return Promise.reject(new Error("用户名必填"));
+            return Promise.reject(new Error('用户名必填'));
           }
 
           return Promise.resolve();
@@ -47,7 +47,7 @@ export default function Login() {
         required: true,
         validator(_: any, value: string) {
           if (!value) {
-            return Promise.reject(new Error("用户密码必填"));
+            return Promise.reject(new Error('用户密码必填'));
           }
 
           return Promise.resolve();
@@ -77,7 +77,7 @@ export default function Login() {
             <Input placeholder="请输入密码" type="password" prefix={<KeyOutlined />} size="large" />
           </Form.Item>
         </Form>
-        <img className={styles["login-icon"]} src={loginIcon} alt="login" onClick={login} />
+        <img className={styles['login-icon']} src={loginIcon} alt="login" onClick={login} />
       </div>
     </div>
   );

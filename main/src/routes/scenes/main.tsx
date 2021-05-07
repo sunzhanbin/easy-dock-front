@@ -1,19 +1,19 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { Link, useHistory } from "react-router-dom";
-import { Button, message } from "antd";
-import { FormInstance } from "antd/lib/form";
-import throttle from "lodash/throttle";
-import classnames from "classnames";
-import { Popover, Icon, Loading } from "@components";
-import Project from "./project";
-import Form from "./project/form";
-import emptyImage from "@assets/empty.png";
-import { axios } from "@utils";
-import { MAIN_CONTENT_CLASSNAME, dynamicRoutes } from "@consts";
-import Scene, { SceneProps } from "./scene";
-import EditScene, { EditSceneProps } from "./edit-scene";
-import { ProjectShape, SceneShape } from "./types";
-import styles from "./index.module.scss";
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
+import { Button, message } from 'antd';
+import { FormInstance } from 'antd/lib/form';
+import throttle from 'lodash/throttle';
+import classnames from 'classnames';
+import { Popover, Icon, Loading } from '@components';
+import Project from './project';
+import Form from './project/form';
+import emptyImage from '@assets/empty.png';
+import { axios } from '@utils';
+import { MAIN_CONTENT_CLASSNAME, dynamicRoutes } from '@consts';
+import Scene, { SceneProps } from './scene';
+import EditScene, { EditSceneProps } from './edit-scene';
+import { ProjectShape, SceneShape } from './types';
+import styles from './index.module.scss';
 
 export default function Home() {
   const history = useHistory();
@@ -30,7 +30,7 @@ export default function Home() {
     setFetching(true);
 
     try {
-      const { data } = await axios.get<ProjectShape[]>("/project/list/all");
+      const { data } = await axios.get<ProjectShape[]>('/project/list/all');
       const list: ProjectShape[] = data.map((item) => {
         return {
           id: item.id,
@@ -63,10 +63,10 @@ export default function Home() {
         e.preventDefault();
       }, 50);
 
-      container.addEventListener("wheel", scroll, false);
+      container.addEventListener('wheel', scroll, false);
 
       return () => {
-        container.removeEventListener("wheel", scroll);
+        container.removeEventListener('wheel', scroll);
       };
     }
   }, [hasProjects]);
@@ -108,15 +108,15 @@ export default function Home() {
   const handleEditProjectSubmit = useCallback(async (values) => {
     if (values.id) {
       // 编辑项目
-      await axios.put("/project", values);
+      await axios.put('/project', values);
 
-      message.success("修改成功");
+      message.success('修改成功');
       fetchProjectListRef.current();
     } else {
       // 新增项目
-      const { data } = await axios.post("/project", values);
+      const { data } = await axios.post('/project', values);
 
-      message.success("添加成功");
+      message.success('添加成功');
 
       setActiveProjectId(data.id);
       fetchProjectListRef.current();
@@ -132,7 +132,7 @@ export default function Home() {
   const handleDeleteProject = useCallback(async (id: number) => {
     await axios.delete(`/project/${id}`);
 
-    message.success("删除成功");
+    message.success('删除成功');
     fetchProjectListRef.current();
   }, []);
 
@@ -150,18 +150,18 @@ export default function Home() {
     setShowEditSceneModal(false);
   }, []);
 
-  const handleSubmitScene: EditSceneProps["onSubmit"] = useCallback(
+  const handleSubmitScene: EditSceneProps['onSubmit'] = useCallback(
     async (data) => {
       if (data.id) {
         // 编辑
-        await axios.put("/scene", Object.assign({}, data, { projectId: activeProjectId }));
+        await axios.put('/scene', Object.assign({}, data, { projectId: activeProjectId }));
 
-        message.success("场景修改成功");
+        message.success('场景修改成功');
       } else {
         // 新增
-        await axios.post("/scene", Object.assign({}, data, { projectId: activeProjectId }));
+        await axios.post('/scene', Object.assign({}, data, { projectId: activeProjectId }));
 
-        message.success("场景创建成功");
+        message.success('场景创建成功');
       }
 
       setShowEditSceneModal(false);
@@ -172,10 +172,10 @@ export default function Home() {
     [activeProjectId, fetchSceneList],
   );
 
-  const handleModifySceneStatus: SceneProps["onStatusChange"] = useCallback(async (status, id) => {
-    await axios.put("/scene/status", { status, id });
+  const handleModifySceneStatus: SceneProps['onStatusChange'] = useCallback(async (status, id) => {
+    await axios.put('/scene/status', { status, id });
 
-    message.success("修改成功");
+    message.success('修改成功');
 
     setScenes((scenes) => {
       return scenes.map((scene) => {
@@ -197,7 +197,7 @@ export default function Home() {
 
   const handledeleteScene = useCallback(async (data: SceneShape) => {
     await axios.delete(`/scene/${data.id}`);
-    message.success("删除成功");
+    message.success('删除成功');
 
     setScenes((scenes) => {
       return scenes.filter((scene) => scene.id !== data.id);
@@ -226,7 +226,7 @@ export default function Home() {
               );
             })}
           </div>
-          <div className={styles["actions-group"]}>
+          <div className={styles['actions-group']}>
             <div className={styles.mask}></div>
             <Popover
               placement="bottom"
@@ -266,7 +266,7 @@ export default function Home() {
       {projects.length > 0 && (
         <div className={styles.content}>
           <div
-            className={classnames(styles.scenes, { [styles["no-scene"]]: scenes.length === 0 })}
+            className={classnames(styles.scenes, { [styles['no-scene']]: scenes.length === 0 })}
             id="scenes-list"
           >
             <div className={classnames(styles.card, styles.scene)}>

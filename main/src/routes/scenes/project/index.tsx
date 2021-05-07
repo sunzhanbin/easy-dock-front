@@ -1,17 +1,17 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
-import classnames from "classnames";
-import Icon from "@components/icon";
-import Popover from "@/components/popover";
-import PopConfirm from "@/components/popover-confirm";
-import Form, { FormType } from "./form";
-import { ProjectShape } from "../types";
-import styles from "./index.module.scss";
+import React, { useCallback, useMemo, useRef, useState } from 'react';
+import classnames from 'classnames';
+import Icon from '@components/icon';
+import Popover from '@/components/popover';
+import PopConfirm from '@/components/popover-confirm';
+import Form, { FormType } from './form';
+import { ProjectShape } from '../types';
+import styles from './index.module.scss';
 
 interface ProjectProps {
   data: ProjectShape;
   isActive: boolean;
   onSelected(id: number): void;
-  onUpdate(values: ProjectShape & Omit<ProjectShape, "id">): Promise<void>;
+  onUpdate(values: ProjectShape & Omit<ProjectShape, 'id'>): Promise<void>;
   onDelete(id: number): Promise<void>;
   className?: string;
 }
@@ -70,7 +70,7 @@ const Project = (props: ProjectProps) => {
           onVisibleChange={setCurrentProjectIsEditing}
           getPopupContainer={getPopupContainer}
         >
-          <div className={styles["edit-icon-container"]}>
+          <div className={styles['edit-icon-container']}>
             <Icon
               type="bianji"
               className={classnames(styles.icon, { [styles.active]: currentProjectIsEditing })}

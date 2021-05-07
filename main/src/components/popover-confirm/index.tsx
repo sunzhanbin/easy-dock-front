@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Popover, Button } from "antd";
-import { ExclamationCircleFilled } from "@ant-design/icons";
-import { AbstractTooltipProps } from "antd/lib/tooltip";
-import { AsyncButton } from "@components";
-import styles from "./index.module.scss";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Popover, Button } from 'antd';
+import { ExclamationCircleFilled } from '@ant-design/icons';
+import { AbstractTooltipProps } from 'antd/lib/tooltip';
+import { AsyncButton } from '@components';
+import styles from './index.module.scss';
 
 interface PopoverProps {
   title: string;
@@ -11,24 +11,24 @@ interface PopoverProps {
   content?: React.ReactNode;
   okText?: string;
   onConfirm?(): Promise<void> | void;
-  placement?: AbstractTooltipProps["placement"];
-  trigger?: AbstractTooltipProps["trigger"];
+  placement?: AbstractTooltipProps['placement'];
+  trigger?: AbstractTooltipProps['trigger'];
   visible?: boolean;
   onVisibleChange?(visible: boolean): void;
-  getPopupContainer?: AbstractTooltipProps["getTooltipContainer"];
+  getPopupContainer?: AbstractTooltipProps['getTooltipContainer'];
 }
 
-const defaultGetPopupContainer: AbstractTooltipProps["getTooltipContainer"] = (c) => c;
+const defaultGetPopupContainer: AbstractTooltipProps['getTooltipContainer'] = (c) => c;
 
 function EnnPopover(props: PopoverProps) {
   const {
     title,
     children,
-    okText = "确认",
+    okText = '确认',
     onConfirm,
     content,
     placement,
-    trigger = "click",
+    trigger = 'click',
     onVisibleChange,
     visible,
     getPopupContainer = defaultGetPopupContainer,
@@ -89,7 +89,7 @@ function EnnPopover(props: PopoverProps) {
   }, [content, handleCancel, okText, handleClickOk, title]);
 
   // 受控模式下由外层接管
-  const isControlled = typeof onVisibleChange === "function";
+  const isControlled = typeof onVisibleChange === 'function';
 
   return (
     <Popover

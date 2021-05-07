@@ -1,10 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Modal, Form, Input, Row, Col } from "antd";
-import { getSceneImageUrl } from "@utils";
-import { SCENE_IAMGES } from "@consts";
-import Icon from "@components/icon";
-import { SceneShape } from "../types";
-import styles from "./index.module.scss";
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Modal, Form, Input, Row, Col } from 'antd';
+import { getSceneImageUrl } from '@utils';
+import { SCENE_IAMGES } from '@consts';
+import Icon from '@components/icon';
+import { SceneShape } from '../types';
+import styles from './index.module.scss';
 
 interface SelectImageProps {
   value?: string;
@@ -44,7 +44,7 @@ const SelectImage = React.memo(function SelectImage(props: SelectImageProps) {
 export interface EditSceneProps {
   data?: SceneShape;
   visible: boolean;
-  onSubmit(scene: SceneShape & Omit<SceneShape, "id">): Promise<void>;
+  onSubmit(scene: SceneShape & Omit<SceneShape, 'id'>): Promise<void>;
   onCancel(): void;
 }
 
@@ -67,7 +67,7 @@ function EditScene(props: EditSceneProps) {
       {
         validator(_: any, value: string) {
           if (!value || value.length > 50 || /[^\u4e00-\u9fa5_\d\w]/.test(value)) {
-            return Promise.reject(new Error("场景名为1-50位汉字、字母、数字、下划线"));
+            return Promise.reject(new Error('场景名为1-50位汉字、字母、数字、下划线'));
           } else {
             return Promise.resolve();
           }
@@ -92,9 +92,9 @@ function EditScene(props: EditSceneProps) {
       });
     } else {
       form.setFieldsValue({
-        name: "",
+        name: '',
         icon: SCENE_IAMGES.scene1,
-        remark: "",
+        remark: '',
       });
     }
   }, [form, data, visible]);
@@ -102,15 +102,15 @@ function EditScene(props: EditSceneProps) {
   return (
     <Modal
       visible={visible}
-      title={data ? "编辑场景" : "新增场景"}
+      title={data ? '编辑场景' : '新增场景'}
       onOk={handleSubmit}
       onCancel={onCancel}
       confirmLoading={loading}
       width={576}
       okText="确认"
       cancelText="取消"
-      cancelButtonProps={{ type: "text", size: "large" }}
-      okButtonProps={{ size: "large" }}
+      cancelButtonProps={{ type: 'text', size: 'large' }}
+      okButtonProps={{ size: 'large' }}
       destroyOnClose
       maskClosable={false}
       keyboard={false}

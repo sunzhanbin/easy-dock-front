@@ -1,7 +1,7 @@
-import React from "react";
-import classnames from "classnames";
-import "./iconfont";
-import styles from "./index.module.scss";
+import React from 'react';
+import classnames from 'classnames';
+import './iconfont';
+import styles from './index.module.scss';
 
 interface IconProps {
   type: string;

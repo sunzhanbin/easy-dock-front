@@ -1,9 +1,9 @@
-import React, { useCallback, useState } from "react";
-import { Checkbox } from "antd";
-import classnames from "classnames";
-import Popover from "@/components/popover";
-import Icon from "@components/icon";
-import styles from "./index.module.scss";
+import React, { useCallback, useState } from 'react';
+import { Checkbox } from 'antd';
+import classnames from 'classnames';
+import Popover from '@/components/popover';
+import Icon from '@components/icon';
+import styles from './index.module.scss';
 
 interface CardProps {
   title: string;
@@ -19,7 +19,7 @@ export default function Card(props: CardProps) {
   const { checked, className, onChecked, state, title, children, onDelete } = props;
   const [showDeletePopover, setShowDeletePopover] = useState(false);
   const handleChecked = useCallback(() => {
-    if (typeof onChecked === "function") {
+    if (typeof onChecked === 'function') {
       onChecked(!checked);
     }
   }, [onChecked, checked]);
@@ -30,7 +30,7 @@ export default function Card(props: CardProps) {
         styles.card,
         className,
         { [styles.checkable]: Boolean(onChecked) },
-        { [styles["show-delete"]]: showDeletePopover },
+        { [styles['show-delete']]: showDeletePopover },
       )}
       onClick={handleChecked}
     >

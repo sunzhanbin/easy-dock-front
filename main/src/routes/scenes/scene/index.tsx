@@ -1,11 +1,11 @@
-import { useCallback, useState, useMemo, useRef } from "react";
-import { Switch, Dropdown, Tooltip } from "antd";
-import classnames from "classnames";
-import { Popconfirm, Icon } from "@components";
-import { getSceneImageUrl } from "@utils";
-import { stopPropagation } from "@consts";
-import { SceneShape } from "../types";
-import styles from "./index.module.scss";
+import { useCallback, useState, useMemo, useRef } from 'react';
+import { Switch, Dropdown, Tooltip } from 'antd';
+import classnames from 'classnames';
+import { Popconfirm, Icon } from '@components';
+import { getSceneImageUrl } from '@utils';
+import { stopPropagation } from '@consts';
+import { SceneShape } from '../types';
+import styles from './index.module.scss';
 
 export interface SceneProps {
   data: SceneShape;
@@ -39,7 +39,7 @@ export default function Scene(props: SceneProps) {
       let triggerNode: any = event.target;
 
       while (triggerNode && triggerNode.classList) {
-        if (triggerNode.classList.contains("ant-popover-content")) {
+        if (triggerNode.classList.contains('ant-popover-content')) {
           canTriggerCardTap = false;
           break;
         } else if (triggerNode.classList.contains(styles.card)) {
@@ -120,14 +120,14 @@ export default function Scene(props: SceneProps) {
             <div className={styles.remark}>{data.remark}</div>
           </Tooltip>
         ) : (
-          <div className={styles.remark}>{data.remark || "这是一个场景"}</div>
+          <div className={styles.remark}>{data.remark || '这是一个场景'}</div>
         )}
         <div className={styles.footer}>
           {data.version ? (
             <Popconfirm
               title="提示"
               key="switch-status"
-              content={`确认${data.status === 1 ? "关闭" : "启用"}所选场景吗?`}
+              content={`确认${data.status === 1 ? '关闭' : '启用'}所选场景吗?`}
               onConfirm={handleStatusChange}
               getPopupContainer={getPopupContainer}
             >

@@ -1,21 +1,21 @@
-import { useCallback, useContext, useMemo } from "react";
-import { NavLink, Link, NavLinkProps, useHistory } from "react-router-dom";
-import classnames from "classnames";
-import { Avatar, Dropdown, Menu } from "antd";
-import { UserContext } from "@/context";
-import { axios, localStorage } from "@utils";
-import { ROUTES, envs } from "@consts";
-import logo from "@assets/logo.png";
-import styles from "./header.module.scss";
+import { useCallback, useContext, useMemo } from 'react';
+import { NavLink, Link, NavLinkProps, useHistory } from 'react-router-dom';
+import classnames from 'classnames';
+import { Avatar, Dropdown, Menu } from 'antd';
+import { UserContext } from '@/context';
+import { axios, localStorage } from '@utils';
+import { ROUTES, envs } from '@consts';
+import logo from '@assets/logo.png';
+import styles from './header.module.scss';
 
 export default function AppHeader() {
   const loginUser = useContext(UserContext);
   const history = useHistory();
   const logout = useCallback(async () => {
-    await axios.get("/api/auth/v1/logout", { baseURL: envs.REACT_APP_LOGIN_DOMAIN });
+    await axios.get('/api/auth/v1/logout', { baseURL: envs.REACT_APP_LOGIN_DOMAIN });
 
     delete axios.defaults.headers.auth;
-    localStorage.clear("token");
+    localStorage.clear('token');
     history.replace(ROUTES.LOGIN);
   }, [history]);
 
@@ -29,10 +29,10 @@ export default function AppHeader() {
     );
   }, [logout]);
 
-  const indexNavIsActive: NavLinkProps["isActive"] = useCallback((match, location) => {
+  const indexNavIsActive: NavLinkProps['isActive'] = useCallback((match, location) => {
     if (match) {
       return true;
-    } else if (location.pathname === "/") {
+    } else if (location.pathname === '/') {
       return true;
     } else {
       return false;
@@ -41,7 +41,7 @@ export default function AppHeader() {
 
   return (
     <div className={styles.header}>
-      <div className={classnames("easy-dock-content", styles.content)}>
+      <div className={classnames('easy-dock-content', styles.content)}>
         <Link to="/" className={styles.logo}>
           <img src={logo} alt="logo" />
         </Link>
