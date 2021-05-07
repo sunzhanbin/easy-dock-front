@@ -1,5 +1,5 @@
 {
-  "packages": ["packages/components/*","packages/core", "apps/*"],
+  "packages": ["packages/core", "main"],
   "version": "independent",
   "changelog": {
     "labels": {

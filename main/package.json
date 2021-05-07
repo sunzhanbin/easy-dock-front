@@ -1,5 +1,5 @@
 {
-  "name": "easy-dock-front",
+  "name": "easy-dock-main",
   "version": "0.0.2",
   "private": true,
   "scripts": {
@@ -32,9 +32,8 @@
     "lodash": "^4.17.21",
     "qiankun": "^2.4.0",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2",
     "react-beautiful-dnd": "^13.1.0",
-    "react-loadable": "^5.5.0",
+    "react-dom": "^17.0.2",
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
@@ -43,21 +42,18 @@
     "use-immer": "^0.5.1"
   },
   "devDependencies": {
-    "@types/node": "^12.0.0",
-    "@types/react": "^17.0.0",
-    "@types/react-dom": "^17.0.0",
     "@rescripts/cli": "^0.0.16",
     "@types/classnames": "^2.3.1",
     "@types/lodash": "^4.14.168",
+    "@types/react": "^17.0.0",
     "@types/react-beautiful-dnd": "^13.0.0",
-    "@types/react-loadable": "^5.5.5",
+    "@types/react-dom": "^17.0.0",
     "@types/react-redux": "^7.1.7",
     "@types/react-router-dom": "^5.1.7",
     "@types/webpack-env": "^1.16.0",
     "env-cmd": "^10.1.0",
     "filemanager-webpack-plugin": "^4.0.0",
     "node-sass": "^5.0.0",
-    "rescripts": "0.0.1-security",
     "sass-loader": "^11.0.1"
   }
 }
