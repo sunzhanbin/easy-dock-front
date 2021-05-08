@@ -6,3 +6,4 @@ node_modules/
 **/.eslintcache
 /node_modules
 **/build
+*SNAPSHOT.tar.gz
