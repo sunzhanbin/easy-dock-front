@@ -1,5 +1,5 @@
 {
-  "packages": ["packages/core", "main"],
+  "packages": ["packages/core", "apps/*"],
   "version": "independent",
   "changelog": {
     "labels": {

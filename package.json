@@ -8,11 +8,13 @@
     "bootstrap": "lerna bootstrap",
     "publish": "lerna publish",
     "clean": "lerna clean",
-    "eslint": "eslint main/src --ext .js,.jsx,.ts,.tsx"
+    "eslint": "eslint apps/*/src --ext .js,.jsx,.ts,.tsx"
   },
   "devDependencies": {
     "@commitlint/cli": "12.1.1",
     "@commitlint/config-conventional": "12.1.1",
+    "@typescript-eslint/parser": "4.22.1",
+    "babel-eslint": "10.1.0",
     "eslint": "7.25.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-config-react-app": "6.0.0",
@@ -39,7 +41,7 @@
   },
   "workspaces": [
     "packages/core",
-    "main"
+    "apps/*"
   ],
   "engines": {
     "node": ">= 10.0"
