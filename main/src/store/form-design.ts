@@ -1,14 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { uniqueId } from 'lodash';
 type BaseField = {
-  id: string;
+  id: string | undefined;
+  version: string;
   title: string;
-  desc?: string;
+  desc: string | null;
   required: boolean;
-  colSpace?: 1 | 2 | 3 | 4;
-  defaultValue?: string | number;
+  colSpace: 1 | 2 | 3 | 4 | undefined;
+  defaultValue: string | number | undefined | null;
   disabled: boolean;
-  value?: string | number;
+  value: string | number | null;
 };
 
 type AppBindField = {
@@ -92,9 +93,9 @@ const formDesign = createSlice({
     comAdded: {
       reducer: (state, action: PayloadAction<{ com: FormField; rowIndex: number }>) => {
         const { com, rowIndex } = action.payload;
-        if (state.byId[com.id]) return state;
-        state.byId[com.id] = com;
-        state.layout.splice(rowIndex, 0, [com.id]);
+        if (state.byId[com.id!]) return state;
+        state.byId[com.id!] = com;
+        state.layout.splice(rowIndex, 0, [com.id!]);
         return state;
       },
       prepare: (com: FormField, rowIndex: number) => {
