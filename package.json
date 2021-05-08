@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "start": "lerna run start",
-    "build": "lerna run build",
+    "build": "lerna bootstrap && lerna run build",
     "precommit": "lint-staged",
     "bootstrap": "lerna bootstrap",
     "publish": "lerna publish",
@@ -13,6 +13,8 @@
   "devDependencies": {
     "@commitlint/cli": "12.1.1",
     "@commitlint/config-conventional": "12.1.1",
+    "@typescript-eslint/parser": "4.22.1",
+    "babel-eslint": "10.1.0",
     "eslint": "7.25.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-config-react-app": "6.0.0",
