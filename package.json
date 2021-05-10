@@ -2,7 +2,7 @@
   "name": "easy-dock-root",
   "private": true,
   "scripts": {
-    "start": "lerna run start",
+    "start": "lerna run start --scope=easy-flow",
     "build": "lerna bootstrap && lerna run build",
     "precommit": "lint-staged",
     "bootstrap": "lerna bootstrap",
@@ -43,7 +43,7 @@
   },
   "workspaces": [
     "packages/core",
-    "apps/easy-flow"
+    "apps/*"
   ],
   "engines": {
     "node": ">= 10.0"

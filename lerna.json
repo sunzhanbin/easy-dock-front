@@ -1,5 +1,5 @@
 {
-  "packages": ["packages/core", "apps/easy-flow"],
+  "packages": ["packages/core", "apps/*"],
   "version": "independent",
   "changelog": {
     "labels": {
