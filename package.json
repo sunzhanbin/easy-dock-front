@@ -43,7 +43,7 @@
   },
   "workspaces": [
     "packages/core",
-    "apps/*"
+    "apps/easy-flow"
   ],
   "engines": {
     "node": ">= 10.0"
