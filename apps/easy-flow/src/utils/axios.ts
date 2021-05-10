@@ -1,6 +1,6 @@
 import { message } from 'antd';
 import Axios from 'axios';
-import { ROUTES } from '../consts';
+import { ROUTES } from '@consts';
 import history from './history';
 import { localStorage } from './localstorage';
 
