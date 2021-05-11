@@ -1,6 +1,6 @@
 const staticRoutes = {
   INDEX: '/',
-  SCENE_EDITOR: '/scene-editor/:sceneId?',
+  SCENE_EDITOR: '/flow-editor/:sceneId?',
 };
 
 export default staticRoutes;

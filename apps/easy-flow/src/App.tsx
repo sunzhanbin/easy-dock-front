@@ -2,7 +2,7 @@ import React from 'react';
 import logo from './logo.svg';
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
 import { ROUTES } from './consts';
-import SceneEditor from './features/scene-editor';
+import SceneEditor from './features/flow-editor';
 import 'antd/dist/antd.css';
 import './styles/base.scss';
 import './App.css';

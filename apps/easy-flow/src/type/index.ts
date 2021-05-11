@@ -9,19 +9,32 @@ export type BaseField = {
   colSpace: 1 | 2 | 3 | 4 | undefined;
   defaultValue: string | number | undefined | null;
   disabled: boolean;
-  editable: boolean;
   readonly: boolean;
   visible: boolean;
   value: string | number | null;
 };
 
+export type SchemaConfigItem = {
+  key: string;
+  label?: string;
+  type: string;
+  defaultValue?: string | number | boolean;
+  children?: SchemaConfigItem;
+  direction?: 'vertical | horizontal';
+};
+
+export type SchemaItem = {
+  baseInfo: {
+    type: FieldType;
+    name: string;
+    icon: string;
+    category: string;
+  };
+  config: SchemaConfigItem[];
+};
+
 export type Schema = {
-  [k in FieldType]: {
-    key: string;
-    label: string;
-    type: string;
-    direction: 'vertical | horizontal';
-  }[];
+  [k in FieldType]: SchemaItem;
 };
 
 export type AppBindField = {
