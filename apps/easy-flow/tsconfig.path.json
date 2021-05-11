@@ -13,8 +13,8 @@
       "@type/*": ["src/type/*"],
       "@utils": ["src/utils"],
       "@utils/*": ["src/utils/*"],
-      "@mock": ["src/mock"],
-      "@mock/*": ["src/mock/*"],
+      "@config": ["src/config"],
+      "@config/*": ["src/config/*"],
       "@app": ["src/app"],
       "@app/*": ["src/app/*"]
     }

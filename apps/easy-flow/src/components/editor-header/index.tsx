@@ -3,7 +3,7 @@ import { Steps, Button } from 'antd';
 import styled from 'styled-components';
 import { useState } from 'react';
 import { useHistory, useRouteMatch, Link } from 'react-router-dom';
-import logo from '../../assets//logo.png';
+import logo from '@assets/logo.png';
 const { Step } = Steps;
 
 const HeaderContainer = styled.div`

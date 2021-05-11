@@ -1,4 +1,4 @@
-import { FC, memo } from 'react';
+import { FC, memo, useState } from 'react';
 import styled from 'styled-components';
 
 const ToolboxContainer = styled.div`
@@ -8,6 +8,7 @@ const ToolboxContainer = styled.div`
 `;
 
 const Toolbox: FC<{}> = () => {
+  const [state, setstate] = useState([]);
   return <ToolboxContainer>这是工具箱</ToolboxContainer>;
 };
 

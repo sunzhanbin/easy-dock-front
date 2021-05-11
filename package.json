@@ -2,7 +2,8 @@
   "name": "easy-dock-root",
   "private": true,
   "scripts": {
-    "start": "lerna run start --scope=easy-flow",
+    "start": "lerna run start",
+    "start:bpm": "lerna run start --scope=easy-flow",
     "build": "lerna bootstrap && lerna run build",
     "precommit": "lint-staged",
     "bootstrap": "lerna bootstrap",

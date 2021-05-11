@@ -3,7 +3,7 @@ import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import EditorHeader from '@components/editor-header';
 import FormDesign from './form-design';
 
-const SceneEditor: FC = () => {
+const BpmEditor: FC = () => {
   const match = useRouteMatch();
   return (
     <>
@@ -16,4 +16,4 @@ const SceneEditor: FC = () => {
   );
 };
 
-export default memo(SceneEditor);
+export default memo(BpmEditor);
