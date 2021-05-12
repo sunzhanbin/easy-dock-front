@@ -1,8 +1,10 @@
-import { FC, memo, useCallback } from 'react';
+import { FC, memo, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import DesignZone from './design-zone';
 import Toolbox from './toolbox';
 import { DragDropContext } from 'react-beautiful-dnd';
+import { useAppDispatch } from '@app/hooks';
+import { loadComponents } from './toolbox-reducer';
 const WorkbenchContainer = styled.div`
   width: 100%;
   display: flex;
@@ -11,6 +13,10 @@ const WorkbenchContainer = styled.div`
 `;
 
 const FormDesign: FC<{}> = () => {
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(loadComponents());
+  }, []);
   const onDragEnd = useCallback(() => {}, []);
   const onDragStart = useCallback(() => {}, []);
   const onDragUpdate = useCallback(() => {}, []);

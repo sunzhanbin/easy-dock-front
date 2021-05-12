@@ -1,9 +1,11 @@
 import { resolve } from 'dns';
 import components from '@/config/components';
-export function fetchComponents() {
+import { Schema, SchemaConfigItem } from '@type';
+
+export function fetchComponents(): Promise<Schema> {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      resolve(components);
-    }, 1000);
+      resolve(<Schema>components);
+    }, 0);
   });
 }

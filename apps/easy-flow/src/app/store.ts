@@ -1,9 +1,10 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import counterReducer from '../features/counter/counterSlice';
-
+import formDesignReducer from '../features/bpm-editor/form-design/formdesign-slice';
 export const store = configureStore({
   reducer: {
     counter: counterReducer,
+    formDesign: formDesignReducer,
   },
 });
 

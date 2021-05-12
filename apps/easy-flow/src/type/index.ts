@@ -25,6 +25,7 @@ export type SchemaConfigItem = {
 
 export type SchemaItem = {
   baseInfo: {
+    version: string;
     type: FieldType;
     name: string;
     icon: string;
@@ -34,18 +35,20 @@ export type SchemaItem = {
 };
 
 export type Schema = {
-  [k in FieldType]: SchemaItem;
+  [k in FieldType]?: SchemaItem;
 };
 
 export type AppBindField = {
   type: 'app';
   appId: string;
   fieldId: string;
+  next: FieldValueSource;
 };
 
 export type CustomField = {
   type: 'custom';
   data: FieldOption[];
+  next: FieldValueSource;
 };
 
 export type FieldValueSource = CustomField | AppBindField;

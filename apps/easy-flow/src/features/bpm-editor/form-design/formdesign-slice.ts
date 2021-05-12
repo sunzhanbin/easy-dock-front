@@ -8,7 +8,7 @@ import {
   exchange as exchangeReducer,
 } from './formzone-reducer';
 import { FormDesign } from '@/type';
-import { fetchComponents } from './toolbox/toolboxApi';
+import { loadComponents } from './toolbox-reducer';
 
 let initialState: FormDesign = {} as FormDesign;
 
@@ -22,7 +22,11 @@ const formDesign = createSlice({
     moveUp: moveUpReducer,
     exchange: exchangeReducer,
   },
-  extraReducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(loadComponents.fulfilled, (state, action) => {
+      state.schema = action.payload;
+    });
+  },
 });
 
 export const { comAdded, moveDown, moveRow, moveUp } = formDesign.actions;
