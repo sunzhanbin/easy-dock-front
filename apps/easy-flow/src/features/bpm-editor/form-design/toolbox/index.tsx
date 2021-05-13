@@ -5,6 +5,7 @@ import { toolboxSelector } from '../toolbox-reducer';
 import { map } from 'lodash';
 import ToolboxItem from '@components/toolbox-item';
 import Loading from '@components/loading';
+import { Draggable } from 'react-beautiful-dnd';
 
 const ToolboxContainer = styled.div`
   width: 275px;

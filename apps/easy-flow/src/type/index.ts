@@ -42,13 +42,11 @@ export type AppBindField = {
   type: 'app';
   appId: string;
   fieldId: string;
-  next: FieldValueSource;
 };
 
 export type CustomField = {
   type: 'custom';
   data: FieldOption[];
-  next: FieldValueSource;
 };
 
 export type FieldValueSource = CustomField | AppBindField;
@@ -77,7 +75,7 @@ export type DataFilterCondition = {
 
 export type DataBaseField = {
   datasource: FieldValueSource;
-  dataFilter: DataFilterCondition[] | null;
+  dataFilter?: DataFilterCondition[] | null;
 };
 
 export type InputBaseField = {
