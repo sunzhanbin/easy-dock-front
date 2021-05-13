@@ -28,7 +28,7 @@ const StepContainer = styled.div``;
 
 const EditorHeader: FC = () => {
   const match = useRouteMatch();
-  const routes = [`${match.url}/form-design`, `${match.url}/flow-design`];
+  const routes = [`${match.url}/form-design`, `${match.url}flow-design`];
   const history = useHistory();
   const [current, setCurrent] = useState(0);
   const onChange = useCallback((current: number) => {

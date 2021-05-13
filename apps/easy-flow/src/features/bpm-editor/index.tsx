@@ -4,6 +4,7 @@ import EditorHeader from '@components/editor-header';
 import FormDesign from './form-design';
 import { useAppDispatch } from '@app/hooks';
 import { loadComponents } from './form-design/toolbox-reducer';
+import FlowDesign from './flow-design';
 
 const BpmEditor: FC = () => {
   const match = useRouteMatch();
@@ -17,7 +18,7 @@ const BpmEditor: FC = () => {
       <EditorHeader></EditorHeader>
       <Switch>
         <Route path={`${match.path}/form-design`} component={FormDesign}></Route>
-        <Route path={`${match.path}`} component={FormDesign}></Route>
+        <Route path={`${match.path}flow-design`} component={FlowDesign}></Route>
       </Switch>
     </>
   );
