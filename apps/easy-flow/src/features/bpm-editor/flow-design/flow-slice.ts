@@ -1,7 +1,14 @@
-import { createSlice, PayloadAction, createAsyncThunk, createSelector } from '@reduxjs/toolkit';
+import {
+  createSlice,
+  PayloadAction,
+  createAsyncThunk,
+  createSelector,
+  createDraftSafeSelector,
+} from '@reduxjs/toolkit';
 import { axios } from '@utils';
 import { BaseNode, Flow, AllNode, NodeType, StartNode, FinishNode } from './types';
 import { RootState } from '@app/store';
+import { createInitialFlow } from './util';
 
 if (process.env.NODE_ENV === 'development') {
   axios.defaults.baseURL = '/';
@@ -18,6 +25,22 @@ const flowInitial: FlowType = {
   data: null,
 };
 
+function findNodeById(start: AllNode | null, nodeId: string): AllNode | null {
+  while (start) {
+    if (start.id === nodeId) {
+      return start;
+    } else if (start.type === NodeType.BranchNode) {
+      start.branches.forEach((branch) => {
+        findNodeById(branch.next, nodeId);
+      });
+    } else {
+      findNodeById(start.next, nodeId);
+    }
+  }
+
+  return null;
+}
+
 const flow = createSlice({
   name: 'flow',
   initialState: flowInitial,
@@ -31,7 +54,7 @@ const flow = createSlice({
       return state;
     },
     setInitialFlow(state, { payload: data }: PayloadAction<Flow>) {
-      state = { ...state, data };
+      state.data = data;
 
       return state;
     },
@@ -41,71 +64,74 @@ const flow = createSlice({
         payload,
       }: PayloadAction<{ prevId: string; node: Exclude<AllNode, StartNode | FinishNode> }>,
     ) {
-      let success = false;
-      let tmpNode: AllNode = state.data!;
+      const { data } = state;
+      const { prevId, node } = payload;
+      const prevNode = findNodeById(data, prevId);
+
+      if (prevNode) {
+        node.next = prevNode.next;
+        prevNode.next = node;
+      }
+
+      return state;
+    },
+    updateNode(state, { payload }: PayloadAction<{ prevId: string; node: AllNode }>) {
+      if (!state.data) return state;
+
       const { prevId, node } = payload;
 
-      while (tmpNode && tmpNode.type !== NodeType.FinishNode) {
-        if (tmpNode.id === prevId) {
-          let tmpNext = tmpNode.next!;
+      // 修改开始节点
+      if (node.type === NodeType.StartNode) {
+        state.data = node;
+      } else {
+        const prevNode = findNodeById(state.data, prevId);
 
-          tmpNode.next = {
-            ...node,
-            next: tmpNext,
-          };
-
-          success = true;
-
-          break;
-        } else {
-          tmpNode = tmpNode.next!;
+        if (prevNode) {
+          node.next = prevNode.next!.next;
+          prevNode.next = node;
         }
       }
 
-      if (process.env.NODE_ENV === 'development' && !success) {
-        throw new Error('新增节点失败');
-      }
-
-      return { ...state };
+      return state;
     },
     delNode(state, { payload }: PayloadAction<{ prevId: string }>) {
-      let tmpNode: AllNode = state.data!;
-      const { prevId } = payload;
+      const prevNode = findNodeById(state.data, payload.prevId);
 
-      while (tmpNode && tmpNode.type !== NodeType.FinishNode) {
-        if (tmpNode.id === prevId) {
-          tmpNode.next = (<Exclude<AllNode, FinishNode | null>>tmpNode.next).next!;
-        } else {
-          tmpNode = tmpNode.next!;
-        }
+      if (prevNode && prevNode.next) {
+        prevNode.next = prevNode.next.next;
       }
 
-      return { ...state };
+      return state;
     },
   },
 });
 
-export const { setLoading } = flow.actions;
-export const flowActions = flow.actions;
+export const { setLoading, addNode, updateNode, delNode } = flow.actions;
+const flowActions = flow.actions;
 
 // 加载应用的流程，对于初始创建的应用是null
-export const load = createAsyncThunk<Flow | null, string>(
-  'flow/load',
-  async (appkey, { dispatch }) => {
-    try {
-      dispatch(setLoading(true));
-      const { data: flow } = await axios.get<Flow>(`/fetch-flow/${appkey}`);
+export const load = createAsyncThunk('flow/load', async (appkey: string, { dispatch }) => {
+  try {
+    dispatch(setLoading(true));
 
-      return flow;
-    } finally {
-      dispatch(setLoading(false));
+    const { data } = await axios.get<Flow | null>(`/fetch-flow/${appkey}`);
+
+    if (!data) {
+      // 如果没有流程就初始化一个
+      dispatch(flowActions.setInitialFlow(createInitialFlow()));
+    } else {
+      dispatch(flowActions.setInitialFlow(data));
     }
-  },
-);
+  } finally {
+    dispatch(setLoading(false));
+  }
+});
 
 export default flow;
 
-const defaultFields: BaseNode['fieldsAuths'] = [
+type FieldsAuths = Readonly<BaseNode['fieldsAuths'][number]>;
+
+const defaultFields: FieldsAuths[] = [
   {
     id: 'field-order',
     auth: 1,
@@ -128,7 +154,7 @@ const defaultFields: BaseNode['fieldsAuths'] = [
 export const flowDataSelector = createSelector(
   [(state: RootState) => state.formDesign, (state: RootState) => state.flow],
   (form, flow) => {
-    const formFields: BaseNode['fieldsAuths'] = (form && form.byId
+    const formFields: FieldsAuths[] = (form && form.byId
       ? Object.keys(form.byId)
       : ['input-1', 'select-2']
     ).map((fieldId) => ({

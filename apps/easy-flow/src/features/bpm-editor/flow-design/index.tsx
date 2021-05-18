@@ -1,24 +1,18 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { unwrapResult } from '@reduxjs/toolkit';
-import { load, flowActions, flowDataSelector } from './flow-slice';
-import { createInitialFlow } from './util';
+import { Button } from 'antd';
+import useMemoCallback from '@common/hooks/use-memo-callback';
+import { load, flowDataSelector, addNode } from './flow-slice';
+import { createNode } from './util';
+import { NodeType } from './types';
 
 function FlowDesign() {
   const dispath = useDispatch();
-  const { loading, data, fieldsTemplate } = useSelector(flowDataSelector);
+  const { loading, data: flow, fieldsTemplate } = useSelector(flowDataSelector);
 
   useEffect(() => {
-    dispath(load('appkey'))
-      .then(unwrapResult)
-      .then((flow) => {
-        if (!flow) {
-          dispath(flowActions.setInitialFlow(createInitialFlow()));
-        } else {
-          dispath(flowActions.setInitialFlow(flow));
-        }
-      });
-  }, []);
+    dispath(load('appkey'));
+  }, [dispath]);
 
   return <div></div>;
 }

@@ -111,6 +111,7 @@ export interface BranchNode {
 export interface FinishNode extends BaseNode {
   type: NodeType.FinishNode;
   notificationContent: string;
+  next: null;
 }
 
 export enum TriggerType {
