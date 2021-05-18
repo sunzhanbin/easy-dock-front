@@ -42,9 +42,7 @@
     ]
   },
   "husky": {
-    "hooks": {
-      "pre-commit": "npm run precommit"
-    }
+    "hooks": {}
   },
   "workspaces": [
     "packages/core",

@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { load, flowDataSelector, addNode } from './flow-slice';
-import { createNode } from './util';
-import { NodeType } from './types';
+import { Flow } from './nodes';
 
 function FlowDesign() {
   const dispath = useDispatch();
@@ -14,7 +13,11 @@ function FlowDesign() {
     dispath(load('appkey'));
   }, [dispath]);
 
-  return <div></div>;
+  return (
+    <div>
+      <Flow data={flow} />
+    </div>
+  );
 }
 
 export default React.memo(FlowDesign);

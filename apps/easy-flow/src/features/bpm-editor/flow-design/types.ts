@@ -7,16 +7,12 @@ type Member = {
 export enum NodeType {
   // 开始节点
   StartNode = 1,
-  // 审批节点
-  AuditNode = 2,
-  // 填写节点
-  FillNode = 3,
-  // 抄送节点
-  CCNode = 4,
+  // 用户节点
+  UserNode = 2,
   // 分支节点
-  BranchNode = 5,
+  BranchNode = 3,
   // 结束节点
-  FinishNode = 6,
+  FinishNode = 4,
 }
 
 type CorrelationMemberConfig = {
@@ -28,59 +24,39 @@ type CorrelationMemberConfig = {
   members: Member[];
 };
 
+// @auth: 0不可见 1仅可见 2可编辑
+export type FieldAuth = { id: string; auth: 1 | 2 | 0 };
 // 节点基本类型
 export interface BaseNode {
   id: string;
   type: NodeType;
   name: string;
-  correlationMemberConfig: CorrelationMemberConfig;
-  // @auth: 0不可见 1仅可见 2可编辑
-  fieldsAuths: { id: string; auth: 1 | 2 | 0 }[];
 }
 
-export type AllNode = StartNode | AuditNode | FillNode | CCNode | BranchNode | FinishNode;
+export type AllNode = StartNode | UserNode | BranchNode | FinishNode;
 
+export type ButtonAuth = {
+  enable: boolean;
+  text: string;
+};
 // 审批节点
-export interface AuditNode extends BaseNode {
-  type: NodeType.AuditNode;
-  rule:
-    | {
-        // 1常规审批
-        type: 1;
-        signType: 1 | 2;
-      }
-    | {
-        // 2逐级审批
-        type: 2;
-      };
-  btnText: {
-    approve: string | null;
-    reject: string | null;
-    revert: string | null;
-    transfer: string | null;
+export interface UserNode extends BaseNode {
+  type: NodeType.UserNode;
+  btnText?: {
+    approve?: ButtonAuth;
+    reject?: ButtonAuth;
+    revert?: ButtonAuth;
+    submit?: ButtonAuth;
   };
-  transfer: {
-    enable: boolean;
-    scope: 1 | 2;
-    correlationMemberConfig: CorrelationMemberConfig;
+  correlationMemberConfig: CorrelationMemberConfig;
+  fieldsAuths: FieldAuth[];
+  revert?: {
+    nodeId: string;
   };
-  next: Exclude<AllNode, StartNode> | null;
-}
-
-// 填写节点
-export interface FillNode extends BaseNode {
-  type: NodeType.FillNode;
-  next: Exclude<AllNode, StartNode> | null;
-}
-
-// 抄送节点
-export interface CCNode extends BaseNode {
-  type: NodeType.CCNode;
-  btnText: {
-    submit: string | null;
-    transfer: string | null;
+  signRule?: {
+    tpye: 1 | 2;
+    config: {};
   };
-  next: Exclude<AllNode, StartNode> | null;
 }
 
 // 分支类型
@@ -93,25 +69,23 @@ interface Branch {
 type JudgeType = 0 | 1 | 2 | 3;
 type DataType = 0 | 1 | 2;
 
+type BranchCondition = {
+  title: string;
+  dataType: DataType;
+  judgeType: JudgeType;
+  values: string[];
+  details: [];
+};
 // 分支节点
 export interface BranchNode {
   id: string;
   type: NodeType.BranchNode;
-  branches: Branch[];
-  conditions: {
-    title: string;
-    dataType: DataType;
-    judgeType: JudgeType;
-    values: string[];
-    details: [];
-  }[];
-  next: Exclude<AllNode, StartNode> | null;
+  branches: { nodes: AllNode[]; conditions: BranchCondition[] }[];
 }
 
 export interface FinishNode extends BaseNode {
   type: NodeType.FinishNode;
   notificationContent: string;
-  next: null;
 }
 
 export enum TriggerType {
@@ -129,12 +103,16 @@ export enum FillRange {
 // 流程类型，起点是申请人节点，一个流程只能有一个
 export interface StartNode extends BaseNode {
   type: NodeType.StartNode;
-  fillRange: FillRange;
-  trigger: TriggerType;
-  btnText: {
-    submit: string | null;
-  };
-  next: Exclude<AllNode, StartNode> | null;
+  trigger:
+    | {
+        type: TriggerType.MANUAL;
+      }
+    | {
+        type: TriggerType.TIMING;
+      }
+    | {
+        type: TriggerType.SIGNAL;
+      };
 }
 
-export type Flow = StartNode;
+export type Flow = [StartNode, ...(UserNode | BranchNode)[], FinishNode];
