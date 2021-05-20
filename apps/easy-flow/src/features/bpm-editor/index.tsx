@@ -1,5 +1,5 @@
 import { FC, memo, useEffect } from 'react';
-import { Switch, Route, useRouteMatch } from 'react-router-dom';
+import { Switch, Route, useRouteMatch, Redirect } from 'react-router-dom';
 import EditorHeader from '@components/editor-header';
 import FormDesign from './form-design';
 import { useAppDispatch } from '@app/hooks';
@@ -17,8 +17,9 @@ const BpmEditor: FC = () => {
     <>
       <EditorHeader></EditorHeader>
       <Switch>
-        <Route path={`${match.path}/form-design`} component={FormDesign}></Route>
+        <Route path={`${match.path}form-design`} component={FormDesign}></Route>
         <Route path={`${match.path}flow-design`} component={FlowDesign}></Route>
+        <Redirect from="/" to="/form-design"></Redirect>
       </Switch>
     </>
   );
