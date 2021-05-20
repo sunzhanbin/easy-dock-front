@@ -16,7 +16,8 @@
       "@config": ["src/config"],
       "@config/*": ["src/config/*"],
       "@app": ["src/app"],
-      "@app/*": ["src/app/*"]
+      "@app/*": ["src/app/*"],
+      "@common/*": ["../../packages/common/*"]
     }
   }
 }

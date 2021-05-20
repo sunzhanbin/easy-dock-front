@@ -14,16 +14,20 @@
   "devDependencies": {
     "@commitlint/cli": "12.1.1",
     "@commitlint/config-conventional": "12.1.1",
+    "@types/mockjs": "1.0.3",
+    "@typescript-eslint/eslint-plugin": "^4.24.0",
     "@typescript-eslint/parser": "4.22.1",
     "babel-eslint": "10.1.0",
     "eslint": "7.25.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-config-react-app": "6.0.0",
+    "eslint-plugin-import": "^2.23.2",
     "eslint-plugin-react": "7.23.2",
     "eslint-plugin-react-hooks": "4.2.0",
     "husky": "4.3.8",
     "lerna": "3.22.1",
     "lint-staged": "10.5.4",
+    "mockjs": "1.1.0",
     "prettier": "2.2.1",
     "yarn": "1.22.10"
   },
@@ -38,9 +42,7 @@
     ]
   },
   "husky": {
-    "hooks": {
-      "pre-commit": "npm run precommit"
-    }
+    "hooks": {}
   },
   "workspaces": [
     "packages/core",

@@ -4,7 +4,7 @@
     "checkJs": false,
     "target": "esnext",
     "module": "esnext",
-    "resolveJsonModule":true,
+    "resolveJsonModule": true,
     "moduleResolution": "node",
     "lib": ["esnext", "dom"],
     "strict": false,
