@@ -3,7 +3,7 @@ const componentSchema = {
   Input: {
     baseInfo: {
       name: '单行文本',
-      icon: 'logo-icon',
+      icon: 'icon-danxingwenzi',
       category: '基础组件',
       version: '1.0',
       type: 'Input',
@@ -11,13 +11,6 @@ const componentSchema = {
     config: [
       {
         key: 'title',
-        defaultValue: '单行文本',
-        label: '标题',
-        type: 'Input',
-        direction: 'vertical',
-      },
-      {
-        key: 'desc',
         defaultValue: '单行文本',
         label: '标题',
         type: 'Input',
@@ -38,60 +31,52 @@ const componentSchema = {
         direction: 'vertical',
       },
       {
-        key: 'maxLength',
-        defaultValue: '无限制',
-        label: '最大长度',
-        type: 'Input',
-        direction: 'vertical',
-      },
-      {
         key: 'colSpace',
         defaultValue: '4',
         label: '字段占比%',
         type: 'ColSpace',
         direction: 'vertical',
       },
-
       {
         key: 'required',
-        defaultValue: false,
+        defaultValue: true,
         label: '是否是必填项',
-        type: 'Checkbox',
+        type: 'Switch',
         direction: 'horizontal',
       },
       {
         key: 'disabled',
-        defaultValue: false,
+        defaultValue: true,
         label: '是否禁用',
-        type: 'Checkbox',
+        type: 'Switch',
         direction: 'horizontal',
       },
       {
         key: 'readonly',
         defaultValue: false,
         label: '是否只读',
-        type: 'Checkbox',
+        type: 'Switch',
         direction: 'horizontal',
       },
       {
         key: 'visible',
         defaultValue: true,
         label: '是否可见',
-        type: 'Checkbox',
+        type: 'Switch',
         direction: 'horizontal',
       },
       {
         key: 'allowClear',
         defaultValue: true,
         label: '是否允许清除',
-        type: 'Checkbox',
+        type: 'Switch',
         direction: 'horizontal',
       },
       {
         key: 'bordered',
         defaultValue: true,
         label: '是否带边框',
-        type: 'Checkbox',
+        type: 'Switch',
         direction: 'horizontal',
       },
     ],
@@ -99,7 +84,7 @@ const componentSchema = {
   Select: {
     baseInfo: {
       name: '下拉列表',
-      icon: 'logo-icon',
+      icon: 'icon-xialaxuanze',
       category: '基础组件',
       version: '1.0',
       type: 'Select',
@@ -107,14 +92,14 @@ const componentSchema = {
     config: [
       {
         key: 'title',
-        defaultValue: '单行文本',
+        defaultValue: '下拉框',
         label: '标题',
         type: 'Input',
         direction: 'vertical',
       },
       {
         key: 'desc',
-        defaultValue: '单行文本',
+        defaultValue: '下拉框',
         label: '标题',
         type: 'Input',
         direction: 'vertical',

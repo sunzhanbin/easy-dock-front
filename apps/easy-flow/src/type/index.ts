@@ -20,8 +20,14 @@ export type SchemaConfigItem = {
   type: string;
   defaultValue?: string | number | boolean;
   children?: SchemaConfigItem;
-  direction?: 'vertical | horizontal';
+  direction?: 'vertical' | 'horizontal';
+  range?: rangeItem[];
 };
+
+export type rangeItem = {
+  key: string;
+  value: string | number | boolean;
+}
 
 export type SchemaItem = {
   baseInfo: {
@@ -119,3 +125,11 @@ export type FormDesign = {
   layout: string[][];
   schema: Schema;
 };
+
+export type TConfigItem = {
+  [k: string]: string | number | boolean | undefined;
+}
+
+export type TConfigMap = {
+  [k: string]: TConfigItem;
+}

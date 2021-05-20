@@ -1,0 +1,107 @@
+{
+  "id": "1466535",
+  "name": "shop",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "9844027",
+      "name": "copy",
+      "font_class": "Copyingx",
+      "unicode": "e646",
+      "unicode_decimal": 58950
+    },
+    {
+      "icon_id": "18401738",
+      "name": "delete",
+      "font_class": "template_delete-copy",
+      "unicode": "e610",
+      "unicode_decimal": 58896
+    },
+    {
+      "icon_id": "843306",
+      "name": "单行文字",
+      "font_class": "danxingwenzi",
+      "unicode": "e6d0",
+      "unicode_decimal": 59088
+    },
+    {
+      "icon_id": "14480178",
+      "name": "多行文字",
+      "font_class": "duohangwenzi",
+      "unicode": "e628",
+      "unicode_decimal": 58920
+    },
+    {
+      "icon_id": "15220283",
+      "name": "下拉选择",
+      "font_class": "xialaxuanze",
+      "unicode": "e6da",
+      "unicode_decimal": 59098
+    },
+    {
+      "icon_id": "16930073",
+      "name": "单项选择",
+      "font_class": "danxiangxuanze",
+      "unicode": "e615",
+      "unicode_decimal": 58901
+    },
+    {
+      "icon_id": "16930075",
+      "name": "多项选择",
+      "font_class": "duoxiangxuanze",
+      "unicode": "e616",
+      "unicode_decimal": 58902
+    },
+    {
+      "icon_id": "21081185",
+      "name": "数字选择框",
+      "font_class": "shuzixuanzekuang",
+      "unicode": "e619",
+      "unicode_decimal": 58905
+    },
+    {
+      "icon_id": "162781",
+      "name": "减",
+      "font_class": "jian",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "538489",
+      "name": "加",
+      "font_class": "jia",
+      "unicode": "e641",
+      "unicode_decimal": 58945
+    },
+    {
+      "icon_id": "4954933",
+      "name": "购物车",
+      "font_class": "gouwuche",
+      "unicode": "e657",
+      "unicode_decimal": 58967
+    },
+    {
+      "icon_id": "6539865",
+      "name": "提醒",
+      "font_class": "tixing",
+      "unicode": "e60f",
+      "unicode_decimal": 58895
+    },
+    {
+      "icon_id": "9826657",
+      "name": "错误",
+      "font_class": "cuowu",
+      "unicode": "e613",
+      "unicode_decimal": 58899
+    },
+    {
+      "icon_id": "10666917",
+      "name": "成功",
+      "font_class": "chenggong",
+      "unicode": "e671",
+      "unicode_decimal": 58993
+    }
+  ]
+}

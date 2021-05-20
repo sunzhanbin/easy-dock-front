@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
 import { ROUTES } from './consts';
 import BpmEditor from './features/bpm-editor';

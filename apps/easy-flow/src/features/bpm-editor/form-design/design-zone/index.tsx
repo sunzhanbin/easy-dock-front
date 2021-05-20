@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import FormZone from './form-zone';
 
 const DesignZoneContainer = styled.div`
-  padding: 20px 20px 0;
-  height: calc(100vh - 157px);
+  padding: 20px;
+  height: calc(100vh - 84px);
   overflow: auto;
   display: flex;
   justify-content: center;

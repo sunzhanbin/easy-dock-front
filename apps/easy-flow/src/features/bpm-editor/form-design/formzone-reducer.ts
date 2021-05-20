@@ -1,6 +1,7 @@
-import { PayloadAction } from '@reduxjs/toolkit';
+import { createSelector, PayloadAction } from '@reduxjs/toolkit';
 import { uniqueId } from 'lodash';
-import { FormDesign, FormField } from '@type';
+import { FieldType, FormDesign, FormField, TConfigItem, TConfigMap } from '@type';
+import { RootState } from '@/app/store';
 
 function locateById(target: string, layout: Array<string[]>): [number, number] {
   let res: [number, number] = [-1, -1];
@@ -17,6 +18,12 @@ const reducers = {
   comAdded: {
     reducer: (state: FormDesign, action: PayloadAction<{ com: FormField; rowIndex: number }>) => {
       const { com, rowIndex } = action.payload;
+      if (!state.byId) {
+        state.byId = {}
+      }
+      if (!state.layout) {
+        state.layout = [];
+      }
       if (state.byId[com.id!]) return state;
       state.byId[com.id!] = com;
       state.layout.splice(rowIndex, 0, [com.id!]);
@@ -70,6 +77,39 @@ const reducers = {
     [rowLayout[col - 1], rowLayout[col]] = [rowLayout[col], rowLayout[col - 1]];
     return state;
   },
+  selectField(state: FormDesign, action: PayloadAction<{ id: string }>) {
+    const { id } = action.payload;
+    state.selectedField = id;
+    return state;
+  },
+  editProps(state: FormDesign, action: PayloadAction<{ id: string, config: TConfigItem }>) {
+    const { id, config } = action.payload;
+    state.byId[id] = (config as FormField);
+    return state;
+  }
 };
 
-export const { comAdded, moveRow, moveDown, moveUp, exchange } = reducers;
+export const configSelector = createSelector(
+  [
+    (state: RootState) => {
+      return state.formDesign.schema;
+    },
+  ],
+  (schema) => {
+    let config: TConfigMap = {};
+    if (!schema) {
+      return config;
+    }
+    const keys: string[] = Object.keys(schema);
+    keys.forEach((key) => {
+      const configItem: TConfigItem = { type: key };
+      schema[(key as FieldType)]?.config.forEach(({ key, defaultValue }) => {
+        configItem[key] = defaultValue;
+      })
+      config[(key as FieldType)] = configItem;
+    })
+    return config;
+  },
+);
+
+export const { comAdded, moveRow, moveDown, moveUp, exchange, selectField, editProps } = reducers;

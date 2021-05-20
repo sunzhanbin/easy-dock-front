@@ -6,6 +6,8 @@ import {
   moveRow as moveRowReducer,
   moveUp as moveUpReducer,
   exchange as exchangeReducer,
+  selectField as selectFieldReducer,
+  editProps as editPropsReducer,
 } from './formzone-reducer';
 import { FormDesign } from '@/type';
 import { loadComponents } from './toolbox-reducer';
@@ -21,6 +23,8 @@ const formDesign = createSlice({
     moveRow: moveRowReducer,
     moveUp: moveUpReducer,
     exchange: exchangeReducer,
+    selectField: selectFieldReducer,
+    editProps: editPropsReducer,
   },
   extraReducers: (builder) => {
     builder.addCase(loadComponents.fulfilled, (state, action) => {
@@ -29,6 +33,6 @@ const formDesign = createSlice({
   },
 });
 
-export const { comAdded, moveDown, moveRow, moveUp } = formDesign.actions;
+export const { comAdded, moveDown, moveRow, moveUp, selectField, editProps } = formDesign.actions;
 
 export default formDesign.reducer;
