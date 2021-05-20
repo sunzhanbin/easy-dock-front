@@ -37,6 +37,7 @@ const flow: AllNode[] = [
     type: NodeType.BranchNode,
     branches: [
       {
+        id: 'branchid-2222',
         conditions: [],
         nodes: [
           {
@@ -64,9 +65,44 @@ const flow: AllNode[] = [
               members: [{ name: '张三', id: 1, avatar: '用户头像' }],
             },
           },
+          {
+            id: 'fielx-1111',
+            type: NodeType.BranchNode,
+            branches: [
+              {
+                id: 'branchid-1111',
+                conditions: [],
+                nodes: [
+                  {
+                    id: 'field-xxx566',
+                    name: '请假-----审批',
+                    type: NodeType.UserNode,
+                    btnText: {
+                      approve: {
+                        enable: true,
+                        text: '审批通过',
+                      },
+                    },
+                    fieldsAuths: [
+                      {
+                        id: '表单字段id',
+                        auth: 1,
+                      },
+                    ],
+                    correlationMemberConfig: {
+                      departs: [{ id: 1, name: '部门名称' }],
+                      includeSubDeparts: true,
+                      members: [{ name: '张三', id: 1, avatar: '用户头像' }],
+                    },
+                  },
+                ],
+              },
+            ],
+          },
         ],
       },
       {
+        id: 'branchid-3333',
         conditions: [],
         nodes: [
           {
@@ -134,7 +170,7 @@ type Options = {
 mock(/\/fetch-flow\/\S+/, 'get', function () {
   return {
     resultCode: 0,
-    data: flow,
-    // data: null,
+    // data: flow,
+    data: null,
   };
 });

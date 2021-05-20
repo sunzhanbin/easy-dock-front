@@ -54,6 +54,17 @@
   }
 }
 
+.ant-btn-icon-only {
+  .anticon {
+    font-size: 0;
+  }
+
+  svg {
+    margin: 0;
+    font-size: 16px;
+  }
+}
+
 .ant-switch {
   height: 24px;
   line-height: 24px;

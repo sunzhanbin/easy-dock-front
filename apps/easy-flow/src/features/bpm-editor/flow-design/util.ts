@@ -1,13 +1,4 @@
-import {
-  NodeType,
-  BaseNode,
-  StartNode,
-  FillRange,
-  TriggerType,
-  UserNode,
-  FinishNode,
-  Flow,
-} from './types';
+import { NodeType, UserNode } from './types';
 
 function randomString() {
   return Math.random().toString(36).slice(2);
@@ -21,7 +12,7 @@ export function uuid(group: number = 3) {
 
 export function fielduuid(group: number = 3) {
   // 应后端要求字段id不能以数字开头
-  return `field-${uuid(group)}`;
+  return `flow-node-${uuid(group)}`;
 }
 
 export function createNode(type: NodeType.UserNode, name: string): UserNode {

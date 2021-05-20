@@ -20,13 +20,51 @@ if (process.env.NODE_ENV === 'development') {
 
 type FlowType = {
   loading: boolean;
-  data: Flow | [];
+  data: Flow;
 };
 
 const flowInitial: FlowType = {
   loading: false,
   data: [],
 };
+
+function flowUpdate(data: AllNode[], targetId: string, newNode: AllNode | null): AllNode[] {
+  let tIndex = data.findIndex((subNode) => subNode.id === targetId);
+
+  if (tIndex >= 0) {
+    if (!newNode) {
+      return data.slice(0, tIndex).concat(data.slice(tIndex + 1));
+    }
+
+    if (newNode.id === targetId) {
+      return data
+        .slice(0, tIndex)
+        .concat(newNode)
+        .concat(data.slice(tIndex + 1));
+    } else {
+      return data
+        .slice(0, tIndex + 1)
+        .concat(newNode)
+        .concat(data.slice(tIndex + 1));
+    }
+  } else {
+    return data.map((subNode) => {
+      if (subNode.type === NodeType.BranchNode) {
+        return {
+          ...subNode,
+          branches: subNode.branches.map((subBranch) => {
+            return {
+              ...subBranch,
+              nodes: flowUpdate(subBranch.nodes, targetId, newNode),
+            };
+          }),
+        };
+      } else {
+        return subNode;
+      }
+    });
+  }
+}
 
 const flow = createSlice({
   name: 'flow',
@@ -42,23 +80,20 @@ const flow = createSlice({
 
       return state;
     },
-    addNode(state, { payload }: PayloadAction<{ index: number; node: UserNode }>) {
-      const { data } = state;
-      const { index, node } = payload;
+    addNode(state, { payload }: PayloadAction<{ prevId: string; node: UserNode }>) {
+      const { prevId, node } = payload;
 
-      state.data.splice(index, 0, node);
-
-      return state;
-    },
-    updateNode(state, { payload }: PayloadAction<{ node: AllNode; index: number }>) {
-      const { node, index } = payload;
-
-      state.data.splice(index, 1, node);
+      state.data = flowUpdate(state.data, prevId, node);
 
       return state;
     },
-    delNode(state, { payload }: PayloadAction<{ index: number }>) {
-      state.data.splice(payload.index, 1);
+    updateNode(state, { payload: node }: PayloadAction<AllNode>) {
+      state.data = flowUpdate(state.data, node.id, node);
+
+      return state;
+    },
+    delNode(state, { payload: nodeId }: PayloadAction<string>) {
+      state.data = flowUpdate(state.data, nodeId, null);
 
       return state;
     },

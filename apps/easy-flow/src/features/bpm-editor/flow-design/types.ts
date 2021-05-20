@@ -59,12 +59,6 @@ export interface UserNode extends BaseNode {
   };
 }
 
-// 分支类型
-interface Branch {
-  id: number;
-  next: Exclude<AllNode, StartNode>;
-}
-
 // 0等于 1不等于 2包含 3不包含
 type JudgeType = 0 | 1 | 2 | 3;
 type DataType = 0 | 1 | 2;
@@ -80,7 +74,7 @@ type BranchCondition = {
 export interface BranchNode {
   id: string;
   type: NodeType.BranchNode;
-  branches: { nodes: AllNode[]; conditions: BranchCondition[] }[];
+  branches: { id: string; nodes: AllNode[]; conditions: BranchCondition[] }[];
 }
 
 export interface FinishNode extends BaseNode {
@@ -115,4 +109,4 @@ export interface StartNode extends BaseNode {
       };
 }
 
-export type Flow = [StartNode, ...(UserNode | BranchNode)[], FinishNode];
+export type Flow = AllNode[];
