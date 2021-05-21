@@ -1,6 +1,6 @@
-import React, { FC, memo } from "react";
+import React, { memo, useMemo } from "react";
 import styled from 'styled-components';
-import { Input } from "antd";
+import { Input, Form } from "antd";
 import { SingleTextField } from "@/type";
 
 const InputComponentContainer = styled.div`
@@ -18,12 +18,30 @@ const InputComponentContainer = styled.div`
 `;
 
 const InputComponent = (props: SingleTextField) => {
-  const { title } = props;
-  console.info(title, 'title');
+  const { title, placeholder, defaultValue, required, disabled, readonly, visible, allowClear, bordered } = props;
+  const rules = useMemo(() => {
+    const ruleList = [];
+    if (required) {
+      ruleList.push({ required: true });
+    }
+    return ruleList;
+  }, [required])
   return (
     <InputComponentContainer>
-      <div className="title">{title}</div>
-      <Input />
+      <Form.Item
+        label={title}
+        rules={rules}
+        required={required}
+        initialValue={defaultValue}
+      >
+        <Input
+          placeholder={placeholder}
+          disabled={disabled}
+          readOnly={readonly}
+          allowClear={allowClear}
+          bordered={bordered}
+        />
+      </Form.Item>
     </InputComponentContainer>
   );
 };

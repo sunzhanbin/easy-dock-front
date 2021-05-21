@@ -1,6 +1,7 @@
 import React, { FC, memo, useEffect, useState, useMemo, useCallback } from 'react';
 import styled from 'styled-components';
 import SourceBox from '@/components/source-box';
+import { Form, Row, Col } from 'antd';
 import { store } from '@app/store';
 import { useDispatch } from 'react-redux';
 import { selectField } from '../../formdesign-slice';
@@ -46,8 +47,16 @@ const FormZoneContainer = styled.div`
 
 type TLayoutItem = Array<string>
 
+const spaceMap = {
+  1: 6,
+  2: 12,
+  3: 18,
+  4: 24,
+}
+
 const FormZone: FC<{}> = () => {
   const dispatch = useDispatch();
+  const [form] = Form.useForm();
   const [layout, setLayout] = useState<TLayoutItem[]>([]);
   const [idObject, setIdObject] = useState<FormFieldMap>({});
   const [selectId, setSelectId] = useState<string>('');
@@ -63,31 +72,36 @@ const FormZone: FC<{}> = () => {
     dispatch(selectField({ id }))
     const formDesign = store.getState().formDesign;
     setSelectId((formDesign.selectedField as string))
-  }, [])
+  }, []);
+  const getColSpace = useCallback((row, id) => {
+    const space = idObject[id].colSpace;
+    if (space) {
+      return spaceMap[space];
+    }
+    return row.length === 1 ? 24 : row.length === 2 ? 12 : 6;
+  }, [idObject]);
   const content = useMemo(() => {
     return (
-      <>
+      <Form form={form} name="form_design" layout="vertical">
         {
           layout.map((row, index) => (
-            <div className="form_row" key={index}>
+            <Row className="form_row" key={index}>
               {
-                row.map(id => {
-                  return (
-                    <div
-                      key={id}
-                      className={`form_item ${id === selectId ? 'active' : ''}`}
-                      style={{ width: row.length === 1 ? '100%' : row.length === 2 ? '50%' : '25%' }}
-                      onClick={() => { handleSelect(id) }}
-                    >
-                      <SourceBox type={idObject[id].type} config={idObject[id]} />
-                    </div>
-                  )
-                })
+                row.map(id => (
+                  <Col
+                    key={id}
+                    className={`form_item ${id === selectId ? 'active' : ''}`}
+                    onClick={() => { handleSelect(id) }}
+                    span={getColSpace(row, id)}
+                  >
+                    <SourceBox type={idObject[id].type} config={idObject[id]} />
+                  </Col>
+                ))
               }
-            </div>
+            </Row>
           ))
         }
-      </>
+      </Form>
     )
   }, [layout, idObject, selectId])
   return (

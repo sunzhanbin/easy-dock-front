@@ -39,14 +39,14 @@ const componentSchema = {
       },
       {
         key: 'required',
-        defaultValue: true,
+        defaultValue: false,
         label: '是否是必填项',
         type: 'Switch',
         direction: 'horizontal',
       },
       {
         key: 'disabled',
-        defaultValue: true,
+        defaultValue: false,
         label: '是否禁用',
         type: 'Switch',
         direction: 'horizontal',
