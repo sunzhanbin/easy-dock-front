@@ -51,7 +51,9 @@ function BranchNode(props: BranchNodeProps) {
                   />
                 );
               } else if (sNode.type === NodeType.UserNode) {
-                return <UserNode node={sNode} onClick={onNodeClick} key={sNode.id} />;
+                return (
+                  <UserNode node={sNode} onClick={onNodeClick} key={sNode.id} prevNodes={[]} />
+                );
               } else {
                 return null;
               }

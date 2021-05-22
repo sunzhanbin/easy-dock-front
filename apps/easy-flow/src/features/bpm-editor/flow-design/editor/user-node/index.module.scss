@@ -1,0 +1,11 @@
+@import '@styles/mixin.scss';
+
+.title {
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  line-height: 22px;
+  border-bottom: 1px solid rgba(#181f43, 0.12);
+  color: rgba(#181f43, 0.95);
+  font-size: 14px;
+  font-weight: 500;
+}

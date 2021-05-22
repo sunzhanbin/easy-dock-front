@@ -51,6 +51,7 @@ const flow: AllNode[] = [
               },
             },
             revert: {
+              type: 1,
               nodeId: '驳回到节点的ID',
             },
             fieldsAuths: [

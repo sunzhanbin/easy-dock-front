@@ -1,0 +1,77 @@
+@import '@styles/mixin.scss';
+
+.btn-editor {
+  @include center('flex');
+
+  .btn-content {
+    @include center('flex');
+  }
+
+  .btn-alias {
+    flex: 1 1 0;
+    margin: 0 10px;
+  }
+
+  .choose {
+    margin-right: 22px;
+  }
+}
+
+.btn-configs {
+  .header {
+    @include center('flex');
+
+    justify-content: space-between;
+    margin-bottom: 7px;
+    padding: 0 12px 15px;
+    line-height: 22px;
+    border-bottom: 1px solid rgba(#181f43, 0.08);
+    color: rgba(#181f43, 0.75);
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .btn-editor + .btn-editor {
+    margin-top: 10px;
+  }
+
+  .approve {
+    color: #fff;
+    background-color: #63c4ad;
+
+    &:hover {
+      color: #fff;
+      border-color: rgba(#63c4ad, 0.9);
+      background-color: rgba(#63c4ad, 0.9);
+    }
+
+    &:active,
+    &:focus {
+      color: #fff;
+      border-color: #63c4ad;
+      background-color: #63c4ad;
+    }
+  }
+
+  .cascader {
+    display: block;
+    width: unset !important;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 48px;
+  }
+
+  :global {
+    .ant-cascader-menus {
+      & > div {
+        display: flex;
+        align-items: stretch;
+      }
+
+      .ant-cascader-menu {
+        width: 135px;
+        max-height: 180px;
+      }
+    }
+  }
+}

@@ -1,18 +1,19 @@
 import { memo, useCallback } from 'react';
 import { Icon } from '@common/components';
 import BaseNode from '../base';
-import { UserNode as UserNodeType } from '../../types';
+import { UserNode as UserNodeType, AllNode } from '../../types';
 
-interface UserNodeProps {
+export interface UserNodeProps {
   node: UserNodeType;
-  onClick(node: UserNodeType): void;
+  onClick(node: UserNodeType, currentNodePrevNodes: AllNode[]): void;
+  prevNodes: AllNode[];
 }
 
 function UserNode(props: UserNodeProps) {
-  const { node, onClick } = props;
+  const { node, prevNodes, onClick } = props;
   const handleNodeClick = useCallback(() => {
-    onClick(node);
-  }, [onClick, node]);
+    onClick(node, prevNodes);
+  }, [onClick, node, prevNodes]);
 
   return (
     <BaseNode icon={<Icon type="yonghujiedian" />} onClick={handleNodeClick} node={node}>

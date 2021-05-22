@@ -36,22 +36,32 @@ export interface BaseNode {
 export type AllNode = StartNode | UserNode | BranchNode | FinishNode;
 
 export type ButtonAuth = {
-  enable: boolean;
-  text: string;
+  enable?: boolean;
+  text?: string;
 };
+
+export enum RevertType {
+  Start = 1,
+  Prev = 2,
+  Specify = 3,
+}
+
 // 审批节点
 export interface UserNode extends BaseNode {
   type: NodeType.UserNode;
   btnText?: {
     approve?: ButtonAuth;
-    reject?: ButtonAuth;
     revert?: ButtonAuth;
     submit?: ButtonAuth;
+    save?: ButtonAuth;
+    transfer?: ButtonAuth;
+    finish?: ButtonAuth;
   };
   correlationMemberConfig: CorrelationMemberConfig;
   fieldsAuths: FieldAuth[];
   revert?: {
-    nodeId: string;
+    type: RevertType;
+    nodeId?: string;
   };
   signRule?: {
     tpye: 1 | 2;
