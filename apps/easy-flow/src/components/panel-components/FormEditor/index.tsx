@@ -1,8 +1,7 @@
 import React, { memo, useMemo, useEffect, Fragment } from 'react';
 import styled from 'styled-components';
 import { Form, Select, InputNumber, Input, Switch, Radio, Checkbox } from 'antd';
-import ColSpace from '../ColSpace';
-import { FormField, SchemaConfigItem, TConfigItem } from '@/type';
+import { FormField, SchemaConfigItem } from '@/type';
 import { Store } from 'antd/lib/form/interface';
 
 const { Option } = Select;
@@ -16,17 +15,25 @@ interface FormEditorProps {
     componentId: string;
     onSave: Function;
 }
+const options = [
+    { label: '25', value: '1' },
+    { label: '50', value: '2' },
+    { label: '75', value: '3' },
+    { label: '100', value: '4' },
+]
 
 const FormEditor = (props: FormEditorProps) => {
     const { config, initValues, componentId, onSave } = props;
-
+    const [form] = Form.useForm();
     const onFinish = (values: Store) => {
         onSave && onSave(values);
     };
     const handleChange = () => {
         onFinish(form.getFieldsValue());
     };
-    const [form] = Form.useForm();
+    useEffect(() => {
+        form.setFieldsValue(initValues);
+    }, [initValues])
 
     useEffect(() => {
         return () => {
@@ -84,7 +91,10 @@ const FormEditor = (props: FormEditorProps) => {
                                             labelCol={{ span: direction === 'vertical' ? 24 : 6 }}
                                             labelAlign="left"
                                         >
-                                            <ColSpace />
+                                            <Radio.Group
+                                                options={options}
+                                                optionType="button"
+                                            />
                                         </Form.Item>
                                     )
                                 }

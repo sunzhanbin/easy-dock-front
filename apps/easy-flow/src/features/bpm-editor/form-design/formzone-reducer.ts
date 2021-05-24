@@ -65,16 +65,22 @@ const reducers = {
     let rowLayout = state.layout[row];
     if (rowLayout.length === 1) return;
     rowLayout.splice(col, 1);
-    state.layout.splice(row, 1);
+    state.layout.splice(row, 1, rowLayout);
     state.layout.splice(row + 1, 0, [id]);
     return state;
   },
   //exchnage with the com on the left
-  exchange(state: FormDesign, action: PayloadAction<{ id: string }>) {
+  exchange(state: FormDesign, action: PayloadAction<{ id: string, direction: string }>) {
     let [row, col] = locateById(action.payload.id, state.layout);
+    const { direction } = action.payload
     if (col === 0 || row === -1 || col === -1) return state;
     let rowLayout = state.layout[row];
-    [rowLayout[col - 1], rowLayout[col]] = [rowLayout[col], rowLayout[col - 1]];
+    if (direction === 'left') {
+      state.layout[row].splice(col - 1, 2, rowLayout[col], rowLayout[col - 1]);
+    }
+    if (direction === 'right') {
+      state.layout[row].splice(col, 2, rowLayout[col + 1], rowLayout[col]);
+    }
     return state;
   },
   selectField(state: FormDesign, action: PayloadAction<{ id: string }>) {

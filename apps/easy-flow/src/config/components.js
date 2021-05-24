@@ -3,7 +3,7 @@ const componentSchema = {
   Input: {
     baseInfo: {
       name: '单行文本',
-      icon: 'icon-danxingwenzi',
+      icon: 'icondanhangwenben',
       category: '基础组件',
       version: '1.0',
       type: 'Input',
@@ -67,7 +67,7 @@ const componentSchema = {
       },
       {
         key: 'allowClear',
-        defaultValue: true,
+        defaultValue: false,
         label: '是否允许清除',
         type: 'Switch',
         direction: 'horizontal',
@@ -84,7 +84,7 @@ const componentSchema = {
   Select: {
     baseInfo: {
       name: '下拉列表',
-      icon: 'icon-xialaxuanze',
+      icon: 'iconxialakuang',
       category: '基础组件',
       version: '1.0',
       type: 'Select',

@@ -5,7 +5,7 @@ import { Form, Row, Col } from 'antd';
 import { store } from '@app/store';
 import { useDispatch } from 'react-redux';
 import { selectField } from '../../formdesign-slice';
-import { FormFieldMap } from '@/type';
+import { FormFieldMap, MoveConfig } from '@/type';
 
 const FormZoneContainer = styled.div`
   max-width: 900px;
@@ -36,8 +36,12 @@ const FormZoneContainer = styled.div`
         }
         &.active{
           background: #eff3fd;
-          .operation{
-            display:flex;
+          .operation,
+          .moveUp,
+          .moveDown,
+          .moveLeft,
+          .moveRight{
+            display:block;
           }
         }
       }
@@ -73,28 +77,50 @@ const FormZone: FC<{}> = () => {
     const formDesign = store.getState().formDesign;
     setSelectId((formDesign.selectedField as string))
   }, []);
-  const getColSpace = useCallback((row, id) => {
+  const getColSpace = useCallback((id) => {
     const space = idObject[id].colSpace;
     if (space) {
       return spaceMap[space];
     }
-    return row.length === 1 ? 24 : row.length === 2 ? 12 : 6;
   }, [idObject]);
+  const getMoveConfig = useCallback((rowIndex, colIndex) => {
+    const config: MoveConfig = { up: true, down: false, left: true, right: true };
+    if (rowIndex === 0 || layout[rowIndex - 1].length > 3) {
+      config.up = false;
+    }
+    if (layout[rowIndex].length > 1) {
+      config.down = true;
+    }
+    if (colIndex === 0) {
+      config.left = false;
+    }
+    if (colIndex === layout[rowIndex].length - 1) {
+      config.right = false;
+    }
+    return config;
+  }, [layout])
   const content = useMemo(() => {
     return (
       <Form form={form} name="form_design" layout="vertical">
         {
-          layout.map((row, index) => (
-            <Row className="form_row" key={index}>
+          layout.map((row, rowIndex) => (
+            <Row className="form_row" key={rowIndex}>
               {
-                row.map(id => (
+                row.map((id, colIndex) => (
                   <Col
                     key={id}
                     className={`form_item ${id === selectId ? 'active' : ''}`}
                     onClick={() => { handleSelect(id) }}
-                    span={getColSpace(row, id)}
+                    span={getColSpace(id)}
                   >
-                    <SourceBox type={idObject[id].type} config={idObject[id]} />
+                    <SourceBox
+                      type={idObject[id].type}
+                      config={idObject[id]}
+                      moveConfig={getMoveConfig(rowIndex, colIndex)}
+                      id={id}
+                      form={form}
+                      rowIndex={rowIndex}
+                    />
                   </Col>
                 ))
               }

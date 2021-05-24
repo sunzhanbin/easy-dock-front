@@ -1,7 +1,7 @@
-import React, { memo, useMemo } from "react";
+import React, { memo, useMemo, useEffect } from "react";
 import styled from 'styled-components';
-import { Input, Form } from "antd";
-import { SingleTextField } from "@/type";
+import { Input, Form, FormInstance } from "antd";
+import { SingleTextField, TConfigItem } from "@/type";
 
 const InputComponentContainer = styled.div`
   display: flex;
@@ -17,22 +17,28 @@ const InputComponentContainer = styled.div`
   }
 `;
 
-const InputComponent = (props: SingleTextField) => {
-  const { title, placeholder, defaultValue, required, disabled, readonly, visible, allowClear, bordered } = props;
+const InputComponent = (props: SingleTextField & { id: string, form: FormInstance }) => {
+  const { title, placeholder, defaultValue, required, disabled, readonly, visible, allowClear, bordered, id, form } = props;
   const rules = useMemo(() => {
     const ruleList = [];
     if (required) {
       ruleList.push({ required: true });
     }
     return ruleList;
-  }, [required])
+  }, [required]);
+  useEffect(() => {
+    const value: TConfigItem = {};
+    value[id] = defaultValue;
+    form.setFieldsValue(value);
+  }, [id, defaultValue])
   return (
-    <InputComponentContainer>
+    <InputComponentContainer style={{ display: visible ? 'flex' : 'none' }}>
       <Form.Item
         label={title}
         rules={rules}
         required={required}
         initialValue={defaultValue}
+        name={id}
       >
         <Input
           placeholder={placeholder}

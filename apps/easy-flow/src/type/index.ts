@@ -1,3 +1,5 @@
+import { FormInstance } from "antd";
+
 export type FieldType = 'Select' | 'Input';
 
 export type BaseField = {
@@ -127,9 +129,15 @@ export type FormDesign = {
 };
 
 export type TConfigItem = {
-  [k: string]: string | number | boolean | undefined;
+  [k: string]: string | number | boolean | undefined | null | FormInstance;
 }
 
 export type TConfigMap = {
   [k: string]: TConfigItem;
+}
+
+type MoveDirection = 'up' | 'down' | 'left' | 'right';
+
+export type MoveConfig = {
+  [k in MoveDirection]: boolean;
 }

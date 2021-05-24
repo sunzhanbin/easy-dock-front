@@ -33,6 +33,6 @@ const formDesign = createSlice({
   },
 });
 
-export const { comAdded, moveDown, moveRow, moveUp, selectField, editProps } = formDesign.actions;
+export const { comAdded, moveDown, moveRow, moveUp, exchange, selectField, editProps } = formDesign.actions;
 
 export default formDesign.reducer;
