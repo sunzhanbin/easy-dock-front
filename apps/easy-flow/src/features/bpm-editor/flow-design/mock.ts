@@ -28,7 +28,6 @@ mock(/\/save-flow/, 'post', function (options: Options) {
 
   return {
     resultCode: 0,
-    // data: flow,
     data: null,
   };
 });

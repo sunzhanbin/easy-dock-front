@@ -27,7 +27,7 @@ export type SchemaConfigItem = {
 export type rangeItem = {
   key: string;
   value: string | number | boolean;
-}
+};
 
 export type SchemaItem = {
   baseInfo: {
@@ -128,8 +128,23 @@ export type FormDesign = {
 
 export type TConfigItem = {
   [k: string]: string | number | boolean | undefined;
-}
+};
 
 export type TConfigMap = {
   [k: string]: TConfigItem;
-}
+};
+
+type Member = {
+  name: string;
+  id: number;
+  avatar: string;
+};
+
+export type MemberConfig = {
+  // 部门数组
+  departs: { id: number; name: string }[];
+  // 是否包含子部门
+  includeSubDeparts: boolean;
+  // 节点成员
+  members: Member[];
+};

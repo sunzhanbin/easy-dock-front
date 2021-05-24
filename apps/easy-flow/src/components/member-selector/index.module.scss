@@ -1,0 +1,172 @@
+@import '@styles/var.scss';
+@import '@styles/mixin.scss';
+
+.avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.member {
+  display: inline-flex;
+  align-items: center;
+
+  .avatar {
+    margin-right: 4px;
+  }
+
+  .name {
+    color: rgab(#181f43, 0.95);
+    line-height: 22px;
+    font-size: 14px;
+    font-weight: 400;
+  }
+}
+
+.members {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+  .member {
+    margin-right: 16px;
+    margin-bottom: 14px;
+  }
+
+  .action {
+    @include center('flex');
+
+    cursor: pointer;
+
+    .add {
+      width: 20px;
+      height: 20px;
+      padding: 4px;
+      margin-bottom: 14px;
+      border-radius: 50%;
+      color: #fff;
+      background-color: $primary-color;
+      font-size: 12px;
+    }
+  }
+}
+
+// 人员选择内容样式
+.content {
+  position: relative;
+  width: 232px;
+
+  & > .loading {
+    top: unset;
+    bottom: 0;
+    transform: translateX(-50%);
+  }
+
+  .search {
+    margin-bottom: 12px;
+  }
+
+  .list {
+    max-height: 200px;
+    color: rgba(#181f43, 0.95);
+    font-size: 14px;
+    font-weight: 400;
+    overflow-y: auto;
+
+    .total {
+      margin-bottom: 12px;
+    }
+
+    .item {
+      @include center('flex');
+
+      padding: 8px;
+      border-radius: 3px;
+      cursor: pointer;
+
+      &:hover {
+        background: rgba(#182743, 0.04);
+      }
+
+      .avatar {
+        margin-right: 8px;
+      }
+
+      & > .name {
+        @include ellipsis;
+
+        flex: 1 1 0;
+        margin-right: 8px;
+        line-height: 22px;
+      }
+    }
+  }
+}
+
+.container {
+  .popover-content-container {
+    position: relative;
+    margin-top: -14px;
+  }
+
+  .popover-footer {
+    @include center('flex');
+
+    justify-content: flex-end;
+    margin-top: 10px;
+
+    .cancel {
+      margin-right: 15px;
+    }
+  }
+
+  :global {
+    .ant-popover {
+      padding-top: 2px;
+
+      .ant-popover-arrow {
+        display: none;
+      }
+    }
+
+    .ant-tabs {
+      min-height: 200px;
+      overflow: visible;
+
+      .ant-tabs-tab {
+        height: 37px;
+        padding-top: 0;
+
+        .ant-tabs-tab-btn {
+          height: 25px;
+          line-height: 25px;
+        }
+      }
+    }
+
+    .ant-tabs-tab {
+      line-height: 20px;
+      color: rgba(#181f43, 0.75);
+      font-size: 14px;
+      font-weight: 400;
+
+      &:hover {
+        color: rgba($primary-color, 0.75);
+      }
+    }
+
+    .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+      line-height: 25px;
+      color: rgba(#181f43, 0.95);
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    .ant-tabs-ink-bar {
+      height: 5px !important;
+      background-color: $primary-color;
+    }
+  }
+}
