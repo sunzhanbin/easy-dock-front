@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction, createAsyncThunk, createSelector } from '@reduxjs/toolkit';
+import { message } from 'antd';
 import { axios } from '@utils';
 import {
   FieldAuth,
@@ -138,6 +139,21 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
     dispatch(setLoading(false));
   }
 });
+
+export const save = createAsyncThunk<void, string, { state: RootState }>(
+  'flow/save',
+  async (appkey: string, { getState, dispatch }) => {
+    dispatch(setLoading(true));
+
+    try {
+      await axios.post('/save-flow', { data: getState().flow.data, appkey });
+
+      message.success('保存成功');
+    } finally {
+      dispatch(setLoading(false));
+    }
+  },
+);
 
 export default flow;
 

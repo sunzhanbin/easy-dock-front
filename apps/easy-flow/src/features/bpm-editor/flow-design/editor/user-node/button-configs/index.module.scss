@@ -3,6 +3,13 @@
 .btn-editor {
   @include center('flex');
 
+  border-radius: 3px;
+  padding: 7px 12px;
+
+  &:hover {
+    background-color: rgba(#4c5cdb, 0.06);
+  }
+
   .btn-content {
     @include center('flex');
   }
@@ -13,7 +20,7 @@
   }
 
   .choose {
-    margin-right: 22px;
+    margin-right: 10px;
   }
 }
 
@@ -29,10 +36,6 @@
     color: rgba(#181f43, 0.75);
     font-size: 14px;
     font-weight: 500;
-  }
-
-  .btn-editor + .btn-editor {
-    margin-top: 10px;
   }
 
   .approve {
@@ -56,6 +59,7 @@
   .cascader {
     display: block;
     width: unset !important;
+    margin-left: 12px;
     margin-top: 10px;
     margin-bottom: 10px;
     margin-right: 48px;
