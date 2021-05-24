@@ -29,7 +29,7 @@ export type SchemaConfigItem = {
 export type rangeItem = {
   key: string;
   value: string | number | boolean;
-}
+};
 
 export type SchemaItem = {
   baseInfo: {
@@ -141,3 +141,18 @@ type MoveDirection = 'up' | 'down' | 'left' | 'right';
 export type MoveConfig = {
   [k in MoveDirection]: boolean;
 }
+
+type Member = {
+  name: string;
+  id: number;
+  avatar: string;
+};
+
+export type MemberConfig = {
+  // 部门数组
+  departs: { id: number; name: string }[];
+  // 是否包含子部门
+  includeSubDeparts: boolean;
+  // 节点成员
+  members: Member[];
+};

@@ -1,8 +1,10 @@
-import React, { FC, memo, useCallback } from 'react';
+import React, { FC, memo, useCallback, useState } from 'react';
 import { Steps, Button } from 'antd';
 import styled from 'styled-components';
-import { useState } from 'react';
 import { useHistory, useRouteMatch, Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import useMemoCallback from '@common/hooks/use-memo-callback';
+import { save } from '../../features/bpm-editor/flow-design/flow-slice';
 import logo from '@assets/logo.png';
 const { Step } = Steps;
 
@@ -27,6 +29,7 @@ const HeaderContainer = styled.div`
 const StepContainer = styled.div``;
 
 const EditorHeader: FC = () => {
+  const dispatch = useDispatch();
   const match = useRouteMatch();
   const routes = [`${match.url}form-design`, `${match.url}flow-design`];
   const history = useHistory();
@@ -36,6 +39,9 @@ const EditorHeader: FC = () => {
     history.push(routes[current]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  const handleSave = useMemoCallback(() => {
+    dispatch(save('appkey'));
+  });
   return (
     <HeaderContainer>
       <Link to="/" className="logo">
@@ -48,7 +54,7 @@ const EditorHeader: FC = () => {
           <Step title="应用发布" />
         </Steps>
       </StepContainer>
-      <Button type="primary" ghost>
+      <Button type="primary" ghost onClick={handleSave}>
         保存
       </Button>
     </HeaderContainer>

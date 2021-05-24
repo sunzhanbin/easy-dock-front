@@ -1,9 +1,10 @@
 import { memo, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Form, Input } from 'antd';
-import { updateNode, flowDataSelector } from '../../flow-slice';
+import MemberSelector from '@components/member-selector';
 import debounce from 'lodash/debounce';
 import useMemoCallback from '@common/hooks/use-memo-callback';
+import { updateNode, flowDataSelector } from '../../flow-slice';
 import { UserNode, AllNode } from '../../types';
 import ButtonConfigs from './button-configs';
 import styles from './index.module.scss';
@@ -15,6 +16,7 @@ interface UserNodeEditorProps {
 
 type FormValuesType = {
   name: string;
+  correlationMemberConfig: UserNode['correlationMemberConfig'];
   btnConfigs: {
     btnText: UserNode['btnText'];
     revert: UserNode['revert'];
@@ -29,6 +31,7 @@ function UserNodeEditor(props: UserNodeEditorProps) {
   const formInitialValues = useMemo(() => {
     return {
       name: node.name,
+      correlationMemberConfig: node.correlationMemberConfig,
       btnConfigs: {
         btnText: node.btnText,
         revert: node.revert,
@@ -41,6 +44,7 @@ function UserNodeEditor(props: UserNodeEditorProps) {
       dispatch(
         updateNode({
           ...node,
+          correlationMemberConfig: allValues.correlationMemberConfig,
           name: allValues.name,
           btnText: allValues.btnConfigs.btnText,
           revert: allValues.btnConfigs.revert,
@@ -62,7 +66,9 @@ function UserNodeEditor(props: UserNodeEditorProps) {
         <Form.Item label="节点名称" name="name">
           <Input size="large" placeholder="请输入用户节点名称" />
         </Form.Item>
-
+        <Form.Item label="选择办理人" name="correlationMemberConfig">
+          <MemberSelector></MemberSelector>
+        </Form.Item>
         <div>
           <div className={styles.title}>操作权限</div>
           <Form.Item label="" name="btnConfigs">

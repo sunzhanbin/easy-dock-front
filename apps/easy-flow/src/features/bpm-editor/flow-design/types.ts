@@ -1,8 +1,4 @@
-type Member = {
-  name: string;
-  id: number;
-  avatar: string;
-};
+import { MemberConfig } from '@type';
 
 export enum NodeType {
   // 开始节点
@@ -14,15 +10,6 @@ export enum NodeType {
   // 结束节点
   FinishNode = 4,
 }
-
-type CorrelationMemberConfig = {
-  // 部门数组
-  departs: { id: number; name: string }[];
-  // 是否包含子部门
-  includeSubDeparts: boolean;
-  // 节点成员
-  members: Member[];
-};
 
 // @auth: 0不可见 1仅可见 2可编辑
 export type FieldAuth = { id: string; auth: 1 | 2 | 0 };
@@ -57,7 +44,7 @@ export interface UserNode extends BaseNode {
     transfer?: ButtonAuth;
     finish?: ButtonAuth;
   };
-  correlationMemberConfig: CorrelationMemberConfig;
+  correlationMemberConfig: MemberConfig;
   fieldsAuths: FieldAuth[];
   revert?: {
     type: RevertType;

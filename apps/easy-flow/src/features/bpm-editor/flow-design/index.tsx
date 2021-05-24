@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Drawer } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
+import { Loading } from '@common/components';
 import { load, flowDataSelector } from './flow-slice';
 import { AllNode, BranchNode as BranchNodeType, NodeType } from './types';
 import { StartNode, UserNode, FinishNode } from './nodes';
@@ -11,7 +12,7 @@ import styles from './index.module.scss';
 
 function FlowDesign() {
   const dispatch = useDispatch();
-  const { loading, data: flow, fieldsTemplate } = useSelector(flowDataSelector);
+  const { loading, data: flow } = useSelector(flowDataSelector);
   const [currentEditNode, setCurrentEditNode] = useState<AllNode | null>(null);
   const [showEditDrawer, setShowEditDrawer] = useState(false);
   const [currentEditNodePrevNodes, setCurrentEditNodePrevNodes] = useState<AllNode[]>([]);
@@ -51,6 +52,7 @@ function FlowDesign() {
 
   return (
     <div className={styles.flow}>
+      {loading && <Loading />}
       <div className={styles.content}>
         {flow.map((node, index) => {
           switch (node.type) {
