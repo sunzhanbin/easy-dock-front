@@ -4,7 +4,7 @@ import React, { memo, FC, useEffect, useState, useMemo, useCallback } from 'reac
 import styled from 'styled-components';
 import { store } from '@app/store';
 import { useDispatch } from 'react-redux';
-import { moveUp, moveDown, exchange, editProps, } from '@/features/bpm-editor/form-design/formdesign-slice';
+import { moveUp, moveDown, exchange, editProps, comAdded, comDeleted } from '@/features/bpm-editor/form-design/formdesign-slice';
 
 const BoxContainer = styled.div`
   cursor: move;
@@ -103,27 +103,35 @@ const SourceBox: FC<{
         return Object.assign({}, config, { id, form });
     }, [config, id, form])
     useEffect(() => {
-        import(`../basic-shop/basic-components/${type}/index`).then(res => {
+        type && import(`../basic-shop/basic-components/${type}/index`).then(res => {
             setComponent(res.default);
         })
     }, []);
     const handleCopy = useCallback(() => {
-        console.log('复制成功!')
-    }, []);
+        const formDesign = store.getState().formDesign;
+        const com = Object.assign({}, formDesign.byId[id]);
+        dispatch(comAdded(com, rowIndex + 1));
+    }, [id, rowIndex]);
     const handleDelete = useCallback(() => {
-        console.log('删除成功!')
-    }, []);
+        dispatch(comDeleted({ id }));
+    }, [id]);
     const handleMoveUp = useCallback(() => {
         dispatch(moveUp({ id }));
         const formDesign = store.getState().formDesign;
         const rowList = formDesign.layout;
         const componentMap = formDesign.byId;
-        const componentIdList = rowList[rowIndex - 1];
-        const length = componentIdList.length;
-        componentIdList.forEach(id => {
-            const config = Object.assign({}, componentMap[id], { colSpace: length === 2 ? '2' : '1' });
+        const currentRow = rowList[rowIndex - 1];
+        const nextRow = rowList[rowIndex];
+        // 当前行重新布局
+        currentRow.forEach(id => {
+            const config = Object.assign({}, componentMap[id], { colSpace: currentRow.length === 2 ? '2' : '1' });
             dispatch(editProps({ id, config }));
         });
+        // 如果有下一行，重新布局
+        nextRow && nextRow.forEach(id => {
+            const config = Object.assign({}, componentMap[id], { colSpace: nextRow.length === 1 ? '4' : nextRow.length === 2 ? '2' : '1' });
+            dispatch(editProps({ id, config }));
+        })
     }, [id, rowIndex]);
     const handleMoveDown = useCallback(() => {
         dispatch(moveDown({ id }));
@@ -132,10 +140,12 @@ const SourceBox: FC<{
         const componentMap = formDesign.byId;
         const componentIdList = rowList[rowIndex];
         const length = componentIdList.length;
+        // 当前行重新布局
         componentIdList.forEach(id => {
             const config = Object.assign({}, componentMap[id], { colSpace: length === 1 ? '4' : length === 2 ? '2' : '1' });
             dispatch(editProps({ id, config }));
         });
+        // 下移之后一定是独占一行
         dispatch(editProps({ id, config: Object.assign({}, componentMap[id], { colSpace: '4' }) }));
     }, [id, rowIndex]);
     const handleMoveLeft = useCallback(() => {
@@ -185,7 +195,7 @@ const SourceBox: FC<{
             )
         }
         return null;
-    }, [Component, config])
+    }, [Component, config, moveConfig])
     return (<>{content}</>)
 }
 

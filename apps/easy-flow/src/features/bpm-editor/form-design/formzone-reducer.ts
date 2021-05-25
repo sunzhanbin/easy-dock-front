@@ -39,6 +39,16 @@ const reducers = {
       };
     },
   },
+  comDeleted(state: FormDesign, action: PayloadAction<{ id: string }>) {
+    const { id } = action.payload;
+    let [row, col] = locateById(id, state.layout);
+    if (state.layout[row].length === 1) {
+      state.layout.splice(row, 1);
+    } else {
+      state.layout[row].splice(col, 1);
+    }
+    return state;
+  },
   moveRow(state: FormDesign, action: PayloadAction<{ sourceIndex: number; targetIndex: number }>) {
     const { sourceIndex, targetIndex } = action.payload;
     state.layout.splice(targetIndex, 0, [...state.layout[sourceIndex]]);
@@ -73,7 +83,7 @@ const reducers = {
   exchange(state: FormDesign, action: PayloadAction<{ id: string, direction: string }>) {
     let [row, col] = locateById(action.payload.id, state.layout);
     const { direction } = action.payload
-    if (col === 0 || row === -1 || col === -1) return state;
+    if (row === -1 || col === -1) return state;
     let rowLayout = state.layout[row];
     if (direction === 'left') {
       state.layout[row].splice(col - 1, 2, rowLayout[col], rowLayout[col - 1]);
@@ -118,4 +128,4 @@ export const configSelector = createSelector(
   },
 );
 
-export const { comAdded, moveRow, moveDown, moveUp, exchange, selectField, editProps } = reducers;
+export const { comAdded, comDeleted, moveRow, moveDown, moveUp, exchange, selectField, editProps } = reducers;

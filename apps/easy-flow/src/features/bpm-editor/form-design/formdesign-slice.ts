@@ -8,6 +8,7 @@ import {
   exchange as exchangeReducer,
   selectField as selectFieldReducer,
   editProps as editPropsReducer,
+  comDeleted as comDeletedReducer,
 } from './formzone-reducer';
 import { FormDesign } from '@/type';
 import { loadComponents } from './toolbox-reducer';
@@ -19,6 +20,7 @@ const formDesign = createSlice({
   initialState,
   reducers: {
     comAdded: addedReducer,
+    comDeleted: comDeletedReducer,
     moveDown: moveDownReducer,
     moveRow: moveRowReducer,
     moveUp: moveUpReducer,
@@ -33,6 +35,6 @@ const formDesign = createSlice({
   },
 });
 
-export const { comAdded, moveDown, moveRow, moveUp, exchange, selectField, editProps } = formDesign.actions;
+export const { comAdded, comDeleted, moveDown, moveRow, moveUp, exchange, selectField, editProps } = formDesign.actions;
 
 export default formDesign.reducer;

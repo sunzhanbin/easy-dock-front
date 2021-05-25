@@ -83,7 +83,7 @@ const FormZone: FC<{}> = () => {
       return spaceMap[space];
     }
   }, [idObject]);
-  const getMoveConfig = useCallback((rowIndex, colIndex) => {
+  const getMoveConfig = useCallback((rowIndex, colIndex, flag?) => {
     const config: MoveConfig = { up: true, down: false, left: true, right: true };
     if (rowIndex === 0 || layout[rowIndex - 1].length > 3) {
       config.up = false;
