@@ -1,3 +1,4 @@
+export { CardHeader } from './base';
 export { default as StartNode } from './start';
 export { default as UserNode } from './user';
 export { default as FinishNode } from './finish';

@@ -2,10 +2,10 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Drawer } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import { Loading } from '@common/components';
+import { Loading, Icon } from '@common/components';
 import { load, flowDataSelector } from './flow-slice';
 import { AllNode, BranchNode as BranchNodeType, NodeType } from './types';
-import { StartNode, UserNode, FinishNode } from './nodes';
+import { StartNode, UserNode, FinishNode, CardHeader } from './nodes';
 import { UserNodeProps } from './nodes/user';
 import { StartNodeEditor, UserNodeEditor } from './editor';
 import styles from './index.module.scss';
@@ -36,18 +36,22 @@ function FlowDesign() {
     setShowEditDrawer(true);
   });
 
-  const currentEditNodeTypeName = useMemo(() => {
+  const drawerHeader = useMemo(() => {
     if (currentEditNode) {
       if (currentEditNode.type === NodeType.UserNode) {
-        return '用户节点';
+        return (
+          <CardHeader icon={<Icon type="yonghujiedian" />} isUserNode>
+            用户节点
+          </CardHeader>
+        );
       } else if (currentEditNode.type === NodeType.StartNode) {
-        return '开始节点';
+        return <CardHeader icon={<Icon type="baocunbingzhixing" />}>开始节点</CardHeader>;
       } else if (currentEditNode.type === NodeType.FinishNode) {
-        return '结束节点';
+        return <CardHeader icon={<Icon type="jieshujiedian" />}>结束节点</CardHeader>;
       }
     }
 
-    return '';
+    return null;
   }, [currentEditNode?.type]);
 
   return (
@@ -86,9 +90,9 @@ function FlowDesign() {
         destroyOnClose
         closable={false}
       >
-        <div className={styles.editor}>
-          <div className={styles.title}>{currentEditNodeTypeName}</div>
+        {drawerHeader}
 
+        <div className={styles.editor}>
           {currentEditNode && currentEditNode.type === NodeType.StartNode && (
             <StartNodeEditor node={currentEditNode} />
           )}

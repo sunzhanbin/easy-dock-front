@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction, createAsyncThunk, createSelector } from '@reduxjs/toolkit';
-import { message } from 'antd';
+import { message, Modal } from 'antd';
 import { axios } from '@utils';
 import {
   FieldAuth,
@@ -22,11 +22,21 @@ if (process.env.NODE_ENV === 'development') {
 type FlowType = {
   loading: boolean;
   data: Flow;
+  dirty: boolean;
+  invalidNodesMap: {
+    [key: string]: {
+      errors: string[];
+      id: string;
+      name: string;
+    };
+  };
 };
 
 const flowInitial: FlowType = {
   loading: false,
   data: [],
+  dirty: false,
+  invalidNodesMap: {},
 };
 
 function flowUpdate(data: AllNode[], targetId: string, newNode: AllNode | null): AllNode[] {
@@ -67,10 +77,61 @@ function flowUpdate(data: AllNode[], targetId: string, newNode: AllNode | null):
   }
 }
 
+function valid(data: AllNode[], validRes: FlowType['invalidNodesMap']) {
+  data.forEach((node) => {
+    if (node.type === NodeType.BranchNode) {
+      node.branches.forEach((branch) => {
+        valid(branch.nodes, validRes);
+      });
+      return;
+    }
+
+    const errors = [];
+
+    if (!node.name) {
+      errors.push('未输入节点名称');
+    }
+
+    if (node.type === NodeType.StartNode) {
+    } else if (node.type === NodeType.UserNode) {
+      if (!node.btnText || Object.keys(node.btnText).length === 0) {
+        errors.push('请配置按钮');
+      }
+
+      if (
+        !node.correlationMemberConfig.members.length &&
+        !node.correlationMemberConfig.departs.length
+      ) {
+        errors.push('请选择办理人');
+      }
+    }
+
+    if (errors.length) {
+      validRes[node.id] = {
+        errors,
+        id: node.id,
+        name: node.name,
+      };
+    }
+  });
+
+  return validRes;
+}
+
 const flow = createSlice({
   name: 'flow',
   initialState: flowInitial,
   reducers: {
+    setValidSatus(state, { payload: validRes }: PayloadAction<FlowType['invalidNodesMap']>) {
+      state.invalidNodesMap = validRes;
+
+      return state;
+    },
+    setDirty(state, { payload: dirty }: PayloadAction<boolean>) {
+      state.dirty = dirty;
+
+      return state;
+    },
     setLoading(state, { payload: loading }: PayloadAction<boolean>) {
       state.loading = loading;
 
@@ -85,16 +146,28 @@ const flow = createSlice({
       const { prevId, node } = payload;
 
       state.data = flowUpdate(state.data, prevId, node);
+      state.dirty = true;
 
       return state;
     },
     updateNode(state, { payload: node }: PayloadAction<AllNode>) {
       state.data = flowUpdate(state.data, node.id, node);
+      state.dirty = true;
+      state.invalidNodesMap = {
+        ...state.invalidNodesMap,
+        [node.id]: {
+          ...state.invalidNodesMap[node.id],
+          errors: [],
+        },
+      };
 
       return state;
     },
     delNode(state, { payload: nodeId }: PayloadAction<string>) {
       state.data = flowUpdate(state.data, nodeId, null);
+      state.dirty = true;
+
+      delete state.invalidNodesMap[nodeId];
 
       return state;
     },
@@ -143,12 +216,26 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
 export const save = createAsyncThunk<void, string, { state: RootState }>(
   'flow/save',
   async (appkey: string, { getState, dispatch }) => {
-    dispatch(setLoading(true));
+    const flowData = getState().flow.data;
+    const validResult: FlowType['invalidNodesMap'] = valid(flowData, {});
+
+    if (Object.keys(validResult).length) {
+      dispatch(flowActions.setValidSatus(validResult));
+
+      message.error('数据填写不完整');
+      // Modal.info({
+      //   title: '数据填写不完整',
+      // });
+      return;
+    }
 
     try {
-      await axios.post('/save-flow', { data: getState().flow.data, appkey });
+      dispatch(setLoading(true));
+
+      await axios.post('/save-flow', { data: flowData, appkey });
 
       message.success('保存成功');
+      dispatch(flowActions.setDirty(false));
     } finally {
       dispatch(setLoading(false));
     }
@@ -189,8 +276,7 @@ export const flowDataSelector = createSelector(
     }));
 
     return {
-      loading: flow.loading,
-      data: flow.data,
+      ...flow,
       fieldsTemplate: defaultFields.concat(formFields),
     };
   },

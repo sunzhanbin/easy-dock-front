@@ -1,11 +1,19 @@
 @import '@styles/mixin.scss';
 
-.title {
-  margin-bottom: 15px;
-  padding-bottom: 10px;
-  line-height: 22px;
-  border-bottom: 1px solid rgba(#181f43, 0.12);
-  color: rgba(#181f43, 0.95);
-  font-size: 14px;
-  font-weight: 500;
+.form {
+  :global {
+    .ant-input {
+      border-color: #d9d9d9 !important;
+      box-shadow: none !important;
+
+      &:hover {
+        border-color: rgba(76, 92, 219, 0.85) !important;
+      }
+
+      &:focus {
+        border-color: rgba(76, 92, 219, 0.85) !important;
+        box-shadow: 0 0 0 3px rgba(76, 92, 219, 0.2) !important;
+      }
+    }
+  }
 }

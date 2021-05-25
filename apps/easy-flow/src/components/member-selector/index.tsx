@@ -1,5 +1,5 @@
 import { memo, ReactNode, useMemo, useRef, useState } from 'react';
-import { Popover, Button } from 'antd';
+import { Popover } from 'antd';
 import { MemberConfig } from '@type';
 import { Icon } from '@common/components';
 import useMemoCallback from '@common/hooks/use-memo-callback';
@@ -13,17 +13,23 @@ interface MemberProps {
     name: string;
     id: number;
   };
-  onDelete?(id: string): void;
+  onDelete?(data: this['data']): void;
   editable?: boolean;
 }
 
 const Member = memo(function Member(props: MemberProps) {
-  const { data } = props;
+  const { data, editable, onDelete } = props;
+  const handleDelete = useMemoCallback(() => {
+    if (onDelete) {
+      onDelete(data);
+    }
+  });
 
   return (
     <div className={styles.member}>
       <img className={styles.avatar} src={data.avatar} alt="头像" />
       <div className={styles.name}>{data.name}</div>
+      {editable && <Icon className={styles.delete} type="guanbi" onClick={handleDelete} />}
     </div>
   );
 });
@@ -64,27 +70,18 @@ function MemberSelector(props: MemberSelectorProps) {
     }
   });
 
-  const handleClosePopover = useMemoCallback(() => {
-    setShowPopover(false);
+  const handleDeleteMember = useMemoCallback((data: MemberProps['data']) => {
+    if (onChange) {
+      onChange({
+        ...showValue,
+        members: showValue.members.filter((member) => member.id !== data.id),
+      });
+    }
   });
 
   const content = useMemo(() => {
-    const ensureBtnText = showValue.members.length ? `(${showValue.members.length})` : '';
-
-    return (
-      <>
-        <Selector value={showValue} onMembersChange={handleMembersChange} />
-        <div className={styles['popover-footer']}>
-          <Button className={styles.cancel} type="text" size="large" onClick={handleClosePopover}>
-            取消
-          </Button>
-          <Button type="primary" size="large">
-            确认{ensureBtnText}
-          </Button>
-        </div>
-      </>
-    );
-  }, [showValue, handleMembersChange]);
+    return <Selector value={showValue} onMembersChange={handleMembersChange} />;
+  }, [showValue]);
 
   return (
     <div className={styles.container}>
@@ -99,23 +96,36 @@ function MemberSelector(props: MemberSelectorProps) {
             avatar: member.avatar || memberDefaultAvatar,
           };
 
-          return <Member editable={!readonly} key={member.id} data={data} />;
+          return (
+            <Member
+              editable={!readonly}
+              key={member.id}
+              data={data}
+              onDelete={handleDeleteMember}
+            />
+          );
         })}
 
-        <Popover
-          content={content}
-          getPopupContainer={getPopupContainer}
-          trigger="click"
-          visible={showPopover}
-          onVisibleChange={setShowPopover}
-          destroyTooltipOnHide
-        >
-          <div className={styles.action}>
-            {children ? children : <Icon type="xinzengjiacu" className={styles.add} />}
-          </div>
-        </Popover>
+        {!readonly && (
+          <Popover
+            content={content}
+            getPopupContainer={getPopupContainer}
+            trigger="click"
+            visible={showPopover}
+            onVisibleChange={setShowPopover}
+            destroyTooltipOnHide
+            placement="bottom"
+            arrowContent={null}
+          >
+            <div className={styles.action}>
+              {children ? children : <Icon type="xinzengjiacu" className={styles.add} />}
+            </div>
+          </Popover>
+        )}
       </div>
-      <div className={styles['popover-content-container']} ref={popoverContentContainerRef}></div>
+      {!readonly && (
+        <div className={styles['popover-content-container']} ref={popoverContentContainerRef} />
+      )}
     </div>
   );
 }
