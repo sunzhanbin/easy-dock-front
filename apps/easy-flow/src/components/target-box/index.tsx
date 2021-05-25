@@ -16,7 +16,7 @@ const TargetBoxContainer = styled.div`
   cursor: pointer;
   
   .iconfont{
-    margin:0 8px;
+    margin:0 4px;
     color: #aaaeb3;
   }
   .component_name{

@@ -51,9 +51,15 @@ const reducers = {
   },
   moveRow(state: FormDesign, action: PayloadAction<{ sourceIndex: number; targetIndex: number }>) {
     const { sourceIndex, targetIndex } = action.payload;
-    state.layout.splice(targetIndex, 0, [...state.layout[sourceIndex]]);
-    let indexToDelete = sourceIndex > targetIndex ? sourceIndex + 1 : sourceIndex;
-    state.layout.splice(indexToDelete, 1);
+    console.info(sourceIndex, targetIndex);
+    if (sourceIndex > targetIndex) {
+      state.layout.splice(targetIndex, 0, state.layout[sourceIndex]);
+      state.layout.splice(sourceIndex + 1, 1);
+    } else {
+      const target = state.layout[sourceIndex];
+      state.layout.splice(sourceIndex, 1);
+      state.layout.splice(targetIndex, 0, target);
+    }
     return state;
   },
   moveUp(state: FormDesign, action: PayloadAction<{ id: string }>) {

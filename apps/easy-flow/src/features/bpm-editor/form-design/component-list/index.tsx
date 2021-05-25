@@ -5,6 +5,7 @@ import { useAppSelector } from '@app/hooks';
 import { toolboxSelector } from '../toolbox-reducer';
 import Loading from '@components/loading';
 import { map } from 'lodash';
+import { Draggable, Droppable } from 'react-beautiful-dnd';
 
 const ComponentListContainer = styled.div`
   width: 275px;
@@ -42,16 +43,49 @@ const ComponentList: FC<{}> = () => {
 			<ToolboxGroup key={key}>
 				<div className="groupTitle">{key}</div>
 				<div className="componentContainer">
-					{map(value, (tool) => {
+					{map(value, (tool, index) => {
 						const { name, icon, type } = tool;
-						return <TargetBox icon={icon} displayName={name} type={type} key={type}></TargetBox>;
+						// return <TargetBox icon={icon} displayName={name} type={type} key={type}></TargetBox>;
+						return (
+							<Draggable draggableId={type} index={+index} key={name}>
+								{
+									(dragProvided) => (
+										<div
+											ref={dragProvided.innerRef}
+											{...dragProvided.draggableProps}
+											{...dragProvided.dragHandleProps}
+										>
+											<TargetBox
+												icon={icon}
+												displayName={name}
+												type={type}
+											></TargetBox>
+										</div>
+									)
+								}
+							</Draggable>
+
+						);
 					})}
 				</div>
 			</ToolboxGroup>
 		);
 	});
 	if (!comGroups) return <Loading></Loading>;
-	return <ComponentListContainer>{comGroups}</ComponentListContainer>;
+	return (
+		<ComponentListContainer>
+			<Droppable droppableId="component_zone">
+				{
+					(dropProvided) => (
+						<div ref={dropProvided.innerRef} {...dropProvided.droppableProps}>
+							<div>{comGroups}</div>
+							{dropProvided.placeholder}
+						</div>
+					)
+				}
+			</Droppable>
+		</ComponentListContainer>
+	);
 };
 
 export default memo(ComponentList);

@@ -6,6 +6,7 @@ import { store } from '@app/store';
 import { useDispatch } from 'react-redux';
 import { selectField } from '../../formdesign-slice';
 import { FormFieldMap, MoveConfig } from '@/type';
+import { Draggable, Droppable } from 'react-beautiful-dnd';
 
 const FormZoneContainer = styled.div`
   max-width: 900px;
@@ -16,6 +17,9 @@ const FormZoneContainer = styled.div`
     box-shadow: 0 2px 4px 0 rgb(43 52 65 / 10%);
     min-height: 200px;
     margin-bottom: 30px;
+    >div{
+      min-height: 200px;
+    }
     .form_row{
       &:first-child{
         padding-top:12px;
@@ -101,33 +105,56 @@ const FormZone: FC<{}> = () => {
   }, [layout])
   const content = useMemo(() => {
     return (
-      <Form form={form} name="form_design" layout="vertical">
+      <Droppable droppableId="form_zone" direction="vertical">
         {
-          layout.map((row, rowIndex) => (
-            <Row className="form_row" key={rowIndex}>
-              {
-                row.map((id, colIndex) => (
-                  <Col
-                    key={id}
-                    className={`form_item ${id === selectId ? 'active' : ''}`}
-                    onClick={() => { handleSelect(id) }}
-                    span={getColSpace(id)}
-                  >
-                    <SourceBox
-                      type={idObject[id].type}
-                      config={idObject[id]}
-                      moveConfig={getMoveConfig(rowIndex, colIndex)}
-                      id={id}
-                      form={form}
-                      rowIndex={rowIndex}
-                    />
-                  </Col>
-                ))
-              }
-            </Row>
-          ))
+          (dropProvided) => (
+            <div ref={dropProvided.innerRef} {...dropProvided.droppableProps}>
+              <Form form={form} name="form_design" layout="vertical">
+                {
+                  layout.map((row, rowIndex) => (
+                    <Draggable draggableId={row[0]} index={rowIndex} key={row[0]}>
+                      {
+                        (dragProvided) => (
+                          <div
+                            ref={dragProvided.innerRef}
+                            {...dragProvided.draggableProps}
+                            {...dragProvided.dragHandleProps}
+                          >
+                            <Row className="form_row" key={rowIndex}>
+                              {
+                                row.map((id, colIndex) => (
+                                  <Col
+                                    key={id}
+                                    className={`form_item ${id === selectId ? 'active' : ''}`}
+                                    onClick={() => { handleSelect(id) }}
+                                    span={getColSpace(id)}
+                                  >
+                                    <SourceBox
+                                      type={idObject[id].type}
+                                      config={idObject[id]}
+                                      moveConfig={getMoveConfig(rowIndex, colIndex)}
+                                      id={id}
+                                      form={form}
+                                      rowIndex={rowIndex}
+                                    />
+                                  </Col>
+                                ))
+                              }
+                            </Row>
+                          </div>
+                        )
+                      }
+                    </Draggable>
+
+                  ))
+                }
+              </Form>
+              {dropProvided.placeholder}
+            </div>
+          )
         }
-      </Form>
+      </Droppable>
+
     )
   }, [layout, idObject, selectId])
   return (
