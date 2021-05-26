@@ -47,6 +47,9 @@ const reducers = {
     } else {
       state.layout[row].splice(col, 1);
     }
+    if (id === state.selectedField) {
+      state.selectedField = null;
+    }
     return state;
   },
   moveRow(state: FormDesign, action: PayloadAction<{ sourceIndex: number; targetIndex: number }>) {

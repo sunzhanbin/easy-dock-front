@@ -32,6 +32,8 @@ const EditZone = () => {
                 setTitle((baseInfo?.name as string));
                 setSelectId((formDesign.selectedField as string));
                 setConfig(formDesign.byId[(formDesign.selectedField as string)]);
+            } else {
+                setSelectId('');
             }
         })
     }, []);
@@ -43,8 +45,13 @@ const EditZone = () => {
     ), [title])
     return (
         <EditZoneContainer>
-            {renderTitle}
-            <FormEditor config={editList} initValues={(config as FormField)} onSave={onSave} componentId={selectId} />
+            {
+                selectId
+                    ? <>
+                        {renderTitle}
+                        <FormEditor config={editList} initValues={(config as FormField)} onSave={onSave} componentId={selectId} />
+                    </> : null
+            }
         </EditZoneContainer>
     )
 }
