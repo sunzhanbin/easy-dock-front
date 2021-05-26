@@ -100,22 +100,20 @@ function StartNodeEditor(props: StartNodeEditorProps) {
     };
   }, [node]);
   return (
-    <div>
-      <Form
-        form={form}
-        layout="vertical"
-        autoComplete="off"
-        initialValues={formInitialValues}
-        onValuesChange={handleFormValuesChange}
-      >
-        <Form.Item label="节点名称" name="name">
-          <Input size="large" placeholder="请输入开始节点名称" />
-        </Form.Item>
-        <Form.Item label="开始方式" name="triggerType">
-          <Trigger />
-        </Form.Item>
-      </Form>
-    </div>
+    <Form
+      form={form}
+      layout="vertical"
+      autoComplete="off"
+      initialValues={formInitialValues}
+      onValuesChange={handleFormValuesChange}
+    >
+      <Form.Item label="节点名称" name="name">
+        <Input size="large" placeholder="请输入开始节点名称" />
+      </Form.Item>
+      <Form.Item label="开始方式" name="triggerType">
+        <Trigger />
+      </Form.Item>
+    </Form>
   );
 }
 

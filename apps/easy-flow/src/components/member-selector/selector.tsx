@@ -27,6 +27,7 @@ const fetchUser = async (data: { name: string; page: number }) => {
 
   return {
     total: memberResponse.data.recordTotal,
+    index: memberResponse.data.pageIndex,
     members: memberResponse.data.data.map((item: any, index: number) => {
       const member = item.userInfo[0];
 
@@ -48,20 +49,24 @@ function Selector(props: SelectorProps) {
   const { value, onMembersChange } = props;
   const [members, setMembers] = useState<MemberConfig['members']>([]);
   const [loading, setLoading] = useState(true);
-  const fetchMemberParamsRef = useRef<{ name: string; page: number }>({ name: '', page: 1 });
   const [memberTotal, setMemberTotal] = useState(0);
+  const [memberSearchText, setMemberSearchText] = useState('');
+  const memberPageNumberRef = useRef(1);
   const searchMembers = useMemoCallback(
-    async (payload: typeof fetchMemberParamsRef.current, cover: boolean = false) => {
+    async (payload: { name: string; page: number }, cover: boolean = false) => {
       setLoading(true);
 
       try {
-        const { members, total } = await fetchUser(payload);
+        const { members, total, index } = await fetchUser(payload);
+
         if (cover) {
           setMembers(members);
         } else {
           setMembers((oldValue) => oldValue.concat(members));
         }
 
+        // 更新当前页数
+        memberPageNumberRef.current = index;
         setMemberTotal(total);
       } finally {
         setLoading(false);
@@ -73,10 +78,12 @@ function Selector(props: SelectorProps) {
 
   const handleMemberSearchTextChange: React.ChangeEventHandler<HTMLInputElement> = useMemoCallback(
     async (event) => {
-      fetchMemberParamsRef.current.name = event.target.value;
-      fetchMemberParamsRef.current.page = 1;
+      const name = (event.target.value || '').trim();
 
-      debounceSearchUser(fetchMemberParamsRef.current, true);
+      setMemberSearchText(name);
+      memberPageNumberRef.current = 1;
+
+      debounceSearchUser({ page: 1, name }, true);
     },
   );
 
@@ -112,7 +119,7 @@ function Selector(props: SelectorProps) {
   });
 
   useEffect(() => {
-    searchMembers(fetchMemberParamsRef.current);
+    searchMembers({ name: '', page: 1 });
   }, []);
 
   const handleMemberListScroll = useMemoCallback(
@@ -124,9 +131,10 @@ function Selector(props: SelectorProps) {
           return;
         }
 
-        fetchMemberParamsRef.current.page += 1;
-
-        searchMembers(fetchMemberParamsRef.current);
+        searchMembers({
+          page: memberPageNumberRef.current + 1,
+          name: memberSearchText,
+        });
       }
     }, 300),
   );
@@ -140,9 +148,10 @@ function Selector(props: SelectorProps) {
             className={styles.search}
             onChange={handleMemberSearchTextChange}
             size="large"
+            value={memberSearchText}
           />
           <div className={styles.list} onScroll={handleMemberListScroll}>
-            <div className={styles.total}>全部成员({memberTotal})</div>
+            {!memberSearchText && <div className={styles.total}>全部成员({memberTotal})</div>}
             {members.map((member) => {
               return (
                 <div
@@ -160,10 +169,11 @@ function Selector(props: SelectorProps) {
                 </div>
               );
             })}
+            {members.length === 0 && <div>未搜索到用户</div>}
           </div>
         </TabPane>
         <TabPane tab="部门" key="dept">
-          部门
+          功能暂未开放
         </TabPane>
       </Tabs>
 

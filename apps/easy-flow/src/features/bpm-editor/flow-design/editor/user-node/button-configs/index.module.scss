@@ -3,12 +3,7 @@
 .btn-editor {
   @include center('flex');
 
-  border-radius: 3px;
-  padding: 7px 12px;
-
-  &:hover {
-    background-color: rgba(#4c5cdb, 0.06);
-  }
+  margin-bottom: 14px;
 
   .btn-content {
     @include center('flex');
@@ -25,17 +20,8 @@
 }
 
 .btn-configs {
-  .header {
-    @include center('flex');
-
-    justify-content: space-between;
-    margin-bottom: 7px;
-    padding: 0 12px 15px;
-    line-height: 22px;
-    border-bottom: 1px solid rgba(#181f43, 0.08);
-    color: rgba(#181f43, 0.75);
-    font-size: 14px;
-    font-weight: 500;
+  & > .btn-editor:last-child {
+    margin-bottom: 0;
   }
 
   .approve {
@@ -60,10 +46,8 @@
   .cascader {
     display: block;
     width: unset !important;
-    margin-left: 12px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    margin-right: 48px;
+    margin-bottom: 14px;
+    margin-right: 36px;
   }
 
   :global {

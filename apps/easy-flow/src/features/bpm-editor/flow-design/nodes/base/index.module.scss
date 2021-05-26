@@ -1,5 +1,38 @@
 @import '@styles/mixin.scss';
 
+.header {
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  line-height: 22px;
+  color: #fff;
+  background-color: #818a9e;
+  font-weight: 500;
+
+  &.custom {
+    background-color: #63c4ad;
+  }
+
+  .icon-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-right: 8px;
+    font-size: 24px;
+
+    svg {
+      color: #fff;
+    }
+  }
+
+  .title {
+    @include ellipsis;
+
+    flex: 1 1 0;
+  }
+}
+
 .node {
   width: 248px;
   position: relative;
@@ -14,38 +47,11 @@
     border-radius: 3px;
     overflow: hidden;
     cursor: pointer;
+    border: 1px solid transparent;
 
-    .header {
-      padding: 12px;
-      display: flex;
-      align-items: center;
-      line-height: 22px;
-      color: #fff;
-      background-color: #818a9e;
-      font-weight: 500;
-
-      &.custom {
-        background-color: #63c4ad;
-      }
-
-      .icon-box {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-        margin-right: 8px;
-        font-size: 24px;
-
-        svg {
-          color: #fff;
-        }
-      }
-
-      .title {
-        @include ellipsis;
-
-        flex: 1 1 0;
-      }
+    &.invalid {
+      border-color: #ff5568;
+      box-shadow: 0 0 0 4px rgba(#ff5568, 0.12);
     }
   }
 

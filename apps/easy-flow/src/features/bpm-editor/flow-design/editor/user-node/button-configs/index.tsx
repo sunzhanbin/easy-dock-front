@@ -124,10 +124,6 @@ function ButtonConfigs(props: ButtonConfigsProps) {
 
   return (
     <div className={styles['btn-configs']}>
-      <div className={styles.header}>
-        <div>按钮名称</div>
-        <div>选择</div>
-      </div>
       <ButtonEditor
         text={btnText?.submit?.text}
         enable={btnText?.submit?.enable}

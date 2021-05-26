@@ -19,7 +19,8 @@
       bottom: 0;
 
       .ant-drawer-body {
-        position: relative;
+        display: flex;
+        flex-direction: column;
         padding: 0;
       }
     }
@@ -34,18 +35,21 @@
   }
 
   .editor {
-    height: 100%;
+    flex: 1 1 0;
     padding: 24px;
-    padding-top: 74px;
+    overflow-y: auto;
 
-    .title {
-      position: absolute;
-      left: 24px;
-      top: 24px;
-      line-height: 26px;
-      color: rgba(0, 0, 0, 0.85);
-      font-size: 18px;
-      font-weight: 500;
+    :global {
+      .ant-form-item-label {
+        padding-bottom: 12px;
+
+        & > label {
+          line-height: 22px;
+          color: rgba(#181f43, 0.95);
+          font-size: 14px;
+          font-weight: 500;
+        }
+      }
     }
   }
 }

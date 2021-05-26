@@ -1,9 +1,9 @@
 import { memo, ReactNode, useCallback, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import classnames from 'classnames';
-import { Icon, PopoverConfirm } from '@common/components';
 import { Button } from 'antd';
-import { addNode, delNode } from '../../flow-slice';
+import { Icon, PopoverConfirm } from '@common/components';
+import { addNode, delNode, flowDataSelector } from '../../flow-slice';
 import { createNode } from '../../util';
 import { NodeType, AllNode, BranchNode } from '../../types';
 import styles from './index.module.scss';
@@ -15,10 +15,28 @@ interface BaseProps {
   onDelete?(): void;
 }
 
+interface CardHeaderProps {
+  icon: ReactNode;
+  children?: ReactNode;
+  className?: string;
+  isUserNode?: boolean;
+}
+
+export const CardHeader = memo(function CardHeader(props: CardHeaderProps) {
+  const { icon, children, className, isUserNode } = props;
+  return (
+    <div className={classnames(styles.header, className, { [styles.custom]: isUserNode })}>
+      <div className={styles['icon-box']}>{icon}</div>
+      <div className={styles.title}>{children}</div>
+    </div>
+  );
+});
+
 function Base(props: BaseProps) {
+  const dispatch = useDispatch();
+  const { invalidNodesMap } = useSelector(flowDataSelector);
   const { icon, node, onClick, children } = props;
   const { type, name } = node;
-  const dispatch = useDispatch();
   const [showDeletePopover, setShowDeletePopover] = useState(false);
   const handleAddNode = useCallback(() => {
     dispatch(
@@ -35,11 +53,15 @@ function Base(props: BaseProps) {
 
   return (
     <div className={styles.node}>
-      <div className={styles.card} onClick={onClick}>
-        <div className={classnames(styles.header, { [styles.custom]: type === NodeType.UserNode })}>
-          <div className={styles['icon-box']}>{icon}</div>
-          <div className={styles.title}>{name}</div>
-        </div>
+      <div
+        className={classnames(styles.card, {
+          [styles.invalid]: invalidNodesMap[node.id] && invalidNodesMap[node.id].errors.length > 0,
+        })}
+        onClick={onClick}
+      >
+        <CardHeader isUserNode={type === NodeType.UserNode} icon={icon}>
+          {node.name}
+        </CardHeader>
         <div className={styles.content}>{children}</div>
       </div>
 
