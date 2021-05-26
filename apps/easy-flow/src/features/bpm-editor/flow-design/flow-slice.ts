@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction, createAsyncThunk, createSelector } from '@reduxjs/toolkit';
-import { message, Modal } from 'antd';
+import { message } from 'antd';
 import { axios } from '@utils';
 import {
   FieldAuth,
@@ -7,7 +7,8 @@ import {
   NodeType,
   StartNode,
   FinishNode,
-  UserNode,
+  AuditNode,
+  FillNode,
   TriggerType,
   Flow,
 } from './types';
@@ -93,7 +94,7 @@ function valid(data: AllNode[], validRes: FlowType['invalidNodesMap']) {
     }
 
     if (node.type === NodeType.StartNode) {
-    } else if (node.type === NodeType.UserNode) {
+    } else if (node.type === NodeType.AuditNode) {
       if (!node.btnText || Object.keys(node.btnText).length === 0) {
         errors.push('请配置按钮');
       }
@@ -122,7 +123,7 @@ const flow = createSlice({
   name: 'flow',
   initialState: flowInitial,
   reducers: {
-    setValidSatus(state, { payload: validRes }: PayloadAction<FlowType['invalidNodesMap']>) {
+    setInvalidMaps(state, { payload: validRes }: PayloadAction<FlowType['invalidNodesMap']>) {
       state.invalidNodesMap = validRes;
 
       return state;
@@ -142,7 +143,7 @@ const flow = createSlice({
 
       return state;
     },
-    addNode(state, { payload }: PayloadAction<{ prevId: string; node: UserNode }>) {
+    addNode(state, { payload }: PayloadAction<{ prevId: string; node: AuditNode | FillNode }>) {
       const { prevId, node } = payload;
 
       state.data = flowUpdate(state.data, prevId, node);
@@ -174,8 +175,8 @@ const flow = createSlice({
   },
 });
 
-export const { setLoading, addNode, updateNode, delNode } = flow.actions;
 const flowActions = flow.actions;
+export const { setLoading, addNode, updateNode, delNode } = flow.actions;
 
 // 加载应用的流程，对于初始创建的应用是null
 export const load = createAsyncThunk('flow/load', async (appkey: string, { dispatch }) => {
@@ -195,8 +196,6 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
         },
       };
 
-      const userNode = createNode(NodeType.UserNode, '用户节点');
-
       const finishNode: FinishNode = {
         id: fielduuid(),
         type: NodeType.FinishNode,
@@ -204,7 +203,7 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
         notificationContent: '',
       };
 
-      dispatch(flowActions.setInitialFlow([startNode, userNode, finishNode]));
+      dispatch(flowActions.setInitialFlow([startNode, finishNode]));
     } else {
       dispatch(flowActions.setInitialFlow(data));
     }
@@ -220,12 +219,10 @@ export const save = createAsyncThunk<void, string, { state: RootState }>(
     const validResult: FlowType['invalidNodesMap'] = valid(flowData, {});
 
     if (Object.keys(validResult).length) {
-      dispatch(flowActions.setValidSatus(validResult));
+      dispatch(flowActions.setInvalidMaps(validResult));
 
       message.error('数据填写不完整');
-      // Modal.info({
-      //   title: '数据填写不完整',
-      // });
+
       return;
     }
 
@@ -244,25 +241,6 @@ export const save = createAsyncThunk<void, string, { state: RootState }>(
 
 export default flow;
 
-const defaultFields: FieldAuth[] = [
-  {
-    id: 'field-order',
-    auth: 1,
-  },
-  {
-    id: 'field-applicant',
-    auth: 1,
-  },
-  {
-    id: 'field-start-time',
-    auth: 1,
-  },
-  {
-    id: 'field-update-time',
-    auth: 1,
-  },
-];
-
 // 聚合form和flow, 因为flow的字段权限需要form的字段信息
 export const flowDataSelector = createSelector(
   [(state: RootState) => state.formDesign, (state: RootState) => state.flow],
@@ -273,11 +251,12 @@ export const flowDataSelector = createSelector(
     ).map((fieldId) => ({
       id: fieldId,
       auth: 1,
+      name: '表单字段',
     }));
 
     return {
       ...flow,
-      fieldsTemplate: defaultFields.concat(formFields),
+      fieldsTemplate: formFields,
     };
   },
 );

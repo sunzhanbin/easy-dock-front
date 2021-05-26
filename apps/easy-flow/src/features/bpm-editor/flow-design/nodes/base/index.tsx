@@ -1,7 +1,8 @@
-import { memo, ReactNode, useCallback, useState } from 'react';
+import { memo, ReactNode, useCallback, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import classnames from 'classnames';
-import { Button } from 'antd';
+import { Button, Popover } from 'antd';
+import useMemoCallback from '@common/hooks/use-memo-callback';
 import { Icon, PopoverConfirm } from '@common/components';
 import { addNode, delNode, flowDataSelector } from '../../flow-slice';
 import { createNode } from '../../util';
@@ -38,18 +39,46 @@ function Base(props: BaseProps) {
   const { icon, node, onClick, children } = props;
   const { type, name } = node;
   const [showDeletePopover, setShowDeletePopover] = useState(false);
-  const handleAddNode = useCallback(() => {
+  const [showAddPopover, setShowAddPopover] = useState(false);
+  const handleAddNode = useMemoCallback((type: NodeType, name: string) => {
+    let tmpNode;
+
+    if (type === NodeType.AuditNode) {
+      tmpNode = createNode(type, name);
+    } else if (type === NodeType.FillNode) {
+      tmpNode = createNode(type, name);
+    } else {
+      throw Error('传入类型不正确');
+    }
+
     dispatch(
       addNode({
         prevId: node.id,
-        node: createNode(NodeType.UserNode, '用户节点'),
+        node: tmpNode,
       }),
     );
-  }, [node.id, dispatch]);
+
+    setShowAddPopover(false);
+  });
 
   const handleDeleteConfirm = useCallback(() => {
     dispatch(delNode(node.id));
   }, [dispatch, node.id]);
+
+  const addPopoverContent = useMemo(() => {
+    return (
+      <div className={styles.adds}>
+        <div onClick={() => handleAddNode(NodeType.AuditNode, '审批节点')}>
+          <Icon type="lineyonghujiedian1" />
+          <span>添加审批节点</span>
+        </div>
+        <div onClick={() => handleAddNode(NodeType.FillNode, '填写节点')}>
+          <Icon type="caidan" />
+          <span>添加填写节点</span>
+        </div>
+      </div>
+    );
+  }, []);
 
   return (
     <div className={styles.node}>
@@ -59,7 +88,7 @@ function Base(props: BaseProps) {
         })}
         onClick={onClick}
       >
-        <CardHeader isUserNode={type === NodeType.UserNode} icon={icon}>
+        <CardHeader isUserNode={type === NodeType.AuditNode} icon={icon}>
           {node.name}
         </CardHeader>
         <div className={styles.content}>{children}</div>
@@ -68,15 +97,26 @@ function Base(props: BaseProps) {
       {type !== NodeType.FinishNode && (
         <div className={styles.footer}>
           <div className={styles.line} />
-          <Button
-            className={styles['add-button']}
-            onClick={handleAddNode}
-            type="default"
-            icon={<Icon type="xinzeng" />}
-          />
+          <Popover
+            className={styles.popover}
+            getPopupContainer={(c) => c}
+            placement="rightTop"
+            arrowContent={null}
+            visible={showAddPopover}
+            onVisibleChange={setShowAddPopover}
+            content={addPopoverContent}
+          >
+            <div>
+              <Button
+                className={styles['add-button']}
+                type="default"
+                icon={<Icon type="xinzeng" />}
+              />
+            </div>
+          </Popover>
         </div>
       )}
-      {type === NodeType.UserNode && (
+      {type === NodeType.AuditNode && (
         <div className={classnames(styles.actions, { [styles.show]: showDeletePopover })}>
           <PopoverConfirm
             title="是否确认删除此节点"

@@ -21,7 +21,7 @@
     margin-right: 8px;
     font-size: 24px;
 
-    svg {
+    & > svg {
       color: #fff;
     }
   }
@@ -78,7 +78,7 @@
       background-color: #fff;
       border-color: rgba($color: #181f43, $alpha: 0.12);
 
-      svg {
+      & > svg {
         width: 10px;
         font-weight: bold;
         color: #4c5cdb;
@@ -122,6 +122,42 @@
 
     .action + .action {
       margin-left: 10px;
+    }
+  }
+}
+
+.popover {
+  .adds {
+    & > div {
+      @include center('flex');
+
+      margin-bottom: 4px;
+      padding: 5px 8px;
+      line-height: 22px;
+      color: rgba(#181f43, 0.95);
+      font-size: 14px;
+      font-weight: 400;
+      white-space: nowrap;
+      cursor: pointer;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      svg {
+        font-size: 16px;
+        margin-right: 4px;
+      }
+    }
+  }
+
+  :global {
+    .ant-popover-arrow {
+      display: none;
+    }
+
+    .ant-popover-inner-content {
+      padding: 8px;
     }
   }
 }
