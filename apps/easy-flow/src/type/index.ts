@@ -5,14 +5,15 @@ export type FieldType = 'Select' | 'Input';
 export type BaseField = {
   id: string | undefined;
   version: string;
-  title: string;
-  desc: string | null;
-  required: boolean;
+  fieldName: string;
+  label: string;
+  tip: string | null;
+  required?: boolean;
   colSpace: 1 | 2 | 3 | 4 | undefined;
   defaultValue: string | number | undefined | null;
-  disabled: boolean;
-  readonly: boolean;
-  visible: boolean;
+  disabled?: boolean;
+  readonly?: boolean;
+  visible?: boolean;
   value: string | number | null;
 };
 

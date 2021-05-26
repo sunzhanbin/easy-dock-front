@@ -3,11 +3,51 @@ import styled from 'styled-components';
 import { Form, Select, InputNumber, Input, Switch, Radio, Checkbox } from 'antd';
 import { FormField, SchemaConfigItem } from '@/type';
 import { Store } from 'antd/lib/form/interface';
+import selectedImage from '@assets/selected.png';
 
 const { Option } = Select;
 
 const Container = styled.div`
-
+    .ant-form-item-label{
+        padding-bottom: 4px;
+        >label{
+            height: 22px;
+            line-height: 22px;
+            font-size: 14px;
+            font-weight: 500;
+            color: rgba(24, 31, 67, 0.95);
+        }
+    }
+    .ant-radio-group{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        .ant-radio-button-wrapper{
+            width: 47px;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            font-size: 14px;
+            background: rgba(24, 39, 67, 0.04);
+            border-radius: 3px;
+            border: none;
+            font-weight: 400;
+            color: rgba(24, 31, 67, 0.95);
+            box-shadow: none !important;
+            &:hover{
+                color: #4C5CDB;
+            }
+        }
+        .ant-radio-button-wrapper:not(:first-child)::before{
+            display: none;
+        }
+        .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled){
+            color: #4C5CDB;
+            background-image: url(${selectedImage});
+            background-position: top right;
+            background-repeat: no-repeat;
+        }
+    }
 `
 interface FormEditorProps {
     config: SchemaConfigItem[];
@@ -16,10 +56,10 @@ interface FormEditorProps {
     onSave: Function;
 }
 const options = [
-    { label: '25', value: '1' },
-    { label: '50', value: '2' },
-    { label: '75', value: '3' },
-    { label: '100', value: '4' },
+    { label: '1/4', value: '1' },
+    { label: '1/2', value: '2' },
+    { label: '3/4', value: '3' },
+    { label: '1', value: '4' },
 ]
 
 const FormEditor = (props: FormEditorProps) => {

@@ -65,6 +65,7 @@ const BoxContainer = styled.div`
         height: 10px;
         line-height: 10px;
         font-size: 10px;
+        color: #4C5CDB;
     }
 }
 .moveUp{

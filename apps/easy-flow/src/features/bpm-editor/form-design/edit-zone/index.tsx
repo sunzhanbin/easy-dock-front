@@ -7,11 +7,18 @@ import { editProps } from '../formdesign-slice';
 import { FieldType, FormField, SchemaConfigItem } from '@/type';
 
 const EditZoneContainer = styled.div`
-    flex: 0 0 265px;
+    flex: 0 0 260px;
     height: calc(100vh - 64px);
     background: #fff;
-    padding: 20px;
+    padding: 20px 21px;
     overflow-y:auto;
+    .edit_title{
+        font-size: 18px;
+        font-weight: 500;
+        color: rgba(0, 0, 0, 0.85);
+        line-height: 28px;
+        margin-bottom: 14px;
+    }
 `
 
 

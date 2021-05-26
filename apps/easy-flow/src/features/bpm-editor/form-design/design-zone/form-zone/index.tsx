@@ -17,35 +17,57 @@ const FormZoneContainer = styled.div`
     box-shadow: 0 2px 4px 0 rgb(43 52 65 / 10%);
     min-height: 200px;
     margin-bottom: 30px;
+    padding: 12px 0;
     >div{
       min-height: 200px;
     }
     .form_row{
-      &:first-child{
-        padding-top:12px;
-      }
-      &:last-child{
-        padding-bottom:12px;
-      }
       display:flex;
       padding:0 12px;
       
       .form_item{
         position: relative;
         display: inline-block;
-        padding: 12px;
-        border-radius: 6px;
+        padding: 12px 16px;
+        border-radius: 3px;
+        border:1px solid transparent;
         &:hover{
-          background: #fafafb;
+          border: 1px dashed rgba(24, 31, 67, 0.3);
         }
         &.active{
-          background: #eff3fd;
+          border: 1px dashed #818A9E;
           .operation,
           .moveUp,
           .moveDown,
           .moveLeft,
           .moveRight{
             display:block;
+          }
+        }
+        .ant-form-item{
+          margin-bottom: 0;
+          .ant-form-item-label{
+            padding-bottom: 4px;
+            >label{
+              display: block;
+              line-height: 20px;
+              .label_container{
+                .label{
+                  font-size: 12px;
+                  font-weight: 500;
+                  color: rgba(24, 31, 67, 0.95);
+                  line-height: 20px;
+                  margin-bottom: 2px;
+                }
+                .tip{
+                  font-size: 12px;
+                  font-weight: 400;
+                  color: rgba(24, 31, 67, 0.5);
+                  line-height: 20px;
+                  word-break: break-all;
+                }
+              }
+            }
           }
         }
       }

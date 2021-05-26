@@ -8,26 +8,36 @@ import { configSelector } from '@/features/bpm-editor/form-design/formzone-reduc
 import { FieldType, FormField } from '@/type';
 
 const TargetBoxContainer = styled.div`
-  flex: 0 0 98px;
-  height: 36px;
-  line-height:36px;
-  align-items: center;
-  margin-top: 12px;
+  width: 72px;
+  height: 72px;
+  border-radius: 3px;
+  border: 1px solid rgba(24, 31, 67, 0.12);
+  text-align: center;
   cursor: pointer;
+  &:hover{
+    border: 1px solid rgba(24, 31, 67, 0.5);
+  }
   
-  .iconfont{
-    margin:0 4px;
-    color: #aaaeb3;
+  .icon_container{
+    margin-top: 14px;
+    text-align: center;
+    .iconfont{
+      display:inline-block;
+      width: 20px;
+      height: 20px;
+      font-size: 17px;
+      color: #4F5571;
+    }
   }
   .component_name{
-    width: 56px;
+    font-size: 12px;
+    font-weight: 400;
+    color: rgba(24, 31, 67, 0.75);
+    line-height: 20px;
+    margin-top: 10px;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-  }
-  &:hover{
-    background-image: url('https://file.qingflow.com/assets/widget/cover.png');
-    background-size: 98px 36px;
   }
 `;
 
@@ -43,7 +53,9 @@ const TargetBox: FC<{ icon: string, displayName: string, type: FieldType }> = ({
   }, [type])
   return (
     <TargetBoxContainer onClick={addComponent}>
-      <span className={`iconfont ${icon}`}></span>
+      <div className="icon_container">
+        <span className={`iconfont ${icon}`}></span>
+      </div>
       <span className="component_name">{displayName}</span>
     </TargetBoxContainer>
   );
