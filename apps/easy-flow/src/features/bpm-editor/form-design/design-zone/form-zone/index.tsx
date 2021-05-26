@@ -5,6 +5,8 @@ import { Form, Row, Col } from 'antd';
 import { store } from '@app/store';
 import { useDispatch } from 'react-redux';
 import { selectField } from '../../formdesign-slice';
+import { useAppSelector } from '@/app/hooks';
+import { layoutSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 import { FormFieldMap, MoveConfig } from '@/type';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 
@@ -86,25 +88,23 @@ const spaceMap = {
 
 const FormZone: FC<{}> = () => {
   const dispatch = useDispatch();
+  const layout = useAppSelector(layoutSelector);
   const [form] = Form.useForm();
-  const [layout, setLayout] = useState<TLayoutItem[]>([]);
   const [idObject, setIdObject] = useState<FormFieldMap>({});
   const [selectId, setSelectId] = useState<string>('');
   useEffect(() => {
-    store.subscribe(() => {
+    if (layout.length > 0) {
       const formDesign = store.getState().formDesign;
-      const layoutList = formDesign.layout || [];
       setIdObject(formDesign.byId || {});
-      setLayout(layoutList);
-    })
-  }, []);
+    }
+  }, [layout.length]);
   const handleSelect = useCallback((id) => {
     dispatch(selectField({ id }))
     const formDesign = store.getState().formDesign;
     setSelectId((formDesign.selectedField as string))
   }, []);
   const getColSpace = useCallback((id) => {
-    const space = idObject[id].colSpace;
+    const space = idObject[id]?.colSpace;
     if (space) {
       return spaceMap[space];
     }
@@ -152,7 +152,7 @@ const FormZone: FC<{}> = () => {
                                     span={getColSpace(id)}
                                   >
                                     <SourceBox
-                                      type={idObject[id].type}
+                                      type={idObject[id]?.type}
                                       config={idObject[id]}
                                       moveConfig={getMoveConfig(rowIndex, colIndex)}
                                       id={id}
@@ -167,7 +167,6 @@ const FormZone: FC<{}> = () => {
                         )
                       }
                     </Draggable>
-
                   ))
                 }
               </Form>

@@ -1,6 +1,6 @@
 import React, { FC, memo } from 'react';
 import styled from 'styled-components';
-import TargetBox from '@/components/target-box';
+import ComponentItem from '@/components/component-item';
 import { useAppSelector } from '@app/hooks';
 import { toolboxSelector } from '../toolbox-reducer';
 import Loading from '@components/loading';
@@ -59,11 +59,11 @@ const ComponentList: FC<{}> = () => {
 											{...dragProvided.draggableProps}
 											{...dragProvided.dragHandleProps}
 										>
-											<TargetBox
+											<ComponentItem
 												icon={icon}
 												displayName={name}
 												type={type}
-											></TargetBox>
+											></ComponentItem>
 										</div>
 									)
 								}

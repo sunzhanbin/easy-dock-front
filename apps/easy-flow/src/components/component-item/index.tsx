@@ -3,11 +3,11 @@ import styled from 'styled-components';
 import { store } from '@app/store';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '@/app/hooks';
-import { comAdded } from '../../features/bpm-editor/form-design/formdesign-slice';
 import { configSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
+import { comAdded } from '../../features/bpm-editor/form-design/formdesign-slice';
 import { FieldType, FormField } from '@/type';
 
-const TargetBoxContainer = styled.div`
+const ComponentItemContainer = styled.div`
   width: 72px;
   height: 72px;
   border-radius: 3px;
@@ -42,7 +42,7 @@ const TargetBoxContainer = styled.div`
 `;
 
 
-const TargetBox: FC<{ icon: string, displayName: string, type: FieldType }> = ({ icon, displayName, type }) => {
+const ComponentItem: FC<{ icon: string, displayName: string, type: FieldType }> = ({ icon, displayName, type }) => {
   const dispatch = useDispatch();
   const configMap = useAppSelector(configSelector);
   const addComponent = useCallback(() => {
@@ -52,13 +52,13 @@ const TargetBox: FC<{ icon: string, displayName: string, type: FieldType }> = ({
     dispatch(comAdded((com as FormField), rowIndex + 1));
   }, [type])
   return (
-    <TargetBoxContainer onClick={addComponent}>
+    <ComponentItemContainer onClick={addComponent}>
       <div className="icon_container">
         <span className={`iconfont ${icon}`}></span>
       </div>
       <span className="component_name">{displayName}</span>
-    </TargetBoxContainer>
+    </ComponentItemContainer>
   );
 };
 
-export default memo(TargetBox);
+export default memo(ComponentItem);
