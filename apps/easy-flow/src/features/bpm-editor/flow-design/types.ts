@@ -3,16 +3,18 @@ import { MemberConfig } from '@type';
 export enum NodeType {
   // 开始节点
   StartNode = 1,
-  // 用户节点
-  UserNode = 2,
+  // 审批节点
+  AuditNode = 2,
+  // 填写节点
+  FillNode = 3,
   // 分支节点
-  BranchNode = 3,
+  BranchNode = 4,
   // 结束节点
-  FinishNode = 4,
+  FinishNode = 5,
 }
 
 // @auth: 0不可见 1仅可见 2可编辑
-export type FieldAuth = { id: string; auth: 1 | 2 | 0 };
+export type FieldAuth = { id: string; auth: 0 | 1 | 2 | 3; name: string };
 // 节点基本类型
 export interface BaseNode {
   id: string;
@@ -20,7 +22,7 @@ export interface BaseNode {
   name: string;
 }
 
-export type AllNode = StartNode | UserNode | BranchNode | FinishNode;
+export type AllNode = StartNode | AuditNode | FillNode | BranchNode | FinishNode;
 
 export type ButtonAuth = {
   enable?: boolean;
@@ -33,26 +35,39 @@ export enum RevertType {
   Specify = 3,
 }
 
+export type FieldAuthsMap = {
+  [fieldId: string]: FieldAuth;
+};
 // 审批节点
 export interface UserNode extends BaseNode {
-  type: NodeType.UserNode;
-  btnText?: {
-    approve?: ButtonAuth;
-    revert?: ButtonAuth;
-    submit?: ButtonAuth;
-    save?: ButtonAuth;
-    transfer?: ButtonAuth;
-    finish?: ButtonAuth;
-  };
   correlationMemberConfig: MemberConfig;
-  fieldsAuths: FieldAuth[];
-  revert?: {
-    type: RevertType;
-    nodeId?: string;
-  };
+  fieldsAuths: FieldAuthsMap;
   signRule?: {
     tpye: 1 | 2;
     config: {};
+  };
+}
+
+export interface AuditNode extends UserNode {
+  type: NodeType.AuditNode;
+  btnText: {
+    approve: ButtonAuth;
+    revert: ButtonAuth;
+    save: ButtonAuth;
+    transfer?: ButtonAuth;
+    terminate?: ButtonAuth;
+  };
+  revert: {
+    type: RevertType;
+    nodeId?: string;
+  };
+}
+
+export interface FillNode extends UserNode {
+  type: NodeType.FillNode;
+  btnText?: {
+    submit?: ButtonAuth;
+    save?: ButtonAuth;
   };
 }
 

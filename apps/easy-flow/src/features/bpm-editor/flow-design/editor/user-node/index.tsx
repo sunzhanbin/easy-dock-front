@@ -6,22 +6,24 @@ import MemberSelector from '@components/member-selector';
 import { Rule } from 'antd/lib/form';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { updateNode, flowDataSelector } from '../../flow-slice';
-import { UserNode, AllNode } from '../../types';
+import { AuditNode, AllNode } from '../../types';
 import ButtonConfigs from './button-configs';
+import FieldAuths from '../components/field-auths';
 import styles from './index.module.scss';
 
 interface UserNodeEditorProps {
-  node: UserNode;
+  node: AuditNode;
   prevNodes: AllNode[];
 }
 
 type FormValuesType = {
   name: string;
-  correlationMemberConfig: UserNode['correlationMemberConfig'];
+  correlationMemberConfig: AuditNode['correlationMemberConfig'];
   btnConfigs: {
-    btnText: UserNode['btnText'];
-    revert: UserNode['revert'];
+    btnText: AuditNode['btnText'];
+    revert: AuditNode['revert'];
   };
+  fieldsAuths: AuditNode['fieldsAuths'];
 };
 
 function UserNodeEditor(props: UserNodeEditorProps) {
@@ -37,6 +39,7 @@ function UserNodeEditor(props: UserNodeEditorProps) {
         btnText: node.btnText,
         revert: node.revert,
       },
+      fieldsAuths: node.fieldsAuths,
     };
   }, [node]);
 
@@ -49,6 +52,7 @@ function UserNodeEditor(props: UserNodeEditorProps) {
           name: allValues.name,
           btnText: allValues.btnConfigs.btnText,
           revert: allValues.btnConfigs.revert,
+          fieldsAuths: allValues.fieldsAuths,
         }),
       );
     }, 100),
@@ -77,7 +81,42 @@ function UserNodeEditor(props: UserNodeEditorProps) {
           const { departs = [], members = [] } = value;
 
           if (!departs.length && !members.length) {
-            return Promise.reject(new Error('请选择办理人'));
+            return Promise.reject(new Error('办理人不能为空'));
+          }
+
+          return Promise.resolve();
+        },
+      },
+    ];
+  }, []);
+
+  const buttonRules: Rule[] = useMemo(() => {
+    return [
+      {
+        required: true,
+        validator(_, value: FormValuesType['btnConfigs']) {
+          const { btnText, revert } = value;
+
+          if (!btnText) {
+            return Promise.reject(new Error('按钮配置不能为空'));
+          }
+
+          if (btnText.revert?.enable && !revert) {
+            return Promise.reject(new Error('驳回节点不能为空'));
+          }
+
+          let key: keyof typeof btnText;
+          let invalid = true;
+
+          for (key in btnText) {
+            if (btnText[key]?.enable) {
+              invalid = false;
+              break;
+            }
+          }
+
+          if (invalid) {
+            return Promise.reject(new Error('按钮配置不能为空'));
           }
 
           return Promise.resolve();
@@ -101,8 +140,11 @@ function UserNodeEditor(props: UserNodeEditorProps) {
       <Form.Item label="选择办理人" name="correlationMemberConfig" rules={memberRules}>
         <MemberSelector />
       </Form.Item>
-      <Form.Item label="操作权限" name="btnConfigs">
+      <Form.Item label="操作权限" name="btnConfigs" rules={buttonRules}>
         <ButtonConfigs prevNodes={prevNodes} />
+      </Form.Item>
+      <Form.Item label="字段权限" name="fieldsAuths">
+        <FieldAuths templates={fieldsTemplate} />
       </Form.Item>
     </Form>
   );

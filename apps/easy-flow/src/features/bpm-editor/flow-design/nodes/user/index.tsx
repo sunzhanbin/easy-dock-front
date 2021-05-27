@@ -2,11 +2,11 @@ import { memo, useCallback, useMemo } from 'react';
 import { Icon } from '@common/components';
 import MemberSelector from '@components/member-selector';
 import BaseNode from '../base';
-import { UserNode as UserNodeType, AllNode } from '../../types';
+import { AuditNode as AuditNodeType, AllNode } from '../../types';
 
 export interface UserNodeProps {
-  node: UserNodeType;
-  onClick(node: UserNodeType, currentNodePrevNodes: AllNode[]): void;
+  node: AuditNodeType;
+  onClick(node: AuditNodeType, currentNodePrevNodes: AllNode[]): void;
   prevNodes: AllNode[];
 }
 

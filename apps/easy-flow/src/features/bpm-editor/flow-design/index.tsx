@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Drawer } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { Loading, Icon } from '@common/components';
-import { load, flowDataSelector } from './flow-slice';
+import { load, flowDataSelector, save } from './flow-slice';
 import { AllNode, BranchNode as BranchNodeType, NodeType } from './types';
 import { StartNode, UserNode, FinishNode, CardHeader } from './nodes';
 import { UserNodeProps } from './nodes/user';
@@ -36,9 +36,25 @@ function FlowDesign() {
     setShowEditDrawer(true);
   });
 
+  useEffect(() => {
+    function handleSave(event: KeyboardEvent) {
+      if (event.key === 's' && (navigator.platform.match('Mac') ? event.metaKey : event.ctrlKey)) {
+        event.preventDefault();
+
+        dispatch(save('appkey'));
+      }
+    }
+
+    document.body.addEventListener('keydown', handleSave, false);
+
+    return () => {
+      document.body.removeEventListener('keydown', handleSave);
+    };
+  }, []);
+
   const drawerHeader = useMemo(() => {
     if (currentEditNode) {
-      if (currentEditNode.type === NodeType.UserNode) {
+      if (currentEditNode.type === NodeType.AuditNode) {
         return (
           <CardHeader icon={<Icon type="yonghujiedian" />} isUserNode>
             用户节点
@@ -64,7 +80,7 @@ function FlowDesign() {
               return <StartNode key={node.id} node={node} onClick={handleClickNode} />;
             }
 
-            case NodeType.UserNode: {
+            case NodeType.AuditNode: {
               const prevNodes = flow.slice(0, index);
               return (
                 <UserNode
@@ -97,7 +113,7 @@ function FlowDesign() {
             <StartNodeEditor node={currentEditNode} />
           )}
 
-          {currentEditNode && currentEditNode.type === NodeType.UserNode && (
+          {currentEditNode && currentEditNode.type === NodeType.AuditNode && (
             <UserNodeEditor node={currentEditNode} prevNodes={currentEditNodePrevNodes} />
           )}
         </div>

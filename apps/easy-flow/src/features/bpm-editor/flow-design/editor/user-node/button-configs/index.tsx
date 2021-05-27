@@ -1,45 +1,15 @@
-import { memo, ReactNode, useMemo } from 'react';
-import { Input, Button, Checkbox, Cascader } from 'antd';
+import { memo, useMemo } from 'react';
+import { Button, Cascader } from 'antd';
 import { CascaderValueType } from 'antd/lib/cascader';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import { UserNode, ButtonAuth, AllNode, BranchNode, NodeType, RevertType } from '../../../types';
+import ButtonEditor from '../../components/button-editor';
+import { AuditNode, AllNode, BranchNode, NodeType, RevertType, ButtonAuth } from '../../../types';
 import styles from './index.module.scss';
-
-interface ButtonEditorProps extends ButtonAuth {
-  onChange(config: ButtonAuth): void;
-  children: ReactNode;
-}
-
-const ButtonEditor = memo(function ButtonEditor(props: ButtonEditorProps) {
-  const { text, enable, children, onChange } = props;
-
-  return (
-    <div className={styles['btn-editor']}>
-      <div className={styles['btn-content']}>{children}</div>
-      <Input
-        className={styles['btn-alias']}
-        value={text}
-        placeholder="请输入按钮别名"
-        onChange={(event) => {
-          onChange({ text: event.target.value.trim(), enable: enable || false });
-        }}
-        size="large"
-      />
-      <Checkbox
-        className={styles.choose}
-        checked={enable}
-        onChange={(event) => {
-          onChange({ text, enable: event.target.checked });
-        }}
-      />
-    </div>
-  );
-});
 
 interface ButtonConfigsProps {
   value?: {
-    btnText: NonNullable<UserNode['btnText']>;
-    revert: UserNode['revert'];
+    btnText: NonNullable<AuditNode['btnText']>;
+    revert: AuditNode['revert'];
   };
   prevNodes: AllNode[];
   onChange?(value: this['value']): void;
@@ -53,8 +23,7 @@ type RevertOptionsType = {
 
 function ButtonConfigs(props: ButtonConfigsProps) {
   const { value, onChange, prevNodes } = props;
-  const { btnText, revert } = value || {};
-  const showRevert = btnText?.revert?.enable;
+  const { btnText, revert } = value!;
   const options = useMemo(() => {
     const nodes = prevNodes.filter((subNode) => subNode.type !== NodeType.BranchNode) as Exclude<
       AllNode,
@@ -82,22 +51,14 @@ function ButtonConfigs(props: ButtonConfigsProps) {
   }, [prevNodes]);
 
   const cascaderValue = useMemo(() => {
-    if (!options.length) {
-      return [];
+    const { type, nodeId } = revert;
+
+    if (nodeId) {
+      return [type, nodeId];
+    } else {
+      return [type];
     }
-
-    if (value?.revert) {
-      const { type, nodeId } = value.revert;
-
-      if (nodeId) {
-        return [type, nodeId];
-      } else {
-        return [type];
-      }
-    }
-
-    return [options[0].value];
-  }, [value?.revert?.nodeId, options]);
+  }, [revert.nodeId]);
 
   const cascaderValueDisplay = useMemo(() => {
     return function (labels: string[]) {
@@ -108,7 +69,7 @@ function ButtonConfigs(props: ButtonConfigsProps) {
   const handleRevertNodeChange = useMemoCallback((value: CascaderValueType) => {
     if (!onChange || !btnText) return;
 
-    const revert: UserNode['revert'] = {
+    const revert: AuditNode['revert'] = {
       type: value[0] as RevertType,
     };
 
@@ -122,55 +83,34 @@ function ButtonConfigs(props: ButtonConfigsProps) {
     });
   });
 
+  const handleButtonChange = useMemoCallback(
+    (key: keyof AuditNode['btnText'], config: ButtonAuth) => {
+      if (!onChange) return;
+
+      onChange({ btnText: Object.assign({}, btnText, { [key]: config }), revert });
+    },
+  );
+
   return (
     <div className={styles['btn-configs']}>
       <ButtonEditor
-        text={btnText?.submit?.text}
-        enable={btnText?.submit?.enable}
-        onChange={(config) =>
-          onChange!({
-            ...value,
-            btnText: {
-              ...btnText,
-              submit: config,
-            },
-            revert,
-          })
-        }
-      >
-        <Button size="large">提交</Button>
-      </ButtonEditor>
-
-      <ButtonEditor
-        text={btnText?.save?.text}
-        enable={btnText?.save?.enable}
-        onChange={(config) =>
-          onChange!({
-            ...value,
-            btnText: {
-              ...btnText,
-              save: config,
-            },
-            revert,
-          })
-        }
+        className={styles.editor}
+        text={btnText.save.text}
+        enable={btnText.save.enable}
+        cancelable={false}
+        btnKey="save"
+        onChange={handleButtonChange}
       >
         <Button size="large">保存</Button>
       </ButtonEditor>
 
       <ButtonEditor
+        className={styles.editor}
         text={btnText?.approve?.text}
         enable={btnText?.approve?.enable}
-        onChange={(config) =>
-          onChange!({
-            ...value,
-            btnText: {
-              ...btnText,
-              approve: config,
-            },
-            revert,
-          })
-        }
+        cancelable={false}
+        btnKey="approve"
+        onChange={handleButtonChange}
       >
         <Button size="large" className={styles.approve}>
           同意
@@ -178,68 +118,46 @@ function ButtonConfigs(props: ButtonConfigsProps) {
       </ButtonEditor>
 
       <ButtonEditor
+        className={styles.editor}
         text={btnText?.revert?.text}
         enable={btnText?.revert?.enable}
-        onChange={(config) => {
-          onChange!({
-            ...value,
-            btnText: {
-              ...btnText,
-              revert: config,
-            },
-            revert: config.enable && !revert ? { type: RevertType.Start } : revert,
-          });
-        }}
+        cancelable={false}
+        btnKey="revert"
+        onChange={handleButtonChange}
       >
         <Button size="large" type="primary" danger>
           驳回
         </Button>
       </ButtonEditor>
 
-      {showRevert && (
-        <Cascader
-          className={styles.cascader}
-          onChange={handleRevertNodeChange}
-          getPopupContainer={(c) => c}
-          options={options}
-          value={cascaderValue}
-          expandTrigger="hover"
-          displayRender={cascaderValueDisplay}
-          size="large"
-          allowClear={false}
-        />
-      )}
+      <Cascader
+        className={styles.cascader}
+        onChange={handleRevertNodeChange}
+        getPopupContainer={(c) => c}
+        options={options}
+        value={cascaderValue}
+        expandTrigger="hover"
+        displayRender={cascaderValueDisplay}
+        size="large"
+        allowClear={false}
+      />
 
       <ButtonEditor
+        className={styles.editor}
         text={btnText?.transfer?.text}
         enable={btnText?.transfer?.enable}
-        onChange={(config) =>
-          onChange!({
-            ...value,
-            btnText: {
-              ...btnText,
-              transfer: config,
-            },
-            revert,
-          })
-        }
+        btnKey="transfer"
+        onChange={handleButtonChange}
       >
         <Button size="large">转办</Button>
       </ButtonEditor>
 
       <ButtonEditor
-        text={btnText?.finish?.text}
-        enable={btnText?.finish?.enable}
-        onChange={(config) =>
-          onChange!({
-            ...value,
-            btnText: {
-              ...btnText,
-              finish: config,
-            },
-            revert,
-          })
-        }
+        className={styles.editor}
+        text={btnText.terminate?.text}
+        enable={btnText.terminate?.enable}
+        btnKey="terminate"
+        onChange={handleButtonChange}
       >
         <Button size="large">终止</Button>
       </ButtonEditor>
