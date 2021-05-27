@@ -1,4 +1,4 @@
-import { FormInstance } from "antd";
+import { FormInstance } from 'antd';
 
 export type FieldType = 'Select' | 'Input';
 
@@ -61,7 +61,7 @@ export type FieldValueSource = CustomField | AppBindField;
 
 export type FieldOption = {
   readonly value: string;
-  text: string;
+  name: string;
   color?: string;
 };
 
@@ -122,6 +122,7 @@ export type FormFieldMap = {
 };
 
 export type FormDesign = {
+  formId?: string;
   selectedField: string | null;
   byId: FormFieldMap;
   layout: string[][];
@@ -130,17 +131,17 @@ export type FormDesign = {
 
 export type TConfigItem = {
   [k: string]: string | number | boolean | undefined | null | FormInstance;
-}
+};
 
 export type TConfigMap = {
   [k: string]: TConfigItem;
-}
+};
 
 type MoveDirection = 'up' | 'down' | 'left' | 'right';
 
 export type MoveConfig = {
   [k in MoveDirection]: boolean;
-}
+};
 
 type Member = {
   name: string;
