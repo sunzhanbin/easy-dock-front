@@ -56,14 +56,22 @@ function FlowDesign() {
     if (currentEditNode) {
       if (currentEditNode.type === NodeType.AuditNode) {
         return (
-          <CardHeader icon={<Icon type="yonghujiedian" />} isUserNode>
+          <CardHeader icon={<Icon type="yonghujiedian" />} type={currentEditNode.type}>
             用户节点
           </CardHeader>
         );
       } else if (currentEditNode.type === NodeType.StartNode) {
-        return <CardHeader icon={<Icon type="baocunbingzhixing" />}>开始节点</CardHeader>;
+        return (
+          <CardHeader icon={<Icon type="baocunbingzhixing" />} type={currentEditNode.type}>
+            开始节点
+          </CardHeader>
+        );
       } else if (currentEditNode.type === NodeType.FinishNode) {
-        return <CardHeader icon={<Icon type="jieshujiedian" />}>结束节点</CardHeader>;
+        return (
+          <CardHeader icon={<Icon type="jieshujiedian" />} type={currentEditNode.type}>
+            结束节点
+          </CardHeader>
+        );
       }
     }
 

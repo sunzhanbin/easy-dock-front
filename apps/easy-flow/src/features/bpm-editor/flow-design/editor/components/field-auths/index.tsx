@@ -137,10 +137,7 @@ function FieldAuths(props: FieldAuthsProps) {
   const handleFieldChange = useMemoCallback((field: FieldAuth) => {
     if (!onChange) return;
 
-    onChange({
-      ...memoValueInfo.valueMaps,
-      [field.id]: field,
-    });
+    onChange(Object.assign({}, memoValueInfo.valueMaps, { [field.id]: field }));
   });
 
   const { valueMaps, total } = memoValueInfo;
@@ -150,10 +147,7 @@ function FieldAuths(props: FieldAuthsProps) {
     const newValue = { ...valueMaps };
 
     for (let key in newValue) {
-      newValue[key] = {
-        ...newValue[key],
-        auth,
-      };
+      newValue[key] = Object.assign({}, newValue[key], { auth });
     }
 
     if (onChange) {

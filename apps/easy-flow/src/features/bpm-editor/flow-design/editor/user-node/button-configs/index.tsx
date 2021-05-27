@@ -77,10 +77,7 @@ function ButtonConfigs(props: ButtonConfigsProps) {
       revert.nodeId = value[value.length - 1] as string;
     }
 
-    onChange({
-      btnText,
-      revert,
-    });
+    onChange({ btnText, revert });
   });
 
   const handleButtonChange = useMemoCallback(
