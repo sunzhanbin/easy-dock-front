@@ -3,10 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Drawer } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { Loading, Icon } from '@common/components';
-import { load, flowDataSelector } from './flow-slice';
+import { load, flowDataSelector, save } from './flow-slice';
 import { AllNode, BranchNode as BranchNodeType, NodeType } from './types';
 import { StartNode, UserNode, FinishNode, CardHeader } from './nodes';
-import { UserNodeProps } from './nodes/user';
+import { AuditNodeProps } from './nodes/audit-node';
 import { StartNodeEditor, UserNodeEditor } from './editor';
 import styles from './index.module.scss';
 
@@ -30,24 +30,48 @@ function FlowDesign() {
     setShowEditDrawer(false);
   });
 
-  const handleClickUserNode: UserNodeProps['onClick'] = useMemoCallback((node, prevNodes) => {
+  const handleClickUserNode: AuditNodeProps['onClick'] = useMemoCallback((node, prevNodes) => {
     setCurrentEditNode(node);
     setCurrentEditNodePrevNodes(prevNodes);
     setShowEditDrawer(true);
   });
 
+  useEffect(() => {
+    function handleSave(event: KeyboardEvent) {
+      if (event.key === 's' && (navigator.platform.match('Mac') ? event.metaKey : event.ctrlKey)) {
+        event.preventDefault();
+
+        dispatch(save('appkey'));
+      }
+    }
+
+    document.body.addEventListener('keydown', handleSave, false);
+
+    return () => {
+      document.body.removeEventListener('keydown', handleSave);
+    };
+  }, []);
+
   const drawerHeader = useMemo(() => {
     if (currentEditNode) {
-      if (currentEditNode.type === NodeType.UserNode) {
+      if (currentEditNode.type === NodeType.AuditNode) {
         return (
-          <CardHeader icon={<Icon type="yonghujiedian" />} isUserNode>
+          <CardHeader icon={<Icon type="yonghujiedian" />} type={currentEditNode.type}>
             用户节点
           </CardHeader>
         );
       } else if (currentEditNode.type === NodeType.StartNode) {
-        return <CardHeader icon={<Icon type="baocunbingzhixing" />}>开始节点</CardHeader>;
+        return (
+          <CardHeader icon={<Icon type="baocunbingzhixing" />} type={currentEditNode.type}>
+            开始节点
+          </CardHeader>
+        );
       } else if (currentEditNode.type === NodeType.FinishNode) {
-        return <CardHeader icon={<Icon type="jieshujiedian" />}>结束节点</CardHeader>;
+        return (
+          <CardHeader icon={<Icon type="jieshujiedian" />} type={currentEditNode.type}>
+            结束节点
+          </CardHeader>
+        );
       }
     }
 
@@ -64,7 +88,7 @@ function FlowDesign() {
               return <StartNode key={node.id} node={node} onClick={handleClickNode} />;
             }
 
-            case NodeType.UserNode: {
+            case NodeType.AuditNode: {
               const prevNodes = flow.slice(0, index);
               return (
                 <UserNode
@@ -97,7 +121,7 @@ function FlowDesign() {
             <StartNodeEditor node={currentEditNode} />
           )}
 
-          {currentEditNode && currentEditNode.type === NodeType.UserNode && (
+          {currentEditNode && currentEditNode.type === NodeType.AuditNode && (
             <UserNodeEditor node={currentEditNode} prevNodes={currentEditNodePrevNodes} />
           )}
         </div>

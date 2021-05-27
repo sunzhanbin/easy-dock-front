@@ -1,6 +1,6 @@
 import React, { FC, memo } from 'react';
 import styled from 'styled-components';
-import TargetBox from '@/components/target-box';
+import ComponentItem from '@/components/component-item';
 import { useAppSelector } from '@app/hooks';
 import { toolboxSelector } from '../toolbox-reducer';
 import Loading from '@components/loading';
@@ -8,10 +8,10 @@ import { map } from 'lodash';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 
 const ComponentListContainer = styled.div`
-  width: 275px;
-  padding:57px 20px;
+  width: 288px;
+  padding:25px 24px;
   height: calc(100vh - 64px);
-  background: #fff;
+  background: rgba(24, 39, 67, 0.04);
 	.component_list{
 		display:flex;
 		flex-wrap:wrap;
@@ -21,18 +21,23 @@ const ComponentListContainer = styled.div`
 `;
 const ToolboxGroup = styled.div`
   width: 100%;
-  background: #fff;
-  padding: 30px 10px;
   .groupTitle {
-    font-size: 16px;
-    font-weight: 600;
-    padding: 0px 10px 20px 10px;
+    height: 22px;
+	line-height: 22px;
+	font-size: 14px;
+	font-weight: 500;
+	color: rgba(24, 31, 67, 0.95);
   }
   .componentContainer {
     display: flex;
-    justify-content: space-between;
     align-content: space-around;
-    padding: 0px 20px;
+    padding-top: 12px;
+	>div{
+		margin-right: 12px;
+		&:nth-child(3n){
+			margin-right: 0;
+		}
+	}
   }
 `;
 
@@ -45,7 +50,6 @@ const ComponentList: FC<{}> = () => {
 				<div className="componentContainer">
 					{map(value, (tool, index) => {
 						const { name, icon, type } = tool;
-						// return <TargetBox icon={icon} displayName={name} type={type} key={type}></TargetBox>;
 						return (
 							<Draggable draggableId={type} index={+index} key={name}>
 								{
@@ -55,11 +59,11 @@ const ComponentList: FC<{}> = () => {
 											{...dragProvided.draggableProps}
 											{...dragProvided.dragHandleProps}
 										>
-											<TargetBox
+											<ComponentItem
 												icon={icon}
 												displayName={name}
 												type={type}
-											></TargetBox>
+											></ComponentItem>
 										</div>
 									)
 								}

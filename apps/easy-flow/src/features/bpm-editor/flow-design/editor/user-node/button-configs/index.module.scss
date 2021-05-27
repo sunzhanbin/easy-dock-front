@@ -1,27 +1,12 @@
 @import '@styles/mixin.scss';
 
-.btn-editor {
-  @include center('flex');
-
-  margin-bottom: 14px;
-
-  .btn-content {
-    @include center('flex');
-  }
-
-  .btn-alias {
-    flex: 1 1 0;
-    margin: 0 10px;
-  }
-
-  .choose {
-    margin-right: 10px;
-  }
-}
-
 .btn-configs {
-  & > .btn-editor:last-child {
-    margin-bottom: 0;
+  & > .editor {
+    margin-bottom: 14px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 
   .approve {
@@ -58,7 +43,7 @@
       }
 
       .ant-cascader-menu {
-        width: 135px;
+        width: 140px;
         max-height: 180px;
       }
     }

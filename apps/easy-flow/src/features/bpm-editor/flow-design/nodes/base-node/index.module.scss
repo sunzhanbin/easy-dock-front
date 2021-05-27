@@ -9,7 +9,7 @@
   background-color: #818a9e;
   font-weight: 500;
 
-  &.custom {
+  &.audit-node {
     background-color: #63c4ad;
   }
 
@@ -21,7 +21,7 @@
     margin-right: 8px;
     font-size: 24px;
 
-    svg {
+    & > svg {
       color: #fff;
     }
   }
@@ -39,7 +39,7 @@
 
   &:hover {
     .actions {
-      display: flex;
+      opacity: 1;
     }
   }
 
@@ -71,20 +71,6 @@
     justify-content: center;
     padding: 16px 0;
 
-    .add-button {
-      width: 18px;
-      height: 18px;
-      border-radius: 3px;
-      background-color: #fff;
-      border-color: rgba($color: #181f43, $alpha: 0.12);
-
-      svg {
-        width: 10px;
-        font-weight: bold;
-        color: #4c5cdb;
-      }
-    }
-
     .line {
       position: absolute;
       top: 0;
@@ -97,19 +83,21 @@
   }
 
   .actions {
-    display: none;
+    @include center('flex');
+
     position: absolute;
     top: 0;
     right: 0;
-    align-items: center;
     padding: 4px 0;
     padding-left: 30px;
     line-height: 1;
     z-index: 1;
     transform: translateY(-100%);
+    opacity: 0;
+    transition: opacity ease-in-out 0.3s;
 
     &.show {
-      display: flex;
+      opacity: 1;
     }
 
     .action {

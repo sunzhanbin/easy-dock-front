@@ -5,6 +5,8 @@ import { Form, Row, Col } from 'antd';
 import { store } from '@app/store';
 import { useDispatch } from 'react-redux';
 import { selectField } from '../../formdesign-slice';
+import { useAppSelector } from '@/app/hooks';
+import { layoutSelector, componentPropsSelector, selectedFieldSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 import { FormFieldMap, MoveConfig } from '@/type';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 
@@ -17,29 +19,25 @@ const FormZoneContainer = styled.div`
     box-shadow: 0 2px 4px 0 rgb(43 52 65 / 10%);
     min-height: 200px;
     margin-bottom: 30px;
+    padding: 12px 0;
     >div{
       min-height: 200px;
     }
     .form_row{
-      &:first-child{
-        padding-top:12px;
-      }
-      &:last-child{
-        padding-bottom:12px;
-      }
       display:flex;
       padding:0 12px;
       
       .form_item{
         position: relative;
         display: inline-block;
-        padding: 12px;
-        border-radius: 6px;
+        padding: 12px 16px;
+        border-radius: 3px;
+        border:1px solid transparent;
         &:hover{
-          background: #fafafb;
+          border: 1px dashed rgba(24, 31, 67, 0.3);
         }
         &.active{
-          background: #eff3fd;
+          border: 1px dashed #818A9E;
           .operation,
           .moveUp,
           .moveDown,
@@ -48,12 +46,36 @@ const FormZoneContainer = styled.div`
             display:block;
           }
         }
+        .ant-form-item{
+          margin-bottom: 0;
+          .ant-form-item-label{
+            padding-bottom: 4px;
+            >label{
+              display: block;
+              line-height: 20px;
+              .label_container{
+                .label{
+                  font-size: 12px;
+                  font-weight: 500;
+                  color: rgba(24, 31, 67, 0.95);
+                  line-height: 20px;
+                  margin-bottom: 2px;
+                }
+                .tip{
+                  font-size: 12px;
+                  font-weight: 400;
+                  color: rgba(24, 31, 67, 0.5);
+                  line-height: 20px;
+                  word-break: break-all;
+                }
+              }
+            }
+          }
+        }
       }
     }
   }
 `;
-
-type TLayoutItem = Array<string>
 
 const spaceMap = {
   1: 6,
@@ -64,29 +86,19 @@ const spaceMap = {
 
 const FormZone: FC<{}> = () => {
   const dispatch = useDispatch();
+  const layout = useAppSelector(layoutSelector);
+  const byId = useAppSelector(componentPropsSelector);
+  const selectedField = useAppSelector(selectedFieldSelector);
   const [form] = Form.useForm();
-  const [layout, setLayout] = useState<TLayoutItem[]>([]);
-  const [idObject, setIdObject] = useState<FormFieldMap>({});
-  const [selectId, setSelectId] = useState<string>('');
-  useEffect(() => {
-    store.subscribe(() => {
-      const formDesign = store.getState().formDesign;
-      const layoutList = formDesign.layout || [];
-      setIdObject(formDesign.byId || {});
-      setLayout(layoutList);
-    })
-  }, []);
   const handleSelect = useCallback((id) => {
     dispatch(selectField({ id }))
-    const formDesign = store.getState().formDesign;
-    setSelectId((formDesign.selectedField as string))
   }, []);
   const getColSpace = useCallback((id) => {
-    const space = idObject[id].colSpace;
+    const space = byId[id]?.colSpace;
     if (space) {
       return spaceMap[space];
     }
-  }, [idObject]);
+  }, [byId]);
   const getMoveConfig = useCallback((rowIndex, colIndex, flag?) => {
     const config: MoveConfig = { up: true, down: false, left: true, right: true };
     if (rowIndex === 0 || layout[rowIndex - 1].length > 3) {
@@ -125,13 +137,13 @@ const FormZone: FC<{}> = () => {
                                 row.map((id, colIndex) => (
                                   <Col
                                     key={id}
-                                    className={`form_item ${id === selectId ? 'active' : ''}`}
+                                    className={`form_item ${id === selectedField ? 'active' : ''}`}
                                     onClick={() => { handleSelect(id) }}
                                     span={getColSpace(id)}
                                   >
                                     <SourceBox
-                                      type={idObject[id].type}
-                                      config={idObject[id]}
+                                      type={id ? id.split('_')[0] : ''}
+                                      config={byId[id]}
                                       moveConfig={getMoveConfig(rowIndex, colIndex)}
                                       id={id}
                                       form={form}
@@ -145,7 +157,6 @@ const FormZone: FC<{}> = () => {
                         )
                       }
                     </Draggable>
-
                   ))
                 }
               </Form>
@@ -156,7 +167,7 @@ const FormZone: FC<{}> = () => {
       </Droppable>
 
     )
-  }, [layout, idObject, selectId])
+  }, [layout, byId, selectedField])
   return (
     <FormZoneContainer>
       <div className="form-zone">{content}</div>

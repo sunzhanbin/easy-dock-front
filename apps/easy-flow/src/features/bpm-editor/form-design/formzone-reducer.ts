@@ -47,6 +47,9 @@ const reducers = {
     } else {
       state.layout[row].splice(col, 1);
     }
+    if (id === state.selectedField) {
+      state.selectedField = null;
+    }
     return state;
   },
   moveRow(state: FormDesign, action: PayloadAction<{ sourceIndex: number; targetIndex: number }>) {
@@ -124,7 +127,7 @@ export const configSelector = createSelector(
     }
     const keys: string[] = Object.keys(schema);
     keys.forEach((key) => {
-      const configItem: TConfigItem = { type: key };
+      const configItem: TConfigItem = { type: schema[(key as FieldType)]?.baseInfo.type };
       schema[(key as FieldType)]?.config.forEach(({ key, defaultValue }) => {
         configItem[key] = defaultValue;
       })
@@ -133,5 +136,37 @@ export const configSelector = createSelector(
     return config;
   },
 );
+
+export const selectedFieldSelector = createSelector(
+  [
+    (state: RootState) => {
+      return state.formDesign;
+    },
+  ],
+  (formDesign) => {
+    return formDesign.selectedField || '';
+  }
+)
+
+export const layoutSelector = createSelector(
+  [
+    (state: RootState) => {
+      return state.formDesign;
+    },
+  ],
+  (formDesign) => {
+    return formDesign.layout || [];
+  }
+)
+export const componentPropsSelector = createSelector(
+  [
+    (state: RootState) => {
+      return state.formDesign;
+    },
+  ],
+  (formDesign) => {
+    return formDesign.byId || {};
+  }
+)
 
 export const { comAdded, comDeleted, moveRow, moveDown, moveUp, exchange, selectField, editProps } = reducers;

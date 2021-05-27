@@ -65,6 +65,7 @@ const BoxContainer = styled.div`
         height: 10px;
         line-height: 10px;
         font-size: 10px;
+        color: #4C5CDB;
     }
 }
 .moveUp{
@@ -106,13 +107,14 @@ const SourceBox: FC<{
         type && import(`../basic-shop/basic-components/${type}/index`).then(res => {
             setComponent(res.default);
         })
-    }, []);
+    }, [type]);
     const handleCopy = useCallback(() => {
         const formDesign = store.getState().formDesign;
         const com = Object.assign({}, formDesign.byId[id]);
         dispatch(comAdded(com, rowIndex + 1));
     }, [id, rowIndex]);
-    const handleDelete = useCallback(() => {
+    const handleDelete = useCallback((e) => {
+        e.stopPropagation();
         dispatch(comDeleted({ id }));
     }, [id]);
     const handleMoveUp = useCallback(() => {

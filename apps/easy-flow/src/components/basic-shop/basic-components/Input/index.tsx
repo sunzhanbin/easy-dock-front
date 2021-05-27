@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useEffect } from "react";
+import React, { memo, useEffect, useMemo } from "react";
 import styled from 'styled-components';
 import { Input, Form, FormInstance } from "antd";
 import { SingleTextField, TConfigItem } from "@/type";
@@ -18,35 +18,28 @@ const InputComponentContainer = styled.div`
 `;
 
 const InputComponent = (props: SingleTextField & { id: string, form: FormInstance }) => {
-  const { title, placeholder, defaultValue, required, disabled, readonly, visible, allowClear, bordered, id, form } = props;
-  const rules = useMemo(() => {
-    const ruleList = [];
-    if (required) {
-      ruleList.push({ required: true });
-    }
-    return ruleList;
-  }, [required]);
+  const { label, defaultValue, tip, id, form } = props;
   useEffect(() => {
     const value: TConfigItem = {};
     value[id] = defaultValue;
     form.setFieldsValue(value);
   }, [id, defaultValue])
+  const renderLabel = useMemo(() => {
+    return (
+      <div className="label_container">
+        <div className="label">{label}</div>
+        <div className="tip">{tip}</div>
+      </div>
+    )
+  }, [tip, label])
   return (
-    <InputComponentContainer style={{ display: visible ? 'flex' : 'none' }}>
+    <InputComponentContainer>
       <Form.Item
-        label={title}
-        rules={rules}
-        required={required}
+        label={renderLabel}
         initialValue={defaultValue}
         name={id}
       >
-        <Input
-          placeholder={placeholder}
-          disabled={disabled}
-          readOnly={readonly}
-          allowClear={allowClear}
-          bordered={bordered}
-        />
+        <Input />
       </Form.Item>
     </InputComponentContainer>
   );

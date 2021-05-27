@@ -1,4 +1,5 @@
-import { NodeType, UserNode } from './types';
+import { AbstractTooltipProps } from 'antd/lib/tooltip';
+import { NodeType, AuditNode, FillNode, RevertType } from './types';
 
 function randomString() {
   return Math.random().toString(36).slice(2);
@@ -15,11 +16,13 @@ export function fielduuid(group: number = 3) {
   return `flow-node-${uuid(group)}`;
 }
 
-export function createNode(type: NodeType.UserNode, name: string): UserNode {
-  return {
+export function createNode(type: NodeType.AuditNode, name: string): AuditNode;
+export function createNode(type: NodeType.FillNode, name: string): FillNode;
+export function createNode(type: NodeType, name: string) {
+  const node = {
     id: fielduuid(),
     type,
-    fieldsAuths: [],
+    fieldsAuths: {},
     name,
     correlationMemberConfig: {
       departs: [],
@@ -27,4 +30,29 @@ export function createNode(type: NodeType.UserNode, name: string): UserNode {
       members: [],
     },
   };
+
+  if (type === NodeType.AuditNode) {
+    return <AuditNode>{
+      ...node,
+      btnText: {
+        approve: { enable: true },
+        revert: {
+          enable: true,
+        },
+        save: {
+          enable: true,
+        },
+      },
+      revert: {
+        type: RevertType.Start,
+      },
+    };
+  } else if (type === NodeType.FillNode) {
+    return <FillNode>node;
+  } else {
+    throw new Error('传入类型不正确');
+  }
 }
+
+export const getPopupContainer: AbstractTooltipProps['getPopupContainer'] = (container) =>
+  container;
