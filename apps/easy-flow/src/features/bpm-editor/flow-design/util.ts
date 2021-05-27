@@ -25,8 +25,6 @@ export function createNode(type: NodeType, name: string) {
     fieldsAuths: {},
     name,
     correlationMemberConfig: {
-      departs: [],
-      includeSubDeparts: true,
       members: [],
     },
   };

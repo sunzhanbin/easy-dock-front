@@ -1,6 +1,7 @@
 import { memo, useCallback, useMemo } from 'react';
 import { Icon } from '@common/components';
-import MemberSelector from '@components/member-selector';
+import { MemberList } from '@components/member-selector';
+import useShowMembers from '../../hooks/use-show-members';
 import BaseNode from '../base-node';
 import { AuditNode as AuditNodeType, AllNode } from '../../types';
 
@@ -15,23 +16,11 @@ function AuditNode(props: AuditNodeProps) {
   const handleNodeClick = useCallback(() => {
     onClick(node, prevNodes);
   }, [onClick, node, prevNodes]);
-
-  const showMembers = useMemo(() => {
-    const { departs, members } = node.correlationMemberConfig || {};
-    if (departs.length || members.length) {
-      return true;
-    }
-
-    return false;
-  }, [node.correlationMemberConfig]);
+  const showMembers = useShowMembers(node.correlationMemberConfig.members);
 
   return (
     <BaseNode icon={<Icon type="yonghujiedian" />} onClick={handleNodeClick} node={node}>
-      {showMembers ? (
-        <MemberSelector value={node.correlationMemberConfig} readonly></MemberSelector>
-      ) : (
-        '设置此节点'
-      )}
+      {showMembers.length ? <MemberList members={showMembers} /> : '设置此节点'}
     </BaseNode>
   );
 }

@@ -1,7 +1,7 @@
 import React, { memo, useState, useEffect, useMemo, useRef } from 'react';
 import { Tabs, Input, Checkbox } from 'antd';
 import { debounce, throttle } from 'lodash';
-import { MemberConfig } from '@type';
+import { ValueType } from './type';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { Loading } from '@common/components';
 import memberDefaultAvatar from '@assets/members/member-default-avatar.png';
@@ -28,12 +28,12 @@ const fetchUser = async (data: { name: string; page: number }) => {
   return {
     total: memberResponse.data.recordTotal,
     index: memberResponse.data.pageIndex,
-    members: memberResponse.data.data.map((item: any, index: number) => {
+    members: memberResponse.data.data.map((item: any) => {
       const member = item.userInfo[0];
 
       return {
         name: member.cnName,
-        id: member.id,
+        loginName: item.loginName,
         avatar: member.staffPhoto,
       };
     }),
@@ -41,13 +41,13 @@ const fetchUser = async (data: { name: string; page: number }) => {
 };
 
 interface SelectorProps {
-  value: MemberConfig;
-  onMembersChange?(value: MemberConfig['members']): void;
+  value: ValueType;
+  onMembersChange?(value: ValueType['members']): void;
 }
 
 function Selector(props: SelectorProps) {
   const { value, onMembersChange } = props;
-  const [members, setMembers] = useState<MemberConfig['members']>([]);
+  const [members, setMembers] = useState<ValueType['members']>([]);
   const [loading, setLoading] = useState(true);
   const [memberTotal, setMemberTotal] = useState(0);
   const [memberSearchText, setMemberSearchText] = useState('');
@@ -95,28 +95,27 @@ function Selector(props: SelectorProps) {
     }
 
     value.members.forEach((member) => {
-      maps[member.id] = true;
-    });
-
-    value.departs.forEach((dept) => {
-      maps[dept.id] = true;
+      maps[member.loginName] = true;
     });
 
     return maps;
   }, [value]);
 
-  const handleChangeMembers = useMemoCallback((member, checked) => {
-    let newMembers = value ? [...value.members] : [];
-    if (checked) {
-      newMembers.push(member);
-    } else {
-      newMembers = newMembers.filter((item) => item.id !== member.id);
-    }
+  const handleChangeMembers = useMemoCallback(
+    (member: ValueType['members'][number], checked: boolean) => {
+      let newMembers = value ? [...value.members] : [];
 
-    if (onMembersChange) {
-      onMembersChange(newMembers);
-    }
-  });
+      if (checked) {
+        newMembers.push(member);
+      } else {
+        newMembers = newMembers.filter((item) => item.loginName !== member.loginName);
+      }
+
+      if (onMembersChange) {
+        onMembersChange(newMembers);
+      }
+    },
+  );
 
   useEffect(() => {
     searchMembers({ name: '', page: 1 });
@@ -152,12 +151,15 @@ function Selector(props: SelectorProps) {
           />
           <div className={styles.list} onScroll={handleMemberListScroll}>
             {!memberSearchText && <div className={styles.total}>全部成员({memberTotal})</div>}
+
             {members.map((member) => {
+              const selected = valueMaps[member.loginName];
+
               return (
                 <div
-                  key={member.id}
+                  key={member.loginName}
                   className={styles.item}
-                  onClick={() => handleChangeMembers(member, !valueMaps[member.id])}
+                  onClick={() => handleChangeMembers(member, !selected)}
                 >
                   <img
                     className={styles.avatar}
@@ -165,10 +167,11 @@ function Selector(props: SelectorProps) {
                     alt="用户头像"
                   />
                   <span className={styles.name}>{member.name}</span>
-                  <Checkbox checked={valueMaps[member.id]} />
+                  <Checkbox checked={selected} />
                 </div>
               );
             })}
+
             {members.length === 0 && <div>未搜索到用户</div>}
           </div>
         </TabPane>

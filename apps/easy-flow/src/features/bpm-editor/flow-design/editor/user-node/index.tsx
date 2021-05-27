@@ -2,7 +2,7 @@ import { memo, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Form, Input } from 'antd';
 import debounce from 'lodash/debounce';
-import MemberSelector from '@components/member-selector';
+import MemberSelector from '../components/member-selector';
 import { Rule } from 'antd/lib/form';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { updateNode, flowDataSelector } from '../../flow-slice';
@@ -78,9 +78,9 @@ function UserNodeEditor(props: UserNodeEditorProps) {
       {
         required: true,
         validator(_, value: FormValuesType['correlationMemberConfig']) {
-          const { departs = [], members = [] } = value;
+          const { members = [] } = value;
 
-          if (!departs.length && !members.length) {
+          if (!members.length) {
             return Promise.reject(new Error('办理人不能为空'));
           }
 
