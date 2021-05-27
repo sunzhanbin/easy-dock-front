@@ -1,6 +1,6 @@
 import { memo, useCallback } from 'react';
 import { BranchNode as BranchNodeType, AllNode, NodeType } from '../../types';
-import UserNode from '../user';
+import UserNode from '../audit-node';
 
 type BranchType = BranchNodeType['branches'][number];
 

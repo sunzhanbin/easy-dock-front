@@ -6,7 +6,7 @@ import { Loading, Icon } from '@common/components';
 import { load, flowDataSelector, save } from './flow-slice';
 import { AllNode, BranchNode as BranchNodeType, NodeType } from './types';
 import { StartNode, UserNode, FinishNode, CardHeader } from './nodes';
-import { UserNodeProps } from './nodes/user';
+import { AuditNodeProps } from './nodes/audit-node';
 import { StartNodeEditor, UserNodeEditor } from './editor';
 import styles from './index.module.scss';
 
@@ -30,7 +30,7 @@ function FlowDesign() {
     setShowEditDrawer(false);
   });
 
-  const handleClickUserNode: UserNodeProps['onClick'] = useMemoCallback((node, prevNodes) => {
+  const handleClickUserNode: AuditNodeProps['onClick'] = useMemoCallback((node, prevNodes) => {
     setCurrentEditNode(node);
     setCurrentEditNodePrevNodes(prevNodes);
     setShowEditDrawer(true);

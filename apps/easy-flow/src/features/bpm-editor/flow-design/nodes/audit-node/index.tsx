@@ -1,16 +1,16 @@
 import { memo, useCallback, useMemo } from 'react';
 import { Icon } from '@common/components';
 import MemberSelector from '@components/member-selector';
-import BaseNode from '../base';
+import BaseNode from '../base-node';
 import { AuditNode as AuditNodeType, AllNode } from '../../types';
 
-export interface UserNodeProps {
+export interface AuditNodeProps {
   node: AuditNodeType;
   onClick(node: AuditNodeType, currentNodePrevNodes: AllNode[]): void;
   prevNodes: AllNode[];
 }
 
-function UserNode(props: UserNodeProps) {
+function AuditNode(props: AuditNodeProps) {
   const { node, prevNodes, onClick } = props;
   const handleNodeClick = useCallback(() => {
     onClick(node, prevNodes);
@@ -36,4 +36,4 @@ function UserNode(props: UserNodeProps) {
   );
 }
 
-export default memo(UserNode);
+export default memo(AuditNode);

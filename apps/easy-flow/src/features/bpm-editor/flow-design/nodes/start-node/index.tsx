@@ -2,7 +2,7 @@ import { memo, useMemo } from 'react';
 import { Icon } from '@common/components';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { StartNode as StartNodeType, TriggerType } from '../../types';
-import Base from '../base';
+import Base from '../base-node';
 
 interface StartNodeProps {
   node: StartNodeType;
