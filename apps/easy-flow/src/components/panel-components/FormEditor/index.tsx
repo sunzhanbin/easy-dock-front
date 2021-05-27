@@ -90,7 +90,7 @@ const FormEditor = (props: FormEditorProps) => {
                 onValuesChange={handleChange}
             >
                 {
-                    config.map(({ key, label, direction, type, range }) => {
+                    config.map(({ key, label, direction, type, range, placeholder }) => {
                         return (
                             <Fragment key={key}>
                                 {
@@ -101,7 +101,19 @@ const FormEditor = (props: FormEditorProps) => {
                                             labelCol={{ span: direction === 'vertical' ? 24 : 6 }}
                                             labelAlign="left"
                                         >
-                                            <Input />
+                                            <Input placeholder={placeholder} />
+                                        </Form.Item>
+                                    )
+                                }
+                                {
+                                    type === 'Textarea' && (
+                                        <Form.Item
+                                            label={label}
+                                            name={key}
+                                            labelCol={{ span: direction === 'vertical' ? 24 : 6 }}
+                                            labelAlign="left"
+                                        >
+                                            <Input.TextArea placeholder={placeholder} rows={4} />
                                         </Form.Item>
                                     )
                                 }

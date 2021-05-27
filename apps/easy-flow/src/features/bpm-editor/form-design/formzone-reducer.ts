@@ -158,5 +158,15 @@ export const layoutSelector = createSelector(
     return formDesign.layout || [];
   }
 )
+export const componentPropsSelector = createSelector(
+  [
+    (state: RootState) => {
+      return state.formDesign;
+    },
+  ],
+  (formDesign) => {
+    return formDesign.byId || {};
+  }
+)
 
 export const { comAdded, comDeleted, moveRow, moveDown, moveUp, exchange, selectField, editProps } = reducers;

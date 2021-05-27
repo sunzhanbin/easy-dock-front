@@ -6,7 +6,7 @@ import { store } from '@app/store';
 import { useDispatch } from 'react-redux';
 import { selectField } from '../../formdesign-slice';
 import { useAppSelector } from '@/app/hooks';
-import { layoutSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
+import { layoutSelector, componentPropsSelector, selectedFieldSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 import { FormFieldMap, MoveConfig } from '@/type';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 
@@ -77,8 +77,6 @@ const FormZoneContainer = styled.div`
   }
 `;
 
-type TLayoutItem = Array<string>
-
 const spaceMap = {
   1: 6,
   2: 12,
@@ -89,26 +87,18 @@ const spaceMap = {
 const FormZone: FC<{}> = () => {
   const dispatch = useDispatch();
   const layout = useAppSelector(layoutSelector);
+  const byId = useAppSelector(componentPropsSelector);
+  const selectedField = useAppSelector(selectedFieldSelector);
   const [form] = Form.useForm();
-  const [idObject, setIdObject] = useState<FormFieldMap>({});
-  const [selectId, setSelectId] = useState<string>('');
-  useEffect(() => {
-    if (layout.length > 0) {
-      const formDesign = store.getState().formDesign;
-      setIdObject(formDesign.byId || {});
-    }
-  }, [layout.length]);
   const handleSelect = useCallback((id) => {
     dispatch(selectField({ id }))
-    const formDesign = store.getState().formDesign;
-    setSelectId((formDesign.selectedField as string))
   }, []);
   const getColSpace = useCallback((id) => {
-    const space = idObject[id]?.colSpace;
+    const space = byId[id]?.colSpace;
     if (space) {
       return spaceMap[space];
     }
-  }, [idObject]);
+  }, [byId]);
   const getMoveConfig = useCallback((rowIndex, colIndex, flag?) => {
     const config: MoveConfig = { up: true, down: false, left: true, right: true };
     if (rowIndex === 0 || layout[rowIndex - 1].length > 3) {
@@ -147,13 +137,13 @@ const FormZone: FC<{}> = () => {
                                 row.map((id, colIndex) => (
                                   <Col
                                     key={id}
-                                    className={`form_item ${id === selectId ? 'active' : ''}`}
+                                    className={`form_item ${id === selectedField ? 'active' : ''}`}
                                     onClick={() => { handleSelect(id) }}
                                     span={getColSpace(id)}
                                   >
                                     <SourceBox
-                                      type={idObject[id]?.type}
-                                      config={idObject[id]}
+                                      type={id ? id.split('_')[0] : ''}
+                                      config={byId[id]}
                                       moveConfig={getMoveConfig(rowIndex, colIndex)}
                                       id={id}
                                       form={form}
@@ -177,7 +167,7 @@ const FormZone: FC<{}> = () => {
       </Droppable>
 
     )
-  }, [layout, idObject, selectId])
+  }, [layout, byId, selectedField])
   return (
     <FormZoneContainer>
       <div className="form-zone">{content}</div>

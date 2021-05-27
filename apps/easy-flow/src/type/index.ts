@@ -22,6 +22,7 @@ export type SchemaConfigItem = {
   label?: string;
   type: string;
   defaultValue?: string | number | boolean;
+  placeholder?: string;
   children?: SchemaConfigItem;
   direction?: 'vertical' | 'horizontal';
   range?: rangeItem[];

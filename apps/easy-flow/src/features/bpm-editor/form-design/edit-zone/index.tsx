@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 import { editProps } from '../formdesign-slice';
 import { FieldType, FormField, SchemaConfigItem } from '@/type';
 import { useAppSelector } from '@/app/hooks';
-import { selectedFieldSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
+import { componentPropsSelector, selectedFieldSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 
 const EditZoneContainer = styled.div`
     flex: 0 0 260px;
@@ -27,6 +27,7 @@ const EditZoneContainer = styled.div`
 const EditZone = () => {
     const dispatch = useDispatch();
     const selectedField = useAppSelector(selectedFieldSelector);
+    const byId = useAppSelector(componentPropsSelector);
     const [title, setTitle] = useState<string>('');
     const [editList, setEditList] = useState<SchemaConfigItem[]>([]);
     const [config, setConfig] = useState<FormField | null>(null);
@@ -40,7 +41,7 @@ const EditZone = () => {
             setTitle((baseInfo?.name as string));
             setConfig(formDesign.byId[(formDesign.selectedField as string)]);
         }
-    }, [selectedField])
+    }, [selectedField, byId])
     const onSave = useCallback((values) => {
         dispatch(editProps({ id: selectedField, config: values }));
     }, [selectedField]);
