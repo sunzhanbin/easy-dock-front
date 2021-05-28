@@ -92,7 +92,6 @@ type optionItem = {
   key: string;
   value: string;
 };
-type selectedItem = string;
 type Value = {
   type: Mode;
   content: optionItem[];
@@ -108,12 +107,6 @@ const SelectOptionList = (props: editProps) => {
   const [content, setContent] = useState<optionItem[]>(value?.content || []);
   const [canDrag, setCanDrag] = useState<boolean>(false);
   const customRef = useRef(null);
-  useEffect(() => {
-    if (value) {
-      setType(value.type);
-      setContent(value.content);
-    }
-  }, [value]);
   const addItem = useCallback(() => {
     const list: optionItem[] = [...content];
     const name = uniqueId('未命名');
@@ -141,8 +134,8 @@ const SelectOptionList = (props: editProps) => {
     e.preventDefault();
   }, []);
   useEffect(() => {
-    // onChange && onChange({ type, content });
-  }, [type, content, onChange]);
+    onChange && onChange({ type, content });
+  }, [type, content]);
   const customContent = useMemo(() => {
     if (Array.isArray(content)) {
       return (

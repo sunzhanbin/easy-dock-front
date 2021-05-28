@@ -29,7 +29,6 @@ const EditZone = () => {
   const byId = useAppSelector(componentPropsSelector);
   const [title, setTitle] = useState<string>('');
   const [editList, setEditList] = useState<SchemaConfigItem[]>([]);
-  const [config, setConfig] = useState<FormField | null>(null);
   useEffect(() => {
     const formDesign = store.getState().formDesign;
     const filedType = formDesign.selectedField?.split('_')[0] || '';
@@ -38,7 +37,6 @@ const EditZone = () => {
       const baseInfo = formDesign.schema[filedType as FieldType]?.baseInfo;
       setEditList(editConfig as SchemaConfigItem[]);
       setTitle(baseInfo?.name as string);
-      setConfig(formDesign.byId[formDesign.selectedField as string]);
     }
   }, [selectedField, byId]);
   const onSave = useCallback(
@@ -53,7 +51,7 @@ const EditZone = () => {
       {selectedField ? (
         <>
           {renderTitle}
-          <FormEditor config={editList} initValues={config as FormField} onSave={onSave} componentId={selectedField} />
+          <FormEditor config={editList} initValues={byId[selectedField]} onSave={onSave} componentId={selectedField} />
         </>
       ) : null}
     </EditZoneContainer>

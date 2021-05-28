@@ -79,9 +79,6 @@ const FormEditor = (props: FormEditorProps) => {
   const handleChange = () => {
     onFinish(form.getFieldsValue());
   };
-  useEffect(() => {
-    form.setFieldsValue(initValues);
-  }, [initValues]);
 
   useEffect(() => {
     return () => {

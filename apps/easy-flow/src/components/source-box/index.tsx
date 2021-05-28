@@ -1,5 +1,5 @@
 import { FormField, MoveConfig, TConfigItem } from '@/type';
-import { FormInstance } from 'antd';
+import { Tooltip } from 'antd';
 import React, { memo, FC, useEffect, useState, useMemo, useCallback } from 'react';
 import styled from 'styled-components';
 import { store } from '@app/store';
@@ -175,8 +175,12 @@ const SourceBox: FC<{
         <BoxContainer>
           <Component {...(propList as TConfigItem)} />
           <div className="operation">
-            <span className="iconfont iconfuzhi" onClick={handleCopy}></span>
-            <span className="iconfont iconshanchu" onClick={handleDelete}></span>
+            <Tooltip title="复制">
+              <span className="iconfont iconfuzhi" onClick={handleCopy}></span>
+            </Tooltip>
+            <Tooltip title="删除">
+              <span className="iconfont iconshanchu" onClick={handleDelete}></span>
+            </Tooltip>
           </div>
           {moveConfig.up && (
             <div className="moveUp">
