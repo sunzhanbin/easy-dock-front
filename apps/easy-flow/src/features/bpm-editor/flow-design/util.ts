@@ -1,3 +1,4 @@
+import { AbstractTooltipProps } from 'antd/lib/tooltip';
 import { NodeType, AuditNode, FillNode, RevertType } from './types';
 
 function randomString() {
@@ -24,8 +25,6 @@ export function createNode(type: NodeType, name: string) {
     fieldsAuths: {},
     name,
     correlationMemberConfig: {
-      departs: [],
-      includeSubDeparts: true,
       members: [],
     },
   };
@@ -52,3 +51,6 @@ export function createNode(type: NodeType, name: string) {
     throw new Error('传入类型不正确');
   }
 }
+
+export const getPopupContainer: AbstractTooltipProps['getPopupContainer'] = (container) =>
+  container;

@@ -7,7 +7,7 @@ type Options = {
 };
 
 setup({
-  timeout: '200-2000',
+  timeout: '200',
 });
 
 mock(/\/fetch-flow\/\S+/, 'get', function (options: Options) {
@@ -29,5 +29,20 @@ mock(/\/save-flow/, 'post', function (options: Options) {
   return {
     resultCode: 0,
     data: null,
+  };
+});
+
+mock(/^\/user\/list/, 'post', function (options: Options) {
+  const { data } = JSON.parse(options.body);
+
+  return {
+    resultCode: 0,
+    data: data.map((item: string) => {
+      return {
+        avatar: `https://picsum.photos/100/100?t=${Math.random()}`,
+        loginName: item,
+        name: mock('@cname'),
+      };
+    }),
   };
 });

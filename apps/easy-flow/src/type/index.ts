@@ -1,4 +1,4 @@
-import { FormInstance } from "antd";
+import { FormInstance } from 'antd';
 
 export type FieldType = 'Select' | 'Input';
 
@@ -133,29 +133,41 @@ export type FormDesign = {
 
 export type TConfigItem = {
   [k: string]: string | number | boolean | undefined | null | FormInstance;
-}
+};
 
 export type TConfigMap = {
   [k: string]: TConfigItem;
-}
+};
 
 type MoveDirection = 'up' | 'down' | 'left' | 'right';
 
 export type MoveConfig = {
   [k in MoveDirection]: boolean;
-}
+};
 
-type Member = {
+export type Member = {
   name: string;
-  id: number;
+  loginName: string;
   avatar: string;
 };
 
 export type MemberConfig = {
   // 部门数组
-  departs: { id: number; name: string }[];
+  departs: number[];
   // 是否包含子部门
   includeSubDeparts: boolean;
   // 节点成员
-  members: Member[];
+  members: string[];
+};
+
+export type User = {
+  name: string;
+  loginName: string;
+  avatar: string;
+};
+
+export type Depart = {
+  name: string;
+  id: number;
+  avatar: string;
 };

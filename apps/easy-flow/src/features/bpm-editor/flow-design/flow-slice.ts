@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction, createAsyncThunk, createSelector } from '@reduxjs/toolkit';
 import { message } from 'antd';
 import { axios } from '@utils';
+import { User } from '@type';
 import {
   FieldAuth,
   AllNode,
@@ -13,14 +14,14 @@ import {
   Flow,
 } from './types';
 import { RootState } from '@app/store';
-import { fielduuid, createNode } from './util';
+import { fielduuid } from './util';
 
 if (process.env.NODE_ENV === 'development') {
   axios.defaults.baseURL = '/';
   require('./mock');
 }
 
-type FlowType = {
+export type FlowType = {
   loading: boolean;
   data: Flow;
   dirty: boolean;
@@ -31,6 +32,9 @@ type FlowType = {
       name: string;
     };
   };
+  cacheMembers: {
+    [loginNae: string]: User;
+  };
 };
 
 const flowInitial: FlowType = {
@@ -38,6 +42,7 @@ const flowInitial: FlowType = {
   data: [],
   dirty: false,
   invalidNodesMap: {},
+  cacheMembers: {},
 };
 
 function flowUpdate(data: AllNode[], targetId: string, newNode: AllNode | null): AllNode[] {
@@ -95,14 +100,15 @@ function valid(data: AllNode[], validRes: FlowType['invalidNodesMap']) {
 
     if (node.type === NodeType.StartNode) {
     } else if (node.type === NodeType.AuditNode) {
+      if (!node.correlationMemberConfig.members.length) {
+        errors.push('请选择办理人');
+      }
+    } else if (node.type === NodeType.FillNode) {
       if (!node.btnText || Object.keys(node.btnText).length === 0) {
         errors.push('请配置按钮');
       }
 
-      if (
-        !node.correlationMemberConfig.members.length &&
-        !node.correlationMemberConfig.departs.length
-      ) {
+      if (!node.correlationMemberConfig.members.length) {
         errors.push('请选择办理人');
       }
     }
@@ -119,10 +125,40 @@ function valid(data: AllNode[], validRes: FlowType['invalidNodesMap']) {
   return validRes;
 }
 
+function flowMemberKeys(flowData: Flow) {
+  function flowRecursion(flowData: Flow, keys: { members: string[] }) {
+    flowData.forEach((node) => {
+      if (node.type === NodeType.AuditNode || node.type === NodeType.FillNode) {
+        keys.members = keys.members.concat(node.correlationMemberConfig.members);
+      } else if (node.type === NodeType.BranchNode) {
+        node.branches.forEach((sBranch) => {
+          flowRecursion(sBranch.nodes, keys);
+        });
+      }
+    });
+
+    return keys;
+  }
+
+  const allKeys = flowRecursion(flowData, { members: [] });
+
+  allKeys.members = Array.from(new Set(allKeys.members));
+
+  return allKeys;
+}
+
 const flow = createSlice({
   name: 'flow',
   initialState: flowInitial,
   reducers: {
+    setCacheMembers(state, { payload }: PayloadAction<FlowType['cacheMembers']>) {
+      state.cacheMembers = {
+        ...state.cacheMembers,
+        ...payload,
+      };
+
+      return state;
+    },
     setInvalidMaps(state, { payload: validRes }: PayloadAction<FlowType['invalidNodesMap']>) {
       state.invalidNodesMap = validRes;
 
@@ -176,16 +212,16 @@ const flow = createSlice({
 });
 
 const flowActions = flow.actions;
-export const { setLoading, addNode, updateNode, delNode } = flow.actions;
+export const { setLoading, addNode, updateNode, delNode, setCacheMembers } = flow.actions;
 
 // 加载应用的流程，对于初始创建的应用是null
 export const load = createAsyncThunk('flow/load', async (appkey: string, { dispatch }) => {
   try {
     dispatch(setLoading(true));
 
-    const { data } = await axios.get<Flow | null>(`/fetch-flow/${appkey}`);
+    let { data: flowData } = await axios.get<Flow | null>(`/fetch-flow/${appkey}`);
 
-    if (!data || !data.length) {
+    if (!flowData || !flowData.length) {
       // 如果没有流程就初始化一个
       const startNode: StartNode = {
         id: fielduuid(),
@@ -203,10 +239,25 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
         notificationContent: '',
       };
 
-      dispatch(flowActions.setInitialFlow([startNode, finishNode]));
-    } else {
-      dispatch(flowActions.setInitialFlow(data));
+      flowData = [startNode, finishNode];
     }
+
+    const { members } = flowMemberKeys(flowData);
+
+    // members 为一组成员id，这样设计为了避免用户更新完头像或者名称后不在节点中更新的问题
+    const userResponse = await axios.post('/user/list', { data: members });
+    const cacheMembers: FlowType['cacheMembers'] = {};
+
+    userResponse.data.map((member: any) => {
+      cacheMembers[member.loginName] = {
+        name: member.name,
+        avatar: member.avatar,
+        loginName: member.loginName,
+      };
+    });
+
+    dispatch(flowActions.setCacheMembers(cacheMembers));
+    dispatch(flowActions.setInitialFlow(flowData));
   } finally {
     dispatch(setLoading(false));
   }
