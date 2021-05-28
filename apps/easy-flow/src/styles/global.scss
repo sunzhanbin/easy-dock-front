@@ -147,11 +147,13 @@
 
   &:hover {
     border-color: rgba(76, 92, 219, 0.85);
+    background-color: transparent;
   }
 
   &:focus {
     border-color: rgba(76, 92, 219, 0.85);
     box-shadow: 0 0 0 3px rgba(76, 92, 219, 0.2);
+    background-color: transparent;
   }
 
   &.ant-input-lg {

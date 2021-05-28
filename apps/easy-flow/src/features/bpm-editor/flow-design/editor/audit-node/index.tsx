@@ -1,17 +1,16 @@
 import { memo, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Form, Input } from 'antd';
-import debounce from 'lodash/debounce';
-import MemberSelector from '../components/member-selector';
 import { Rule } from 'antd/lib/form';
+import debounce from 'lodash/debounce';
 import useMemoCallback from '@common/hooks/use-memo-callback';
+import MemberSelector from '../components/member-selector';
 import { updateNode, flowDataSelector } from '../../flow-slice';
 import { AuditNode, AllNode } from '../../types';
 import ButtonConfigs from './button-configs';
 import FieldAuths from '../components/field-auths';
-import styles from './index.module.scss';
 
-interface UserNodeEditorProps {
+interface AuditNodeEditorProps {
   node: AuditNode;
   prevNodes: AllNode[];
 }
@@ -26,7 +25,7 @@ type FormValuesType = {
   fieldsAuths: AuditNode['fieldsAuths'];
 };
 
-function UserNodeEditor(props: UserNodeEditorProps) {
+function AuditNodeEditor(props: AuditNodeEditorProps) {
   const dispatch = useDispatch();
   const { node, prevNodes } = props;
   const { fieldsTemplate } = useSelector(flowDataSelector);
@@ -90,44 +89,8 @@ function UserNodeEditor(props: UserNodeEditorProps) {
     ];
   }, []);
 
-  const buttonRules: Rule[] = useMemo(() => {
-    return [
-      {
-        required: true,
-        validator(_, value: FormValuesType['btnConfigs']) {
-          const { btnText, revert } = value;
-
-          if (!btnText) {
-            return Promise.reject(new Error('按钮配置不能为空'));
-          }
-
-          if (btnText.revert?.enable && !revert) {
-            return Promise.reject(new Error('驳回节点不能为空'));
-          }
-
-          let key: keyof typeof btnText;
-          let invalid = true;
-
-          for (key in btnText) {
-            if (btnText[key]?.enable) {
-              invalid = false;
-              break;
-            }
-          }
-
-          if (invalid) {
-            return Promise.reject(new Error('按钮配置不能为空'));
-          }
-
-          return Promise.resolve();
-        },
-      },
-    ];
-  }, []);
-
   return (
     <Form
-      className={styles.form}
       form={form}
       layout="vertical"
       initialValues={formInitialValues}
@@ -140,7 +103,7 @@ function UserNodeEditor(props: UserNodeEditorProps) {
       <Form.Item label="选择办理人" name="correlationMemberConfig" rules={memberRules}>
         <MemberSelector />
       </Form.Item>
-      <Form.Item label="操作权限" name="btnConfigs" rules={buttonRules}>
+      <Form.Item label="操作权限" name="btnConfigs" required>
         <ButtonConfigs prevNodes={prevNodes} />
       </Form.Item>
       <Form.Item label="字段权限" name="fieldsAuths">
@@ -150,4 +113,4 @@ function UserNodeEditor(props: UserNodeEditorProps) {
   );
 }
 
-export default memo(UserNodeEditor);
+export default memo(AuditNodeEditor);

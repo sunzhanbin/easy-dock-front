@@ -7,7 +7,7 @@ import { load, flowDataSelector, save } from './flow-slice';
 import { AllNode, BranchNode as BranchNodeType, NodeType } from './types';
 import { StartNode, UserNode, FinishNode, CardHeader } from './nodes';
 import { AuditNodeProps } from './nodes/audit-node';
-import { StartNodeEditor, UserNodeEditor } from './editor';
+import { StartNodeEditor, AuditNodeEditor, FillNodeEditor } from './editor';
 import styles from './index.module.scss';
 
 function FlowDesign() {
@@ -72,6 +72,12 @@ function FlowDesign() {
             结束节点
           </CardHeader>
         );
+      } else if (currentEditNode.type === NodeType.FillNode) {
+        return (
+          <CardHeader icon={<Icon type="jieshujiedian" />} type={currentEditNode.type}>
+            填写节点
+          </CardHeader>
+        );
       }
     }
 
@@ -83,13 +89,25 @@ function FlowDesign() {
       {loading && <Loading />}
       <div className={styles.content}>
         {flow.map((node, index) => {
+          const prevNodes = flow.slice(0, index);
+
           switch (node.type) {
             case NodeType.StartNode: {
               return <StartNode key={node.id} node={node} onClick={handleClickNode} />;
             }
 
             case NodeType.AuditNode: {
-              const prevNodes = flow.slice(0, index);
+              return (
+                <UserNode
+                  key={node.id}
+                  node={node}
+                  onClick={handleClickUserNode}
+                  prevNodes={prevNodes}
+                />
+              );
+            }
+
+            case NodeType.FillNode: {
               return (
                 <UserNode
                   key={node.id}
@@ -106,6 +124,7 @@ function FlowDesign() {
           }
         })}
       </div>
+
       <Drawer
         width={368}
         visible={showEditDrawer}
@@ -122,7 +141,11 @@ function FlowDesign() {
           )}
 
           {currentEditNode && currentEditNode.type === NodeType.AuditNode && (
-            <UserNodeEditor node={currentEditNode} prevNodes={currentEditNodePrevNodes} />
+            <AuditNodeEditor node={currentEditNode} prevNodes={currentEditNodePrevNodes} />
+          )}
+
+          {currentEditNode && currentEditNode.type === NodeType.FillNode && (
+            <FillNodeEditor node={currentEditNode} prevNodes={currentEditNodePrevNodes} />
           )}
         </div>
       </Drawer>

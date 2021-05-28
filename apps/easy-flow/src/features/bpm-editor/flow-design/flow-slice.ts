@@ -14,7 +14,7 @@ import {
   Flow,
 } from './types';
 import { RootState } from '@app/store';
-import { fielduuid, createNode } from './util';
+import { fielduuid } from './util';
 
 if (process.env.NODE_ENV === 'development') {
   axios.defaults.baseURL = '/';
@@ -100,6 +100,10 @@ function valid(data: AllNode[], validRes: FlowType['invalidNodesMap']) {
 
     if (node.type === NodeType.StartNode) {
     } else if (node.type === NodeType.AuditNode) {
+      if (!node.correlationMemberConfig.members.length) {
+        errors.push('请选择办理人');
+      }
+    } else if (node.type === NodeType.FillNode) {
       if (!node.btnText || Object.keys(node.btnText).length === 0) {
         errors.push('请配置按钮');
       }

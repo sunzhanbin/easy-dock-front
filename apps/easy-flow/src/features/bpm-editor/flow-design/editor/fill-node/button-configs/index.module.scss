@@ -1,0 +1,11 @@
+@import '@styles/mixin.scss';
+
+.btn-configs {
+  & > .editor {
+    margin-bottom: 14px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}

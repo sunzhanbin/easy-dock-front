@@ -1,3 +1,4 @@
+@import '@styles/var.scss';
 @import '@styles/mixin.scss';
 
 .header {
@@ -10,7 +11,7 @@
   font-weight: 500;
 
   &.audit-node {
-    background-color: #63c4ad;
+    background-color: $success-color;
   }
 
   .icon-box {
@@ -36,6 +37,7 @@
 .node {
   width: 248px;
   position: relative;
+  user-select: none;
 
   &:hover {
     .actions {

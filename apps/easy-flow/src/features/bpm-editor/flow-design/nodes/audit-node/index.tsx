@@ -3,11 +3,11 @@ import { Icon } from '@common/components';
 import { MemberList } from '@components/member-selector';
 import useShowMembers from '../../hooks/use-show-members';
 import BaseNode from '../base-node';
-import { AuditNode as AuditNodeType, AllNode } from '../../types';
+import { AuditNode as AuditNodeType, FillNode as FillNodeType, AllNode } from '../../types';
 
 export interface AuditNodeProps {
-  node: AuditNodeType;
-  onClick(node: AuditNodeType, currentNodePrevNodes: AllNode[]): void;
+  node: AuditNodeType | FillNodeType;
+  onClick(node: this['node'], currentNodePrevNodes: AllNode[]): void;
   prevNodes: AllNode[];
 }
 
