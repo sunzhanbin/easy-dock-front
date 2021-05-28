@@ -1,7 +1,7 @@
-import React, { FC, memo, useEffect, useMemo } from "react";
-import { Form, FormInstance, Select } from "antd";
+import React, { memo } from 'react';
+import { Select } from 'antd';
 import styled from 'styled-components';
-import { SelectField, TConfigItem } from "@/type";
+import { SelectField } from '@/type';
 
 const SelectComponentContainer = styled.div`
   display: flex;
@@ -9,30 +9,15 @@ const SelectComponentContainer = styled.div`
   justify-content: space-around;
 `;
 
-const SelectComponent = (props: SelectField & { id: string, form: FormInstance }) => {
-  const { label, defaultValue, tip, id, form, multiple, showSearch } = props;
-  useEffect(() => {
-    const value: TConfigItem = {};
-    value[id] = defaultValue;
-    form.setFieldsValue(value);
-  }, [id, defaultValue])
-  const renderLabel = useMemo(() => {
-    return (
+const SelectComponent = (props: SelectField & { id: string }) => {
+  const { label, defaultValue, tip, multiple, showSearch } = props;
+  return (
+    <SelectComponentContainer>
       <div className="label_container">
         <div className="label">{label}</div>
         <div className="tip">{tip}</div>
       </div>
-    )
-  }, [tip, label])
-  return (
-    <SelectComponentContainer>
-      <Form.Item
-        label={renderLabel}
-        initialValue={defaultValue}
-        name={id}
-      >
-        <Select></Select>
-      </Form.Item>
+      <Select defaultValue={defaultValue} showSearch={showSearch} size="large"></Select>
     </SelectComponentContainer>
   );
 };

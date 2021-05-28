@@ -10,7 +10,7 @@ export type BaseField = {
   tip: string | null;
   required?: boolean;
   colSpace: 1 | 2 | 3 | 4 | undefined;
-  defaultValue: string | number | undefined | null;
+  defaultValue: string | number | undefined;
   disabled?: boolean;
   readonly?: boolean;
   visible?: boolean;
