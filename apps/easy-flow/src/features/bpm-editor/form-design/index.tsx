@@ -1,7 +1,7 @@
 import { FC, memo, useCallback } from 'react';
 import styled from 'styled-components';
 import DesignZone from './design-zone';
-import ComponentList from './component-list';
+import ToolBox from './toolbox';
 import EditZone from './edit-zone';
 import { DragDropContext, DraggableLocation, DropResult } from 'react-beautiful-dnd';
 import { store } from '@app/store';
@@ -50,7 +50,7 @@ const FormDesign: FC<{}> = () => {
   return (
     <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart} onDragUpdate={onDragUpdate}>
       <WorkbenchContainer>
-        <ComponentList></ComponentList>
+        <ToolBox></ToolBox>
         <DesignZone></DesignZone>
         <EditZone></EditZone>
       </WorkbenchContainer>

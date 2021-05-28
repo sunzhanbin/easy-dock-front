@@ -11,7 +11,7 @@ import {
   comDeleted as comDeletedReducer,
 } from './formzone-reducer';
 import { FormDesign } from '@/type';
-import { loadComponents } from './toolbox-reducer';
+import { loadComponents } from './toolbox/toolbox-reducer';
 
 let initialState: FormDesign = {} as FormDesign;
 

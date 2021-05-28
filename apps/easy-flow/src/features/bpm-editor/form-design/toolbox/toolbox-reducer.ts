@@ -2,7 +2,7 @@ import { createAsyncThunk, PayloadAction, createSelector } from '@reduxjs/toolki
 import { uniqueId, values, reduce } from 'lodash';
 import { FormDesign, FormField } from '@type';
 import { RootState } from '@app/store';
-import { fetchComponents } from './toolbox/toolboxApi';
+import { fetchComponents } from './toolboxApi';
 
 export const loadComponents = createAsyncThunk('formDesign/fetchComponents', async () => {
   const response = await fetchComponents();
