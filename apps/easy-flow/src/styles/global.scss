@@ -141,7 +141,6 @@
 
 // 定制输入框
 .ant-input {
-  line-height: 30px;
   border-radius: 3px;
   border-color: transparent;
   background: rgba(24, 39, 67, 0.04);
@@ -298,14 +297,9 @@ input:-webkit-autofill:active {
 
 // 定制下拉框
 .ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
-  height: 40px;
   background: rgba(24, 39, 67, 0.04);
   border-radius: 3px;
   border: none;
-
-  .ant-select-selection-search {
-    height: 40px;
-  }
 }
 
 /* 美化浏览器滚动条样式  ---start--- */

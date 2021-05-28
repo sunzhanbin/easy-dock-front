@@ -1,26 +1,38 @@
-import React, { FC, memo } from "react";
-import { Select } from "antd";
+import React, { FC, memo, useEffect, useMemo } from "react";
+import { Form, FormInstance, Select } from "antd";
 import styled from 'styled-components';
+import { SelectField, TConfigItem } from "@/type";
 
 const SelectComponentContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  .title{
-    display: flex;
-    justify-content: space-between;
-    padding: 0 0 8px;
-    font-weight: 500;
-    word-wrap: break-word;
-  }
 `;
 
-const SelectComponent = (props: any) => {
-  const { title } = props;
+const SelectComponent = (props: SelectField & { id: string, form: FormInstance }) => {
+  const { label, defaultValue, tip, id, form, multiple, showSearch } = props;
+  useEffect(() => {
+    const value: TConfigItem = {};
+    value[id] = defaultValue;
+    form.setFieldsValue(value);
+  }, [id, defaultValue])
+  const renderLabel = useMemo(() => {
+    return (
+      <div className="label_container">
+        <div className="label">{label}</div>
+        <div className="tip">{tip}</div>
+      </div>
+    )
+  }, [tip, label])
   return (
     <SelectComponentContainer>
-      <div className="title">{title}</div>
-      <Select />
+      <Form.Item
+        label={renderLabel}
+        initialValue={defaultValue}
+        name={id}
+      >
+        <Select></Select>
+      </Form.Item>
     </SelectComponentContainer>
   );
 };

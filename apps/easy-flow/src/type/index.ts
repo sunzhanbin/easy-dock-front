@@ -115,6 +115,7 @@ export type SelectField = {
   allowClear: boolean;
   showArrow: boolean;
   showSearch: boolean;
+  multiple: boolean;
 } & SelectBaseField;
 
 export type FormField = SingleTextField | MultipleTextField | SelectField;

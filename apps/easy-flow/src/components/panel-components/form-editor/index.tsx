@@ -1,6 +1,7 @@
 import React, { memo, useMemo, useEffect, Fragment } from 'react';
 import styled from 'styled-components';
 import { Form, Select, InputNumber, Input, Switch, Radio, Checkbox } from 'antd';
+import SelectOptionList from '../select-option-list';
 import { FormField, SchemaConfigItem } from '@/type';
 import { Store } from 'antd/lib/form/interface';
 import selectedImage from '@assets/selected.png';
@@ -47,6 +48,13 @@ const Container = styled.div`
             background-position: top right;
             background-repeat: no-repeat;
         }
+    }
+    .ant-form-item-label-left{
+        height: 32px;
+        line-height: 32px;
+    }
+    .ant-switch{
+        float: right;
     }
 `
 interface FormEditorProps {
@@ -168,11 +176,25 @@ const FormEditor = (props: FormEditorProps) => {
                                         <Form.Item
                                             label={label}
                                             name={key}
+                                            colon={false}
                                             labelCol={{ span: direction === 'vertical' ? 0 : 0 }}
                                             labelAlign="left"
                                             valuePropName="checked"
                                         >
                                             <Switch></Switch>
+                                        </Form.Item>
+                                    )
+                                }
+                                {
+                                    type === 'SelectOptionList' && (
+                                        <Form.Item
+                                            label={label}
+                                            name={key}
+                                            colon={false}
+                                            labelCol={{ span: direction === 'vertical' ? 24 : 6 }}
+                                            labelAlign="left"
+                                        >
+                                            <SelectOptionList />
                                         </Form.Item>
                                     )
                                 }

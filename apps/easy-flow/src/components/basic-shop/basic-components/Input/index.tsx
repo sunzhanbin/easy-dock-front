@@ -8,13 +8,6 @@ const InputComponentContainer = styled.div`
   flex-direction: column;
   justify-content: space-around;
   width:100%;
-  .title{
-    display: flex;
-    justify-content: space-between;
-    padding: 0 0 8px;
-    font-weight: 500;
-    word-wrap: break-word;
-  }
 `;
 
 const InputComponent = (props: SingleTextField & { id: string, form: FormInstance }) => {
