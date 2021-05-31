@@ -121,27 +121,66 @@ const SelectOptionList = (props: editProps) => {
     },
     [content],
   );
-  // TODO 拖拽交换顺序暂未实现
-  const handleDragstart = useCallback((e) => {
+  const handleDragstart = useCallback((e, index) => {
     e.dataTransfer.dropEffect = 'move';
-    e.dataTransfer.setData('text/html', e.target.outerHtml);
+    e.dataTransfer.setData('index', index);
   }, []);
-  const handleDrop = useCallback((e) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
-  }, []);
+  const handleDrop = useCallback(
+    (e, index) => {
+      e.preventDefault();
+      e.stopPropagation();
+      e.dataTransfer.dropEffect = 'move';
+      const sourceIndex = +e.dataTransfer.getData('index');
+      const targetIndex = index;
+      const list: optionItem[] = [...content];
+      if (sourceIndex > targetIndex) {
+        list.splice(targetIndex, 0, list[sourceIndex]);
+        list.splice(sourceIndex + 1, 1);
+      } else {
+        const target = list[sourceIndex];
+        list.splice(sourceIndex, 1);
+        list.splice(targetIndex, 0, target);
+      }
+      setContent(list);
+    },
+    [content],
+  );
   const handleDragOver = useCallback((e) => {
     e.preventDefault();
+    e.stopPropagation();
   }, []);
+  const handleBlur = useCallback(
+    (e, index) => {
+      const list = [...content];
+      const text = e.target.value;
+      list[index] = {
+        key: text,
+        value: text,
+      };
+      setContent(list);
+    },
+    [content],
+  );
   useEffect(() => {
     onChange && onChange({ type, content });
   }, [type, content]);
   const customContent = useMemo(() => {
     if (Array.isArray(content)) {
       return (
-        <div className="custom_list" ref={customRef} onDrop={handleDrop} onDragOver={handleDragOver}>
+        <div className="custom_list" ref={customRef}>
           {content.map((item: optionItem, index: number) => (
-            <div className="custom_item" key={item.key} draggable={canDrag} onDragStart={handleDragstart}>
+            <div
+              className="custom_item"
+              key={item.key}
+              draggable={canDrag}
+              onDragStart={(e) => {
+                handleDragstart(e, index);
+              }}
+              onDrop={(e) => {
+                handleDrop(e, index);
+              }}
+              onDragOver={handleDragOver}
+            >
               <div
                 className="delete"
                 onClick={() => {
@@ -165,7 +204,13 @@ const SelectOptionList = (props: editProps) => {
                   <span className="iconfont iconcaidan"></span>
                 </Tooltip>
               </div>
-              <Input size="large" defaultValue={item.value} />
+              <Input
+                size="large"
+                defaultValue={item.value}
+                onBlur={(e) => {
+                  handleBlur(e, index);
+                }}
+              />
             </div>
           ))}
           <div className="add_custom" onClick={addItem}>

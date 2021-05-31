@@ -159,9 +159,9 @@ const componentSchema = {
         defaultValue: {
           type: 'custom',
           content: [
-            { key: '1', value: '选项一' },
-            { key: '2', value: '选项二' },
-            { key: '3', value: '选项三' },
+            { key: '选项一', value: '选项一' },
+            { key: '选项二', value: '选项二' },
+            { key: '选项三', value: '选项三' },
           ],
         },
         label: '选项内容',
