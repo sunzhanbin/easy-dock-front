@@ -107,9 +107,40 @@ const reducers = {
     state.selectedField = id;
     return state;
   },
-  editProps(state: FormDesign, action: PayloadAction<{ id: string, config: TConfigItem }>) {
-    const { id, config } = action.payload;
+  editProps(state: FormDesign, action: PayloadAction<{ id: string, config: TConfigItem, isEdit?: boolean }>) {
+    const { id, config, isEdit } = action.payload;
     state.byId[id] = (config as FormField);
+    // 如果改变控件宽度后导致整行的宽度大于100%,则需要改变layout布局以实现换行
+    if (isEdit) {
+      const [rowIndex, colIndex] = locateById(id, state.layout);
+      const idList: string[] = [...state.layout[rowIndex]];
+      if (state.byId[id].colSpace == 4) {
+        if (colIndex === 0) {
+          const id: string = (idList.shift() as string);
+          state.layout[rowIndex] = [id];
+          state.layout.splice(rowIndex + 1, 0, idList);
+        } else {
+          const prevRow = idList.slice(0, colIndex);
+          const currentRow = [id];
+          const nextRow = idList.slice(colIndex + 1);
+          state.layout.splice(rowIndex, 1, prevRow, currentRow, nextRow);
+        }
+        return state;
+      }
+      let sum = 0;
+      for (let i = 0, len = idList.length; i < len; i++) {
+        sum += Number(state.byId[idList[i]].colSpace);
+      }
+      if (sum > 4) {
+        state.layout.splice(rowIndex + 1, 0, []);
+      }
+      while (sum > 4) {
+        const id: string = (idList.pop() as string);
+        sum -= Number(state.byId[id].colSpace);
+        state.layout[rowIndex].pop();
+        state.layout[rowIndex + 1].unshift(id);
+      }
+    }
     return state;
   }
 };

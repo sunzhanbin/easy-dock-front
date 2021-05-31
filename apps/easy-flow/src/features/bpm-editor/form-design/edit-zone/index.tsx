@@ -41,7 +41,7 @@ const EditZone = () => {
   }, [selectedField, byId]);
   const onSave = useCallback(
     (values) => {
-      dispatch(editProps({ id: selectedField, config: values }));
+      dispatch(editProps({ id: selectedField, config: values, isEdit: true }));
     },
     [selectedField],
   );

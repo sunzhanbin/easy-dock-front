@@ -86,6 +86,9 @@ const FormEditor = (props: FormEditorProps) => {
       form.resetFields();
     };
   }, [componentId, form]);
+  useEffect(() => {
+    form.setFieldsValue(initValues);
+  }, [initValues]);
   return (
     <Container>
       <Form form={form} name="form_editor" initialValues={initValues} onFinish={onFinish} onValuesChange={handleChange}>
