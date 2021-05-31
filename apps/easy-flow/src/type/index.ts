@@ -109,13 +109,23 @@ export type SelectBaseField = {
 } & DataBaseField &
   BaseField;
 
+export type OptionMode = 'custom' | 'dictionaries';
+export type OptionItem = {
+  key: string;
+  value: string;
+};
+export type SelectOptionItem = {
+  type: OptionMode;
+  content: OptionItem[];
+};
+
 export type SelectField = {
   type: 'Select';
-  mode: 'multipe' | 'tag';
   allowClear: boolean;
   showArrow: boolean;
   showSearch: boolean;
   multiple: boolean;
+  selectOptionList:SelectOptionItem;
 } & SelectBaseField;
 
 export type FormField = SingleTextField | MultipleTextField | SelectField;

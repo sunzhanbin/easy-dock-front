@@ -2,6 +2,7 @@ import React, { memo, useMemo, useEffect, Fragment } from 'react';
 import styled from 'styled-components';
 import { Form, Select, InputNumber, Input, Switch, Radio, Checkbox } from 'antd';
 import SelectOptionList from '../select-option-list';
+import SelectDefaultOption from '../select-default-option';
 import { FormField, SchemaConfigItem } from '@/type';
 import { Store } from 'antd/lib/form/interface';
 import selectedImage from '@assets/selected.png';
@@ -170,6 +171,17 @@ const FormEditor = (props: FormEditorProps) => {
                   labelAlign="left"
                 >
                   <SelectOptionList />
+                </Form.Item>
+              )}
+              {type === 'SelectDefaultOption' && (
+                <Form.Item
+                  label={label}
+                  name={key}
+                  colon={false}
+                  labelCol={{ span: direction === 'vertical' ? 24 : 6 }}
+                  labelAlign="left"
+                >
+                  <SelectDefaultOption id={componentId} />
                 </Form.Item>
               )}
             </Fragment>

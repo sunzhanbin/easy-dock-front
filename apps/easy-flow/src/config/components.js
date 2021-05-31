@@ -136,8 +136,8 @@ const componentSchema = {
         key: 'defaultValue',
         defaultValue: '',
         label: '默认值',
-        placeholder: '请输入',
-        type: 'Input',
+        placeholder: '请选择',
+        type: 'SelectDefaultOption',
         direction: 'vertical',
       },
       {

@@ -2,6 +2,7 @@ import React, { memo, useCallback, useMemo, useState, useRef, useEffect } from '
 import styled from 'styled-components';
 import { Select, Input, Tooltip } from 'antd';
 import { uniqueId } from 'lodash';
+import { OptionItem, OptionMode, SelectOptionItem } from '@/type';
 
 const { Option } = Select;
 
@@ -87,35 +88,26 @@ const Container = styled.div`
     padding: 12px 0;
   }
 `;
-type Mode = 'custom' | 'dictionaries';
-type optionItem = {
-  key: string;
-  value: string;
-};
-type Value = {
-  type: Mode;
-  content: optionItem[];
-};
 interface editProps {
-  value?: Value;
-  onChange?: (v: Value) => void;
+  value?: SelectOptionItem;
+  onChange?: (v: SelectOptionItem) => void;
 }
 
 const SelectOptionList = (props: editProps) => {
   const { value, onChange } = props;
-  const [type, setType] = useState<Mode>(value?.type || 'custom');
-  const [content, setContent] = useState<optionItem[]>(value?.content || []);
+  const [type, setType] = useState<OptionMode>(value?.type || 'custom');
+  const [content, setContent] = useState<OptionItem[]>(value?.content || []);
   const [canDrag, setCanDrag] = useState<boolean>(false);
   const customRef = useRef(null);
   const addItem = useCallback(() => {
-    const list: optionItem[] = [...content];
+    const list: OptionItem[] = [...content];
     const name = uniqueId('未命名');
     list.push({ key: name, value: name });
     setContent(list);
   }, [content]);
   const deleteItem = useCallback(
     (index) => {
-      const list: optionItem[] = [...content];
+      const list: OptionItem[] = [...content];
       list.splice(index, 1);
       setContent(list);
     },
@@ -132,7 +124,7 @@ const SelectOptionList = (props: editProps) => {
       e.dataTransfer.dropEffect = 'move';
       const sourceIndex = +e.dataTransfer.getData('index');
       const targetIndex = index;
-      const list: optionItem[] = [...content];
+      const list: OptionItem[] = [...content];
       if (sourceIndex > targetIndex) {
         list.splice(targetIndex, 0, list[sourceIndex]);
         list.splice(sourceIndex + 1, 1);
@@ -165,10 +157,10 @@ const SelectOptionList = (props: editProps) => {
     onChange && onChange({ type, content });
   }, [type, content]);
   const customContent = useMemo(() => {
-    if (Array.isArray(content)) {
+    if (Array.isArray(content) && type === 'custom') {
       return (
         <div className="custom_list" ref={customRef}>
-          {content.map((item: optionItem, index: number) => (
+          {content.map((item: OptionItem, index: number) => (
             <div
               className="custom_item"
               key={item.key}
@@ -221,7 +213,7 @@ const SelectOptionList = (props: editProps) => {
       );
     }
     return null;
-  }, [content, canDrag]);
+  }, [type, content, canDrag]);
   const dictContent = useMemo(() => {
     if (type === 'dictionaries') {
       return (
