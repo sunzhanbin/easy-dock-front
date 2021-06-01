@@ -12,9 +12,12 @@ const Container = styled.div`
 `;
 
 const Date = (props: DateField) => {
-  const { tip, label, format, notSelectPassed, defaultValue } = props;
+  const { tip, label, format, notSelectPassed, defaultValue, readonly } = props;
   const propList = useMemo(() => {
-    const props: { [k: string]: string | boolean | Function | Moment } = { size: 'large' };
+    const props: { [k: string]: string | boolean | Function | Moment } = {
+      size: 'large',
+      disabled: readonly as boolean,
+    };
     let formatStr: string = '';
     if (format === '2') {
       props.showTime = true;
@@ -34,7 +37,7 @@ const Date = (props: DateField) => {
       props.defaultValue = value;
     }
     return props;
-  }, [format, notSelectPassed, defaultValue]);
+  }, [format, notSelectPassed, defaultValue, readonly]);
   return (
     <Container>
       <div className="label_container">

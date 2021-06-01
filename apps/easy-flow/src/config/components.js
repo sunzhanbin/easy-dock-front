@@ -251,6 +251,56 @@ const componentSchema = {
         direction: 'vertical',
       },
     ]
+  },
+  InputNumber: {
+    baseInfo: {
+      name: '数字',
+      icon: 'iconshuzi123',
+      category: '基础控件',
+      version: '1.0',
+      type: 'InputNumber',
+    },
+    config: [
+      {
+        key: 'fieldName',
+        defaultValue: '',
+        label: '数据库字段名',
+        placeholder: '字母开头,数字或下划线组成',
+        type: 'Input',
+        direction: 'vertical',
+      },
+      {
+        key: 'label',
+        defaultValue: '数字',
+        label: '控件名称',
+        placeholder: '请输入',
+        type: 'Input',
+        direction: 'vertical',
+      },
+      {
+        key: 'tip',
+        defaultValue: '',
+        label: '提示语',
+        placeholder: '请输入',
+        type: 'Input',
+        direction: 'vertical',
+      },
+      {
+        key: 'defaultValue',
+        defaultValue: '',
+        label: '默认值',
+        placeholder: '请输入',
+        type: 'InputNumber',
+        direction: 'vertical',
+      },
+      {
+        key: 'colSpace',
+        defaultValue: '4',
+        label: '控件宽度',
+        type: 'ColSpace',
+        direction: 'vertical',
+      },
+    ]
   }
 };
 

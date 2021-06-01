@@ -12,12 +12,17 @@ const SelectComponentContainer = styled.div`
 `;
 
 const SelectComponent = (props: SelectField & { id: string }) => {
-  const { label, defaultValue, tip, multiple, showSearch, selectOptionList } = props;
+  const { label, defaultValue, tip, multiple, showSearch, selectOptionList, readonly } = props;
   const optionList = useMemo(() => {
     return selectOptionList?.content || [];
   }, [selectOptionList]);
   const propList = useMemo(() => {
-    const prop: { [k: string]: string | boolean } = { size: 'large', showSearch: showSearch, placeholder: '请选择' };
+    const prop: { [k: string]: string | boolean } = {
+      size: 'large',
+      showSearch: showSearch,
+      placeholder: '请选择',
+      disabled: readonly as boolean,
+    };
     if (multiple) {
       prop.mode = 'multiple';
     }
@@ -26,7 +31,7 @@ const SelectComponent = (props: SelectField & { id: string }) => {
       prop.value = defaultValue as string;
     }
     return prop;
-  }, [defaultValue, multiple, showSearch]);
+  }, [defaultValue, multiple, showSearch, readonly]);
   return (
     <SelectComponentContainer>
       <div className="label_container">

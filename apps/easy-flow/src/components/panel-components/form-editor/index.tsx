@@ -1,6 +1,6 @@
 import React, { memo, useEffect, Fragment } from 'react';
 import styled from 'styled-components';
-import { Form, Select, DatePicker, Input, Switch, Radio, Checkbox } from 'antd';
+import { Form, Select, DatePicker, Input, Switch, Radio, Checkbox, InputNumber } from 'antd';
 import SelectOptionList from '../select-option-list';
 import SelectDefaultOption from '../select-default-option';
 import DefaultDate from '../default-date';
@@ -57,6 +57,13 @@ const Container = styled.div`
   }
   .ant-switch {
     float: right;
+  }
+  .input_number {
+    width: 100%;
+  }
+  .ant-input-number-input {
+    background: rgba(24, 39, 67, 0.04);
+    border-radius: 3px;
   }
 `;
 interface FormEditorProps {
@@ -188,7 +195,7 @@ const FormEditor = (props: FormEditorProps) => {
                   <SelectDefaultOption id={componentId} />
                 </Form.Item>
               )}
-              {type === 'Date' && (
+              {type === 'InputNumber' && (
                 <Form.Item
                   label={label}
                   name={key}
@@ -196,7 +203,7 @@ const FormEditor = (props: FormEditorProps) => {
                   labelCol={{ span: direction === 'vertical' ? 24 : 6 }}
                   labelAlign="left"
                 >
-                  <DatePicker size="large" />
+                  <InputNumber size="large" className="input_number" placeholder={placeholder} />
                 </Form.Item>
               )}
               {type === 'DefaultDate' && (

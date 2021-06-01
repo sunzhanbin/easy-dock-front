@@ -13,7 +13,7 @@ const TextareaComponentContainer = styled.div`
 `;
 
 const TextareaComponent = (props: SingleTextField & { id: string }) => {
-  const { label, defaultValue, tip } = props;
+  const { label, defaultValue, tip, readonly } = props;
 
   return (
     <TextareaComponentContainer>
@@ -21,7 +21,7 @@ const TextareaComponent = (props: SingleTextField & { id: string }) => {
         <div className="label">{label}</div>
         <div className="tip">{tip}</div>
       </div>
-      <TextArea rows={4} value={defaultValue} defaultValue={defaultValue} size="large" />
+      <TextArea rows={4} value={defaultValue} defaultValue={defaultValue} size="large" readOnly={readonly} />
     </TextareaComponentContainer>
   );
 };
