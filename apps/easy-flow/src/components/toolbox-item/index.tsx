@@ -1,8 +1,7 @@
 import React, { FC, memo, useCallback } from 'react';
 import styled from 'styled-components';
 import { store } from '@app/store';
-import { useDispatch } from 'react-redux';
-import { useAppSelector } from '@/app/hooks';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { configSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 import { comAdded } from '../../features/bpm-editor/form-design/formdesign-slice';
 import { FieldType, FormField } from '@/type';
@@ -43,7 +42,7 @@ const ToolBoxItemContainer = styled.div`
 
 
 const ToolBoxItem: FC<{ icon: string, displayName: string, type: FieldType }> = ({ icon, displayName, type }) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const configMap = useAppSelector(configSelector);
   const addComponent = useCallback(() => {
     const formDesign = store.getState().formDesign;

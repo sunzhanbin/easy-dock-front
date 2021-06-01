@@ -2,10 +2,9 @@ import React, { memo, useEffect, useState, useMemo, useCallback } from 'react';
 import styled from 'styled-components';
 import FormEditor from '@/components/panel-components/form-editor';
 import { store } from '@app/store';
-import { useDispatch } from 'react-redux';
 import { editProps } from '../formdesign-slice';
-import { FieldType, FormField, SchemaConfigItem } from '@/type';
-import { useAppSelector } from '@/app/hooks';
+import { FieldType, SchemaConfigItem } from '@/type';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { componentPropsSelector, selectedFieldSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 
 const EditZoneContainer = styled.div`
@@ -24,7 +23,7 @@ const EditZoneContainer = styled.div`
 `;
 
 const EditZone = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const selectedField = useAppSelector(selectedFieldSelector);
   const byId = useAppSelector(componentPropsSelector);
   const [title, setTitle] = useState<string>('');

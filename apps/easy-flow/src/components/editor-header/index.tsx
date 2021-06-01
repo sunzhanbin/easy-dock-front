@@ -2,10 +2,10 @@ import React, { FC, memo, useCallback, useState } from 'react';
 import { Steps, Button } from 'antd';
 import styled from 'styled-components';
 import { useHistory, useRouteMatch, Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { save } from '../../features/bpm-editor/flow-design/flow-slice';
 import logo from '@assets/logo.png';
+import { useAppDispatch } from '@/app/hooks';
 const { Step } = Steps;
 
 const HeaderContainer = styled.div`
@@ -29,7 +29,7 @@ const HeaderContainer = styled.div`
 const StepContainer = styled.div``;
 
 const EditorHeader: FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const match = useRouteMatch();
   const routes = [`${match.url}form-design`, `${match.url}flow-design`];
   const history = useHistory();

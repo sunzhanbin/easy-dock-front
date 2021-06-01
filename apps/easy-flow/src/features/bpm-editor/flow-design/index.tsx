@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Prompt } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
 import { Drawer } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { Loading, Icon } from '@common/components';
@@ -10,10 +9,11 @@ import { StartNode, UserNode, FinishNode, CardHeader } from './nodes';
 import { AuditNodeProps } from './nodes/audit-node';
 import { StartNodeEditor, AuditNodeEditor, FillNodeEditor } from './editor';
 import styles from './index.module.scss';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 
 function FlowDesign() {
-  const dispatch = useDispatch();
-  const { loading, data: flow, dirty } = useSelector(flowDataSelector);
+  const dispatch = useAppDispatch();
+  const { loading, data: flow, dirty } = useAppSelector(flowDataSelector);
   const [currentEditNode, setCurrentEditNode] = useState<AllNode | null>(null);
   const [showEditDrawer, setShowEditDrawer] = useState(false);
   const [currentEditNodePrevNodes, setCurrentEditNodePrevNodes] = useState<AllNode[]>([]);
@@ -103,25 +103,11 @@ function FlowDesign() {
             }
 
             case NodeType.AuditNode: {
-              return (
-                <UserNode
-                  key={node.id}
-                  node={node}
-                  onClick={handleClickUserNode}
-                  prevNodes={prevNodes}
-                />
-              );
+              return <UserNode key={node.id} node={node} onClick={handleClickUserNode} prevNodes={prevNodes} />;
             }
 
             case NodeType.FillNode: {
-              return (
-                <UserNode
-                  key={node.id}
-                  node={node}
-                  onClick={handleClickUserNode}
-                  prevNodes={prevNodes}
-                />
-              );
+              return <UserNode key={node.id} node={node} onClick={handleClickUserNode} prevNodes={prevNodes} />;
             }
 
             case NodeType.FinishNode: {
@@ -142,9 +128,7 @@ function FlowDesign() {
         {drawerHeader}
 
         <div className={styles.editor}>
-          {currentEditNode && currentEditNode.type === NodeType.StartNode && (
-            <StartNodeEditor node={currentEditNode} />
-          )}
+          {currentEditNode && currentEditNode.type === NodeType.StartNode && <StartNodeEditor node={currentEditNode} />}
 
           {currentEditNode && currentEditNode.type === NodeType.AuditNode && (
             <AuditNodeEditor node={currentEditNode} prevNodes={currentEditNodePrevNodes} />

@@ -1,5 +1,4 @@
 import { memo, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { Form, Input } from 'antd';
 import { Rule } from 'antd/lib/form';
 import debounce from 'lodash/debounce';
@@ -10,6 +9,7 @@ import { FillNode, AllNode } from '../../types';
 import ButtonConfigs from './button-configs';
 import FieldAuths from '../components/field-auths';
 import styles from './index.module.scss';
+import { useAppDispatch,useAppSelector } from '@/app/hooks';
 
 interface FillNodeEditorProps {
   node: FillNode;
@@ -24,9 +24,9 @@ type FormValuesType = {
 };
 
 function FillNodeEditor(props: FillNodeEditorProps) {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { node, prevNodes } = props;
-  const { fieldsTemplate } = useSelector(flowDataSelector);
+  const { fieldsTemplate } = useAppSelector(flowDataSelector);
   const [form] = Form.useForm<FormValuesType>();
   const formInitialValues = useMemo(() => {
     return {

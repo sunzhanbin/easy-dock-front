@@ -1,17 +1,15 @@
-import React, { FC, memo, useEffect, useState, useMemo, useCallback } from 'react';
+import React, { FC, memo, useMemo, useCallback } from 'react';
 import styled from 'styled-components';
 import SourceBox from '@/components/source-box';
-import { Form, Row, Col } from 'antd';
-import { store } from '@app/store';
-import { useDispatch } from 'react-redux';
+import { Row, Col } from 'antd';
 import { selectField } from '../../formdesign-slice';
-import { useAppSelector } from '@/app/hooks';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import {
   layoutSelector,
   componentPropsSelector,
   selectedFieldSelector,
 } from '@/features/bpm-editor/form-design/formzone-reducer';
-import { FormFieldMap, MoveConfig } from '@/type';
+import { MoveConfig } from '@/type';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 
 const FormZoneContainer = styled.div`
@@ -79,7 +77,7 @@ const spaceMap = {
 };
 
 const FormZone: FC<{}> = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const layout = useAppSelector(layoutSelector);
   const byId = useAppSelector(componentPropsSelector);
   const selectedField = useAppSelector(selectedFieldSelector);

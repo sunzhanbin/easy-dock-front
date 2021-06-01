@@ -1,5 +1,4 @@
 import { memo, useMemo } from 'react';
-import { useDispatch } from 'react-redux';
 import { Input, Form, Space, Button } from 'antd';
 import debounce from 'lodash/debounce';
 import classnames from 'classnames';
@@ -7,6 +6,7 @@ import useMemoCallback from '@common/hooks/use-memo-callback';
 import { updateNode } from '../../flow-slice';
 import { StartNode, TriggerType } from '../../types';
 import styles from './index.module.scss';
+import { useAppDispatch } from '@/app/hooks';
 
 interface StartNodeEditorProps {
   node: StartNode;
@@ -63,7 +63,7 @@ const Trigger = memo(function Trigger({
 function StartNodeEditor(props: StartNodeEditorProps) {
   const { node } = props;
   const [form] = Form.useForm();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const handleFormValuesChange = useMemoCallback(
     debounce((_, allValues: { name: string; triggerType: TriggerType }) => {
       let trigger: StartNode['trigger'];

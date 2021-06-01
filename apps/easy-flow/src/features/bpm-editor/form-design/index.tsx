@@ -5,9 +5,9 @@ import ToolBox from './toolbox';
 import EditZone from './edit-zone';
 import { DragDropContext, DraggableLocation, DropResult } from 'react-beautiful-dnd';
 import { store } from '@app/store';
-import { useDispatch } from 'react-redux';
 import { moveRow, comAdded } from './formdesign-slice';
 import { FieldType, FormField, TConfigItem, TConfigMap } from '@/type';
+import { useAppDispatch } from '@/app/hooks';
 
 const WorkbenchContainer = styled.div`
   width: 100%;
@@ -17,7 +17,7 @@ const WorkbenchContainer = styled.div`
 `;
 
 const FormDesign: FC<{}> = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const onDragEnd = useCallback((result: DropResult) => {
     const { destination, source, draggableId } = result;
     if (destination && source) {
