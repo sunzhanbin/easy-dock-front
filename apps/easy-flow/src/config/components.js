@@ -177,6 +177,81 @@ const componentSchema = {
       },
     ],
   },
+  Date: {
+    baseInfo: {
+      name: '日期',
+      icon: 'iconriqi',
+      category: '基础控件',
+      version: '1.0',
+      type: 'Date',
+    },
+    config: [
+      {
+        key: 'fieldName',
+        defaultValue: '',
+        label: '数据库字段名',
+        placeholder: '字母开头,数字或下划线组成',
+        type: 'Input',
+        direction: 'vertical',
+      },
+      {
+        key: 'label',
+        defaultValue: '日期',
+        label: '控件名称',
+        placeholder: '请输入',
+        type: 'Input',
+        direction: 'vertical',
+      },
+      {
+        key: 'tip',
+        defaultValue: '',
+        label: '提示语',
+        placeholder: '请输入',
+        type: 'Input',
+        direction: 'vertical',
+      },
+      {
+        key: 'format',
+        defaultValue: undefined,
+        label: '显示格式',
+        placeholder: '请选择',
+        type: 'Select',
+        direction: 'vertical',
+        range: [
+          {
+            key: '1',
+            value: '年-月-日'
+          },
+          {
+            key: '2',
+            value: '年-月-日 时:分:秒'
+          },
+        ]
+      },
+      {
+        key: 'notSelectPassed',
+        defaultValue: false,
+        label: '禁止选择已过去的时间',
+        type: 'Switch',
+        direction: 'horizontal',
+      },
+      {
+        key: 'defaultValue',
+        defaultValue: '',
+        label: '默认值',
+        placeholder: '选择日期',
+        type: 'DefaultDate',
+        direction: 'vertical',
+      },
+      {
+        key: 'colSpace',
+        defaultValue: '4',
+        label: '控件宽度',
+        type: 'ColSpace',
+        direction: 'vertical',
+      },
+    ]
+  }
 };
 
 export default componentSchema;

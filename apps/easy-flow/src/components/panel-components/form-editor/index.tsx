@@ -1,8 +1,9 @@
-import React, { memo, useMemo, useEffect, Fragment } from 'react';
+import React, { memo, useEffect, Fragment } from 'react';
 import styled from 'styled-components';
-import { Form, Select, InputNumber, Input, Switch, Radio, Checkbox } from 'antd';
+import { Form, Select, DatePicker, Input, Switch, Radio, Checkbox } from 'antd';
 import SelectOptionList from '../select-option-list';
 import SelectDefaultOption from '../select-default-option';
+import DefaultDate from '../default-date';
 import { FormField, SchemaConfigItem } from '@/type';
 import { Store } from 'antd/lib/form/interface';
 import selectedImage from '@assets/selected.png';
@@ -122,7 +123,7 @@ const FormEditor = (props: FormEditorProps) => {
                   labelCol={{ span: direction === 'vertical' ? 24 : 6 }}
                   labelAlign="left"
                 >
-                  <Select placeholder="请选择" size="large">
+                  <Select placeholder={placeholder || '请选择'} size="large">
                     {range &&
                       range.map((v) => (
                         <Option value={v.key} key={v.key}>
@@ -185,6 +186,28 @@ const FormEditor = (props: FormEditorProps) => {
                   labelAlign="left"
                 >
                   <SelectDefaultOption id={componentId} />
+                </Form.Item>
+              )}
+              {type === 'Date' && (
+                <Form.Item
+                  label={label}
+                  name={key}
+                  colon={false}
+                  labelCol={{ span: direction === 'vertical' ? 24 : 6 }}
+                  labelAlign="left"
+                >
+                  <DatePicker size="large" />
+                </Form.Item>
+              )}
+              {type === 'DefaultDate' && (
+                <Form.Item
+                  label={label}
+                  name={key}
+                  colon={false}
+                  labelCol={{ span: direction === 'vertical' ? 24 : 6 }}
+                  labelAlign="left"
+                >
+                  <DefaultDate id={componentId} />
                 </Form.Item>
               )}
             </Fragment>

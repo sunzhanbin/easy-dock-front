@@ -121,7 +121,7 @@ const FormZone: FC<{}> = () => {
           <div ref={dropProvided.innerRef} {...dropProvided.droppableProps}>
             <div className="form_design">
               {layout.map((row, rowIndex) => (
-                <Draggable draggableId={row[0]} index={rowIndex} key={row[0]}>
+                <Draggable draggableId={`${rowIndex}`} index={rowIndex} key={rowIndex}>
                   {(dragProvided) => (
                     <div ref={dragProvided.innerRef} {...dragProvided.draggableProps} {...dragProvided.dragHandleProps}>
                       <Row className="form_row" key={rowIndex}>
