@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { Prompt } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Drawer } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
@@ -12,7 +13,7 @@ import styles from './index.module.scss';
 
 function FlowDesign() {
   const dispatch = useDispatch();
-  const { loading, data: flow } = useSelector(flowDataSelector);
+  const { loading, data: flow, dirty } = useSelector(flowDataSelector);
   const [currentEditNode, setCurrentEditNode] = useState<AllNode | null>(null);
   const [showEditDrawer, setShowEditDrawer] = useState(false);
   const [currentEditNodePrevNodes, setCurrentEditNodePrevNodes] = useState<AllNode[]>([]);
@@ -84,8 +85,13 @@ function FlowDesign() {
     return null;
   }, [currentEditNode?.type]);
 
+  const handleConfirmLeave = useMemoCallback(() => {
+    return true;
+  });
+
   return (
     <div className={styles.flow}>
+      <Prompt when={dirty} message={handleConfirmLeave} />
       {loading && <Loading />}
       <div className={styles.content}>
         {flow.map((node, index) => {

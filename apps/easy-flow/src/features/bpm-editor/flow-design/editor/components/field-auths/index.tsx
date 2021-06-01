@@ -2,8 +2,10 @@ import { memo, useMemo } from 'react';
 import { Checkbox } from 'antd';
 import classnames from 'classnames';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import { FieldAuth, FieldAuthsMap } from '../../../types';
+import { FieldAuthsMap, AuthType } from '../../../types';
 import styles from './index.module.scss';
+
+type FieldAuth = { id: string; auth: AuthType; name: string };
 
 interface FieldRowProps {
   value: FieldAuth;
@@ -63,7 +65,7 @@ interface FieldAuthsProps {
 function FieldAuths(props: FieldAuthsProps) {
   const { value, onChange, templates } = props;
   const memoValueInfo = useMemo(() => {
-    const valueMaps: FieldAuthsMap = {};
+    const valueMaps: { [key: string]: FieldAuth } = {};
     const statistic: FieldRowProps['extra'] = {
       view: {
         label: '查看',
@@ -86,7 +88,11 @@ function FieldAuths(props: FieldAuthsProps) {
 
     templates.forEach((field) => {
       if (value && value[field.id]) {
-        valueMaps[field.id] = value[field.id];
+        valueMaps[field.id] = {
+          id: field.id,
+          name: field.name,
+          auth: value[field.id],
+        };
       } else {
         valueMaps[field.id] = {
           id: field.id,
@@ -137,17 +143,17 @@ function FieldAuths(props: FieldAuthsProps) {
   const handleFieldChange = useMemoCallback((field: FieldAuth) => {
     if (!onChange) return;
 
-    onChange(Object.assign({}, memoValueInfo.valueMaps, { [field.id]: field }));
+    onChange(Object.assign({}, value, { [field.id]: field.auth }));
   });
 
   const { valueMaps, total } = memoValueInfo;
 
   const handleTotalChange = useMemoCallback((field: FieldAuth) => {
     const { auth } = field;
-    const newValue = { ...valueMaps };
+    const newValue = { ...value };
 
     for (let key in newValue) {
-      newValue[key] = Object.assign({}, newValue[key], { auth });
+      newValue[key] = auth;
     }
 
     if (onChange) {

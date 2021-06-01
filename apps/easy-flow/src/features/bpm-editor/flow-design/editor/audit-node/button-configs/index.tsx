@@ -58,13 +58,13 @@ function ButtonConfigs(props: ButtonConfigsProps) {
     } else {
       return [type];
     }
-  }, [revert.nodeId]);
+  }, [revert]);
 
   const cascaderValueDisplay = useMemo(() => {
     return function (labels: string[]) {
       return labels[labels.length - 1];
     };
-  }, [options]);
+  }, []);
 
   const handleRevertNodeChange = useMemoCallback((value: CascaderValueType) => {
     if (!onChange || !btnText) return;

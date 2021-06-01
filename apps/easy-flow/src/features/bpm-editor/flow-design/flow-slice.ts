@@ -3,7 +3,6 @@ import { message } from 'antd';
 import { axios } from '@utils';
 import { User } from '@type';
 import {
-  FieldAuth,
   AllNode,
   NodeType,
   StartNode,
@@ -33,7 +32,7 @@ export type FlowType = {
     };
   };
   cacheMembers: {
-    [loginNae: string]: User;
+    [loginName: string]: User;
   };
 };
 
@@ -248,7 +247,7 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
     const userResponse = await axios.post('/user/list', { data: members });
     const cacheMembers: FlowType['cacheMembers'] = {};
 
-    userResponse.data.map((member: any) => {
+    userResponse.data.forEach((member: any) => {
       cacheMembers[member.loginName] = {
         name: member.name,
         avatar: member.avatar,
@@ -296,14 +295,13 @@ export default flow;
 export const flowDataSelector = createSelector(
   [(state: RootState) => state.formDesign, (state: RootState) => state.flow],
   (form, flow) => {
-    const formFields: FieldAuth[] = (form && form.byId
-      ? Object.keys(form.byId)
-      : ['input-1', 'select-2']
-    ).map((fieldId) => ({
-      id: fieldId,
-      auth: 1,
-      name: '表单字段',
-    }));
+    const formFields = (form && form.byId ? Object.keys(form.byId) : ['input-1', 'select-2']).map(
+      (fieldId) => ({
+        id: fieldId,
+        name: '表单字段',
+        auth: 1,
+      }),
+    );
 
     return {
       ...flow,

@@ -3,7 +3,6 @@ import Selector, { MemberSelectorProps as SelectorProps } from '@components/memb
 import { useSelector, useDispatch } from 'react-redux';
 import { flowDataSelector, setCacheMembers } from '../../../flow-slice';
 import { UserNode } from '../../../types';
-import { User } from '@type';
 
 interface MemberSelectorProps {
   value?: UserNode['correlationMemberConfig'];
