@@ -93,7 +93,7 @@ function MemberSelector(props: MemberSelectorProps) {
 
   const content = useMemo(() => {
     return <Selector value={showValue} onMembersChange={handleMembersChange} />;
-  }, [showValue]);
+  }, [showValue, handleMembersChange]);
 
   return (
     <div className={styles.container}>

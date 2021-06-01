@@ -20,7 +20,6 @@ const fetchUser = async (data: { name: string; page: number }) => {
       queryField: 'cnName',
     },
     {
-      headers: { auth: '9649555a10ff4177927c0acd422bad5d' },
       baseURL: 'http://10.19.151.141:28201',
     },
   );
@@ -119,7 +118,7 @@ function Selector(props: SelectorProps) {
 
   useEffect(() => {
     searchMembers({ name: '', page: 1 });
-  }, []);
+  }, [searchMembers]);
 
   const handleMemberListScroll = useMemoCallback(
     throttle((event: React.UIEvent<HTMLDivElement, UIEvent>) => {

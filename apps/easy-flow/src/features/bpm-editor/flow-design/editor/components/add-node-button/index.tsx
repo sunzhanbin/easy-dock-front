@@ -53,7 +53,7 @@ function AddNodeButton(props: AddNodeButtonProps) {
         </div>
       </div>
     );
-  }, []);
+  }, [handleAddNode]);
 
   return (
     <Popover

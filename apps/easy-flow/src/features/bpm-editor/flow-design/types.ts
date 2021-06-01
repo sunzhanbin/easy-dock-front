@@ -1,5 +1,3 @@
-import { MemberConfig } from '@type';
-
 export enum NodeType {
   // 开始节点
   StartNode = 1,
@@ -13,8 +11,12 @@ export enum NodeType {
   FinishNode = 5,
 }
 
-// @auth: 0不可见 1仅可见 2可编辑
-export type FieldAuth = { id: string; auth: 0 | 1 | 2 | 3; name: string };
+export enum AuthType {
+  Denied = 0,
+  View = 1,
+  Edit = 2,
+  Required = 3,
+}
 // 节点基本类型
 export interface BaseNode {
   id: string;
@@ -36,7 +38,7 @@ export enum RevertType {
 }
 
 export type FieldAuthsMap = {
-  [fieldId: string]: FieldAuth;
+  [fieldId: string]: AuthType;
 };
 // 审批节点
 export interface UserNode extends BaseNode {
