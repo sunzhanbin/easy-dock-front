@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useMemo, useState, useRef, useEffect } from 'react';
+import React, { memo, useCallback, useMemo, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Select, Input, Tooltip } from 'antd';
 import { uniqueId } from 'lodash';
@@ -98,7 +98,8 @@ const SelectOptionList = (props: editProps) => {
   const [type, setType] = useState<OptionMode>(value?.type || 'custom');
   const [content, setContent] = useState<OptionItem[]>(value?.content || []);
   const [canDrag, setCanDrag] = useState<boolean>(false);
-  const customRef = useRef(null);
+  const [subAppKey, setSubAppKey] = useState<string>('');
+  const [componentKey, setComponentKey] = useState<string>('');
   const addItem = useCallback(() => {
     const list: OptionItem[] = [...content];
     const name = uniqueId('未命名');
@@ -159,7 +160,7 @@ const SelectOptionList = (props: editProps) => {
   const customContent = useMemo(() => {
     if (Array.isArray(content) && type === 'custom') {
       return (
-        <div className="custom_list" ref={customRef}>
+        <div className="custom_list">
           {content.map((item: OptionItem, index: number) => (
             <div
               className="custom_item"
@@ -217,14 +218,36 @@ const SelectOptionList = (props: editProps) => {
   const dictContent = useMemo(() => {
     if (type === 'dictionaries') {
       return (
-        <Select placeholder="请选择" className="dict_content" size="large">
-          <Option value="1">字典一</Option>
-          <Option value="2">字典二</Option>
-        </Select>
+        <>
+          <Select
+            placeholder="选择子应用"
+            className="dict_content"
+            size="large"
+            onChange={(e) => {
+              setSubAppKey(e as string);
+            }}
+          >
+            <Option value="1">子应用一</Option>
+            <Option value="2">子应用二</Option>
+          </Select>
+          {subAppKey && (
+            <Select
+              placeholder="选择控件"
+              className="dict_content"
+              size="large"
+              onChange={(e) => {
+                setComponentKey(e as string);
+              }}
+            >
+              <Option value="1">控件一</Option>
+              <Option value="2">控件二</Option>
+            </Select>
+          )}
+        </>
       );
     }
     return null;
-  }, [type]);
+  }, [type, subAppKey, componentKey]);
   return (
     <Container>
       <div className="title">
@@ -242,7 +265,7 @@ const SelectOptionList = (props: editProps) => {
             setType('dictionaries');
           }}
         >
-          字典数据
+          其他表单数据
         </div>
       </div>
       <div className="content">{type === 'custom' ? customContent : dictContent}</div>

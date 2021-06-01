@@ -41,6 +41,13 @@ const componentSchema = {
         direction: 'vertical',
       },
       {
+        key: 'isUniq',
+        defaultValue: false,
+        label: '是否唯一',
+        type: 'Switch',
+        direction: 'vertical',
+      },
+      {
         key: 'colSpace',
         defaultValue: '4',
         label: '控件宽度',
