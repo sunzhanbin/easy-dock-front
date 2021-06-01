@@ -21,7 +21,7 @@ const TextareaComponent = (props: SingleTextField & { id: string }) => {
         <div className="label">{label}</div>
         <div className="tip">{tip}</div>
       </div>
-      <TextArea rows={4} value={defaultValue} size="large" />
+      <TextArea rows={4} value={defaultValue} defaultValue={defaultValue} size="large" />
     </TextareaComponentContainer>
   );
 };

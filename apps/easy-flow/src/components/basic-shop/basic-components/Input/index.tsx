@@ -18,7 +18,7 @@ const InputComponent = (props: SingleTextField & { id: string }) => {
         <div className="label">{label}</div>
         <div className="tip">{tip}</div>
       </div>
-      <Input value={defaultValue} size="large" />
+      <Input value={defaultValue} defaultValue={defaultValue} size="large" />
     </InputComponentContainer>
   );
 };

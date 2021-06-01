@@ -212,7 +212,7 @@ const componentSchema = {
       },
       {
         key: 'format',
-        defaultValue: undefined,
+        defaultValue: '1',
         label: '显示格式',
         placeholder: '请选择',
         type: 'Select',

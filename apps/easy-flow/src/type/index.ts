@@ -1,4 +1,4 @@
-import { FormInstance } from 'antd';
+import { Moment } from 'moment';
 
 export type FieldType = 'Select' | 'Input';
 
@@ -125,10 +125,16 @@ export type SelectField = {
   showArrow: boolean;
   showSearch: boolean;
   multiple: boolean;
-  selectOptionList:SelectOptionItem;
+  selectOptionList: SelectOptionItem;
 } & SelectBaseField;
 
-export type FormField = SingleTextField | MultipleTextField | SelectField;
+export type DateField = {
+  type: 'Date';
+  format: string;
+  notSelectPassed: boolean;
+} & BaseField
+
+export type FormField = SingleTextField | MultipleTextField | SelectField | DateField;
 
 export type FormFieldMap = {
   [k: string]: FormField;
@@ -142,7 +148,7 @@ export type FormDesign = {
 };
 
 export type TConfigItem = {
-  [k: string]: string | number | boolean | undefined | null | FormInstance;
+  [k: string]: string | number | boolean | undefined | null;
 };
 
 export type TConfigMap = {

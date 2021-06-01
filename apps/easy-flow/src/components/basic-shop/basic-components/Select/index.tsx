@@ -23,6 +23,7 @@ const SelectComponent = (props: SelectField & { id: string }) => {
     }
     if (defaultValue) {
       prop.defaultValue = defaultValue as string;
+      prop.value = defaultValue as string;
     }
     return prop;
   }, [defaultValue, multiple, showSearch]);
