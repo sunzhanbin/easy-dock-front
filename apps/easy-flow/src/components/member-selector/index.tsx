@@ -1,6 +1,6 @@
 import { memo, ReactNode, useMemo, useRef, useState } from 'react';
 import { Popover } from 'antd';
-import { MemberConfig } from '@type';
+import { ValueType } from './type';
 import { Icon } from '@common/components';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import memberDefaultAvatar from '@assets/members/member-default-avatar.png';
@@ -8,12 +8,8 @@ import Selector from './selector';
 import styles from './index.module.scss';
 
 interface MemberProps {
-  data: {
-    avatar?: string;
-    name: string;
-    id: number;
-  };
-  onDelete?(data: this['data']): void;
+  data: ValueType['members'][number];
+  onDelete?(id: string): void;
   editable?: boolean;
 }
 
@@ -21,47 +17,63 @@ const Member = memo(function Member(props: MemberProps) {
   const { data, editable, onDelete } = props;
   const handleDelete = useMemoCallback(() => {
     if (onDelete) {
-      onDelete(data);
+      onDelete(data.loginName);
     }
   });
 
   return (
     <div className={styles.member}>
-      <img className={styles.avatar} src={data.avatar} alt="头像" />
+      <img className={styles.avatar} src={data.avatar || memberDefaultAvatar} alt="头像" />
       <div className={styles.name}>{data.name}</div>
       {editable && <Icon className={styles.delete} type="guanbi" onClick={handleDelete} />}
     </div>
   );
 });
 
-interface MemberSelectorProps {
-  value?: MemberConfig;
+interface MemberListProps {
+  members: ValueType['members'];
+  editable?: boolean;
+  onDelete?(id: string): void;
   children?: ReactNode;
-  readonly?: boolean;
-  onChange?(value: MemberConfig): void;
 }
 
-const defaultValue: MemberConfig = {
-  departs: [],
+export const MemberList = memo(function MemberList(props: MemberListProps) {
+  const { members, editable, onDelete, children } = props;
+
+  return (
+    <div className={styles.members}>
+      {members.map((member) => {
+        return (
+          <Member editable={editable} key={member.loginName} data={member} onDelete={onDelete} />
+        );
+      })}
+      {children}
+    </div>
+  );
+});
+
+export interface MemberSelectorProps {
+  value?: ValueType;
+  children?: ReactNode;
+  onChange?(value: ValueType): void;
+}
+
+const defaultValue: ValueType = {
   members: [],
-  includeSubDeparts: true,
 };
 
 function MemberSelector(props: MemberSelectorProps) {
-  const { value, readonly = false, onChange, children } = props;
+  const { value, onChange, children } = props;
   const popoverContentContainerRef = useRef<HTMLDivElement>(null);
   const [showPopover, setShowPopover] = useState(false);
-  const [localValue, setLocalValue] = useState<MemberConfig>(value || defaultValue);
+  const [localValue, setLocalValue] = useState<ValueType>(value || defaultValue);
   const showValue = value || localValue;
   const getPopupContainer = useMemo(() => {
     return () => popoverContentContainerRef.current!;
   }, []);
 
-  const handleMembersChange = useMemoCallback((newMembers: MemberConfig['members']) => {
-    const newValue = {
-      ...showValue,
-      members: newMembers,
-    };
+  const handleMembersChange = useMemoCallback((newMembers: ValueType['members']) => {
+    const newValue = Object.assign({}, showValue, { members: newMembers });
 
     if (onChange) {
       onChange(newValue);
@@ -70,11 +82,11 @@ function MemberSelector(props: MemberSelectorProps) {
     }
   });
 
-  const handleDeleteMember = useMemoCallback((data: MemberProps['data']) => {
+  const handleDeleteMember = useMemoCallback((loginName: string) => {
     if (onChange) {
       onChange({
         ...showValue,
-        members: showValue.members.filter((member) => member.id !== data.id),
+        members: showValue.members.filter((member) => member.loginName !== loginName),
       });
     }
   });
@@ -85,47 +97,24 @@ function MemberSelector(props: MemberSelectorProps) {
 
   return (
     <div className={styles.container}>
-      <div className={styles.members}>
-        {showValue.departs.map((dept) => (
-          <Member editable={!readonly} key={dept.id} data={dept} />
-        ))}
+      <MemberList members={showValue.members} onDelete={handleDeleteMember} editable>
+        <Popover
+          content={content}
+          getPopupContainer={getPopupContainer}
+          trigger="click"
+          visible={showPopover}
+          onVisibleChange={setShowPopover}
+          destroyTooltipOnHide
+          placement="bottom"
+          arrowContent={null}
+        >
+          <div className={styles.action}>
+            {children ? children : <Icon type="xinzengjiacu" className={styles.add} />}
+          </div>
+        </Popover>
+      </MemberList>
 
-        {showValue.members.map((member) => {
-          const data = {
-            ...member,
-            avatar: member.avatar || memberDefaultAvatar,
-          };
-
-          return (
-            <Member
-              editable={!readonly}
-              key={member.id}
-              data={data}
-              onDelete={handleDeleteMember}
-            />
-          );
-        })}
-
-        {!readonly && (
-          <Popover
-            content={content}
-            getPopupContainer={getPopupContainer}
-            trigger="click"
-            visible={showPopover}
-            onVisibleChange={setShowPopover}
-            destroyTooltipOnHide
-            placement="bottom"
-            arrowContent={null}
-          >
-            <div className={styles.action}>
-              {children ? children : <Icon type="xinzengjiacu" className={styles.add} />}
-            </div>
-          </Popover>
-        )}
-      </div>
-      {!readonly && (
-        <div className={styles['popover-content-container']} ref={popoverContentContainerRef} />
-      )}
+      <div className={styles['popover-content-container']} ref={popoverContentContainerRef} />
     </div>
   );
 }

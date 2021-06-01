@@ -40,12 +40,10 @@ export type FieldAuthsMap = {
 };
 // 审批节点
 export interface UserNode extends BaseNode {
-  correlationMemberConfig: MemberConfig;
-  fieldsAuths: FieldAuthsMap;
-  signRule?: {
-    tpye: 1 | 2;
-    config: {};
+  correlationMemberConfig: {
+    members: string[];
   };
+  fieldsAuths: FieldAuthsMap;
 }
 
 export interface AuditNode extends UserNode {

@@ -19,13 +19,13 @@ function AddNodeButton(props: AddNodeButtonProps) {
   const dispatch = useDispatch();
   const [showAddPopover, setShowAddPopover] = useState(false);
 
-  const handleAddNode = useMemoCallback((type: NodeType, name: string) => {
+  const handleAddNode = useMemoCallback((type: NodeType) => {
     let tmpNode;
 
     if (type === NodeType.AuditNode) {
-      tmpNode = createNode(type, name);
+      tmpNode = createNode(type, '审批节点');
     } else if (type === NodeType.FillNode) {
-      tmpNode = createNode(type, name);
+      tmpNode = createNode(type, '填写节点');
     } else {
       throw Error('传入类型不正确');
     }
@@ -43,11 +43,11 @@ function AddNodeButton(props: AddNodeButtonProps) {
   const addPopoverContent = useMemo(() => {
     return (
       <div className={styles['add-list']}>
-        <div onClick={() => handleAddNode(NodeType.AuditNode, '审批节点')}>
+        <div onClick={() => handleAddNode(NodeType.AuditNode)}>
           <Icon type="lineyonghujiedian1" />
           <span>添加审批节点</span>
         </div>
-        <div onClick={() => handleAddNode(NodeType.FillNode, '填写节点')}>
+        <div onClick={() => handleAddNode(NodeType.FillNode)}>
           <Icon type="caidan" />
           <span>添加填写节点</span>
         </div>

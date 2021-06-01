@@ -1,7 +1,7 @@
-import React, { memo, useEffect, useMemo } from "react";
+import React, { memo } from 'react';
 import styled from 'styled-components';
-import { Input, Form, FormInstance } from "antd";
-import { SingleTextField, TConfigItem } from "@/type";
+import { Input } from 'antd';
+import { SingleTextField } from '@/type';
 
 const { TextArea } = Input;
 
@@ -9,42 +9,21 @@ const TextareaComponentContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  width:100%;
-  .title{
-    display: flex;
-    justify-content: space-between;
-    padding: 0 0 8px;
-    font-weight: 500;
-    word-wrap: break-word;
-  }
+  width: 100%;
 `;
 
-const TextareaComponent = (props: SingleTextField & { id: string, form: FormInstance }) => {
-    const { label, defaultValue, tip, id, form } = props;
-    useEffect(() => {
-        const value: TConfigItem = {};
-        value[id] = defaultValue;
-        form.setFieldsValue(value);
-    }, [id, defaultValue])
-    const renderLabel = useMemo(() => {
-        return (
-            <div className="label_container">
-                <div className="label">{label}</div>
-                <div className="tip">{tip}</div>
-            </div>
-        )
-    }, [tip, label])
-    return (
-        <TextareaComponentContainer>
-            <Form.Item
-                label={renderLabel}
-                initialValue={defaultValue}
-                name={id}
-            >
-                <TextArea rows={4} />
-            </Form.Item>
-        </TextareaComponentContainer>
-    );
+const TextareaComponent = (props: SingleTextField & { id: string }) => {
+  const { label, defaultValue, tip } = props;
+
+  return (
+    <TextareaComponentContainer>
+      <div className="label_container">
+        <div className="label">{label}</div>
+        <div className="tip">{tip}</div>
+      </div>
+      <TextArea rows={4} value={defaultValue} size="large" />
+    </TextareaComponentContainer>
+  );
 };
 
 export default memo(TextareaComponent);

@@ -10,7 +10,7 @@ export type BaseField = {
   tip: string | null;
   required?: boolean;
   colSpace: 1 | 2 | 3 | 4 | undefined;
-  defaultValue: string | number | undefined | null;
+  defaultValue: string | number | undefined;
   disabled?: boolean;
   readonly?: boolean;
   visible?: boolean;
@@ -109,12 +109,23 @@ export type SelectBaseField = {
 } & DataBaseField &
   BaseField;
 
+export type OptionMode = 'custom' | 'dictionaries';
+export type OptionItem = {
+  key: string;
+  value: string;
+};
+export type SelectOptionItem = {
+  type: OptionMode;
+  content: OptionItem[];
+};
+
 export type SelectField = {
   type: 'Select';
-  mode: 'multipe' | 'tag';
   allowClear: boolean;
   showArrow: boolean;
   showSearch: boolean;
+  multiple: boolean;
+  selectOptionList: SelectOptionItem;
 } & SelectBaseField;
 
 export type FormField = SingleTextField | MultipleTextField | SelectField;
@@ -145,17 +156,29 @@ export type MoveConfig = {
   [k in MoveDirection]: boolean;
 };
 
-type Member = {
+export type Member = {
   name: string;
-  id: number;
+  loginName: string;
   avatar: string;
 };
 
 export type MemberConfig = {
   // 部门数组
-  departs: { id: number; name: string }[];
+  departs: number[];
   // 是否包含子部门
   includeSubDeparts: boolean;
   // 节点成员
-  members: Member[];
+  members: string[];
+};
+
+export type User = {
+  name: string;
+  loginName: string;
+  avatar: string;
+};
+
+export type Depart = {
+  name: string;
+  id: number;
+  avatar: string;
 };
