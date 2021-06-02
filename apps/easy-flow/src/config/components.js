@@ -184,7 +184,7 @@ const componentSchema = {
       },
     ],
   },
-  Radio:{
+  Radio: {
     baseInfo: {
       name: '单选',
       icon: 'icondanxuankuang',
@@ -204,6 +204,62 @@ const componentSchema = {
       {
         key: 'label',
         defaultValue: '单选框',
+        label: '控件名称',
+        placeholder: '请输入',
+        type: 'Input',
+        direction: 'vertical',
+      },
+      {
+        key: 'tip',
+        defaultValue: '',
+        label: '提示语',
+        placeholder: '请输入',
+        type: 'Input',
+        direction: 'vertical',
+      },
+      {
+        key: 'optionList',
+        defaultValue: {
+          type: 'custom',
+          content: [
+            { key: '选项一', value: '选项一' },
+            { key: '选项二', value: '选项二' },
+            { key: '选项三', value: '选项三' },
+          ],
+        },
+        label: '选项内容',
+        type: 'SelectOptionList',
+        direction: 'vertical',
+      },
+      {
+        key: 'colSpace',
+        defaultValue: '4',
+        label: '控件宽度',
+        type: 'ColSpace',
+        direction: 'vertical',
+      },
+    ],
+  },
+  Checkbox: {
+    baseInfo: {
+      name: '复选',
+      icon: 'iconduoxuankuang',
+      category: '基础控件',
+      version: '1.0',
+      type: 'Checkbox',
+    },
+    config: [
+      {
+        key: 'fieldName',
+        defaultValue: '',
+        label: '数据库字段名',
+        placeholder: '字母开头,数字或下划线组成',
+        type: 'Input',
+        direction: 'vertical',
+      },
+      {
+        key: 'label',
+        defaultValue: '复选框',
         label: '控件名称',
         placeholder: '请输入',
         type: 'Input',

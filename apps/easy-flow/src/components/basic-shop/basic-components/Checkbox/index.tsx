@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from 'react';
 import styled from 'styled-components';
-import { Radio } from 'antd';
-import { RadioField } from '@/type';
+import { Checkbox } from 'antd';
+import { CheckboxField } from '@/type';
 
 const Container = styled.div`
   display: flex;
@@ -9,10 +9,10 @@ const Container = styled.div`
   justify-content: space-around;
 `;
 
-const RadioComponent = (props: RadioField) => {
+const CheckboxComponent = (props: CheckboxField) => {
   const { label, tip, fieldName, optionList, readonly } = props;
   const options = useMemo(() => {
-    return optionList.content;
+    return optionList.content.map((item) => item.value);
   }, [optionList]);
   return (
     <Container>
@@ -20,15 +20,9 @@ const RadioComponent = (props: RadioField) => {
         <div className="label">{label}</div>
         <div className="tip">{tip}</div>
       </div>
-      <Radio.Group disabled={readonly}>
-        {options.map(({ key, value }) => (
-          <Radio value={key} key={key}>
-            {value}
-          </Radio>
-        ))}
-      </Radio.Group>
+      <Checkbox.Group disabled={readonly} options={options}></Checkbox.Group>
     </Container>
   );
 };
 
-export default memo(RadioComponent);
+export default memo(CheckboxComponent);

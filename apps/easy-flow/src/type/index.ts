@@ -132,9 +132,19 @@ export type DateField = {
   type: 'Date';
   format: string;
   notSelectPassed: boolean;
-} & BaseField
+} & BaseField;
 
-export type FormField = SingleTextField | MultipleTextField | SelectField | DateField;
+export type RadioField = {
+  type: 'Radio';
+  optionList: SelectOptionItem;
+} & BaseField;
+
+export type CheckboxField = {
+  type: 'Checkbox';
+  optionList: SelectOptionItem;
+} & BaseField;
+
+export type FormField = SingleTextField | MultipleTextField | SelectField | DateField | RadioField | CheckboxField;
 
 export type FormFieldMap = {
   [k: string]: FormField;

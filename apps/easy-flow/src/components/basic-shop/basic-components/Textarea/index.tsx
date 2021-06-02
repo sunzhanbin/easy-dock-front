@@ -1,7 +1,7 @@
 import React, { memo } from 'react';
 import styled from 'styled-components';
 import { Input } from 'antd';
-import { SingleTextField } from '@/type';
+import { MultipleTextField } from '@/type';
 
 const { TextArea } = Input;
 
@@ -12,7 +12,7 @@ const TextareaComponentContainer = styled.div`
   width: 100%;
 `;
 
-const TextareaComponent = (props: SingleTextField & { id: string }) => {
+const TextareaComponent = (props: MultipleTextField) => {
   const { label, defaultValue, tip, readonly } = props;
 
   return (
