@@ -66,6 +66,12 @@ const FormZoneContainer = styled.div`
         }
       }
     }
+    .empty_tip {
+      text-align: center;
+      line-height: 200px;
+      font-size: 16px;
+      color: #dcdcdc;
+    }
   }
 `;
 
@@ -118,34 +124,42 @@ const FormZone: FC<{}> = () => {
         {(dropProvided) => (
           <div ref={dropProvided.innerRef} {...dropProvided.droppableProps}>
             <div className="form_design">
-              {layout.map((row, rowIndex) => (
-                <Draggable draggableId={`${rowIndex}`} index={rowIndex} key={rowIndex}>
-                  {(dragProvided) => (
-                    <div ref={dragProvided.innerRef} {...dragProvided.draggableProps} {...dragProvided.dragHandleProps}>
-                      <Row className="form_row" key={rowIndex}>
-                        {row.map((id, colIndex) => (
-                          <Col
-                            key={id}
-                            className={`form_item ${id === selectedField ? 'active' : ''}`}
-                            onClick={() => {
-                              handleSelect(id);
-                            }}
-                            span={getColSpace(id)}
-                          >
-                            <SourceBox
-                              type={id ? id.split('_')[0] : ''}
-                              config={byId[id]}
-                              moveConfig={getMoveConfig(rowIndex, colIndex)}
-                              id={id}
-                              rowIndex={rowIndex}
-                            />
-                          </Col>
-                        ))}
-                      </Row>
-                    </div>
-                  )}
-                </Draggable>
-              ))}
+              {layout && layout.length > 0 ? (
+                layout.map((row, rowIndex) => (
+                  <Draggable draggableId={`${rowIndex}`} index={rowIndex} key={rowIndex}>
+                    {(dragProvided) => (
+                      <div
+                        ref={dragProvided.innerRef}
+                        {...dragProvided.draggableProps}
+                        {...dragProvided.dragHandleProps}
+                      >
+                        <Row className="form_row" key={rowIndex}>
+                          {row.map((id, colIndex) => (
+                            <Col
+                              key={id}
+                              className={`form_item ${id === selectedField ? 'active' : ''}`}
+                              onClick={() => {
+                                handleSelect(id);
+                              }}
+                              span={getColSpace(id)}
+                            >
+                              <SourceBox
+                                type={id ? id.split('_')[0] : ''}
+                                config={byId[id]}
+                                moveConfig={getMoveConfig(rowIndex, colIndex)}
+                                id={id}
+                                rowIndex={rowIndex}
+                              />
+                            </Col>
+                          ))}
+                        </Row>
+                      </div>
+                    )}
+                  </Draggable>
+                ))
+              ) : (
+                <div className="empty_tip">拖动或点击左侧控件到这里</div>
+              )}
             </div>
             {dropProvided.placeholder}
           </div>
