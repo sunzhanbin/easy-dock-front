@@ -308,6 +308,31 @@ const componentSchema = {
         direction: 'vertical',
       },
     ]
+  },
+  DescText: {
+    baseInfo: {
+      name: '描述文字',
+      icon: 'iconxiangqing',
+      category: '基础控件',
+      version: '1.0',
+      type: 'DescText',
+    },
+    config: [
+      {
+        key: 'content',
+        defaultValue: '',
+        label: '内容',
+        type: 'Editor',
+        direction: 'vertical',
+      },
+      {
+        key: 'colSpace',
+        defaultValue: '4',
+        label: '控件宽度',
+        type: 'ColSpace',
+        direction: 'vertical',
+      },
+    ]
   }
 };
 

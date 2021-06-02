@@ -4,6 +4,7 @@ import { Form, Select, DatePicker, Input, Switch, Radio, Checkbox, InputNumber }
 import SelectOptionList from '../select-option-list';
 import SelectDefaultOption from '../select-default-option';
 import DefaultDate from '../default-date';
+import Editor from '../editor';
 import { FormField, SchemaConfigItem } from '@/type';
 import { Store } from 'antd/lib/form/interface';
 import selectedImage from '@assets/selected.png';
@@ -215,6 +216,17 @@ const FormEditor = (props: FormEditorProps) => {
                   labelAlign="left"
                 >
                   <DefaultDate id={componentId} />
+                </Form.Item>
+              )}
+              {type === 'Editor' && (
+                <Form.Item
+                  label={label}
+                  name={key}
+                  colon={false}
+                  labelCol={{ span: direction === 'vertical' ? 24 : 6 }}
+                  labelAlign="left"
+                >
+                  <Editor />
                 </Form.Item>
               )}
             </Fragment>
