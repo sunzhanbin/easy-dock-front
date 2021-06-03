@@ -32,6 +32,9 @@
 
     .content {
       flex: 1 1 0;
+      height: 100%;
+      overflow-x: hidden;
+      overflow-y: auto;
     }
 
     .flow {
@@ -46,6 +49,56 @@
   }
 }
 
+.track {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border: 1px solid rgba(#181f43, 0.12);
+  border-radius: 4px;
+  cursor: not-allowed;
+
+  svg {
+    margin-left: 4px;
+    font-size: 12px;
+  }
+}
+
+.cell {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 0 15px;
+  overflow: hidden;
+
+  .cell-title {
+    @include ellipsis;
+
+    margin-bottom: 4px;
+    line-height: 24px;
+    color: rgba(#000, 0.85);
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .cell-desc {
+    line-height: 20px;
+    color: rgba(#181f43, 0.5);
+    font-size: 12px;
+    font-weight: 400;
+  }
+
+  .cell-icon {
+    flex-shrink: 0;
+    margin-top: 1px;
+    margin-right: 8px;
+    font-size: 20px;
+  }
+
+  .cell-content {
+    overflow: hidden;
+  }
+}
+
 .status {
   @include center('flex');
 
@@ -53,64 +106,31 @@
 
   .cell {
     flex: 1 1 0;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 0 5px;
-    overflow: hidden;
 
     &:nth-of-type(2) {
       border-left: 1px solid rgba(#181f43, 0.12);
       border-right: 1px solid rgba(#181f43, 0.12);
     }
 
-    .cell-icon {
-      flex-shrink: 0;
-      margin-right: 8px;
-      font-size: 20px;
-    }
-
-    .cell-content {
-      overflow: hidden;
-
-      .cell-title {
-        @include ellipsis;
-
-        margin-bottom: 4px;
-        line-height: 24px;
-        color: rgba(#000, 0.85);
-        font-size: 16px;
-        font-weight: bold;
-      }
-
-      .cell-desc {
-        line-height: 20px;
-        color: rgba(#181f43, 0.5);
-        font-size: 12px;
-        font-weight: 400;
-      }
+    .time-used {
+      line-height: 20px;
+      color: #181f43;
+      font-size: 12px;
+      font-weight: 400;
     }
   }
 
-  .track {
-    line-height: 20px;
-    color: #181f43;
-    font-size: 12px;
-    font-weight: 400;
+  // 流程办结状态栏
+  &.finish {
+    .cell {
+      justify-content: flex-start;
+    }
 
-    .cell-row {
-      @include center('flex');
+    & > div:last-child {
+      flex: 0 0 250px;
 
-      &:last-child {
-        display: inline-flex;
-        margin-top: 4px;
-        padding: 2px 8px;
-        border: 1px solid rgba(#181f43, 0.12);
-        border-radius: 4px;
-      }
-
-      & > span:first-child {
-        margin-right: 4px;
+      .track {
+        padding: 9px 12px;
       }
     }
   }
@@ -133,4 +153,15 @@
   flex: 1 1 0;
   padding: 25px;
   overflow-y: auto;
+}
+
+.empty {
+  @include center('flex');
+
+  flex-direction: column;
+  padding-top: 100px;
+
+  img {
+    width: 200px;
+  }
 }

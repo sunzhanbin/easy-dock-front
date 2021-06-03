@@ -35,6 +35,8 @@ export type FormValue = { [key: string]: any };
 export type FlowDetaiDataType = {
   auditRecords: [];
   detail: {
+    applyUser: string;
+    applyTime: string;
     state: NodeStatusType;
     timeUsed: string;
     currentProcessor: {

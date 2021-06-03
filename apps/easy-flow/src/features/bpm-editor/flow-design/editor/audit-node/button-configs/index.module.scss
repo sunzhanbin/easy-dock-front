@@ -10,22 +10,7 @@
   }
 
   .approve {
-    color: #fff;
-    background-color: #63c4ad;
-    border-color: #63c4ad;
-
-    &:hover {
-      color: #fff;
-      border-color: rgba(#63c4ad, 0.9);
-      background-color: rgba(#63c4ad, 0.9);
-    }
-
-    &:active,
-    &:focus {
-      color: #fff;
-      border-color: #63c4ad;
-      background-color: #63c4ad;
-    }
+    @include btntheme(#63c4ad);
   }
 
   .cascader {

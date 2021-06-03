@@ -127,6 +127,10 @@ body {
   .ant-modal-body {
     max-height: 330px;
     padding: 12px 0 24px;
+
+    .ant-form {
+      margin-bottom: -24px;
+    }
   }
 
   .ant-modal-footer {

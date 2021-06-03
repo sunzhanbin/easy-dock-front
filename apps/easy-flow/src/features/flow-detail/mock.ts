@@ -356,9 +356,11 @@ mock(/\/runtime\/v1\/task\/instanceDetail/, 'post', function name(options: MockO
     resultCode: 0,
     data: <FlowDetaiDataType>{
       auditRecords: [],
-      formData: {},
+      formData: { Input_1: 'hello' },
       formMeta: database.formDesign,
       detail: {
+        applyUser: '张三',
+        applyTime: Date.now() + '',
         state: NodeStatusType.Processing,
         timeUsed: '1天1小时12分钟3秒',
         currentProcessor: {
@@ -376,8 +378,8 @@ mock(/\/runtime\/v1\/task\/instanceDetail/, 'post', function name(options: MockO
         fieldsAuths: {
           Select_1: 1,
           Select_2: 2,
-          Input_1: 1,
-          Input_2: 1,
+          Input_1: 2,
+          Input_2: 3,
         },
         name: '审批节点',
         correlationMemberConfig: {
@@ -392,6 +394,14 @@ mock(/\/runtime\/v1\/task\/instanceDetail/, 'post', function name(options: MockO
           },
           save: {
             enable: true,
+          },
+          transfer: {
+            enable: true,
+            text: '转给其他人',
+          },
+          terminate: {
+            enable: true,
+            text: '速速终止',
           },
         },
         revert: {
