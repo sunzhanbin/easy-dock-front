@@ -6,8 +6,8 @@ import { AsyncButton, Icon, Loading } from '@common/components';
 import { axios } from '@utils';
 import { FillNode } from '@type/flow';
 import { FormMeta, FormValue } from './type';
-import Form from './components/form-engine';
-import Header from '../../components/header';
+import Form from '@components/form-engine';
+import Header from '@components/header';
 import styles from './index.module.scss';
 
 if (process.env.NODE_ENV === 'development') {

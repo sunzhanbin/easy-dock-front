@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import { message, FormInstance } from 'antd';
 import { Loading, AsyncButton, Icon } from '@common/components';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import FormEngine from './components/form-engine';
+import FormEngine from '@components/form-engine';
 import ConfirmModal from './components/confirm-modal';
 import Header from '@components/header';
 import { axios } from '@utils';

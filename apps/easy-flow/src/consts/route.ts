@@ -1,4 +1,4 @@
-import { FlowDetailType } from '@/type/flow-detail';
+import { FlowDetailType } from '@type/flow';
 
 const staticRoutes = {
   INDEX: '/',
