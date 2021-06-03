@@ -2,7 +2,7 @@ import { memo, useEffect, useState } from 'react';
 import { Form, Input, Row, Col } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { FieldAuthsMap, AuthType } from '../../features/bpm-editor/flow-design/types';
-import { FormInfo } from '../../features/flow-detail/type';
+import { FormMeta } from '../../features/flow-detail/type';
 import styles from './index.module.scss';
 
 type FormValueType = { [key: string]: any };
@@ -10,14 +10,14 @@ type FormValueType = { [key: string]: any };
 type FieldsVisible = { [fieldId: string]: boolean };
 
 interface FormProps {
-  data: FormInfo;
+  data: FormMeta;
   fieldsAuths: FieldAuthsMap;
   initialValue: { [key: string]: any };
 }
 
-type A = FormInfo['components'][number];
+type A = FormMeta['components'][number];
 type CompMaps = {
-  [componentId: string]: FormInfo['components'][number];
+  [componentId: string]: FormMeta['components'][number];
 };
 
 function FormDetail(props: FormProps) {
@@ -59,7 +59,7 @@ function FormDetail(props: FormProps) {
 
   useEffect(() => {
     const visbles: FieldsVisible = {};
-    const comMaps: { [key: string]: FormInfo['components'][number] } = {};
+    const comMaps: { [key: string]: FormMeta['components'][number] } = {};
 
     data.components.forEach((com) => {
       const comId = com.id!;
