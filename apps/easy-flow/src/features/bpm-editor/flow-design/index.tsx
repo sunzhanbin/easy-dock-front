@@ -7,7 +7,7 @@ import { load, flowDataSelector, save } from './flow-slice';
 import { AllNode, BranchNode as BranchNodeType, NodeType } from '@type/flow';
 import { StartNode, UserNode, FinishNode, CardHeader } from './nodes';
 import { AuditNodeProps } from './nodes/audit-node';
-import { StartNodeEditor, AuditNodeEditor, FillNodeEditor } from './editor';
+import { StartNodeEditor, AuditNodeEditor, FillNodeEditor, FinishNodeEditor } from './editor';
 import styles from './index.module.scss';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 
@@ -33,7 +33,7 @@ function FlowDesign() {
 
   const handleClickUserNode: AuditNodeProps['onClick'] = useMemoCallback((node, prevNodes) => {
     setCurrentEditNode(node);
-    setCurrentEditNodePrevNodes(prevNodes);
+    setCurrentEditNodePrevNodes(prevNodes || []);
     setShowEditDrawer(true);
   });
 
@@ -107,11 +107,11 @@ function FlowDesign() {
             }
 
             case NodeType.FillNode: {
-              return <UserNode key={node.id} node={node} onClick={handleClickUserNode} prevNodes={prevNodes} />;
+              return <UserNode key={node.id} node={node} onClick={handleClickUserNode} />;
             }
 
             case NodeType.FinishNode: {
-              return <FinishNode key={node.id} node={node} />;
+              return <FinishNode key={node.id} node={node} onClick={handleClickNode} />;
             }
           }
         })}
@@ -136,6 +136,10 @@ function FlowDesign() {
 
           {currentEditNode && currentEditNode.type === NodeType.FillNode && (
             <FillNodeEditor node={currentEditNode} prevNodes={currentEditNodePrevNodes} />
+          )}
+
+          {currentEditNode && currentEditNode.type === NodeType.FinishNode && (
+            <FinishNodeEditor node={currentEditNode} />
           )}
         </div>
       </Drawer>

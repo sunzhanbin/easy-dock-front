@@ -1,3 +1,4 @@
+import React from 'react';
 import { AbstractTooltipProps } from 'antd/lib/tooltip';
 import { NodeType, AuditNode, FillNode, RevertType } from '@type/flow';
 
@@ -53,3 +54,9 @@ export function createNode(type: NodeType, name: string) {
 }
 
 export const getPopupContainer: AbstractTooltipProps['getPopupContainer'] = (container) => container;
+
+export function trimInputValue(event: React.ChangeEvent<HTMLInputElement>) {
+  const value = event.target.value;
+
+  return value ? value.trim() : '';
+}

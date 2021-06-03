@@ -1,22 +1,23 @@
-import { memo, useCallback, useMemo } from 'react';
+import { memo } from 'react';
 import { Icon } from '@common/components';
 import { MemberList } from '@components/member-selector';
+import useMemoCallback from '@common/hooks/use-memo-callback';
 import useShowMembers from '../../hooks/use-show-members';
 import BaseNode from '../base-node';
 import { AuditNode as AuditNodeType, FillNode as FillNodeType, AllNode } from '@type/flow';
 
 export interface AuditNodeProps {
   node: AuditNodeType | FillNodeType;
-  onClick(node: this['node'], currentNodePrevNodes: AllNode[]): void;
-  prevNodes: AllNode[];
+  onClick(node: this['node'], currentNodePrevNodes: this['prevNodes']): void;
+  prevNodes?: AllNode[];
 }
 
 function AuditNode(props: AuditNodeProps) {
   const { node, prevNodes, onClick } = props;
-  const handleNodeClick = useCallback(() => {
-    onClick(node, prevNodes);
-  }, [onClick, node, prevNodes]);
   const showMembers = useShowMembers(node.correlationMemberConfig.members);
+  const handleNodeClick = useMemoCallback(() => {
+    onClick(node, prevNodes);
+  });
 
   return (
     <BaseNode icon={<Icon type="yonghujiedian" />} onClick={handleNodeClick} node={node}>

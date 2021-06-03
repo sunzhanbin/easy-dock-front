@@ -7,6 +7,7 @@ import { updateNode } from '../../flow-slice';
 import { StartNode, TriggerType } from '@type/flow';
 import styles from './index.module.scss';
 import { useAppDispatch } from '@/app/hooks';
+import { trimInputValue } from '../../util';
 
 interface StartNodeEditorProps {
   node: StartNode;
@@ -107,7 +108,7 @@ function StartNodeEditor(props: StartNodeEditorProps) {
       initialValues={formInitialValues}
       onValuesChange={handleFormValuesChange}
     >
-      <Form.Item label="节点名称" name="name">
+      <Form.Item label="节点名称" name="name" getValueFromEvent={trimInputValue}>
         <Input size="large" placeholder="请输入开始节点名称" />
       </Form.Item>
       <Form.Item label="开始方式" name="triggerType">
