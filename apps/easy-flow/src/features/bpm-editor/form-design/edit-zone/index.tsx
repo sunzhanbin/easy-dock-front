@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { componentPropsSelector, selectedFieldSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 
 const EditZoneContainer = styled.div`
+  flex: 0 0 260px;
   height: calc(100vh - 64px);
   background: #fff;
   padding: 20px 21px;

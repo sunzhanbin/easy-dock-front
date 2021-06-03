@@ -19,13 +19,14 @@ const reducers = {
     reducer: (state: FormDesign, action: PayloadAction<{ com: FormField; rowIndex: number }>) => {
       const { com, rowIndex } = action.payload;
       if (!state.byId) {
-        state.byId = {}
+        state.byId = {};
       }
       if (!state.layout) {
         state.layout = [];
       }
       if (state.byId[com.id!]) return state;
       state.byId[com.id!] = com;
+      state.selectedField = com.id as string;
       state.layout.splice(rowIndex, 0, [com.id!]);
       return state;
     },
@@ -89,9 +90,9 @@ const reducers = {
     return state;
   },
   //exchnage with the com on the left
-  exchange(state: FormDesign, action: PayloadAction<{ id: string, direction: string }>) {
+  exchange(state: FormDesign, action: PayloadAction<{ id: string; direction: string }>) {
     let [row, col] = locateById(action.payload.id, state.layout);
-    const { direction } = action.payload
+    const { direction } = action.payload;
     if (row === -1 || col === -1) return state;
     let rowLayout = state.layout[row];
     if (direction === 'left') {
@@ -107,16 +108,16 @@ const reducers = {
     state.selectedField = id;
     return state;
   },
-  editProps(state: FormDesign, action: PayloadAction<{ id: string, config: TConfigItem, isEdit?: boolean }>) {
+  editProps(state: FormDesign, action: PayloadAction<{ id: string; config: TConfigItem; isEdit?: boolean }>) {
     const { id, config, isEdit } = action.payload;
-    state.byId[id] = (config as FormField);
+    state.byId[id] = config as FormField;
     // 如果改变控件宽度后导致整行的宽度大于100%,则需要改变layout布局以实现换行
     if (isEdit) {
       const [rowIndex, colIndex] = locateById(id, state.layout);
       const idList: string[] = [...state.layout[rowIndex]];
       if (state.byId[id].colSpace == 4) {
         if (colIndex === 0) {
-          const id: string = (idList.shift() as string);
+          const id: string = idList.shift() as string;
           state.layout[rowIndex] = [id];
           state.layout.splice(rowIndex + 1, 0, idList);
         } else {
@@ -135,14 +136,14 @@ const reducers = {
         state.layout.splice(rowIndex + 1, 0, []);
       }
       while (sum > 4) {
-        const id: string = (idList.pop() as string);
+        const id: string = idList.pop() as string;
         sum -= Number(state.byId[id].colSpace);
         state.layout[rowIndex].pop();
         state.layout[rowIndex + 1].unshift(id);
       }
     }
     return state;
-  }
+  },
 };
 
 export const configSelector = createSelector(
@@ -158,12 +159,12 @@ export const configSelector = createSelector(
     }
     const keys: string[] = Object.keys(schema);
     keys.forEach((key) => {
-      const configItem: TConfigItem = { type: schema[(key as FieldType)]?.baseInfo.type };
-      schema[(key as FieldType)]?.config.forEach(({ key, defaultValue }) => {
+      const configItem: TConfigItem = { type: schema[key as FieldType]?.baseInfo.type };
+      schema[key as FieldType]?.config.forEach(({ key, defaultValue }) => {
         configItem[key] = defaultValue;
-      })
-      config[(key as FieldType)] = configItem;
-    })
+      });
+      config[key as FieldType] = configItem;
+    });
     return config;
   },
 );
@@ -176,8 +177,8 @@ export const selectedFieldSelector = createSelector(
   ],
   (formDesign) => {
     return formDesign.selectedField || '';
-  }
-)
+  },
+);
 
 export const layoutSelector = createSelector(
   [
@@ -187,8 +188,8 @@ export const layoutSelector = createSelector(
   ],
   (formDesign) => {
     return formDesign.layout || [];
-  }
-)
+  },
+);
 export const componentPropsSelector = createSelector(
   [
     (state: RootState) => {
@@ -197,7 +198,7 @@ export const componentPropsSelector = createSelector(
   ],
   (formDesign) => {
     return formDesign.byId || {};
-  }
-)
+  },
+);
 
 export const { comAdded, comDeleted, moveRow, moveDown, moveUp, exchange, selectField, editProps } = reducers;
