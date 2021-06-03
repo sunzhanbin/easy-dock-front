@@ -4,7 +4,7 @@ import debounce from 'lodash/debounce';
 import classnames from 'classnames';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { updateNode } from '../../flow-slice';
-import { StartNode, TriggerType } from '../../types';
+import { StartNode, TriggerType } from '@type/flow';
 import styles from './index.module.scss';
 import { useAppDispatch } from '@/app/hooks';
 

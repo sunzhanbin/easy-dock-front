@@ -2,7 +2,7 @@ import { memo, ReactNode, useCallback, useState, useMemo } from 'react';
 import classnames from 'classnames';
 import { Icon, PopoverConfirm } from '@common/components';
 import { delNode, flowDataSelector } from '../../flow-slice';
-import { NodeType, AllNode, BranchNode } from '../../types';
+import { NodeType, AllNode, BranchNode } from '@type/flow';
 import AddNodeButton from '../../editor/components/add-node-button';
 import styles from './index.module.scss';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';

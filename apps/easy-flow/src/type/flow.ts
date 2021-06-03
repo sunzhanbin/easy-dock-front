@@ -1,3 +1,5 @@
+import { SelectField, SingleTextField } from '@type';
+
 export enum NodeType {
   // 开始节点
   StartNode = 1,
@@ -136,3 +138,32 @@ export enum NodeStatusType {
   Finish = 4,
   Revert = 5,
 }
+
+type ComponentInfo = (SelectField | SingleTextField) & {
+  title: string;
+};
+
+export interface FormMeta {
+  seletedTheme: string;
+  components: ComponentInfo[];
+  layout: [string, string, string, string][];
+  events: {
+    onchange: {
+      fieldId: string;
+      value: string;
+      listeners: {
+        visible?: string[];
+        reset?: string[];
+      };
+    }[];
+  };
+  rules: {
+    type: 'reg' | '<' | '>' | '=' | '||';
+    field: string;
+    validator?: RegExp | { type: 'ref'; value: string };
+    message?: string;
+    children?: Omit<FormMeta['rules'][number], 'children'>[];
+  }[];
+}
+
+export type FormValue = { [key: string]: any };

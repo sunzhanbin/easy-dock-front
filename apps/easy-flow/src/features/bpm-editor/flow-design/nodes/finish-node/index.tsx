@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import BaseNode from '../base-node';
 import { Icon } from '@common/components';
-import { FinishNode as FinishNodeType } from '../../types';
+import { FinishNode as FinishNodeType } from '@type/flow';
 
 interface FinishNodeProps {
   node: FinishNodeType;

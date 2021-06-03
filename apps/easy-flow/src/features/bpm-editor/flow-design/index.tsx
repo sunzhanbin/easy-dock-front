@@ -4,7 +4,7 @@ import { Drawer } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { Loading, Icon } from '@common/components';
 import { load, flowDataSelector, save } from './flow-slice';
-import { AllNode, BranchNode as BranchNodeType, NodeType } from './types';
+import { AllNode, BranchNode as BranchNodeType, NodeType } from '@type/flow';
 import { StartNode, UserNode, FinishNode, CardHeader } from './nodes';
 import { AuditNodeProps } from './nodes/audit-node';
 import { StartNodeEditor, AuditNodeEditor, FillNodeEditor } from './editor';

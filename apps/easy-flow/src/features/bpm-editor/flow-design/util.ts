@@ -1,5 +1,5 @@
 import { AbstractTooltipProps } from 'antd/lib/tooltip';
-import { NodeType, AuditNode, FillNode, RevertType } from './types';
+import { NodeType, AuditNode, FillNode, RevertType } from '@type/flow';
 
 function randomString() {
   return Math.random().toString(36).slice(2);
@@ -52,5 +52,4 @@ export function createNode(type: NodeType, name: string) {
   }
 }
 
-export const getPopupContainer: AbstractTooltipProps['getPopupContainer'] = (container) =>
-  container;
+export const getPopupContainer: AbstractTooltipProps['getPopupContainer'] = (container) => container;

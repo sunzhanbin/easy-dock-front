@@ -2,16 +2,7 @@ import { createSlice, PayloadAction, createAsyncThunk, createSelector } from '@r
 import { message } from 'antd';
 import { axios } from '@utils';
 import { User } from '@type';
-import {
-  AllNode,
-  NodeType,
-  StartNode,
-  FinishNode,
-  AuditNode,
-  FillNode,
-  TriggerType,
-  Flow,
-} from './types';
+import { AllNode, NodeType, StartNode, FinishNode, AuditNode, FillNode, TriggerType, Flow } from '@type/flow';
 import { RootState } from '@app/store';
 import { fielduuid } from './util';
 
@@ -295,13 +286,11 @@ export default flow;
 export const flowDataSelector = createSelector(
   [(state: RootState) => state.formDesign, (state: RootState) => state.flow],
   (form, flow) => {
-    const formFields = (form && form.byId ? Object.keys(form.byId) : ['input-1', 'select-2']).map(
-      (fieldId) => ({
-        id: fieldId,
-        name: '表单字段',
-        auth: 1,
-      }),
-    );
+    const formFields = (form && form.byId ? Object.keys(form.byId) : ['input-1', 'select-2']).map((fieldId) => ({
+      id: fieldId,
+      name: '表单字段',
+      auth: 1,
+    }));
 
     return {
       ...flow,

@@ -5,11 +5,11 @@ import debounce from 'lodash/debounce';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import MemberSelector from '../components/member-selector';
 import { updateNode, flowDataSelector } from '../../flow-slice';
-import { FillNode, AllNode } from '../../types';
+import { FillNode, AllNode } from '@type/flow';
 import ButtonConfigs from './button-configs';
 import FieldAuths from '../components/field-auths';
 import styles from './index.module.scss';
-import { useAppDispatch,useAppSelector } from '@/app/hooks';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 
 interface FillNodeEditorProps {
   node: FillNode;

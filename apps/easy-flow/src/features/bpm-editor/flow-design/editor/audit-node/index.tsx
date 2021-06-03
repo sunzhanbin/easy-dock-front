@@ -5,7 +5,7 @@ import debounce from 'lodash/debounce';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import MemberSelector from '../components/member-selector';
 import { updateNode, flowDataSelector } from '../../flow-slice';
-import { AuditNode, AllNode } from '../../types';
+import { AuditNode, AllNode } from '@type/flow';
 import ButtonConfigs from './button-configs';
 import FieldAuths from '../components/field-auths';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';

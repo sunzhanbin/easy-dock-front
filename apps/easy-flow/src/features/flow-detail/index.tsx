@@ -10,8 +10,8 @@ import ConfirmModal from './components/confirm-modal';
 import Header from '@components/header';
 import { axios } from '@utils';
 import StatusBar from './components/statusbar';
-import { FlowDetailType, NodeStatusType, NodeType } from '@type/flow';
-import { FlowDetaiDataType, FormValue } from './type';
+import { FlowDetailType, NodeStatusType, NodeType, FormValue } from '@type/flow';
+import { FlowDetaiDataType } from './type';
 import emptyImage from '@assets/empty.png';
 import styles from './index.module.scss';
 

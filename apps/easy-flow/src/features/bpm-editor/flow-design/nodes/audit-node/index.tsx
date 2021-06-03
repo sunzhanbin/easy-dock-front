@@ -3,7 +3,7 @@ import { Icon } from '@common/components';
 import { MemberList } from '@components/member-selector';
 import useShowMembers from '../../hooks/use-show-members';
 import BaseNode from '../base-node';
-import { AuditNode as AuditNodeType, FillNode as FillNodeType, AllNode } from '../../types';
+import { AuditNode as AuditNodeType, FillNode as FillNodeType, AllNode } from '@type/flow';
 
 export interface AuditNodeProps {
   node: AuditNodeType | FillNodeType;

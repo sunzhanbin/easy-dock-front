@@ -1,8 +1,7 @@
 import React, { memo, useEffect, useState } from 'react';
 import { Form, Input, Row, Col, FormInstance } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import { FieldAuthsMap, AuthType } from '@type/flow';
-import { FormMeta, FormValue } from '@/features/flow-detail/type';
+import { FieldAuthsMap, AuthType, FormMeta, FormValue } from '@type/flow';
 import styles from './index.module.scss';
 
 type FieldsVisible = { [fieldId: string]: boolean };
