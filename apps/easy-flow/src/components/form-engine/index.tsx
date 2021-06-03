@@ -1,11 +1,9 @@
-import { memo, useEffect, useState } from 'react';
-import { Form, Input, Row, Col } from 'antd';
+import React, { memo, useEffect, useState } from 'react';
+import { Form, Input, Row, Col, FormInstance } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import { FieldAuthsMap, AuthType } from '../../features/bpm-editor/flow-design/types';
-import { FormMeta } from '../../features/flow-detail/type';
+import { FieldAuthsMap, AuthType } from '@type/flow';
+import { FormMeta, FormValue } from '@/features/flow-detail/type';
 import styles from './index.module.scss';
-
-type FormValueType = { [key: string]: any };
 
 type FieldsVisible = { [fieldId: string]: boolean };
 
@@ -15,17 +13,19 @@ interface FormProps {
   initialValue: { [key: string]: any };
 }
 
-type A = FormMeta['components'][number];
 type CompMaps = {
   [componentId: string]: FormMeta['components'][number];
 };
 
-function FormDetail(props: FormProps) {
+const FormDetail = React.forwardRef(function FormDetail(
+  props: FormProps,
+  ref: React.ForwardedRef<FormInstance<FormValue>>,
+) {
   const { data, fieldsAuths, initialValue } = props;
-  const [form] = Form.useForm<FormValueType>();
+  const [form] = Form.useForm<FormValue>();
   const [fieldsVisible, setFieldsVisible] = useState<FieldsVisible>({});
   const [compMaps, setCompMaps] = useState<CompMaps>({});
-  const formValuesChange = useMemoCallback((changedValues: FormValueType) => {
+  const formValuesChange = useMemoCallback((changedValues: FormValue) => {
     // 处理响应表单事件，响应绑定的visible和reset
     data.events.onchange.forEach((event) => {
       const { fieldId, listeners, value } = event;
@@ -80,7 +80,14 @@ function FormDetail(props: FormProps) {
   }, [data, fieldsAuths, initialValue, form, formValuesChange]);
 
   return (
-    <Form className={styles.form} form={form} layout="vertical" autoComplete="off" onValuesChange={formValuesChange}>
+    <Form
+      className={styles.form}
+      ref={ref}
+      form={form}
+      layout="vertical"
+      autoComplete="off"
+      onValuesChange={formValuesChange}
+    >
       {data.layout.map((formRow, index) => {
         // 空行或者该行字段全不可见不渲染
         if (!formRow.length || !formRow.find((fieldId) => fieldsVisible[fieldId])) return null;
@@ -110,6 +117,6 @@ function FormDetail(props: FormProps) {
       })}
     </Form>
   );
-}
+});
 
 export default memo(FormDetail);
