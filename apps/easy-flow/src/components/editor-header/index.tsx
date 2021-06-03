@@ -1,8 +1,7 @@
-import React, { FC, memo, useCallback, useState, useMemo } from 'react';
+import React, { FC, memo, useCallback, useMemo } from 'react';
 import { Button, Tooltip } from 'antd';
 import styled from 'styled-components';
-import { useHistory, useRouteMatch, Link, NavLink, useLocation } from 'react-router-dom';
-import useMemoCallback from '@common/hooks/use-memo-callback';
+import { useHistory, useRouteMatch, NavLink, useLocation } from 'react-router-dom';
 import { save } from '../../features/bpm-editor/flow-design/flow-slice';
 import { useAppDispatch } from '@/app/hooks';
 import Header from '../header';
@@ -112,6 +111,7 @@ const HeaderContainer = styled.div`
 
 const EditorHeader: FC = () => {
   const dispatch = useAppDispatch();
+  const history = useHistory();
   const match = useRouteMatch();
   const location = useLocation();
   const pathName = useMemo(() => {
@@ -119,7 +119,7 @@ const EditorHeader: FC = () => {
   }, [location]);
   const handlePreview = useCallback(() => {
     if (pathName === '/form-design') {
-      console.info('preview form');
+      history.push('/preview-form');
     }
   }, [pathName]);
   const handleSave = useCallback(() => {
