@@ -1,8 +1,9 @@
 import { memo, useEffect, useState } from 'react';
 import { Form, Input, Row, Col } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import { FieldAuthsMap, AuthType } from '../bpm-editor/flow-design/types';
-import { FormInfo } from './type';
+import { FieldAuthsMap, AuthType } from '../../features/bpm-editor/flow-design/types';
+import { FormInfo } from '../../features/flow-detail/type';
+import styles from './index.module.scss';
 
 type FormValueType = { [key: string]: any };
 
@@ -14,6 +15,7 @@ interface FormProps {
   initialValue: { [key: string]: any };
 }
 
+type A = FormInfo['components'][number];
 type CompMaps = {
   [componentId: string]: FormInfo['components'][number];
 };
@@ -78,39 +80,35 @@ function FormDetail(props: FormProps) {
   }, [data, fieldsAuths, initialValue, form, formValuesChange]);
 
   return (
-    <div>
-      <Form form={form} layout="vertical" autoComplete="off" onValuesChange={formValuesChange}>
-        {data.layout.map((formRow, index) => {
-          // 空行或者该行字段全不可见不渲染
-          if (!formRow.length || !formRow.find((fieldId) => fieldsVisible[fieldId])) return null;
+    <Form className={styles.form} form={form} layout="vertical" autoComplete="off" onValuesChange={formValuesChange}>
+      {data.layout.map((formRow, index) => {
+        // 空行或者该行字段全不可见不渲染
+        if (!formRow.length || !formRow.find((fieldId) => fieldsVisible[fieldId])) return null;
 
-          return (
-            <Row key={index}>
-              {formRow.map((fieldId) => {
-                if (!fieldsVisible[fieldId]) {
-                  return null;
-                }
+        return (
+          <Row key={index} className={styles.row}>
+            {formRow.map((fieldId) => {
+              if (!fieldsVisible[fieldId]) {
+                return null;
+              }
 
-                return (
-                  <Col span={compMaps[fieldId].colSpace! * 6} key={fieldId}>
-                    <Form.Item
-                      key={fieldId}
-                      name={fieldId}
-                      label={fieldId}
-                      required={fieldsAuths[fieldId] === AuthType.Required}
-                    >
-                      <Input
-                        readOnly={!fieldsAuths[fieldId] || fieldsAuths[fieldId] === AuthType.View}
-                      />
-                    </Form.Item>
-                  </Col>
-                );
-              })}
-            </Row>
-          );
-        })}
-      </Form>
-    </div>
+              return (
+                <Col span={compMaps[fieldId].colSpace! * 6} key={fieldId} className={styles.col}>
+                  <Form.Item
+                    key={fieldId}
+                    name={fieldId}
+                    label={compMaps[fieldId].title}
+                    required={fieldsAuths[fieldId] === AuthType.Required}
+                  >
+                    <Input readOnly={!fieldsAuths[fieldId] || fieldsAuths[fieldId] === AuthType.View} />
+                  </Form.Item>
+                </Col>
+              );
+            })}
+          </Row>
+        );
+      })}
+    </Form>
   );
 }
 

@@ -1,5 +1,13 @@
 @import './var.scss';
 
+body {
+  height: 100%;
+
+  #root {
+    height: 100%;
+  }
+}
+
 .ant-btn {
   display: inline-flex;
   align-items: center;

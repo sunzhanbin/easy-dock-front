@@ -1,0 +1,13 @@
+.form {
+  .row {
+    flex-wrap: nowrap;
+
+    & > .col {
+      flex-shrink: 1;
+
+      & + .col {
+        margin-left: 20px;
+      }
+    }
+  }
+}

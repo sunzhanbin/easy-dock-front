@@ -1,0 +1,38 @@
+@import '@styles/var.scss';
+@import '@styles/mixin.scss';
+
+.statusbar {
+  display: flex;
+  justify-content: center;
+
+  &.processing {
+    background-color: rgba(#4c5cdb, 0.08);
+  }
+
+  &.revert {
+    background-color: rgba(#ff9900, 0.08);
+  }
+
+  &.undo {
+    background-color: rgba(#182743, 0.04);
+  }
+
+  &.termination {
+    background-color: rgba(#ff5568, 0.08);
+  }
+
+  &.finish {
+    background-color: rgba(#06c498, 0.08);
+  }
+
+  .content {
+    @include center('flex');
+
+    .image {
+      width: 150px;
+      height: 80px;
+      flex-shrink: 0;
+      object-fit: contain;
+    }
+  }
+}

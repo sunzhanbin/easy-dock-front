@@ -1,0 +1,136 @@
+@import '@styles/var.scss';
+@import '@styles/mixin.scss';
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .header {
+    flex-shrink: 0;
+    border-bottom: 1px solid rgba(#181f43, 0.12);
+
+    .btns {
+      @include center('flex');
+
+      button + button {
+        margin-left: 12px;
+      }
+
+      .save {
+        color: $primary-color;
+        border-color: rgba($primary-color, 0.85);
+      }
+    }
+  }
+
+  .main {
+    flex: 1 1 0;
+    display: flex;
+    height: 100%;
+    overflow: auto;
+
+    .content {
+      flex: 1 1 0;
+    }
+
+    .flow {
+      flex-shrink: 0;
+      width: 310px;
+      border-left: 1px solid rgba(#181f43, 0.12);
+    }
+
+    .form {
+      padding-top: 30px;
+    }
+  }
+}
+
+.status {
+  @include center('flex');
+
+  width: 750px;
+
+  .cell {
+    flex: 1 1 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 0 5px;
+    overflow: hidden;
+
+    &:nth-of-type(2) {
+      border-left: 1px solid rgba(#181f43, 0.12);
+      border-right: 1px solid rgba(#181f43, 0.12);
+    }
+
+    .cell-icon {
+      flex-shrink: 0;
+      margin-right: 8px;
+      font-size: 20px;
+    }
+
+    .cell-content {
+      overflow: hidden;
+
+      .cell-title {
+        @include ellipsis;
+
+        margin-bottom: 4px;
+        line-height: 24px;
+        color: rgba(#000, 0.85);
+        font-size: 16px;
+        font-weight: bold;
+      }
+
+      .cell-desc {
+        line-height: 20px;
+        color: rgba(#181f43, 0.5);
+        font-size: 12px;
+        font-weight: 400;
+      }
+    }
+  }
+
+  .track {
+    line-height: 20px;
+    color: #181f43;
+    font-size: 12px;
+    font-weight: 400;
+
+    .cell-row {
+      @include center('flex');
+
+      &:last-child {
+        display: inline-flex;
+        margin-top: 4px;
+        padding: 2px 8px;
+        border: 1px solid rgba(#181f43, 0.12);
+        border-radius: 4px;
+      }
+
+      & > span:first-child {
+        margin-right: 4px;
+      }
+    }
+  }
+}
+
+.form {
+  width: 705px;
+  margin: 0 auto;
+
+  .title {
+    margin-bottom: 24px;
+    line-height: 34px;
+    color: rgba(#000, 0.85);
+    font-size: 24px;
+    font-weight: bold;
+  }
+}
+
+.start-form-wrapper {
+  flex: 1 1 0;
+  padding: 25px;
+  overflow-y: auto;
+}

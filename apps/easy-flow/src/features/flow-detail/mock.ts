@@ -1,6 +1,8 @@
 import { mock } from 'mockjs';
+import { FillNode, AuditNode, AuthType, NodeType, NodeStatusType } from '@type/flow';
+import { FlowDetaiDataType } from './type';
 
-const flowData: any = {
+const database: any = {
   subApp: {},
   flowDesign: {},
   formDesign: {
@@ -309,48 +311,92 @@ const flowData: any = {
   },
 };
 
+const startFilleNode = <FillNode>{
+  type: NodeType.FillNode,
+  correlationMemberConfig: {
+    members: [],
+  },
+  name: '填写节点',
+  id: 'ddddd',
+  btnText: {
+    submit: {
+      text: '速速提交',
+      enable: true,
+    },
+    save: {
+      text: '速度保存',
+    },
+  },
+  fieldsAuths: {
+    Input_1: AuthType.View,
+    Input_2: AuthType.Edit,
+  },
+};
+
 mock(/\/flow\/detail\/\S+/, 'get', function name(options: MockOptions) {
-  const slices = options.url.split('/');
-  const appkey = slices[slices.length - 1];
-
-  return {
-    resultCode: 0,
-    data: appkey === 'appkey' ? flowData : null,
-  };
-});
-
-mock(/\/flow\/value\/\S+/, 'get', function name(options: MockOptions) {
-  const slices = options.url.split('/');
-  const appkey = slices[slices.length - 1];
-
   return {
     resultCode: 0,
     data: {
-      id: 'flow-node-8ckew2qjeo3-ia0q73ry1h8-b4ci6vmcva',
-      type: 2,
-      fieldsAuths: {
-        Select_1: 3,
-        Select_2: 3,
-        Input_1: 3,
-        Input_2: 3,
+      processMeta: startFilleNode,
+      formMeta: database.formDesign,
+      formData: {
+        Input_1: '这是...',
+        Input_2: '第二个输入',
+        Select_1: '只读',
       },
-      name: '审批节点',
-      correlationMemberConfig: {
-        members: ['www66', 'wanjiang', 'zhuxiangwei'],
+    },
+  };
+});
+
+mock(/\/runtime\/v1\/task\/instanceDetail/, 'post', function name(options: MockOptions) {
+  const slices = options.url.split('/');
+  const appkey = slices[slices.length - 1];
+
+  return {
+    resultCode: 0,
+    data: <FlowDetaiDataType>{
+      auditRecords: [],
+      formData: {},
+      formMeta: database.formDesign,
+      detail: {
+        state: NodeStatusType.Processing,
+        timeUsed: '1天1小时12分钟3秒',
+        currentProcessor: {
+          users: [
+            { name: '张三', id: '1', avatar: '' },
+            { name: '李四', id: '2', avatar: '' },
+            { name: '王二麻子221212122121212ddd', id: '3', avatar: '' },
+          ],
+          groups: [],
+        },
       },
-      btnText: {
-        approve: {
-          enable: true,
+      processMeta: <AuditNode>{
+        id: 'flow-node-8ckew2qjeo3-ia0q73ry1h8-b4ci6vmcva',
+        type: 2,
+        fieldsAuths: {
+          Select_1: 1,
+          Select_2: 2,
+          Input_1: 1,
+          Input_2: 1,
+        },
+        name: '审批节点',
+        correlationMemberConfig: {
+          members: ['www66', 'wanjiang', 'zhuxiangwei'],
+        },
+        btnText: {
+          approve: {
+            enable: true,
+          },
+          revert: {
+            enable: true,
+          },
+          save: {
+            enable: true,
+          },
         },
         revert: {
-          enable: true,
+          type: 1,
         },
-        save: {
-          enable: true,
-        },
-      },
-      revert: {
-        type: 1,
       },
     },
   };

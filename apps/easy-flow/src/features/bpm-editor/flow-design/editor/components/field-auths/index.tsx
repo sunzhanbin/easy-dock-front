@@ -29,25 +29,19 @@ const FieldRow = memo(function FieldRow(props: FieldRowProps) {
     <div className={classnames(styles['flex-row'], className)}>
       <div className={styles.cell}>{value.name}</div>
       <div className={styles.cell}>
-        <span
-          className={styles.checkbox}
-          onClickCapture={() => handleAuthChange(value.auth > 0 ? 0 : 1)}
-        >
+        <span className={styles.checkbox} onClickCapture={() => handleAuthChange(value.auth > 0 ? 0 : 1)}>
           <Checkbox checked={value.auth > 0} indeterminate={extra?.view.indeterminate} />
           {extra?.view.label && <span className={styles.label}>{extra.view.label}</span>}
         </span>
       </div>
       <div className={styles.cell}>
-        <span className={styles.checkbox} onClick={() => handleAuthChange(value.auth > 1 ? 1 : 2)}>
+        <span className={styles.checkbox} onClickCapture={() => handleAuthChange(value.auth > 1 ? 1 : 2)}>
           <Checkbox checked={value.auth > 1} indeterminate={extra?.edit.indeterminate} />
           {extra?.edit.label && <span className={styles.label}>{extra.edit.label}</span>}
         </span>
       </div>
       <div className={styles.cell}>
-        <span
-          className={styles.checkbox}
-          onClick={() => handleAuthChange(value.auth === 3 ? 2 : 3)}
-        >
+        <span className={styles.checkbox} onClickCapture={() => handleAuthChange(value.auth === 3 ? 2 : 3)}>
           <Checkbox checked={value.auth === 3} indeterminate={extra?.required.indeterminate} />
           {extra?.required.label && <span className={styles.label}>{extra.required.label}</span>}
         </span>
@@ -163,12 +157,7 @@ function FieldAuths(props: FieldAuthsProps) {
 
   return (
     <div>
-      <FieldRow
-        className={styles.title}
-        value={total.value}
-        extra={total.extra}
-        onChange={handleTotalChange}
-      />
+      <FieldRow className={styles.title} value={total.value} extra={total.extra} onChange={handleTotalChange} />
       {templates.map((field) => {
         return <FieldRow key={field.id} value={valueMaps[field.id]} onChange={handleFieldChange} />;
       })}

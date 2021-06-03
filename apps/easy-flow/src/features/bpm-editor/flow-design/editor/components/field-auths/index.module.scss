@@ -26,7 +26,18 @@
   .checkbox {
     @include center('flex');
 
+    position: relative;
     cursor: pointer;
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 1;
+    }
 
     .label {
       font-size: 14px;
