@@ -23,6 +23,8 @@ export type SchemaConfigItem = {
   type: string;
   defaultValue?: string | number | boolean;
   placeholder?: string;
+  required?: boolean;
+  requiredMessage?: string;
   children?: SchemaConfigItem;
   direction?: 'vertical' | 'horizontal';
   range?: rangeItem[];
