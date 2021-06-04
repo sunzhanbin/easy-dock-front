@@ -89,7 +89,11 @@ function FlowDetail() {
     if (!data) return null;
 
     if (String(FlowDetailType.MyInitiation) === type) {
-      return <AsyncButton size="large">撤回</AsyncButton>;
+      return (
+        <AsyncButton size="large" disabled>
+          撤回
+        </AsyncButton>
+      );
     }
 
     if (String(FlowDetailType.MyTodo) === type) {
@@ -147,10 +151,6 @@ function FlowDetail() {
           </>
         );
       }
-    }
-
-    if (String(FlowDetailType.MyFinish) === type) {
-      return <></>;
     }
 
     return null;

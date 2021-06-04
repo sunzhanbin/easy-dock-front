@@ -1,7 +1,8 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect, useState, useMemo } from 'react';
 import { Form, Input, Row, Col, FormInstance } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { FieldAuthsMap, AuthType, FormMeta, FormValue } from '@type/flow';
+import useLoadComponents from '@/hooks/use-load-components';
 import styles from './index.module.scss';
 
 type FieldsVisible = { [fieldId: string]: boolean };
@@ -24,7 +25,17 @@ const FormDetail = React.forwardRef(function FormDetail(
   const [form] = Form.useForm<FormValue>();
   const [fieldsVisible, setFieldsVisible] = useState<FieldsVisible>({});
   const [compMaps, setCompMaps] = useState<CompMaps>({});
+
+  // 提取所有组件类型
+  const componentTypes = useMemo(() => {
+    return data.components.map((comp) => comp.type);
+  }, [data]);
+
+  // 获取组件源码
+  const compSources = useLoadComponents(componentTypes);
   const formValuesChange = useMemoCallback((changedValues: FormValue) => {
+    if (!data.events || !data.events.onchange) return;
+
     // 处理响应表单事件，响应绑定的visible和reset
     data.events.onchange.forEach((event) => {
       const { fieldId, listeners, value } = event;
@@ -94,9 +105,11 @@ const FormDetail = React.forwardRef(function FormDetail(
         return (
           <Row key={index} className={styles.row}>
             {formRow.map((fieldId) => {
-              if (!fieldsVisible[fieldId]) {
+              if (!fieldsVisible[fieldId] || !compSources) {
                 return null;
               }
+
+              const Component = compSources[compMaps[fieldId].type]!;
 
               return (
                 <Col span={compMaps[fieldId].colSpace! * 6} key={fieldId} className={styles.col}>
@@ -106,7 +119,7 @@ const FormDetail = React.forwardRef(function FormDetail(
                     label={compMaps[fieldId].label}
                     required={fieldsAuths[fieldId] === AuthType.Required}
                   >
-                    <Input readOnly={!fieldsAuths[fieldId] || fieldsAuths[fieldId] === AuthType.View} />
+                    <Component readOnly={!fieldsAuths[fieldId] || fieldsAuths[fieldId] === AuthType.View} />
                   </Form.Item>
                 </Col>
               );
