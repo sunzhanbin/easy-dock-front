@@ -197,3 +197,5 @@ export type Depart = {
   id: number;
   avatar: string;
 };
+
+export type AllComponentType = SingleTextField | SelectField | DateField | RadioField | CheckboxField;

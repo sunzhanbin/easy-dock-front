@@ -1,4 +1,4 @@
-import { SelectField, SingleTextField } from '@type';
+import { AllComponentType } from '@type';
 
 export enum NodeType {
   // 开始节点
@@ -139,7 +139,7 @@ export enum NodeStatusType {
   Revert = 5,
 }
 
-type ComponentInfo = (SelectField | SingleTextField) & {
+type ComponentInfo = AllComponentType & {
   title: string;
 };
 
@@ -147,7 +147,7 @@ export interface FormMeta {
   seletedTheme: string;
   components: ComponentInfo[];
   layout: [string, string, string, string][];
-  events: {
+  events?: {
     onchange: {
       fieldId: string;
       value: string;
@@ -157,12 +157,12 @@ export interface FormMeta {
       };
     }[];
   };
-  rules: {
+  rules?: {
     type: 'reg' | '<' | '>' | '=' | '||';
     field: string;
     validator?: RegExp | { type: 'ref'; value: string };
     message?: string;
-    children?: Omit<FormMeta['rules'][number], 'children'>[];
+    children?: Omit<NonNullable<FormMeta['rules']>[number], 'children'>[];
   }[];
 }
 
