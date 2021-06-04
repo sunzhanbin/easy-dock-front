@@ -1,6 +1,6 @@
 import { Moment } from 'moment';
 
-export type FieldType = 'Select' | 'Input';
+export type FieldType = 'Select' | 'Input' | 'Textarea' | 'Radio' | 'Checkbox' | 'Date' | 'InputNumber' | 'DescText';
 
 export type BaseField = {
   id: string | undefined;

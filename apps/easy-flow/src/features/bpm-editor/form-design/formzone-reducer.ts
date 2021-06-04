@@ -55,7 +55,6 @@ const reducers = {
   },
   moveRow(state: FormDesign, action: PayloadAction<{ sourceIndex: number; targetIndex: number }>) {
     const { sourceIndex, targetIndex } = action.payload;
-    console.info(sourceIndex, targetIndex);
     if (sourceIndex > targetIndex) {
       state.layout.splice(targetIndex, 0, state.layout[sourceIndex]);
       state.layout.splice(sourceIndex + 1, 1);
@@ -115,7 +114,7 @@ const reducers = {
     if (isEdit) {
       const [rowIndex, colIndex] = locateById(id, state.layout);
       const idList: string[] = [...state.layout[rowIndex]];
-      if (state.byId[id].colSpace == 4) {
+      if (state.byId[id].colSpace == 4 && state.layout[rowIndex].length > 1) {
         if (colIndex === 0) {
           const id: string = idList.shift() as string;
           state.layout[rowIndex] = [id];
