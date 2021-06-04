@@ -104,7 +104,7 @@ const FormDetail = React.forwardRef(function FormDetail(
                   <Form.Item
                     key={fieldId}
                     name={fieldId}
-                    label={compMaps[fieldId].title}
+                    label={compMaps[fieldId].label}
                     required={fieldsAuths[fieldId] === AuthType.Required}
                   >
                     <Input readOnly={!fieldsAuths[fieldId] || fieldsAuths[fieldId] === AuthType.View} />

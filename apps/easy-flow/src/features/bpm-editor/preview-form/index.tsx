@@ -2,8 +2,10 @@ import React, { memo, FC, useMemo, useCallback } from 'react';
 import styled from 'styled-components';
 import { useAppSelector } from '@/app/hooks';
 import { componentPropsSelector, layoutSelector } from '../form-design/formzone-reducer';
-import { Col, Row } from 'antd';
-import SourceBox from '@/components/source-box';
+import FormEngine from '@components/form-engine';
+import { FormMeta } from '@/features/flow-detail/type';
+import { FieldAuthsMap } from '@/type/flow';
+import { useHistory } from 'react-router-dom';
 
 const Container = styled.div`
   .header {
@@ -27,13 +29,19 @@ const Container = styled.div`
       float: right;
       width: 20px;
       height: 20px;
+      line-height: 20px;
       margin-top: 22px;
+      cursor: pointer;
+      .iconfont {
+        font-size: 20px;
+        color: #818a9e;
+      }
     }
   }
   .content {
     width: 60%;
     margin-left: 20%;
-    margin-top: 64px;
+    margin-top: 89px;
     .title {
       height: 34px;
       font-size: 24px;
@@ -76,43 +84,48 @@ const Container = styled.div`
     }
   }
 `;
-const spaceMap = {
-  1: 6,
-  2: 12,
-  3: 18,
-  4: 24,
-};
 
 const PreviewForm: FC = () => {
   const layout = useAppSelector(layoutSelector);
   const byId = useAppSelector(componentPropsSelector);
-  const getColSpace = useCallback(
-    (id: string) => {
-      const space = byId[id]?.colSpace;
-      if (space) {
-        return spaceMap[space];
-      }
-    },
-    [byId],
-  );
-  const formContent = useMemo(() => {
-    return (
-      <div className="form_design">
-        
-      </div>
-    );
+  const history = useHistory();
+
+  const formDesign = useMemo(() => {
+    const formMeta = {
+      layout,
+      events: {
+        onchange: [],
+      },
+      rules: [],
+      themes: [{}],
+      components: Object.values(byId),
+      selectedTheme: '',
+    };
+    return formMeta;
   }, [layout, byId]);
+  const auths = useMemo(() => {
+    const res: FieldAuthsMap = {};
+    Object.keys(byId).forEach((id) => {
+      res[id] = 2;
+    });
+    return res;
+  }, [byId]);
+  const handleClose = useCallback(() => {
+    history.goBack();
+  }, []);
   return (
     <Container>
       <div className="header">
         <div className="title">预览表单</div>
-        <div className="close">
+        <div className="close" onClick={handleClose}>
           <span className="iconfont iconguanbi"></span>
         </div>
       </div>
       <div className="content">
-        <div className="title">燃气保修</div>
-        <div className="form_content">{formContent}</div>
+        <div className="title">燃气报修</div>
+        <div className="form_content">
+          <FormEngine initialValue={{}} data={(formDesign as unknown) as FormMeta} fieldsAuths={auths}></FormEngine>
+        </div>
       </div>
     </Container>
   );
