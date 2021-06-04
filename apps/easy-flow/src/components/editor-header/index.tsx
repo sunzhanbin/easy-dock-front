@@ -83,7 +83,6 @@ const HeaderContainer = styled.div`
         width: 74px;
         margin-top: 12px;
         margin-right: 24px;
-        background: #4c5cdb;
         border-radius: 3px;
         font-size: 14px;
         font-weight: 400;
@@ -93,7 +92,6 @@ const HeaderContainer = styled.div`
         width: 74px;
         margin-top: 12px;
         margin-right: 24px;
-        background: #4c5cdb;
         border-radius: 3px;
         font-size: 14px;
         font-weight: 400;
@@ -122,6 +120,11 @@ const EditorHeader: FC = () => {
       history.push('/preview-form');
     }
   }, [pathName]);
+  const handlePrev = useCallback(() => {
+    if (pathName === '/flow-design') {
+      history.push('/form-design');
+    }
+  }, [pathName]);
   const handleSave = useCallback(() => {
     if (pathName === '/form-design') {
       console.info('save');
@@ -132,7 +135,7 @@ const EditorHeader: FC = () => {
   }, [pathName]);
   const handleNext = useCallback(() => {
     if (pathName === '/form-design') {
-      console.info('next');
+      history.push('/flow-design');
     }
   }, [pathName]);
 
@@ -153,13 +156,16 @@ const EditorHeader: FC = () => {
           </NavLink>
         </div>
         <div className="operation">
-          <span className="iconfont iconjiantoushangyibu"></span>
-          <span className="iconfont iconjiantouxiayibu"></span>
-          <Tooltip title="预览">
-            <span className="iconfont iconyulan" onClick={handlePreview}></span>
-          </Tooltip>
+          {/* 这个版本暂时不做 */}
+          {/* <span className="iconfont iconjiantoushangyibu"></span>
+          <span className="iconfont iconjiantouxiayibu"></span> */}
+          {pathName === '/form-design' && (
+            <Tooltip title="预览">
+              <span className="iconfont iconyulan" onClick={handlePreview}></span>
+            </Tooltip>
+          )}
           {pathName === '/flow-design' && (
-            <Button className="prev" size="large">
+            <Button className="prev" size="large" onClick={handlePrev}>
               上一步
             </Button>
           )}
