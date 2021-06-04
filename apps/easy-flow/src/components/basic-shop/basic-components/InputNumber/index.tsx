@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 import styled from 'styled-components';
 import { InputNumber } from 'antd';
 import { SingleTextField } from '@/type';
+import { useCallback } from 'react';
 
 const TextareaComponentContainer = styled.div`
   display: flex;
@@ -35,15 +36,17 @@ const TextareaComponentContainer = styled.div`
   }
 `;
 
-const TextareaComponent = (props: SingleTextField & { id: string }) => {
-  const { label, defaultValue, tip, readonly } = props;
+const TextareaComponent = (props: SingleTextField & { id: string; onChange: (v: number) => void }) => {
+  const { defaultValue, readonly, value, onChange } = props;
+  const handleChange = useCallback(
+    (e) => {
+      onChange && onChange(e);
+    },
+    [onChange],
+  );
 
   return (
     <TextareaComponentContainer>
-      <div className="label_container">
-        <div className="label">{label}</div>
-        <div className="tip">{tip}</div>
-      </div>
       <div className="number_container">
         <div className="icon">
           <span className="iconfont iconshuzi123"></span>
@@ -54,6 +57,7 @@ const TextareaComponent = (props: SingleTextField & { id: string }) => {
           defaultValue={defaultValue}
           value={defaultValue}
           readOnly={readonly}
+          onChange={handleChange}
         />
       </div>
     </TextareaComponentContainer>

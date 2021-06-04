@@ -1,18 +1,11 @@
 import React, { memo, useMemo } from 'react';
 import { Select } from 'antd';
-import styled from 'styled-components';
 import { SelectField } from '@/type';
 
 const { Option } = Select;
 
-const SelectComponentContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-`;
-
 const SelectComponent = (props: SelectField & { id: string }) => {
-  const { label, defaultValue, tip, multiple, showSearch, selectOptionList, readonly } = props;
+  const { defaultValue, multiple, showSearch, selectOptionList, readonly } = props;
   const optionList = useMemo(() => {
     return selectOptionList?.content || [];
   }, [selectOptionList]);
@@ -33,19 +26,13 @@ const SelectComponent = (props: SelectField & { id: string }) => {
     return prop;
   }, [defaultValue, multiple, showSearch, readonly]);
   return (
-    <SelectComponentContainer>
-      <div className="label_container">
-        <div className="label">{label}</div>
-        <div className="tip">{tip}</div>
-      </div>
-      <Select {...propList}>
-        {optionList.map(({ key, value }) => (
-          <Option value={key} key={key}>
-            {value}
-          </Option>
-        ))}
-      </Select>
-    </SelectComponentContainer>
+    <Select {...propList}>
+      {optionList.map(({ key, value }) => (
+        <Option value={key} key={key}>
+          {value}
+        </Option>
+      ))}
+    </Select>
   );
 };
 

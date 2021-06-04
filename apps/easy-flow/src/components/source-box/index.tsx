@@ -1,5 +1,6 @@
 import { FormField, MoveConfig, TConfigItem } from '@/type';
 import { Tooltip } from 'antd';
+import LabelContent from '../label-content';
 import React, { memo, FC, useEffect, useState, useMemo, useCallback } from 'react';
 import styled from 'styled-components';
 import { store } from '@app/store';
@@ -173,7 +174,10 @@ const SourceBox: FC<{
     if (Component) {
       return (
         <BoxContainer>
-          <Component {...(propList as TConfigItem)} />
+          <div className="component_container">
+            <LabelContent label={propList.label} desc={propList.desc} />
+            <Component {...(propList as TConfigItem)} />
+          </div>
           <div className="operation">
             <Tooltip title="复制">
               <span className="iconfont iconfuzhi" onClick={handleCopy}></span>

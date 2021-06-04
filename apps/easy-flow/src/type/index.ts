@@ -7,7 +7,7 @@ export type BaseField = {
   version: string;
   fieldName: string;
   label: string;
-  tip: string | null;
+  desc: string;
   required?: boolean;
   colSpace: 1 | 2 | 3 | 4 | undefined;
   defaultValue: string | number | undefined;

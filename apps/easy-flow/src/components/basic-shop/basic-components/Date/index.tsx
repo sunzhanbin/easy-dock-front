@@ -1,18 +1,10 @@
 import React, { memo, useMemo } from 'react';
-import styled from 'styled-components';
 import { DatePicker } from 'antd';
 import { DateField } from '@/type';
 import moment, { Moment } from 'moment';
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  width: 100%;
-`;
-
 const Date = (props: DateField) => {
-  const { tip, label, format, notSelectPassed, defaultValue, readonly } = props;
+  const { format, notSelectPassed, defaultValue, readonly } = props;
   const propList = useMemo(() => {
     const props: { [k: string]: string | boolean | Function | Moment } = {
       size: 'large',
@@ -38,14 +30,6 @@ const Date = (props: DateField) => {
     }
     return props;
   }, [format, notSelectPassed, defaultValue, readonly]);
-  return (
-    <Container>
-      <div className="label_container">
-        <div className="label">{label}</div>
-        <div className="tip">{tip}</div>
-      </div>
-      <DatePicker {...propList} />
-    </Container>
-  );
+  return <DatePicker {...propList} />;
 };
 export default memo(Date);
