@@ -1,5 +1,5 @@
 import { memo, useCallback } from 'react';
-import { BranchNode as BranchNodeType, AllNode, NodeType } from '../../types';
+import { BranchNode as BranchNodeType, AllNode, NodeType } from '@type/flow';
 import UserNode from '../audit-node';
 
 type BranchType = BranchNodeType['branches'][number];
@@ -38,17 +38,10 @@ function BranchNode(props: BranchNodeProps) {
             {sBranch.nodes.map((sNode) => {
               if (sNode.type === NodeType.BranchNode) {
                 return (
-                  <BranchNode
-                    key={sNode.id}
-                    data={sNode}
-                    onNodeClick={onNodeClick}
-                    onBranchClick={onBranchClick}
-                  />
+                  <BranchNode key={sNode.id} data={sNode} onNodeClick={onNodeClick} onBranchClick={onBranchClick} />
                 );
               } else if (sNode.type === NodeType.AuditNode) {
-                return (
-                  <UserNode node={sNode} onClick={onNodeClick} key={sNode.id} prevNodes={[]} />
-                );
+                return <UserNode node={sNode} onClick={onNodeClick} key={sNode.id} prevNodes={[]} />;
               } else {
                 return null;
               }

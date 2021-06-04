@@ -1,7 +1,7 @@
 import { memo, useMemo } from 'react';
 import Selector, { MemberSelectorProps as SelectorProps } from '@components/member-selector';
 import { flowDataSelector, setCacheMembers } from '../../../flow-slice';
-import { UserNode } from '../../../types';
+import { UserNode } from '@type/flow';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 
 interface MemberSelectorProps {

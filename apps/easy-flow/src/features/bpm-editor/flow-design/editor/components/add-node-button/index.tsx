@@ -5,7 +5,7 @@ import useMemoCallback from '@common/hooks/use-memo-callback';
 import { Icon } from '@common/components';
 import { addNode } from '../../../flow-slice';
 import { createNode, getPopupContainer } from '../../../util';
-import { NodeType } from '../../../types';
+import { NodeType } from '@type/flow';
 import styles from './index.module.scss';
 import { useAppDispatch } from '@/app/hooks';
 

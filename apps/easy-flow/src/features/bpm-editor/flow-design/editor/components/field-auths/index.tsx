@@ -2,7 +2,7 @@ import { memo, useMemo } from 'react';
 import { Checkbox } from 'antd';
 import classnames from 'classnames';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import { FieldAuthsMap, AuthType } from '../../../types';
+import { FieldAuthsMap, AuthType } from '@type/flow';
 import styles from './index.module.scss';
 
 type FieldAuth = { id: string; auth: AuthType; name: string };

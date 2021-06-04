@@ -1,36 +1,7 @@
-import { SelectField, SingleTextField, Depart, User } from '@type';
-import { FillNode, AuditNode, NodeStatusType } from '@type/flow';
+import { SelectField, SingleTextField, Depart } from '@type';
+import { FillNode, AuditNode, NodeStatusType, FormMeta, FormValue } from '@type/flow';
 
 export type { SelectField, SingleTextField } from '@type';
-
-type ComponentInfo = (SelectField | SingleTextField) & {
-  title: string;
-};
-
-export interface FormMeta {
-  seletedTheme: string;
-  components: ComponentInfo[];
-  layout: [string, string, string, string][];
-  events: {
-    onchange: {
-      fieldId: string;
-      value: string;
-      listeners: {
-        visible?: string[];
-        reset?: string[];
-      };
-    }[];
-  };
-  rules: {
-    type: 'reg' | '<' | '>' | '=' | '||';
-    field: string;
-    validator?: RegExp | { type: 'ref'; value: string };
-    message?: string;
-    children?: Omit<FormMeta['rules'][number], 'children'>[];
-  }[];
-}
-
-export type FormValue = { [key: string]: any };
 
 export type FlowDetaiDataType = {
   auditRecords: [];

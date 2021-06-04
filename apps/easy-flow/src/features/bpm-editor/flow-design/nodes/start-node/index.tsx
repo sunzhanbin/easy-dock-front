@@ -1,7 +1,7 @@
 import { memo, useMemo } from 'react';
 import { Icon } from '@common/components';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import { StartNode as StartNodeType, TriggerType } from '../../types';
+import { StartNode as StartNodeType, TriggerType } from '@type/flow';
 import Base from '../base-node';
 
 interface StartNodeProps {
