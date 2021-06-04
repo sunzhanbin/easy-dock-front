@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useAppSelector } from '@/app/hooks';
 import { componentPropsSelector, layoutSelector } from '../form-design/formzone-reducer';
 import FormEngine from '@components/form-engine';
-import { FormMeta } from '@/features/flow-detail/type';
+import { FormMeta } from '@type/flow';
 import { FieldAuthsMap } from '@/type/flow';
 import { useHistory } from 'react-router-dom';
 
