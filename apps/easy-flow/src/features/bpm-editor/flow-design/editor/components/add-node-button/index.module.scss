@@ -1,3 +1,4 @@
+@import '@styles/var.scss';
 @import '@styles/mixin.scss';
 
 .container {
@@ -12,11 +13,15 @@
     background-color: #fff;
     border-color: rgba($color: #181f43, $alpha: 0.12);
 
+    &.active {
+      border-color: $primary-color;
+    }
+
     & > svg {
       width: 10px;
       height: 10px;
       font-weight: bold;
-      color: #4c5cdb;
+      color: $primary-color;
     }
   }
 
@@ -27,7 +32,7 @@
       margin-bottom: 4px;
       padding: 5px 8px;
       line-height: 22px;
-      color: rgba(#181f43, 0.95);
+      color: #181f43;
       font-size: 14px;
       font-weight: 400;
       white-space: nowrap;

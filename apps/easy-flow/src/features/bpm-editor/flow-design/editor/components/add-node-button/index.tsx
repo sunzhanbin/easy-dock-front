@@ -29,11 +29,11 @@ function AddNodeButton(props: AddNodeButtonProps) {
     return (
       <div className={styles['add-list']}>
         <div onClick={() => handleAddNode(NodeType.AuditNode)}>
-          <Icon type="lineyonghujiedian1" />
+          <Icon type="lineshenpijiedian" />
           <span>添加审批节点</span>
         </div>
         <div onClick={() => handleAddNode(NodeType.FillNode)}>
-          <Icon type="caidan" />
+          <Icon type="linetianxiejiedian" />
           <span>添加填写节点</span>
         </div>
       </div>
@@ -51,7 +51,11 @@ function AddNodeButton(props: AddNodeButtonProps) {
       content={addPopoverContent}
     >
       <div className={classnames(styles.container, className)}>
-        <Button className={styles['add-button']} type="default" icon={<Icon type="xinzeng" />} />
+        <Button
+          className={classnames(styles['add-button'], { [styles.active]: showAddPopover })}
+          type="default"
+          icon={<Icon type="xinzeng" />}
+        />
       </div>
     </Popover>
   );

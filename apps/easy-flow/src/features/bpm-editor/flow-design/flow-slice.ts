@@ -229,7 +229,9 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
         notificationContent: '',
       };
 
-      flowData = [startNode, finishNode];
+      const fillNode: FillNode = createNode(NodeType.FillNode, '填写节点');
+
+      flowData = [startNode, fillNode, finishNode];
     }
 
     const { members } = flowMemberKeys(flowData);
