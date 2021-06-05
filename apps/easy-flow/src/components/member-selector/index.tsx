@@ -43,9 +43,7 @@ export const MemberList = memo(function MemberList(props: MemberListProps) {
   return (
     <div className={styles.members}>
       {members.map((member) => {
-        return (
-          <Member editable={editable} key={member.loginName} data={member} onDelete={onDelete} />
-        );
+        return <Member editable={editable} key={member.loginName} data={member} onDelete={onDelete} />;
       })}
       {children}
     </div>

@@ -27,6 +27,8 @@ export const CardHeader = memo(function CardHeader(props: CardHeaderProps) {
   const typeClass = useMemo(() => {
     if (type === NodeType.AuditNode) {
       return styles['audit-node'];
+    } else if (type === NodeType.FillNode) {
+      return styles['fill-node'];
     }
 
     return '';

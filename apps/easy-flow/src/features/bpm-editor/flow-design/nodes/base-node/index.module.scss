@@ -11,7 +11,11 @@
   font-weight: 500;
 
   &.audit-node {
-    background-color: $success-color;
+    background-color: rgba($primary-color, 0.8);
+  }
+
+  &.fill-node {
+    background-color: rgba(#06c498, 0.8);
   }
 
   .icon-box {

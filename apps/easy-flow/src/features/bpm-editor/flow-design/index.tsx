@@ -5,7 +5,7 @@ import useMemoCallback from '@common/hooks/use-memo-callback';
 import { Loading, Icon } from '@common/components';
 import { load, flowDataSelector, save } from './flow-slice';
 import { AllNode, BranchNode as BranchNodeType, NodeType } from '@type/flow';
-import { StartNode, UserNode, FinishNode, CardHeader } from './nodes';
+import { StartNode, AuditNode, FillNode, FinishNode, CardHeader } from './nodes';
 import { AuditNodeProps } from './nodes/audit-node';
 import { StartNodeEditor, AuditNodeEditor, FillNodeEditor, FinishNodeEditor } from './editor';
 import styles from './index.module.scss';
@@ -31,7 +31,7 @@ function FlowDesign() {
     setShowEditDrawer(false);
   });
 
-  const handleClickUserNode: AuditNodeProps['onClick'] = useMemoCallback((node, prevNodes) => {
+  const handleClickAuditNode: AuditNodeProps['onClick'] = useMemoCallback((node, prevNodes) => {
     setCurrentEditNode(node);
     setCurrentEditNodePrevNodes(prevNodes || []);
     setShowEditDrawer(true);
@@ -57,7 +57,7 @@ function FlowDesign() {
     if (currentEditNode) {
       if (currentEditNode.type === NodeType.AuditNode) {
         return (
-          <CardHeader icon={<Icon type="yonghujiedian" />} type={currentEditNode.type}>
+          <CardHeader icon={<Icon type="shenhejiedian" />} type={currentEditNode.type}>
             用户节点
           </CardHeader>
         );
@@ -75,7 +75,7 @@ function FlowDesign() {
         );
       } else if (currentEditNode.type === NodeType.FillNode) {
         return (
-          <CardHeader icon={<Icon type="jieshujiedian" />} type={currentEditNode.type}>
+          <CardHeader icon={<Icon type="tianxiejiedian" />} type={currentEditNode.type}>
             填写节点
           </CardHeader>
         );
@@ -103,11 +103,11 @@ function FlowDesign() {
             }
 
             case NodeType.AuditNode: {
-              return <UserNode key={node.id} node={node} onClick={handleClickUserNode} prevNodes={prevNodes} />;
+              return <AuditNode key={node.id} node={node} onClick={handleClickAuditNode} prevNodes={prevNodes} />;
             }
 
             case NodeType.FillNode: {
-              return <UserNode key={node.id} node={node} onClick={handleClickUserNode} />;
+              return <FillNode key={node.id} node={node} onClick={handleClickNode} />;
             }
 
             case NodeType.FinishNode: {

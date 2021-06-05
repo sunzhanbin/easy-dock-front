@@ -40,7 +40,24 @@
     .flow {
       flex-shrink: 0;
       width: 310px;
+      padding: 24px;
       border-left: 1px solid rgba(#181f43, 0.12);
+      overflow-y: auto;
+
+      .detail {
+        position: relative;
+
+        &::after {
+          content: '';
+          position: absolute;
+          left: 8px;
+          top: 2px;
+          bottom: 0;
+          z-index: -1;
+          width: 1px;
+          background-color: rgba(#181f43, 0.12);
+        }
+      }
     }
 
     .form {

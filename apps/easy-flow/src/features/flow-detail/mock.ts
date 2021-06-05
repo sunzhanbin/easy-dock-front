@@ -1,5 +1,5 @@
 import { mock } from 'mockjs';
-import { FillNode, AuditNode, AuthType, NodeType, NodeStatusType } from '@type/flow';
+import { FillNode, AuditNode, AuthType, NodeType, NodeStatusType, AuditRecordType } from '@type/flow';
 import { FlowDetaiDataType } from './type';
 
 const database: any = {
@@ -348,14 +348,27 @@ mock(/\/flow\/detail\/\S+/, 'get', function name(options: MockOptions) {
   };
 });
 
-mock(/\/runtime\/v1\/task\/instanceDetail/, 'post', function name(options: MockOptions) {
-  const slices = options.url.split('/');
-  const appkey = slices[slices.length - 1];
-
+mock(/\/runtime\/v1\/task\/instanceDetail/, 'post', function name() {
   return {
     resultCode: 0,
-    data: <FlowDetaiDataType>{
-      auditRecords: [],
+    data: <FlowDetaiDataType>mock({
+      'auditRecords|3-10': [
+        {
+          auditTime: mock('@datetime'),
+          'auditType|1': [
+            AuditRecordType.APPROVE,
+            AuditRecordType.FORM_FILL,
+            AuditRecordType.INSTANCE_STOP,
+            AuditRecordType.REJECT,
+            AuditRecordType.START,
+            AuditRecordType.TURN,
+          ],
+          comments: mock('@cparagraph'),
+          nodeName: mock('@ctitle'),
+          userName: mock('@cname'),
+          userAvatar: `https://picsum.photos/100/100?t=${Math.random()}`,
+        },
+      ],
       formData: { Input_1: 'hello' },
       formMeta: database.formDesign,
       detail: {
@@ -408,19 +421,6 @@ mock(/\/runtime\/v1\/task\/instanceDetail/, 'post', function name(options: MockO
           type: 1,
         },
       },
-    },
-  };
-});
-
-mock(/\/form\/value\/\S+/, 'get', function name(options: MockOptions) {
-  const slices = options.url.split('/');
-  const appkey = slices[slices.length - 1];
-
-  return {
-    resultCode: 0,
-    data: {
-      Input_1: 'hello',
-      Input_2: 'male',
-    },
+    }),
   };
 });

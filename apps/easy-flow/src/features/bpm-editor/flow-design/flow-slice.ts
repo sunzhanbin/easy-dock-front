@@ -4,7 +4,7 @@ import { axios } from '@utils';
 import { User } from '@type';
 import { AllNode, NodeType, StartNode, FinishNode, AuditNode, FillNode, TriggerType, Flow } from '@type/flow';
 import { RootState } from '@app/store';
-import { fielduuid } from './util';
+import { fielduuid, createNode } from './util';
 
 if (process.env.NODE_ENV === 'development') {
   axios.defaults.baseURL = '/';
@@ -202,7 +202,7 @@ const flow = createSlice({
 });
 
 const flowActions = flow.actions;
-export const { setLoading, addNode, updateNode, delNode, setCacheMembers } = flow.actions;
+export const { setLoading, updateNode, delNode, setCacheMembers } = flow.actions;
 
 // 加载应用的流程，对于初始创建的应用是null
 export const load = createAsyncThunk('flow/load', async (appkey: string, { dispatch }) => {
@@ -280,6 +280,27 @@ export const save = createAsyncThunk<void, string, { state: RootState }>(
   },
 );
 
+export const addNode = createAsyncThunk<void, { prevId: string; type: NodeType.AuditNode | NodeType.FillNode }>(
+  'flow/createn-ode',
+  ({ prevId, type }, { dispatch }) => {
+    let tmpNode;
+
+    if (type === NodeType.AuditNode) {
+      tmpNode = createNode(type, '审批节点');
+    } else if (type === NodeType.FillNode) {
+      tmpNode = createNode(type, '填写节点');
+    } else {
+      throw Error('传入类型不正确');
+    }
+
+    dispatch(
+      flowActions.addNode({
+        prevId,
+        node: tmpNode,
+      }),
+    );
+  },
+);
 export default flow;
 
 // 聚合form和flow, 因为flow的字段权限需要form的字段信息

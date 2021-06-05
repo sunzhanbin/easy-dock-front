@@ -21,9 +21,9 @@ function StatusBar(props: StatusBarProps) {
     } else if (status === NodeStatusType.Undo) {
       image = `/images/flow-detail/undo.png`;
       styleName = styles.undo;
-    } else if (status === NodeStatusType.Termination) {
-      image = `/images/flow-detail/termination.png`;
-      styleName = styles.termination;
+    } else if (status === NodeStatusType.Terminated) {
+      image = `/images/flow-detail/terminated.png`;
+      styleName = styles.terminated;
     } else if (status === NodeStatusType.Revert) {
       image = `/images/flow-detail/revert.png`;
       styleName = styles.revert;
