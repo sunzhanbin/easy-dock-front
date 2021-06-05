@@ -3,3 +3,9 @@ type MockOptions<T = any> = {
   type: 'GET' | 'POST' | 'DELETE';
   url: string;
 };
+
+interface Window {
+  __POWERED_BY_QIANKUN__: boolean | undefined;
+  __webpack_public_path__: string;
+  __INJECTED_PUBLIC_PATH_BY_QIANKUN__: string;
+}

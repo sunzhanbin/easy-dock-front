@@ -57,7 +57,7 @@ const Project = (props: ProjectProps) => {
     >
       <div className={styles.content}>
         <div className={styles.name}>{data.name}</div>
-        <div>{data.sceneCount || 0}</div>
+        <div>{data.appCount || 0}</div>
       </div>
       <div className={styles.icons}>
         <Popover
@@ -71,10 +71,7 @@ const Project = (props: ProjectProps) => {
           getPopupContainer={getPopupContainer}
         >
           <div className={styles['edit-icon-container']}>
-            <Icon
-              type="bianji"
-              className={classnames(styles.icon, { [styles.active]: currentProjectIsEditing })}
-            />
+            <Icon type="bianji" className={classnames(styles.icon, { [styles.active]: currentProjectIsEditing })} />
           </div>
         </Popover>
 
@@ -89,10 +86,7 @@ const Project = (props: ProjectProps) => {
           getPopupContainer={getPopupContainer}
         >
           <div>
-            <Icon
-              type="shanchu"
-              className={classnames(styles.icon, { [styles.active]: currentProjectIsDeleting })}
-            />
+            <Icon type="shanchu" className={classnames(styles.icon, { [styles.active]: currentProjectIsDeleting })} />
           </div>
         </PopConfirm>
       </div>
