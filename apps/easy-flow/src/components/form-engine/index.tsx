@@ -29,7 +29,6 @@ const FormDetail = React.forwardRef(function FormDetail(
 
   // 提取所有组件类型
   const componentTypes = useMemo(() => {
-    console.info(data);
     return data.components.map((comp) => comp.type);
   }, [data]);
 

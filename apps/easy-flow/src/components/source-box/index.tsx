@@ -1,7 +1,7 @@
-import { FormField, MoveConfig, TConfigItem } from '@/type';
+import { AllComponentType, FormField, MoveConfig, TConfigItem } from '@/type';
 import { Tooltip } from 'antd';
 import LabelContent from '../label-content';
-import React, { memo, FC, useEffect, useState, useMemo, useCallback } from 'react';
+import React, { memo, FC, useMemo, useCallback } from 'react';
 import styled from 'styled-components';
 import { store } from '@app/store';
 import {
@@ -13,6 +13,7 @@ import {
   comDeleted,
 } from '@/features/bpm-editor/form-design/formdesign-slice';
 import { useAppDispatch } from '@/app/hooks';
+import useLoadComponents from '@/hooks/use-load-components';
 
 const BoxContainer = styled.div`
   cursor: move;
@@ -97,7 +98,7 @@ const BoxContainer = styled.div`
     transform: translateY(-9px);
   }
 `;
-
+type Component = React.FC | React.ComponentClass;
 const SourceBox: FC<{
   type: string;
   config: FormField;
@@ -105,17 +106,12 @@ const SourceBox: FC<{
   moveConfig: MoveConfig;
   rowIndex: number;
 }> = ({ type, config, id, moveConfig, rowIndex }) => {
-  const [Component, setComponent] = useState<FC | null>(null);
   const dispatch = useAppDispatch();
+  // 获取组件源码
+  const compSources: Component = useLoadComponents(type as AllComponentType['type']) as Component;
   const propList = useMemo(() => {
     return Object.assign({}, config, { id });
   }, [config, id]);
-  useEffect(() => {
-    type &&
-      import(`../basic-shop/basic-components/${type}/index`).then((res) => {
-        setComponent(res.default);
-      });
-  }, [type]);
   const handleCopy = useCallback(() => {
     const formDesign = store.getState().formDesign;
     const com = Object.assign({}, formDesign.byId[id]);
@@ -171,7 +167,8 @@ const SourceBox: FC<{
     dispatch(exchange({ id, direction: 'right' }));
   }, [id]);
   const content = useMemo(() => {
-    if (Component) {
+    if (compSources) {
+      const Component = compSources;
       return (
         <BoxContainer>
           <div className="component_container">
@@ -210,7 +207,7 @@ const SourceBox: FC<{
       );
     }
     return null;
-  }, [Component, config, moveConfig]);
+  }, [config, moveConfig, compSources, type]);
   return <>{content}</>;
 };
 
