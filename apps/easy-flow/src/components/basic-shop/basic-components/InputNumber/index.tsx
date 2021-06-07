@@ -1,4 +1,5 @@
-import React, { memo } from 'react';
+import React, { memo, useMemo } from 'react';
+import { useLocation } from 'react-router';
 import styled from 'styled-components';
 import { InputNumber } from 'antd';
 import { SingleTextField } from '@/type';
@@ -37,13 +38,29 @@ const TextareaComponentContainer = styled.div`
 `;
 
 const TextareaComponent = (props: SingleTextField & { id: string; onChange: (v: number) => void }) => {
-  const { defaultValue, readonly, value, onChange } = props;
+  const location = useLocation();
+  const { defaultValue, readonly, onChange } = props;
   const handleChange = useCallback(
     (e) => {
       onChange && onChange(e);
     },
     [onChange],
   );
+  const propList = useMemo(() => {
+    const props: { [k: string]: string | number | boolean | undefined | Function } = {
+      size: 'large',
+      placeholder: '请输入',
+      readOnly: readonly,
+      onChange: handleChange,
+    };
+    if (defaultValue) {
+      props.defaultValue = defaultValue;
+      if (location.pathname === '/form-design') {
+        props.value = defaultValue;
+      }
+    }
+    return props;
+  }, [defaultValue, readonly, handleChange]);
 
   return (
     <TextareaComponentContainer>
@@ -51,14 +68,7 @@ const TextareaComponent = (props: SingleTextField & { id: string; onChange: (v: 
         <div className="icon">
           <span className="iconfont iconshuzi123"></span>
         </div>
-        <InputNumber
-          size="large"
-          placeholder="请输入"
-          defaultValue={defaultValue}
-          value={defaultValue}
-          readOnly={readonly}
-          onChange={handleChange}
-        />
+        <InputNumber {...propList} />
       </div>
     </TextareaComponentContainer>
   );

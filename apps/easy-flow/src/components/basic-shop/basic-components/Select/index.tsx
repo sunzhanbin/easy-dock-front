@@ -1,4 +1,5 @@
 import React, { memo, useMemo } from 'react';
+import { useLocation } from 'react-router';
 import { Select } from 'antd';
 import { SelectField } from '@/type';
 
@@ -6,6 +7,7 @@ const { Option } = Select;
 
 const SelectComponent = (props: SelectField & { id: string }) => {
   const { defaultValue, multiple, showSearch, selectOptionList, readonly } = props;
+  const location = useLocation();
   const optionList = useMemo(() => {
     return selectOptionList?.content || [];
   }, [selectOptionList]);
@@ -21,10 +23,12 @@ const SelectComponent = (props: SelectField & { id: string }) => {
     }
     if (defaultValue) {
       prop.defaultValue = defaultValue as string;
-      prop.value = defaultValue as string;
+      if (location.pathname === '/form-design') {
+        prop.value = defaultValue as string;
+      }
     }
     return prop;
-  }, [defaultValue, multiple, showSearch, readonly]);
+  }, [defaultValue, multiple, showSearch, readonly, location]);
   return (
     <Select {...propList} style={{ width: '100%' }}>
       {optionList.map(({ key, value }) => (

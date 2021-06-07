@@ -1,10 +1,12 @@
 import React, { memo, useMemo } from 'react';
+import { useLocation } from 'react-router';
 import { DatePicker } from 'antd';
 import { DateField } from '@/type';
 import moment, { Moment } from 'moment';
 
 const Date = (props: DateField) => {
   const { format, notSelectPassed, defaultValue, readonly } = props;
+  const location = useLocation();
   const propList = useMemo(() => {
     const props: { [k: string]: string | boolean | Function | Moment } = {
       size: 'large',
@@ -25,11 +27,13 @@ const Date = (props: DateField) => {
     }
     if (defaultValue) {
       const value = moment(defaultValue, formatStr);
-      props.value = value;
       props.defaultValue = value;
+      if (location.pathname === '/form-design') {
+        props.value = value;
+      }
     }
     return props;
-  }, [format, notSelectPassed, defaultValue, readonly]);
+  }, [format, notSelectPassed, defaultValue, readonly, location]);
   return <DatePicker {...propList} style={{ width: '100%' }} />;
 };
 export default memo(Date);
