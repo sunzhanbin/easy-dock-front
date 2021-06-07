@@ -1,3 +1,4 @@
+import { Rule } from 'antd/lib/form';
 import { Moment } from 'moment';
 
 export type FieldType = 'Select' | 'Input' | 'Textarea' | 'Radio' | 'Checkbox' | 'Date' | 'InputNumber' | 'DescText';
@@ -25,6 +26,7 @@ export type SchemaConfigItem = {
   placeholder?: string;
   required?: boolean;
   requiredMessage?: string;
+  rules?: Rule[];
   children?: SchemaConfigItem;
   direction?: 'vertical' | 'horizontal';
   range?: rangeItem[];

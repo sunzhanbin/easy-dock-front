@@ -17,6 +17,9 @@ const componentSchema = {
         direction: 'vertical',
         required: true,
         requiredMessage: '请输入数据库字段名',
+        rules: [
+          { pattern: '^[a-zA-Z]+[a-zA-Z0-9_]*$', message: '请以字母开头,数字或下划线组成' }
+        ],
         isProps: false,
       },
       {
@@ -88,6 +91,9 @@ const componentSchema = {
         direction: 'vertical',
         required: true,
         requiredMessage: '请输入数据库字段名',
+        rules: [
+          { pattern: '^[a-zA-Z]+[a-zA-Z0-9_]*$', message: '请以字母开头,数字或下划线组成' }
+        ],
         isProps: false,
       },
       {
@@ -150,6 +156,9 @@ const componentSchema = {
         direction: 'vertical',
         required: true,
         requiredMessage: '请输入数据库字段名',
+        rules: [
+          { pattern: '^[a-zA-Z]+[a-zA-Z0-9_]*$', message: '请以字母开头,数字或下划线组成' }
+        ],
         isProps: false,
       },
       {
@@ -244,6 +253,9 @@ const componentSchema = {
         direction: 'vertical',
         required: true,
         requiredMessage: '请输入数据库字段名',
+        rules: [
+          { pattern: '^[a-zA-Z]+[a-zA-Z0-9_]*$', message: '请以字母开头,数字或下划线组成' }
+        ],
         isProps: false,
       },
       {
@@ -312,6 +324,9 @@ const componentSchema = {
         direction: 'vertical',
         required: true,
         requiredMessage: '请输入数据库字段名',
+        rules: [
+          { pattern: '^[a-zA-Z]+[a-zA-Z0-9_]*$', message: '请以字母开头,数字或下划线组成' }
+        ],
         isProps: false,
       },
       {
@@ -380,6 +395,9 @@ const componentSchema = {
         direction: 'vertical',
         required: true,
         requiredMessage: '请输入数据库字段名',
+        rules: [
+          { pattern: '^[a-zA-Z]+[a-zA-Z0-9_]*$', message: '请以字母开头,数字或下划线组成' }
+        ],
         isProps: false,
       },
       {
@@ -471,6 +489,9 @@ const componentSchema = {
         direction: 'vertical',
         required: true,
         requiredMessage: '请输入数据库字段名',
+        rules: [
+          { pattern: '^[a-zA-Z]+[a-zA-Z0-9_]*$', message: '请以字母开头,数字或下划线组成' }
+        ],
         isProps: false,
       },
       {
