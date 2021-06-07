@@ -11,15 +11,15 @@ import {
 } from '@/features/bpm-editor/form-design/formzone-reducer';
 import { MoveConfig } from '@/type';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
+import emptyImage from '@assets/drag.png';
 
 const FormZoneContainer = styled.div`
-  max-width: 900px;
   width: 100%;
   height: 100%;
   .form-zone {
+    position: relative;
     background: #fff;
-    box-shadow: 0 2px 4px 0 rgb(43 52 65 / 10%);
-    min-height: 200px;
+    min-height: calc(100vh - 104px);
     margin-bottom: 30px;
     padding: 12px 0;
     > div {
@@ -67,10 +67,28 @@ const FormZoneContainer = styled.div`
       }
     }
     .empty_tip {
+      position: absolute;
+      top: 165px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 216px;
+      height: 110px;
       text-align: center;
-      line-height: 200px;
       font-size: 16px;
       color: #dcdcdc;
+      .image {
+        width: 107px;
+        height: 53px;
+        margin: 10px 70px 24px 30px;
+      }
+      .text {
+        width: 216px;
+        height: 28px;
+        line-height: 28px;
+        font-weight: 500;
+        font-size: 18px;
+        color: rgba(0, 0, 0, 0.85);
+      }
     }
   }
 `;
@@ -158,7 +176,10 @@ const FormZone: FC<{}> = () => {
                   </Draggable>
                 ))
               ) : (
-                <div className="empty_tip">拖动或点击左侧控件到这里</div>
+                <div className="empty_tip">
+                  <img src={emptyImage} className="image" />
+                  <div className="text">拖动或点击左侧控件到这里</div>
+                </div>
               )}
             </div>
             {dropProvided.placeholder}

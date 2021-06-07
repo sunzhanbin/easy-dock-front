@@ -25,7 +25,7 @@ const ToolboxGroup = styled.div`
     height: 22px;
     line-height: 22px;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
     color: rgba(24, 31, 67, 0.95);
   }
   .componentContainer {

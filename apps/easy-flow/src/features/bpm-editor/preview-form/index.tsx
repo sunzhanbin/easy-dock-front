@@ -40,8 +40,8 @@ const Container = styled.div`
     }
   }
   .content {
-    width: 60%;
-    margin-left: 20%;
+    width: calc(100% - 548px);
+    margin-left: 288px;
     margin-top: 89px;
     .title {
       height: 34px;
