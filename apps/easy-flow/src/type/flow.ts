@@ -133,10 +133,19 @@ export enum FlowDetailType {
 
 export enum NodeStatusType {
   Processing = 1,
-  Termination = 2,
+  Terminated = 2,
   Undo = 3,
   Finish = 4,
   Revert = 5,
+}
+
+export enum AuditRecordType {
+  APPROVE = 'APPROVE',
+  REJECT = 'REJECT',
+  TURN = 'TURN',
+  INSTANCE_STOP = 'INSTANCE_STOP',
+  START = 'START',
+  FORM_FILL = 'FORM_FILL',
 }
 
 type ComponentInfo = AllComponentType & {

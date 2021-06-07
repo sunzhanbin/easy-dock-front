@@ -10,4 +10,14 @@
       }
     }
   }
+
+  :global {
+    .ant-form-item-required {
+      align-items: flex-start;
+
+      &::before {
+        padding-top: 4px;
+      }
+    }
+  }
 }

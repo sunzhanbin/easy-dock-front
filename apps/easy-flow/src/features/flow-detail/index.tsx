@@ -10,6 +10,7 @@ import ConfirmModal from './components/confirm-modal';
 import Header from '@components/header';
 import { axios } from '@utils';
 import StatusBar from './components/statusbar';
+import AuditRecord from './components/audit-record';
 import { FlowDetailType, NodeStatusType, NodeType, FormValue } from '@type/flow';
 import { FlowDetaiDataType } from './type';
 import emptyImage from '@assets/empty.png';
@@ -252,7 +253,13 @@ function FlowDetail() {
               <>{formVnode}</>
             </div>
           </div>
-          <div className={styles.flow}>流程进度</div>
+          <div className={styles.flow}>
+            <div className={styles.detail}>
+              {data.auditRecords.map((record) => (
+                <AuditRecord key={record.auditTime} data={record} />
+              ))}
+            </div>
+          </div>
         </div>
       )) || (
         <div className={styles.empty}>

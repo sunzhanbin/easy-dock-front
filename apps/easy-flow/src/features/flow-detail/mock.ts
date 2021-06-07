@@ -1,5 +1,5 @@
 import { mock } from 'mockjs';
-import { FillNode, AuditNode, AuthType, NodeType, NodeStatusType } from '@type/flow';
+import { FillNode, AuditNode, AuthType, NodeType, NodeStatusType, AuditRecordType } from '@type/flow';
 import { FlowDetaiDataType } from './type';
 
 const database: any = {
@@ -12,7 +12,7 @@ const database: any = {
         id: 'Input_1',
         version: '1.0',
         type: 'Input',
-        title: '姓名',
+        label: '姓名',
         desc: '姓名',
         defaultValue: '',
         placeholder: '请输入姓名',
@@ -24,7 +24,7 @@ const database: any = {
         id: 'Input_2',
         version: '1.0',
         type: 'Input',
-        title: '联系地址',
+        label: '联系地址',
         desc: '联系地址',
         defaultValue: '',
         placeholder: '请输入联系地址',
@@ -35,7 +35,7 @@ const database: any = {
         id: 'Select_1',
         version: '1.0',
         type: 'Select',
-        title: '性别',
+        label: '性别',
         desc: '性别',
         defaultValue: 'male',
         colSpace: 3,
@@ -57,7 +57,7 @@ const database: any = {
         id: 'Select_2',
         version: '1.0',
         type: 'Select',
-        title: '性别',
+        label: '性别',
         desc: '性别',
         defaultValue: 'male',
         colSpace: 4,
@@ -348,14 +348,27 @@ mock(/\/flow\/detail\/\S+/, 'get', function name(options: MockOptions) {
   };
 });
 
-mock(/\/runtime\/v1\/task\/instanceDetail/, 'post', function name(options: MockOptions) {
-  const slices = options.url.split('/');
-  const appkey = slices[slices.length - 1];
-
+mock(/\/runtime\/v1\/task\/instanceDetail/, 'post', function name() {
   return {
     resultCode: 0,
-    data: <FlowDetaiDataType>{
-      auditRecords: [],
+    data: <FlowDetaiDataType>mock({
+      'auditRecords|3-10': [
+        {
+          auditTime: '@datetime',
+          'auditType|1': [
+            AuditRecordType.APPROVE,
+            AuditRecordType.FORM_FILL,
+            AuditRecordType.INSTANCE_STOP,
+            AuditRecordType.REJECT,
+            AuditRecordType.START,
+            AuditRecordType.TURN,
+          ],
+          comments: '@cparagraph',
+          nodeName: '@ctitle',
+          userName: '@cname',
+          userAvatar: `https://picsum.photos/100/100?t=${'@int'}`,
+        },
+      ],
       formData: { Input_1: 'hello' },
       formMeta: database.formDesign,
       detail: {
@@ -408,19 +421,6 @@ mock(/\/runtime\/v1\/task\/instanceDetail/, 'post', function name(options: MockO
           type: 1,
         },
       },
-    },
-  };
-});
-
-mock(/\/form\/value\/\S+/, 'get', function name(options: MockOptions) {
-  const slices = options.url.split('/');
-  const appkey = slices[slices.length - 1];
-
-  return {
-    resultCode: 0,
-    data: {
-      Input_1: 'hello',
-      Input_2: 'male',
-    },
+    }),
   };
 });

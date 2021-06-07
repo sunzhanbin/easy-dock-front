@@ -35,7 +35,7 @@ export default function Home() {
         return {
           id: item.id,
           name: item.name,
-          sceneCount: item.sceneCount,
+          appCount: item.appCount,
         };
       });
 
@@ -77,7 +77,7 @@ export default function Home() {
       setFetching(true);
 
       try {
-        const { data } = await axios.get(`/scene/${projectId}/list/all`);
+        const { data } = await axios.get(`/app/${projectId}/list/all`);
 
         setActiveProjectId((prevActiveProjectIid) => {
           // 当请求过于频繁时有可能先发出的接口后返回，在这里限制下
@@ -250,12 +250,7 @@ export default function Home() {
         <div className={styles.empty}>
           <img src={emptyImage} alt="empty" />
           <div className={styles.desc}>暂无项目，来创建一个吧</div>
-          <Popover
-            content={<Form formRef={formRef} />}
-            placement="top"
-            title="新增项目"
-            onOk={handleAddProjectSubmit}
-          >
+          <Popover content={<Form formRef={formRef} />} placement="top" title="新增项目" onOk={handleAddProjectSubmit}>
             <Button size="large" type="primary" icon={<Icon type="xinzengjiacu" />}>
               创建项目
             </Button>
@@ -265,10 +260,7 @@ export default function Home() {
 
       {projects.length > 0 && (
         <div className={styles.content}>
-          <div
-            className={classnames(styles.scenes, { [styles['no-scene']]: scenes.length === 0 })}
-            id="scenes-list"
-          >
+          <div className={classnames(styles.scenes, { [styles['no-scene']]: scenes.length === 0 })} id="scenes-list">
             <div className={classnames(styles.card, styles.scene)}>
               <Button
                 className={styles.btn}

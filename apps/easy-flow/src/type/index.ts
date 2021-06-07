@@ -7,7 +7,7 @@ export type BaseField = {
   version: string;
   fieldName: string;
   label: string;
-  tip: string | null;
+  desc: string;
   required?: boolean;
   colSpace: 1 | 2 | 3 | 4 | undefined;
   defaultValue: string | number | undefined;
@@ -23,6 +23,8 @@ export type SchemaConfigItem = {
   type: string;
   defaultValue?: string | number | boolean;
   placeholder?: string;
+  required?: boolean;
+  requiredMessage?: string;
   children?: SchemaConfigItem;
   direction?: 'vertical' | 'horizontal';
   range?: rangeItem[];

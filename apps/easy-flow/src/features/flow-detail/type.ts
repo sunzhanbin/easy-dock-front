@@ -1,10 +1,17 @@
-import { SelectField, SingleTextField, Depart } from '@type';
-import { FillNode, AuditNode, NodeStatusType, FormMeta, FormValue } from '@type/flow';
+import { Depart } from '@type';
+import { FillNode, AuditNode, NodeStatusType, FormMeta, FormValue, AuditRecordType } from '@type/flow';
 
 export type { SelectField, SingleTextField } from '@type';
 
 export type FlowDetaiDataType = {
-  auditRecords: [];
+  auditRecords: {
+    auditTime: string;
+    auditType: AuditRecordType;
+    comments?: string;
+    nodeName: string;
+    userName: string;
+    userAvatar?: string;
+  }[];
   detail: {
     applyUser: string;
     applyTime: string;

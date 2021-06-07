@@ -87,11 +87,11 @@ export default function SceneDetail() {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    axios.get<SceneShape>(`/scene/${sceneId}`).then(({ data }) => {
+    axios.get<SceneShape>(`/app/${sceneId}`).then(({ data }) => {
       setCurrentScene(data);
 
       // 获取项目所有场景
-      axios.get<SceneBaseType[]>(`/scene/${data.project.id}/list/all`).then(({ data }) => {
+      axios.get<SceneBaseType[]>(`/app/${data.project.id}/list/all`).then(({ data }) => {
         setSceneMenusItems(data);
       });
     });
@@ -244,11 +244,7 @@ export default function SceneDetail() {
     <div className={classnames(MAIN_CONTENT_CLASSNAME, styles.detail)}>
       <div className={styles.header}>
         <div className={styles.tool}>
-          <Icon
-            className={classnames(styles.icon, styles.back)}
-            type="fanhui"
-            onClick={history.goBack}
-          />
+          <Icon className={classnames(styles.icon, styles.back)} type="fanhui" onClick={history.goBack} />
           <Dropdown overlay={dropdownOptions}>
             <div className={styles.dropdown}>
               <div className={styles.name}>{currentScene?.name}</div>
@@ -262,18 +258,8 @@ export default function SceneDetail() {
         </Button>
       </div>
       <div className={styles.content}>
-        <GridColumn
-          icon="yemianbianpai"
-          title="页面编排"
-          type="page"
-          onAdd={handleAddPage}
-        ></GridColumn>
-        <GridColumn
-          icon="shujubianpai"
-          title="数据编排"
-          type="data"
-          onAdd={handleAddData}
-        ></GridColumn>
+        <GridColumn icon="yemianbianpai" title="页面编排" type="page" onAdd={handleAddPage}></GridColumn>
+        <GridColumn icon="shujubianpai" title="数据编排" type="data" onAdd={handleAddData}></GridColumn>
         <GridColumn
           icon="api"
           title="API编排"

@@ -101,7 +101,7 @@ const FormEditor = (props: FormEditorProps) => {
   return (
     <Container>
       <Form form={form} name="form_editor" initialValues={initValues} onFinish={onFinish} onValuesChange={handleChange}>
-        {config.map(({ key, label, direction, type, range, placeholder }) => {
+        {config.map(({ key, label, direction, type, range, placeholder, required, requiredMessage }) => {
           return (
             <Fragment key={key}>
               {type === 'Input' && (
@@ -110,6 +110,8 @@ const FormEditor = (props: FormEditorProps) => {
                   name={key}
                   labelCol={{ span: direction === 'vertical' ? 24 : 6 }}
                   labelAlign="left"
+                  required={required}
+                  rules={[{ required: required, message: requiredMessage }]}
                 >
                   <Input placeholder={placeholder} size="large" />
                 </Form.Item>
@@ -120,6 +122,8 @@ const FormEditor = (props: FormEditorProps) => {
                   name={key}
                   labelCol={{ span: direction === 'vertical' ? 24 : 6 }}
                   labelAlign="left"
+                  required={required}
+                  rules={[{ required: required, message: requiredMessage }]}
                 >
                   <Input.TextArea placeholder={placeholder} rows={4} size="large" />
                 </Form.Item>
@@ -130,6 +134,8 @@ const FormEditor = (props: FormEditorProps) => {
                   name={key}
                   labelCol={{ span: direction === 'vertical' ? 24 : 6 }}
                   labelAlign="left"
+                  required={required}
+                  rules={[{ required: required, message: requiredMessage }]}
                 >
                   <Select placeholder={placeholder || '请选择'} size="large">
                     {range &&

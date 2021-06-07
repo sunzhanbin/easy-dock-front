@@ -89,7 +89,7 @@ function ButtonConfigs(props: ButtonConfigsProps) {
         className={styles.editor}
         text={btnText.save.text}
         enable={btnText.save.enable}
-        cancelable={false}
+        editable={false}
         btnKey="save"
         onChange={handleButtonChange}
       >
@@ -98,9 +98,9 @@ function ButtonConfigs(props: ButtonConfigsProps) {
 
       <ButtonEditor
         className={styles.editor}
-        text={btnText?.approve?.text}
-        enable={btnText?.approve?.enable}
-        cancelable={false}
+        text={btnText.approve.text}
+        enable={btnText.approve.enable}
+        editable={false}
         btnKey="approve"
         onChange={handleButtonChange}
       >
@@ -111,9 +111,9 @@ function ButtonConfigs(props: ButtonConfigsProps) {
 
       <ButtonEditor
         className={styles.editor}
-        text={btnText?.revert?.text}
-        enable={btnText?.revert?.enable}
-        cancelable={false}
+        text={btnText.revert.text}
+        enable={btnText.revert.enable}
+        editable={false}
         btnKey="revert"
         onChange={handleButtonChange}
       >
@@ -134,7 +134,7 @@ function ButtonConfigs(props: ButtonConfigsProps) {
         allowClear={false}
       />
 
-      <ButtonEditor
+      {/* <ButtonEditor
         className={styles.editor}
         text={btnText?.transfer?.text}
         enable={btnText?.transfer?.enable}
@@ -142,7 +142,7 @@ function ButtonConfigs(props: ButtonConfigsProps) {
         onChange={handleButtonChange}
       >
         <Button size="large">转办</Button>
-      </ButtonEditor>
+      </ButtonEditor> */}
 
       <ButtonEditor
         className={styles.editor}

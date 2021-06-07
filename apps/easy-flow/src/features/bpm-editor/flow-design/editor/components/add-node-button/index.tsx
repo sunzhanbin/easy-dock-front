@@ -4,7 +4,7 @@ import { Button, Popover } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { Icon } from '@common/components';
 import { addNode } from '../../../flow-slice';
-import { createNode, getPopupContainer } from '../../../util';
+import { getPopupContainer } from '../../../util';
 import { NodeType } from '@type/flow';
 import styles from './index.module.scss';
 import { useAppDispatch } from '@/app/hooks';
@@ -19,24 +19,9 @@ function AddNodeButton(props: AddNodeButtonProps) {
   const dispatch = useAppDispatch();
   const [showAddPopover, setShowAddPopover] = useState(false);
 
-  const handleAddNode = useMemoCallback((type: NodeType) => {
-    let tmpNode;
-
-    if (type === NodeType.AuditNode) {
-      tmpNode = createNode(type, '审批节点');
-    } else if (type === NodeType.FillNode) {
-      tmpNode = createNode(type, '填写节点');
-    } else {
-      throw Error('传入类型不正确');
-    }
-
-    dispatch(
-      addNode({
-        prevId,
-        node: tmpNode,
-      }),
-    );
-
+  const handleAddNode = useMemoCallback((type: NodeType.AuditNode | NodeType.FillNode) => {
+    // 将业务逻辑放在redux里处理
+    dispatch(addNode({ prevId, type }));
     setShowAddPopover(false);
   });
 
@@ -44,11 +29,11 @@ function AddNodeButton(props: AddNodeButtonProps) {
     return (
       <div className={styles['add-list']}>
         <div onClick={() => handleAddNode(NodeType.AuditNode)}>
-          <Icon type="lineyonghujiedian1" />
+          <Icon type="lineshenpijiedian" />
           <span>添加审批节点</span>
         </div>
         <div onClick={() => handleAddNode(NodeType.FillNode)}>
-          <Icon type="caidan" />
+          <Icon type="linetianxiejiedian" />
           <span>添加填写节点</span>
         </div>
       </div>
@@ -66,7 +51,11 @@ function AddNodeButton(props: AddNodeButtonProps) {
       content={addPopoverContent}
     >
       <div className={classnames(styles.container, className)}>
-        <Button className={styles['add-button']} type="default" icon={<Icon type="xinzeng" />} />
+        <Button
+          className={classnames(styles['add-button'], { [styles.active]: showAddPopover })}
+          type="default"
+          icon={<Icon type="xinzeng" />}
+        />
       </div>
     </Popover>
   );

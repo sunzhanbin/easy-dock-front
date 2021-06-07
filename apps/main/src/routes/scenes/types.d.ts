@@ -3,7 +3,7 @@ import { SCENE_IAMGES } from '@consts';
 export interface ProjectShape {
   name: string;
   id: number;
-  sceneCount: number;
+  appCount: number;
 }
 
 export interface SceneShape {
