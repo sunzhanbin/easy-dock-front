@@ -4,7 +4,6 @@ import { Select, Input, Tooltip } from 'antd';
 import { uniqueId } from 'lodash';
 import { axios } from '@utils';
 import { OptionItem, OptionMode, SelectOptionItem } from '@/type';
-import { Children } from 'react';
 import { subApp } from './mock';
 import { Icon } from '@common/components';
 
@@ -199,7 +198,7 @@ const SelectOptionList = (props: editProps) => {
   }, []);
   useEffect(() => {
     onChange && onChange({ type, content });
-  }, [type, content]);
+  }, [type, content, onChange]);
   const customContent = useMemo(() => {
     if (Array.isArray(content) && type === 'custom') {
       return (
@@ -257,7 +256,7 @@ const SelectOptionList = (props: editProps) => {
       );
     }
     return null;
-  }, [type, content, canDrag]);
+  }, [type, content, canDrag, addItem, deleteItem, handleBlur, handleDragOver, handleDragstart, handleDrop]);
   const dictContent = useMemo(() => {
     if (type === 'dictionaries') {
       return (
@@ -288,7 +287,7 @@ const SelectOptionList = (props: editProps) => {
       );
     }
     return null;
-  }, [type, subAppKey, componentKey, appList, componentList]);
+  }, [type, subAppKey, componentKey, appList, componentList, handleChangeApp, handleChangeComponent]);
   return (
     <Container>
       <div className="title">

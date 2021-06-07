@@ -84,7 +84,7 @@ function FlowDetail() {
     return <FormEngine ref={formRef} data={formMeta} initialValue={formValue} fieldsAuths={processMeta.fieldsAuths} />;
   }, [data]);
 
-  const handleSave = useMemoCallback(() => {});
+  // const handleSave = useMemoCallback(() => {});
 
   const btnsVnode = useMemo(() => {
     if (!data) return null;
@@ -155,7 +155,7 @@ function FlowDetail() {
     }
 
     return null;
-  }, [data]);
+  }, [data, type]);
 
   const statusContent = useMemo(() => {
     if (!data) return null;

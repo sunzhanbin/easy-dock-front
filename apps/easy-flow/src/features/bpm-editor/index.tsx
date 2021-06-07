@@ -25,7 +25,7 @@ const BpmEditor: FC = () => {
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(loadComponents());
-  }, []);
+  }, [dispatch]);
 
   return (
     <Container>

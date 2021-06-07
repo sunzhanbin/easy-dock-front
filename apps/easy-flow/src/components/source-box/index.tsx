@@ -118,13 +118,13 @@ const SourceBox: FC<{
     const formDesign = store.getState().formDesign;
     const com = Object.assign({}, formDesign.byId[id]);
     dispatch(comAdded(com, rowIndex + 1));
-  }, [id, rowIndex]);
+  }, [id, rowIndex, dispatch]);
   const handleDelete = useCallback(
     (e) => {
       e.stopPropagation();
       dispatch(comDeleted({ id }));
     },
-    [id],
+    [id, dispatch],
   );
   const handleMoveUp = useCallback(() => {
     dispatch(moveUp({ id }));
@@ -146,7 +146,7 @@ const SourceBox: FC<{
         });
         dispatch(editProps({ id, config }));
       });
-  }, [id, rowIndex]);
+  }, [id, rowIndex, dispatch]);
   const handleMoveDown = useCallback(() => {
     dispatch(moveDown({ id }));
     const formDesign = store.getState().formDesign;
@@ -161,13 +161,13 @@ const SourceBox: FC<{
     });
     // 下移之后一定是独占一行
     dispatch(editProps({ id, config: Object.assign({}, componentMap[id], { colSpace: '4' }) }));
-  }, [id, rowIndex]);
+  }, [id, rowIndex, dispatch]);
   const handleMoveLeft = useCallback(() => {
     dispatch(exchange({ id, direction: 'left' }));
-  }, [id]);
+  }, [id, dispatch]);
   const handleMoveRight = useCallback(() => {
     dispatch(exchange({ id, direction: 'right' }));
-  }, [id]);
+  }, [id, dispatch]);
   const content = useMemo(() => {
     if (compSources) {
       const Component = compSources;
@@ -209,7 +209,17 @@ const SourceBox: FC<{
       );
     }
     return null;
-  }, [config, moveConfig, compSources, type]);
+  }, [
+    moveConfig,
+    compSources,
+    propList,
+    handleCopy,
+    handleDelete,
+    handleMoveDown,
+    handleMoveLeft,
+    handleMoveRight,
+    handleMoveUp,
+  ]);
   return <>{content}</>;
 };
 

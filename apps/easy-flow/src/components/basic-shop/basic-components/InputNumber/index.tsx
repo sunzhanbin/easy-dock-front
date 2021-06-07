@@ -62,7 +62,7 @@ const TextareaComponent = (props: SingleTextField & { id: string; onChange: (v: 
       }
     }
     return props;
-  }, [defaultValue, readonly, handleChange]);
+  }, [defaultValue, readonly, handleChange, location]);
 
   return (
     <TextareaComponentContainer>

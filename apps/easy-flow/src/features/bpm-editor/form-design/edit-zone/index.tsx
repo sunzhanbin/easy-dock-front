@@ -49,7 +49,7 @@ const EditZone = () => {
         }),
       );
     },
-    [selectedField],
+    [selectedField, dispatch],
   );
   const renderTitle = useMemo(() => <div className="edit_title">{title}</div>, [title]);
   return (

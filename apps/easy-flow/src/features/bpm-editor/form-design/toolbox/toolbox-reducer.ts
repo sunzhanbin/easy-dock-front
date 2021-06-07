@@ -1,6 +1,5 @@
-import { createAsyncThunk, PayloadAction, createSelector } from '@reduxjs/toolkit';
-import { uniqueId, values, reduce } from 'lodash';
-import { FormDesign, FormField } from '@type';
+import { createAsyncThunk, createSelector } from '@reduxjs/toolkit';
+import { values, reduce } from 'lodash';
 import { RootState } from '@app/store';
 import { fetchComponents } from './toolboxApi';
 

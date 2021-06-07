@@ -105,9 +105,12 @@ const FormZone: FC<{}> = () => {
   const layout = useAppSelector(layoutSelector);
   const byId = useAppSelector(componentPropsSelector);
   const selectedField = useAppSelector(selectedFieldSelector);
-  const handleSelect = useCallback((id) => {
-    dispatch(selectField({ id }));
-  }, []);
+  const handleSelect = useCallback(
+    (id) => {
+      dispatch(selectField({ id }));
+    },
+    [dispatch],
+  );
   const getColSpace = useCallback(
     (id) => {
       const space = byId[id]?.colSpace;
@@ -177,7 +180,7 @@ const FormZone: FC<{}> = () => {
                 ))
               ) : (
                 <div className="empty_tip">
-                  <img src={emptyImage} className="image" />
+                  <img src={emptyImage} className="image" alt="empty" />
                   <div className="text">拖动或点击左侧控件到这里</div>
                 </div>
               )}
@@ -187,7 +190,7 @@ const FormZone: FC<{}> = () => {
         )}
       </Droppable>
     );
-  }, [layout, byId, selectedField]);
+  }, [layout, byId, selectedField, getColSpace, getMoveConfig, handleSelect]);
   return (
     <FormZoneContainer>
       <div className="form-zone">{content}</div>

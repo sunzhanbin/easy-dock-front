@@ -113,7 +113,7 @@ const PreviewForm: FC = () => {
   }, [byId]);
   const handleClose = useCallback(() => {
     history.goBack();
-  }, []);
+  }, [history]);
   return (
     <Container>
       <div className="header">

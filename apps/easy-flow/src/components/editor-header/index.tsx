@@ -125,12 +125,12 @@ const EditorHeader: FC = () => {
     if (pathName === '/form-design') {
       history.push('/preview-form');
     }
-  }, [pathName]);
+  }, [pathName, history]);
   const handlePrev = useCallback(() => {
     if (pathName === '/flow-design') {
       history.push('/form-design');
     }
-  }, [pathName]);
+  }, [pathName, history]);
   const handleSave = useCallback(() => {
     if (pathName === '/form-design') {
       console.info('save');
@@ -138,12 +138,12 @@ const EditorHeader: FC = () => {
     if (pathName === '/flow-design') {
       dispatch(save('appkey'));
     }
-  }, [pathName]);
+  }, [pathName, dispatch]);
   const handleNext = useCallback(() => {
     if (pathName === '/form-design') {
       history.push('/flow-design');
     }
-  }, [pathName]);
+  }, [pathName, history]);
 
   return (
     <HeaderContainer>

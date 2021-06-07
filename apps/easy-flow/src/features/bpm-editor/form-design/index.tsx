@@ -20,32 +20,35 @@ const WorkbenchContainer = styled.div`
 const FormDesign: FC<{}> = () => {
   const dispatch = useAppDispatch();
   const selectedField = useAppSelector(selectedFieldSelector);
-  const onDragEnd = useCallback((result: DropResult) => {
-    const { destination, source, draggableId } = result;
-    if (destination && source) {
-      const { droppableId: targetId, index: targetIndex } = destination as DraggableLocation;
-      const { droppableId: sourceId, index: sourceIndex } = source as DraggableLocation;
-      if (targetId === 'form_zone' && sourceId === 'form_zone') {
-        dispatch(moveRow({ sourceIndex, targetIndex }));
-      }
-      if (targetId === 'form_zone' && sourceId === 'component_zone') {
-        const schema = store.getState().formDesign.schema;
-        const configMap: TConfigMap = {};
-        if (schema) {
-          const keys: string[] = Object.keys(schema);
-          keys.forEach((key) => {
-            const configItem: TConfigItem = { type: key };
-            schema[key as FieldType]?.config.forEach(({ key, defaultValue }) => {
-              configItem[key] = defaultValue;
+  const onDragEnd = useCallback(
+    (result: DropResult) => {
+      const { destination, source, draggableId } = result;
+      if (destination && source) {
+        const { droppableId: targetId, index: targetIndex } = destination as DraggableLocation;
+        const { droppableId: sourceId, index: sourceIndex } = source as DraggableLocation;
+        if (targetId === 'form_zone' && sourceId === 'form_zone') {
+          dispatch(moveRow({ sourceIndex, targetIndex }));
+        }
+        if (targetId === 'form_zone' && sourceId === 'component_zone') {
+          const schema = store.getState().formDesign.schema;
+          const configMap: TConfigMap = {};
+          if (schema) {
+            const keys: string[] = Object.keys(schema);
+            keys.forEach((key) => {
+              const configItem: TConfigItem = { type: key };
+              schema[key as FieldType]?.config.forEach(({ key, defaultValue }) => {
+                configItem[key] = defaultValue;
+              });
+              configMap[key as FieldType] = configItem;
             });
-            configMap[key as FieldType] = configItem;
-          });
-          const com = { ...configMap[draggableId] };
-          dispatch(comAdded(com as FormField, targetIndex));
+            const com = { ...configMap[draggableId] };
+            dispatch(comAdded(com as FormField, targetIndex));
+          }
         }
       }
-    }
-  }, []);
+    },
+    [dispatch],
+  );
   const onDragStart = useCallback(() => {}, []);
   const onDragUpdate = useCallback(() => {}, []);
 

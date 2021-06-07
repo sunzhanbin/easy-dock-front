@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useState, useMemo } from 'react';
-import { Form, Input, Row, Col, FormInstance } from 'antd';
+import { Form, Row, Col, FormInstance } from 'antd';
 import LabelContent from '../label-content';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { FieldAuthsMap, AuthType, FormMeta, FormValue } from '@type/flow';

@@ -48,7 +48,7 @@ const ToolBoxItem: FC<{ icon: string; displayName: string; type: FieldType }> = 
     const com = { ...configMap[type], type };
     const rowIndex = formDesign?.layout?.length || -1;
     dispatch(comAdded(com as FormField, rowIndex + 1));
-  }, [type]);
+  }, [type, configMap, dispatch]);
   return (
     <ToolBoxItemContainer onClick={addComponent}>
       <div className="icon_container">

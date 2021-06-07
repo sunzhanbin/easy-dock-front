@@ -1,6 +1,6 @@
 import React, { memo, useEffect, Fragment } from 'react';
 import styled from 'styled-components';
-import { Form, Select, DatePicker, Input, Switch, Radio, Checkbox, InputNumber } from 'antd';
+import { Form, Select, Input, Switch, Radio, Checkbox, InputNumber } from 'antd';
 import SelectOptionList from '../select-option-list';
 import SelectDefaultOption from '../select-default-option';
 import DefaultDate from '../default-date';
@@ -97,7 +97,7 @@ const FormEditor = (props: FormEditorProps) => {
   }, [componentId, form]);
   useEffect(() => {
     form.setFieldsValue(initValues);
-  }, [initValues]);
+  }, [initValues, form]);
   return (
     <Container>
       <Form form={form} name="form_editor" initialValues={initValues} onFinish={onFinish} onValuesChange={handleChange}>

@@ -1,5 +1,4 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState, AppThunk } from '@app/store';
+import { createSlice } from '@reduxjs/toolkit';
 import {
   comAdded as addedReducer,
   moveDown as moveDownReducer,

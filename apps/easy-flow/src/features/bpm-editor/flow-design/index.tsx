@@ -51,7 +51,7 @@ function FlowDesign() {
     return () => {
       document.body.removeEventListener('keydown', handleSave);
     };
-  }, []);
+  }, [dispatch]);
 
   const drawerHeader = useMemo(() => {
     if (currentEditNode) {
@@ -83,7 +83,7 @@ function FlowDesign() {
     }
 
     return null;
-  }, [currentEditNode?.type]);
+  }, [currentEditNode?.type, currentEditNode]);
 
   const handleConfirmLeave = useMemoCallback(() => {
     return true;
@@ -112,6 +112,9 @@ function FlowDesign() {
 
             case NodeType.FinishNode: {
               return <FinishNode key={node.id} node={node} onClick={handleClickNode} />;
+            }
+            default: {
+              return null;
             }
           }
         })}
