@@ -6,19 +6,12 @@ import { UserContext } from '@/context';
 import { axios } from '@utils';
 import { ROUTES, envs } from '@consts';
 
-const ScenesListPage = React.lazy(
-  () => import(/* webpackChunkName: "scenes-list" */ '@/routes/scenes/main'),
-);
-const ScenePage = React.lazy(
-  () => import(/* webpackChunkName: "scene-detail" */ '@/routes/scene-detail'),
-);
-const IntegrationPage = React.lazy(
-  () => import(/* webpackChunkName: "integration" */ '@/routes/integration'),
-);
+const ScenesListPage = React.lazy(() => import(/* webpackChunkName: "scenes-list" */ '@/routes/scenes/main'));
+// const ScenePage = React.lazy(() => import(/* webpackChunkName: "scene-detail" */ '@/routes/scene-detail'));
+const AppPage = React.lazy(() => import(/* webpackChunkName: "app-detail" */ '@/routes/app-detail'));
+const IntegrationPage = React.lazy(() => import(/* webpackChunkName: "integration" */ '@/routes/integration'));
 
-const SceneEditorPage = React.lazy(
-  () => import(/* webpackChunkName: "integration" */ '@/routes/scene-editor'),
-);
+const SceneEditorPage = React.lazy(() => import(/* webpackChunkName: "integration" */ '@/routes/scene-editor'));
 
 export default function PrimaryLayout() {
   const [user, setUser] = useState<User>();
@@ -51,7 +44,7 @@ export default function PrimaryLayout() {
       <Header />
       <Suspense fallback={fallback}>
         <Route path={[ROUTES.INDEX, ROUTES.SCENE_MANAGE]} exact component={ScenesListPage}></Route>
-        <Route path={ROUTES.SCENE_DETAIL} component={ScenePage}></Route>
+        <Route path={ROUTES.SCENE_DETAIL} component={AppPage}></Route>
         <Route path={ROUTES.INTEGRATION} component={IntegrationPage}></Route>
         <Route path={ROUTES.SCENE_EDITOR} component={SceneEditorPage}></Route>
       </Suspense>
