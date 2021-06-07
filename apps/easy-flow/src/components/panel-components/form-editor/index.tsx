@@ -1,8 +1,10 @@
-import React, { memo, useMemo, useEffect, Fragment } from 'react';
+import React, { memo, useEffect, Fragment } from 'react';
 import styled from 'styled-components';
-import { Form, Select, InputNumber, Input, Switch, Radio, Checkbox } from 'antd';
+import { Form, Select, DatePicker, Input, Switch, Radio, Checkbox, InputNumber } from 'antd';
 import SelectOptionList from '../select-option-list';
 import SelectDefaultOption from '../select-default-option';
+import DefaultDate from '../default-date';
+import Editor from '../editor';
 import { FormField, SchemaConfigItem } from '@/type';
 import { Store } from 'antd/lib/form/interface';
 import selectedImage from '@assets/selected.png';
@@ -56,6 +58,13 @@ const Container = styled.div`
   }
   .ant-switch {
     float: right;
+  }
+  .input_number {
+    width: 100%;
+  }
+  .ant-input-number-input {
+    background: rgba(24, 39, 67, 0.04);
+    border-radius: 3px;
   }
 `;
 interface FormEditorProps {
@@ -122,7 +131,7 @@ const FormEditor = (props: FormEditorProps) => {
                   labelCol={{ span: direction === 'vertical' ? 24 : 6 }}
                   labelAlign="left"
                 >
-                  <Select placeholder="请选择" size="large">
+                  <Select placeholder={placeholder || '请选择'} size="large">
                     {range &&
                       range.map((v) => (
                         <Option value={v.key} key={v.key}>
@@ -185,6 +194,39 @@ const FormEditor = (props: FormEditorProps) => {
                   labelAlign="left"
                 >
                   <SelectDefaultOption id={componentId} />
+                </Form.Item>
+              )}
+              {type === 'InputNumber' && (
+                <Form.Item
+                  label={label}
+                  name={key}
+                  colon={false}
+                  labelCol={{ span: direction === 'vertical' ? 24 : 6 }}
+                  labelAlign="left"
+                >
+                  <InputNumber size="large" className="input_number" placeholder={placeholder} />
+                </Form.Item>
+              )}
+              {type === 'DefaultDate' && (
+                <Form.Item
+                  label={label}
+                  name={key}
+                  colon={false}
+                  labelCol={{ span: direction === 'vertical' ? 24 : 6 }}
+                  labelAlign="left"
+                >
+                  <DefaultDate id={componentId} />
+                </Form.Item>
+              )}
+              {type === 'Editor' && (
+                <Form.Item
+                  label={label}
+                  name={key}
+                  colon={false}
+                  labelCol={{ span: direction === 'vertical' ? 24 : 6 }}
+                  labelAlign="left"
+                >
+                  <Editor />
                 </Form.Item>
               )}
             </Fragment>

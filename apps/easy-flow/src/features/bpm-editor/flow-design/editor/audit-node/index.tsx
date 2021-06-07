@@ -1,14 +1,15 @@
 import { memo, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { Form, Input } from 'antd';
 import { Rule } from 'antd/lib/form';
 import debounce from 'lodash/debounce';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import MemberSelector from '../components/member-selector';
 import { updateNode, flowDataSelector } from '../../flow-slice';
-import { AuditNode, AllNode } from '../../types';
+import { AuditNode, AllNode } from '@type/flow';
 import ButtonConfigs from './button-configs';
 import FieldAuths from '../components/field-auths';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { trimInputValue } from '../../util';
 
 interface AuditNodeEditorProps {
   node: AuditNode;
@@ -26,9 +27,9 @@ type FormValuesType = {
 };
 
 function AuditNodeEditor(props: AuditNodeEditorProps) {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { node, prevNodes } = props;
-  const { fieldsTemplate } = useSelector(flowDataSelector);
+  const { fieldsTemplate } = useAppSelector(flowDataSelector);
   const [form] = Form.useForm<FormValuesType>();
   const formInitialValues = useMemo(() => {
     return {
@@ -97,7 +98,7 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
       onValuesChange={handleFormValuesChange}
       autoComplete="off"
     >
-      <Form.Item label="节点名称" name="name" rules={nameRules}>
+      <Form.Item label="节点名称" name="name" rules={nameRules} getValueFromEvent={trimInputValue}>
         <Input size="large" placeholder="请输入用户节点名称" />
       </Form.Item>
       <Form.Item label="选择办理人" name="correlationMemberConfig" rules={memberRules}>

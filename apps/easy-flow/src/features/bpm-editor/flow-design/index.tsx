@@ -1,18 +1,19 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { Prompt } from 'react-router-dom';
 import { Drawer } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { Loading, Icon } from '@common/components';
 import { load, flowDataSelector, save } from './flow-slice';
-import { AllNode, BranchNode as BranchNodeType, NodeType } from './types';
+import { AllNode, BranchNode as BranchNodeType, NodeType } from '@type/flow';
 import { StartNode, UserNode, FinishNode, CardHeader } from './nodes';
 import { AuditNodeProps } from './nodes/audit-node';
-import { StartNodeEditor, AuditNodeEditor, FillNodeEditor } from './editor';
+import { StartNodeEditor, AuditNodeEditor, FillNodeEditor, FinishNodeEditor } from './editor';
 import styles from './index.module.scss';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 
 function FlowDesign() {
-  const dispatch = useDispatch();
-  const { loading, data: flow } = useSelector(flowDataSelector);
+  const dispatch = useAppDispatch();
+  const { loading, data: flow, dirty } = useAppSelector(flowDataSelector);
   const [currentEditNode, setCurrentEditNode] = useState<AllNode | null>(null);
   const [showEditDrawer, setShowEditDrawer] = useState(false);
   const [currentEditNodePrevNodes, setCurrentEditNodePrevNodes] = useState<AllNode[]>([]);
@@ -32,7 +33,7 @@ function FlowDesign() {
 
   const handleClickUserNode: AuditNodeProps['onClick'] = useMemoCallback((node, prevNodes) => {
     setCurrentEditNode(node);
-    setCurrentEditNodePrevNodes(prevNodes);
+    setCurrentEditNodePrevNodes(prevNodes || []);
     setShowEditDrawer(true);
   });
 
@@ -84,8 +85,13 @@ function FlowDesign() {
     return null;
   }, [currentEditNode?.type]);
 
+  const handleConfirmLeave = useMemoCallback(() => {
+    return true;
+  });
+
   return (
     <div className={styles.flow}>
+      <Prompt when={dirty} message={handleConfirmLeave} />
       {loading && <Loading />}
       <div className={styles.content}>
         {flow.map((node, index) => {
@@ -97,29 +103,15 @@ function FlowDesign() {
             }
 
             case NodeType.AuditNode: {
-              return (
-                <UserNode
-                  key={node.id}
-                  node={node}
-                  onClick={handleClickUserNode}
-                  prevNodes={prevNodes}
-                />
-              );
+              return <UserNode key={node.id} node={node} onClick={handleClickUserNode} prevNodes={prevNodes} />;
             }
 
             case NodeType.FillNode: {
-              return (
-                <UserNode
-                  key={node.id}
-                  node={node}
-                  onClick={handleClickUserNode}
-                  prevNodes={prevNodes}
-                />
-              );
+              return <UserNode key={node.id} node={node} onClick={handleClickUserNode} />;
             }
 
             case NodeType.FinishNode: {
-              return <FinishNode key={node.id} node={node} />;
+              return <FinishNode key={node.id} node={node} onClick={handleClickNode} />;
             }
           }
         })}
@@ -136,9 +128,7 @@ function FlowDesign() {
         {drawerHeader}
 
         <div className={styles.editor}>
-          {currentEditNode && currentEditNode.type === NodeType.StartNode && (
-            <StartNodeEditor node={currentEditNode} />
-          )}
+          {currentEditNode && currentEditNode.type === NodeType.StartNode && <StartNodeEditor node={currentEditNode} />}
 
           {currentEditNode && currentEditNode.type === NodeType.AuditNode && (
             <AuditNodeEditor node={currentEditNode} prevNodes={currentEditNodePrevNodes} />
@@ -146,6 +136,10 @@ function FlowDesign() {
 
           {currentEditNode && currentEditNode.type === NodeType.FillNode && (
             <FillNodeEditor node={currentEditNode} prevNodes={currentEditNodePrevNodes} />
+          )}
+
+          {currentEditNode && currentEditNode.type === NodeType.FinishNode && (
+            <FinishNodeEditor node={currentEditNode} />
           )}
         </div>
       </Drawer>

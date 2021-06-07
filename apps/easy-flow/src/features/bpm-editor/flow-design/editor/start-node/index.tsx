@@ -1,12 +1,13 @@
-import { memo, useMemo, useCallback } from 'react';
-import { useDispatch } from 'react-redux';
+import { memo, useMemo } from 'react';
 import { Input, Form, Space, Button } from 'antd';
 import debounce from 'lodash/debounce';
 import classnames from 'classnames';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { updateNode } from '../../flow-slice';
-import { StartNode, TriggerType } from '../../types';
+import { StartNode, TriggerType } from '@type/flow';
 import styles from './index.module.scss';
+import { useAppDispatch } from '@/app/hooks';
+import { trimInputValue } from '../../util';
 
 interface StartNodeEditorProps {
   node: StartNode;
@@ -63,7 +64,7 @@ const Trigger = memo(function Trigger({
 function StartNodeEditor(props: StartNodeEditorProps) {
   const { node } = props;
   const [form] = Form.useForm();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const handleFormValuesChange = useMemoCallback(
     debounce((_, allValues: { name: string; triggerType: TriggerType }) => {
       let trigger: StartNode['trigger'];
@@ -107,7 +108,7 @@ function StartNodeEditor(props: StartNodeEditorProps) {
       initialValues={formInitialValues}
       onValuesChange={handleFormValuesChange}
     >
-      <Form.Item label="节点名称" name="name">
+      <Form.Item label="节点名称" name="name" getValueFromEvent={trimInputValue}>
         <Input size="large" placeholder="请输入开始节点名称" />
       </Form.Item>
       <Form.Item label="开始方式" name="triggerType">

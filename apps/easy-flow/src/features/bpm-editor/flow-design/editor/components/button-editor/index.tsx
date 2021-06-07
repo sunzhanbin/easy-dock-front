@@ -1,7 +1,7 @@
 import { memo, ReactNode } from 'react';
 import { Input, Checkbox } from 'antd';
 import classnames from 'classnames';
-import { ButtonAuth } from '../../../types';
+import { ButtonAuth } from '@type/flow';
 import styles from './index.module.scss';
 
 interface ButtonEditorProps extends ButtonAuth {

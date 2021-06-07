@@ -1,5 +1,13 @@
 @import './var.scss';
 
+body {
+  height: 100%;
+
+  #root {
+    height: 100%;
+  }
+}
+
 .ant-btn {
   display: inline-flex;
   align-items: center;
@@ -119,6 +127,10 @@
   .ant-modal-body {
     max-height: 330px;
     padding: 12px 0 24px;
+
+    .ant-form {
+      margin-bottom: -24px;
+    }
   }
 
   .ant-modal-footer {

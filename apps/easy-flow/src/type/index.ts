@@ -1,6 +1,6 @@
-import { FormInstance } from 'antd';
+import { Moment } from 'moment';
 
-export type FieldType = 'Select' | 'Input';
+export type FieldType = 'Select' | 'Input' | 'Textarea' | 'Radio' | 'Checkbox' | 'Date' | 'InputNumber' | 'DescText';
 
 export type BaseField = {
   id: string | undefined;
@@ -128,7 +128,23 @@ export type SelectField = {
   selectOptionList: SelectOptionItem;
 } & SelectBaseField;
 
-export type FormField = SingleTextField | MultipleTextField | SelectField;
+export type DateField = {
+  type: 'Date';
+  format: string;
+  notSelectPassed: boolean;
+} & BaseField;
+
+export type RadioField = {
+  type: 'Radio';
+  optionList: SelectOptionItem;
+} & BaseField;
+
+export type CheckboxField = {
+  type: 'Checkbox';
+  optionList: SelectOptionItem;
+} & BaseField;
+
+export type FormField = SingleTextField | MultipleTextField | SelectField | DateField | RadioField | CheckboxField;
 
 export type FormFieldMap = {
   [k: string]: FormField;
@@ -143,7 +159,7 @@ export type FormDesign = {
 };
 
 export type TConfigItem = {
-  [k: string]: string | number | boolean | undefined | null | FormInstance;
+  [k: string]: string | number | boolean | undefined | null;
 };
 
 export type TConfigMap = {
@@ -182,3 +198,5 @@ export type Depart = {
   id: number;
   avatar: string;
 };
+
+export type AllComponentType = SingleTextField | SelectField | DateField | RadioField | CheckboxField;

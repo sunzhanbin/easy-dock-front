@@ -1,4 +1,4 @@
-import { MemberConfig } from '@type';
+import { AllComponentType } from '@type';
 
 export enum NodeType {
   // 开始节点
@@ -13,8 +13,12 @@ export enum NodeType {
   FinishNode = 5,
 }
 
-// @auth: 0不可见 1仅可见 2可编辑
-export type FieldAuth = { id: string; auth: 0 | 1 | 2 | 3; name: string };
+export enum AuthType {
+  Denied = 0,
+  View = 1,
+  Edit = 2,
+  Required = 3,
+}
 // 节点基本类型
 export interface BaseNode {
   id: string;
@@ -36,7 +40,7 @@ export enum RevertType {
 }
 
 export type FieldAuthsMap = {
-  [fieldId: string]: FieldAuth;
+  [fieldId: string]: AuthType;
 };
 // 审批节点
 export interface UserNode extends BaseNode {
@@ -120,3 +124,46 @@ export interface StartNode extends BaseNode {
 }
 
 export type Flow = AllNode[];
+
+export enum FlowDetailType {
+  MyInitiation = 1,
+  MyFinish = 2,
+  MyTodo = 3,
+}
+
+export enum NodeStatusType {
+  Processing = 1,
+  Termination = 2,
+  Undo = 3,
+  Finish = 4,
+  Revert = 5,
+}
+
+type ComponentInfo = AllComponentType & {
+  title: string;
+};
+
+export interface FormMeta {
+  seletedTheme: string;
+  components: ComponentInfo[];
+  layout: [string, string, string, string][];
+  events?: {
+    onchange: {
+      fieldId: string;
+      value: string;
+      listeners: {
+        visible?: string[];
+        reset?: string[];
+      };
+    }[];
+  };
+  rules?: {
+    type: 'reg' | '<' | '>' | '=' | '||';
+    field: string;
+    validator?: RegExp | { type: 'ref'; value: string };
+    message?: string;
+    children?: Omit<NonNullable<FormMeta['rules']>[number], 'children'>[];
+  }[];
+}
+
+export type FormValue = { [key: string]: any };

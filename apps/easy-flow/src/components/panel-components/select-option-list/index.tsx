@@ -1,8 +1,11 @@
-import React, { memo, useCallback, useMemo, useState, useRef, useEffect } from 'react';
+import React, { memo, useCallback, useMemo, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Select, Input, Tooltip } from 'antd';
 import { uniqueId } from 'lodash';
+import { axios } from '@utils';
 import { OptionItem, OptionMode, SelectOptionItem } from '@/type';
+import { Children } from 'react';
+import { subApp } from './mock';
 
 const { Option } = Select;
 
@@ -93,12 +96,24 @@ interface editProps {
   onChange?: (v: SelectOptionItem) => void;
 }
 
+type NameMap = {
+  [k: string]: OptionItem[];
+};
+
+if (process.env.NODE_ENV === 'development') {
+  require('./mock');
+}
+
 const SelectOptionList = (props: editProps) => {
   const { value, onChange } = props;
   const [type, setType] = useState<OptionMode>(value?.type || 'custom');
   const [content, setContent] = useState<OptionItem[]>(value?.content || []);
   const [canDrag, setCanDrag] = useState<boolean>(false);
-  const customRef = useRef(null);
+  const [subAppKey, setSubAppKey] = useState<string>('');
+  const [appList, setAppList] = useState<OptionItem[]>([]);
+  const [componentKey, setComponentKey] = useState<string>('');
+  const [componentList, setComponentList] = useState<OptionItem[]>([]);
+  const [nameMap, setNameMap] = useState<NameMap>({});
   const addItem = useCallback(() => {
     const list: OptionItem[] = [...content];
     const name = uniqueId('未命名');
@@ -153,13 +168,41 @@ const SelectOptionList = (props: editProps) => {
     },
     [content],
   );
+  const handleChangeApp = useCallback(
+    (e) => {
+      const list = nameMap[e];
+      setSubAppKey(e as string);
+      setComponentList(list);
+      setComponentKey('');
+    },
+    [nameMap],
+  );
+  const handleChangeComponent = useCallback((e) => {
+    setComponentKey(e);
+  }, []);
+  useEffect(() => {
+    axios.get('/fetchAppList').then((res) => {
+      const list = res.data.map(({ name }: { name: string }) => {
+        return {
+          key: name,
+          value: name,
+        };
+      });
+      const map: NameMap = {};
+      res.data.forEach((item: subApp) => {
+        map[item.name] = item.children;
+      });
+      setAppList(list);
+      setNameMap(map);
+    });
+  }, []);
   useEffect(() => {
     onChange && onChange({ type, content });
   }, [type, content]);
   const customContent = useMemo(() => {
     if (Array.isArray(content) && type === 'custom') {
       return (
-        <div className="custom_list" ref={customRef}>
+        <div className="custom_list">
           {content.map((item: OptionItem, index: number) => (
             <div
               className="custom_item"
@@ -217,14 +260,34 @@ const SelectOptionList = (props: editProps) => {
   const dictContent = useMemo(() => {
     if (type === 'dictionaries') {
       return (
-        <Select placeholder="请选择" className="dict_content" size="large">
-          <Option value="1">字典一</Option>
-          <Option value="2">字典二</Option>
-        </Select>
+        <>
+          <Select placeholder="选择子应用" className="dict_content" size="large" onChange={handleChangeApp}>
+            {appList.map(({ key, value }) => (
+              <Option value={key} key={key}>
+                {value}
+              </Option>
+            ))}
+          </Select>
+          {subAppKey && (
+            <Select
+              placeholder="选择控件"
+              className="dict_content"
+              size="large"
+              {...(componentKey ? { value: componentKey } : null)}
+              onChange={handleChangeComponent}
+            >
+              {componentList.map(({ key, value }) => (
+                <Option value={key} key={key}>
+                  {value}
+                </Option>
+              ))}
+            </Select>
+          )}
+        </>
       );
     }
     return null;
-  }, [type]);
+  }, [type, subAppKey, componentKey, appList, componentList]);
   return (
     <Container>
       <div className="title">
@@ -242,7 +305,7 @@ const SelectOptionList = (props: editProps) => {
             setType('dictionaries');
           }}
         >
-          字典数据
+          其他表单数据
         </div>
       </div>
       <div className="content">{type === 'custom' ? customContent : dictContent}</div>

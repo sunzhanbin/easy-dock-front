@@ -3,7 +3,7 @@ import { Button, Cascader } from 'antd';
 import { CascaderValueType } from 'antd/lib/cascader';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import ButtonEditor from '../../components/button-editor';
-import { AuditNode, AllNode, BranchNode, NodeType, RevertType, ButtonAuth } from '../../../types';
+import { AuditNode, AllNode, BranchNode, NodeType, RevertType, ButtonAuth } from '@type/flow';
 import styles from './index.module.scss';
 
 interface ButtonConfigsProps {
@@ -25,10 +25,7 @@ function ButtonConfigs(props: ButtonConfigsProps) {
   const { value, onChange, prevNodes } = props;
   const { btnText, revert } = value!;
   const options = useMemo(() => {
-    const nodes = prevNodes.filter((subNode) => subNode.type !== NodeType.BranchNode) as Exclude<
-      AllNode,
-      BranchNode
-    >[];
+    const nodes = prevNodes.filter((subNode) => subNode.type !== NodeType.BranchNode) as Exclude<AllNode, BranchNode>[];
 
     const opts: RevertOptionsType[] = [
       {
@@ -58,13 +55,13 @@ function ButtonConfigs(props: ButtonConfigsProps) {
     } else {
       return [type];
     }
-  }, [revert.nodeId]);
+  }, [revert]);
 
   const cascaderValueDisplay = useMemo(() => {
     return function (labels: string[]) {
       return labels[labels.length - 1];
     };
-  }, [options]);
+  }, []);
 
   const handleRevertNodeChange = useMemoCallback((value: CascaderValueType) => {
     if (!onChange || !btnText) return;
@@ -80,13 +77,11 @@ function ButtonConfigs(props: ButtonConfigsProps) {
     onChange({ btnText, revert });
   });
 
-  const handleButtonChange = useMemoCallback(
-    (key: keyof AuditNode['btnText'], config: ButtonAuth) => {
-      if (!onChange) return;
+  const handleButtonChange = useMemoCallback((key: keyof AuditNode['btnText'], config: ButtonAuth) => {
+    if (!onChange) return;
 
-      onChange({ btnText: Object.assign({}, btnText, { [key]: config }), revert });
-    },
-  );
+    onChange({ btnText: Object.assign({}, btnText, { [key]: config }), revert });
+  });
 
   return (
     <div className={styles['btn-configs']}>

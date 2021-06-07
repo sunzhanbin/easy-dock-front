@@ -1,13 +1,13 @@
 import { memo, useState, useMemo } from 'react';
-import { useDispatch } from 'react-redux';
 import classnames from 'classnames';
 import { Button, Popover } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { Icon } from '@common/components';
 import { addNode } from '../../../flow-slice';
 import { createNode, getPopupContainer } from '../../../util';
-import { NodeType } from '../../../types';
+import { NodeType } from '@type/flow';
 import styles from './index.module.scss';
+import { useAppDispatch } from '@/app/hooks';
 
 interface AddNodeButtonProps {
   prevId: string;
@@ -16,7 +16,7 @@ interface AddNodeButtonProps {
 
 function AddNodeButton(props: AddNodeButtonProps) {
   const { prevId, className } = props;
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [showAddPopover, setShowAddPopover] = useState(false);
 
   const handleAddNode = useMemoCallback((type: NodeType) => {
@@ -53,7 +53,7 @@ function AddNodeButton(props: AddNodeButtonProps) {
         </div>
       </div>
     );
-  }, []);
+  }, [handleAddNode]);
 
   return (
     <Popover

@@ -1,9 +1,8 @@
 import { memo, useMemo } from 'react';
 import Selector, { MemberSelectorProps as SelectorProps } from '@components/member-selector';
-import { useSelector, useDispatch } from 'react-redux';
 import { flowDataSelector, setCacheMembers } from '../../../flow-slice';
-import { UserNode } from '../../../types';
-import { User } from '@type';
+import { UserNode } from '@type/flow';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 
 interface MemberSelectorProps {
   value?: UserNode['correlationMemberConfig'];
@@ -11,9 +10,9 @@ interface MemberSelectorProps {
 }
 
 function MemberSelector(props: MemberSelectorProps) {
-  const { cacheMembers } = useSelector(flowDataSelector);
+  const { cacheMembers } = useAppSelector(flowDataSelector);
   const { value, onChange } = props;
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const showValue: NonNullable<SelectorProps['value']> = useMemo(() => {
     const { members } = value!;
 

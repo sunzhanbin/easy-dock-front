@@ -1,11 +1,9 @@
 import { message } from 'antd';
 import Axios from 'axios';
-import { ROUTES } from '@consts';
-import history from './history';
 import { localStorage } from './localstorage';
 
 const instance = Axios.create({
-  baseURL: `${process.env.EASY_DOCK_BASE_SERVICE_ENDPOINT}/enc-oss-easydock/api/builder/v1`,
+  baseURL: `${process.env.EASY_DOCK_BASE_SERVICE_ENDPOINT}/enc-oss-easydock/api`,
   headers: {
     auth: localStorage.get('token'),
   },

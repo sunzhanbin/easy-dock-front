@@ -1,17 +1,15 @@
-import React, { FC, memo, useEffect, useState, useMemo, useCallback } from 'react';
+import React, { FC, memo, useMemo, useCallback } from 'react';
 import styled from 'styled-components';
 import SourceBox from '@/components/source-box';
-import { Form, Row, Col } from 'antd';
-import { store } from '@app/store';
-import { useDispatch } from 'react-redux';
+import { Row, Col } from 'antd';
 import { selectField } from '../../formdesign-slice';
-import { useAppSelector } from '@/app/hooks';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import {
   layoutSelector,
   componentPropsSelector,
   selectedFieldSelector,
 } from '@/features/bpm-editor/form-design/formzone-reducer';
-import { FormFieldMap, MoveConfig } from '@/type';
+import { MoveConfig } from '@/type';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 
 const FormZoneContainer = styled.div`
@@ -68,6 +66,12 @@ const FormZoneContainer = styled.div`
         }
       }
     }
+    .empty_tip {
+      text-align: center;
+      line-height: 200px;
+      font-size: 16px;
+      color: #dcdcdc;
+    }
   }
 `;
 
@@ -79,7 +83,7 @@ const spaceMap = {
 };
 
 const FormZone: FC<{}> = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const layout = useAppSelector(layoutSelector);
   const byId = useAppSelector(componentPropsSelector);
   const selectedField = useAppSelector(selectedFieldSelector);
@@ -120,34 +124,42 @@ const FormZone: FC<{}> = () => {
         {(dropProvided) => (
           <div ref={dropProvided.innerRef} {...dropProvided.droppableProps}>
             <div className="form_design">
-              {layout.map((row, rowIndex) => (
-                <Draggable draggableId={row[0]} index={rowIndex} key={row[0]}>
-                  {(dragProvided) => (
-                    <div ref={dragProvided.innerRef} {...dragProvided.draggableProps} {...dragProvided.dragHandleProps}>
-                      <Row className="form_row" key={rowIndex}>
-                        {row.map((id, colIndex) => (
-                          <Col
-                            key={id}
-                            className={`form_item ${id === selectedField ? 'active' : ''}`}
-                            onClick={() => {
-                              handleSelect(id);
-                            }}
-                            span={getColSpace(id)}
-                          >
-                            <SourceBox
-                              type={id ? id.split('_')[0] : ''}
-                              config={byId[id]}
-                              moveConfig={getMoveConfig(rowIndex, colIndex)}
-                              id={id}
-                              rowIndex={rowIndex}
-                            />
-                          </Col>
-                        ))}
-                      </Row>
-                    </div>
-                  )}
-                </Draggable>
-              ))}
+              {layout && layout.length > 0 ? (
+                layout.map((row, rowIndex) => (
+                  <Draggable draggableId={`${rowIndex}`} index={rowIndex} key={rowIndex}>
+                    {(dragProvided) => (
+                      <div
+                        ref={dragProvided.innerRef}
+                        {...dragProvided.draggableProps}
+                        {...dragProvided.dragHandleProps}
+                      >
+                        <Row className="form_row" key={rowIndex}>
+                          {row.map((id, colIndex) => (
+                            <Col
+                              key={id}
+                              className={`form_item ${id === selectedField ? 'active' : ''}`}
+                              onClick={() => {
+                                handleSelect(id);
+                              }}
+                              span={getColSpace(id)}
+                            >
+                              <SourceBox
+                                type={id ? id.split('_')[0] : ''}
+                                config={byId[id]}
+                                moveConfig={getMoveConfig(rowIndex, colIndex)}
+                                id={id}
+                                rowIndex={rowIndex}
+                              />
+                            </Col>
+                          ))}
+                        </Row>
+                      </div>
+                    )}
+                  </Draggable>
+                ))
+              ) : (
+                <div className="empty_tip">拖动或点击左侧控件到这里</div>
+              )}
             </div>
             {dropProvided.placeholder}
           </div>

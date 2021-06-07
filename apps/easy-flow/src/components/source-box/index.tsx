@@ -3,7 +3,6 @@ import { Tooltip } from 'antd';
 import React, { memo, FC, useEffect, useState, useMemo, useCallback } from 'react';
 import styled from 'styled-components';
 import { store } from '@app/store';
-import { useDispatch } from 'react-redux';
 import {
   moveUp,
   moveDown,
@@ -12,6 +11,7 @@ import {
   comAdded,
   comDeleted,
 } from '@/features/bpm-editor/form-design/formdesign-slice';
+import { useAppDispatch } from '@/app/hooks';
 
 const BoxContainer = styled.div`
   cursor: move;
@@ -105,7 +105,7 @@ const SourceBox: FC<{
   rowIndex: number;
 }> = ({ type, config, id, moveConfig, rowIndex }) => {
   const [Component, setComponent] = useState<FC | null>(null);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const propList = useMemo(() => {
     return Object.assign({}, config, { id });
   }, [config, id]);

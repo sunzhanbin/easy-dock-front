@@ -1,11 +1,11 @@
 import { memo, ReactNode, useCallback, useState, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import classnames from 'classnames';
 import { Icon, PopoverConfirm } from '@common/components';
 import { delNode, flowDataSelector } from '../../flow-slice';
-import { NodeType, AllNode, BranchNode } from '../../types';
+import { NodeType, AllNode, BranchNode } from '@type/flow';
 import AddNodeButton from '../../editor/components/add-node-button';
 import styles from './index.module.scss';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 interface BaseProps {
   onClick(): void;
   children: ReactNode;
@@ -41,8 +41,8 @@ export const CardHeader = memo(function CardHeader(props: CardHeaderProps) {
 });
 
 function Base(props: BaseProps) {
-  const dispatch = useDispatch();
-  const { invalidNodesMap } = useSelector(flowDataSelector);
+  const dispatch = useAppDispatch();
+  const { invalidNodesMap } = useAppSelector(flowDataSelector);
   const { icon, node, onClick, children } = props;
   const { type, name } = node;
   const [showDeletePopover, setShowDeletePopover] = useState(false);

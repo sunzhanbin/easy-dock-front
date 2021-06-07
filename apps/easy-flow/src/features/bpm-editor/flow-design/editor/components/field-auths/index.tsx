@@ -2,8 +2,10 @@ import { memo, useMemo } from 'react';
 import { Checkbox } from 'antd';
 import classnames from 'classnames';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import { FieldAuth, FieldAuthsMap } from '../../../types';
+import { FieldAuthsMap, AuthType } from '@type/flow';
 import styles from './index.module.scss';
+
+type FieldAuth = { id: string; auth: AuthType; name: string };
 
 interface FieldRowProps {
   value: FieldAuth;
@@ -27,25 +29,19 @@ const FieldRow = memo(function FieldRow(props: FieldRowProps) {
     <div className={classnames(styles['flex-row'], className)}>
       <div className={styles.cell}>{value.name}</div>
       <div className={styles.cell}>
-        <span
-          className={styles.checkbox}
-          onClickCapture={() => handleAuthChange(value.auth > 0 ? 0 : 1)}
-        >
+        <span className={styles.checkbox} onClickCapture={() => handleAuthChange(value.auth > 0 ? 0 : 1)}>
           <Checkbox checked={value.auth > 0} indeterminate={extra?.view.indeterminate} />
           {extra?.view.label && <span className={styles.label}>{extra.view.label}</span>}
         </span>
       </div>
       <div className={styles.cell}>
-        <span className={styles.checkbox} onClick={() => handleAuthChange(value.auth > 1 ? 1 : 2)}>
+        <span className={styles.checkbox} onClickCapture={() => handleAuthChange(value.auth > 1 ? 1 : 2)}>
           <Checkbox checked={value.auth > 1} indeterminate={extra?.edit.indeterminate} />
           {extra?.edit.label && <span className={styles.label}>{extra.edit.label}</span>}
         </span>
       </div>
       <div className={styles.cell}>
-        <span
-          className={styles.checkbox}
-          onClick={() => handleAuthChange(value.auth === 3 ? 2 : 3)}
-        >
+        <span className={styles.checkbox} onClickCapture={() => handleAuthChange(value.auth === 3 ? 2 : 3)}>
           <Checkbox checked={value.auth === 3} indeterminate={extra?.required.indeterminate} />
           {extra?.required.label && <span className={styles.label}>{extra.required.label}</span>}
         </span>
@@ -63,7 +59,7 @@ interface FieldAuthsProps {
 function FieldAuths(props: FieldAuthsProps) {
   const { value, onChange, templates } = props;
   const memoValueInfo = useMemo(() => {
-    const valueMaps: FieldAuthsMap = {};
+    const valueMaps: { [key: string]: FieldAuth } = {};
     const statistic: FieldRowProps['extra'] = {
       view: {
         label: '查看',
@@ -86,7 +82,11 @@ function FieldAuths(props: FieldAuthsProps) {
 
     templates.forEach((field) => {
       if (value && value[field.id]) {
-        valueMaps[field.id] = value[field.id];
+        valueMaps[field.id] = {
+          id: field.id,
+          name: field.name,
+          auth: value[field.id],
+        };
       } else {
         valueMaps[field.id] = {
           id: field.id,
@@ -137,17 +137,17 @@ function FieldAuths(props: FieldAuthsProps) {
   const handleFieldChange = useMemoCallback((field: FieldAuth) => {
     if (!onChange) return;
 
-    onChange(Object.assign({}, memoValueInfo.valueMaps, { [field.id]: field }));
+    onChange(Object.assign({}, value, { [field.id]: field.auth }));
   });
 
   const { valueMaps, total } = memoValueInfo;
 
   const handleTotalChange = useMemoCallback((field: FieldAuth) => {
     const { auth } = field;
-    const newValue = { ...valueMaps };
+    const newValue = { ...value };
 
     for (let key in newValue) {
-      newValue[key] = Object.assign({}, newValue[key], { auth });
+      newValue[key] = auth;
     }
 
     if (onChange) {
@@ -157,12 +157,7 @@ function FieldAuths(props: FieldAuthsProps) {
 
   return (
     <div>
-      <FieldRow
-        className={styles.title}
-        value={total.value}
-        extra={total.extra}
-        onChange={handleTotalChange}
-      />
+      <FieldRow className={styles.title} value={total.value} extra={total.extra} onChange={handleTotalChange} />
       {templates.map((field) => {
         return <FieldRow key={field.id} value={valueMaps[field.id]} onChange={handleFieldChange} />;
       })}

@@ -14,6 +14,7 @@ export default function useMemoCallback<T extends (...args: any[]) => any>(cb: T
       hasUnmountRef.current = true;
 
       if (keyRef.current) {
+        delete wraps[keyRef.current];
         delete callbacks[keyRef.current];
       }
     };
