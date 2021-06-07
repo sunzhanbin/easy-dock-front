@@ -90,7 +90,7 @@ export default function SceneDetail() {
     axios.get<SceneShape>(`/app/${sceneId}`).then(({ data }) => {
       setCurrentScene(data);
 
-      // 获取项目所有场景
+      // 获取项目所有应用
       axios.get<SceneBaseType[]>(`/app/${data.project.id}/list/all`).then(({ data }) => {
         setSceneMenusItems(data);
       });
@@ -287,7 +287,7 @@ export default function SceneDetail() {
         <ApiList value={checkApis} onChange={handleAddApiChange} />
       </Drawer>
       <Modal
-        title="场景发布"
+        title="应用发布"
         onOk={handleDeploy}
         destroyOnClose
         keyboard={false}

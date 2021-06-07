@@ -53,13 +53,9 @@ export default function AppHeader() {
             className={styles.nav}
             activeClassName={styles.active}
           >
-            场景管理
+            应用管理
           </NavLink>
-          <NavLink
-            to={ROUTES.TMPLATE_CENTER}
-            className={styles.nav}
-            activeClassName={styles.active}
-          >
+          <NavLink to={ROUTES.TMPLATE_CENTER} className={styles.nav} activeClassName={styles.active}>
             模版中心
           </NavLink>
           <NavLink to={ROUTES.SYSTEM_MANAGE} className={styles.nav} activeClassName={styles.active}>
@@ -70,11 +66,7 @@ export default function AppHeader() {
         <div>
           {loginUser ? (
             <div className={styles.user}>
-              <Dropdown
-                overlay={dropownOverlay}
-                getPopupContainer={(c) => c}
-                placement="bottomCenter"
-              >
+              <Dropdown overlay={dropownOverlay} getPopupContainer={(c) => c} placement="bottomCenter">
                 <div className={styles.avatar}>
                   <Avatar size={32} src={loginUser.avatar} />
                 </div>
