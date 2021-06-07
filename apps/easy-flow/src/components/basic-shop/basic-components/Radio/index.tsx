@@ -5,7 +5,7 @@ import { RadioField } from '@/type';
 const RadioComponent = (props: RadioField) => {
   const { optionList, readonly } = props;
   const options = useMemo(() => {
-    return optionList.content;
+    return optionList?.content || [];
   }, [optionList]);
   return (
     <Radio.Group disabled={readonly}>

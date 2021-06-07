@@ -26,7 +26,7 @@ const SelectComponent = (props: SelectField & { id: string }) => {
     return prop;
   }, [defaultValue, multiple, showSearch, readonly]);
   return (
-    <Select {...propList}>
+    <Select {...propList} style={{ width: '100%' }}>
       {optionList.map(({ key, value }) => (
         <Option value={key} key={key}>
           {value}

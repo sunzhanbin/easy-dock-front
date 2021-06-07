@@ -30,6 +30,6 @@ const Date = (props: DateField) => {
     }
     return props;
   }, [format, notSelectPassed, defaultValue, readonly]);
-  return <DatePicker {...propList} />;
+  return <DatePicker {...propList} style={{ width: '100%' }} />;
 };
 export default memo(Date);

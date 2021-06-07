@@ -29,6 +29,7 @@ const FormDetail = React.forwardRef(function FormDetail(
 
   // 提取所有组件类型
   const componentTypes = useMemo(() => {
+    console.info(data);
     return data.components.map((comp) => comp.type);
   }, [data]);
 
@@ -120,7 +121,10 @@ const FormDetail = React.forwardRef(function FormDetail(
                     label={<LabelContent label={compMaps[fieldId].label} desc={compMaps[fieldId].desc} />}
                     required={fieldsAuths[fieldId] === AuthType.Required}
                   >
-                    <Component readOnly={!fieldsAuths[fieldId] || fieldsAuths[fieldId] === AuthType.View} />
+                    <Component
+                      readOnly={!fieldsAuths[fieldId] || fieldsAuths[fieldId] === AuthType.View}
+                      {...compMaps[fieldId]}
+                    />
                   </Form.Item>
                 </Col>
               );
