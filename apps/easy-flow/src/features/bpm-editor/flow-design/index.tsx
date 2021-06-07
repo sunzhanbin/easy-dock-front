@@ -83,7 +83,7 @@ function FlowDesign() {
     }
 
     return null;
-  }, [currentEditNode?.type, currentEditNode]);
+  }, [currentEditNode]);
 
   const handleConfirmLeave = useMemoCallback(() => {
     return true;
