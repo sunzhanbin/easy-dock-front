@@ -6,6 +6,7 @@ import FormEngine from '@components/form-engine';
 import { FormMeta } from '@type/flow';
 import { FieldAuthsMap } from '@/type/flow';
 import { useHistory } from 'react-router-dom';
+import { Icon } from '@common/components';
 
 const Container = styled.div`
   .header {
@@ -118,7 +119,7 @@ const PreviewForm: FC = () => {
       <div className="header">
         <div className="title">预览表单</div>
         <div className="close" onClick={handleClose}>
-          <span className="iconfont iconguanbi"></span>
+          <Icon className="iconfont" type="guanbi" />
         </div>
       </div>
       <div className="content">

@@ -6,6 +6,7 @@ import { axios } from '@utils';
 import { OptionItem, OptionMode, SelectOptionItem } from '@/type';
 import { Children } from 'react';
 import { subApp } from './mock';
+import { Icon } from '@common/components';
 
 const { Option } = Select;
 
@@ -223,7 +224,7 @@ const SelectOptionList = (props: editProps) => {
                 }}
               >
                 <Tooltip title="删除">
-                  <span className="iconfont iconshanchu"></span>
+                  <Icon className="iconfont" type="shanchu" />
                 </Tooltip>
               </div>
               <div
@@ -236,7 +237,7 @@ const SelectOptionList = (props: editProps) => {
                 }}
               >
                 <Tooltip title="拖动换行">
-                  <span className="iconfont iconcaidan"></span>
+                  <Icon className="iconfont" type="caidan" />
                 </Tooltip>
               </div>
               <Input
@@ -249,7 +250,7 @@ const SelectOptionList = (props: editProps) => {
             </div>
           ))}
           <div className="add_custom" onClick={addItem}>
-            <span className="iconfont iconxinzengjiacu"></span>
+            <Icon className="iconfont" type="xinzengjiacu" />
             <span>添加选项</span>
           </div>
         </div>

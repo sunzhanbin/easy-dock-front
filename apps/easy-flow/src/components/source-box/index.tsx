@@ -1,6 +1,7 @@
 import { AllComponentType, FormField, MoveConfig, TConfigItem } from '@/type';
 import { Tooltip } from 'antd';
 import LabelContent from '../label-content';
+import { Icon } from '@common/components';
 import React, { memo, FC, useMemo, useCallback } from 'react';
 import styled from 'styled-components';
 import { store } from '@app/store';
@@ -41,6 +42,7 @@ const BoxContainer = styled.div`
       width: 16px;
       height: 16px;
       line-height: 16px;
+      font-size: 16px;
       color: #fff;
       cursor: pointer;
       &:first-child {
@@ -177,30 +179,30 @@ const SourceBox: FC<{
           </div>
           <div className="operation">
             <Tooltip title="复制">
-              <span className="iconfont iconfuzhi" onClick={handleCopy}></span>
+              <Icon className="iconfont" type="fuzhi" onClick={handleCopy} />
             </Tooltip>
             <Tooltip title="删除">
-              <span className="iconfont iconshanchu" onClick={handleDelete}></span>
+              <Icon className="iconfont" type="shanchu" onClick={handleDelete} />
             </Tooltip>
           </div>
           {moveConfig.up && (
             <div className="moveUp">
-              <span className="iconfont iconjiantouxiangshang" onClick={handleMoveUp}></span>
+              <Icon className="iconfont" type="jiantouxiangshang" onClick={handleMoveUp} />
             </div>
           )}
           {moveConfig.down && (
             <div className="moveDown">
-              <span className="iconfont iconjiantouxiangxia" onClick={handleMoveDown}></span>
+              <Icon className="iconfont" type="jiantouxiangxia" onClick={handleMoveDown} />
             </div>
           )}
           {moveConfig.left && (
             <div className="moveLeft">
-              <span className="iconfont iconhengxiangqiehuan" onClick={handleMoveLeft}></span>
+              <Icon className="iconfont" type="hengxiangqiehuan" onClick={handleMoveLeft} />
             </div>
           )}
           {moveConfig.right && (
             <div className="moveRight">
-              <span className="iconfont iconhengxiangqiehuan" onClick={handleMoveRight}></span>
+              <Icon className="iconfont" type="hengxiangqiehuan" onClick={handleMoveRight} />
             </div>
           )}
         </BoxContainer>

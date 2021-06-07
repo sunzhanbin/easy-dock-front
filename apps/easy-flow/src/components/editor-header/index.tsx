@@ -5,6 +5,7 @@ import { useHistory, useRouteMatch, NavLink, useLocation } from 'react-router-do
 import { save } from '../../features/bpm-editor/flow-design/flow-slice';
 import { useAppDispatch } from '@/app/hooks';
 import Header from '../header';
+import { Icon } from '@common/components';
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -45,6 +46,10 @@ const HeaderContainer = styled.div`
         font-size: 12px;
         color: #818a9e;
         margin: 0 12px;
+        .iconfont {
+          position: relative;
+          top: 2px;
+        }
       }
     }
     .operation {
@@ -97,8 +102,9 @@ const HeaderContainer = styled.div`
         font-weight: 400;
         color: #ffffff;
         .iconfont {
+          position: relative;
+          right: 4px;
           margin: 0;
-          margin-right: 4px;
           color: #fff;
           font-size: 16px;
         }
@@ -148,7 +154,7 @@ const EditorHeader: FC = () => {
             <span>表单设计</span>
           </NavLink>
           <div className="separator">
-            <span className="iconfont iconjinru"></span>
+            <Icon className="iconfont" type="jinru" />
           </div>
           <NavLink className="step" to={`${match.path}flow-design`} activeClassName="active">
             <span className="number">02</span>
@@ -157,11 +163,13 @@ const EditorHeader: FC = () => {
         </div>
         <div className="operation">
           {/* 这个版本暂时不做 */}
-          {/* <span className="iconfont iconjiantoushangyibu"></span>
-          <span className="iconfont iconjiantouxiayibu"></span> */}
+          {/* 
+            <Icon className="iconfont" type="jiantoushangyibu" />
+            <Icon className="iconfont" type="jiantouxiayibu" />
+          */}
           {pathName === '/form-design' && (
             <Tooltip title="预览">
-              <span className="iconfont iconyulan" onClick={handlePreview}></span>
+              <Icon className="iconfont" type="yulan" onClick={handlePreview} />
             </Tooltip>
           )}
           {pathName === '/flow-design' && (
@@ -178,7 +186,7 @@ const EditorHeader: FC = () => {
             </Button>
           )}
           {pathName === '/flow-design' && (
-            <Button className="publish" type="primary" size="large" icon={<span className="iconfont iconfabu"></span>}>
+            <Button className="publish" type="primary" size="large" icon={<Icon className="iconfont" type="fabu" />}>
               发布
             </Button>
           )}

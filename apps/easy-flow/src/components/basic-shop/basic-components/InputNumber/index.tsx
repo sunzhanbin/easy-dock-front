@@ -2,6 +2,7 @@ import React, { memo, useMemo } from 'react';
 import { useLocation } from 'react-router';
 import styled from 'styled-components';
 import { InputNumber } from 'antd';
+import { Icon } from '@common/components';
 import { SingleTextField } from '@/type';
 import { useCallback } from 'react';
 
@@ -24,6 +25,7 @@ const TextareaComponentContainer = styled.div`
         width: 16px;
         height: 16px;
         line-height: 16px;
+        font-size: 16px;
         text-align: center;
         margin: 12px;
       }
@@ -66,7 +68,7 @@ const TextareaComponent = (props: SingleTextField & { id: string; onChange: (v: 
     <TextareaComponentContainer>
       <div className="number_container">
         <div className="icon">
-          <span className="iconfont iconshuzi123"></span>
+          <Icon className="iconfont" type="shuzi123" />
         </div>
         <InputNumber {...propList} />
       </div>
