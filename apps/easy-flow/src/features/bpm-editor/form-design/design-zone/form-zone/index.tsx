@@ -68,18 +68,19 @@ const FormZoneContainer = styled.div`
     }
     .empty_tip {
       position: absolute;
-      top: 165px;
+      top: 24px;
       left: 50%;
       transform: translateX(-50%);
-      width: 216px;
-      height: 110px;
+      width: calc(100% - 260px);
+      height: calc(100% - 55px);
       text-align: center;
       font-size: 16px;
       color: #dcdcdc;
+      border: 1px dashed #b9bbc6;
       .image {
         width: 107px;
         height: 53px;
-        margin: 10px 70px 24px 30px;
+        margin: 175px 70px 24px 30px;
       }
       .text {
         width: 216px;
@@ -88,6 +89,7 @@ const FormZoneContainer = styled.div`
         font-weight: 500;
         font-size: 18px;
         color: rgba(0, 0, 0, 0.85);
+        margin: 0 auto;
       }
     }
   }
