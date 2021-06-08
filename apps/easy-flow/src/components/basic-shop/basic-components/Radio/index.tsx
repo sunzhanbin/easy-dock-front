@@ -1,14 +1,15 @@
 import React, { memo, useMemo } from 'react';
 import { Radio } from 'antd';
-import { RadioField } from '@/type';
+import { SelectOptionItem } from '@/type';
+import { RadioGroupProps } from 'antd/lib/radio';
 
-const RadioComponent = (props: RadioField) => {
-  const { optionList, readonly } = props;
+const RadioComponent = (props: RadioGroupProps & { readOnly: boolean; optionList: SelectOptionItem }) => {
+  const { optionList, readOnly, onChange } = props;
   const options = useMemo(() => {
     return optionList?.content || [];
   }, [optionList]);
   return (
-    <Radio.Group disabled={readonly}>
+    <Radio.Group disabled={readOnly} onChange={onChange}>
       {options.map(({ key, value }) => (
         <Radio value={key} key={key}>
           {value}

@@ -35,6 +35,7 @@ const FormDetail = React.forwardRef(function FormDetail(
   // 获取组件源码
   const compSources = useLoadComponents(componentTypes);
   const formValuesChange = useMemoCallback((changedValues: FormValue) => {
+    console.info(changedValues, '111');
     if (!data.events || !data.events.onchange) return;
 
     // 处理响应表单事件，响应绑定的visible和reset

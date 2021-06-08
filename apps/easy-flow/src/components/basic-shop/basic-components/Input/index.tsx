@@ -1,26 +1,26 @@
 import React, { memo, useMemo } from 'react';
 import { useLocation } from 'react-router';
 import { Input } from 'antd';
-import { SingleTextField } from '@/type';
+import { InputProps } from 'antd/lib/input';
 
-const InputComponent = (props: SingleTextField & { id: string }) => {
-  const { defaultValue, readonly } = props;
+const InputComponent = (props: InputProps) => {
+  const { defaultValue, readOnly, onChange } = props;
   const location = useLocation();
   const propList = useMemo(() => {
     const props: { [k: string]: string | boolean | number | undefined | null } = {
       size: 'large',
       placeholder: '请输入',
-      readOnly: readonly,
+      readOnly: readOnly,
     };
     if (defaultValue) {
-      props.defaultValue = defaultValue;
+      props.defaultValue = defaultValue as string;
       if (location.pathname === '/form-design') {
-        props.value = defaultValue;
+        props.value = defaultValue as string;
       }
     }
     return props;
-  }, [defaultValue, readonly, location]);
-  return <Input {...propList} />;
+  }, [defaultValue, readOnly, location]);
+  return <Input {...propList} onChange={onChange} />;
 };
 
 export default memo(InputComponent);

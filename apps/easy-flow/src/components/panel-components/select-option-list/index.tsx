@@ -198,7 +198,7 @@ const SelectOptionList = (props: editProps) => {
   }, []);
   useEffect(() => {
     onChange && onChange({ type, content });
-  }, [type, content, onChange]);
+  }, [type, content]);
   const customContent = useMemo(() => {
     if (Array.isArray(content) && type === 'custom') {
       return (

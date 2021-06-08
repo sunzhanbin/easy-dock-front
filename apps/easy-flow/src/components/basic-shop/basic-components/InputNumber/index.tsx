@@ -3,7 +3,7 @@ import { useLocation } from 'react-router';
 import styled from 'styled-components';
 import { InputNumber } from 'antd';
 import { Icon } from '@common/components';
-import { SingleTextField } from '@/type';
+import { InputNumberProps } from 'antd/lib/input-number';
 import { useCallback } from 'react';
 
 const TextareaComponentContainer = styled.div`
@@ -39,9 +39,9 @@ const TextareaComponentContainer = styled.div`
   }
 `;
 
-const TextareaComponent = (props: SingleTextField & { id: string; onChange: (v: number) => void }) => {
+const TextareaComponent = (props: InputNumberProps) => {
   const location = useLocation();
-  const { defaultValue, readonly, onChange } = props;
+  const { defaultValue, readOnly, onChange } = props;
   const handleChange = useCallback(
     (e) => {
       onChange && onChange(e);
@@ -52,7 +52,7 @@ const TextareaComponent = (props: SingleTextField & { id: string; onChange: (v: 
     const props: { [k: string]: string | number | boolean | undefined | Function } = {
       size: 'large',
       placeholder: '请输入',
-      readOnly: readonly,
+      readOnly: readOnly,
       onChange: handleChange,
     };
     if (defaultValue) {
@@ -62,7 +62,7 @@ const TextareaComponent = (props: SingleTextField & { id: string; onChange: (v: 
       }
     }
     return props;
-  }, [defaultValue, readonly, handleChange, location]);
+  }, [defaultValue, readOnly, handleChange, location]);
 
   return (
     <TextareaComponentContainer>

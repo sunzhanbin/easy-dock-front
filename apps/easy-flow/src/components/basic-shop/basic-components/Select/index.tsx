@@ -1,12 +1,15 @@
 import React, { memo, useMemo } from 'react';
 import { useLocation } from 'react-router';
 import { Select } from 'antd';
-import { SelectField } from '@/type';
+import { SelectOptionItem } from '@/type';
+import { SelectProps } from 'antd/lib/select';
 
 const { Option } = Select;
 
-const SelectComponent = (props: SelectField & { id: string }) => {
-  const { defaultValue, multiple, showSearch, selectOptionList, readonly } = props;
+const SelectComponent = (
+  props: SelectProps<string> & { readOnly: boolean; multiple: boolean; selectOptionList: SelectOptionItem },
+) => {
+  const { defaultValue, multiple, showSearch, selectOptionList, readOnly, onChange } = props;
   const location = useLocation();
   const optionList = useMemo(() => {
     return selectOptionList?.content || [];
@@ -14,9 +17,9 @@ const SelectComponent = (props: SelectField & { id: string }) => {
   const propList = useMemo(() => {
     const prop: { [k: string]: string | boolean } = {
       size: 'large',
-      showSearch: showSearch,
+      showSearch: showSearch as boolean,
       placeholder: '请选择',
-      disabled: readonly as boolean,
+      disabled: readOnly as boolean,
     };
     if (multiple) {
       prop.mode = 'multiple';
@@ -28,9 +31,9 @@ const SelectComponent = (props: SelectField & { id: string }) => {
       }
     }
     return prop;
-  }, [defaultValue, multiple, showSearch, readonly, location]);
+  }, [defaultValue, multiple, showSearch, readOnly, location]);
   return (
-    <Select {...propList} style={{ width: '100%' }}>
+    <Select {...propList} onChange={onChange} style={{ width: '100%' }}>
       {optionList.map(({ key, value }) => (
         <Option value={key} key={key}>
           {value}

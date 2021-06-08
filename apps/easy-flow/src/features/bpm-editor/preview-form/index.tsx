@@ -39,7 +39,7 @@ const Container = styled.div`
       }
     }
   }
-  .content {
+  & > .content {
     width: calc(100% - 548px);
     margin-left: 288px;
     margin-top: 89px;

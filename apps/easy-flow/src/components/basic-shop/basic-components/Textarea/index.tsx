@@ -1,29 +1,29 @@
 import React, { memo, useMemo } from 'react';
 import { useLocation } from 'react-router';
 import { Input } from 'antd';
-import { MultipleTextField } from '@/type';
+import { TextAreaProps } from 'antd/lib/input';
 
 const { TextArea } = Input;
 
-const TextareaComponent = (props: MultipleTextField) => {
+const TextareaComponent = (props: TextAreaProps) => {
   const location = useLocation();
-  const { defaultValue, readonly } = props;
+  const { defaultValue, readOnly, onChange } = props;
   const propList = useMemo(() => {
     const props: { [k: string]: string | number | boolean | undefined } = {
       rows: 4,
       size: 'large',
       placeholder: '请输入',
-      readOnly: readonly,
+      readOnly: readOnly,
     };
     if (defaultValue) {
-      props.defaultValue = defaultValue;
+      props.defaultValue = defaultValue as string;
       if (location.pathname === '/form-design') {
-        props.value = defaultValue;
+        props.value = defaultValue as string;
       }
     }
     return props;
-  }, [defaultValue, readonly, location]);
-  return <TextArea {...propList} />;
+  }, [defaultValue, readOnly, location]);
+  return <TextArea {...propList} onChange={onChange} />;
 };
 
 export default memo(TextareaComponent);
