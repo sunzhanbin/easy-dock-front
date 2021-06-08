@@ -8,32 +8,33 @@ const Date = (props: DatePickerProps & { readOnly: boolean; notSelectPassed: boo
   const { format, notSelectPassed, defaultValue, readOnly, onChange } = props;
   const location = useLocation();
   const propList = useMemo(() => {
-    const props: { [k: string]: string | boolean | Function | Moment } = {
+    const prop: { [k: string]: string | boolean | Function | Moment } = {
       size: 'large',
       disabled: readOnly as boolean,
+      onChange: onChange as Function,
     };
     let formatStr: string = '';
     if (format === '2') {
-      props.showTime = true;
+      prop.showTime = true;
       formatStr = 'YYYY-MM-DD HH:mm:ss';
     } else if (format === '1') {
       formatStr = 'YYYY-MM-DD';
     }
-    props.format = formatStr;
+    prop.format = formatStr;
     if (notSelectPassed) {
-      props.disabledDate = (current: Moment) => {
+      prop.disabledDate = (current: Moment) => {
         return current && current < moment().endOf('second');
       };
     }
     if (defaultValue) {
       const value = moment(defaultValue, formatStr);
-      props.defaultValue = value;
+      prop.defaultValue = value;
       if (location.pathname === '/form-design') {
-        props.value = value;
+        prop.value = value;
       }
     }
-    return props;
-  }, [format, notSelectPassed, defaultValue, readOnly, location]);
-  return <DatePicker {...propList} style={{ width: '100%' }} onChange={onChange} />;
+    return Object.assign({}, props, prop);
+  }, [format, notSelectPassed, defaultValue, readOnly, location, props, onChange]);
+  return <DatePicker {...propList} style={{ width: '100%' }} />;
 };
 export default memo(Date);

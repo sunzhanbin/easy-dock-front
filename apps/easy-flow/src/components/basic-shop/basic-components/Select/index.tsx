@@ -15,11 +15,12 @@ const SelectComponent = (
     return selectOptionList?.content || [];
   }, [selectOptionList]);
   const propList = useMemo(() => {
-    const prop: { [k: string]: string | boolean } = {
+    const prop: { [k: string]: string | boolean | Function } = {
       size: 'large',
       showSearch: showSearch as boolean,
       placeholder: '请选择',
       disabled: readOnly as boolean,
+      onChange: onChange as Function,
     };
     if (multiple) {
       prop.mode = 'multiple';
@@ -30,10 +31,10 @@ const SelectComponent = (
         prop.value = defaultValue as string;
       }
     }
-    return prop;
-  }, [defaultValue, multiple, showSearch, readOnly, location]);
+    return Object.assign({}, props, prop);
+  }, [defaultValue, multiple, showSearch, readOnly, location, props, onChange]);
   return (
-    <Select {...propList} onChange={onChange} style={{ width: '100%' }}>
+    <Select {...propList} style={{ width: '100%' }}>
       {optionList.map(({ key, value }) => (
         <Option value={key} key={key}>
           {value}

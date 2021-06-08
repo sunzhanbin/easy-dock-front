@@ -8,7 +8,15 @@ const CheckboxComponent = (props: CheckboxGroupProps & { readOnly: boolean; opti
   const options = useMemo(() => {
     return (optionList?.content || []).map((item) => item.value);
   }, [optionList]);
-  return <Checkbox.Group disabled={readOnly} options={options} onChange={onChange}></Checkbox.Group>;
+  const propList = useMemo(() => {
+    const prop: { [k: string]: string | boolean | string[] | Function } = {
+      disabled: readOnly,
+      options: options,
+      onChange: onChange as Function,
+    };
+    return Object.assign({}, props, prop);
+  }, [options, readOnly, props, onChange]);
+  return <Checkbox.Group {...propList}></Checkbox.Group>;
 };
 
 export default memo(CheckboxComponent);

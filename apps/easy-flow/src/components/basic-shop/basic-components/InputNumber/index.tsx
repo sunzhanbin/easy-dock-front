@@ -42,27 +42,21 @@ const TextareaComponentContainer = styled.div`
 const TextareaComponent = (props: InputNumberProps) => {
   const location = useLocation();
   const { defaultValue, readOnly, onChange } = props;
-  const handleChange = useCallback(
-    (e) => {
-      onChange && onChange(e);
-    },
-    [onChange],
-  );
   const propList = useMemo(() => {
-    const props: { [k: string]: string | number | boolean | undefined | Function } = {
+    const prop: { [k: string]: string | number | boolean | undefined | Function } = {
       size: 'large',
       placeholder: '请输入',
       readOnly: readOnly,
-      onChange: handleChange,
+      onChange: onChange,
     };
     if (defaultValue) {
-      props.defaultValue = defaultValue;
+      prop.defaultValue = defaultValue;
       if (location.pathname === '/form-design') {
-        props.value = defaultValue;
+        prop.value = defaultValue;
       }
     }
-    return props;
-  }, [defaultValue, readOnly, handleChange, location]);
+    return Object.assign({}, props, prop);
+  }, [defaultValue, readOnly, location, props, onChange]);
 
   return (
     <TextareaComponentContainer>

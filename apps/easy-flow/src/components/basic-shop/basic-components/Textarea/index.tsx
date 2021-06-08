@@ -9,21 +9,22 @@ const TextareaComponent = (props: TextAreaProps) => {
   const location = useLocation();
   const { defaultValue, readOnly, onChange } = props;
   const propList = useMemo(() => {
-    const props: { [k: string]: string | number | boolean | undefined } = {
+    const prop: { [k: string]: string | number | boolean | undefined | Function } = {
       rows: 4,
       size: 'large',
       placeholder: '请输入',
       readOnly: readOnly,
+      onChange: onChange,
     };
     if (defaultValue) {
-      props.defaultValue = defaultValue as string;
+      prop.defaultValue = defaultValue as string;
       if (location.pathname === '/form-design') {
-        props.value = defaultValue as string;
+        prop.value = defaultValue as string;
       }
     }
-    return props;
-  }, [defaultValue, readOnly, location]);
-  return <TextArea {...propList} onChange={onChange} />;
+    return Object.assign({}, props, prop);
+  }, [defaultValue, readOnly, location, props, onChange]);
+  return <TextArea {...propList} />;
 };
 
 export default memo(TextareaComponent);

@@ -8,8 +8,14 @@ const RadioComponent = (props: RadioGroupProps & { readOnly: boolean; optionList
   const options = useMemo(() => {
     return optionList?.content || [];
   }, [optionList]);
+  const propList = useMemo(() => {
+    return Object.assign({}, props, {
+      disabled: readOnly,
+      onChange: onChange as Function,
+    });
+  }, [readOnly, props, onChange]);
   return (
-    <Radio.Group disabled={readOnly} onChange={onChange}>
+    <Radio.Group {...propList}>
       {options.map(({ key, value }) => (
         <Radio value={key} key={key}>
           {value}

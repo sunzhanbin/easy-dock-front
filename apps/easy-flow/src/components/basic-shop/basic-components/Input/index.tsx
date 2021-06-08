@@ -3,24 +3,26 @@ import { useLocation } from 'react-router';
 import { Input } from 'antd';
 import { InputProps } from 'antd/lib/input';
 
-const InputComponent = (props: InputProps) => {
-  const { defaultValue, readOnly, onChange } = props;
+const InputComponent = (props: InputProps & { isUniq: boolean }) => {
+  const { defaultValue, readOnly, isUniq, onChange } = props;
   const location = useLocation();
   const propList = useMemo(() => {
-    const props: { [k: string]: string | boolean | number | undefined | null } = {
+    const prop: { [k: string]: string | boolean | number | undefined | null | Function } = {
       size: 'large',
       placeholder: '请输入',
       readOnly: readOnly,
+      isUniq: isUniq,
+      onChange: onChange,
     };
     if (defaultValue) {
-      props.defaultValue = defaultValue as string;
+      prop.defaultValue = defaultValue as string;
       if (location.pathname === '/form-design') {
-        props.value = defaultValue as string;
+        prop.value = defaultValue as string;
       }
     }
-    return props;
-  }, [defaultValue, readOnly, location]);
-  return <Input {...propList} onChange={onChange} />;
+    return Object.assign({}, props, prop);
+  }, [defaultValue, readOnly, isUniq, location, props, onChange]);
+  return <Input {...propList} />;
 };
 
 export default memo(InputComponent);
