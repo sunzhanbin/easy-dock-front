@@ -17,7 +17,8 @@
       "@assets": ["src/assets"],
       "@assets/*": ["src/assets/*"],
       "@styles/*": ["src/styles/*"],
-      "@hooks/*": ["src/hooks/*"]
+      "@hooks/*": ["src/hooks/*"],
+      "@common/*": ["../../packages/common/*"]
     }
   }
 }

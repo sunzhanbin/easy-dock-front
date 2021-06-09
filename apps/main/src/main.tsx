@@ -1,11 +1,10 @@
-import { memo, useEffect } from 'react';
-import { Switch, Route, useLocation } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 import 'antd/dist/antd.css';
 import './styles/base.scss';
 
-import { ConfigProvider } from 'antd';
-import zh_CN from 'antd/es/locale/zh_CN';
+import { memo, useEffect } from 'react';
+import { Switch, Route, useLocation } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import AntdProvider from '@common/components/antd-provider';
 import LoginLayout from '@layouts/login-layout';
 import PrimaryLayout from '@layouts/main-layout';
 import { shouldHideHeaderUrls } from '@consts';
@@ -24,12 +23,12 @@ function AppEntry() {
   }, [pathname, dispatch]);
 
   return (
-    <ConfigProvider locale={zh_CN}>
+    <AntdProvider>
       <Switch>
         <Route path="/login" component={LoginLayout}></Route>
         <Route path="/" component={PrimaryLayout}></Route>
       </Switch>
-    </ConfigProvider>
+    </AntdProvider>
   );
 }
 

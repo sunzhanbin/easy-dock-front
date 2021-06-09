@@ -23,6 +23,7 @@ module.exports = {
       ['@assets']: path.resolve(__dirname, 'src/assets'),
       ['@styles']: path.resolve(__dirname, 'src/styles'),
       ['@hooks']: path.resolve(__dirname, 'src/hooks'),
+      ['@common']: path.resolve(__dirname, '../../packages/common'),
     };
 
     if (config.mode !== 'development') {
@@ -39,11 +40,7 @@ module.exports = {
                 {
                   source: path.resolve(
                     __dirname,
-                    `conf${
-                      process.env.REACT_APP_TARGET_ENV === 'staging'
-                        ? '.staging.js'
-                        : '.production.js'
-                    }`,
+                    `conf${process.env.REACT_APP_TARGET_ENV === 'staging' ? '.staging.js' : '.production.js'}`,
                   ),
                   destination: `zip/${name}/dist/config.js`,
                 },
