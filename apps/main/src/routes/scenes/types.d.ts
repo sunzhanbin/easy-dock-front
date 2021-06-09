@@ -17,3 +17,15 @@ export interface SceneShape {
     version: string;
   };
 }
+
+export interface SubAppInfo {
+  id: number;
+  name: string;
+  status: -1 | 1;
+  type: 1 | 2;
+  version: {
+    id: number;
+    remark: string;
+    version: string;
+  };
+}
