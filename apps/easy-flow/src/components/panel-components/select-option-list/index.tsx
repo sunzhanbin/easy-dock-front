@@ -107,7 +107,7 @@ if (process.env.NODE_ENV === 'development') {
 const SelectOptionList = (props: editProps) => {
   const { value, onChange } = props;
   const [type, setType] = useState<OptionMode>(value?.type || 'custom');
-  const [content, setContent] = useState<OptionItem[]>(value?.content || []);
+  const [content, setContent] = useState<OptionItem[]>(value?.data || []);
   const [canDrag, setCanDrag] = useState<boolean>(false);
   const [subAppKey, setSubAppKey] = useState<string>('');
   const [appList, setAppList] = useState<OptionItem[]>([]);
@@ -197,7 +197,7 @@ const SelectOptionList = (props: editProps) => {
     });
   }, []);
   useEffect(() => {
-    onChange && onChange({ type, content });
+    onChange && onChange({ type, data: content });
   }, [type, content]);
   const customContent = useMemo(() => {
     if (Array.isArray(content) && type === 'custom') {

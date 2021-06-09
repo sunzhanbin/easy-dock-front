@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { InputNumber } from 'antd';
 import { Icon } from '@common/components';
 import { InputNumberProps } from 'antd/lib/input-number';
-import { useCallback } from 'react';
 
 const TextareaComponentContainer = styled.div`
   display: flex;

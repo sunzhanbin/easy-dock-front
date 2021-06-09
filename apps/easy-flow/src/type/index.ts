@@ -30,6 +30,7 @@ export type SchemaConfigItem = {
   children?: SchemaConfigItem;
   direction?: 'vertical' | 'horizontal';
   range?: rangeItem[];
+  isProps: boolean;
 };
 
 export type rangeItem = {
@@ -120,7 +121,7 @@ export type OptionItem = {
 };
 export type SelectOptionItem = {
   type: OptionMode;
-  content: OptionItem[];
+  data: OptionItem[];
 };
 
 export type SelectField = {

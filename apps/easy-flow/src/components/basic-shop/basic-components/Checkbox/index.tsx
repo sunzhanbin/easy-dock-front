@@ -3,11 +3,11 @@ import { Checkbox } from 'antd';
 import { SelectOptionItem } from '@/type';
 import { CheckboxGroupProps } from 'antd/lib/checkbox';
 
-const CheckboxComponent = (props: CheckboxGroupProps & { readOnly: boolean; optionList: SelectOptionItem }) => {
-  const { optionList, readOnly, onChange } = props;
+const CheckboxComponent = (props: CheckboxGroupProps & { readOnly: boolean; dataSource: SelectOptionItem }) => {
+  const { dataSource, readOnly, onChange } = props;
   const options = useMemo(() => {
-    return (optionList?.content || []).map((item) => item.value);
-  }, [optionList]);
+    return (dataSource?.data || []).map((item) => item.value);
+  }, [dataSource]);
   const propList = useMemo(() => {
     const prop: { [k: string]: string | boolean | string[] | Function } = {
       disabled: readOnly,

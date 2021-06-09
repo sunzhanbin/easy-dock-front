@@ -7,13 +7,13 @@ import { SelectProps } from 'antd/lib/select';
 const { Option } = Select;
 
 const SelectComponent = (
-  props: SelectProps<string> & { readOnly: boolean; multiple: boolean; selectOptionList: SelectOptionItem },
+  props: SelectProps<string> & { readOnly: boolean; multiple: boolean; dataSource: SelectOptionItem },
 ) => {
-  const { defaultValue, multiple, showSearch, selectOptionList, readOnly, onChange } = props;
+  const { defaultValue, multiple, showSearch, dataSource, readOnly, onChange } = props;
   const location = useLocation();
   const optionList = useMemo(() => {
-    return selectOptionList?.content || [];
-  }, [selectOptionList]);
+    return dataSource?.data || [];
+  }, [dataSource]);
   const propList = useMemo(() => {
     const prop: { [k: string]: string | boolean | Function } = {
       size: 'large',

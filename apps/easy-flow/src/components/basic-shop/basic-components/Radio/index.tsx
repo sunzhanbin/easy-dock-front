@@ -3,11 +3,11 @@ import { Radio } from 'antd';
 import { SelectOptionItem } from '@/type';
 import { RadioGroupProps } from 'antd/lib/radio';
 
-const RadioComponent = (props: RadioGroupProps & { readOnly: boolean; optionList: SelectOptionItem }) => {
-  const { optionList, readOnly, onChange } = props;
+const RadioComponent = (props: RadioGroupProps & { readOnly: boolean; dataSource: SelectOptionItem }) => {
+  const { dataSource, readOnly, onChange } = props;
   const options = useMemo(() => {
-    return optionList?.content || [];
-  }, [optionList]);
+    return dataSource?.data || [];
+  }, [dataSource]);
   const propList = useMemo(() => {
     return Object.assign({}, props, {
       disabled: readOnly,

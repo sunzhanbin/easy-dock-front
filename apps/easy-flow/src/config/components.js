@@ -2,7 +2,7 @@ const componentSchema = {
   Input: {
     baseInfo: {
       name: '单行文本',
-      icon: 'icondanhangwenben',
+      icon: 'danhangwenben',
       category: '基础控件',
       version: '1.0',
       type: 'Input',
@@ -51,7 +51,7 @@ const componentSchema = {
         type: 'Input',
         direction: 'vertical',
         required: false,
-        isProps: false,
+        isProps: true,
       },
       {
         key: 'isUniq',
@@ -76,7 +76,7 @@ const componentSchema = {
   Textarea: {
     baseInfo: {
       name: '多行文本',
-      icon: 'iconduohangcaidan',
+      icon: 'duohangcaidan',
       category: '基础控件',
       version: '1.0',
       type: 'Textarea',
@@ -141,7 +141,7 @@ const componentSchema = {
   Select: {
     baseInfo: {
       name: '下拉框',
-      icon: 'iconxialakuang',
+      icon: 'xialakuang',
       category: '基础控件',
       version: '1.0',
       type: 'Select',
@@ -209,10 +209,10 @@ const componentSchema = {
         isProps: true,
       },
       {
-        key: 'selectOptionList',
+        key: 'dataSource',
         defaultValue: {
           type: 'custom',
-          content: [
+          data: [
             { key: '选项一', value: '选项一' },
             { key: '选项二', value: '选项二' },
             { key: '选项三', value: '选项三' },
@@ -238,7 +238,7 @@ const componentSchema = {
   Radio: {
     baseInfo: {
       name: '单选',
-      icon: 'icondanxuankuang',
+      icon: 'danxuankuang',
       category: '基础控件',
       version: '1.0',
       type: 'Radio',
@@ -280,10 +280,10 @@ const componentSchema = {
         isProps: false,
       },
       {
-        key: 'optionList',
+        key: 'dataSource',
         defaultValue: {
           type: 'custom',
-          content: [
+          data: [
             { key: '选项一', value: '选项一' },
             { key: '选项二', value: '选项二' },
             { key: '选项三', value: '选项三' },
@@ -309,7 +309,7 @@ const componentSchema = {
   Checkbox: {
     baseInfo: {
       name: '复选',
-      icon: 'iconduoxuankuang',
+      icon: 'duoxuankuang',
       category: '基础控件',
       version: '1.0',
       type: 'Checkbox',
@@ -351,10 +351,10 @@ const componentSchema = {
         isProps: false,
       },
       {
-        key: 'optionList',
+        key: 'dataSource',
         defaultValue: {
           type: 'custom',
-          content: [
+          data: [
             { key: '选项一', value: '选项一' },
             { key: '选项二', value: '选项二' },
             { key: '选项三', value: '选项三' },
@@ -380,7 +380,7 @@ const componentSchema = {
   Date: {
     baseInfo: {
       name: '日期',
-      icon: 'iconriqi',
+      icon: 'riqi',
       category: '基础控件',
       version: '1.0',
       type: 'Date',
@@ -474,7 +474,7 @@ const componentSchema = {
   InputNumber: {
     baseInfo: {
       name: '数字',
-      icon: 'iconshuzi123',
+      icon: 'shuzi123',
       category: '基础控件',
       version: '1.0',
       type: 'InputNumber',
@@ -539,7 +539,7 @@ const componentSchema = {
   DescText: {
     baseInfo: {
       name: '描述文字',
-      icon: 'iconxiangqing',
+      icon: 'xiangqing',
       category: '基础控件',
       version: '1.0',
       type: 'DescText',

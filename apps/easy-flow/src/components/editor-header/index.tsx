@@ -6,6 +6,8 @@ import { save } from '../../features/bpm-editor/flow-design/flow-slice';
 import { useAppDispatch } from '@/app/hooks';
 import Header from '../header';
 import { Icon } from '@common/components';
+import { store } from '@/app/store';
+import { FieldType, SchemaItem } from '@/type';
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -113,6 +115,39 @@ const HeaderContainer = styled.div`
   }
 `;
 
+type ConfigItem = { [k: string]: string | number | boolean | null | undefined | Object | Array<any> };
+type ComponentConfig = {
+  config: ConfigItem;
+  props?: ConfigItem;
+};
+type Event = {
+  fieldId: string;
+  value: string | number | boolean | string[];
+  listeners: {
+    visible: string[];
+    reset: string[];
+  };
+};
+type Events = {
+  onChange: Event[];
+};
+type Rule = {
+  type: string;
+  field: string;
+};
+type Theme = {
+  name: string;
+};
+type FormDesign = {
+  selectedTheme?: string;
+  components: ComponentConfig[];
+  layout: string[][];
+  events?: Events;
+  schema: { [k: string]: SchemaItem };
+  rules?: Rule[];
+  themes?: Theme[];
+};
+
 const EditorHeader: FC = () => {
   const dispatch = useAppDispatch();
   const history = useHistory();
@@ -133,7 +168,29 @@ const EditorHeader: FC = () => {
   }, [pathName, history]);
   const handleSave = useCallback(() => {
     if (pathName === '/form-design') {
-      console.info('save');
+      const { formDesign } = store.getState();
+      const { layout, schema } = formDesign;
+      const designData: FormDesign = {
+        components: [],
+        layout: layout,
+        schema: schema,
+      };
+      const { byId } = formDesign;
+      Object.keys(byId).forEach((id) => {
+        const type = id.split('_')[0] || '';
+        const version = schema[type as FieldType]?.baseInfo.version || '';
+        const componentConfig = schema[type as FieldType]?.config;
+        const config: ConfigItem = { id, type, version, rule: [] };
+        const props: ConfigItem = {};
+        componentConfig?.forEach(({ isProps, key }) => {
+          if (isProps) {
+            props[key] = (byId[id] as any)[key];
+          } else {
+            config[key] = (byId[id] as any)[key];
+          }
+        });
+        designData.components.push({ config, props });
+      });
     }
     if (pathName === '/flow-design') {
       dispatch(save('appkey'));
