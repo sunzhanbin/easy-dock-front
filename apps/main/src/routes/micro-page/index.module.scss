@@ -1,0 +1,7 @@
+.micro {
+  min-height: 100vh;
+
+  &.has-header {
+    min-height: calc(100vh - 64px);
+  }
+}

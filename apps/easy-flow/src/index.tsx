@@ -1,19 +1,37 @@
-import './init';
-import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
-import { store } from './app/store';
+import appConfig from './init';
+import ReactDOM from 'react-dom';
+import { Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import * as serviceWorker from './serviceWorker';
+import { createBrowserHistory } from 'history';
+import { store } from './app/store';
+import AntdProvider from '@common/components/antd-provider';
+import App from './App';
 
-ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  document.getElementById('root'),
-);
+export async function mount(props?: { container: HTMLElement; basename: string }) {
+  const { container, basename = '/' } = props || {};
+  const history = createBrowserHistory({ basename });
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+  ReactDOM.render(
+    <AntdProvider>
+      <Provider store={store}>
+        <Router history={history}>
+          <App />
+        </Router>
+      </Provider>
+    </AntdProvider>,
+    container ? container.querySelector('#root') : document.querySelector('#root'),
+  );
+}
+
+if (!appConfig.micro) {
+  mount();
+}
+
+export async function bootstrap() {}
+
+export async function unmount(props: { container: HTMLElement }) {
+  const { container } = props;
+
+  ReactDOM.unmountComponentAtNode((container && container.querySelector('#root')) || document.querySelector('#root')!);
+}

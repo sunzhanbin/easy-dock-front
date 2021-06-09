@@ -56,3 +56,9 @@ ol {
   border-radius: 3px;
   background-color: rgba(#181f43, 0.3);
 }
+
+.blocklyComputeCanvas {
+  position: absolute;
+  width: 0;
+  height: 0;
+}

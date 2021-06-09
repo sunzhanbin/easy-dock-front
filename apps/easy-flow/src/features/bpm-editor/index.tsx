@@ -23,6 +23,7 @@ const BpmEditor: FC = () => {
   const match = useRouteMatch();
   const location = useLocation();
   const dispatch = useAppDispatch();
+
   useEffect(() => {
     dispatch(loadComponents());
   }, [dispatch]);
