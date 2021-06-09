@@ -8,6 +8,8 @@ import { store } from './app/store';
 import AntdProvider from '@common/components/antd-provider';
 import App from './App';
 
+const APP_CONTAINER_ID = '#easy-flow-root';
+
 export async function mount(props?: { container: HTMLElement; basename: string }) {
   const { container, basename = '/' } = props || {};
   const history = createBrowserHistory({ basename });
@@ -20,7 +22,7 @@ export async function mount(props?: { container: HTMLElement; basename: string }
         </Router>
       </Provider>
     </AntdProvider>,
-    container ? container.querySelector('#root') : document.querySelector('#root'),
+    container ? container.querySelector(APP_CONTAINER_ID) : document.querySelector(APP_CONTAINER_ID),
   );
 }
 
@@ -33,5 +35,7 @@ export async function bootstrap() {}
 export async function unmount(props: { container: HTMLElement }) {
   const { container } = props;
 
-  ReactDOM.unmountComponentAtNode((container && container.querySelector('#root')) || document.querySelector('#root')!);
+  ReactDOM.unmountComponentAtNode(
+    (container && container.querySelector(APP_CONTAINER_ID)) || document.querySelector(APP_CONTAINER_ID)!,
+  );
 }

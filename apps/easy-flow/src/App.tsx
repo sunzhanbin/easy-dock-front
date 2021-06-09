@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { ROUTES } from './consts';
 import BpmEditor from './features/bpm-editor';
@@ -17,4 +18,4 @@ function App() {
   );
 }
 
-export default App;
+export default memo(App);
