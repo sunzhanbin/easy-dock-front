@@ -1,0 +1,27 @@
+@import '@styles/var.scss';
+@import '@styles/mixin.scss';
+
+.container {
+  position: relative;
+
+  & > .content {
+    position: relative;
+    height: inherit;
+    min-height: inherit;
+
+    :global {
+      div[id^='__qiankun_microapp_wrapper_for'] {
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1;
+      }
+    }
+  }
+
+  .loading {
+    @include center('absolute');
+  }
+}

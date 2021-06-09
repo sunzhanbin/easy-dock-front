@@ -15,7 +15,7 @@ export default function Login() {
     const values = await form.validateFields();
     const data = Object.assign({}, { loginType: 1, appCode: 'easydock' }, values);
     const loginResponse = await axios.post('/api/auth/v1/login', data, {
-      baseURL: envs.REACT_APP_LOGIN_DOMAIN,
+      baseURL: envs.COMMON_LOGIN_DOMAIN,
     });
 
     if (loginResponse.data) {
@@ -58,11 +58,7 @@ export default function Login() {
 
   return (
     <div className={styles.content}>
-      <img
-        className={styles.image}
-        src={`${process.env.PUBLIC_URL}/images/login.png`}
-        alt="login"
-      />
+      <img className={styles.image} src={`${process.env.PUBLIC_URL}/images/login.png`} alt="login" />
       <div className={styles.footer}>
         <div className={styles.info}>
           <img className={styles.logo} src={logoIcon} alt="logo" />

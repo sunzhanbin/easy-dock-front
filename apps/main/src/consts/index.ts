@@ -1,3 +1,5 @@
+import ROUTES, { orchRoutes } from './route';
+
 export const MAIN_CONTENT_CLASSNAME = 'easy-dock-content';
 
 export const SCENE_IAMGES = {
@@ -20,3 +22,28 @@ export { default as ROUTES, dynamicRoutes } from './route';
 export const stopPropagation = (e: React.MouseEvent) => e.stopPropagation();
 
 export { default as envs } from './envs';
+
+// 配置微前端
+export const OrchMicroApp: Readonly<MicroApp> = {
+  name: 'orch',
+  entry: window.ALGOR_ORCH_FRONTEND_ENTRY,
+  title: '服务编排',
+  route: '/micro/orch',
+};
+
+export const FlowMicroApp: Readonly<MicroApp> = {
+  name: 'flow',
+  entry: window.EASY_FLOW_FRONTEND_ENTRY,
+  title: '流程编排',
+  route: '/micro/flow',
+};
+
+// 导出微前端应用集合
+export const micros: Readonly<MicroApp>[] = [OrchMicroApp, FlowMicroApp];
+
+// 配置需要隐藏头部的url
+export const shouldHideHeaderUrls = [
+  OrchMicroApp.route + orchRoutes.ORCH_EDIT_GENERATION_API, // 微前端服务编排积木页面
+  ROUTES.INTEGRATION_ORCH_EDIT_GENERATION_API, // 集成管理页面加载服务编排时积木页面
+  FlowMicroApp.route + '/*',
+];

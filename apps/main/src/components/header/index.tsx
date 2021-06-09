@@ -12,7 +12,7 @@ export default function AppHeader() {
   const loginUser = useContext(UserContext);
   const history = useHistory();
   const logout = useCallback(async () => {
-    await axios.get('/api/auth/v1/logout', { baseURL: envs.REACT_APP_LOGIN_DOMAIN });
+    await axios.get('/api/auth/v1/logout', { baseURL: envs.COMMON_LOGIN_DOMAIN });
 
     delete axios.defaults.headers.auth;
     localStorage.clear('token');
