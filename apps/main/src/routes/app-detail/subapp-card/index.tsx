@@ -1,7 +1,7 @@
 import { memo, useMemo, FC } from 'react';
 import styled from 'styled-components';
-import FlowImage from '@assets/flow-app.png';
-import ScreenImage from '@assets/screen-app.png';
+import FlowImage from '@assets/flow-big.png';
+import ScreenImage from '@assets/screen-big.png';
 import { getShorterText } from '@/utils';
 import { Icon } from '@/components';
 
@@ -16,6 +16,13 @@ const Container = styled.div`
     padding: 16px;
     background: rgba(24, 39, 67, 0.03);
     border-radius: 0 3px 3px 0;
+    &:hover {
+      .header {
+        .operation {
+          display: block;
+        }
+      }
+    }
     .header {
       display: flex;
       justify-content: space-between;
@@ -26,6 +33,7 @@ const Container = styled.div`
         line-height: 22px;
       }
       .operation {
+        display: none;
         width: 20px;
         height: 20px;
         cursor: pointer;
@@ -61,19 +69,19 @@ const Container = styled.div`
   }
 `;
 
-const Card: FC<{ name: string; status: number; type: 1 | 2; className?: string }> = ({
-  name,
-  status,
-  type,
-  className,
-}) => {
+const Card: FC<{
+  name: string;
+  status: number;
+  type: 1 | 2;
+  className?: string;
+  version?: { id: number; remark: string; version: string } | null | undefined;
+}> = ({ name, status, type, className, version }) => {
   const statusText = useMemo(() => {
-    const statusMap: { [K: string]: string } = {
-      '-1': '已停用',
-      '1': '已启用',
-    };
-    return statusMap[status];
-  }, [status]);
+    if (!version) {
+      return '编排中';
+    }
+    return status === 1 ? '已启用' : '已停用';
+  }, [status, version]);
   return (
     <Container className={className}>
       <div className="image" style={{ backgroundColor: type === 1 ? '#DFF5EF' : '#E7EBFD' }}>

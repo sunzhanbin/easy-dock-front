@@ -67,8 +67,8 @@ const AppDetail: FC = () => {
               />
               <div>新建子应用</div>
             </div>
-            {subAppList.map(({ name, status, type }) => (
-              <Card name={name} status={status} type={type} className={styles.card} key={name} />
+            {subAppList.map(({ name, status, type, version }) => (
+              <Card name={name} status={status} type={type} className={styles.card} version={version} key={name} />
             ))}
           </div>
         ) : (

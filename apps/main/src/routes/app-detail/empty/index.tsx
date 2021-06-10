@@ -1,7 +1,7 @@
 import { memo, useState, useCallback, FC } from 'react';
 import styled from 'styled-components';
-import FlowImage from '@assets/flow-icon.png';
-import ScreenImage from '@assets/screen-icon.png';
+import FlowImage from '@assets/flow-normal.png';
+import ScreenImage from '@assets/screen-normal.png';
 import { Icon } from '@/components';
 import { Form, Input, Button } from 'antd';
 import { axios } from '@/utils';
