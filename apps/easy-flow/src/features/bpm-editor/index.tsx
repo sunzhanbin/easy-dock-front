@@ -30,13 +30,14 @@ const BpmEditor: FC = () => {
 
   return (
     <Container>
-      {location.pathname !== '/preview-form' && <EditorHeader></EditorHeader>}
+      {location.pathname !== `${match.url}/preview-form` && <EditorHeader></EditorHeader>}
+
       <div className="bmp-editor-content">
         <Switch>
-          <Route path={`${match.path}form-design/:subAppId?`} component={FormDesign}></Route>
-          <Route path={`${match.path}flow-design/:subAppId?`} component={FlowDesign}></Route>
-          <Route path={`${match.path}preview-form/:subAppId?`} component={PreviewForm}></Route>
-          <Redirect from="/:subAppId" to="/form-design/:subAppId"></Redirect>
+          <Route path={`${match.path}/form-design`} component={FormDesign}></Route>
+          <Route path={`${match.path}/flow-design`} component={FlowDesign}></Route>
+          <Route path={`${match.path}preview-form`} component={PreviewForm}></Route>
+          <Redirect to={`${match.url}/form-design`}></Redirect>
         </Switch>
       </div>
     </Container>

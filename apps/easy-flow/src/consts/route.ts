@@ -2,7 +2,7 @@ import { FlowDetailType } from '@type/flow';
 
 const staticRoutes = {
   INDEX: '/',
-  BPM_EDITOR: '/bpm-editor/:bpmId?',
+  BPM_EDITOR: '/bpm-editor/:bpmId',
   FLOW_START: '/flow/start/:subAppId',
   FLOW_DETAIL: '/flow/detail/:subAppId/:flowId/:type',
 };

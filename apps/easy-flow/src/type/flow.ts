@@ -42,6 +42,7 @@ export enum RevertType {
 export type FieldAuthsMap = {
   [fieldId: string]: AuthType;
 };
+
 // 审批节点
 export interface UserNode extends BaseNode {
   correlationMemberConfig: {
