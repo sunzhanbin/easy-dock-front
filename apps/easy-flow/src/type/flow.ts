@@ -176,3 +176,5 @@ export interface FormMeta {
 }
 
 export type FormValue = { [key: string]: any };
+
+export type FieldTemplate = { id: string; name: string };

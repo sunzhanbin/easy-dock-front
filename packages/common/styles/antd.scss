@@ -146,15 +146,15 @@
 .ant-input {
   border-radius: 3px;
   border-color: transparent;
-  background: rgba(24, 39, 67, 0.04);
+  background-color: rgba(24, 39, 67, 0.04);
 
   &:hover {
-    border-color: rgba(76, 92, 219, 0.85);
+    border-color: rgba($primary-color, 0.85);
     background-color: transparent;
   }
 
   &:focus {
-    border-color: rgba(76, 92, 219, 0.85);
+    border-color: rgba($primary-color, 0.85);
     box-shadow: 0 0 0 3px rgba(76, 92, 219, 0.2);
     background-color: transparent;
   }

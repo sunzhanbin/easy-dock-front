@@ -3,7 +3,7 @@ import { NavLink, Link, NavLinkProps, useHistory } from 'react-router-dom';
 import classnames from 'classnames';
 import { Avatar, Dropdown, Menu } from 'antd';
 import { UserContext } from '@/context';
-import { axios, localStorage } from '@utils';
+import { axios, localStorage } from '@common/utils';
 import { ROUTES, envs } from '@consts';
 import logo from '@assets/logo.png';
 import styles from './header.module.scss';
