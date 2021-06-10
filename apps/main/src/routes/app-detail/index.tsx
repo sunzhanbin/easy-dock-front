@@ -9,16 +9,20 @@ import Empty from './empty/index';
 import { Icon } from '@/components';
 import { Button, Input } from 'antd';
 import Card from './subapp-card';
+import AppModel from './app-model';
 
 const AppDetail: FC = () => {
   const history = useHistory();
   const { sceneId: appId } = useParams<{ sceneId: string }>();
   const [appInfo, setAppInfo] = useState<SceneShape>();
   const [subAppList, setSubAppList] = useState<SubAppInfo[]>([]);
+  const [isShowModel, setIsShowModel] = useState<boolean>(false);
   const handleSearch = useCallback(() => {
     // console.info(e.target.value);
   }, []);
-  const handleCrateSubApp = useCallback(() => {}, []);
+  const handleCrateSubApp = useCallback(() => {
+    setIsShowModel(true);
+  }, [setIsShowModel]);
   useEffect(() => {
     const appPromise = axios.get(`/app/${appId}`);
     const subAppListPromise = axios.get(`/subapp/${appId}/list/all`);
@@ -66,6 +70,16 @@ const AppDetail: FC = () => {
                 onClick={handleCrateSubApp}
               />
               <div>新建子应用</div>
+              {isShowModel && (
+                <AppModel
+                  type="create"
+                  className={styles.createModel}
+                  onClose={() => {
+                    setIsShowModel(false);
+                  }}
+                  onOk={(name) => {}}
+                />
+              )}
             </div>
             {subAppList.map(({ name, status, type, version }) => (
               <Card name={name} status={status} type={type} className={styles.card} version={version} key={name} />
