@@ -16,10 +16,10 @@ import { FlowDetaiDataType } from './type';
 import emptyImage from '@assets/empty.png';
 import styles from './index.module.scss';
 
-if (process.env.NODE_ENV === 'development') {
-  axios.defaults.baseURL = '/';
-  require('./mock');
-}
+// if (process.env.NODE_ENV === 'development') {
+//   axios.defaults.baseURL = '/';
+//   require('./mock');
+// }
 
 interface CellProps {
   title: string | ReactNode;

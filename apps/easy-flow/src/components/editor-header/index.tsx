@@ -1,9 +1,11 @@
-import React, { FC, memo, useCallback, useMemo } from 'react';
-import { Button, Tooltip } from 'antd';
+import { FC, memo, useCallback, useMemo } from 'react';
+import { Button, Tooltip, message } from 'antd';
 import styled from 'styled-components';
-import { useHistory, useRouteMatch, NavLink, useLocation } from 'react-router-dom';
+import { useHistory, useRouteMatch, NavLink, useLocation, useParams } from 'react-router-dom';
 import { save } from '../../features/bpm-editor/flow-design/flow-slice';
+import { AsyncButton } from '@common/components';
 import { useAppDispatch } from '@/app/hooks';
+import { axios } from '@utils';
 import Header from '../header';
 import { Icon } from '@common/components';
 import { store } from '@/app/store';
@@ -151,11 +153,13 @@ type FormDesign = {
 const EditorHeader: FC = () => {
   const dispatch = useAppDispatch();
   const history = useHistory();
+  const { bpmId } = useParams<{ bpmId: string }>();
   const match = useRouteMatch();
   const location = useLocation();
   const pathName = useMemo(() => {
     return location.pathname;
   }, [location]);
+  const flowDesignPath = `${match.url}/flow-design`;
   const handlePreview = useCallback(() => {
     if (pathName === '/form-design') {
       history.push('/preview-form');
@@ -192,28 +196,39 @@ const EditorHeader: FC = () => {
         designData.components.push({ config, props });
       });
     }
-    if (pathName === '/flow-design') {
-      dispatch(save('appkey'));
+
+    if (pathName === flowDesignPath) {
+      dispatch(save(bpmId));
     }
-  }, [pathName, dispatch]);
+  }, [pathName, dispatch, flowDesignPath, bpmId]);
   const handleNext = useCallback(() => {
     if (pathName === '/form-design') {
       history.push('/flow-design');
     }
   }, [pathName, history]);
 
+  const handlePublish = useCallback(async () => {
+    await axios.post('/subapp/deploy', {
+      enableNewVersion: true,
+      remark: '',
+      subappId: bpmId,
+    });
+
+    message.success('发布成功');
+  }, [bpmId]);
+
   return (
     <HeaderContainer>
       <Header backText="燃气报修" className="edit_header">
         <div className="steps">
-          <NavLink className="step" to={`${match.path}form-design`} activeClassName="active">
+          <NavLink className="step" to={`${match.url}/form-design`} activeClassName="active">
             <span className="number">01</span>
             <span>表单设计</span>
           </NavLink>
           <div className="separator">
             <Icon className="iconfont" type="jinru" />
           </div>
-          <NavLink className="step" to={`${match.path}flow-design`} activeClassName="active">
+          <NavLink className="step" to={`${match.url}/flow-design`} activeClassName="active">
             <span className="number">02</span>
             <span>流程设计</span>
           </NavLink>
@@ -242,10 +257,16 @@ const EditorHeader: FC = () => {
               下一步
             </Button>
           )}
-          {pathName === '/flow-design' && (
-            <Button className="publish" type="primary" size="large" icon={<Icon className="iconfont" type="fabu" />}>
+          {pathName === `${match.url}/flow-design` && (
+            <AsyncButton
+              className="publish"
+              type="primary"
+              size="large"
+              icon={<Icon className="iconfont" type="fabu" />}
+              onClick={handlePublish}
+            >
               发布
-            </Button>
+            </AsyncButton>
           )}
         </div>
       </Header>

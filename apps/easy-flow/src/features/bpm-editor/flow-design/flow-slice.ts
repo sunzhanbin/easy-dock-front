@@ -18,10 +18,10 @@ import {
 import { RootState } from '@app/store';
 import { fielduuid, createNode } from './util';
 
-if (process.env.NODE_ENV === 'development') {
-  axios.defaults.baseURL = '/';
-  require('./mock');
-}
+// if (process.env.NODE_ENV === 'development') {
+//   axios.defaults.baseURL = '/';
+//   require('./mock');
+// }
 
 export type FlowType = {
   loading: boolean;
@@ -218,14 +218,16 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
   try {
     dispatch(setLoading(true));
 
-    let [{ data: flowData }, { data: fields }] = await Promise.all([
-      axios.get<Flow | null>(`/fetch-flow/${appkey}`),
+    // 获取流程数据和所需字段
+    let [{ data: flowResponse }, { data: fields }] = await Promise.all([
+      axios.get<{ meta: Flow | null }>(`/process/${appkey}`),
       axios.get<{ field: string; name: string }[]>(`/form/subapp/${appkey}/components`),
     ]);
 
     const fieldsTemplate: FlowType['fieldsTemplate'] = fields.map((item) => ({ name: item.name, id: item.field }));
+    let flowData = flowResponse.meta || [];
 
-    if (!flowData || !flowData.length) {
+    if (!flowData.length) {
       // 如果没有流程就初始化一个
       const startNode: StartNode = {
         id: fielduuid(),
@@ -276,16 +278,22 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
       });
 
       // loginNames 为一组成员登录名，这样设计为了避免用户更新完头像或者名称后不在节点中更新的问题
-      const userResponse = await axios.post('/user/list', { data: Array.from(loginNames) });
-      const cacheMembers: FlowType['cacheMembers'] = {};
+      // const userResponse = await axios.post('/user/list', { data: Array.from(loginNames) });
+      const cacheMembers: FlowType['cacheMembers'] = {
+        easydock: {
+          avatar: '',
+          name: '张三',
+          loginName: 'easydock',
+        },
+      };
 
-      userResponse.data.forEach((member: any) => {
-        cacheMembers[member.loginName] = {
-          name: member.name,
-          avatar: member.avatar,
-          loginName: member.loginName,
-        };
-      });
+      // userResponse.data.forEach((member: any) => {
+      //   cacheMembers[member.loginName] = {
+      //     name: member.name,
+      //     avatar: member.avatar,
+      //     loginName: member.loginName,
+      //   };
+      // });
 
       dispatch(flowActions.setCacheMembers(cacheMembers));
     }
@@ -293,7 +301,7 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
     dispatch(flowActions.setFieldsTemplate(fieldsTemplate));
     dispatch(flowActions.setInitialFlow(flowData));
   } catch (error) {
-    console.error(error);
+    message.error(error);
   } finally {
     dispatch(setLoading(false));
   }
@@ -316,10 +324,12 @@ export const save = createAsyncThunk<void, string, { state: RootState }>(
     try {
       dispatch(setLoading(true));
 
-      await axios.post('/save-flow', { data: flowData, appkey });
+      await axios.post('/process/add', { meta: flowData, subappId: appkey });
 
       message.success('保存成功');
       dispatch(flowActions.setDirty(false));
+    } catch (error) {
+      message.error(error);
     } finally {
       dispatch(setLoading(false));
     }
