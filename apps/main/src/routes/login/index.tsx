@@ -4,7 +4,7 @@ import { Form, Input } from 'antd';
 import { UserOutlined, KeyOutlined } from '@ant-design/icons';
 import loginIcon from '@assets/login-icon.png';
 import logoIcon from '@assets/logo-icon.png';
-import { localStorage, axios } from '@utils';
+import { axios, localStorage } from '@common/utils';
 import { ROUTES, envs } from '@consts';
 import styles from './index.module.scss';
 

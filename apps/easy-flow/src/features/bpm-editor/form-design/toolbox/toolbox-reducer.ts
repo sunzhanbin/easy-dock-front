@@ -5,7 +5,7 @@ import { fetchComponents } from './toolboxApi';
 
 export const loadComponents = createAsyncThunk('formDesign/fetchComponents', async () => {
   const response = await fetchComponents();
-  console.log(response);
+
   return response;
 });
 

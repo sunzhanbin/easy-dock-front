@@ -60,9 +60,9 @@
   }
 
   .action {
-    position: relative;
     @include center('flex');
 
+    position: relative;
     cursor: pointer;
 
     .add {
@@ -138,6 +138,23 @@
   :global {
     .ant-popover {
       padding-top: 2px;
+    }
+
+    .ant-input {
+      border-color: transparent !important;
+      background-color: rgba(24, 39, 67, 0.04) !important;
+      box-shadow: unset !important;
+
+      &:hover {
+        border-color: rgba($primary-color, 0.85) !important;
+        background-color: transparent !important;
+      }
+
+      &:focus {
+        border-color: rgba($primary-color, 0.85) !important;
+        box-shadow: 0 0 0 3px rgba(76, 92, 219, 0.2) !important;
+        background-color: transparent !important;
+      }
     }
 
     .ant-tabs {
