@@ -180,7 +180,7 @@ const EditorHeader: FC = () => {
         const type = id.split('_')[0] || '';
         const version = schema[type as FieldType]?.baseInfo.version || '';
         const componentConfig = schema[type as FieldType]?.config;
-        const config: ConfigItem = { id, type, version, rule: [] };
+        const config: ConfigItem = { id, type, version, rules: [] };
         const props: ConfigItem = {};
         componentConfig?.forEach(({ isProps, key }) => {
           if (isProps) {

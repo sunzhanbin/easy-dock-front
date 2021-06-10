@@ -54,7 +54,7 @@ const componentSchema = {
         isProps: true,
       },
       {
-        key: 'isUniq',
+        key: 'unique',
         defaultValue: false,
         label: '不允许重复值',
         type: 'Switch',
