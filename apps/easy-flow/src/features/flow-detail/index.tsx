@@ -17,7 +17,7 @@ import emptyImage from '@assets/empty.png';
 import styles from './index.module.scss';
 
 if (process.env.NODE_ENV === 'development') {
-  axios.defaults.baseURL = '/';
+  // axios.defaults.baseURL = '/';
   require('./mock');
 }
 

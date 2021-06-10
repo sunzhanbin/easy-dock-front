@@ -143,6 +143,11 @@ const reducers = {
     }
     return state;
   },
+  setAppInfo(state: FormDesign, action: PayloadAction<{ id: string | number; name: string }>) {
+    const { id, name } = action.payload;
+    state.subAppInfo = { id, name };
+    return state;
+  },
 };
 
 export const configSelector = createSelector(
@@ -199,5 +204,18 @@ export const componentPropsSelector = createSelector(
     return formDesign.byId || {};
   },
 );
+export const subAppSelect = createSelector([(state: RootState) => state.formDesign], (formDesign) => {
+  return formDesign.subAppInfo || { name: '', id: '' };
+});
 
-export const { comAdded, comDeleted, moveRow, moveDown, moveUp, exchange, selectField, editProps } = reducers;
+export const {
+  comAdded,
+  comDeleted,
+  moveRow,
+  moveDown,
+  moveUp,
+  exchange,
+  selectField,
+  editProps,
+  setAppInfo,
+} = reducers;

@@ -7,7 +7,7 @@ import { RootState } from '@app/store';
 import { fielduuid, createNode } from './util';
 
 if (process.env.NODE_ENV === 'development') {
-  axios.defaults.baseURL = '/';
+  // axios.defaults.baseURL = '/';
   require('./mock');
 }
 

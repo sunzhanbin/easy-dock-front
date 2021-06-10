@@ -1,13 +1,15 @@
 import React, { FC, memo, useCallback, useMemo } from 'react';
-import { Button, Tooltip } from 'antd';
+import { Button, message, Tooltip } from 'antd';
 import styled from 'styled-components';
 import { useHistory, useRouteMatch, NavLink, useLocation } from 'react-router-dom';
 import { save } from '../../features/bpm-editor/flow-design/flow-slice';
-import { useAppDispatch } from '@/app/hooks';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import Header from '../header';
 import { Icon } from '@common/components';
 import { store } from '@/app/store';
 import { FieldType, SchemaItem } from '@/type';
+import { subAppSelect } from '@/features/bpm-editor/form-design/formzone-reducer';
+import { axios } from '@/utils';
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -150,6 +152,7 @@ type FormDesign = {
 
 const EditorHeader: FC = () => {
   const dispatch = useAppDispatch();
+  const { name: appName, id: subAppId } = useAppSelector(subAppSelect);
   const history = useHistory();
   const match = useRouteMatch();
   const location = useLocation();
@@ -167,10 +170,10 @@ const EditorHeader: FC = () => {
     }
   }, [pathName, history]);
   const handleSave = useCallback(() => {
-    if (pathName === '/form-design') {
+    if (pathName.startsWith('/form-design/')) {
       const { formDesign } = store.getState();
       const { layout, schema } = formDesign;
-      const designData: FormDesign = {
+      const formMeta: FormDesign = {
         components: [],
         layout: layout,
         schema: schema,
@@ -189,13 +192,16 @@ const EditorHeader: FC = () => {
             config[key] = (byId[id] as any)[key];
           }
         });
-        designData.components.push({ config, props });
+        formMeta.components.push({ config, props });
+      });
+      axios.post('/form', { meta: formMeta, subappId: subAppId }).then(() => {
+        message.success('保存成功!');
       });
     }
     if (pathName === '/flow-design') {
       dispatch(save('appkey'));
     }
-  }, [pathName, dispatch]);
+  }, [pathName, subAppId, dispatch]);
   const handleNext = useCallback(() => {
     if (pathName === '/form-design') {
       history.push('/flow-design');
@@ -204,7 +210,7 @@ const EditorHeader: FC = () => {
 
   return (
     <HeaderContainer>
-      <Header backText="燃气报修" className="edit_header">
+      <Header backText={appName} className="edit_header">
         <div className="steps">
           <NavLink className="step" to={`${match.path}form-design`} activeClassName="active">
             <span className="number">01</span>

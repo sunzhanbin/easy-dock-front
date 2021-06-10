@@ -160,6 +160,10 @@ export type FormDesign = {
   byId: FormFieldMap;
   layout: string[][];
   schema: Schema;
+  subAppInfo: {
+    name: string;
+    id: number | string;
+  };
 };
 
 export type TConfigItem = {
