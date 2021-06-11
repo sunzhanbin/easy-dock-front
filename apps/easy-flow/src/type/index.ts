@@ -164,6 +164,7 @@ export type FormDesign = {
   subAppInfo: {
     name: string;
     id: number | string;
+    appId: number | string;
   };
 };
 

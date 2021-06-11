@@ -4,8 +4,9 @@ import { Select, Input, Tooltip } from 'antd';
 import { uniqueId } from 'lodash';
 import { axios } from '@utils';
 import { OptionItem, OptionMode, SelectOptionItem } from '@/type';
-import { subApp } from './mock';
 import { Icon } from '@common/components';
+import { useAppSelector } from '@/app/hooks';
+import { subAppSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 
 const { Option } = Select;
 
@@ -100,12 +101,9 @@ type NameMap = {
   [k: string]: OptionItem[];
 };
 
-if (process.env.NODE_ENV === 'development') {
-  require('./mock');
-}
-
 const SelectOptionList = (props: editProps) => {
   const { value, onChange } = props;
+  const { appId, id: subAppId } = useAppSelector(subAppSelector);
   const [type, setType] = useState<OptionMode>(value?.type || 'custom');
   const [content, setContent] = useState<OptionItem[]>(value?.data || []);
   const [canDrag, setCanDrag] = useState<boolean>(false);
@@ -113,7 +111,6 @@ const SelectOptionList = (props: editProps) => {
   const [appList, setAppList] = useState<OptionItem[]>([]);
   const [componentKey, setComponentKey] = useState<string>('');
   const [componentList, setComponentList] = useState<OptionItem[]>([]);
-  const [nameMap, setNameMap] = useState<NameMap>({});
   const addItem = useCallback(() => {
     const list: OptionItem[] = [...content];
     const name = uniqueId('未命名');
@@ -168,34 +165,23 @@ const SelectOptionList = (props: editProps) => {
     },
     [content],
   );
-  const handleChangeApp = useCallback(
-    (e) => {
-      const list = nameMap[e];
-      setSubAppKey(e as string);
-      setComponentList(list);
-      setComponentKey('');
-    },
-    [nameMap],
-  );
+  const handleChangeApp = useCallback((e) => {
+    setSubAppKey(e as string);
+    setComponentList([]);
+    // setComponentList(list);
+    setComponentKey('');
+  }, []);
   const handleChangeComponent = useCallback((e) => {
     setComponentKey(e);
   }, []);
   useEffect(() => {
-    axios.get('/fetchAppList').then((res) => {
-      const list = res.data.map(({ name }: { name: string }) => {
-        return {
-          key: name,
-          value: name,
-        };
-      });
-      const map: NameMap = {};
-      res.data.forEach((item: subApp) => {
-        map[item.name] = item.children;
-      });
+    axios.get(`/subapp/${appId}/list/all/deployed`).then((res) => {
+      const list = res.data
+        .filter((app: { id: number }) => app.id !== subAppId)
+        .map((app: { name: string; id: number }) => ({ key: app.id, value: app.name }));
       setAppList(list);
-      setNameMap(map);
     });
-  }, []);
+  }, [subAppId]);
   useEffect(() => {
     onChange && onChange({ type, data: content });
   }, [type, content]);

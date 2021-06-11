@@ -29,8 +29,8 @@ const BpmEditor: FC = () => {
   useEffect(() => {
     bpmId &&
       axios.get(`/subapp/${bpmId}`).then((res) => {
-        const { name, id } = res.data;
-        dispatch(setAppInfo({ id, name }));
+        const { name, id, app } = res.data;
+        dispatch(setAppInfo({ id, name, appId: app.id }));
       });
   }, [bpmId]);
 

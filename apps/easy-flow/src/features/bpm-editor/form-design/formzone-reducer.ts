@@ -150,9 +150,9 @@ const reducers = {
     state.isDirty = true;
     return state;
   },
-  setAppInfo(state: FormDesign, action: PayloadAction<{ id: string | number; name: string }>) {
-    const { id, name } = action.payload;
-    state.subAppInfo = { id, name };
+  setAppInfo(state: FormDesign, action: PayloadAction<{ id: string | number; appId: string | number; name: string }>) {
+    const { id, name, appId } = action.payload;
+    state.subAppInfo = { id, name, appId };
     return state;
   },
   setLayout(state: FormDesign, action: PayloadAction<{ layout: string[][] }>) {
