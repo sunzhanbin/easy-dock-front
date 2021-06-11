@@ -93,7 +93,7 @@ const EmptyDetail: FC<{ appId: string }> = ({ appId }) => {
   const handleFinish = useCallback(() => {
     form.validateFields().then(({ subAppName }: { subAppName: string }) => {
       axios.post('/subapp', { appId, name: subAppName, type: 2 }).then((res) => {
-        history.push(`${FlowMicroApp.route}/${res.data.id}`);
+        history.push(`${FlowMicroApp.route}/bpm-editor/${res.data.id}/form-design`);
       });
     });
   }, [form, appId]);

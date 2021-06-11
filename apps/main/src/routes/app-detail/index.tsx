@@ -81,8 +81,16 @@ const AppDetail: FC = () => {
                 />
               )}
             </div>
-            {subAppList.map(({ name, status, type, version }) => (
-              <Card name={name} status={status} type={type} className={styles.card} version={version} key={name} />
+            {subAppList.map(({ id, name, status, type, version }) => (
+              <Card
+                name={name}
+                id={id}
+                status={status}
+                type={type}
+                className={styles.card}
+                version={version}
+                key={name}
+              />
             ))}
           </div>
         ) : (

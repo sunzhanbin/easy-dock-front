@@ -1,14 +1,17 @@
-import { memo, useMemo, useState, FC } from 'react';
+import { memo, useMemo, useState, FC, useCallback } from 'react';
 import styled from 'styled-components';
 import FlowImage from '@assets/flow-big.png';
 import ScreenImage from '@assets/screen-big.png';
 import { getShorterText } from '@/utils';
 import { Icon } from '@/components';
 import classNames from 'classnames';
+import { useHistory } from 'react-router-dom';
+import { FlowMicroApp } from '@/consts';
 
 const Container = styled.div`
   position: relative;
   display: flex;
+  cursor: pointer;
   .image {
     flex: 0 0 74px;
   }
@@ -90,13 +93,15 @@ type StatusMap = {
 };
 
 const Card: FC<{
+  id: number;
   name: string;
   status: number;
   type: 1 | 2;
   className?: string;
   version?: { id: number; remark: string; version: string } | null | undefined;
-}> = ({ name, status, type, className, version }) => {
+}> = ({ id, name, status, type, className, version }) => {
   // const [isShowOperation, setIsShowOperation] = useState<boolean>(false);
+  const history = useHistory();
   const statusObj: StatusMap = useMemo(() => {
     // 未发布(没有版本信息)的子应用为编排中状态
     if (!version) {
@@ -110,8 +115,11 @@ const Card: FC<{
       ? { className: 'used', text: '已启用', status: 1 }
       : { className: 'stoped', text: '已停用', status: -1 };
   }, [status, version]);
+  const handleJump = useCallback(() => {
+    history.push(`${FlowMicroApp.route}/bpm-editor/${id}/form-design`);
+  }, [id]);
   return (
-    <Container className={className}>
+    <Container className={className} onClick={handleJump}>
       <div className="image" style={{ backgroundColor: type === 1 ? '#DFF5EF' : '#E7EBFD' }}>
         <img src={type === 1 ? ScreenImage : FlowImage} alt="图片" />
       </div>

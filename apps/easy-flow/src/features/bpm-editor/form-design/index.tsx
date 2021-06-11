@@ -6,11 +6,10 @@ import ToolBox from './toolbox';
 import EditZone from './edit-zone';
 import { DragDropContext, DraggableLocation, DropResult } from 'react-beautiful-dnd';
 import { store } from '@app/store';
-import { moveRow, comAdded, setAppInfo } from './formdesign-slice';
+import { moveRow, comAdded } from './formdesign-slice';
 import { FieldType, FormField, TConfigItem, TConfigMap } from '@/type';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { selectedFieldSelector } from './formzone-reducer';
-import { axios } from '@/utils';
 
 const WorkbenchContainer = styled.div`
   width: 100%;
@@ -20,7 +19,6 @@ const WorkbenchContainer = styled.div`
 `;
 
 const FormDesign: FC<{}> = () => {
-  const { subAppId } = useParams() as { subAppId: string };
   const dispatch = useAppDispatch();
   const selectedField = useAppSelector(selectedFieldSelector);
   const onDragEnd = useCallback(
@@ -54,12 +52,6 @@ const FormDesign: FC<{}> = () => {
   );
   const onDragStart = useCallback(() => {}, []);
   const onDragUpdate = useCallback(() => {}, []);
-  useEffect(() => {
-    axios.get(`/subapp/${subAppId}`).then((res) => {
-      const { name, id } = res.data;
-      dispatch(setAppInfo({ id, name }));
-    });
-  }, [subAppId]);
 
   return (
     <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart} onDragUpdate={onDragUpdate}>
