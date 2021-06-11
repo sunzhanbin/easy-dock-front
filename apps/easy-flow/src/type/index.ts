@@ -208,3 +208,37 @@ export type Depart = {
 };
 
 export type AllComponentType = SingleTextField | SelectField | DateField | RadioField | CheckboxField;
+
+
+export type ConfigItem = { [k: string]: string | number | boolean | null | undefined | Object | Array<any> };
+export type ComponentConfig = {
+  config: ConfigItem;
+  props: ConfigItem;
+};
+export type Event = {
+  fieldId: string;
+  value: string | number | boolean | string[];
+  listeners: {
+    visible: string[];
+    reset: string[];
+  };
+};
+export type Events = {
+  onChange: Event[];
+};
+export type FormRule = {
+  type: string;
+  field: string;
+};
+export type Theme = {
+  name: string;
+};
+export type FormMeta = {
+  selectedTheme?: string;
+  components: ComponentConfig[];
+  layout: string[][];
+  events?: Events;
+  schema: { [k: string]: SchemaItem };
+  rules?: FormRule[];
+  themes?: Theme[];
+};

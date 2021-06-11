@@ -9,7 +9,7 @@ import { axios } from '@utils';
 import Header from '../header';
 import { Icon } from '@common/components';
 import { store } from '@/app/store';
-import { FieldType, SchemaItem } from '@/type';
+import { ConfigItem, FieldType, FormMeta } from '@/type';
 import { subAppSelect } from '@/features/bpm-editor/form-design/formzone-reducer';
 
 const HeaderContainer = styled.div`
@@ -118,38 +118,6 @@ const HeaderContainer = styled.div`
   }
 `;
 
-type ConfigItem = { [k: string]: string | number | boolean | null | undefined | Object | Array<any> };
-type ComponentConfig = {
-  config: ConfigItem;
-  props?: ConfigItem;
-};
-type Event = {
-  fieldId: string;
-  value: string | number | boolean | string[];
-  listeners: {
-    visible: string[];
-    reset: string[];
-  };
-};
-type Events = {
-  onChange: Event[];
-};
-type Rule = {
-  type: string;
-  field: string;
-};
-type Theme = {
-  name: string;
-};
-type FormDesign = {
-  selectedTheme?: string;
-  components: ComponentConfig[];
-  layout: string[][];
-  events?: Events;
-  schema: { [k: string]: SchemaItem };
-  rules?: Rule[];
-  themes?: Theme[];
-};
 
 const EditorHeader: FC = () => {
   const dispatch = useAppDispatch();
@@ -176,7 +144,7 @@ const EditorHeader: FC = () => {
     if (pathName.startsWith('/form-design/')) {
       const { formDesign } = store.getState();
       const { layout, schema } = formDesign;
-      const formMeta: FormDesign = {
+      const formMeta: FormMeta = {
         components: [],
         layout: layout,
         schema: schema,

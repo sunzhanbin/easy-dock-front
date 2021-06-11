@@ -9,6 +9,8 @@ import {
   editProps as editPropsReducer,
   comDeleted as comDeletedReducer,
   setAppInfo as setAppInfoReducer,
+  setLayout as setLayoutReducer,
+  setById as setByIdReducer,
 } from './formzone-reducer';
 import { FormDesign } from '@/type';
 import { loadComponents } from './toolbox/toolbox-reducer';
@@ -28,6 +30,8 @@ const formDesign = createSlice({
     selectField: selectFieldReducer,
     editProps: editPropsReducer,
     setAppInfo: setAppInfoReducer,
+    setLayout: setLayoutReducer,
+    setById: setByIdReducer,
   },
   extraReducers: (builder) => {
     builder.addCase(loadComponents.fulfilled, (state, action) => {
@@ -46,6 +50,8 @@ export const {
   selectField,
   editProps,
   setAppInfo,
+  setLayout,
+  setById,
 } = formDesign.actions;
 
 export default formDesign.reducer;

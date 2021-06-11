@@ -1,6 +1,6 @@
 import { createSelector, PayloadAction } from '@reduxjs/toolkit';
 import { uniqueId } from 'lodash';
-import { FieldType, FormDesign, FormField, TConfigItem, TConfigMap } from '@type';
+import { FieldType, FormDesign, FormField, FormFieldMap, TConfigItem, TConfigMap } from '@type';
 import { RootState } from '@/app/store';
 
 function locateById(target: string, layout: Array<string[]>): [number, number] {
@@ -148,6 +148,16 @@ const reducers = {
     state.subAppInfo = { id, name };
     return state;
   },
+  setLayout(state: FormDesign, action: PayloadAction<{ layout: string[][] }>) {
+    const { layout } = action.payload;
+    state.layout = layout;
+    return state;
+  },
+  setById(state: FormDesign, action: PayloadAction<{ byId: FormFieldMap }>) {
+    const { byId } = action.payload;
+    state.byId = byId;
+    return state;
+  },
 };
 
 export const configSelector = createSelector(
@@ -218,4 +228,6 @@ export const {
   selectField,
   editProps,
   setAppInfo,
+  setLayout,
+  setById,
 } = reducers;

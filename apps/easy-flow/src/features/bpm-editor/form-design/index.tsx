@@ -6,10 +6,11 @@ import ToolBox from './toolbox';
 import EditZone from './edit-zone';
 import { DragDropContext, DraggableLocation, DropResult } from 'react-beautiful-dnd';
 import { store } from '@app/store';
-import { moveRow, comAdded } from './formdesign-slice';
-import { FieldType, FormField, TConfigItem, TConfigMap } from '@/type';
+import { moveRow, comAdded, setLayout, setById, selectField } from './formdesign-slice';
+import { ComponentConfig, ConfigItem, FieldType, FormField, FormFieldMap, TConfigItem, TConfigMap } from '@/type';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { selectedFieldSelector } from './formzone-reducer';
+import { axios } from '@/utils';
 
 const WorkbenchContainer = styled.div`
   width: 100%;
@@ -20,6 +21,35 @@ const WorkbenchContainer = styled.div`
 
 const FormDesign: FC<{}> = () => {
   const dispatch = useAppDispatch();
+  const { bpmId: subAppId } = useParams<{ bpmId: string }>();
+  useEffect(() => {
+    // 初始化表单数据
+    axios.get(`/form/${subAppId}`).then((res) => {
+      const { meta } = res.data;
+      if (meta) {
+        const { layout, components } = meta;
+        const byId: { [k: string]: ConfigItem } = {};
+        const selectFieldId = (layout.length > 0 && layout[0].length > 0 && layout[0][0]) || '';
+        components.forEach(({ config, props }: ComponentConfig) => {
+          const { id } = config;
+          const componentConfig: ConfigItem = {};
+          const excludeKeys = ['id', 'type', 'version', 'rules', 'canSubmit'];
+          Object.keys(config).forEach((key) => {
+            if (!excludeKeys.includes(key)) {
+              componentConfig[key] = config[key];
+            }
+          });
+          Object.keys(props).forEach((key) => {
+            componentConfig[key] = props[key];
+          });
+          byId[id as string] = componentConfig;
+        });
+        dispatch(setById({ byId: byId as FormFieldMap }));
+        dispatch(setLayout({ layout }));
+        selectFieldId && dispatch(selectField({ id: selectFieldId }));
+      }
+    });
+  }, [subAppId]);
   const selectedField = useAppSelector(selectedFieldSelector);
   const onDragEnd = useCallback(
     (result: DropResult) => {
