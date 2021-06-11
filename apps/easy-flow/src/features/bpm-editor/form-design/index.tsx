@@ -1,4 +1,4 @@
-import { FC, memo, useCallback, useEffect } from 'react';
+import { FC, memo, useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import styled from 'styled-components';
 import DesignZone from './design-zone';
@@ -11,21 +11,35 @@ import { ComponentConfig, ConfigItem, FieldType, FormField, FormFieldMap, TConfi
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { dirtySelector, selectedFieldSelector } from './formzone-reducer';
 import { axios } from '@/utils';
-import { Prompt } from 'react-router-dom';
-import { message } from 'antd';
+import { Prompt, useHistory } from 'react-router-dom';
+import { Popconfirm } from 'antd';
+import './index.css';
 
 const WorkbenchContainer = styled.div`
   width: 100%;
   display: flex;
   flex: 1;
   background-color: rgb(245, 245, 247);
+  .mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(24, 31, 67, 0.12);
+  }
 `;
 
 const FormDesign: FC<{}> = () => {
   const dispatch = useAppDispatch();
+  const history = useHistory();
   const selectedField = useAppSelector(selectedFieldSelector);
   const isDirty = useAppSelector(dirtySelector);
   const { bpmId: subAppId } = useParams<{ bpmId: string }>();
+  const [isShowTip, setIsShowTip] = useState<boolean>(false);
+  const [forceLeave, setForceLeave] = useState<boolean>(false);
+  const [pathName, setPathName] = useState<string>('');
   useEffect(() => {
     // 初始化表单数据
     axios.get(`/form/${subAppId}`).then((res) => {
@@ -86,13 +100,38 @@ const FormDesign: FC<{}> = () => {
   );
   const onDragStart = useCallback(() => {}, []);
   const onDragUpdate = useCallback(() => {}, []);
-  const handleConfirmLeave = useCallback(() => {
-    message.warn('当前表单尚未保存,请确认是否离开?');
-    return true;
-  }, []);
+  const handleConfirmLeave = useCallback(
+    (location) => {
+      if (forceLeave) {
+        return true;
+      }
+      setPathName(location.pathname);
+      setIsShowTip(true);
+      return false;
+    },
+    [forceLeave, setPathName, setIsShowTip],
+  );
+  const handleOk = useCallback(() => {
+    setForceLeave(true);
+    setIsShowTip(false);
+    setTimeout(() => {
+      pathName && history.push(pathName);
+    }, 0);
+  }, [pathName, history, setForceLeave, setIsShowTip]);
+  const handleCancel = useCallback(() => {
+    setIsShowTip(false);
+  }, [setIsShowTip]);
   return (
     <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart} onDragUpdate={onDragUpdate}>
       <Prompt when={isDirty} message={handleConfirmLeave} />
+      <Popconfirm
+        title="当前表单尚未保存,请确认是否离开?"
+        visible={isShowTip}
+        onConfirm={handleOk}
+        onCancel={handleCancel}
+        overlayClassName="pop_tip"
+      ></Popconfirm>
+      {isShowTip && <div className="mask"></div>}
       <WorkbenchContainer>
         <ToolBox></ToolBox>
         <DesignZone></DesignZone>

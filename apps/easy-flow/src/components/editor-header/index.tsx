@@ -11,6 +11,7 @@ import { Icon } from '@common/components';
 import { store } from '@/app/store';
 import { ConfigItem, FieldType, FormMeta } from '@/type';
 import { subAppSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
+import { setIsDirty } from '@/features/bpm-editor/form-design/formdesign-slice';
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -120,7 +121,7 @@ const HeaderContainer = styled.div`
 
 const EditorHeader: FC = () => {
   const dispatch = useAppDispatch();
-  const { name: appName, id: subAppId } = useAppSelector(subAppSelector);
+  const { name: appName } = useAppSelector(subAppSelector);
   const history = useHistory();
   const { bpmId } = useParams<{ bpmId: string }>();
   const match = useRouteMatch();
@@ -164,7 +165,8 @@ const EditorHeader: FC = () => {
         });
         formMeta.components.push({ config, props });
       });
-      axios.post('/form', { meta: formMeta, subappId: subAppId }).then(() => {
+      axios.post('/form', { meta: formMeta, subappId: bpmId }).then(() => {
+        dispatch(setIsDirty({ isDirty: false }));
         message.success('保存成功!');
       });
     }
