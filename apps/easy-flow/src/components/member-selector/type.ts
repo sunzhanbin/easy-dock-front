@@ -1,4 +1,4 @@
-import { User, Depart } from '@type';
+import { User } from '@type';
 
 export type ValueType = {
   members: User[];

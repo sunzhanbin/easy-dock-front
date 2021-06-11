@@ -1,4 +1,4 @@
-export { default as axios } from './axios';
+export { default as axios, runtimeAxios, builderAxios } from './axios';
 export { default as history } from './history';
 
 export function getToolboxImageUrl(icon: string): string {

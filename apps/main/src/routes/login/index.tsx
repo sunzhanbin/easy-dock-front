@@ -1,16 +1,18 @@
 import { useCallback, useMemo } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { Form, Input } from 'antd';
 import { UserOutlined, KeyOutlined } from '@ant-design/icons';
+import cookie from 'js-cookie';
 import loginIcon from '@assets/login-icon.png';
 import logoIcon from '@assets/logo-icon.png';
-import { axios, localStorage } from '@common/utils';
+import { axios } from '@utils';
 import { ROUTES, envs } from '@consts';
 import styles from './index.module.scss';
 
 export default function Login() {
   const [form] = Form.useForm();
   const history = useHistory();
+  const { search } = useLocation();
   const login = useCallback(async () => {
     const values = await form.validateFields();
     const data = Object.assign({}, { loginType: 1, appCode: 'easydock' }, values);
@@ -19,12 +21,24 @@ export default function Login() {
     });
 
     if (loginResponse.data) {
-      localStorage.set('token', loginResponse.data.token);
-      axios.defaults.headers.auth = loginResponse.data.token;
+      const token = loginResponse.data.token;
 
-      history.replace(ROUTES.INDEX);
+      cookie.set('token', token, { expires: 1 });
+      axios.defaults.headers.auth = token;
+
+      let redirectUrl = '';
+      const keyValues = decodeURIComponent(search.slice(1)).split('=');
+      const redirectUrlIndex = keyValues.findIndex((item) => item === 'redirect');
+
+      if (redirectUrlIndex !== -1) {
+        redirectUrl = keyValues[redirectUrlIndex + 1];
+      } else {
+        redirectUrl = ROUTES.INDEX;
+      }
+
+      window.location.replace(redirectUrl);
     }
-  }, [history, form]);
+  }, [history, form, search]);
 
   const nameRules = useMemo(() => {
     return [
