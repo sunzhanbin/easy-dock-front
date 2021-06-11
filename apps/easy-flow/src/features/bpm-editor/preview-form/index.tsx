@@ -1,7 +1,7 @@
 import React, { memo, FC, useMemo, useCallback } from 'react';
 import styled from 'styled-components';
 import { useAppSelector } from '@/app/hooks';
-import { componentPropsSelector, layoutSelector } from '../form-design/formzone-reducer';
+import { componentPropsSelector, layoutSelector, subAppSelect } from '../form-design/formzone-reducer';
 import FormEngine from '@components/form-engine';
 import { FormMeta } from '@type/flow';
 import { FieldAuthsMap } from '@/type/flow';
@@ -87,6 +87,7 @@ const Container = styled.div`
 `;
 
 const PreviewForm: FC = () => {
+  const { name: appName } = useAppSelector(subAppSelect);
   const layout = useAppSelector(layoutSelector);
   const byId = useAppSelector(componentPropsSelector);
   const history = useHistory();
@@ -99,7 +100,7 @@ const PreviewForm: FC = () => {
       },
       rules: [],
       themes: [{}],
-      components: Object.values(byId),
+      components: Object.keys(byId).map((id) => Object.assign({}, byId[id], { type: id.split('_')[0] || '', id })),
       selectedTheme: '',
     };
     return formMeta;
@@ -123,7 +124,7 @@ const PreviewForm: FC = () => {
         </div>
       </div>
       <div className="content">
-        <div className="title">燃气报修</div>
+        <div className="title">{appName}</div>
         <div className="form_content">
           <FormEngine initialValue={{}} data={(formDesign as unknown) as FormMeta} fieldsAuths={auths}></FormEngine>
         </div>

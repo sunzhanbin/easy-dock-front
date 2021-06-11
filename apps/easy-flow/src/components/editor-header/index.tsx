@@ -118,30 +118,29 @@ const HeaderContainer = styled.div`
   }
 `;
 
-
 const EditorHeader: FC = () => {
   const dispatch = useAppDispatch();
   const { name: appName, id: subAppId } = useAppSelector(subAppSelect);
   const history = useHistory();
   const { bpmId } = useParams<{ bpmId: string }>();
   const match = useRouteMatch();
-  const location = useLocation();
-  const pathName = useMemo(() => {
-    return location.pathname;
-  }, [location]);
+  const { pathname: pathName } = useLocation<{ pathname: string }>();
   const flowDesignPath = `${match.url}/flow-design`;
+  const formDesignPath = useMemo(() => {
+    return `${match.url}/form-design`;
+  }, [match]);
   const handlePreview = useCallback(() => {
-    if (pathName === '/form-design') {
+    if (pathName === formDesignPath) {
       history.push('/preview-form');
     }
-  }, [pathName, history]);
+  }, [pathName, history, formDesignPath]);
   const handlePrev = useCallback(() => {
-    if (pathName === '/flow-design') {
-      history.push('/form-design');
+    if (pathName === flowDesignPath) {
+      history.push(formDesignPath);
     }
-  }, [pathName, history]);
+  }, [pathName, history, formDesignPath, flowDesignPath]);
   const handleSave = useCallback(() => {
-    if (pathName.startsWith('/form-design/')) {
+    if (pathName === formDesignPath) {
       const { formDesign } = store.getState();
       const { layout, schema } = formDesign;
       const formMeta: FormMeta = {
@@ -173,12 +172,12 @@ const EditorHeader: FC = () => {
     if (pathName === flowDesignPath) {
       dispatch(save(bpmId));
     }
-  }, [pathName, dispatch, flowDesignPath, bpmId]);
+  }, [pathName, dispatch, formDesignPath, flowDesignPath, bpmId]);
   const handleNext = useCallback(() => {
-    if (pathName === '/form-design') {
-      history.push('/flow-design');
+    if (pathName === formDesignPath) {
+      history.push(flowDesignPath);
     }
-  }, [pathName, history]);
+  }, [pathName, history, formDesignPath, flowDesignPath]);
 
   const handlePublish = useCallback(async () => {
     await axios.post('/subapp/deploy', {
@@ -212,12 +211,12 @@ const EditorHeader: FC = () => {
             <Icon className="iconfont" type="jiantoushangyibu" />
             <Icon className="iconfont" type="jiantouxiayibu" />
           */}
-          {pathName === '/form-design' && (
+          {pathName === formDesignPath && (
             <Tooltip title="预览">
               <Icon className="iconfont" type="yulan" onClick={handlePreview} />
             </Tooltip>
           )}
-          {pathName === '/flow-design' && (
+          {pathName === flowDesignPath && (
             <Button className="prev" size="large" onClick={handlePrev}>
               上一步
             </Button>
@@ -225,7 +224,7 @@ const EditorHeader: FC = () => {
           <Button type="primary" ghost className="save" size="large" onClick={handleSave}>
             保存
           </Button>
-          {pathName === '/form-design' && (
+          {pathName === formDesignPath && (
             <Button type="primary" className="next" size="large" onClick={handleNext}>
               下一步
             </Button>
