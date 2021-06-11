@@ -1,7 +1,7 @@
 import { FC, memo, useEffect } from 'react';
 import { Switch, Route, useRouteMatch, Redirect, useLocation, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import EditorHeader from '@components/editor-header';
+import EditorHeader from '@/features/bpm-editor/editor-header';
 import FormDesign from './form-design';
 import FlowDesign from './flow-design';
 import PreviewForm from './preview-form';
