@@ -77,7 +77,7 @@ module.exports = {
               archive: [
                 {
                   source: `zip`,
-                  destination: path.relative(__dirname, `../${name}-${version}-SNAPSHOT.tar.gz`),
+                  destination: path.relative(__dirname, `../../${name}-${version}-SNAPSHOT.tar.gz`),
                   format: 'tar',
                   options: {
                     gzip: true,
