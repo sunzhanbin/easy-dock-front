@@ -10,6 +10,7 @@ import { Icon } from '@/components';
 import { Button, Input } from 'antd';
 import Card from './subapp-card';
 import AppModel from './app-model';
+import { FlowMicroApp } from '@/consts';
 
 const AppDetail: FC = () => {
   const history = useHistory();
@@ -20,6 +21,15 @@ const AppDetail: FC = () => {
   const handleSearch = useCallback(() => {
     // console.info(e.target.value);
   }, []);
+  const handleOK = useCallback(
+    (name, type) => {
+      axios.post('/subapp', { appId, name, type }).then((res) => {
+        setIsShowModel(false);
+        history.push(`${FlowMicroApp.route}/bpm-editor/${res.data.id}/form-design`);
+      });
+    },
+    [appId],
+  );
   const handleCrateSubApp = useCallback(() => {
     setIsShowModel(true);
   }, [setIsShowModel]);
@@ -77,7 +87,7 @@ const AppDetail: FC = () => {
                   onClose={() => {
                     setIsShowModel(false);
                   }}
-                  onOk={(name) => {}}
+                  onOk={handleOK}
                 />
               )}
             </div>
