@@ -5,35 +5,26 @@ import { ValueType } from './type';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { Loading } from '@common/components';
 import memberDefaultAvatar from '@assets/members/member-default-avatar.png';
-import { axios } from '@utils';
+import { runtimeAxios } from '@utils';
 import styles from './index.module.scss';
 
 const { TabPane } = Tabs;
 
 const fetchUser = async (data: { name: string; page: number }) => {
-  const memberResponse = await axios.post(
-    '/api/auth/v1/user/list',
-    {
-      condition: data.name,
-      pageNum: data.page,
-      pageSize: 20,
-      queryField: 'cnName',
-    },
-    {
-      baseURL: window.COMMON_LOGIN_DOMAIN,
-    },
-  );
+  const memberResponse = await runtimeAxios.post('/user/search', {
+    index: data.page,
+    size: 20,
+    keyword: data.name,
+  });
 
   return {
     total: memberResponse.data.recordTotal,
     index: memberResponse.data.pageIndex,
     members: memberResponse.data.data.map((item: any) => {
-      const member = item.userInfo[0];
-
       return {
-        name: member.cnName,
+        name: item.userName,
         loginName: item.loginName,
-        avatar: member.staffPhoto,
+        avatar: item.avatar,
       };
     }),
   };

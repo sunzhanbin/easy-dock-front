@@ -5,6 +5,8 @@ import ScreenImage from '@assets/screen-normal.png';
 import { Icon } from '@/components';
 import { Form, Input, Button } from 'antd';
 import { axios } from '@/utils';
+import { useHistory } from 'react-router-dom';
+import { FlowMicroApp } from '@/consts';
 
 const Container = styled.div`
   display: flex;
@@ -60,6 +62,7 @@ const Container = styled.div`
     }
   }
   .flow_app {
+    border: 1px solid rgba(24, 31, 67, 0.5);
     margin-right: 24px;
     .form {
       width: 330px;
@@ -70,10 +73,15 @@ const Container = styled.div`
       }
     }
   }
+  .screen_app {
+    border: 1px solid rgba(24, 31, 67, 0.12);
+    cursor: not-allowed;
+  }
 `;
 
 const EmptyDetail: FC<{ appId: string }> = ({ appId }) => {
   const [form] = Form.useForm();
+  const history = useHistory();
   const [canEdit, setCanEdit] = useState<boolean>(false);
   const handleClose = useCallback(
     (e) => {
@@ -85,8 +93,7 @@ const EmptyDetail: FC<{ appId: string }> = ({ appId }) => {
   const handleFinish = useCallback(() => {
     form.validateFields().then(({ subAppName }: { subAppName: string }) => {
       axios.post('/subapp', { appId, name: subAppName, type: 2 }).then((res) => {
-        console.info(res);
-        // 跳转到流程编排子应用，暂时未实现
+        history.push(`${FlowMicroApp.route}/bpm-editor/${res.data.id}/form-design`);
       });
     });
   }, [form, appId]);
@@ -125,6 +132,7 @@ const EmptyDetail: FC<{ appId: string }> = ({ appId }) => {
           <img className="image" src={FlowImage} alt="新建流程子应用" />
         )}
       </div>
+      {/* 功能暂时未开放,禁用 */}
       <div className="screen_app">
         <div className="title">新建大屏子应用</div>
         <div className="tip">用于配置可视化大屏及其所需的数据、接口</div>

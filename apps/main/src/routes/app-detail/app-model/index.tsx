@@ -108,7 +108,7 @@ const AppModel: FC<{
   name?: string;
   className?: string;
   onClose: () => void;
-  onOk: (name: string) => void;
+  onOk: (name: string, type: number) => void;
 }> = ({ type, name, className, onClose, onOk }) => {
   const [appName, setAppName] = useState<string>(name || '');
   const inputProps = useMemo(() => {
@@ -125,7 +125,7 @@ const AppModel: FC<{
     onClose && onClose();
   }, [onClose]);
   const handleOK = useCallback(() => {
-    onOk && onOk(appName);
+    onOk && onOk(appName, 2);
   }, [onOk, appName]);
 
   return (

@@ -2,14 +2,14 @@ import { FC, memo, useCallback, useMemo } from 'react';
 import { Button, Tooltip, message } from 'antd';
 import styled from 'styled-components';
 import { useHistory, useRouteMatch, NavLink, useLocation, useParams } from 'react-router-dom';
-import { save } from '../../features/bpm-editor/flow-design/flow-slice';
+import { save } from '../flow-design/flow-slice';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { AsyncButton } from '@common/components';
-import { useAppDispatch } from '@/app/hooks';
 import { axios } from '@utils';
-import Header from '../header';
+import Header from '../../../components/header';
 import { Icon } from '@common/components';
-import { store } from '@/app/store';
-import { FieldType, SchemaItem } from '@/type';
+import { subAppSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
+import { saveForm } from '@/features/bpm-editor/form-design/formdesign-slice';
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -117,95 +117,41 @@ const HeaderContainer = styled.div`
   }
 `;
 
-type ConfigItem = { [k: string]: string | number | boolean | null | undefined | Object | Array<any> };
-type ComponentConfig = {
-  config: ConfigItem;
-  props?: ConfigItem;
-};
-type Event = {
-  fieldId: string;
-  value: string | number | boolean | string[];
-  listeners: {
-    visible: string[];
-    reset: string[];
-  };
-};
-type Events = {
-  onChange: Event[];
-};
-type Rule = {
-  type: string;
-  field: string;
-};
-type Theme = {
-  name: string;
-};
-type FormDesign = {
-  selectedTheme?: string;
-  components: ComponentConfig[];
-  layout: string[][];
-  events?: Events;
-  schema: { [k: string]: SchemaItem };
-  rules?: Rule[];
-  themes?: Theme[];
-};
-
 const EditorHeader: FC = () => {
   const dispatch = useAppDispatch();
+  const { name: appName } = useAppSelector(subAppSelector);
   const history = useHistory();
   const { bpmId } = useParams<{ bpmId: string }>();
   const match = useRouteMatch();
-  const location = useLocation();
-  const pathName = useMemo(() => {
-    return location.pathname;
-  }, [location]);
+  const { pathname: pathName } = useLocation<{ pathname: string }>();
   const flowDesignPath = `${match.url}/flow-design`;
+  const formDesignPath = useMemo(() => {
+    return `${match.url}/form-design`;
+  }, [match]);
   const handlePreview = useCallback(() => {
-    if (pathName === '/form-design') {
+    if (pathName === formDesignPath) {
       history.push('/preview-form');
     }
-  }, [pathName, history]);
+  }, [pathName, history, formDesignPath]);
   const handlePrev = useCallback(() => {
-    if (pathName === '/flow-design') {
-      history.push('/form-design');
+    if (pathName === flowDesignPath) {
+      history.push(formDesignPath);
     }
-  }, [pathName, history]);
+  }, [pathName, history, formDesignPath, flowDesignPath]);
   const handleSave = useCallback(() => {
-    if (pathName === '/form-design') {
-      const { formDesign } = store.getState();
-      const { layout, schema } = formDesign;
-      const designData: FormDesign = {
-        components: [],
-        layout: layout,
-        schema: schema,
-      };
-      const { byId } = formDesign;
-      Object.keys(byId).forEach((id) => {
-        const type = id.split('_')[0] || '';
-        const version = schema[type as FieldType]?.baseInfo.version || '';
-        const componentConfig = schema[type as FieldType]?.config;
-        const config: ConfigItem = { id, type, version, rules: [], canSubmit: type === 'DescText' ? false : true };
-        const props: ConfigItem = {};
-        componentConfig?.forEach(({ isProps, key }) => {
-          if (isProps) {
-            props[key] = (byId[id] as any)[key];
-          } else {
-            config[key] = (byId[id] as any)[key];
-          }
-        });
-        designData.components.push({ config, props });
-      });
+    if (pathName === formDesignPath) {
+      dispatch(saveForm(bpmId));
     }
 
     if (pathName === flowDesignPath) {
       dispatch(save(bpmId));
     }
-  }, [pathName, dispatch, flowDesignPath, bpmId]);
+  }, [pathName, dispatch, formDesignPath, flowDesignPath, bpmId]);
   const handleNext = useCallback(() => {
-    if (pathName === '/form-design') {
-      history.push('/flow-design');
+    if (pathName === formDesignPath) {
+      history.push(flowDesignPath);
     }
-  }, [pathName, history]);
+  }, [pathName, history, formDesignPath, flowDesignPath]);
 
   const handlePublish = useCallback(async () => {
     await axios.post('/subapp/deploy', {
@@ -219,7 +165,7 @@ const EditorHeader: FC = () => {
 
   return (
     <HeaderContainer>
-      <Header backText="燃气报修" className="edit_header">
+      <Header backText={appName} className="edit_header">
         <div className="steps">
           <NavLink className="step" to={`${match.url}/form-design`} activeClassName="active">
             <span className="number">01</span>
@@ -239,12 +185,12 @@ const EditorHeader: FC = () => {
             <Icon className="iconfont" type="jiantoushangyibu" />
             <Icon className="iconfont" type="jiantouxiayibu" />
           */}
-          {pathName === '/form-design' && (
+          {pathName === formDesignPath && (
             <Tooltip title="预览">
               <Icon className="iconfont" type="yulan" onClick={handlePreview} />
             </Tooltip>
           )}
-          {pathName === '/flow-design' && (
+          {pathName === flowDesignPath && (
             <Button className="prev" size="large" onClick={handlePrev}>
               上一步
             </Button>
@@ -252,7 +198,7 @@ const EditorHeader: FC = () => {
           <Button type="primary" ghost className="save" size="large" onClick={handleSave}>
             保存
           </Button>
-          {pathName === '/form-design' && (
+          {pathName === formDesignPath && (
             <Button type="primary" className="next" size="large" onClick={handleNext}>
               下一步
             </Button>
