@@ -8,10 +8,8 @@ import { AsyncButton } from '@common/components';
 import { axios } from '@utils';
 import Header from '../../../components/header';
 import { Icon } from '@common/components';
-import { store } from '@/app/store';
-import { ConfigItem, FieldType, FormMeta } from '@/type';
 import { subAppSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
-import { setIsDirty } from '@/features/bpm-editor/form-design/formdesign-slice';
+import { saveForm } from '@/features/bpm-editor/form-design/formdesign-slice';
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -142,33 +140,7 @@ const EditorHeader: FC = () => {
   }, [pathName, history, formDesignPath, flowDesignPath]);
   const handleSave = useCallback(() => {
     if (pathName === formDesignPath) {
-      const { formDesign } = store.getState();
-      const { layout, schema } = formDesign;
-      const formMeta: FormMeta = {
-        components: [],
-        layout: layout,
-        schema: schema,
-      };
-      const { byId } = formDesign;
-      Object.keys(byId).forEach((id) => {
-        const type = id.split('_')[0] || '';
-        const version = schema[type as FieldType]?.baseInfo.version || '';
-        const componentConfig = schema[type as FieldType]?.config;
-        const config: ConfigItem = { id, type, version, rules: [], canSubmit: type === 'DescText' ? false : true };
-        const props: ConfigItem = {};
-        componentConfig?.forEach(({ isProps, key }) => {
-          if (isProps) {
-            props[key] = (byId[id] as any)[key];
-          } else {
-            config[key] = (byId[id] as any)[key];
-          }
-        });
-        formMeta.components.push({ config, props });
-      });
-      axios.post('/form', { meta: formMeta, subappId: bpmId }).then(() => {
-        dispatch(setIsDirty({ isDirty: false }));
-        message.success('保存成功!');
-      });
+      dispatch(saveForm(bpmId));
     }
 
     if (pathName === flowDesignPath) {
