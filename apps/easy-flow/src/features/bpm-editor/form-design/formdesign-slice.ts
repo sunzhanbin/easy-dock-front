@@ -11,6 +11,7 @@ import {
   setAppInfo as setAppInfoReducer,
   setLayout as setLayoutReducer,
   setById as setByIdReducer,
+  setIsDirty as setIsDirtyReducer,
 } from './formzone-reducer';
 import { FormDesign } from '@/type';
 import { loadComponents } from './toolbox/toolbox-reducer';
@@ -32,10 +33,12 @@ const formDesign = createSlice({
     setAppInfo: setAppInfoReducer,
     setLayout: setLayoutReducer,
     setById: setByIdReducer,
+    setIsDirty: setIsDirtyReducer,
   },
   extraReducers: (builder) => {
     builder.addCase(loadComponents.fulfilled, (state, action) => {
       state.schema = action.payload;
+      state.isDirty = false;
     });
   },
 });
@@ -52,6 +55,7 @@ export const {
   setAppInfo,
   setLayout,
   setById,
+  setIsDirty,
 } = formDesign.actions;
 
 export default formDesign.reducer;

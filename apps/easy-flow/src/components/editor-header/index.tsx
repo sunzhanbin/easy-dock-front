@@ -10,7 +10,7 @@ import Header from '../header';
 import { Icon } from '@common/components';
 import { store } from '@/app/store';
 import { ConfigItem, FieldType, FormMeta } from '@/type';
-import { subAppSelect } from '@/features/bpm-editor/form-design/formzone-reducer';
+import { subAppSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -120,7 +120,7 @@ const HeaderContainer = styled.div`
 
 const EditorHeader: FC = () => {
   const dispatch = useAppDispatch();
-  const { name: appName, id: subAppId } = useAppSelector(subAppSelect);
+  const { name: appName, id: subAppId } = useAppSelector(subAppSelector);
   const history = useHistory();
   const { bpmId } = useParams<{ bpmId: string }>();
   const match = useRouteMatch();

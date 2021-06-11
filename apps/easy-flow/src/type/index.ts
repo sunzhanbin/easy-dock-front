@@ -160,6 +160,7 @@ export type FormDesign = {
   byId: FormFieldMap;
   layout: string[][];
   schema: Schema;
+  isDirty: boolean;
   subAppInfo: {
     name: string;
     id: number | string;
@@ -208,7 +209,6 @@ export type Depart = {
 };
 
 export type AllComponentType = SingleTextField | SelectField | DateField | RadioField | CheckboxField;
-
 
 export type ConfigItem = { [k: string]: string | number | boolean | null | undefined | Object | Array<any> };
 export type ComponentConfig = {

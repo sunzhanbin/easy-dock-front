@@ -28,6 +28,7 @@ const reducers = {
       state.byId[com.id!] = com;
       state.selectedField = com.id as string;
       state.layout.splice(rowIndex, 0, [com.id!]);
+      state.isDirty = true;
       return state;
     },
     prepare: (com: FormField, rowIndex: number) => {
@@ -51,6 +52,7 @@ const reducers = {
     if (id === state.selectedField) {
       state.selectedField = null;
     }
+    state.isDirty = true;
     return state;
   },
   moveRow(state: FormDesign, action: PayloadAction<{ sourceIndex: number; targetIndex: number }>) {
@@ -63,6 +65,7 @@ const reducers = {
       state.layout.splice(sourceIndex, 1);
       state.layout.splice(targetIndex, 0, target);
     }
+    state.isDirty = true;
     return state;
   },
   moveUp(state: FormDesign, action: PayloadAction<{ id: string }>) {
@@ -75,6 +78,7 @@ const reducers = {
     rowLayout.splice(col, 1);
     targetLayout.push(id);
     if (rowLayout.length === 0) state.layout.splice(row, 1);
+    state.isDirty = true;
     return state;
   },
   moveDown(state: FormDesign, action: PayloadAction<{ id: string }>) {
@@ -86,6 +90,7 @@ const reducers = {
     rowLayout.splice(col, 1);
     state.layout.splice(row, 1, rowLayout);
     state.layout.splice(row + 1, 0, [id]);
+    state.isDirty = true;
     return state;
   },
   //exchnage with the com on the left
@@ -100,6 +105,7 @@ const reducers = {
     if (direction === 'right') {
       state.layout[row].splice(col, 2, rowLayout[col + 1], rowLayout[col]);
     }
+    state.isDirty = true;
     return state;
   },
   selectField(state: FormDesign, action: PayloadAction<{ id: string }>) {
@@ -141,6 +147,7 @@ const reducers = {
         state.layout[rowIndex + 1].unshift(id);
       }
     }
+    state.isDirty = true;
     return state;
   },
   setAppInfo(state: FormDesign, action: PayloadAction<{ id: string | number; name: string }>) {
@@ -156,6 +163,11 @@ const reducers = {
   setById(state: FormDesign, action: PayloadAction<{ byId: FormFieldMap }>) {
     const { byId } = action.payload;
     state.byId = byId;
+    return state;
+  },
+  setIsDirty(state: FormDesign, action: PayloadAction<{ isDirty: boolean }>) {
+    const { isDirty } = action.payload;
+    state.isDirty = isDirty;
     return state;
   },
 };
@@ -214,8 +226,11 @@ export const componentPropsSelector = createSelector(
     return formDesign.byId || {};
   },
 );
-export const subAppSelect = createSelector([(state: RootState) => state.formDesign], (formDesign) => {
+export const subAppSelector = createSelector([(state: RootState) => state.formDesign], (formDesign) => {
   return formDesign.subAppInfo || { name: '', id: '' };
+});
+export const dirtySelector = createSelector([(state: RootState) => state.formDesign], (formDesign) => {
+  return formDesign.isDirty;
 });
 
 export const {
@@ -230,4 +245,5 @@ export const {
   setAppInfo,
   setLayout,
   setById,
+  setIsDirty,
 } = reducers;

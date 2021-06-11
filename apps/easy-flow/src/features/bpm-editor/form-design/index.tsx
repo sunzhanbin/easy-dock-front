@@ -6,11 +6,13 @@ import ToolBox from './toolbox';
 import EditZone from './edit-zone';
 import { DragDropContext, DraggableLocation, DropResult } from 'react-beautiful-dnd';
 import { store } from '@app/store';
-import { moveRow, comAdded, setLayout, setById, selectField } from './formdesign-slice';
+import { moveRow, comAdded, setLayout, setById, selectField, setIsDirty } from './formdesign-slice';
 import { ComponentConfig, ConfigItem, FieldType, FormField, FormFieldMap, TConfigItem, TConfigMap } from '@/type';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { selectedFieldSelector } from './formzone-reducer';
+import { dirtySelector, selectedFieldSelector } from './formzone-reducer';
 import { axios } from '@/utils';
+import { Prompt } from 'react-router-dom';
+import { message } from 'antd';
 
 const WorkbenchContainer = styled.div`
   width: 100%;
@@ -21,6 +23,8 @@ const WorkbenchContainer = styled.div`
 
 const FormDesign: FC<{}> = () => {
   const dispatch = useAppDispatch();
+  const selectedField = useAppSelector(selectedFieldSelector);
+  const isDirty = useAppSelector(dirtySelector);
   const { bpmId: subAppId } = useParams<{ bpmId: string }>();
   useEffect(() => {
     // 初始化表单数据
@@ -46,11 +50,11 @@ const FormDesign: FC<{}> = () => {
         });
         dispatch(setById({ byId: byId as FormFieldMap }));
         dispatch(setLayout({ layout }));
+        dispatch(setIsDirty({ isDirty: false }));
         selectFieldId && dispatch(selectField({ id: selectFieldId }));
       }
     });
   }, [subAppId]);
-  const selectedField = useAppSelector(selectedFieldSelector);
   const onDragEnd = useCallback(
     (result: DropResult) => {
       const { destination, source, draggableId } = result;
@@ -82,9 +86,13 @@ const FormDesign: FC<{}> = () => {
   );
   const onDragStart = useCallback(() => {}, []);
   const onDragUpdate = useCallback(() => {}, []);
-
+  const handleConfirmLeave = useCallback(() => {
+    message.warn('当前表单尚未保存,请确认是否离开?');
+    return true;
+  }, []);
   return (
     <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart} onDragUpdate={onDragUpdate}>
+      <Prompt when={isDirty} message={handleConfirmLeave} />
       <WorkbenchContainer>
         <ToolBox></ToolBox>
         <DesignZone></DesignZone>

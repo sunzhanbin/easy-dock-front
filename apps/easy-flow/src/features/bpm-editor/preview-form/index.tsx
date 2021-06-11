@@ -1,7 +1,7 @@
 import React, { memo, FC, useMemo, useCallback } from 'react';
 import styled from 'styled-components';
 import { useAppSelector } from '@/app/hooks';
-import { componentPropsSelector, layoutSelector, subAppSelect } from '../form-design/formzone-reducer';
+import { componentPropsSelector, layoutSelector, subAppSelector } from '../form-design/formzone-reducer';
 import FormEngine from '@components/form-engine';
 import { FormMeta } from '@type/flow';
 import { FieldAuthsMap } from '@/type/flow';
@@ -87,7 +87,7 @@ const Container = styled.div`
 `;
 
 const PreviewForm: FC = () => {
-  const { name: appName } = useAppSelector(subAppSelect);
+  const { name: appName } = useAppSelector(subAppSelector);
   const layout = useAppSelector(layoutSelector);
   const byId = useAppSelector(componentPropsSelector);
   const history = useHistory();
