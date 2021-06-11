@@ -67,7 +67,7 @@ function EditScene(props: EditSceneProps) {
       {
         validator(_: any, value: string) {
           if (!value || value.length > 50 || /[^\u4e00-\u9fa5_\d\w]/.test(value)) {
-            return Promise.reject(new Error('场景名为1-50位汉字、字母、数字、下划线'));
+            return Promise.reject(new Error('应用名为1-50位汉字、字母、数字、下划线'));
           } else {
             return Promise.resolve();
           }
@@ -102,7 +102,7 @@ function EditScene(props: EditSceneProps) {
   return (
     <Modal
       visible={visible}
-      title={data ? '编辑场景' : '新增场景'}
+      title={data ? '编辑应用' : '新增应用'}
       onOk={handleSubmit}
       onCancel={onCancel}
       confirmLoading={loading}
@@ -117,14 +117,14 @@ function EditScene(props: EditSceneProps) {
     >
       <Form form={form} className={styles.form} layout="vertical" autoComplete="off">
         <div className={styles.column}>
-          <Form.Item label="场景名称" name="name" rules={nameRules}>
-            <Input placeholder="请填写场景名称" size="large" />
+          <Form.Item label="应用名称" name="name" rules={nameRules}>
+            <Input placeholder="请填写应用名称" size="large" />
           </Form.Item>
-          <Form.Item label="场景描述" name="remark" getValueFromEvent={formatInputValue}>
+          <Form.Item label="应用描述" name="remark" getValueFromEvent={formatInputValue}>
             <Input.TextArea
               className={styles.textarea}
               size="large"
-              placeholder="请填写场景描述"
+              placeholder="请填写应用描述"
               maxLength={200}
             />
           </Form.Item>

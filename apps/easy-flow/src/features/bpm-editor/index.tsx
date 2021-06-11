@@ -23,19 +23,21 @@ const BpmEditor: FC = () => {
   const match = useRouteMatch();
   const location = useLocation();
   const dispatch = useAppDispatch();
+
   useEffect(() => {
     dispatch(loadComponents());
-  }, []);
+  }, [dispatch]);
 
   return (
     <Container>
-      {location.pathname !== '/preview-form' && <EditorHeader></EditorHeader>}
+      {location.pathname !== `${match.url}/preview-form` && <EditorHeader></EditorHeader>}
+
       <div className="bmp-editor-content">
         <Switch>
-          <Route path={`${match.path}form-design`} component={FormDesign}></Route>
-          <Route path={`${match.path}flow-design`} component={FlowDesign}></Route>
+          <Route path={`${match.path}/form-design`} component={FormDesign}></Route>
+          <Route path={`${match.path}/flow-design`} component={FlowDesign}></Route>
           <Route path={`${match.path}preview-form`} component={PreviewForm}></Route>
-          <Redirect from="/" to="/form-design"></Redirect>
+          <Redirect to={`${match.url}/form-design`}></Redirect>
         </Switch>
       </div>
     </Container>

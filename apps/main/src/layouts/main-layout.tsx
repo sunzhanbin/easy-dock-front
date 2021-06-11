@@ -1,32 +1,30 @@
 import React, { Suspense, useEffect, useMemo, useState } from 'react';
 import { Route } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import Header from '@components/header';
 import Loading from '@components/loading';
 import { UserContext } from '@/context';
 import { axios } from '@utils';
-import { ROUTES, envs } from '@consts';
+import { ROUTES, envs, micros } from '@consts';
+import { RootState } from '@/store';
 
-const ScenesListPage = React.lazy(
-  () => import(/* webpackChunkName: "scenes-list" */ '@/routes/scenes/main'),
-);
-const ScenePage = React.lazy(
-  () => import(/* webpackChunkName: "scene-detail" */ '@/routes/scene-detail'),
-);
-const IntegrationPage = React.lazy(
-  () => import(/* webpackChunkName: "integration" */ '@/routes/integration'),
-);
+const ScenesListPage = React.lazy(() => import(/* webpackChunkName: "scenes-list" */ '@/routes/scenes/main'));
+// const ScenePage = React.lazy(() => import(/* webpackChunkName: "scene-detail" */ '@/routes/scene-detail'));
+const AppPage = React.lazy(() => import(/* webpackChunkName: "app-detail" */ '@/routes/app-detail'));
+const IntegrationPage = React.lazy(() => import(/* webpackChunkName: "integration" */ '@/routes/integration'));
 
-const SceneEditorPage = React.lazy(
-  () => import(/* webpackChunkName: "integration" */ '@/routes/scene-editor'),
-);
+const SceneEditorPage = React.lazy(() => import(/* webpackChunkName: "integration" */ '@/routes/scene-editor'));
+
+const MicroPage = React.lazy(() => import(/* webpackChunkName: "integration" */ '@/routes/micro-page'));
 
 export default function PrimaryLayout() {
   const [user, setUser] = useState<User>();
+  const { showHeader } = useSelector((state: RootState) => state.layout);
 
   useEffect(() => {
     axios
       .get('/api/auth/v1/user/currentInfo', {
-        baseURL: envs.REACT_APP_LOGIN_DOMAIN,
+        baseURL: envs.COMMON_LOGIN_DOMAIN,
         silence: true,
       })
       .then(({ data }) => {
@@ -46,14 +44,21 @@ export default function PrimaryLayout() {
 
   const fallback = useMemo(() => <Loading />, []);
 
+  // 注册微应用的路由
+  const microsUrls = useMemo(() => {
+    return micros.map((micro) => micro.route);
+  }, []);
+
   return (
     <UserContext.Provider value={user}>
-      <Header />
+      {showHeader && <Header />}
+
       <Suspense fallback={fallback}>
         <Route path={[ROUTES.INDEX, ROUTES.SCENE_MANAGE]} exact component={ScenesListPage}></Route>
-        <Route path={ROUTES.SCENE_DETAIL} component={ScenePage}></Route>
+        <Route path={ROUTES.SCENE_DETAIL} component={AppPage}></Route>
         <Route path={ROUTES.INTEGRATION} component={IntegrationPage}></Route>
         <Route path={ROUTES.SCENE_EDITOR} component={SceneEditorPage}></Route>
+        <Route path={microsUrls} component={MicroPage}></Route>
       </Suspense>
     </UserContext.Provider>
   );

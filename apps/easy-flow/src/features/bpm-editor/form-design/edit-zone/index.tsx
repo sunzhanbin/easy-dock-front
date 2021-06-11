@@ -13,9 +13,10 @@ const EditZoneContainer = styled.div`
   background: #fff;
   padding: 20px 21px;
   overflow-y: auto;
+  box-shadow: 0px 6px 24px 0px rgba(24, 31, 67, 0.1);
   .edit_title {
     font-size: 18px;
-    font-weight: 500;
+    font-weight: 600;
     color: rgba(0, 0, 0, 0.85);
     line-height: 28px;
     margin-bottom: 14px;
@@ -48,7 +49,7 @@ const EditZone = () => {
         }),
       );
     },
-    [selectedField],
+    [selectedField, dispatch],
   );
   const renderTitle = useMemo(() => <div className="edit_title">{title}</div>, [title]);
   return (

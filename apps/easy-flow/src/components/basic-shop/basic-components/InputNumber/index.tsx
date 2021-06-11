@@ -1,8 +1,9 @@
-import React, { memo } from 'react';
+import React, { memo, useMemo } from 'react';
+import { useLocation } from 'react-router';
 import styled from 'styled-components';
 import { InputNumber } from 'antd';
-import { SingleTextField } from '@/type';
-import { useCallback } from 'react';
+import { Icon } from '@common/components';
+import { InputNumberProps } from 'antd/lib/input-number';
 
 const TextareaComponentContainer = styled.div`
   display: flex;
@@ -23,6 +24,7 @@ const TextareaComponentContainer = styled.div`
         width: 16px;
         height: 16px;
         line-height: 16px;
+        font-size: 16px;
         text-align: center;
         margin: 12px;
       }
@@ -36,29 +38,32 @@ const TextareaComponentContainer = styled.div`
   }
 `;
 
-const TextareaComponent = (props: SingleTextField & { id: string; onChange: (v: number) => void }) => {
-  const { defaultValue, readonly, value, onChange } = props;
-  const handleChange = useCallback(
-    (e) => {
-      onChange && onChange(e);
-    },
-    [onChange],
-  );
+const TextareaComponent = (props: InputNumberProps) => {
+  const location = useLocation();
+  const { defaultValue, readOnly, onChange } = props;
+  const propList = useMemo(() => {
+    const prop: { [k: string]: string | number | boolean | undefined | Function } = {
+      size: 'large',
+      placeholder: '请输入',
+      readOnly: readOnly,
+      onChange: onChange,
+    };
+    if (defaultValue) {
+      prop.defaultValue = defaultValue;
+      if (location.pathname === '/form-design') {
+        prop.value = defaultValue;
+      }
+    }
+    return Object.assign({}, props, prop);
+  }, [defaultValue, readOnly, location, props, onChange]);
 
   return (
     <TextareaComponentContainer>
       <div className="number_container">
         <div className="icon">
-          <span className="iconfont iconshuzi123"></span>
+          <Icon className="iconfont" type="shuzi123" />
         </div>
-        <InputNumber
-          size="large"
-          placeholder="请输入"
-          defaultValue={defaultValue}
-          value={defaultValue}
-          readOnly={readonly}
-          onChange={handleChange}
-        />
+        <InputNumber {...propList} />
       </div>
     </TextareaComponentContainer>
   );

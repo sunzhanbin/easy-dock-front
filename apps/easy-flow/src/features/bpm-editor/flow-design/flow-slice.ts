@@ -2,14 +2,26 @@ import { createSlice, PayloadAction, createAsyncThunk, createSelector } from '@r
 import { message } from 'antd';
 import { axios } from '@utils';
 import { User } from '@type';
-import { AllNode, NodeType, StartNode, FinishNode, AuditNode, FillNode, TriggerType, Flow } from '@type/flow';
+import {
+  AllNode,
+  NodeType,
+  StartNode,
+  FinishNode,
+  AuditNode,
+  FillNode,
+  TriggerType,
+  Flow,
+  AuthType,
+  FieldAuthsMap,
+  FieldTemplate,
+} from '@type/flow';
 import { RootState } from '@app/store';
 import { fielduuid, createNode } from './util';
 
-if (process.env.NODE_ENV === 'development') {
-  axios.defaults.baseURL = '/';
-  require('./mock');
-}
+// if (process.env.NODE_ENV === 'development') {
+//   axios.defaults.baseURL = '/';
+//   require('./mock');
+// }
 
 export type FlowType = {
   loading: boolean;
@@ -25,6 +37,7 @@ export type FlowType = {
   cacheMembers: {
     [loginName: string]: User;
   };
+  fieldsTemplate: FieldTemplate[];
 };
 
 const flowInitial: FlowType = {
@@ -33,6 +46,7 @@ const flowInitial: FlowType = {
   dirty: false,
   invalidNodesMap: {},
   cacheMembers: {},
+  fieldsTemplate: [],
 };
 
 function flowUpdate(data: AllNode[], targetId: string, newNode: AllNode | null): AllNode[] {
@@ -115,32 +129,27 @@ function valid(data: AllNode[], validRes: FlowType['invalidNodesMap']) {
   return validRes;
 }
 
-function flowMemberKeys(flowData: Flow) {
-  function flowRecursion(flowData: Flow, keys: { members: string[] }) {
-    flowData.forEach((node) => {
-      if (node.type === NodeType.AuditNode || node.type === NodeType.FillNode) {
-        keys.members = keys.members.concat(node.correlationMemberConfig.members);
-      } else if (node.type === NodeType.BranchNode) {
-        node.branches.forEach((sBranch) => {
-          flowRecursion(sBranch.nodes, keys);
-        });
-      }
-    });
-
-    return keys;
-  }
-
-  const allKeys = flowRecursion(flowData, { members: [] });
-
-  allKeys.members = Array.from(new Set(allKeys.members));
-
-  return allKeys;
+function flowRecursion(flowData: Flow, callBack: (node: AllNode) => any) {
+  flowData.forEach((node) => {
+    if (node.type === NodeType.BranchNode) {
+      node.branches.forEach((sBranch) => {
+        flowRecursion(sBranch.nodes, callBack);
+      });
+    } else {
+      callBack(node);
+    }
+  });
 }
 
 const flow = createSlice({
   name: 'flow',
   initialState: flowInitial,
   reducers: {
+    setFieldsTemplate(state, { payload }: PayloadAction<FlowType['fieldsTemplate']>) {
+      state.fieldsTemplate = payload;
+
+      return state;
+    },
     setCacheMembers(state, { payload }: PayloadAction<FlowType['cacheMembers']>) {
       state.cacheMembers = {
         ...state.cacheMembers,
@@ -209,9 +218,16 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
   try {
     dispatch(setLoading(true));
 
-    let { data: flowData } = await axios.get<Flow | null>(`/fetch-flow/${appkey}`);
+    // 获取流程数据和所需字段
+    let [{ data: flowResponse }, { data: fields }] = await Promise.all([
+      axios.get<{ meta: Flow | null }>(`/process/${appkey}`),
+      axios.get<{ field: string; name: string }[]>(`/form/subapp/${appkey}/components`),
+    ]);
 
-    if (!flowData || !flowData.length) {
+    const fieldsTemplate: FlowType['fieldsTemplate'] = fields.map((item) => ({ name: item.name, id: item.field }));
+    let flowData = flowResponse.meta || [];
+
+    if (!flowData.length) {
       // 如果没有流程就初始化一个
       const startNode: StartNode = {
         id: fielduuid(),
@@ -231,25 +247,61 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
 
       const fillNode: FillNode = createNode(NodeType.FillNode, '填写节点');
 
+      fillNode.fieldsAuths = fieldsTemplate.reduce((fieldsAuths, item) => {
+        fieldsAuths[item.id] = AuthType.View;
+
+        return fieldsAuths;
+      }, <FieldAuthsMap>{});
+
       flowData = [startNode, fillNode, finishNode];
+    } else {
+      const loginNames: Set<string> = new Set();
+
+      flowRecursion(flowData, (node) => {
+        if (node.type === NodeType.FillNode || node.type === NodeType.AuditNode) {
+          (node.correlationMemberConfig.members || []).forEach((member) => {
+            loginNames.add(member);
+
+            const fieldsAuths: FieldAuthsMap = {};
+
+            fieldsTemplate.forEach((item) => {
+              if (node.fieldsAuths[item.id] !== undefined) {
+                fieldsAuths[item.id] = node.fieldsAuths[item.id];
+              } else {
+                fieldsAuths[item.id] = AuthType.View;
+              }
+            });
+
+            node.fieldsAuths = fieldsAuths;
+          });
+        }
+      });
+
+      // loginNames 为一组成员登录名，这样设计为了避免用户更新完头像或者名称后不在节点中更新的问题
+      // const userResponse = await axios.post('/user/list', { data: Array.from(loginNames) });
+      const cacheMembers: FlowType['cacheMembers'] = {
+        easydock: {
+          avatar: '',
+          name: '张三',
+          loginName: 'easydock',
+        },
+      };
+
+      // userResponse.data.forEach((member: any) => {
+      //   cacheMembers[member.loginName] = {
+      //     name: member.name,
+      //     avatar: member.avatar,
+      //     loginName: member.loginName,
+      //   };
+      // });
+
+      dispatch(flowActions.setCacheMembers(cacheMembers));
     }
 
-    const { members } = flowMemberKeys(flowData);
-
-    // members 为一组成员id，这样设计为了避免用户更新完头像或者名称后不在节点中更新的问题
-    const userResponse = await axios.post('/user/list', { data: members });
-    const cacheMembers: FlowType['cacheMembers'] = {};
-
-    userResponse.data.forEach((member: any) => {
-      cacheMembers[member.loginName] = {
-        name: member.name,
-        avatar: member.avatar,
-        loginName: member.loginName,
-      };
-    });
-
-    dispatch(flowActions.setCacheMembers(cacheMembers));
+    dispatch(flowActions.setFieldsTemplate(fieldsTemplate));
     dispatch(flowActions.setInitialFlow(flowData));
+  } catch (error) {
+    message.error(error);
   } finally {
     dispatch(setLoading(false));
   }
@@ -272,10 +324,12 @@ export const save = createAsyncThunk<void, string, { state: RootState }>(
     try {
       dispatch(setLoading(true));
 
-      await axios.post('/save-flow', { data: flowData, appkey });
+      await axios.post('/process/add', { meta: flowData, subappId: appkey });
 
       message.success('保存成功');
       dispatch(flowActions.setDirty(false));
+    } catch (error) {
+      message.error(error);
     } finally {
       dispatch(setLoading(false));
     }
@@ -303,21 +357,13 @@ export const addNode = createAsyncThunk<void, { prevId: string; type: NodeType.A
     );
   },
 );
+
 export default flow;
 
 // 聚合form和flow, 因为flow的字段权限需要form的字段信息
 export const flowDataSelector = createSelector(
   [(state: RootState) => state.formDesign, (state: RootState) => state.flow],
   (form, flow) => {
-    const formFields = (form && form.byId ? Object.keys(form.byId) : ['input-1', 'select-2']).map((fieldId) => ({
-      id: fieldId,
-      name: '表单字段',
-      auth: 1,
-    }));
-
-    return {
-      ...flow,
-      fieldsTemplate: formFields,
-    };
+    return flow;
   },
 );

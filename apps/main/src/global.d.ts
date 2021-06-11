@@ -7,8 +7,18 @@ declare type User = {
 };
 
 interface Window {
-  REACT_APP_LOGIN_DOMAIN: string;
+  COMMON_LOGIN_DOMAIN: string;
   ALGOR_ORCH_BASE_SERVICE_ENDPOINT: string;
   EASY_DOCK_BASE_SERVICE_ENDPOINT: string;
   ALGOR_ORCH_FRONTEND_ENTRY: string;
+  EASY_FLOW_FRONTEND_ENTRY: string;
+  COMMON_LOGIN_URL: string;
+}
+
+interface MicroApp {
+  route: string;
+  entry: string;
+  name: string;
+  title: string;
+  description?: string;
 }

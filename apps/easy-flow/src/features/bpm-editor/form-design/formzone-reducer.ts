@@ -114,7 +114,7 @@ const reducers = {
     if (isEdit) {
       const [rowIndex, colIndex] = locateById(id, state.layout);
       const idList: string[] = [...state.layout[rowIndex]];
-      if (state.byId[id].colSpace == 4 && state.layout[rowIndex].length > 1) {
+      if (Number(state.byId[id].colSpace) === 4 && state.layout[rowIndex].length > 1) {
         if (colIndex === 0) {
           const id: string = idList.shift() as string;
           state.layout[rowIndex] = [id];

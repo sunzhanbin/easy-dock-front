@@ -54,6 +54,17 @@
   }
 }
 
+.ant-btn-icon-only {
+  .anticon {
+    font-size: 0;
+  }
+
+  svg {
+    margin: 0;
+    font-size: 16px;
+  }
+}
+
 .ant-switch {
   height: 24px;
   line-height: 24px;
@@ -108,6 +119,10 @@
   .ant-modal-body {
     max-height: 330px;
     padding: 12px 0 24px;
+
+    .ant-form {
+      margin-bottom: -24px;
+    }
   }
 
   .ant-modal-footer {
@@ -127,21 +142,25 @@
   background-color: rgba(24, 31, 67, 0.55);
 }
 
+// 定制输入框
 .ant-input {
   border-radius: 3px;
   border-color: transparent;
-  background-color: rgba(24, 31, 67, 0.04);
+  background-color: rgba(24, 39, 67, 0.04);
 
   &:hover {
-    border-color: rgba(76, 92, 219, 0.85);
+    border-color: rgba($primary-color, 0.85);
+    background-color: transparent;
   }
 
   &:focus {
-    border-color: rgba(76, 92, 219, 0.85);
+    border-color: rgba($primary-color, 0.85);
     box-shadow: 0 0 0 3px rgba(76, 92, 219, 0.2);
+    background-color: transparent;
   }
 
   &.ant-input-lg {
+    padding: 8px 12px;
     font-size: 14px;
   }
 }
@@ -192,6 +211,30 @@
     line-height: 20px;
     font-size: 12px;
     font-weight: 400;
+  }
+}
+
+.ant-checkbox-checked .ant-checkbox-inner {
+  background-color: $primary-color;
+  border-color: $primary-color;
+}
+
+.ant-checkbox-indeterminate .ant-checkbox-inner::after {
+  background-color: $primary-color;
+}
+
+.ant-checkbox-wrapper:hover .ant-checkbox-inner,
+.ant-checkbox:hover .ant-checkbox-inner,
+.ant-checkbox-input:focus + .ant-checkbox-inner,
+.ant-checkbox-checked::after {
+  border-color: $primary-color;
+}
+
+.ant-checkbox-disabled.ant-checkbox-checked .ant-checkbox-inner {
+  background-color: #ededf0;
+
+  &::after {
+    border-color: #aeb1bd;
   }
 }
 
@@ -268,10 +311,27 @@
   }
 }
 
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-input:-webkit-autofill:active {
-  transition-delay: 99999s;
-  transition: color 99999s ease-out, background-color 99999s ease-out;
+.ant-cascader-input.ant-input {
+  border-color: #d9d9d9;
+}
+
+.ant-cascader-picker-label:hover
+  + .ant-cascader-input:not(.ant-cascader-picker-disabled .ant-cascader-picker-label:hover + .ant-cascader-input) {
+  border-color: $primary-color;
+}
+
+.ant-cascader-picker {
+  &:hover,
+  &:focus {
+    .ant-cascader-input {
+      border-color: $primary-color;
+    }
+  }
+}
+
+// 定制下拉框
+.ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+  background: rgba(24, 39, 67, 0.04);
+  border-radius: 3px;
+  border: none;
 }

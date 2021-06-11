@@ -1,10 +1,15 @@
-import React, { FC, memo, useCallback, useMemo } from 'react';
-import { Button, Tooltip } from 'antd';
+import { FC, memo, useCallback, useMemo } from 'react';
+import { Button, Tooltip, message } from 'antd';
 import styled from 'styled-components';
-import { useHistory, useRouteMatch, NavLink, useLocation } from 'react-router-dom';
+import { useHistory, useRouteMatch, NavLink, useLocation, useParams } from 'react-router-dom';
 import { save } from '../../features/bpm-editor/flow-design/flow-slice';
+import { AsyncButton } from '@common/components';
 import { useAppDispatch } from '@/app/hooks';
+import { axios } from '@utils';
 import Header from '../header';
+import { Icon } from '@common/components';
+import { store } from '@/app/store';
+import { FieldType, SchemaItem } from '@/type';
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -45,6 +50,10 @@ const HeaderContainer = styled.div`
         font-size: 12px;
         color: #818a9e;
         margin: 0 12px;
+        .iconfont {
+          position: relative;
+          top: 2px;
+        }
       }
     }
     .operation {
@@ -97,8 +106,9 @@ const HeaderContainer = styled.div`
         font-weight: 400;
         color: #ffffff;
         .iconfont {
+          position: relative;
+          right: 4px;
           margin: 0;
-          margin-right: 4px;
           color: #fff;
           font-size: 16px;
         }
@@ -107,61 +117,131 @@ const HeaderContainer = styled.div`
   }
 `;
 
+type ConfigItem = { [k: string]: string | number | boolean | null | undefined | Object | Array<any> };
+type ComponentConfig = {
+  config: ConfigItem;
+  props?: ConfigItem;
+};
+type Event = {
+  fieldId: string;
+  value: string | number | boolean | string[];
+  listeners: {
+    visible: string[];
+    reset: string[];
+  };
+};
+type Events = {
+  onChange: Event[];
+};
+type Rule = {
+  type: string;
+  field: string;
+};
+type Theme = {
+  name: string;
+};
+type FormDesign = {
+  selectedTheme?: string;
+  components: ComponentConfig[];
+  layout: string[][];
+  events?: Events;
+  schema: { [k: string]: SchemaItem };
+  rules?: Rule[];
+  themes?: Theme[];
+};
+
 const EditorHeader: FC = () => {
   const dispatch = useAppDispatch();
   const history = useHistory();
+  const { bpmId } = useParams<{ bpmId: string }>();
   const match = useRouteMatch();
   const location = useLocation();
   const pathName = useMemo(() => {
     return location.pathname;
   }, [location]);
+  const flowDesignPath = `${match.url}/flow-design`;
   const handlePreview = useCallback(() => {
     if (pathName === '/form-design') {
       history.push('/preview-form');
     }
-  }, [pathName]);
+  }, [pathName, history]);
   const handlePrev = useCallback(() => {
     if (pathName === '/flow-design') {
       history.push('/form-design');
     }
-  }, [pathName]);
+  }, [pathName, history]);
   const handleSave = useCallback(() => {
     if (pathName === '/form-design') {
-      console.info('save');
+      const { formDesign } = store.getState();
+      const { layout, schema } = formDesign;
+      const designData: FormDesign = {
+        components: [],
+        layout: layout,
+        schema: schema,
+      };
+      const { byId } = formDesign;
+      Object.keys(byId).forEach((id) => {
+        const type = id.split('_')[0] || '';
+        const version = schema[type as FieldType]?.baseInfo.version || '';
+        const componentConfig = schema[type as FieldType]?.config;
+        const config: ConfigItem = { id, type, version, rules: [], canSubmit: type === 'DescText' ? false : true };
+        const props: ConfigItem = {};
+        componentConfig?.forEach(({ isProps, key }) => {
+          if (isProps) {
+            props[key] = (byId[id] as any)[key];
+          } else {
+            config[key] = (byId[id] as any)[key];
+          }
+        });
+        designData.components.push({ config, props });
+      });
     }
-    if (pathName === '/flow-design') {
-      dispatch(save('appkey'));
+
+    if (pathName === flowDesignPath) {
+      dispatch(save(bpmId));
     }
-  }, [pathName]);
+  }, [pathName, dispatch, flowDesignPath, bpmId]);
   const handleNext = useCallback(() => {
     if (pathName === '/form-design') {
       history.push('/flow-design');
     }
-  }, [pathName]);
+  }, [pathName, history]);
+
+  const handlePublish = useCallback(async () => {
+    await axios.post('/subapp/deploy', {
+      enableNewVersion: true,
+      remark: '',
+      subappId: bpmId,
+    });
+
+    message.success('发布成功');
+  }, [bpmId]);
 
   return (
     <HeaderContainer>
       <Header backText="燃气报修" className="edit_header">
         <div className="steps">
-          <NavLink className="step" to={`${match.path}form-design`} activeClassName="active">
+          <NavLink className="step" to={`${match.url}/form-design`} activeClassName="active">
             <span className="number">01</span>
             <span>表单设计</span>
           </NavLink>
           <div className="separator">
-            <span className="iconfont iconjinru"></span>
+            <Icon className="iconfont" type="jinru" />
           </div>
-          <NavLink className="step" to={`${match.path}flow-design`} activeClassName="active">
+          <NavLink className="step" to={`${match.url}/flow-design`} activeClassName="active">
             <span className="number">02</span>
             <span>流程设计</span>
           </NavLink>
         </div>
         <div className="operation">
           {/* 这个版本暂时不做 */}
-          {/* <span className="iconfont iconjiantoushangyibu"></span>
-          <span className="iconfont iconjiantouxiayibu"></span> */}
+          {/* 
+            <Icon className="iconfont" type="jiantoushangyibu" />
+            <Icon className="iconfont" type="jiantouxiayibu" />
+          */}
           {pathName === '/form-design' && (
             <Tooltip title="预览">
-              <span className="iconfont iconyulan" onClick={handlePreview}></span>
+              <Icon className="iconfont" type="yulan" onClick={handlePreview} />
             </Tooltip>
           )}
           {pathName === '/flow-design' && (
@@ -177,10 +257,16 @@ const EditorHeader: FC = () => {
               下一步
             </Button>
           )}
-          {pathName === '/flow-design' && (
-            <Button className="publish" type="primary" size="large" icon={<span className="iconfont iconfabu"></span>}>
+          {pathName === `${match.url}/flow-design` && (
+            <AsyncButton
+              className="publish"
+              type="primary"
+              size="large"
+              icon={<Icon className="iconfont" type="fabu" />}
+              onClick={handlePublish}
+            >
               发布
-            </Button>
+            </AsyncButton>
           )}
         </div>
       </Header>

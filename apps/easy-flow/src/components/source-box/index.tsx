@@ -1,7 +1,8 @@
-import { FormField, MoveConfig, TConfigItem } from '@/type';
+import { AllComponentType, FormField, MoveConfig, TConfigItem } from '@/type';
 import { Tooltip } from 'antd';
 import LabelContent from '../label-content';
-import React, { memo, FC, useEffect, useState, useMemo, useCallback } from 'react';
+import { Icon } from '@common/components';
+import React, { memo, FC, useMemo, useCallback } from 'react';
 import styled from 'styled-components';
 import { store } from '@app/store';
 import {
@@ -13,6 +14,7 @@ import {
   comDeleted,
 } from '@/features/bpm-editor/form-design/formdesign-slice';
 import { useAppDispatch } from '@/app/hooks';
+import useLoadComponents from '@/hooks/use-load-components';
 
 const BoxContainer = styled.div`
   cursor: move;
@@ -40,6 +42,7 @@ const BoxContainer = styled.div`
       width: 16px;
       height: 16px;
       line-height: 16px;
+      font-size: 16px;
       color: #fff;
       cursor: pointer;
       &:first-child {
@@ -97,7 +100,7 @@ const BoxContainer = styled.div`
     transform: translateY(-9px);
   }
 `;
-
+type Component = React.FC | React.ComponentClass;
 const SourceBox: FC<{
   type: string;
   config: FormField;
@@ -105,28 +108,23 @@ const SourceBox: FC<{
   moveConfig: MoveConfig;
   rowIndex: number;
 }> = ({ type, config, id, moveConfig, rowIndex }) => {
-  const [Component, setComponent] = useState<FC | null>(null);
   const dispatch = useAppDispatch();
+  // 获取组件源码
+  const compSources: Component = useLoadComponents(type as AllComponentType['type']) as Component;
   const propList = useMemo(() => {
     return Object.assign({}, config, { id });
   }, [config, id]);
-  useEffect(() => {
-    type &&
-      import(`../basic-shop/basic-components/${type}/index`).then((res) => {
-        setComponent(res.default);
-      });
-  }, [type]);
   const handleCopy = useCallback(() => {
     const formDesign = store.getState().formDesign;
     const com = Object.assign({}, formDesign.byId[id]);
     dispatch(comAdded(com, rowIndex + 1));
-  }, [id, rowIndex]);
+  }, [id, rowIndex, dispatch]);
   const handleDelete = useCallback(
     (e) => {
       e.stopPropagation();
       dispatch(comDeleted({ id }));
     },
-    [id],
+    [id, dispatch],
   );
   const handleMoveUp = useCallback(() => {
     dispatch(moveUp({ id }));
@@ -148,7 +146,7 @@ const SourceBox: FC<{
         });
         dispatch(editProps({ id, config }));
       });
-  }, [id, rowIndex]);
+  }, [id, rowIndex, dispatch]);
   const handleMoveDown = useCallback(() => {
     dispatch(moveDown({ id }));
     const formDesign = store.getState().formDesign;
@@ -163,15 +161,16 @@ const SourceBox: FC<{
     });
     // 下移之后一定是独占一行
     dispatch(editProps({ id, config: Object.assign({}, componentMap[id], { colSpace: '4' }) }));
-  }, [id, rowIndex]);
+  }, [id, rowIndex, dispatch]);
   const handleMoveLeft = useCallback(() => {
     dispatch(exchange({ id, direction: 'left' }));
-  }, [id]);
+  }, [id, dispatch]);
   const handleMoveRight = useCallback(() => {
     dispatch(exchange({ id, direction: 'right' }));
-  }, [id]);
+  }, [id, dispatch]);
   const content = useMemo(() => {
-    if (Component) {
+    if (compSources) {
+      const Component = compSources;
       return (
         <BoxContainer>
           <div className="component_container">
@@ -180,37 +179,47 @@ const SourceBox: FC<{
           </div>
           <div className="operation">
             <Tooltip title="复制">
-              <span className="iconfont iconfuzhi" onClick={handleCopy}></span>
+              <Icon className="iconfont" type="fuzhi" onClick={handleCopy} />
             </Tooltip>
             <Tooltip title="删除">
-              <span className="iconfont iconshanchu" onClick={handleDelete}></span>
+              <Icon className="iconfont" type="shanchu" onClick={handleDelete} />
             </Tooltip>
           </div>
           {moveConfig.up && (
             <div className="moveUp">
-              <span className="iconfont iconjiantouxiangshang" onClick={handleMoveUp}></span>
+              <Icon className="iconfont" type="jiantouxiangshang" onClick={handleMoveUp} />
             </div>
           )}
           {moveConfig.down && (
             <div className="moveDown">
-              <span className="iconfont iconjiantouxiangxia" onClick={handleMoveDown}></span>
+              <Icon className="iconfont" type="jiantouxiangxia" onClick={handleMoveDown} />
             </div>
           )}
           {moveConfig.left && (
             <div className="moveLeft">
-              <span className="iconfont iconhengxiangqiehuan" onClick={handleMoveLeft}></span>
+              <Icon className="iconfont" type="hengxiangqiehuan" onClick={handleMoveLeft} />
             </div>
           )}
           {moveConfig.right && (
             <div className="moveRight">
-              <span className="iconfont iconhengxiangqiehuan" onClick={handleMoveRight}></span>
+              <Icon className="iconfont" type="hengxiangqiehuan" onClick={handleMoveRight} />
             </div>
           )}
         </BoxContainer>
       );
     }
     return null;
-  }, [Component, config, moveConfig]);
+  }, [
+    moveConfig,
+    compSources,
+    propList,
+    handleCopy,
+    handleDelete,
+    handleMoveDown,
+    handleMoveLeft,
+    handleMoveRight,
+    handleMoveUp,
+  ]);
   return <>{content}</>;
 };
 

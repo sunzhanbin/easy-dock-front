@@ -2,6 +2,7 @@ import { ReactNode, memo, useMemo } from 'react';
 import classnames from 'classnames';
 import { NodeStatusType } from '@type/flow';
 import styles from './index.module.scss';
+import appConfig from '@/init';
 
 interface StatusBarProps {
   status: NodeStatusType;
@@ -16,19 +17,19 @@ function StatusBar(props: StatusBarProps) {
     let styleName = '';
 
     if (status === NodeStatusType.Processing) {
-      image = `/images/flow-detail/processing.png`;
+      image = `${appConfig.publicPath}/images/flow-detail/processing.png`;
       styleName = styles.processing;
     } else if (status === NodeStatusType.Undo) {
-      image = `/images/flow-detail/undo.png`;
+      image = `${appConfig.publicPath}/images/flow-detail/undo.png`;
       styleName = styles.undo;
     } else if (status === NodeStatusType.Terminated) {
-      image = `/images/flow-detail/terminated.png`;
+      image = `${appConfig.publicPath}/images/flow-detail/terminated.png`;
       styleName = styles.terminated;
     } else if (status === NodeStatusType.Revert) {
-      image = `/images/flow-detail/revert.png`;
+      image = `${appConfig.publicPath}/images/flow-detail/revert.png`;
       styleName = styles.revert;
     } else if (status === NodeStatusType.Finish) {
-      image = `/images/flow-detail/finish.png`;
+      image = `${appConfig.publicPath}/images/flow-detail/finish.png`;
       styleName = styles.finish;
     }
 

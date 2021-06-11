@@ -4,8 +4,8 @@ import { Select, Input, Tooltip } from 'antd';
 import { uniqueId } from 'lodash';
 import { axios } from '@utils';
 import { OptionItem, OptionMode, SelectOptionItem } from '@/type';
-import { Children } from 'react';
 import { subApp } from './mock';
+import { Icon } from '@common/components';
 
 const { Option } = Select;
 
@@ -107,7 +107,7 @@ if (process.env.NODE_ENV === 'development') {
 const SelectOptionList = (props: editProps) => {
   const { value, onChange } = props;
   const [type, setType] = useState<OptionMode>(value?.type || 'custom');
-  const [content, setContent] = useState<OptionItem[]>(value?.content || []);
+  const [content, setContent] = useState<OptionItem[]>(value?.data || []);
   const [canDrag, setCanDrag] = useState<boolean>(false);
   const [subAppKey, setSubAppKey] = useState<string>('');
   const [appList, setAppList] = useState<OptionItem[]>([]);
@@ -197,7 +197,7 @@ const SelectOptionList = (props: editProps) => {
     });
   }, []);
   useEffect(() => {
-    onChange && onChange({ type, content });
+    onChange && onChange({ type, data: content });
   }, [type, content]);
   const customContent = useMemo(() => {
     if (Array.isArray(content) && type === 'custom') {
@@ -223,7 +223,7 @@ const SelectOptionList = (props: editProps) => {
                 }}
               >
                 <Tooltip title="删除">
-                  <span className="iconfont iconshanchu"></span>
+                  <Icon className="iconfont" type="shanchu" />
                 </Tooltip>
               </div>
               <div
@@ -236,7 +236,7 @@ const SelectOptionList = (props: editProps) => {
                 }}
               >
                 <Tooltip title="拖动换行">
-                  <span className="iconfont iconcaidan"></span>
+                  <Icon className="iconfont" type="caidan" />
                 </Tooltip>
               </div>
               <Input
@@ -249,14 +249,14 @@ const SelectOptionList = (props: editProps) => {
             </div>
           ))}
           <div className="add_custom" onClick={addItem}>
-            <span className="iconfont iconxinzengjiacu"></span>
+            <Icon className="iconfont" type="xinzengjiacu" />
             <span>添加选项</span>
           </div>
         </div>
       );
     }
     return null;
-  }, [type, content, canDrag]);
+  }, [type, content, canDrag, addItem, deleteItem, handleBlur, handleDragOver, handleDragstart, handleDrop]);
   const dictContent = useMemo(() => {
     if (type === 'dictionaries') {
       return (
@@ -287,7 +287,7 @@ const SelectOptionList = (props: editProps) => {
       );
     }
     return null;
-  }, [type, subAppKey, componentKey, appList, componentList]);
+  }, [type, subAppKey, componentKey, appList, componentList, handleChangeApp, handleChangeComponent]);
   return (
     <Container>
       <div className="title">

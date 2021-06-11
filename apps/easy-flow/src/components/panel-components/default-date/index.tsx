@@ -19,7 +19,7 @@ interface editProps {
 }
 
 const DefaultDate = (props: editProps) => {
-  const { id, value, onChange } = props;
+  const { id, onChange } = props;
   const byId = useAppSelector(componentPropsSelector);
   const formatType = useMemo(() => {
     return (byId[id] as DateField)?.format;

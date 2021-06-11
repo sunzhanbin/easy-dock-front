@@ -6,6 +6,7 @@ import FormEngine from '@components/form-engine';
 import { FormMeta } from '@type/flow';
 import { FieldAuthsMap } from '@/type/flow';
 import { useHistory } from 'react-router-dom';
+import { Icon } from '@common/components';
 
 const Container = styled.div`
   .header {
@@ -38,9 +39,9 @@ const Container = styled.div`
       }
     }
   }
-  .content {
-    width: 60%;
-    margin-left: 20%;
+  & > .content {
+    width: calc(100% - 548px);
+    margin-left: 288px;
     margin-top: 89px;
     .title {
       height: 34px;
@@ -112,13 +113,13 @@ const PreviewForm: FC = () => {
   }, [byId]);
   const handleClose = useCallback(() => {
     history.goBack();
-  }, []);
+  }, [history]);
   return (
     <Container>
       <div className="header">
         <div className="title">预览表单</div>
         <div className="close" onClick={handleClose}>
-          <span className="iconfont iconguanbi"></span>
+          <Icon className="iconfont" type="guanbi" />
         </div>
       </div>
       <div className="content">

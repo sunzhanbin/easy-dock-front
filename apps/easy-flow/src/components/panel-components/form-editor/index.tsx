@@ -1,6 +1,6 @@
 import React, { memo, useEffect, Fragment } from 'react';
 import styled from 'styled-components';
-import { Form, Select, DatePicker, Input, Switch, Radio, Checkbox, InputNumber } from 'antd';
+import { Form, Select, Input, Switch, Radio, Checkbox, InputNumber } from 'antd';
 import SelectOptionList from '../select-option-list';
 import SelectDefaultOption from '../select-default-option';
 import DefaultDate from '../default-date';
@@ -18,7 +18,7 @@ const Container = styled.div`
       height: 22px;
       line-height: 22px;
       font-size: 14px;
-      font-weight: 500;
+      font-weight: 600;
       color: rgba(24, 31, 67, 0.95);
     }
   }
@@ -97,11 +97,11 @@ const FormEditor = (props: FormEditorProps) => {
   }, [componentId, form]);
   useEffect(() => {
     form.setFieldsValue(initValues);
-  }, [initValues]);
+  }, [initValues, form]);
   return (
     <Container>
       <Form form={form} name="form_editor" initialValues={initValues} onFinish={onFinish} onValuesChange={handleChange}>
-        {config.map(({ key, label, direction, type, range, placeholder, required, requiredMessage }) => {
+        {config.map(({ key, label, direction, type, range, placeholder, required, requiredMessage, rules }) => {
           return (
             <Fragment key={key}>
               {type === 'Input' && (
@@ -111,7 +111,11 @@ const FormEditor = (props: FormEditorProps) => {
                   labelCol={{ span: direction === 'vertical' ? 24 : 6 }}
                   labelAlign="left"
                   required={required}
-                  rules={[{ required: required, message: requiredMessage }]}
+                  rules={
+                    rules
+                      ? [...rules, { required: required, message: requiredMessage }]
+                      : [{ required: required, message: requiredMessage }]
+                  }
                 >
                   <Input placeholder={placeholder} size="large" />
                 </Form.Item>

@@ -1,4 +1,4 @@
-import React, { memo, useState, useCallback, useMemo, useEffect } from 'react';
+import React, { memo, useState, useCallback } from 'react';
 import styled from 'styled-components';
 import { Editor as RichText } from 'react-draft-wysiwyg';
 import { EditorState, convertToRaw, ContentState } from 'draft-js';

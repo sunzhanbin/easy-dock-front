@@ -1,13 +1,22 @@
 import React, { memo, useMemo } from 'react';
 import { Checkbox } from 'antd';
-import { CheckboxField } from '@/type';
+import { SelectOptionItem } from '@/type';
+import { CheckboxGroupProps } from 'antd/lib/checkbox';
 
-const CheckboxComponent = (props: CheckboxField) => {
-  const { optionList, readonly } = props;
+const CheckboxComponent = (props: CheckboxGroupProps & { readOnly: boolean; dataSource: SelectOptionItem }) => {
+  const { dataSource, readOnly, onChange } = props;
   const options = useMemo(() => {
-    return optionList.content.map((item) => item.value);
-  }, [optionList]);
-  return <Checkbox.Group disabled={readonly} options={options}></Checkbox.Group>;
+    return (dataSource?.data || []).map((item) => item.value);
+  }, [dataSource]);
+  const propList = useMemo(() => {
+    const prop: { [k: string]: string | boolean | string[] | Function } = {
+      disabled: readOnly,
+      options: options,
+      onChange: onChange as Function,
+    };
+    return Object.assign({}, props, prop);
+  }, [options, readOnly, props, onChange]);
+  return <Checkbox.Group {...propList}></Checkbox.Group>;
 };
 
 export default memo(CheckboxComponent);

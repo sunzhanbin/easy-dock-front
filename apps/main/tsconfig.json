@@ -1,43 +1,8 @@
 {
   "extends": "./paths.json",
-  "compilerOptions": {
-    "target": "es5",
-    "baseUrl": ".",
-    "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx",
-    "esModuleInterop": true,
-    "allowJs": true,
-    "checkJs": false,
-    "module": "esnext",
-    "resolveJsonModule": true,
-    "moduleResolution": "node",
-    "lib": [
-      "esnext",
-      "dom",
-      "dom.iterable"
-    ],
-    "strict": false,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
-    "strictPropertyInitialization": true,
-    "strictBindCallApply": true,
-    "noImplicitThis": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitReturns": false,
-    "experimentalDecorators": true,
-    "forceConsistentCasingInFileNames": false,
-    "declaration": true,
-    "allowSyntheticDefaultImports": true,
-    "skipLibCheck": true,
-    "emitDecoratorMetadata": true,
-    "sourceMap": true
-  },
   "include": [
-    "src"
+    "src",
+    "../../packages/common/**/*"
   ],
   "exclude": [
     "lib/**",
@@ -46,5 +11,6 @@
     "dist/**",
     "node_modules/**",
     "template/**"
-  ]
+  ],
+  "compilerOptions": {}
 }

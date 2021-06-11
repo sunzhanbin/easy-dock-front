@@ -19,7 +19,7 @@ const SelectDefaultOption = (props: editProps) => {
   const { id, value, onChange } = props;
   const byId = useAppSelector(componentPropsSelector);
   const optionList = useMemo(() => {
-    return (byId[id] as SelectField)?.selectOptionList?.content || [];
+    return (byId[id] as SelectField)?.selectOptionList?.data || [];
   }, [id, byId]);
   const isMultiple = useMemo(() => {
     return (byId[id] as SelectField)?.multiple;

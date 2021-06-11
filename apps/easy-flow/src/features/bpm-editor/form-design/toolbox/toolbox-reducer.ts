@@ -1,12 +1,11 @@
-import { createAsyncThunk, PayloadAction, createSelector } from '@reduxjs/toolkit';
-import { uniqueId, values, reduce } from 'lodash';
-import { FormDesign, FormField } from '@type';
+import { createAsyncThunk, createSelector } from '@reduxjs/toolkit';
+import { values, reduce } from 'lodash';
 import { RootState } from '@app/store';
 import { fetchComponents } from './toolboxApi';
 
 export const loadComponents = createAsyncThunk('formDesign/fetchComponents', async () => {
   const response = await fetchComponents();
-  console.log(response);
+
   return response;
 });
 

@@ -5,7 +5,7 @@ const Container = styled.div`
   .label_container {
     .label {
       font-size: 12px;
-      font-weight: 500;
+      font-weight: 600;
       color: rgba(24, 31, 67, 0.95);
       line-height: 20px;
       margin-bottom: 2px;

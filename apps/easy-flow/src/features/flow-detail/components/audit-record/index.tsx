@@ -5,19 +5,19 @@ import { AuditRecordType } from '@type/flow';
 import { FlowDetaiDataType } from '../../type';
 import styles from './index.module.scss';
 
-interface IconBoxProps {
-  type: 'success' | 'fial' | 'end';
-}
+// interface IconBoxProps {
+//   type: 'success' | 'fial' | 'end';
+// }
 
-function IconBox(props: IconBoxProps) {
-  const { type } = props;
+// function IconBox(props: IconBoxProps) {
+//   const { type } = props;
 
-  return (
-    <div className={styles.icon}>
-      <Icon type="gou"></Icon>
-    </div>
-  );
-}
+//   return (
+//     <div className={styles.icon}>
+//       <Icon type="gou"></Icon>
+//     </div>
+//   );
+// }
 
 interface AuditRecordProps {
   data: FlowDetaiDataType['auditRecords'][number];
@@ -26,7 +26,7 @@ interface AuditRecordProps {
 function AuditRecord(props: AuditRecordProps) {
   const { data } = props;
   const icon = useMemo(() => {
-    const { auditType } = data;
+    const auditType = data.auditType;
 
     if (
       auditType === AuditRecordType.APPROVE ||
@@ -53,7 +53,7 @@ function AuditRecord(props: AuditRecordProps) {
   }, [data.auditType]);
 
   const tag = useMemo(() => {
-    const { auditType } = data;
+    const auditType = data.auditType;
 
     if (auditType === AuditRecordType.APPROVE) {
       return {

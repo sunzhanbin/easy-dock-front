@@ -1,9 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
-import formDesignReducer from './form-design';
+import layout from './layout';
 
 export const store = configureStore({
   reducer: {
-    formDesign: formDesignReducer,
+    layout: layout,
   },
 });
 

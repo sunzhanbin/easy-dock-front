@@ -32,6 +32,18 @@ mock(/\/save-flow/, 'post', function (options: Options) {
   };
 });
 
+mock(/\/form\/subapp\/\w+\/components/, function () {
+  return mock({
+    resultCode: 0,
+    'data|2-5': [
+      {
+        field: '@uuid',
+        name: '@ctitle',
+      },
+    ],
+  });
+});
+
 mock(/^\/user\/list/, 'post', function (options: Options) {
   const { data } = JSON.parse(options.body);
 

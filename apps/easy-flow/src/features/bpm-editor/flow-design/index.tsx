@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Prompt } from 'react-router-dom';
+import { Prompt, useParams } from 'react-router-dom';
 import { Drawer } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { Loading, Icon } from '@common/components';
@@ -13,14 +13,15 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks';
 
 function FlowDesign() {
   const dispatch = useAppDispatch();
+  const { bpmId } = useParams<{ bpmId: string }>();
   const { loading, data: flow, dirty } = useAppSelector(flowDataSelector);
   const [currentEditNode, setCurrentEditNode] = useState<AllNode | null>(null);
   const [showEditDrawer, setShowEditDrawer] = useState(false);
   const [currentEditNodePrevNodes, setCurrentEditNodePrevNodes] = useState<AllNode[]>([]);
 
   useEffect(() => {
-    dispatch(load('appkey'));
-  }, [dispatch]);
+    dispatch(load(bpmId));
+  }, [dispatch, bpmId]);
 
   const handleClickNode = useMemoCallback((node: Exclude<AllNode, BranchNodeType>) => {
     setCurrentEditNode(node);
@@ -51,7 +52,7 @@ function FlowDesign() {
     return () => {
       document.body.removeEventListener('keydown', handleSave);
     };
-  }, []);
+  }, [dispatch]);
 
   const drawerHeader = useMemo(() => {
     if (currentEditNode) {
@@ -83,7 +84,7 @@ function FlowDesign() {
     }
 
     return null;
-  }, [currentEditNode?.type]);
+  }, [currentEditNode]);
 
   const handleConfirmLeave = useMemoCallback(() => {
     return true;
@@ -112,6 +113,9 @@ function FlowDesign() {
 
             case NodeType.FinishNode: {
               return <FinishNode key={node.id} node={node} onClick={handleClickNode} />;
+            }
+            default: {
+              return null;
             }
           }
         })}

@@ -1,32 +1,4 @@
-@import './global.scss';
-
-body {
-  margin: 0;
-  font-family: Helvetica, Tahoma, Arial, 'PingFang SC', 'Hiragino Sans GB', 'Heiti SC', 'Microsoft YaHei',
-    'WenQuanYi Micro Hei', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p {
-  margin: 0;
-}
-
-ul,
-li,
-ol {
-  list-style: none;
-}
+@import '@common/styles/global.scss';
 
 .easy-dock-content {
   margin: 0 auto;
@@ -48,11 +20,4 @@ ol {
   .main-content {
     width: 90%;
   }
-}
-
-::-webkit-scrollbar {
-  height: 5px;
-  width: 5px;
-  border-radius: 3px;
-  background-color: rgba(#181f43, 0.3);
 }

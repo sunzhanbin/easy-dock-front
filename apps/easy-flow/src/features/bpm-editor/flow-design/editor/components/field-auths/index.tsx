@@ -2,10 +2,10 @@ import { memo, useMemo } from 'react';
 import { Checkbox } from 'antd';
 import classnames from 'classnames';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import { FieldAuthsMap, AuthType } from '@type/flow';
+import { FieldAuthsMap, AuthType, FieldTemplate } from '@type/flow';
 import styles from './index.module.scss';
 
-type FieldAuth = { id: string; auth: AuthType; name: string };
+type FieldAuth = FieldTemplate & { auth: AuthType };
 
 interface FieldRowProps {
   value: FieldAuth;
@@ -53,7 +53,7 @@ const FieldRow = memo(function FieldRow(props: FieldRowProps) {
 interface FieldAuthsProps {
   value?: FieldAuthsMap;
   onChange?(value: this['value']): void;
-  templates: FieldAuth[];
+  templates: FieldTemplate[];
 }
 
 function FieldAuths(props: FieldAuthsProps) {
@@ -81,7 +81,7 @@ function FieldAuths(props: FieldAuthsProps) {
     let totalAuth: FieldAuth['auth'] = 0;
 
     templates.forEach((field) => {
-      if (value && value[field.id]) {
+      if (value && value[field.id] in AuthType) {
         valueMaps[field.id] = {
           id: field.id,
           name: field.name,

@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { configSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 import { comAdded } from '../../features/bpm-editor/form-design/formdesign-slice';
 import { FieldType, FormField } from '@/type';
+import { Icon } from '@common/components';
 
 const ToolBoxItemContainer = styled.div`
   width: 72px;
@@ -48,11 +49,11 @@ const ToolBoxItem: FC<{ icon: string; displayName: string; type: FieldType }> = 
     const com = { ...configMap[type], type };
     const rowIndex = formDesign?.layout?.length || -1;
     dispatch(comAdded(com as FormField, rowIndex + 1));
-  }, [type]);
+  }, [type, configMap, dispatch]);
   return (
     <ToolBoxItemContainer onClick={addComponent}>
       <div className="icon_container">
-        <span className={`iconfont ${icon}`}></span>
+        <Icon type={icon} className="iconfont" />
       </div>
       <span className="component_name">{displayName}</span>
     </ToolBoxItemContainer>

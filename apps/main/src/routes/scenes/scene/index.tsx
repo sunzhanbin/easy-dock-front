@@ -22,13 +22,13 @@ export default function Scene(props: SceneProps) {
   const [showActionDropdown, setShowActionDropdown] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
-  // 编辑场景
+  // 编辑应用
   const handleEditScene = useCallback(() => {
     setShowActionDropdown(false);
     onEdit(data);
   }, [onEdit, data]);
 
-  // 开关场景启用状态
+  // 开关应用启用状态
   const handleStatusChange = useCallback(async () => {
     await onStatusChange(data.status === 1 ? -1 : 1, data.id);
   }, [onStatusChange, data]);
@@ -120,14 +120,14 @@ export default function Scene(props: SceneProps) {
             <div className={styles.remark}>{data.remark}</div>
           </Tooltip>
         ) : (
-          <div className={styles.remark}>{data.remark || '这是一个场景'}</div>
+          <div className={styles.remark}>{data.remark || '这是一个应用'}</div>
         )}
         <div className={styles.footer}>
           {data.version ? (
             <Popconfirm
               title="提示"
               key="switch-status"
-              content={`确认${data.status === 1 ? '关闭' : '启用'}所选场景吗?`}
+              content={`确认${data.status === 1 ? '关闭' : '启用'}所选应用吗?`}
               onConfirm={handleStatusChange}
               getPopupContainer={getPopupContainer}
             >

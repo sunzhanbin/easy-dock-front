@@ -71,7 +71,7 @@ export default function Home() {
     }
   }, [hasProjects]);
 
-  // 获取场景列表
+  // 获取应用列表
   const fetchSceneList = useCallback(
     async (projectId: number) => {
       setFetching(true);
@@ -156,12 +156,12 @@ export default function Home() {
         // 编辑
         await axios.put('/scene', Object.assign({}, data, { projectId: activeProjectId }));
 
-        message.success('场景修改成功');
+        message.success('应用修改成功');
       } else {
         // 新增
         await axios.post('/scene', Object.assign({}, data, { projectId: activeProjectId }));
 
-        message.success('场景创建成功');
+        message.success('应用创建成功');
       }
 
       setShowEditSceneModal(false);
@@ -270,7 +270,7 @@ export default function Home() {
                 icon={<Icon type="xinzeng" />}
                 onClick={handleAddScene}
               />
-              <div>添加场景</div>
+              <div>添加应用</div>
             </div>
             {scenes.map((scene) => {
               return (

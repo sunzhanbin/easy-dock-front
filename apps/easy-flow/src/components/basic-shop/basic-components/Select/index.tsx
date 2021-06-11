@@ -1,32 +1,40 @@
 import React, { memo, useMemo } from 'react';
+import { useLocation } from 'react-router';
 import { Select } from 'antd';
-import { SelectField } from '@/type';
+import { SelectOptionItem } from '@/type';
+import { SelectProps } from 'antd/lib/select';
 
 const { Option } = Select;
 
-const SelectComponent = (props: SelectField & { id: string }) => {
-  const { defaultValue, multiple, showSearch, selectOptionList, readonly } = props;
+const SelectComponent = (
+  props: SelectProps<string> & { readOnly: boolean; multiple: boolean; dataSource: SelectOptionItem },
+) => {
+  const { defaultValue, multiple, showSearch, dataSource, readOnly, onChange } = props;
+  const location = useLocation();
   const optionList = useMemo(() => {
-    return selectOptionList?.content || [];
-  }, [selectOptionList]);
+    return dataSource?.data || [];
+  }, [dataSource]);
   const propList = useMemo(() => {
-    const prop: { [k: string]: string | boolean } = {
+    const prop: { [k: string]: string | boolean | Function } = {
       size: 'large',
-      showSearch: showSearch,
+      showSearch: showSearch as boolean,
       placeholder: '请选择',
-      disabled: readonly as boolean,
+      disabled: readOnly as boolean,
+      onChange: onChange as Function,
     };
     if (multiple) {
       prop.mode = 'multiple';
     }
     if (defaultValue) {
       prop.defaultValue = defaultValue as string;
-      prop.value = defaultValue as string;
+      if (location.pathname === '/form-design') {
+        prop.value = defaultValue as string;
+      }
     }
-    return prop;
-  }, [defaultValue, multiple, showSearch, readonly]);
+    return Object.assign({}, props, prop);
+  }, [defaultValue, multiple, showSearch, readOnly, location, props, onChange]);
   return (
-    <Select {...propList}>
+    <Select {...propList} style={{ width: '100%' }}>
       {optionList.map(({ key, value }) => (
         <Option value={key} key={key}>
           {value}

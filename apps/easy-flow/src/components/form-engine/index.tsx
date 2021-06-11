@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useState, useMemo } from 'react';
-import { Form, Input, Row, Col, FormInstance } from 'antd';
+import { Form, Row, Col, FormInstance } from 'antd';
 import LabelContent from '../label-content';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { FieldAuthsMap, AuthType, FormMeta, FormValue } from '@type/flow';
@@ -120,7 +120,10 @@ const FormDetail = React.forwardRef(function FormDetail(
                     label={<LabelContent label={compMaps[fieldId].label} desc={compMaps[fieldId].desc} />}
                     required={fieldsAuths[fieldId] === AuthType.Required}
                   >
-                    <Component readOnly={!fieldsAuths[fieldId] || fieldsAuths[fieldId] === AuthType.View} />
+                    <Component
+                      readOnly={!fieldsAuths[fieldId] || fieldsAuths[fieldId] === AuthType.View}
+                      {...compMaps[fieldId]}
+                    />
                   </Form.Item>
                 </Col>
               );

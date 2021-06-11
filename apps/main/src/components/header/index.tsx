@@ -3,7 +3,7 @@ import { NavLink, Link, NavLinkProps, useHistory } from 'react-router-dom';
 import classnames from 'classnames';
 import { Avatar, Dropdown, Menu } from 'antd';
 import { UserContext } from '@/context';
-import { axios, localStorage } from '@utils';
+import { axios, localStorage } from '@common/utils';
 import { ROUTES, envs } from '@consts';
 import logo from '@assets/logo.png';
 import styles from './header.module.scss';
@@ -12,7 +12,7 @@ export default function AppHeader() {
   const loginUser = useContext(UserContext);
   const history = useHistory();
   const logout = useCallback(async () => {
-    await axios.get('/api/auth/v1/logout', { baseURL: envs.REACT_APP_LOGIN_DOMAIN });
+    await axios.get('/api/auth/v1/logout', { baseURL: envs.COMMON_LOGIN_DOMAIN });
 
     delete axios.defaults.headers.auth;
     localStorage.clear('token');
@@ -53,13 +53,9 @@ export default function AppHeader() {
             className={styles.nav}
             activeClassName={styles.active}
           >
-            场景管理
+            应用管理
           </NavLink>
-          <NavLink
-            to={ROUTES.TMPLATE_CENTER}
-            className={styles.nav}
-            activeClassName={styles.active}
-          >
+          <NavLink to={ROUTES.TMPLATE_CENTER} className={styles.nav} activeClassName={styles.active}>
             模版中心
           </NavLink>
           <NavLink to={ROUTES.SYSTEM_MANAGE} className={styles.nav} activeClassName={styles.active}>
@@ -70,11 +66,7 @@ export default function AppHeader() {
         <div>
           {loginUser ? (
             <div className={styles.user}>
-              <Dropdown
-                overlay={dropownOverlay}
-                getPopupContainer={(c) => c}
-                placement="bottomCenter"
-              >
+              <Dropdown overlay={dropownOverlay} getPopupContainer={(c) => c} placement="bottomCenter">
                 <div className={styles.avatar}>
                   <Avatar size={32} src={loginUser.avatar} />
                 </div>

@@ -42,6 +42,7 @@ export enum RevertType {
 export type FieldAuthsMap = {
   [fieldId: string]: AuthType;
 };
+
 // 审批节点
 export interface UserNode extends BaseNode {
   correlationMemberConfig: {
@@ -176,3 +177,5 @@ export interface FormMeta {
 }
 
 export type FormValue = { [key: string]: any };
+
+export type FieldTemplate = { id: string; name: string };

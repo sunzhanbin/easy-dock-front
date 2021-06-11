@@ -11,15 +11,15 @@ import {
 } from '@/features/bpm-editor/form-design/formzone-reducer';
 import { MoveConfig } from '@/type';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
+import emptyImage from '@assets/drag.png';
 
 const FormZoneContainer = styled.div`
-  max-width: 900px;
   width: 100%;
   height: 100%;
   .form-zone {
+    position: relative;
     background: #fff;
-    box-shadow: 0 2px 4px 0 rgb(43 52 65 / 10%);
-    min-height: 200px;
+    min-height: calc(100vh - 104px);
     margin-bottom: 30px;
     padding: 12px 0;
     > div {
@@ -67,10 +67,30 @@ const FormZoneContainer = styled.div`
       }
     }
     .empty_tip {
+      position: absolute;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 260px);
+      height: calc(100% - 55px);
       text-align: center;
-      line-height: 200px;
       font-size: 16px;
       color: #dcdcdc;
+      border: 1px dashed #b9bbc6;
+      .image {
+        width: 107px;
+        height: 53px;
+        margin: 175px 70px 24px 30px;
+      }
+      .text {
+        width: 216px;
+        height: 28px;
+        line-height: 28px;
+        font-weight: 500;
+        font-size: 18px;
+        color: rgba(0, 0, 0, 0.85);
+        margin: 0 auto;
+      }
     }
   }
 `;
@@ -87,9 +107,12 @@ const FormZone: FC<{}> = () => {
   const layout = useAppSelector(layoutSelector);
   const byId = useAppSelector(componentPropsSelector);
   const selectedField = useAppSelector(selectedFieldSelector);
-  const handleSelect = useCallback((id) => {
-    dispatch(selectField({ id }));
-  }, []);
+  const handleSelect = useCallback(
+    (id) => {
+      dispatch(selectField({ id }));
+    },
+    [dispatch],
+  );
   const getColSpace = useCallback(
     (id) => {
       const space = byId[id]?.colSpace;
@@ -158,7 +181,10 @@ const FormZone: FC<{}> = () => {
                   </Draggable>
                 ))
               ) : (
-                <div className="empty_tip">拖动或点击左侧控件到这里</div>
+                <div className="empty_tip">
+                  <img src={emptyImage} className="image" alt="empty" />
+                  <div className="text">拖动或点击左侧控件到这里</div>
+                </div>
               )}
             </div>
             {dropProvided.placeholder}
@@ -166,7 +192,7 @@ const FormZone: FC<{}> = () => {
         )}
       </Droppable>
     );
-  }, [layout, byId, selectedField]);
+  }, [layout, byId, selectedField, getColSpace, getMoveConfig, handleSelect]);
   return (
     <FormZoneContainer>
       <div className="form-zone">{content}</div>
