@@ -33,6 +33,11 @@ const AppDetail: FC = () => {
   const handleCrateSubApp = useCallback(() => {
     setIsShowModel(true);
   }, [setIsShowModel]);
+  const handleChange = useCallback(() => {
+    axios.get(`/subapp/${appId}/list/all`).then((res) => {
+      setSubAppList(res.data);
+    });
+  }, [appId]);
   useEffect(() => {
     const appPromise = axios.get(`/app/${appId}`);
     const subAppListPromise = axios.get(`/subapp/${appId}/list/all`);
@@ -100,6 +105,7 @@ const AppDetail: FC = () => {
                 className={styles.card}
                 version={version}
                 key={name}
+                onChange={handleChange}
               />
             ))}
           </div>

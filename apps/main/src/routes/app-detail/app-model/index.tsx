@@ -93,7 +93,7 @@ const Container = styled.div`
       }
     }
   }
-  .footer {
+  .model_footer {
     display: flex;
     justify-content: flex-end;
     margin-top: 24px;
@@ -129,7 +129,12 @@ const AppModel: FC<{
   }, [onOk, appName]);
 
   return (
-    <Container className={className}>
+    <Container
+      className={className}
+      onClick={(e) => {
+        e.stopPropagation();
+      }}
+    >
       <div className="header">
         <div className="title">{type === 'create' ? '新建' : '编辑'}子应用</div>
         <div className="close" onClick={handleClose}>
@@ -170,7 +175,7 @@ const AppModel: FC<{
           </div>
         )}
       </div>
-      <div className="footer">
+      <div className="model_footer">
         <div className="operation">
           <Button type="text" size="large" className="cancel" onClick={handleClose}>
             取消
