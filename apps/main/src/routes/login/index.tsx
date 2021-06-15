@@ -42,7 +42,7 @@ export default function Login() {
 
       window.location.replace(redirectUrl);
     } else {
-      message.error(loginResponse.data.resultMessage);
+      message.error((loginResponse as any).resultMessage);
     }
   }, [form, search]);
 
