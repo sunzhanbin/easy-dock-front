@@ -1,0 +1,121 @@
+@import '@common/styles/var.scss';
+@import '@common/styles/mixin.scss';
+
+.header {
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  line-height: 22px;
+  color: #fff;
+  background-color: #818a9e;
+  font-weight: 500;
+
+  &.audit-node {
+    background-color: rgba($primary-color, 0.8);
+  }
+
+  &.fill-node {
+    background-color: rgba(#06c498, 0.8);
+  }
+
+  .icon-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-right: 8px;
+    font-size: 24px;
+
+    & > svg {
+      color: #fff;
+    }
+  }
+
+  .title {
+    @include ellipsis;
+
+    flex: 1 1 0;
+  }
+}
+
+.node {
+  width: 248px;
+  position: relative;
+  user-select: none;
+
+  &:hover {
+    .actions {
+      opacity: 1;
+    }
+  }
+
+  .card {
+    border-radius: 3px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 1px solid transparent;
+
+    &.invalid {
+      border-color: #ff5568;
+      box-shadow: 0 0 0 4px rgba(#ff5568, 0.12);
+    }
+  }
+
+  .content {
+    padding: 12px;
+    line-height: 20px;
+    color: rgba($color: #181f43, $alpha: 0.95);
+    background-color: #fff;
+    font-size: 12px;
+    font-weight: 400;
+  }
+
+  .footer {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 0;
+
+    .line {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 1px;
+      background-color: rgba($color: #181f43, $alpha: 0.12);
+      transform: translateX(-50%);
+    }
+  }
+
+  .actions {
+    @include center('flex');
+
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 4px 0;
+    padding-left: 30px;
+    line-height: 1;
+    z-index: 1;
+    transform: translateY(-100%);
+    opacity: 0;
+    transition: opacity ease-in-out 0.3s;
+
+    &.show {
+      opacity: 1;
+    }
+
+    .action {
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .action + .action {
+      margin-left: 10px;
+    }
+  }
+}

@@ -1,0 +1,39 @@
+@mixin center($type, $zIndex: 1) {
+  @if $type == 'flex' {
+    display: flex;
+    align-items: center;
+  }
+
+  @if $type == 'absolute' {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: $zIndex;
+    transform: translate3d(-50%, -50%, 0);
+  }
+}
+
+@mixin ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@mixin btntheme($color) {
+  color: #fff;
+  background-color: $color;
+  border-color: $color;
+
+  &:hover {
+    color: #fff;
+    border-color: rgba($color, 0.9);
+    background-color: rgba($color, 0.9);
+  }
+
+  &:active,
+  &:focus {
+    color: #fff;
+    border-color: $color;
+    background-color: $color;
+  }
+}

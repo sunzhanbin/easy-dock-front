@@ -1,0 +1,122 @@
+@import '@common/styles/var.scss';
+@import '@common/styles/mixin.scss';
+
+.container {
+  & > .header {
+    display: flex;
+    height: 40px;
+    line-height: 40px;
+    margin: 23px 68px;
+
+    .back {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      margin-right: 16px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+
+    .app_name {
+      font-size: 14px;
+      font-weight: 400;
+      color: rgba(24, 31, 67, 0.95);
+    }
+
+    .more_info {
+      position: relative;
+      display: flex;
+      flex: 1;
+
+      .number {
+        margin: 0 8px 0 4px;
+        font-size: 14px;
+        font-weight: 400;
+        color: rgba(24, 31, 67, 0.5);
+      }
+
+      .status {
+        width: 48px;
+        height: 22px;
+        line-height: 22px;
+        text-align: center;
+        border-radius: 3px;
+        font-size: 12px;
+        font-weight: 400;
+        margin-top: 9px;
+
+        &.active {
+          color: #03a882;
+          background: rgba(6, 196, 152, 0.12);
+        }
+
+        &.negative {
+          color: #fff;
+          background: #b9bcc6;
+        }
+      }
+
+      .search_container {
+        position: absolute;
+        right: 0;
+        width: 382px;
+
+        .search {
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  & > .content {
+    margin: 0 68px 24px 68px;
+    .scenes {
+      position: relative;
+      display: grid;
+      grid-row-gap: 24px;
+      grid-column-gap: 24px;
+
+      &.no-scene {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 92px;
+        background: #fff;
+        border-radius: 3px;
+        line-height: 22px;
+        color: #181f43;
+        font-size: 14px;
+        font-weight: 400;
+
+        .btn {
+          margin-right: 12px;
+        }
+      }
+      .scene {
+        border: 1px solid rgba(24, 31, 67, 0.12);
+      }
+    }
+  }
+}
+@media screen and (min-width: 1640px) and (max-width: 1919px) {
+  .scenes {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+@media screen and (max-width: 1639px) {
+  .scenes {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media screen and (min-width: 1920px) {
+  .scenes {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}

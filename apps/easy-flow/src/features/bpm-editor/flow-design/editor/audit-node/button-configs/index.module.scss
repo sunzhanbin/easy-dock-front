@@ -1,0 +1,36 @@
+@import '@common/styles/mixin.scss';
+
+.btn-configs {
+  & > .editor {
+    margin-bottom: 14px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .approve {
+    @include btntheme(#63c4ad);
+  }
+
+  .cascader {
+    display: block;
+    width: unset !important;
+    margin-bottom: 14px;
+    margin-right: 36px;
+  }
+
+  :global {
+    .ant-cascader-menus {
+      & > div {
+        display: flex;
+        align-items: stretch;
+      }
+
+      .ant-cascader-menu {
+        width: 140px;
+        max-height: 180px;
+      }
+    }
+  }
+}

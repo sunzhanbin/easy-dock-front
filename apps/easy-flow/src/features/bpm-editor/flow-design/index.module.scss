@@ -1,0 +1,55 @@
+.flow {
+  position: relative;
+  height: 100%;
+  background-color: rgba($color: #182743, $alpha: 0.04);
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    padding-top: 95px;
+    overflow-y: auto;
+  }
+
+  :global {
+    .ant-drawer-right {
+      height: unset;
+      top: 64px;
+      bottom: 0;
+
+      .ant-drawer-body {
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+      }
+    }
+
+    .ant-drawer-mask {
+      background-color: transparent;
+    }
+
+    .ant-cascader-menu {
+      height: unset;
+    }
+  }
+
+  .editor {
+    flex: 1 1 0;
+    padding: 24px;
+    overflow-y: auto;
+
+    :global {
+      .ant-form-item-label {
+        padding-bottom: 12px;
+
+        & > label {
+          line-height: 22px;
+          color: rgba(#181f43, 0.95);
+          font-size: 14px;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+}

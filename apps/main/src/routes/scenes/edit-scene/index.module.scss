@@ -1,0 +1,64 @@
+@import '@common/styles/mixin.scss';
+
+.form {
+  display: flex;
+
+  .column {
+    flex: 1 1 0;
+
+    :global {
+      .ant-form-item {
+        textarea.ant-input {
+          height: 160px;
+        }
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+
+  .column + .column {
+    margin-left: 48px;
+  }
+}
+
+.images {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+  .col {
+    margin-bottom: 12px;
+  }
+
+  .box {
+    position: relative;
+    border-radius: 3px;
+    overflow: hidden;
+    cursor: pointer;
+
+    & > img {
+      width: 100%;
+    }
+
+    .mask {
+      @include center('flex');
+
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      justify-content: center;
+      color: #fff;
+      background-color: rgba(#181f43, 0.75);
+      z-index: 1;
+
+      svg {
+        color: inherit;
+      }
+    }
+  }
+}
