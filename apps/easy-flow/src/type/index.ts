@@ -68,7 +68,7 @@ export type FieldValueSource = CustomField | AppBindField;
 
 export type FieldOption = {
   readonly value: string;
-  text: string;
+  name: string;
   color?: string;
 };
 
@@ -156,6 +156,7 @@ export type FormFieldMap = {
 };
 
 export type FormDesign = {
+  formId?: string;
   selectedField: string | null;
   byId: FormFieldMap;
   layout: string[][];

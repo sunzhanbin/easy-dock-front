@@ -4,10 +4,12 @@ const {
   removeModuleScopePlugin,
   babelInclude,
   overrideDevServer,
+  /*  addWebpackPlugin, */
 } = require('customize-cra');
+const FileManagerPlugin = require('filemanager-webpack-plugin');
 const path = require('path');
 const appPackageJson = require('./package.json');
-
+const paths = require('./paths');
 process.env.PORT = 8083;
 
 module.exports = {
@@ -35,6 +37,73 @@ module.exports = {
         library: `${appPackageJson.name}-[name]`,
       };
 
+      return config;
+    },
+
+    function overrideWebpackPlugin(config) {
+      process.env.NODE_ENV === 'development' &&
+        config.plugins.push(
+          new FileManagerPlugin({
+            events: {
+              onEnd: {
+                copy: [
+                  {
+                    source: `${paths.appPath}/conf.js`,
+                    destination: `${paths.appPublic}/config.js`,
+                  },
+                ],
+              },
+            },
+          }),
+        );
+
+      process.env.REACT_APP_TARGET_ENV !== 'development' &&
+        config.plugins.push(
+          new FileManagerPlugin({
+            events: {
+              onEnd: {
+                mkdir: [`zip/${appPackageJson.name}/dist`, `zip/${appPackageJson.name}/template`],
+                copy: [
+                  {
+                    source: paths.appBuild,
+                    destination: `zip/${appPackageJson.name}/dist`,
+                  },
+                  {
+                    source: `${paths.appPath}/conf${
+                      process.env.REACT_APP_TARGET_ENV === 'staging' ? '.staging.js' : '.production.js'
+                    }`,
+                    destination: `zip/${appPackageJson.name}/dist/config.js`,
+                  },
+                  {
+                    source: paths.appTemplate,
+                    destination: `zip/${appPackageJson.name}/template`,
+                  },
+                  {
+                    source: `${paths.appPath}/conf.template.js`,
+                    destination: `zip/${appPackageJson.name}/template/config.js`,
+                  },
+                ],
+                archive: [
+                  {
+                    source: `zip`,
+                    destination: `../../${appPackageJson.name}-${appPackageJson.version}-SNAPSHOT.tar.gz`,
+                    format: 'tar',
+                    options: {
+                      gzip: true,
+                      gzipOptions: {
+                        level: 1,
+                      },
+                      globOptions: {
+                        nomount: true,
+                      },
+                    },
+                  },
+                ],
+                delete: ['zip'],
+              },
+            },
+          }),
+        );
       return config;
     },
   ),

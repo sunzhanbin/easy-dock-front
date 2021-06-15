@@ -43,7 +43,7 @@ function FlowDesign() {
       if (event.key === 's' && (navigator.platform.match('Mac') ? event.metaKey : event.ctrlKey)) {
         event.preventDefault();
 
-        dispatch(save('appkey'));
+        dispatch(save(bpmId));
       }
     }
 
@@ -52,7 +52,7 @@ function FlowDesign() {
     return () => {
       document.body.removeEventListener('keydown', handleSave);
     };
-  }, [dispatch]);
+  }, [dispatch, bpmId]);
 
   const drawerHeader = useMemo(() => {
     if (currentEditNode) {

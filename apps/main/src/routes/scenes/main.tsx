@@ -10,6 +10,7 @@ import Form from './project/form';
 import emptyImage from '@assets/empty.png';
 import { axios } from '@utils';
 import { MAIN_CONTENT_CLASSNAME, dynamicRoutes } from '@consts';
+import useMemoCallback from '@common/hooks/use-memo-callback';
 import Scene, { SceneProps } from './scene';
 import EditScene, { EditSceneProps } from './edit-scene';
 import { ProjectShape, SceneShape } from './types';
@@ -26,7 +27,7 @@ export default function Home() {
   const hasProjects = projects.length > 0;
   const formRef = useRef<FormInstance<{ name: string }>>();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const fetchProjectListRef = useRef<() => Promise<void>>(async () => {
+  const fetchProjectList = useMemoCallback(async () => {
     setFetching(true);
 
     try {
@@ -101,7 +102,7 @@ export default function Home() {
   }, [activeProjectId, fetchSceneList]);
 
   useEffect(() => {
-    fetchProjectListRef.current();
+    fetchProjectList();
   }, []);
 
   // 新增或编辑
@@ -111,7 +112,7 @@ export default function Home() {
       await axios.put('/project', values);
 
       message.success('修改成功');
-      fetchProjectListRef.current();
+      fetchProjectList();
     } else {
       // 新增项目
       const { data } = await axios.post('/project', values);
@@ -119,7 +120,7 @@ export default function Home() {
       message.success('添加成功');
 
       setActiveProjectId(data.id);
-      fetchProjectListRef.current();
+      fetchProjectList();
     }
   }, []);
 
@@ -133,7 +134,7 @@ export default function Home() {
     await axios.delete(`/project/${id}`);
 
     message.success('删除成功');
-    fetchProjectListRef.current();
+    fetchProjectList();
   }, []);
 
   const handleAddScene = useCallback(() => {
@@ -167,7 +168,7 @@ export default function Home() {
       setShowEditSceneModal(false);
       setEditingScene(undefined);
       fetchSceneList(activeProjectId!);
-      fetchProjectListRef.current();
+      fetchProjectList();
     },
     [activeProjectId, fetchSceneList],
   );
@@ -196,14 +197,14 @@ export default function Home() {
   );
 
   const handledeleteScene = useCallback(async (data: SceneShape) => {
-    await axios.delete(`/scene/${data.id}`);
+    await axios.delete(`/project/${data.id}`);
     message.success('删除成功');
 
     setScenes((scenes) => {
       return scenes.filter((scene) => scene.id !== data.id);
     });
 
-    fetchProjectListRef.current();
+    fetchProjectList();
   }, []);
 
   return (
@@ -282,7 +283,6 @@ export default function Home() {
                   onStatusChange={handleModifySceneStatus}
                   onTapCard={handleLinkToSceceDetailPage}
                   onDelete={handledeleteScene}
-                  containerId="scenes-list"
                 />
               );
             })}
