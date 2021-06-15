@@ -303,7 +303,7 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
 
 export const save = createAsyncThunk<void, string, { state: RootState }>(
   'flow/save',
-  async (subappId, { getState, dispatch, rejectWithValue }) => {
+  async (subappId, { getState, dispatch }) => {
     const flow = getState().flow;
     const flowData = flow.data;
     const validResult: FlowType['invalidNodesMap'] = valid(flowData, {});
@@ -313,7 +313,7 @@ export const save = createAsyncThunk<void, string, { state: RootState }>(
 
       message.error('数据填写不完整');
 
-      return rejectWithValue('数据填写不完整');
+      return Promise.reject('数据填写不完整');
     }
 
     if (!flow.dirty) {
@@ -337,7 +337,7 @@ export const save = createAsyncThunk<void, string, { state: RootState }>(
 
 export const saveWithForm = createAsyncThunk<void, string, { state: RootState }>(
   'flow/save-with-form',
-  async (subappId, { getState, dispatch, rejectWithValue }) => {
+  async (subappId, { getState, dispatch }) => {
     try {
       const { flow, formDesign } = getState();
       const validResult: FlowType['invalidNodesMap'] = valid(flow.data, {});
@@ -347,7 +347,7 @@ export const saveWithForm = createAsyncThunk<void, string, { state: RootState }>
 
         message.error('数据填写不完整');
 
-        return rejectWithValue('数据填写不完整');
+        return Promise.reject('数据填写不完整');
       }
 
       const components = formDesign.byId;
