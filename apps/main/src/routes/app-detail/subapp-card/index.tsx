@@ -274,7 +274,7 @@ const Card: FC<{
               </div>
               {statusObj.className !== 'used' && (
                 <Popconfirm
-                  title="请确认是否删除该子应用?"
+                  title="删除后不可恢复,请确认是否删除该子应用?"
                   onConfirm={handleDelete}
                   onCancel={handleCancel}
                   okText="确认"

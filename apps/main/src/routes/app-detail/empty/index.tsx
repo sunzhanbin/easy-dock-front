@@ -9,73 +9,75 @@ import { useHistory } from 'react-router-dom';
 import { FlowMicroApp } from '@/consts';
 
 const Container = styled.div`
-  display: flex;
-  width: 812px;
-  height: 394px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 2;
-  .flow_app,
-  .screen_app {
-    position: relative;
-    width: 394px;
+  &.empty_app {
+    display: flex;
+    width: 812px;
     height: 394px;
-    text-align: center;
-    background: #ffffff;
-    border-radius: 3px;
-    border: 1px solid rgba(24, 31, 67, 0.5);
-    cursor: pointer;
-    .close {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      width: 16px;
-      height: 16px;
-      z-index: 3;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    .flow_app,
+    .screen_app {
+      position: relative;
+      width: 394px;
+      height: 394px;
+      text-align: center;
+      background: #ffffff;
+      border-radius: 3px;
+      border: 1px solid rgba(24, 31, 67, 0.5);
       cursor: pointer;
-      .back {
-        display: inline-block;
+      .close {
+        position: absolute;
+        top: 16px;
+        right: 16px;
         width: 16px;
         height: 16px;
+        z-index: 3;
+        cursor: pointer;
+        .back {
+          display: inline-block;
+          width: 16px;
+          height: 16px;
+        }
+      }
+      .title {
+        height: 34px;
+        line-height: 34px;
+        font-size: 24px;
+        font-weight: bold;
+        color: rgba(0, 0, 0, 0.85);
+        margin-top: 68px;
+      }
+      .tip {
+        height: 20px;
+        line-height: 20px;
+        font-size: 14px;
+        font-weight: 400;
+        color: rgba(24, 31, 67, 0.5);
+        margin-top: 8px;
+      }
+      .image {
+        margin-top: 34px;
       }
     }
-    .title {
-      height: 34px;
-      line-height: 34px;
-      font-size: 24px;
-      font-weight: bold;
-      color: rgba(0, 0, 0, 0.85);
-      margin-top: 68px;
-    }
-    .tip {
-      height: 20px;
-      line-height: 20px;
-      font-size: 14px;
-      font-weight: 400;
-      color: rgba(24, 31, 67, 0.5);
-      margin-top: 8px;
-    }
-    .image {
-      margin-top: 34px;
-    }
-  }
-  .flow_app {
-    border: 1px solid rgba(24, 31, 67, 0.5);
-    margin-right: 24px;
-    .form {
-      width: 330px;
-      margin: 0 auto;
-      margin-top: 40px;
-      .submit {
-        width: 100%;
+    .flow_app {
+      border: 1px solid rgba(24, 31, 67, 0.5);
+      margin-right: 24px;
+      .form {
+        width: 330px;
+        margin: 0 auto;
+        margin-top: 40px;
+        .submit {
+          width: 100%;
+        }
       }
     }
-  }
-  .screen_app {
-    border: 1px solid rgba(24, 31, 67, 0.12);
-    cursor: not-allowed;
+    .screen_app {
+      border: 1px solid rgba(24, 31, 67, 0.12);
+      cursor: not-allowed;
+    }
   }
 `;
 
@@ -98,7 +100,7 @@ const EmptyDetail: FC<{ appId: string }> = ({ appId }) => {
     });
   }, [form, appId, history]);
   return (
-    <Container>
+    <Container className="empty_app">
       <div
         className="flow_app"
         onClick={() => {

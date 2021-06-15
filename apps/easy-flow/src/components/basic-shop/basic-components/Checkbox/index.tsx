@@ -1,12 +1,24 @@
-import React, { memo, useMemo } from 'react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import { Checkbox } from 'antd';
 import { SelectOptionItem } from '@/type';
 import { CheckboxGroupProps } from 'antd/lib/checkbox';
+import { axios } from '@/utils';
 
 const CheckboxComponent = (props: CheckboxGroupProps & { readOnly: boolean; dataSource: SelectOptionItem }) => {
   const { dataSource, readOnly, onChange } = props;
-  const options = useMemo(() => {
-    return (dataSource?.data || []).map((item) => item.value);
+  const [options, setOptions] = useState<string[]>([]);
+  useEffect(() => {
+    if (dataSource.type === 'custom') {
+      const list = (dataSource?.data || []).map((item) => item.value);
+      setOptions(list);
+    } else {
+      const { fieldId, appId } = dataSource;
+      if (fieldId && appId) {
+        // axios.get(`/form/subapp/version/${appId}/form/${fieldId}/data`).then((res) => {
+        //   console.info(res);
+        // });
+      }
+    }
   }, [dataSource]);
   const propList = useMemo(() => {
     const prop: { [k: string]: string | boolean | string[] | Function } = {
