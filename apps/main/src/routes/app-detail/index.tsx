@@ -28,7 +28,7 @@ const AppDetail: FC = () => {
         history.push(`${FlowMicroApp.route}/bpm-editor/${res.data.id}/form-design`);
       });
     },
-    [appId],
+    [appId, history],
   );
   const handleCrateSubApp = useCallback(() => {
     setIsShowModel(true);

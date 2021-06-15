@@ -151,7 +151,7 @@ const Card: FC<{
   }, [status, version]);
   const handleJump = useCallback(() => {
     history.push(`${FlowMicroApp.route}/bpm-editor/${id}/form-design`);
-  }, [id]);
+  }, [id, history]);
   const handleShowOperation = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
     setIsShowOperation(true);

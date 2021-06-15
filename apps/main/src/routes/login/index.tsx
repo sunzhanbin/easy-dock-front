@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { Form, Input } from 'antd';
 import { UserOutlined, KeyOutlined } from '@ant-design/icons';
 import cookie from 'js-cookie';
@@ -11,7 +11,6 @@ import styles from './index.module.scss';
 
 export default function Login() {
   const [form] = Form.useForm();
-  const history = useHistory();
   const { search } = useLocation();
   const login = useCallback(async () => {
     const values = await form.validateFields();
@@ -38,7 +37,7 @@ export default function Login() {
 
       window.location.replace(redirectUrl);
     }
-  }, [history, form, search]);
+  }, [form, search]);
 
   const nameRules = useMemo(() => {
     return [

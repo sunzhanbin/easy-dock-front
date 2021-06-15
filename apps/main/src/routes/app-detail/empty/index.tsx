@@ -96,7 +96,7 @@ const EmptyDetail: FC<{ appId: string }> = ({ appId }) => {
         history.push(`${FlowMicroApp.route}/bpm-editor/${res.data.id}/form-design`);
       });
     });
-  }, [form, appId]);
+  }, [form, appId, history]);
   return (
     <Container>
       <div
