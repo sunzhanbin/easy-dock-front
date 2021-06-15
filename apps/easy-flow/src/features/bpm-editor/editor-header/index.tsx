@@ -1,5 +1,6 @@
 import { FC, memo, useCallback, useMemo } from 'react';
 import { Button, Tooltip, message } from 'antd';
+import { isRejectedWithValue } from '@reduxjs/toolkit';
 import styled from 'styled-components';
 import { useHistory, useRouteMatch, NavLink, useLocation, useParams } from 'react-router-dom';
 import { save, saveWithForm } from '../flow-design/flow-slice';
@@ -154,9 +155,15 @@ const EditorHeader: FC = () => {
   }, [pathName, history, formDesignPath, flowDesignPath]);
 
   const handlePublish = useCallback(async () => {
+    const formResponse = await dispatch(saveForm(bpmId));
+
+    if (isRejectedWithValue(formResponse)) {
+      return;
+    }
+
     const flowResponse = await dispatch(saveWithForm(bpmId));
 
-    if ((flowResponse as any).error) {
+    if (isRejectedWithValue(flowResponse)) {
       return;
     }
 
