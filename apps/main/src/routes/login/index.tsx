@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { Form, Input, message } from 'antd';
 import { UserOutlined, KeyOutlined } from '@ant-design/icons';
 import cookie from 'js-cookie';
@@ -13,38 +13,43 @@ import styles from './index.module.scss';
 export default function Login() {
   const [form] = Form.useForm();
   const { search } = useLocation();
-  const history = useHistory();
   const [loading, setLoading] = useState(false);
   const login = useCallback(async () => {
     if (loading) return;
 
-    const values = await form.validateFields();
-    const data = Object.assign({}, { loginType: 1, appCode: 'easydock' }, values);
-    const loginResponse = await axios.post('/api/auth/v1/login', data, {
-      baseURL: envs.COMMON_LOGIN_DOMAIN,
-    });
+    setLoading(true);
 
-    if (loginResponse.data) {
-      const token = loginResponse.data.token;
+    try {
+      const values = await form.validateFields();
+      const data = Object.assign({}, { loginType: 1, appCode: 'easydock' }, values);
+      const loginResponse = await axios.post('/api/auth/v1/login', data, {
+        baseURL: envs.COMMON_LOGIN_DOMAIN,
+      });
 
-      cookie.set('token', token, { expires: 1 });
-      axios.defaults.headers.auth = token;
+      if (loginResponse.data) {
+        const token = loginResponse.data.token;
 
-      let redirectUrl = '';
-      const keyValues = decodeURIComponent(search.slice(1)).split('=');
-      const redirectUrlIndex = keyValues.findIndex((item) => item === 'redirect');
+        cookie.set('token', token, { expires: 1 });
+        axios.defaults.headers.auth = token;
 
-      if (redirectUrlIndex !== -1) {
-        redirectUrl = keyValues[redirectUrlIndex + 1];
+        let redirectUrl = '';
+        const keyValues = decodeURIComponent(search.slice(1)).split('=');
+        const redirectUrlIndex = keyValues.findIndex((item) => item === 'redirect');
+
+        if (redirectUrlIndex !== -1) {
+          redirectUrl = keyValues[redirectUrlIndex + 1];
+        } else {
+          redirectUrl = ROUTES.INDEX;
+        }
+
+        window.location.replace(redirectUrl);
       } else {
-        redirectUrl = ROUTES.INDEX;
+        message.error((loginResponse as any).resultMessage);
       }
-
-      window.location.replace(redirectUrl);
-    } else {
-      message.error((loginResponse as any).resultMessage);
+    } finally {
+      setLoading(false);
     }
-  }, [form, search]);
+  }, [form, search, loading]);
 
   const nameRules = useMemo(() => {
     return [

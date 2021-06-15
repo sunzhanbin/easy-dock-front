@@ -47,62 +47,6 @@ module.exports = {
       ['@common']: path.resolve(__dirname, '../../packages/common'),
     };
 
-    // config.module.rules = config.module.rules.concat({
-    //   test: /\.less$/,
-    //   use: [
-    //     {
-    //       loader: 'style-loader',
-    //     },
-    //     {
-    //       loader: 'css-loader', // translates CSS into CommonJS
-    //     },
-    //     {
-    //       loader: 'less-loader', // compiles Less to CSS
-    //       options: {
-    //         lessOptions: {
-    //           modifyVars: {
-    //             '@primary-color': 'red',
-    //             'link-color': 'red',
-    //             'border-radius-base': '3px',
-    //           },
-    //           javascriptEnabled: true,
-    //         },
-    //       },
-    //     },
-    //   ],
-    // });
-
-    // config.module.rules = config.module.rules.map((rule) => {
-    //   if (Array.isArray(rule.oneOf)) {
-    //     rule.oneOf.push({
-    //       test: /\.less$/,
-    //       use: [
-    //         {
-    //           loader: 'style-loader',
-    //         },
-    //         {
-    //           loader: 'css-loader', // translates CSS into CommonJS
-    //         },
-    //         {
-    //           loader: 'less-loader', // compiles Less to CSS
-    //           options: {
-    //             lessOptions: {
-    //               modifyVars: {
-    //                 'primary-color': 'red',
-    //                 'link-color': 'red',
-    //                 'border-radius-base': '3px',
-    //               },
-    //               javascriptEnabled: true,
-    //             },
-    //           },
-    //         },
-    //       ],
-    //     });
-    //   }
-
-    //   return rule;
-    // });
-
     if (config.mode !== 'development') {
       config.plugins = config.plugins.concat(
         new FileManagerPlugin({
