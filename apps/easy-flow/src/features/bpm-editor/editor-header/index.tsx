@@ -2,7 +2,7 @@ import { FC, memo, useCallback, useMemo } from 'react';
 import { Button, Tooltip, message } from 'antd';
 import styled from 'styled-components';
 import { useHistory, useRouteMatch, NavLink, useLocation, useParams } from 'react-router-dom';
-import { save } from '../flow-design/flow-slice';
+import { save, saveWithForm } from '../flow-design/flow-slice';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { AsyncButton } from '@common/components';
 import { axios } from '@utils';
@@ -154,6 +154,12 @@ const EditorHeader: FC = () => {
   }, [pathName, history, formDesignPath, flowDesignPath]);
 
   const handlePublish = useCallback(async () => {
+    const flowResponse = await dispatch(saveWithForm(bpmId));
+
+    if ((flowResponse as any).error) {
+      return;
+    }
+
     await axios.post('/subapp/deploy', {
       enableNewVersion: true,
       remark: '',
@@ -161,7 +167,7 @@ const EditorHeader: FC = () => {
     });
 
     message.success('发布成功');
-  }, [bpmId]);
+  }, [bpmId, dispatch]);
 
   return (
     <HeaderContainer>

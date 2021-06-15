@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction, createAsyncThunk, createSelector } from '@reduxjs/toolkit';
 import { message } from 'antd';
+import { cloneDeep, isEqual } from 'lodash';
 import { builderAxios, runtimeAxios } from '@utils';
 import { User } from '@type';
 import {
@@ -17,11 +18,6 @@ import {
 } from '@type/flow';
 import { RootState } from '@app/store';
 import { fielduuid, createNode } from './util';
-
-// if (process.env.NODE_ENV === 'development') {
-//   axios.defaults.baseURL = '/';
-//   require('./mock');
-// }
 
 export type FlowType = {
   loading: boolean;
@@ -213,6 +209,14 @@ const flow = createSlice({
 const flowActions = flow.actions;
 export const { setLoading, updateNode, delNode, setCacheMembers } = flow.actions;
 
+function getFieldsTemplate(fieldsTemplate: FlowType['fieldsTemplate']) {
+  return fieldsTemplate.reduce((fieldsAuths, item) => {
+    fieldsAuths[item.id] = AuthType.View;
+
+    return fieldsAuths;
+  }, <FieldAuthsMap>{});
+}
+
 // 加载应用的流程，对于初始创建的应用是null
 export const load = createAsyncThunk('flow/load', async (appkey: string, { dispatch }) => {
   try {
@@ -247,11 +251,7 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
 
       const fillNode: FillNode = createNode(NodeType.FillNode, '填写节点');
 
-      fillNode.fieldsAuths = fieldsTemplate.reduce((fieldsAuths, item) => {
-        fieldsAuths[item.id] = AuthType.View;
-
-        return fieldsAuths;
-      }, <FieldAuthsMap>{});
+      fillNode.fieldsAuths = getFieldsTemplate(fieldsTemplate);
 
       flowData = [startNode, fillNode, finishNode];
     } else {
@@ -303,8 +303,9 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
 
 export const save = createAsyncThunk<void, string, { state: RootState }>(
   'flow/save',
-  async (appkey: string, { getState, dispatch }) => {
-    const flowData = getState().flow.data;
+  async (subappId, { getState, dispatch }) => {
+    const flow = getState().flow;
+    const flowData = flow.data;
     const validResult: FlowType['invalidNodesMap'] = valid(flowData, {});
 
     if (Object.keys(validResult).length) {
@@ -312,52 +313,130 @@ export const save = createAsyncThunk<void, string, { state: RootState }>(
 
       message.error('数据填写不完整');
 
+      await Promise.reject('数据填写不完整');
+    }
+
+    if (!flow.dirty) {
+      message.success('保存成功');
+
       return;
     }
 
     try {
       dispatch(setLoading(true));
 
-      await builderAxios.post('/process/add', { meta: flowData, subappId: appkey });
+      await builderAxios.post('/process/add', { meta: flowData, subappId });
 
-      message.success('保存成功');
       dispatch(flowActions.setDirty(false));
-    } catch (error) {
-      message.error(error);
+      message.success('保存成功');
     } finally {
       dispatch(setLoading(false));
     }
   },
 );
 
-export const addNode = createAsyncThunk<void, { prevId: string; type: NodeType.AuditNode | NodeType.FillNode }>(
-  'flow/createn-ode',
-  ({ prevId, type }, { dispatch }) => {
-    let tmpNode;
+export const saveWithForm = createAsyncThunk<void, string, { state: RootState }>(
+  'flow/save-with-form',
+  async (subappId, { getState, dispatch }) => {
+    try {
+      const { flow, formDesign } = getState();
+      const validResult: FlowType['invalidNodesMap'] = valid(flow.data, {});
 
-    if (type === NodeType.AuditNode) {
-      tmpNode = createNode(type, '审批节点');
-    } else if (type === NodeType.FillNode) {
-      tmpNode = createNode(type, '填写节点');
-    } else {
-      throw Error('传入类型不正确');
+      if (Object.keys(validResult).length) {
+        dispatch(flowActions.setInvalidMaps(validResult));
+
+        message.error('数据填写不完整');
+
+        await Promise.reject('数据填写不完整');
+      }
+
+      const components = formDesign.byId;
+      const fieldsTemplate: FlowType['fieldsTemplate'] = [];
+
+      (formDesign.layout || []).forEach((row) => {
+        row.forEach((componentId) => {
+          const key = components[componentId].fieldName;
+
+          if (!key) return;
+
+          fieldsTemplate.push({
+            id: components[componentId].fieldName,
+            name: components[componentId].label,
+          });
+        });
+      });
+
+      const isNeedUpdateFieldTemplate = !isEqual(flow.fieldsTemplate, fieldsTemplate);
+
+      // 如果不需要更新flow数据
+      if (!isNeedUpdateFieldTemplate && !flow.dirty) return;
+
+      dispatch(flowActions.setLoading(true));
+      // 需要根据表单字段更新flow
+      if (isNeedUpdateFieldTemplate) {
+        const flowData = cloneDeep(flow.data);
+
+        flowRecursion(flowData, function calcField(node) {
+          if (node.type === NodeType.FillNode || node.type === NodeType.AuditNode) {
+            const fieldsAuths: FieldAuthsMap = {};
+
+            fieldsTemplate.forEach((field) => {
+              const key = field.id;
+
+              if (node.fieldsAuths[key] !== undefined) {
+                fieldsAuths[key] = node.fieldsAuths[key];
+              } else {
+                fieldsAuths[key] = AuthType.View;
+              }
+            });
+
+            node.fieldsAuths = fieldsAuths;
+          }
+        });
+
+        await builderAxios.post('/process/add', { meta: flowData, subappId });
+
+        dispatch(flowActions.setInitialFlow(flowData));
+        dispatch(flowActions.setFieldsTemplate(fieldsTemplate));
+      } else if (flow.dirty) {
+        // 当前flow未保存
+        await builderAxios.post('/process/add', { meta: flow.data, subappId });
+      }
+
+      dispatch(flowActions.setDirty(false));
+    } finally {
+      dispatch(flowActions.setLoading(false));
     }
-
-    dispatch(
-      flowActions.addNode({
-        prevId,
-        node: tmpNode,
-      }),
-    );
   },
 );
+
+export const addNode = createAsyncThunk<
+  void,
+  { prevId: string; type: NodeType.AuditNode | NodeType.FillNode },
+  { state: RootState }
+>('flow/create-node', ({ prevId, type }, { getState, dispatch }) => {
+  let tmpNode;
+
+  if (type === NodeType.AuditNode) {
+    tmpNode = createNode(type, '审批节点');
+  } else if (type === NodeType.FillNode) {
+    tmpNode = createNode(type, '填写节点');
+  } else {
+    throw Error('传入类型不正确');
+  }
+
+  // 给新节点设置初始字段权限
+  tmpNode.fieldsAuths = getFieldsTemplate(getState().flow.fieldsTemplate);
+
+  dispatch(
+    flowActions.addNode({
+      prevId,
+      node: tmpNode,
+    }),
+  );
+});
 
 export default flow;
 
 // 聚合form和flow, 因为flow的字段权限需要form的字段信息
-export const flowDataSelector = createSelector(
-  [(state: RootState) => state.formDesign, (state: RootState) => state.flow],
-  (form, flow) => {
-    return flow;
-  },
-);
+export const flowDataSelector = createSelector([(state: RootState) => state.flow], (flow) => flow);

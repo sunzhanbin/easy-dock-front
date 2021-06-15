@@ -146,9 +146,9 @@ function FieldAuths(props: FieldAuthsProps) {
     const { auth } = field;
     const newValue = { ...value };
 
-    for (let key in newValue) {
-      newValue[key] = auth;
-    }
+    templates.forEach((field) => {
+      newValue[field.id] = auth;
+    });
 
     if (onChange) {
       onChange(newValue);
