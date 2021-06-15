@@ -13,8 +13,6 @@ const ScenesListPage = React.lazy(() => import(/* webpackChunkName: "scenes-list
 const AppPage = React.lazy(() => import(/* webpackChunkName: "app-detail" */ '@/routes/app-detail'));
 const IntegrationPage = React.lazy(() => import(/* webpackChunkName: "integration" */ '@/routes/integration'));
 
-const SceneEditorPage = React.lazy(() => import(/* webpackChunkName: "integration" */ '@/routes/scene-editor'));
-
 const MicroPage = React.lazy(() => import(/* webpackChunkName: "integration" */ '@/routes/micro-page'));
 
 export default function PrimaryLayout() {
@@ -57,7 +55,6 @@ export default function PrimaryLayout() {
         <Route path={[ROUTES.INDEX, ROUTES.SCENE_MANAGE]} exact component={ScenesListPage}></Route>
         <Route path={ROUTES.SCENE_DETAIL} component={AppPage}></Route>
         <Route path={ROUTES.INTEGRATION} component={IntegrationPage}></Route>
-        <Route path={ROUTES.SCENE_EDITOR} component={SceneEditorPage}></Route>
         <Route path={microsUrls} component={MicroPage}></Route>
       </Suspense>
     </UserContext.Provider>
