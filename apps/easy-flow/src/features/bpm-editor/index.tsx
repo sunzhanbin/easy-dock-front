@@ -46,7 +46,7 @@ const BpmEditor: FC = () => {
         <Switch>
           <Route path={`${match.path}/form-design`} component={FormDesign}></Route>
           <Route path={`${match.path}/flow-design`} component={FlowDesign}></Route>
-          <Route path={`${match.path}preview-form`} component={PreviewForm}></Route>
+          <Route path={`${match.path}/preview-form`} component={PreviewForm}></Route>
           {/* <Redirect to={`${match.url}/form-design`}></Redirect> */}
         </Switch>
       </div>

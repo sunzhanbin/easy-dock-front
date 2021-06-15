@@ -131,9 +131,9 @@ const EditorHeader: FC = () => {
   }, [match]);
   const handlePreview = useCallback(() => {
     if (pathName === formDesignPath) {
-      history.push('/preview-form');
+      history.push(`${match.url}/preview-form`);
     }
-  }, [pathName, history, formDesignPath]);
+  }, [pathName, history, formDesignPath, match]);
   const handlePrev = useCallback(() => {
     if (pathName === flowDesignPath) {
       history.push(formDesignPath);
