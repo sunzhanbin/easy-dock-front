@@ -121,7 +121,9 @@ export type OptionItem = {
 };
 export type SelectOptionItem = {
   type: OptionMode;
-  data: OptionItem[];
+  data?: OptionItem[];
+  appId?: string;
+  fieldId?: string;
 };
 
 export type SelectField = {

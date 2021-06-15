@@ -97,10 +97,6 @@ interface editProps {
   onChange?: (v: SelectOptionItem) => void;
 }
 
-type NameMap = {
-  [k: string]: OptionItem[];
-};
-
 const SelectOptionList = (props: editProps) => {
   const { value, onChange } = props;
   const { appId, id: subAppId } = useAppSelector(subAppSelector);
@@ -108,7 +104,7 @@ const SelectOptionList = (props: editProps) => {
   const [content, setContent] = useState<OptionItem[]>(value?.data || []);
   const [canDrag, setCanDrag] = useState<boolean>(false);
   const [subAppKey, setSubAppKey] = useState<string>('');
-  const [appList, setAppList] = useState<OptionItem[]>([]);
+  const [appList, setAppList] = useState<(OptionItem & { versionId: number })[]>([]);
   const [componentKey, setComponentKey] = useState<string>('');
   const [componentList, setComponentList] = useState<OptionItem[]>([]);
   const addItem = useCallback(() => {
@@ -165,12 +161,33 @@ const SelectOptionList = (props: editProps) => {
     },
     [content],
   );
-  const handleChangeApp = useCallback((e) => {
-    setSubAppKey(e as string);
-    setComponentList([]);
-    // setComponentList(list);
-    setComponentKey('');
-  }, []);
+  const handleChangeApp = useCallback(
+    (e) => {
+      setSubAppKey(e as string);
+      setComponentKey('');
+      let versionId: number = 0;
+      for (let i = 0, len = appList.length; i < len; i++) {
+        if (appList[i].key === e) {
+          versionId = appList[i].versionId;
+          break;
+        }
+      }
+      if (versionId) {
+        axios
+          .get(`/form/version/${versionId}/components`)
+          .then((res) => {
+            const list = res.data
+              .filter((item: { unique: boolean }) => item.unique)
+              .map((item: { field: string; name: string }) => ({ key: item.field, value: item.name }));
+            setComponentList(list);
+          })
+          .catch(() => {
+            setComponentList([]);
+          });
+      }
+    },
+    [appList],
+  );
   const handleChangeComponent = useCallback((e) => {
     setComponentKey(e);
   }, []);
@@ -178,13 +195,17 @@ const SelectOptionList = (props: editProps) => {
     axios.get(`/subapp/${appId}/list/all/deployed`).then((res) => {
       const list = res.data
         .filter((app: { id: number }) => app.id !== subAppId)
-        .map((app: { name: string; id: number }) => ({ key: app.id, value: app.name }));
+        .map((app: { name: string; id: number; version: { id: number } }) => ({
+          key: app.id,
+          value: app.name,
+          versionId: app.version.id,
+        }));
       setAppList(list);
     });
   }, [subAppId]);
   useEffect(() => {
-    onChange && onChange({ type, data: content });
-  }, [type, content]);
+    onChange && onChange({ type, data: content, appId: subAppKey, fieldId: componentKey });
+  }, [type, content, subAppKey, componentKey]);
   const customContent = useMemo(() => {
     if (Array.isArray(content) && type === 'custom') {
       return (
