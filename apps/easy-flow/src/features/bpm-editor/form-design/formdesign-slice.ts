@@ -80,10 +80,13 @@ const validComponentConfig = (config: ConfigItem) => {
   });
   return errorText;
 };
-
-export const saveForm = createAsyncThunk<void, string, { state: RootState }>(
+type SaveParams = {
+  subAppId: string;
+  isShowTip?: boolean;
+};
+export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>(
   'form/save',
-  async (subAppId: string, { getState, dispatch }) => {
+  async ({ subAppId, isShowTip }, { getState, dispatch }) => {
     const { formDesign } = getState();
     const { layout, schema, isDirty } = formDesign;
     const formMeta: FormMeta = {
@@ -122,7 +125,8 @@ export const saveForm = createAsyncThunk<void, string, { state: RootState }>(
         await axios.post('/form', { meta: formMeta, subappId: subAppId });
         dispatch(setIsDirty({ isDirty: false }));
       }
-      message.success('保存成功!');
-    } catch (error) {}
+      isShowTip && message.success('保存成功!');
+    } finally {
+    }
   },
 );

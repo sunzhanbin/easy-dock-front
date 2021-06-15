@@ -141,7 +141,7 @@ const EditorHeader: FC = () => {
   }, [pathName, history, formDesignPath, flowDesignPath]);
   const handleSave = useCallback(() => {
     if (pathName === formDesignPath) {
-      dispatch(saveForm(bpmId));
+      dispatch(saveForm({ subAppId: bpmId, isShowTip: true }));
     }
 
     if (pathName === flowDesignPath) {
@@ -155,7 +155,7 @@ const EditorHeader: FC = () => {
   }, [pathName, history, formDesignPath, flowDesignPath]);
 
   const handlePublish = useCallback(async () => {
-    const formResponse = await dispatch(saveForm(bpmId));
+    const formResponse = await dispatch(saveForm({ subAppId: bpmId, isShowTip: false }));
 
     if (isRejectedWithValue(formResponse)) {
       return;
