@@ -1,9 +1,10 @@
-import React, { memo, useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { useLocation } from 'react-router';
 import styled from 'styled-components';
 import { InputNumber } from 'antd';
 import { Icon } from '@common/components';
 import { InputNumberProps } from 'antd/lib/input-number';
+import { useRouteMatch } from 'react-router-dom';
 
 const TextareaComponentContainer = styled.div`
   display: flex;
@@ -40,6 +41,7 @@ const TextareaComponentContainer = styled.div`
 
 const TextareaComponent = (props: InputNumberProps) => {
   const location = useLocation();
+  const match = useRouteMatch();
   const { defaultValue, readOnly, onChange } = props;
   const propList = useMemo(() => {
     const prop: { [k: string]: string | number | boolean | undefined | Function } = {
@@ -50,12 +52,12 @@ const TextareaComponent = (props: InputNumberProps) => {
     };
     if (defaultValue) {
       prop.defaultValue = defaultValue;
-      if (location.pathname === '/form-design') {
+      if (location.pathname === `${match.url}`) {
         prop.value = defaultValue;
       }
     }
     return Object.assign({}, props, prop);
-  }, [defaultValue, readOnly, location, props, onChange]);
+  }, [defaultValue, readOnly, location, props, match, onChange]);
 
   return (
     <TextareaComponentContainer>

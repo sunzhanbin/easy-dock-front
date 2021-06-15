@@ -26,9 +26,15 @@ const reducers = {
       }
       if (state.byId[com.id!]) return state;
       state.byId[com.id!] = com;
-      state.selectedField = com.id as string;
-      state.layout.splice(rowIndex, 0, [com.id!]);
+      // 如果当前选中了某一行，则在当前行之后插入；否则在末尾插入
+      if (state.selectedField) {
+        const rowNumber = locateById(state.selectedField, state.layout)[0];
+        state.layout.splice(rowNumber + 1, 0, [com.id!]);
+      } else {
+        state.layout.splice(rowIndex, 0, [com.id!]);
+      }
       state.isDirty = true;
+      state.selectedField = com.id as string;
       return state;
     },
     prepare: (com: FormField, rowIndex: number) => {

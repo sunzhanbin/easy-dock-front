@@ -1,12 +1,14 @@
-import React, { memo, useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { useLocation } from 'react-router';
 import { DatePicker } from 'antd';
 import { DatePickerProps } from 'antd/lib/date-picker';
 import moment, { Moment } from 'moment';
+import { useRouteMatch } from 'react-router-dom';
 
 const Date = (props: DatePickerProps & { readOnly: boolean; notSelectPassed: boolean }) => {
   const { format, notSelectPassed, defaultValue, readOnly, onChange } = props;
   const location = useLocation();
+  const match = useRouteMatch();
   const propList = useMemo(() => {
     const prop: { [k: string]: string | boolean | Function | Moment } = {
       size: 'large',
@@ -29,12 +31,12 @@ const Date = (props: DatePickerProps & { readOnly: boolean; notSelectPassed: boo
     if (defaultValue) {
       const value = moment(defaultValue, formatStr);
       prop.defaultValue = value;
-      if (location.pathname === '/form-design') {
+      if (location.pathname === `${match.url}`) {
         prop.value = value;
       }
     }
     return Object.assign({}, props, prop);
-  }, [format, notSelectPassed, defaultValue, readOnly, location, props, onChange]);
+  }, [format, notSelectPassed, defaultValue, readOnly, location, props, match, onChange]);
   return <DatePicker {...propList} style={{ width: '100%' }} />;
 };
 export default memo(Date);

@@ -75,7 +75,7 @@ const validComponentConfig = (config: ConfigItem) => {
           : `${label}的数据库字段名不符合规范`
         : `请填写${label}的数据库字段名`;
     } else if (key === 'label' && !config.label) {
-      errorText = `请填写${label}的空间名称`;
+      errorText = `请填写控件名称`;
     }
   });
   return errorText;
