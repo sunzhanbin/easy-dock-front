@@ -59,7 +59,7 @@ function FlowDesign() {
       if (currentEditNode.type === NodeType.AuditNode) {
         return (
           <CardHeader icon={<Icon type="shenhejiedian" />} type={currentEditNode.type}>
-            用户节点
+            审批节点
           </CardHeader>
         );
       } else if (currentEditNode.type === NodeType.StartNode) {

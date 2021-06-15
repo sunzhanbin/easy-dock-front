@@ -56,7 +56,7 @@ export default function Scene(props: SceneProps) {
     [onTapCard, data],
   );
 
-  const canDelete = Boolean(!data.version || data.status === -1);
+  const canDelete = data.status === -1;
 
   const handleDeleteScene = useCallback(() => {
     if (!canDelete) {
@@ -78,10 +78,7 @@ export default function Scene(props: SceneProps) {
           <Icon type="bianji" />
           <span>编辑</span>
         </div>
-        <div
-          className={classnames(styles.item, { [styles.disabled]: !canDelete })}
-          onClick={handleDeleteScene}
-        >
+        <div className={classnames(styles.item, { [styles.disabled]: !canDelete })} onClick={handleDeleteScene}>
           <Icon type="shanchu" />
           <span>删除</span>
         </div>
@@ -122,28 +119,19 @@ export default function Scene(props: SceneProps) {
         ) : (
           <div className={styles.remark}>{data.remark || '这是一个应用'}</div>
         )}
-        <div className={styles.footer}>
-          {data.version ? (
-            <Popconfirm
-              title="提示"
-              key="switch-status"
-              content={`确认${data.status === 1 ? '关闭' : '启用'}所选应用吗?`}
-              onConfirm={handleStatusChange}
-              getPopupContainer={getPopupContainer}
-            >
-              <div onClick={stopPropagation}>
-                <Switch
-                  checkedChildren="开启"
-                  unCheckedChildren="关闭"
-                  checked={data.status === 1}
-                />
-              </div>
-            </Popconfirm>
-          ) : (
-            <div className={styles.editing}>编辑中</div>
-          )}
 
-          {data.version && <div className={styles.version}>{data.version.version}</div>}
+        <div className={styles.footer}>
+          <Popconfirm
+            title="提示"
+            key="switch-status"
+            content={`确认${data.status === 1 ? '关闭' : '启用'}所选应用吗?`}
+            onConfirm={handleStatusChange}
+            getPopupContainer={getPopupContainer}
+          >
+            <div onClick={stopPropagation}>
+              <Switch checkedChildren="开启" unCheckedChildren="关闭" checked={data.status === 1} />
+            </div>
+          </Popconfirm>
         </div>
         <div className={styles.tool}>
           <Popconfirm

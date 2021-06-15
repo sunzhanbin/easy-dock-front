@@ -155,12 +155,12 @@ export default function Home() {
     async (data) => {
       if (data.id) {
         // 编辑
-        await axios.put('/scene', Object.assign({}, data, { projectId: activeProjectId }));
+        await axios.put('/app', Object.assign({}, data, { projectId: activeProjectId }));
 
         message.success('应用修改成功');
       } else {
         // 新增
-        await axios.post('/scene', Object.assign({}, data, { projectId: activeProjectId }));
+        await axios.post('/app', Object.assign({}, data, { projectId: activeProjectId }));
 
         message.success('应用创建成功');
       }
@@ -174,7 +174,7 @@ export default function Home() {
   );
 
   const handleModifySceneStatus: SceneProps['onStatusChange'] = useCallback(async (status, id) => {
-    await axios.put('/scene/status', { status, id });
+    await axios.put('/app/status', { status, id });
 
     message.success('修改成功');
 
@@ -197,7 +197,7 @@ export default function Home() {
   );
 
   const handledeleteScene = useCallback(async (data: SceneShape) => {
-    await axios.delete(`/project/${data.id}`);
+    await axios.delete(`/app/${data.id}`);
     message.success('删除成功');
 
     setScenes((scenes) => {
@@ -283,6 +283,7 @@ export default function Home() {
                   onStatusChange={handleModifySceneStatus}
                   onTapCard={handleLinkToSceceDetailPage}
                   onDelete={handledeleteScene}
+                  containerId="scenes-list"
                 />
               );
             })}
