@@ -10,6 +10,7 @@ import ButtonConfigs from './button-configs';
 import FieldAuths from '../components/field-auths';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { trimInputValue } from '../../util';
+import { name } from '../rules';
 
 interface AuditNodeEditorProps {
   node: AuditNode;
@@ -59,18 +60,7 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
   );
 
   const nameRules: Rule[] = useMemo(() => {
-    return [
-      {
-        required: true,
-        validator(_, value: string) {
-          if (!value || value.length > 30 || /[^\u4e00-\u9fa5_\d\w]/.test(value)) {
-            return Promise.reject(new Error('节点名称为1-30位汉字、字母、数字、下划线'));
-          } else {
-            return Promise.resolve();
-          }
-        },
-      },
-    ];
+    return [name];
   }, []);
 
   const memberRules: Rule[] = useMemo(() => {
