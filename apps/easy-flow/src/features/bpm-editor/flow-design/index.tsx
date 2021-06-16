@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { Prompt, useParams } from 'react-router-dom';
-import { Drawer } from 'antd';
+import React, { useEffect, useMemo, useState, useRef } from 'react';
+import { Prompt, useParams, useLocation, useHistory, useRouteMatch } from 'react-router-dom';
+import { Drawer, Modal } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { Loading, Icon } from '@common/components';
 import { load, flowDataSelector, save } from './flow-slice';
@@ -18,10 +18,26 @@ function FlowDesign() {
   const [currentEditNode, setCurrentEditNode] = useState<AllNode | null>(null);
   const [showEditDrawer, setShowEditDrawer] = useState(false);
   const [currentEditNodePrevNodes, setCurrentEditNodePrevNodes] = useState<AllNode[]>([]);
+  const [showPrompt, setShowPrompt] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [showUnSaveModal, setShowUnSaveModal] = useState(false);
+  const { url } = useRouteMatch();
+  const history = useHistory();
+  const targetUrlRef = useRef<string>();
+  const cancelSaveRef = useRef<boolean>();
 
   useEffect(() => {
     dispatch(load(bpmId));
   }, [dispatch, bpmId]);
+
+  useEffect(() => {
+    // 这里不能用dirt替代
+    setShowPrompt((oldValue) => {
+      if (oldValue) return true;
+
+      return dirty;
+    });
+  }, [dirty]);
 
   const handleClickNode = useMemoCallback((node: Exclude<AllNode, BranchNodeType>) => {
     setCurrentEditNode(node);
@@ -86,13 +102,37 @@ function FlowDesign() {
     return null;
   }, [currentEditNode]);
 
-  const handleConfirmLeave = useMemoCallback(() => {
+  const handleConfirmLeave = useMemoCallback((location: ReturnType<typeof useLocation>) => {
+    if (dirty && url !== location.pathname && !cancelSaveRef.current) {
+      targetUrlRef.current = location.pathname + location.search;
+      setShowUnSaveModal(true);
+
+      return false;
+    }
+
     return true;
+  });
+
+  const handleSave = useMemoCallback(async () => {
+    setSaving(true);
+
+    await dispatch(save(bpmId));
+
+    setSaving(false);
+  });
+
+  const handleCancelUnSaveModal = useMemoCallback(() => {
+    setShowUnSaveModal(false);
+    cancelSaveRef.current = true;
+
+    if (targetUrlRef.current) {
+      history.push(targetUrlRef.current);
+    }
   });
 
   return (
     <div className={styles.flow}>
-      <Prompt when={dirty} message={handleConfirmLeave} />
+      {showPrompt && <Prompt when={dirty} message={handleConfirmLeave} />}
       {loading && <Loading />}
       <div className={styles.content}>
         {flow.map((node, index) => {
@@ -147,6 +187,22 @@ function FlowDesign() {
           )}
         </div>
       </Drawer>
+
+      <Modal
+        maskClosable={false}
+        destroyOnClose
+        visible={showUnSaveModal}
+        width={352}
+        title="提示"
+        okButtonProps={{ size: 'large', loading: saving }}
+        okText="保存更改"
+        cancelButtonProps={{ size: 'large' }}
+        cancelText="放弃保存"
+        onOk={handleSave}
+        onCancel={handleCancelUnSaveModal}
+      >
+        当前有未保存的更改，您在离开当前页面是否要保存这些更改?
+      </Modal>
     </div>
   );
 }
