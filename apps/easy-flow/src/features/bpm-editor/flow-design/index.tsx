@@ -3,7 +3,7 @@ import { Prompt, useParams, useLocation, useHistory } from 'react-router-dom';
 import { Drawer, Modal } from 'antd';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import { Loading, Icon } from '@common/components';
+import { Loading, Icon, AsyncButton } from '@common/components';
 import { load, flowDataSelector, save, setDirty } from './flow-slice';
 import { AllNode, BranchNode as BranchNodeType, NodeType } from '@type/flow';
 import { StartNode, AuditNode, FillNode, FinishNode, CardHeader } from './nodes';
@@ -15,12 +15,12 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks';
 function FlowDesign() {
   const dispatch = useAppDispatch();
   const { bpmId } = useParams<{ bpmId: string }>();
-  const { loading, data: flow, dirty } = useAppSelector(flowDataSelector);
+  const { loading, data: flow, dirty, invalidNodesMap } = useAppSelector(flowDataSelector);
   const [currentEditNode, setCurrentEditNode] = useState<AllNode | null>(null);
   const [showEditDrawer, setShowEditDrawer] = useState(false);
   const [currentEditNodePrevNodes, setCurrentEditNodePrevNodes] = useState<AllNode[]>([]);
   const [saving, setSaving] = useState(false);
-  const [showUnSaveModal, setShowUnSaveModal] = useState(false);
+  const [showUnsaveModal, setShowUnsaveModal] = useState(false);
   const history = useHistory();
   const targetUrlRef = useRef<string>();
   const cancelSaveRef = useRef<boolean>();
@@ -99,7 +99,7 @@ function FlowDesign() {
   const handleConfirmLeave = useMemoCallback((location: ReturnType<typeof useLocation>) => {
     if (dirty && !cancelSaveRef.current) {
       targetUrlRef.current = location.pathname + location.search;
-      setShowUnSaveModal(true);
+      setShowUnsaveModal(true);
 
       return false;
     }
@@ -115,9 +115,13 @@ function FlowDesign() {
     setSaving(false);
   });
 
-  const handleCancelUnSaveModal = useMemoCallback(() => {
+  const handleCloseUnsaveModal = useMemoCallback(() => {
+    setShowUnsaveModal(false);
+  });
+
+  const handleCancelUnsaveModal = useMemoCallback(() => {
     dispatch(setDirty(false));
-    setShowUnSaveModal(false);
+    setShowUnsaveModal(false);
     cancelSaveRef.current = true;
 
     if (targetUrlRef.current) {
@@ -186,7 +190,7 @@ function FlowDesign() {
       <Modal
         maskClosable={false}
         destroyOnClose
-        visible={showUnSaveModal}
+        visible={showUnsaveModal}
         width={352}
         title={
           <div className={styles.tiptitle}>
@@ -194,12 +198,17 @@ function FlowDesign() {
             提示
           </div>
         }
-        okButtonProps={{ size: 'large', loading: saving }}
-        okText="保存更改"
-        cancelButtonProps={{ size: 'large' }}
-        cancelText="放弃保存"
-        onOk={handleSave}
-        onCancel={handleCancelUnSaveModal}
+        onCancel={handleCloseUnsaveModal}
+        footer={
+          <>
+            <AsyncButton size="large" onClick={handleCancelUnsaveModal}>
+              放弃保存
+            </AsyncButton>
+            <AsyncButton type="primary" size="large" onClick={handleSave}>
+              保存更改
+            </AsyncButton>
+          </>
+        }
       >
         当前有未保存的更改，您在离开当前页面是否要保存这些更改?
       </Modal>
