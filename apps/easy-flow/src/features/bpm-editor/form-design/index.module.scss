@@ -13,21 +13,21 @@
     background-color: rgba(24, 31, 67, 0.12);
   }
 }
-.tipTitle {
-  @include center('flex');
+// .tipTitle {
+//   @include center('flex');
 
-  height: 24px;
-  line-height: 24px;
-  color: rgba(#181f43, 0.75);
-  font-size: 16px;
-  font-weight: 500;
+//   height: 24px;
+//   line-height: 24px;
+//   color: rgba(#181f43, 0.75);
+//   font-size: 16px;
+//   font-weight: 500;
 
-  svg {
-    margin-right: 8px;
-    color: #ff9900;
-    font-size: 20px;
-  }
-}
+//   svg {
+//     margin-right: 8px;
+//     color: #ff9900;
+//     font-size: 20px;
+//   }
+// }
 :global {
   .pop_tip.ant-popover-placement-top {
     position: fixed;
