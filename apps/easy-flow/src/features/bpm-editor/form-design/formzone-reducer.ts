@@ -55,6 +55,7 @@ const reducers = {
     } else {
       state.layout[row].splice(col, 1);
     }
+    delete state.byId[id];
     if (id === state.selectedField) {
       state.selectedField = null;
     }
