@@ -8,6 +8,7 @@ import { StartNode, TriggerType } from '@type/flow';
 import styles from './index.module.scss';
 import { useAppDispatch } from '@/app/hooks';
 import { trimInputValue } from '../../util';
+import { name } from '../rules';
 
 interface StartNodeEditorProps {
   node: StartNode;
@@ -100,6 +101,7 @@ function StartNodeEditor(props: StartNodeEditorProps) {
       triggerType: node.trigger.type,
     };
   }, [node]);
+
   return (
     <Form
       form={form}
@@ -108,7 +110,7 @@ function StartNodeEditor(props: StartNodeEditorProps) {
       initialValues={formInitialValues}
       onValuesChange={handleFormValuesChange}
     >
-      <Form.Item label="节点名称" name="name" getValueFromEvent={trimInputValue}>
+      <Form.Item label="节点名称" name="name" getValueFromEvent={trimInputValue} rules={[name]}>
         <Input size="large" placeholder="请输入开始节点名称" />
       </Form.Item>
       <Form.Item label="开始方式" name="triggerType">

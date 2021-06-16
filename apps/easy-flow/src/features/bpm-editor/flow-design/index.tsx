@@ -9,17 +9,16 @@ import { AllNode, BranchNode as BranchNodeType, NodeType } from '@type/flow';
 import { StartNode, AuditNode, FillNode, FinishNode, CardHeader } from './nodes';
 import { AuditNodeProps } from './nodes/audit-node';
 import { StartNodeEditor, AuditNodeEditor, FillNodeEditor, FinishNodeEditor } from './editor';
-import styles from './index.module.scss';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import styles from './index.module.scss';
 
 function FlowDesign() {
   const dispatch = useAppDispatch();
   const { bpmId } = useParams<{ bpmId: string }>();
-  const { loading, data: flow, dirty, invalidNodesMap } = useAppSelector(flowDataSelector);
+  const { loading, data: flow, dirty } = useAppSelector(flowDataSelector);
   const [currentEditNode, setCurrentEditNode] = useState<AllNode | null>(null);
   const [showEditDrawer, setShowEditDrawer] = useState(false);
   const [currentEditNodePrevNodes, setCurrentEditNodePrevNodes] = useState<AllNode[]>([]);
-  const [saving, setSaving] = useState(false);
   const [showUnsaveModal, setShowUnsaveModal] = useState(false);
   const history = useHistory();
   const targetUrlRef = useRef<string>();
@@ -29,9 +28,7 @@ function FlowDesign() {
     dispatch(load(bpmId));
   }, [dispatch, bpmId]);
 
-  useEffect(() => {
-    // history.block()
-  }, [history]);
+  useEffect(() => {}, [history]);
 
   const handleClickNode = useMemoCallback((node: Exclude<AllNode, BranchNodeType>) => {
     setCurrentEditNode(node);
@@ -108,11 +105,7 @@ function FlowDesign() {
   });
 
   const handleSave = useMemoCallback(async () => {
-    setSaving(true);
-
     await dispatch(save(bpmId));
-
-    setSaving(false);
   });
 
   const handleCloseUnsaveModal = useMemoCallback(() => {
