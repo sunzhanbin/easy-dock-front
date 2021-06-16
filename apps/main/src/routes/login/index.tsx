@@ -21,7 +21,7 @@ export default function Login() {
 
     try {
       const values = await form.validateFields();
-      const data = Object.assign({}, { loginType: 1, appCode: 'easydock' }, values);
+      const data = Object.assign({}, { loginType: 1 }, values);
       const loginResponse = await axios.post('/api/auth/v1/login', data, {
         baseURL: envs.COMMON_LOGIN_DOMAIN,
       });

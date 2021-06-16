@@ -12,27 +12,35 @@ export default function Orch() {
   const matchedRoute = useMatchRoute();
 
   useEffect(() => {
-    if (orchRef.current) {
-      const orch = loadMicroApp({
+    if (!orchRef.current) return;
+
+    const orch = loadMicroApp(
+      {
         name: 'orch',
         entry: envs.ALGOR_ORCH_FRONTEND_ENTRY,
         container: orchRef.current,
         props: {
           basename: matchedRoute,
         },
-      });
+      },
+      {
+        sandbox: {
+          // 严格隔离样式
+          strictStyleIsolation: true,
+        },
+      },
+    );
 
-      orch.mountPromise.finally(() => {
-        // 防止页面跳走后才加载成功时setstate的警告;
-        if (orchRef.current) {
-          setLoading(false);
-        }
-      });
+    orch.mountPromise.finally(() => {
+      // 防止页面跳走后才加载成功时setstate的警告;
+      if (orchRef.current) {
+        setLoading(false);
+      }
+    });
 
-      return () => {
-        orch.unmount();
-      };
-    }
+    return () => {
+      orch.unmount();
+    };
   }, [matchedRoute]);
 
   return (

@@ -13,7 +13,7 @@ const ScenesListPage = React.lazy(() => import(/* webpackChunkName: "scenes-list
 const AppPage = React.lazy(() => import(/* webpackChunkName: "app-detail" */ '@/routes/app-detail'));
 const IntegrationPage = React.lazy(() => import(/* webpackChunkName: "integration" */ '@/routes/integration'));
 
-const MicroPage = React.lazy(() => import(/* webpackChunkName: "integration" */ '@/routes/micro-page'));
+const MicroPage = React.lazy(() => import(/* webpackChunkName: "micro" */ '@/routes/micro-page'));
 
 export default function PrimaryLayout() {
   const [user, setUser] = useState<User>();
