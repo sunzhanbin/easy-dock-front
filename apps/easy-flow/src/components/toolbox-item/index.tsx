@@ -1,45 +1,11 @@
-import React, { FC, memo, useCallback } from 'react';
-import styled from 'styled-components';
+import { FC, memo, useCallback } from 'react';
 import { store } from '@app/store';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { configSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 import { comAdded } from '../../features/bpm-editor/form-design/formdesign-slice';
 import { FieldType, FormField } from '@/type';
 import { Icon } from '@common/components';
-
-const ToolBoxItemContainer = styled.div`
-  width: 72px;
-  height: 72px;
-  border-radius: 3px;
-  border: 1px solid rgba(24, 31, 67, 0.12);
-  text-align: center;
-  cursor: pointer;
-  &:hover {
-    border: 1px solid rgba(24, 31, 67, 0.5);
-  }
-
-  .icon_container {
-    margin-top: 14px;
-    text-align: center;
-    .iconfont {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      font-size: 17px;
-      color: #4f5571;
-    }
-  }
-  .component_name {
-    font-size: 12px;
-    font-weight: 400;
-    color: rgba(24, 31, 67, 0.75);
-    line-height: 20px;
-    margin-top: 10px;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-  }
-`;
+import styles from './index.module.scss';
 
 const ToolBoxItem: FC<{ icon: string; displayName: string; type: FieldType }> = ({ icon, displayName, type }) => {
   const dispatch = useAppDispatch();
@@ -51,12 +17,12 @@ const ToolBoxItem: FC<{ icon: string; displayName: string; type: FieldType }> = 
     dispatch(comAdded(com as FormField, rowIndex + 1));
   }, [type, configMap, dispatch]);
   return (
-    <ToolBoxItemContainer onClick={addComponent}>
-      <div className="icon_container">
-        <Icon type={icon} className="iconfont" />
+    <div className={styles.container} onClick={addComponent}>
+      <div className={styles.icon_container}>
+        <Icon type={icon} className={styles.iconfont} />
       </div>
-      <span className="component_name">{displayName}</span>
-    </ToolBoxItemContainer>
+      <span className={styles.component_name}>{displayName}</span>
+    </div>
   );
 };
 

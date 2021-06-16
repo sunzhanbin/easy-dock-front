@@ -1,5 +1,4 @@
-import React, { memo, useCallback, useMemo, useState, useEffect } from 'react';
-import styled from 'styled-components';
+import { memo, useCallback, useMemo, useState, useEffect } from 'react';
 import { Select, Input, Tooltip } from 'antd';
 import { uniqueId } from 'lodash';
 import { axios } from '@utils';
@@ -7,91 +6,10 @@ import { OptionItem, OptionMode, SelectOptionItem } from '@/type';
 import { Icon } from '@common/components';
 import { useAppSelector } from '@/app/hooks';
 import { subAppSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
+import styles from './index.module.scss';
+import classNames from 'classnames';
 
 const { Option } = Select;
-
-const Container = styled.div`
-  .title {
-    display: flex;
-    height: 40px;
-    line-height: 40px;
-    background: rgba(24, 39, 67, 0.04);
-    border-radius: 3px;
-    font-size: 14px;
-    font-weight: 400;
-    color: rgba(24, 31, 67, 0.95);
-    > div {
-      flex: 1;
-      text-align: center;
-      cursor: pointer;
-    }
-    .active {
-      background: #ffffff;
-      border-radius: 3px 0px 0px 3px;
-      border: 1px solid rgba(24, 31, 67, 0.12);
-      font-weight: 500;
-      color: #4c5cdb;
-    }
-  }
-  .custom_list {
-    padding: 12px 0;
-    .custom_item {
-      position: relative;
-      height: 40px;
-      line-height: 40px;
-      background: rgba(24, 39, 67, 0.04);
-      border-radius: 3px;
-      margin-bottom: 12px;
-      font-size: 14px;
-      font-weight: 400;
-      color: rgba(24, 31, 67, 0.95);
-      .delete,
-      .move {
-        position: absolute;
-        top: 0;
-        z-index: 10;
-        width: 28px;
-        height: 40px;
-        line-height: 40px;
-        text-align: center;
-        .iconfont {
-          color: #818a9e;
-        }
-      }
-      .move {
-        right: 0;
-        .iconfont {
-          cursor: move;
-        }
-      }
-      .delete {
-        right: 29px;
-        border-right: 1px solid rgba(24, 31, 67, 0.12);
-        .iconfont {
-          cursor: pointer;
-        }
-      }
-    }
-    .add_custom {
-      height: 40px;
-      line-height: 40px;
-      text-align: center;
-      border-radius: 3px;
-      border: 1px solid rgba(24, 31, 67, 0.12);
-      font-size: 14px;
-      font-weight: 400;
-      color: rgba(24, 31, 67, 0.95);
-      cursor: pointer;
-      .iconfont {
-        font-size: 14px;
-        margin-right: 4px;
-      }
-    }
-  }
-  .dict_content {
-    padding: 12px 0;
-  }
-`;
 interface editProps {
   value?: SelectOptionItem;
   onChange?: (v: SelectOptionItem) => void;
@@ -209,10 +127,10 @@ const SelectOptionList = (props: editProps) => {
   const customContent = useMemo(() => {
     if (Array.isArray(content) && type === 'custom') {
       return (
-        <div className="custom_list">
+        <div className={styles.custom_list}>
           {content.map((item: OptionItem, index: number) => (
             <div
-              className="custom_item"
+              className={styles.custom_item}
               key={item.key}
               draggable={canDrag}
               onDragStart={(e) => {
@@ -224,17 +142,17 @@ const SelectOptionList = (props: editProps) => {
               onDragOver={handleDragOver}
             >
               <div
-                className="delete"
+                className={styles.delete}
                 onClick={() => {
                   deleteItem(index);
                 }}
               >
                 <Tooltip title="删除">
-                  <Icon className="iconfont" type="shanchu" />
+                  <Icon className={styles.iconfont} type="shanchu" />
                 </Tooltip>
               </div>
               <div
-                className="move"
+                className={styles.move}
                 onMouseEnter={() => {
                   setCanDrag(true);
                 }}
@@ -243,7 +161,7 @@ const SelectOptionList = (props: editProps) => {
                 }}
               >
                 <Tooltip title="拖动换行">
-                  <Icon className="iconfont" type="caidan" />
+                  <Icon className={styles.iconfont} type="caidan" />
                 </Tooltip>
               </div>
               <Input
@@ -255,8 +173,8 @@ const SelectOptionList = (props: editProps) => {
               />
             </div>
           ))}
-          <div className="add_custom" onClick={addItem}>
-            <Icon className="iconfont" type="xinzengjiacu" />
+          <div className={styles.add_custom} onClick={addItem}>
+            <Icon className={styles.iconfont} type="xinzengjiacu" />
             <span>添加选项</span>
           </div>
         </div>
@@ -268,7 +186,7 @@ const SelectOptionList = (props: editProps) => {
     if (type === 'dictionaries') {
       return (
         <>
-          <Select placeholder="选择子应用" className="dict_content" size="large" onChange={handleChangeApp}>
+          <Select placeholder="选择子应用" className={styles.dict_content} size="large" onChange={handleChangeApp}>
             {appList.map(({ key, value }) => (
               <Option value={key} key={key}>
                 {value}
@@ -278,7 +196,7 @@ const SelectOptionList = (props: editProps) => {
           {subAppKey && (
             <Select
               placeholder="选择控件"
-              className="dict_content"
+              className={styles.dict_content}
               size="large"
               {...(componentKey ? { value: componentKey } : null)}
               onChange={handleChangeComponent}
@@ -296,10 +214,10 @@ const SelectOptionList = (props: editProps) => {
     return null;
   }, [type, subAppKey, componentKey, appList, componentList, handleChangeApp, handleChangeComponent]);
   return (
-    <Container>
-      <div className="title">
+    <div className={styles.container}>
+      <div className={styles.title}>
         <div
-          className={`left ${type === 'custom' ? 'active' : ''}`}
+          className={classNames(styles.left, type === 'custom' ? styles.active : '')}
           onClick={() => {
             setType('custom');
           }}
@@ -307,7 +225,7 @@ const SelectOptionList = (props: editProps) => {
           自定义数据
         </div>
         <div
-          className={`right ${type === 'dictionaries' ? 'active' : ''}`}
+          className={classNames(styles.right, type === 'dictionaries' ? styles.active : '')}
           onClick={() => {
             setType('dictionaries');
           }}
@@ -315,8 +233,8 @@ const SelectOptionList = (props: editProps) => {
           其他表单数据
         </div>
       </div>
-      <div className="content">{type === 'custom' ? customContent : dictContent}</div>
-    </Container>
+      <div className={styles.content}>{type === 'custom' ? customContent : dictContent}</div>
+    </div>
   );
 };
 
