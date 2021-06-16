@@ -38,7 +38,7 @@ function ButtonConfigs(props: ButtonConfigsProps) {
         btnKey="submit"
         onChange={handleButtonChange}
       >
-        <Button size="large">同意</Button>
+        <Button size="large">提交</Button>
       </ButtonEditor>
     </div>
   );
