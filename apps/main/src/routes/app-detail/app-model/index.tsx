@@ -1,7 +1,7 @@
 import { memo, useCallback, useState, useMemo, FC } from 'react';
 import styled from 'styled-components';
 import { Icon } from '@/components';
-import { Input, Button } from 'antd';
+import { Input, Button, Form } from 'antd';
 import FlowImage from '@assets/flow-small.png';
 import ScreenImage from '@assets/screen-small.png';
 
@@ -111,22 +111,15 @@ const AppModel: FC<{
   onClose: () => void;
   onOk: (name: string, type: number) => void;
 }> = ({ type, name, className, onClose, onOk }) => {
+  const [form] = Form.useForm();
   const [appName, setAppName] = useState<string>(name || '');
-  const inputProps = useMemo(() => {
-    const propList: { [k: string]: string } = {
-      placeholder: '请输入',
-      size: 'large',
-    };
-    if (name) {
-      propList.defaultValue = name;
-    }
-    return propList;
-  }, [name]);
   const handleClose = useCallback(() => {
     onClose && onClose();
   }, [onClose]);
   const handleOK = useCallback(() => {
-    onOk && onOk(appName, 2);
+    form.validateFields().then(() => {
+      onOk && onOk(appName, 2);
+    });
   }, [onOk, appName]);
 
   return (
@@ -143,17 +136,30 @@ const AppModel: FC<{
         </div>
       </div>
       <div className="content">
-        <div className="form-item">
-          <div className="label">子应用名称</div>
-          <div className="name">
+        <Form form={form} layout="vertical">
+          <Form.Item
+            label="子应用名称"
+            name="subAppName"
+            required
+            initialValue={appName}
+            rules={[
+              { required: true, message: '请输入子应用名称' },
+              {
+                pattern: /^[\u4e00-\u9fa5_a-zA-Z0-9]{3,20}$/,
+                message: '子应用名称应为3-20位汉字、字母、数字或下划线',
+              },
+            ]}
+          >
             <Input
-              {...inputProps}
+              autoFocus
+              size="large"
+              placeholder="请输入"
               onChange={(e) => {
                 setAppName(e.target.value);
               }}
             />
-          </div>
-        </div>
+          </Form.Item>
+        </Form>
         {type === 'create' && (
           <div className="form-item mt24">
             <div className="label">子应用类型</div>

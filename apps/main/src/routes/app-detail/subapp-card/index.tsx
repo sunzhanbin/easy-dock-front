@@ -297,6 +297,7 @@ const Card: FC<{
           <AppModel
             type="edit"
             className="edit_model"
+            name={name}
             onClose={() => {
               setIsShowModel(false);
             }}

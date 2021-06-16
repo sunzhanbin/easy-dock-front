@@ -47,7 +47,13 @@ const EmptyDetail: FC<{ appId: string }> = ({ appId }) => {
               label="子应用名称"
               name="subAppName"
               required
-              rules={[{ required: true, message: '请输入子应用名称' }]}
+              rules={[
+                { required: true, message: '请输入子应用名称' },
+                {
+                  pattern: /^[\u4e00-\u9fa5_a-zA-Z0-9]{3,20}$/,
+                  message: '子应用名称应为3-20位汉字、字母、数字或下划线',
+                },
+              ]}
             >
               <Input size="large" placeholder="请输入" />
             </Form.Item>
