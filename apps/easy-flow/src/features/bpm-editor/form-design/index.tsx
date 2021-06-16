@@ -1,6 +1,5 @@
 import { FC, memo, useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import styled from 'styled-components';
 import DesignZone from './design-zone';
 import ToolBox from './toolbox';
 import EditZone from './edit-zone';
@@ -13,23 +12,7 @@ import { dirtySelector, selectedFieldSelector } from './formzone-reducer';
 import { axios } from '@/utils';
 import { Prompt, useHistory } from 'react-router-dom';
 import { Popconfirm } from 'antd';
-import './index.css';
-
-const WorkbenchContainer = styled.div`
-  width: 100%;
-  display: flex;
-  flex: 1;
-  background-color: rgb(245, 245, 247);
-  .mask {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 9;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(24, 31, 67, 0.12);
-  }
-`;
+import styles from './index.module.scss';
 
 const FormDesign: FC<{}> = () => {
   const dispatch = useAppDispatch();
@@ -64,9 +47,12 @@ const FormDesign: FC<{}> = () => {
         });
         dispatch(setById({ byId: byId as FormFieldMap }));
         dispatch(setLayout({ layout }));
-        dispatch(setIsDirty({ isDirty: false }));
         selectFieldId && dispatch(selectField({ id: selectFieldId }));
+      } else {
+        dispatch(setById({ byId: {} }));
+        dispatch(setLayout({ layout: [] }));
       }
+      dispatch(setIsDirty({ isDirty: false }));
     });
   }, [subAppId]);
   const onDragEnd = useCallback(
@@ -132,11 +118,11 @@ const FormDesign: FC<{}> = () => {
         overlayClassName="pop_tip"
       ></Popconfirm>
       {isShowTip && <div className="mask"></div>}
-      <WorkbenchContainer>
+      <div className={styles.container}>
         <ToolBox></ToolBox>
         <DesignZone></DesignZone>
         {selectedField ? <EditZone></EditZone> : null}
-      </WorkbenchContainer>
+      </div>
     </DragDropContext>
   );
 };

@@ -1,17 +1,12 @@
-import React, { memo, useMemo, useCallback } from 'react';
-import styled from 'styled-components';
+import { memo, useMemo, useCallback } from 'react';
 import { DatePicker } from 'antd';
 import moment, { Moment } from 'moment';
 import locale from 'antd/lib/date-picker/locale/zh_CN';
 import { componentPropsSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 import { useAppSelector } from '@/app/hooks';
 import { DateField } from '@/type';
+import styles from './index.module.scss';
 
-const Container = styled.div`
-  .ant-picker {
-    width: 100%;
-  }
-`;
 interface editProps {
   id: string;
   value?: string;
@@ -50,9 +45,9 @@ const DefaultDate = (props: editProps) => {
     [onChange, formatType],
   );
   return (
-    <Container>
+    <div className={styles.container}>
       <DatePicker {...propList} locale={locale} onChange={handleChange} />
-    </Container>
+    </div>
   );
 };
 

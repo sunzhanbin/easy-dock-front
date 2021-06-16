@@ -1,22 +1,12 @@
 import { FC, memo } from 'react';
-import styled from 'styled-components';
 import FormZone from './form-zone';
-
-const DesignZoneContainer = styled.div`
-  padding: 20px 40px;
-  height: calc(100vh - 64px);
-  overflow: auto;
-  display: flex;
-  justify-content: center;
-  flex: 1;
-  background-color: #fff;
-`;
+import styles from './index.module.scss';
 
 const DesignZone: FC<{}> = () => {
   return (
-    <DesignZoneContainer>
+    <div className={styles.container}>
       <FormZone></FormZone>
-    </DesignZoneContainer>
+    </div>
   );
 };
 

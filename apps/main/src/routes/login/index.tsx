@@ -21,28 +21,33 @@ export default function Login() {
 
     try {
       const values = await form.validateFields();
-      const data = Object.assign({}, { loginType: 1, appCode: 'easydock' }, values);
+      const data = Object.assign({}, { loginType: 1 }, values);
       const loginResponse = await axios.post('/api/auth/v1/login', data, {
         baseURL: envs.COMMON_LOGIN_DOMAIN,
       });
 
       if (loginResponse.data) {
-        const token = loginResponse.data.token;
+        const hasAuth = loginResponse.data.embedUser.roles.find((item: string) => item === '1');
 
-        cookie.set('token', token, { expires: 1 });
-        axios.defaults.headers.auth = token;
+        if (hasAuth) {
+          const token = loginResponse.data.token;
+          cookie.set('token', token, { expires: 1 });
+          axios.defaults.headers.auth = token;
 
-        let redirectUrl = '';
-        const keyValues = decodeURIComponent(search.slice(1)).split('=');
-        const redirectUrlIndex = keyValues.findIndex((item) => item === 'redirect');
+          let redirectUrl = '';
+          const keyValues = decodeURIComponent(search.slice(1)).split('=');
+          const redirectUrlIndex = keyValues.findIndex((item) => item === 'redirect');
 
-        if (redirectUrlIndex !== -1) {
-          redirectUrl = keyValues[redirectUrlIndex + 1];
+          if (redirectUrlIndex !== -1) {
+            redirectUrl = keyValues[redirectUrlIndex + 1];
+          } else {
+            redirectUrl = ROUTES.INDEX;
+          }
+
+          window.location.replace(redirectUrl);
         } else {
-          redirectUrl = ROUTES.INDEX;
+          message.error('您没有访问权限');
         }
-
-        window.location.replace(redirectUrl);
       } else {
         message.error((loginResponse as any).resultMessage);
       }

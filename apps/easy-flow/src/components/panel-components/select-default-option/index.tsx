@@ -1,13 +1,10 @@
 import { useAppSelector } from '@/app/hooks';
 import { componentPropsSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
-import React, { memo, useCallback, useMemo } from 'react';
-import styled from 'styled-components';
+import { memo, useCallback, useMemo } from 'react';
 import { Select } from 'antd';
 import { OptionItem, SelectField } from '@/type';
 
 const { Option } = Select;
-
-const Container = styled.div``;
 
 interface editProps {
   id: string;
@@ -42,15 +39,13 @@ const SelectDefaultOption = (props: editProps) => {
     [onChange],
   );
   return (
-    <Container>
-      <Select {...propList} onChange={handleChange}>
-        {optionList.map(({ key, value }: OptionItem) => (
-          <Option value={key} key={key}>
-            {value}
-          </Option>
-        ))}
-      </Select>
-    </Container>
+    <Select {...propList} onChange={handleChange}>
+      {optionList.map(({ key, value }: OptionItem) => (
+        <Option value={key} key={key}>
+          {value}
+        </Option>
+      ))}
+    </Select>
   );
 };
 

@@ -1,0 +1,15 @@
+.container {
+  flex: 0 0 260px;
+  height: calc(100vh - 64px);
+  background: #fff;
+  padding: 20px 21px;
+  overflow-y: auto;
+  box-shadow: 0px 6px 24px 0px rgba(24, 31, 67, 0.1);
+  .edit_title {
+    font-size: 18px;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.85);
+    line-height: 28px;
+    margin-bottom: 14px;
+  }
+}

@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSelector, PayloadAction } from '@reduxjs/toolkit';
+import { createSelector, PayloadAction } from '@reduxjs/toolkit';
 import { uniqueId } from 'lodash';
 import { FieldType, FormDesign, FormField, FormFieldMap, TConfigItem, TConfigMap } from '@type';
 import { RootState } from '@/app/store';
@@ -55,6 +55,7 @@ const reducers = {
     } else {
       state.layout[row].splice(col, 1);
     }
+    delete state.byId[id];
     if (id === state.selectedField) {
       state.selectedField = null;
     }

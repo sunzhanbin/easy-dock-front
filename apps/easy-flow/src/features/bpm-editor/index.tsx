@@ -1,6 +1,5 @@
 import { FC, memo, useEffect } from 'react';
-import { Switch, Route, useRouteMatch, Redirect, useLocation, useParams } from 'react-router-dom';
-import styled from 'styled-components';
+import { Switch, Route, useRouteMatch, useLocation, useParams } from 'react-router-dom';
 import EditorHeader from '@/features/bpm-editor/editor-header';
 import FormDesign from './form-design';
 import FlowDesign from './flow-design';
@@ -9,17 +8,7 @@ import { useAppDispatch } from '@app/hooks';
 import { loadComponents } from './form-design/toolbox/toolbox-reducer';
 import { axios } from '@/utils';
 import { setAppInfo } from './form-design/formdesign-slice';
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-
-  .bmp-editor-content {
-    flex: 1 1 0;
-    overflow-y: auto;
-  }
-`;
+import styles from './index.module.scss';
 
 const BpmEditor: FC = () => {
   const match = useRouteMatch();
@@ -39,10 +28,10 @@ const BpmEditor: FC = () => {
   }, [dispatch]);
 
   return (
-    <Container>
+    <div className={styles.container}>
       {location.pathname !== `${match.url}/preview-form` && <EditorHeader></EditorHeader>}
 
-      <div className="bmp-editor-content">
+      <div className={styles['bmp-editor-content']}>
         <Switch>
           <Route path={`${match.path}/form-design`} component={FormDesign}></Route>
           <Route path={`${match.path}/flow-design`} component={FlowDesign}></Route>
@@ -50,7 +39,7 @@ const BpmEditor: FC = () => {
           {/* <Redirect to={`${match.url}/form-design`}></Redirect> */}
         </Switch>
       </div>
-    </Container>
+    </div>
   );
 };
 

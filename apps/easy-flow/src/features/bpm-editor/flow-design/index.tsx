@@ -1,9 +1,10 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { Prompt, useParams } from 'react-router-dom';
-import { Drawer } from 'antd';
+import React, { useEffect, useMemo, useState, useRef } from 'react';
+import { Prompt, useParams, useLocation, useHistory } from 'react-router-dom';
+import { Drawer, Modal } from 'antd';
+import { ExclamationCircleFilled } from '@ant-design/icons';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import { Loading, Icon } from '@common/components';
-import { load, flowDataSelector, save } from './flow-slice';
+import { Loading, Icon, AsyncButton } from '@common/components';
+import { load, flowDataSelector, save, setDirty } from './flow-slice';
 import { AllNode, BranchNode as BranchNodeType, NodeType } from '@type/flow';
 import { StartNode, AuditNode, FillNode, FinishNode, CardHeader } from './nodes';
 import { AuditNodeProps } from './nodes/audit-node';
@@ -14,14 +15,23 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks';
 function FlowDesign() {
   const dispatch = useAppDispatch();
   const { bpmId } = useParams<{ bpmId: string }>();
-  const { loading, data: flow, dirty } = useAppSelector(flowDataSelector);
+  const { loading, data: flow, dirty, invalidNodesMap } = useAppSelector(flowDataSelector);
   const [currentEditNode, setCurrentEditNode] = useState<AllNode | null>(null);
   const [showEditDrawer, setShowEditDrawer] = useState(false);
   const [currentEditNodePrevNodes, setCurrentEditNodePrevNodes] = useState<AllNode[]>([]);
+  const [saving, setSaving] = useState(false);
+  const [showUnsaveModal, setShowUnsaveModal] = useState(false);
+  const history = useHistory();
+  const targetUrlRef = useRef<string>();
+  const cancelSaveRef = useRef<boolean>();
 
   useEffect(() => {
     dispatch(load(bpmId));
   }, [dispatch, bpmId]);
+
+  useEffect(() => {
+    // history.block()
+  }, [history]);
 
   const handleClickNode = useMemoCallback((node: Exclude<AllNode, BranchNodeType>) => {
     setCurrentEditNode(node);
@@ -86,13 +96,42 @@ function FlowDesign() {
     return null;
   }, [currentEditNode]);
 
-  const handleConfirmLeave = useMemoCallback(() => {
+  const handleConfirmLeave = useMemoCallback((location: ReturnType<typeof useLocation>) => {
+    if (dirty && !cancelSaveRef.current) {
+      targetUrlRef.current = location.pathname + location.search;
+      setShowUnsaveModal(true);
+
+      return false;
+    }
+
     return true;
+  });
+
+  const handleSave = useMemoCallback(async () => {
+    setSaving(true);
+
+    await dispatch(save(bpmId));
+
+    setSaving(false);
+  });
+
+  const handleCloseUnsaveModal = useMemoCallback(() => {
+    setShowUnsaveModal(false);
+  });
+
+  const handleCancelUnsaveModal = useMemoCallback(() => {
+    dispatch(setDirty(false));
+    setShowUnsaveModal(false);
+    cancelSaveRef.current = true;
+
+    if (targetUrlRef.current) {
+      history.push(targetUrlRef.current);
+    }
   });
 
   return (
     <div className={styles.flow}>
-      <Prompt when={dirty} message={handleConfirmLeave} />
+      {dirty && <Prompt when={dirty} message={handleConfirmLeave} />}
       {loading && <Loading />}
       <div className={styles.content}>
         {flow.map((node, index) => {
@@ -147,6 +186,32 @@ function FlowDesign() {
           )}
         </div>
       </Drawer>
+
+      <Modal
+        maskClosable={false}
+        destroyOnClose
+        visible={showUnsaveModal}
+        width={352}
+        title={
+          <div className={styles.tiptitle}>
+            <ExclamationCircleFilled />
+            提示
+          </div>
+        }
+        onCancel={handleCloseUnsaveModal}
+        footer={
+          <>
+            <AsyncButton size="large" onClick={handleCancelUnsaveModal}>
+              放弃保存
+            </AsyncButton>
+            <AsyncButton type="primary" size="large" onClick={handleSave}>
+              保存更改
+            </AsyncButton>
+          </>
+        }
+      >
+        当前有未保存的更改，您在离开当前页面是否要保存这些更改?
+      </Modal>
     </div>
   );
 }

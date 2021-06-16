@@ -1,5 +1,4 @@
-import React, { memo, useEffect, Fragment } from 'react';
-import styled from 'styled-components';
+import { memo, useEffect, Fragment } from 'react';
 import { Form, Select, Input, Switch, Radio, Checkbox, InputNumber } from 'antd';
 import SelectOptionList from '../select-option-list';
 import SelectDefaultOption from '../select-default-option';
@@ -7,66 +6,10 @@ import DefaultDate from '../default-date';
 import Editor from '../editor';
 import { FormField, SchemaConfigItem } from '@/type';
 import { Store } from 'antd/lib/form/interface';
-import selectedImage from '@assets/selected.png';
+import styles from './index.module.scss';
 
 const { Option } = Select;
 
-const Container = styled.div`
-  .ant-form-item-label {
-    padding-bottom: 4px;
-    > label {
-      height: 22px;
-      line-height: 22px;
-      font-size: 14px;
-      font-weight: 600;
-      color: rgba(24, 31, 67, 0.95);
-    }
-  }
-  .ant-radio-group {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    .ant-radio-button-wrapper {
-      width: 47px;
-      height: 40px;
-      line-height: 40px;
-      text-align: center;
-      font-size: 14px;
-      background: rgba(24, 39, 67, 0.04);
-      border-radius: 3px;
-      border: none;
-      font-weight: 400;
-      color: rgba(24, 31, 67, 0.95);
-      box-shadow: none !important;
-      &:hover {
-        color: #4c5cdb;
-      }
-    }
-    .ant-radio-button-wrapper:not(:first-child)::before {
-      display: none;
-    }
-    .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
-      color: #4c5cdb;
-      background-image: url(${selectedImage});
-      background-position: top right;
-      background-repeat: no-repeat;
-    }
-  }
-  .ant-form-item-label-left {
-    height: 32px;
-    line-height: 32px;
-  }
-  .ant-switch {
-    float: right;
-  }
-  .input_number {
-    width: 100%;
-  }
-  .ant-input-number-input {
-    background: rgba(24, 39, 67, 0.04);
-    border-radius: 3px;
-  }
-`;
 interface FormEditorProps {
   config: SchemaConfigItem[];
   initValues: FormField;
@@ -99,7 +42,7 @@ const FormEditor = (props: FormEditorProps) => {
     form.setFieldsValue(initValues);
   }, [initValues, form]);
   return (
-    <Container>
+    <div className={styles.container}>
       <Form form={form} name="form_editor" initialValues={initValues} onFinish={onFinish} onValuesChange={handleChange}>
         {config.map(({ key, label, direction, type, range, placeholder, required, requiredMessage, rules }) => {
           return (
@@ -243,7 +186,7 @@ const FormEditor = (props: FormEditorProps) => {
           );
         })}
       </Form>
-    </Container>
+    </div>
   );
 };
 

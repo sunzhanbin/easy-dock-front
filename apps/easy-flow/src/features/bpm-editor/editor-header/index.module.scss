@@ -1,0 +1,105 @@
+.header_container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  width: 100%;
+  border-bottom: 1px solid rgba(24, 31, 67, 0.12);
+  .edit_header {
+    width: 100%;
+    .steps {
+      width: 220px;
+      display: flex;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      .step {
+        height: 64px;
+        line-height: 64px;
+        font-size: 16px;
+        font-weight: 400;
+        color: rgba(24, 31, 67, 0.5);
+        .number {
+          font-size: 18px;
+          font-weight: bold;
+          margin-right: 4px;
+        }
+        &.active {
+          color: rgba(24, 31, 67, 0.95);
+          border-bottom: 5px solid #4c5cdb;
+        }
+      }
+      .separator {
+        width: 16px;
+        height: 64px;
+        line-height: 64px;
+        text-align: center;
+        font-size: 12px;
+        color: #818a9e;
+        margin: 0 12px;
+        .iconfont {
+          position: relative;
+          top: 2px;
+        }
+      }
+    }
+    .operation {
+      display: flex;
+      position: absolute;
+      right: 0;
+      height: 64px;
+      line-height: 64px;
+      .iconfont {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        line-height: 20px;
+        font-size: 20px;
+        color: #818a9e;
+        margin-top: 22px;
+        margin-right: 24px;
+        cursor: pointer;
+      }
+      .prev {
+        width: 74px;
+        margin-top: 12px;
+        margin-right: 12px;
+      }
+      .save {
+        width: 60px;
+        margin-top: 12px;
+        margin-right: 12px;
+        border-radius: 3px;
+        border: 1px solid rgba(76, 92, 219, 0.85);
+        font-size: 14px;
+        font-weight: 400;
+        color: #4c5cdb;
+      }
+      .next {
+        width: 74px;
+        margin-top: 12px;
+        margin-right: 24px;
+        border-radius: 3px;
+        font-size: 14px;
+        font-weight: 400;
+        color: #ffffff;
+      }
+      .publish {
+        width: 74px;
+        margin-top: 12px;
+        margin-right: 24px;
+        border-radius: 3px;
+        font-size: 14px;
+        font-weight: 400;
+        color: #ffffff;
+        .iconfont {
+          position: relative;
+          right: 4px;
+          margin: 0;
+          color: #fff;
+          font-size: 16px;
+        }
+      }
+    }
+  }
+}

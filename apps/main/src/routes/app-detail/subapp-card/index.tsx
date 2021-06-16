@@ -10,7 +10,7 @@ import { FlowMicroApp } from '@/consts';
 import { message, Popconfirm } from 'antd';
 import AppModel from '../app-model';
 
-const Container = styled.div`
+const CardContainer = styled.div`
   position: relative;
   display: flex;
   cursor: pointer;
@@ -223,7 +223,7 @@ const Card: FC<{
     };
   }, []);
   return (
-    <Container className={className} onClick={handleJump}>
+    <CardContainer className={className} onClick={handleJump}>
       <div className="image" style={{ backgroundColor: type === 1 ? '#DFF5EF' : '#E7EBFD' }}>
         <img src={type === 1 ? ScreenImage : FlowImage} alt="图片" />
       </div>
@@ -304,7 +304,7 @@ const Card: FC<{
           />
         )}
       </div>
-    </Container>
+    </CardContainer>
   );
 };
 

@@ -143,44 +143,30 @@ const flow = createSlice({
   reducers: {
     setFieldsTemplate(state, { payload }: PayloadAction<FlowType['fieldsTemplate']>) {
       state.fieldsTemplate = payload;
-
-      return state;
     },
     setCacheMembers(state, { payload }: PayloadAction<FlowType['cacheMembers']>) {
       state.cacheMembers = {
         ...state.cacheMembers,
         ...payload,
       };
-
-      return state;
     },
     setInvalidMaps(state, { payload: validRes }: PayloadAction<FlowType['invalidNodesMap']>) {
       state.invalidNodesMap = validRes;
-
-      return state;
     },
     setDirty(state, { payload: dirty }: PayloadAction<boolean>) {
       state.dirty = dirty;
-
-      return state;
     },
     setLoading(state, { payload: loading }: PayloadAction<boolean>) {
       state.loading = loading;
-
-      return state;
     },
     setInitialFlow(state, { payload: data }: PayloadAction<Flow>) {
       state.data = data;
-
-      return state;
     },
     addNode(state, { payload }: PayloadAction<{ prevId: string; node: AuditNode | FillNode }>) {
       const { prevId, node } = payload;
 
       state.data = flowUpdate(state.data, prevId, node);
       state.dirty = true;
-
-      return state;
     },
     updateNode(state, { payload: node }: PayloadAction<AllNode>) {
       state.data = flowUpdate(state.data, node.id, node);
@@ -192,22 +178,18 @@ const flow = createSlice({
           errors: [],
         },
       };
-
-      return state;
     },
     delNode(state, { payload: nodeId }: PayloadAction<string>) {
       state.data = flowUpdate(state.data, nodeId, null);
       state.dirty = true;
 
       delete state.invalidNodesMap[nodeId];
-
-      return state;
     },
   },
 });
 
 const flowActions = flow.actions;
-export const { setLoading, updateNode, delNode, setCacheMembers } = flow.actions;
+export const { setLoading, updateNode, delNode, setCacheMembers, setDirty } = flow.actions;
 
 function getFieldsTemplate(fieldsTemplate: FlowType['fieldsTemplate']) {
   return fieldsTemplate.reduce((fieldsAuths, item) => {
@@ -220,7 +202,9 @@ function getFieldsTemplate(fieldsTemplate: FlowType['fieldsTemplate']) {
 // 加载应用的流程，对于初始创建的应用是null
 export const load = createAsyncThunk('flow/load', async (appkey: string, { dispatch }) => {
   try {
+    // bpmid变化时重新拉取数据
     dispatch(setLoading(true));
+    dispatch(flowActions.setInitialFlow(flowInitial.data));
 
     // 获取流程数据和所需字段
     let [{ data: flowResponse }, { data: fields }] = await Promise.all([
@@ -294,8 +278,6 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
 
     dispatch(flowActions.setFieldsTemplate(fieldsTemplate));
     dispatch(flowActions.setInitialFlow(flowData));
-  } catch (error) {
-    message.error(error.message || error);
   } finally {
     dispatch(setLoading(false));
   }
