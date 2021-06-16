@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSelector, PayloadAction } from '@reduxjs/toolkit';
+import { createSelector, PayloadAction } from '@reduxjs/toolkit';
 import { uniqueId } from 'lodash';
 import { FieldType, FormDesign, FormField, FormFieldMap, TConfigItem, TConfigMap } from '@type';
 import { RootState } from '@/app/store';

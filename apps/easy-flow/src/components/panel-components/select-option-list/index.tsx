@@ -114,7 +114,7 @@ const SelectOptionList = (props: editProps) => {
       const list = res.data
         .filter((app: { id: number }) => app.id !== subAppId)
         .map((app: { name: string; id: number; version: { id: number } }) => ({
-          key: app.id,
+          key: app.version.id,
           value: app.name,
           versionId: app.version.id,
         }));

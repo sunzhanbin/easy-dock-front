@@ -47,9 +47,12 @@ const FormDesign: FC<{}> = () => {
         });
         dispatch(setById({ byId: byId as FormFieldMap }));
         dispatch(setLayout({ layout }));
-        dispatch(setIsDirty({ isDirty: false }));
         selectFieldId && dispatch(selectField({ id: selectFieldId }));
+      } else {
+        dispatch(setById({ byId: {} }));
+        dispatch(setLayout({ layout: [] }));
       }
+      dispatch(setIsDirty({ isDirty: false }));
     });
   }, [subAppId]);
   const onDragEnd = useCallback(
