@@ -189,7 +189,7 @@ const flow = createSlice({
 });
 
 const flowActions = flow.actions;
-export const { setLoading, updateNode, delNode, setCacheMembers } = flow.actions;
+export const { setLoading, updateNode, delNode, setCacheMembers, setDirty } = flow.actions;
 
 function getFieldsTemplate(fieldsTemplate: FlowType['fieldsTemplate']) {
   return fieldsTemplate.reduce((fieldsAuths, item) => {
@@ -202,7 +202,9 @@ function getFieldsTemplate(fieldsTemplate: FlowType['fieldsTemplate']) {
 // 加载应用的流程，对于初始创建的应用是null
 export const load = createAsyncThunk('flow/load', async (appkey: string, { dispatch }) => {
   try {
+    // bpmid变化时重新拉取数据
     dispatch(setLoading(true));
+    dispatch(flowActions.setInitialFlow(flowInitial.data));
 
     // 获取流程数据和所需字段
     let [{ data: flowResponse }, { data: fields }] = await Promise.all([

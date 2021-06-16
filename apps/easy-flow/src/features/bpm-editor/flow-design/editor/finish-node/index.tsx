@@ -6,6 +6,7 @@ import { updateNode } from '../../flow-slice';
 import { FinishNode } from '@type/flow';
 import { useAppDispatch } from '@/app/hooks';
 import { trimInputValue } from '../../util';
+import { name } from '../rules';
 
 interface FinishNodeEditorProps {
   node: FinishNode;
@@ -40,7 +41,7 @@ function FinishNodeEditor(props: FinishNodeEditorProps) {
       initialValues={formInitialValues}
       onValuesChange={handleFormValuesChange}
     >
-      <Form.Item label="节点名称" name="name" getValueFromEvent={trimInputValue}>
+      <Form.Item label="节点名称" name="name" getValueFromEvent={trimInputValue} rules={[name]}>
         <Input size="large" placeholder="请输入开始节点名称" />
       </Form.Item>
     </Form>
