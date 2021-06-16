@@ -10,6 +10,7 @@ import Header from '../../../components/header';
 import { Icon } from '@common/components';
 import { subAppSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 import { saveForm } from '@/features/bpm-editor/form-design/formdesign-slice';
+import styles from './index.module.scss';
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -176,51 +177,51 @@ const EditorHeader: FC = () => {
   }, [bpmId, dispatch]);
 
   return (
-    <HeaderContainer>
-      <Header backText={appName} className="edit_header">
-        <div className="steps">
-          <NavLink className="step" to={`${match.url}/form-design`} activeClassName="active">
-            <span className="number">01</span>
+    <div className={styles.header_container}>
+      <Header backText={appName} className={styles.edit_header}>
+        <div className={styles.steps}>
+          <NavLink className={styles.step} to={`${match.url}/form-design`} activeClassName="active">
+            <span className={styles.number}>01</span>
             <span>表单设计</span>
           </NavLink>
-          <div className="separator">
-            <Icon className="iconfont" type="jinru" />
+          <div className={styles.separator}>
+            <Icon className={styles.iconfont} type="jinru" />
           </div>
-          <NavLink className="step" to={`${match.url}/flow-design`} activeClassName="active">
-            <span className="number">02</span>
+          <NavLink className={styles.step} to={`${match.url}/flow-design`} activeClassName="active">
+            <span className={styles.number}>02</span>
             <span>流程设计</span>
           </NavLink>
         </div>
-        <div className="operation">
+        <div className={styles.operation}>
           {/* 这个版本暂时不做 */}
           {/* 
-            <Icon className="iconfont" type="jiantoushangyibu" />
-            <Icon className="iconfont" type="jiantouxiayibu" />
+            <Icon className={styles.iconfont} type="jiantoushangyibu" />
+            <Icon className={styles.iconfont} type="jiantouxiayibu" />
           */}
           {pathName === formDesignPath && (
             <Tooltip title="预览">
-              <Icon className="iconfont" type="yulan" onClick={handlePreview} />
+              <Icon className={styles.iconfont} type="yulan" onClick={handlePreview} />
             </Tooltip>
           )}
           {pathName === flowDesignPath && (
-            <Button className="prev" size="large" onClick={handlePrev}>
+            <Button className={styles.prev} size="large" onClick={handlePrev}>
               上一步
             </Button>
           )}
-          <Button type="primary" ghost className="save" size="large" onClick={handleSave}>
+          <Button type="primary" ghost className={styles.save} size="large" onClick={handleSave}>
             保存
           </Button>
           {pathName === formDesignPath && (
-            <Button type="primary" className="next" size="large" onClick={handleNext}>
+            <Button type="primary" className={styles.next} size="large" onClick={handleNext}>
               下一步
             </Button>
           )}
           {pathName === `${match.url}/flow-design` && (
             <AsyncButton
-              className="publish"
+              className={styles.publish}
               type="primary"
               size="large"
-              icon={<Icon className="iconfont" type="fabu" />}
+              icon={<Icon className={styles.iconfont} type="fabu" />}
               onClick={handlePublish}
             >
               发布
@@ -228,7 +229,7 @@ const EditorHeader: FC = () => {
           )}
         </div>
       </Header>
-    </HeaderContainer>
+    </div>
   );
 };
 
