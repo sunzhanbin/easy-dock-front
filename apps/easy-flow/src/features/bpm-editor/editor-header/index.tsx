@@ -7,13 +7,14 @@ import { AsyncButton } from '@common/components';
 import { axios } from '@utils';
 import Header from '../../../components/header';
 import { Icon } from '@common/components';
-import { subAppSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
+import { layoutSelector, subAppSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 import { saveForm } from '@/features/bpm-editor/form-design/formdesign-slice';
 import styles from './index.module.scss';
 
 const EditorHeader: FC = () => {
   const dispatch = useAppDispatch();
   const { name: appName } = useAppSelector(subAppSelector);
+  const layout = useAppSelector(layoutSelector);
   const history = useHistory();
   const { bpmId } = useParams<{ bpmId: string }>();
   const match = useRouteMatch();
@@ -34,7 +35,7 @@ const EditorHeader: FC = () => {
   }, [pathName, history, formDesignPath, flowDesignPath]);
   const handleSave = useCallback(() => {
     if (pathName === formDesignPath) {
-      dispatch(saveForm({ subAppId: bpmId, isShowTip: true }));
+      dispatch(saveForm({ subAppId: bpmId, isShowTip: true, isShowErrorTip: true }));
     }
 
     if (pathName === flowDesignPath) {
@@ -48,7 +49,7 @@ const EditorHeader: FC = () => {
   }, [pathName, history, formDesignPath, flowDesignPath]);
 
   const handlePublish = useCallback(async () => {
-    const formResponse = await dispatch(saveForm({ subAppId: bpmId, isShowTip: false }));
+    const formResponse = await dispatch(saveForm({ subAppId: bpmId, isShowTip: false, isShowErrorTip: true }));
 
     if (formResponse.meta.requestStatus === 'rejected') {
       return;
@@ -104,7 +105,7 @@ const EditorHeader: FC = () => {
           <Button type="primary" ghost className={styles.save} size="large" onClick={handleSave}>
             保存
           </Button>
-          {pathName === formDesignPath && (
+          {pathName === formDesignPath && layout.length > 0 && (
             <Button type="primary" className={styles.next} size="large" onClick={handleNext}>
               下一步
             </Button>

@@ -1,4 +1,4 @@
-import { FC, memo, useCallback, useEffect, useState } from 'react';
+import { FC, memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router';
 import DesignZone from './design-zone';
 import ToolBox from './toolbox';
@@ -10,9 +10,11 @@ import { ComponentConfig, ConfigItem, FieldType, FormField, FormFieldMap, TConfi
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { dirtySelector, selectedFieldSelector } from './formzone-reducer';
 import { axios } from '@/utils';
-import { Prompt, useHistory } from 'react-router-dom';
-import { Popconfirm } from 'antd';
+import { Prompt, useHistory, useLocation, useRouteMatch } from 'react-router-dom';
+import { Modal, Popconfirm } from 'antd';
 import styles from './index.module.scss';
+import { saveForm } from '@/features/bpm-editor/form-design/formdesign-slice';
+import useMemoCallback from '@common/hooks/use-memo-callback';
 
 const FormDesign: FC<{}> = () => {
   const dispatch = useAppDispatch();
@@ -21,8 +23,10 @@ const FormDesign: FC<{}> = () => {
   const isDirty = useAppSelector(dirtySelector);
   const { bpmId: subAppId } = useParams<{ bpmId: string }>();
   const [isShowTip, setIsShowTip] = useState<boolean>(false);
-  const [forceLeave, setForceLeave] = useState<boolean>(false);
-  const [pathName, setPathName] = useState<string>('');
+  const [saving, setSaving] = useState(false);
+  const cancelSaveRef = useRef<boolean>();
+  const targetUrlRef = useRef<string>();
+  const { url } = useRouteMatch();
   useEffect(() => {
     // 初始化表单数据
     axios.get(`/form/${subAppId}`).then((res) => {
@@ -86,38 +90,53 @@ const FormDesign: FC<{}> = () => {
   );
   const onDragStart = useCallback(() => {}, []);
   const onDragUpdate = useCallback(() => {}, []);
-  const handleConfirmLeave = useCallback(
-    (location) => {
-      if (forceLeave) {
-        return true;
-      }
-      setPathName(location.pathname);
+  const handleConfirmLeave = useMemoCallback((location: ReturnType<typeof useLocation>) => {
+    if (isDirty && url !== location.pathname && !cancelSaveRef.current) {
+      targetUrlRef.current = location.pathname + location.search;
       setIsShowTip(true);
+
       return false;
-    },
-    [forceLeave, setPathName, setIsShowTip],
-  );
-  const handleOk = useCallback(() => {
-    setForceLeave(true);
+    }
+
+    return true;
+  });
+  const handleSave = useMemoCallback(async () => {
+    setSaving(true);
+    const formResponse = await dispatch(saveForm({ subAppId: subAppId, isShowTip: false, isShowErrorTip: true }));
+    setSaving(false);
+    if (formResponse.meta.requestStatus === 'rejected') {
+      setIsShowTip(false);
+      return;
+    }
+    if (targetUrlRef.current) {
+      history.push(targetUrlRef.current);
+    }
+  });
+  const handleCancelUnSaveModal = useMemoCallback((e) => {
     setIsShowTip(false);
-    setTimeout(() => {
-      pathName && history.push(pathName);
-    }, 0);
-  }, [pathName, history, setForceLeave, setIsShowTip]);
-  const handleCancel = useCallback(() => {
-    setIsShowTip(false);
-  }, [setIsShowTip]);
+    cancelSaveRef.current = true;
+    if (targetUrlRef.current) {
+      history.push(targetUrlRef.current);
+    }
+  });
   return (
     <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart} onDragUpdate={onDragUpdate}>
       <Prompt when={isDirty} message={handleConfirmLeave} />
-      <Popconfirm
-        title="当前表单尚未保存,请确认是否离开?"
+      <Modal
+        maskClosable={false}
+        destroyOnClose
         visible={isShowTip}
-        onConfirm={handleOk}
-        onCancel={handleCancel}
-        overlayClassName="pop_tip"
-      ></Popconfirm>
-      {isShowTip && <div className="mask"></div>}
+        width={352}
+        title="提示"
+        okButtonProps={{ size: 'large', loading: saving }}
+        okText="保存更改"
+        cancelButtonProps={{ size: 'large' }}
+        cancelText="放弃保存"
+        onOk={handleSave}
+        onCancel={handleCancelUnSaveModal}
+      >
+        当前有未保存的更改，您在离开当前页面前是否要保存这些更改?
+      </Modal>
       <div className={styles.container}>
         <ToolBox></ToolBox>
         <DesignZone></DesignZone>

@@ -83,10 +83,11 @@ const validComponentConfig = (config: ConfigItem) => {
 type SaveParams = {
   subAppId: string;
   isShowTip?: boolean;
+  isShowErrorTip?: boolean;
 };
 export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>(
   'form/save',
-  async ({ subAppId, isShowTip }, { getState, dispatch }) => {
+  async ({ subAppId, isShowTip, isShowErrorTip }, { getState, dispatch }) => {
     const { formDesign } = getState();
     const { layout, schema, isDirty } = formDesign;
     const formMeta: FormMeta = {
@@ -115,18 +116,15 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
       }
       formMeta.components.push({ config, props });
     });
-    try {
-      if (errors.length > 0) {
-        message.error(errors.toString());
-        return;
-      }
-      // 表单改变之后才有必要调后台接口
-      if (isDirty) {
-        await axios.post('/form', { meta: formMeta, subappId: subAppId });
-        dispatch(setIsDirty({ isDirty: false }));
-      }
-      isShowTip && message.success('保存成功!');
-    } finally {
+    if (errors.length > 0) {
+      isShowErrorTip && message.error(errors.toString());
+      return Promise.reject(errors);
     }
+    // 表单改变之后才有必要调后台接口
+    if (isDirty) {
+      await axios.post('/form', { meta: formMeta, subappId: subAppId });
+      dispatch(setIsDirty({ isDirty: false }));
+    }
+    isShowTip && message.success('保存成功!');
   },
 );

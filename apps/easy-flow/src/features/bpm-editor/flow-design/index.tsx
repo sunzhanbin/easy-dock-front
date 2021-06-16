@@ -116,9 +116,16 @@ function FlowDesign() {
   const handleSave = useMemoCallback(async () => {
     setSaving(true);
 
-    await dispatch(save(bpmId));
+    const res = await dispatch(save(bpmId));
 
     setSaving(false);
+    if (res.meta.requestStatus === 'rejected') {
+      setShowUnSaveModal(false);
+      return;
+    }
+    if (targetUrlRef.current) {
+      history.push(targetUrlRef.current);
+    }
   });
 
   const handleCancelUnSaveModal = useMemoCallback(() => {
