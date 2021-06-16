@@ -1,9 +1,10 @@
 import React, { useEffect, useMemo, useState, useRef } from 'react';
-import { Prompt, useParams, useLocation, useHistory, useRouteMatch } from 'react-router-dom';
+import { Prompt, useParams, useLocation, useHistory } from 'react-router-dom';
 import { Drawer, Modal } from 'antd';
+import { ExclamationCircleFilled } from '@ant-design/icons';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { Loading, Icon } from '@common/components';
-import { load, flowDataSelector, save } from './flow-slice';
+import { load, flowDataSelector, save, setDirty } from './flow-slice';
 import { AllNode, BranchNode as BranchNodeType, NodeType } from '@type/flow';
 import { StartNode, AuditNode, FillNode, FinishNode, CardHeader } from './nodes';
 import { AuditNodeProps } from './nodes/audit-node';
@@ -18,10 +19,8 @@ function FlowDesign() {
   const [currentEditNode, setCurrentEditNode] = useState<AllNode | null>(null);
   const [showEditDrawer, setShowEditDrawer] = useState(false);
   const [currentEditNodePrevNodes, setCurrentEditNodePrevNodes] = useState<AllNode[]>([]);
-  const [showPrompt, setShowPrompt] = useState(false);
   const [saving, setSaving] = useState(false);
   const [showUnSaveModal, setShowUnSaveModal] = useState(false);
-  const { url } = useRouteMatch();
   const history = useHistory();
   const targetUrlRef = useRef<string>();
   const cancelSaveRef = useRef<boolean>();
@@ -31,13 +30,8 @@ function FlowDesign() {
   }, [dispatch, bpmId]);
 
   useEffect(() => {
-    // 这里不能用dirt替代
-    setShowPrompt((oldValue) => {
-      if (oldValue) return true;
-
-      return dirty;
-    });
-  }, [dirty]);
+    // history.block()
+  }, [history]);
 
   const handleClickNode = useMemoCallback((node: Exclude<AllNode, BranchNodeType>) => {
     setCurrentEditNode(node);
@@ -103,7 +97,7 @@ function FlowDesign() {
   }, [currentEditNode]);
 
   const handleConfirmLeave = useMemoCallback((location: ReturnType<typeof useLocation>) => {
-    if (dirty && url !== location.pathname && !cancelSaveRef.current) {
+    if (dirty && !cancelSaveRef.current) {
       targetUrlRef.current = location.pathname + location.search;
       setShowUnSaveModal(true);
 
@@ -122,6 +116,7 @@ function FlowDesign() {
   });
 
   const handleCancelUnSaveModal = useMemoCallback(() => {
+    dispatch(setDirty(false));
     setShowUnSaveModal(false);
     cancelSaveRef.current = true;
 
@@ -132,7 +127,7 @@ function FlowDesign() {
 
   return (
     <div className={styles.flow}>
-      {showPrompt && <Prompt when={dirty} message={handleConfirmLeave} />}
+      {dirty && <Prompt when={dirty} message={handleConfirmLeave} />}
       {loading && <Loading />}
       <div className={styles.content}>
         {flow.map((node, index) => {
@@ -193,7 +188,12 @@ function FlowDesign() {
         destroyOnClose
         visible={showUnSaveModal}
         width={352}
-        title="提示"
+        title={
+          <div className={styles.tiptitle}>
+            <ExclamationCircleFilled />
+            提示
+          </div>
+        }
         okButtonProps={{ size: 'large', loading: saving }}
         okText="保存更改"
         cancelButtonProps={{ size: 'large' }}

@@ -1,3 +1,5 @@
+@import '@common/styles/mixin.scss';
+
 .flow {
   position: relative;
   height: 100%;
@@ -51,5 +53,21 @@
         }
       }
     }
+  }
+}
+
+.tiptitle {
+  @include center('flex');
+
+  height: 24px;
+  line-height: 24px;
+  color: rgba(#181f43, 0.75);
+  font-size: 16px;
+  font-weight: 500;
+
+  svg {
+    margin-right: 8px;
+    color: #ff9900;
+    font-size: 20px;
   }
 }
