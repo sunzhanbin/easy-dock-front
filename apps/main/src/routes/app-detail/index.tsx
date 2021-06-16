@@ -1,4 +1,4 @@
-import { memo, FC, useEffect, useState, useCallback } from 'react';
+import { memo, FC, useEffect, useState, useCallback, useMemo } from 'react';
 import { useParams } from 'react-router';
 import { useHistory } from 'react-router-dom';
 import classNames from 'classnames';
@@ -18,8 +18,15 @@ const AppDetail: FC = () => {
   const [appInfo, setAppInfo] = useState<SceneShape>();
   const [subAppList, setSubAppList] = useState<SubAppInfo[]>([]);
   const [isShowModel, setIsShowModel] = useState<boolean>(false);
-  const handleSearch = useCallback(() => {
-    // console.info(e.target.value);
+  const [keyWord, setKeyWord] = useState<string>('');
+  const filterAppList = useMemo(() => {
+    if (keyWord) {
+      return subAppList.filter(({ name }) => name.indexOf(keyWord) > -1);
+    }
+    return subAppList;
+  }, [subAppList, keyWord]);
+  const handleSearch = useCallback((e) => {
+    setKeyWord(e.target.value);
   }, []);
   const handleOK = useCallback(
     (name, type) => {
@@ -96,7 +103,7 @@ const AppDetail: FC = () => {
                 />
               )}
             </div>
-            {subAppList.map(({ id, name, status, type, version }) => (
+            {filterAppList.map(({ id, name, status, type, version }) => (
               <Card
                 name={name}
                 id={id}
