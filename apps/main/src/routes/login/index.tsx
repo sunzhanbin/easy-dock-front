@@ -1,43 +1,55 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Form, Input } from 'antd';
+import { Form, Input, message } from 'antd';
 import { UserOutlined, KeyOutlined } from '@ant-design/icons';
 import cookie from 'js-cookie';
 import loginIcon from '@assets/login-icon.png';
 import logoIcon from '@assets/logo-icon.png';
 import { axios } from '@utils';
 import { ROUTES, envs } from '@consts';
+import { Loading } from '@components';
 import styles from './index.module.scss';
 
 export default function Login() {
   const [form] = Form.useForm();
   const { search } = useLocation();
+  const [loading, setLoading] = useState(false);
   const login = useCallback(async () => {
-    const values = await form.validateFields();
-    const data = Object.assign({}, { loginType: 1, appCode: 'easydock' }, values);
-    const loginResponse = await axios.post('/api/auth/v1/login', data, {
-      baseURL: envs.COMMON_LOGIN_DOMAIN,
-    });
+    if (loading) return;
 
-    if (loginResponse.data) {
-      const token = loginResponse.data.token;
+    setLoading(true);
 
-      cookie.set('token', token, { expires: 1 });
-      axios.defaults.headers.auth = token;
+    try {
+      const values = await form.validateFields();
+      const data = Object.assign({}, { loginType: 1, appCode: 'easydock' }, values);
+      const loginResponse = await axios.post('/api/auth/v1/login', data, {
+        baseURL: envs.COMMON_LOGIN_DOMAIN,
+      });
 
-      let redirectUrl = '';
-      const keyValues = decodeURIComponent(search.slice(1)).split('=');
-      const redirectUrlIndex = keyValues.findIndex((item) => item === 'redirect');
+      if (loginResponse.data) {
+        const token = loginResponse.data.token;
 
-      if (redirectUrlIndex !== -1) {
-        redirectUrl = keyValues[redirectUrlIndex + 1];
+        cookie.set('token', token, { expires: 1 });
+        axios.defaults.headers.auth = token;
+
+        let redirectUrl = '';
+        const keyValues = decodeURIComponent(search.slice(1)).split('=');
+        const redirectUrlIndex = keyValues.findIndex((item) => item === 'redirect');
+
+        if (redirectUrlIndex !== -1) {
+          redirectUrl = keyValues[redirectUrlIndex + 1];
+        } else {
+          redirectUrl = ROUTES.INDEX;
+        }
+
+        window.location.replace(redirectUrl);
       } else {
-        redirectUrl = ROUTES.INDEX;
+        message.error((loginResponse as any).resultMessage);
       }
-
-      window.location.replace(redirectUrl);
+    } finally {
+      setLoading(false);
     }
-  }, [form, search]);
+  }, [form, search, loading]);
 
   const nameRules = useMemo(() => {
     return [
@@ -86,7 +98,10 @@ export default function Login() {
             <Input placeholder="请输入密码" type="password" prefix={<KeyOutlined />} size="large" />
           </Form.Item>
         </Form>
-        <img className={styles['login-icon']} src={loginIcon} alt="login" onClick={login} />
+        <div className={styles['login-icon']}>
+          <img src={loginIcon} alt="login" onClick={login} />
+          {loading && <Loading />}
+        </div>
       </div>
     </div>
   );
