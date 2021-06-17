@@ -35,19 +35,21 @@ export function createNode(type: NodeType, name: string) {
       ...node,
       btnText: {
         approve: { enable: true },
-        revert: {
-          enable: true,
-        },
-        save: {
-          enable: true,
-        },
+        revert: { enable: true },
+        save: { enable: true },
       },
       revert: {
         type: RevertType.Start,
       },
     };
   } else if (type === NodeType.FillNode) {
-    return <FillNode>node;
+    return <FillNode>{
+      ...node,
+      btnText: {
+        submit: { enable: true },
+        save: { enable: true },
+      },
+    };
   } else {
     throw new Error('传入类型不正确');
   }
