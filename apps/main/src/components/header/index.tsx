@@ -31,7 +31,7 @@ export default function AppHeader() {
   }, [logout]);
 
   const indexNavIsActive: NavLinkProps['isActive'] = useCallback((match, location) => {
-    if (match) {
+    if (match || /^\/scenes-detail\/\d+/.test(location.pathname)) {
       return true;
     } else if (location.pathname === '/') {
       return true;
