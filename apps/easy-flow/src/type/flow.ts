@@ -68,9 +68,9 @@ export interface AuditNode extends UserNode {
 
 export interface FillNode extends UserNode {
   type: NodeType.FillNode;
-  btnText?: {
-    submit?: ButtonAuth;
-    save?: ButtonAuth;
+  btnText: {
+    submit: ButtonAuth;
+    save: ButtonAuth;
   };
 }
 
