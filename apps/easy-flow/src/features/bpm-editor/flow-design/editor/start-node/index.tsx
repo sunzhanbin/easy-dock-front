@@ -8,6 +8,7 @@ import { StartNode, TriggerType } from '@type/flow';
 import styles from './index.module.scss';
 import { useAppDispatch } from '@/app/hooks';
 import { trimInputValue } from '../../util';
+import useValidateForm from '../use-validate-form';
 import { name } from '../rules';
 
 interface StartNodeEditorProps {
@@ -62,10 +63,19 @@ const Trigger = memo(function Trigger({
   );
 });
 
+type FormValuesType = {
+  name: string;
+  triggerType: TriggerType;
+};
+
 function StartNodeEditor(props: StartNodeEditorProps) {
   const { node } = props;
-  const [form] = Form.useForm();
+  const [form] = Form.useForm<FormValuesType>();
   const dispatch = useAppDispatch();
+
+  // 触发保存时校验form
+  useValidateForm<FormValuesType>(form);
+
   const handleFormValuesChange = useMemoCallback(
     debounce((_, allValues: { name: string; triggerType: TriggerType }) => {
       let trigger: StartNode['trigger'];
@@ -96,6 +106,8 @@ function StartNodeEditor(props: StartNodeEditorProps) {
   );
 
   const formInitialValues = useMemo(() => {
+    console.log(1);
+
     return {
       name: node.name,
       triggerType: node.trigger.type,

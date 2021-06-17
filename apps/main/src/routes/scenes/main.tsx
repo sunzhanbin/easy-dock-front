@@ -4,7 +4,7 @@ import { Button, message } from 'antd';
 import { FormInstance } from 'antd/lib/form';
 import throttle from 'lodash/throttle';
 import classnames from 'classnames';
-import { Popover, Icon, Loading } from '@components';
+import { Popover, Icon, Loading } from '@common/components';
 import Project from './project';
 import Form from './project/form';
 import emptyImage from '@assets/empty.png';
@@ -103,26 +103,29 @@ export default function Home() {
 
   useEffect(() => {
     fetchProjectList();
-  }, []);
+  }, [fetchProjectList]);
 
   // 新增或编辑
-  const handleEditProjectSubmit = useCallback(async (values) => {
-    if (values.id) {
-      // 编辑项目
-      await axios.put('/project', values);
+  const handleEditProjectSubmit = useCallback(
+    async (values) => {
+      if (values.id) {
+        // 编辑项目
+        await axios.put('/project', values);
 
-      message.success('修改成功');
-      fetchProjectList();
-    } else {
-      // 新增项目
-      const { data } = await axios.post('/project', values);
+        message.success('修改成功');
+        fetchProjectList();
+      } else {
+        // 新增项目
+        const { data } = await axios.post('/project', values);
 
-      message.success('添加成功');
+        message.success('添加成功');
 
-      setActiveProjectId(data.id);
-      fetchProjectList();
-    }
-  }, []);
+        setActiveProjectId(data.id);
+        fetchProjectList();
+      }
+    },
+    [fetchProjectList],
+  );
 
   const handleAddProjectSubmit = useCallback(async () => {
     if (formRef.current) {
@@ -130,12 +133,15 @@ export default function Home() {
     }
   }, [handleEditProjectSubmit]);
 
-  const handleDeleteProject = useCallback(async (id: number) => {
-    await axios.delete(`/project/${id}`);
+  const handleDeleteProject = useCallback(
+    async (id: number) => {
+      await axios.delete(`/project/${id}`);
 
-    message.success('删除成功');
-    fetchProjectList();
-  }, []);
+      message.success('删除成功');
+      fetchProjectList();
+    },
+    [fetchProjectList],
+  );
 
   const handleAddScene = useCallback(() => {
     setEditingScene(undefined);
@@ -170,7 +176,7 @@ export default function Home() {
       fetchSceneList(activeProjectId!);
       fetchProjectList();
     },
-    [activeProjectId, fetchSceneList],
+    [activeProjectId, fetchSceneList, fetchProjectList],
   );
 
   const handleModifySceneStatus: SceneProps['onStatusChange'] = useCallback(async (status, id) => {
@@ -196,16 +202,19 @@ export default function Home() {
     [history],
   );
 
-  const handledeleteScene = useCallback(async (data: SceneShape) => {
-    await axios.delete(`/app/${data.id}`);
-    message.success('删除成功');
+  const handledeleteScene = useCallback(
+    async (data: SceneShape) => {
+      await axios.delete(`/app/${data.id}`);
+      message.success('删除成功');
 
-    setScenes((scenes) => {
-      return scenes.filter((scene) => scene.id !== data.id);
-    });
+      setScenes((scenes) => {
+        return scenes.filter((scene) => scene.id !== data.id);
+      });
 
-    fetchProjectList();
-  }, []);
+      fetchProjectList();
+    },
+    [fetchProjectList],
+  );
 
   return (
     <div className={classnames(styles.container, MAIN_CONTENT_CLASSNAME)}>
@@ -252,9 +261,11 @@ export default function Home() {
           <img src={emptyImage} alt="empty" />
           <div className={styles.desc}>暂无项目，来创建一个吧</div>
           <Popover content={<Form formRef={formRef} />} placement="top" title="新增项目" onOk={handleAddProjectSubmit}>
-            <Button size="large" type="primary" icon={<Icon type="xinzengjiacu" />}>
-              创建项目
-            </Button>
+            <div>
+              <Button size="large" type="primary" icon={<Icon type="xinzengjiacu" />}>
+                创建项目
+              </Button>
+            </div>
           </Popover>
         </div>
       )}

@@ -28,8 +28,6 @@ function FlowDesign() {
     dispatch(load(bpmId));
   }, [dispatch, bpmId]);
 
-  useEffect(() => {}, [history]);
-
   const handleClickNode = useMemoCallback((node: Exclude<AllNode, BranchNodeType>) => {
     setCurrentEditNode(node);
     setShowEditDrawer(true);
