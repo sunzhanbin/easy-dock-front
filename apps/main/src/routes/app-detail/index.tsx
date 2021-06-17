@@ -95,6 +95,7 @@ const AppDetail: FC = () => {
               {isShowModel && (
                 <AppModel
                   type="create"
+                  position="left"
                   className={styles.createModel}
                   onClose={() => {
                     setIsShowModel(false);
