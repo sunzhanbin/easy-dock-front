@@ -14,6 +14,10 @@ const CardContainer = styled.div`
   position: relative;
   display: flex;
   cursor: pointer;
+  &:hover {
+    box-shadow: 0px 6px 24px 0px rgba(24, 31, 67, 0.1);
+    border-radius: 3px;
+  }
   .image {
     flex: 0 0 74px;
   }
@@ -210,20 +214,15 @@ const Card: FC<{
     },
     [id, setIsShowModel, onChange],
   );
-  useEffect(() => {
-    const handleHide = (e: MouseEvent) => {
-      if ((e.target as HTMLDivElement).parentElement?.className !== 'app_operation_item') {
-        setIsShowOperation(false);
-      }
-    };
-    // 点击其他地方收起操作按钮
-    document.body.addEventListener('click', handleHide);
-    return () => {
-      document.body.removeEventListener('click', handleHide);
-    };
-  }, []);
+
   return (
-    <CardContainer className={className} onClick={handleJump}>
+    <CardContainer
+      className={className}
+      onClick={handleJump}
+      onMouseLeave={() => {
+        setIsShowOperation(false);
+      }}
+    >
       <div className="image" style={{ backgroundColor: type === 1 ? '#DFF5EF' : '#E7EBFD' }}>
         <img src={type === 1 ? ScreenImage : FlowImage} alt="图片" />
       </div>
@@ -240,7 +239,7 @@ const Card: FC<{
                 e.stopPropagation();
               }}
             >
-              {statusObj.className !== 'used' && (
+              {statusObj.className === 'stoped' && (
                 <Popconfirm
                   title="请确认是否启用该子应用?"
                   onConfirm={handleStart}
@@ -297,6 +296,7 @@ const Card: FC<{
           <AppModel
             type="edit"
             className="edit_model"
+            name={name}
             onClose={() => {
               setIsShowModel(false);
             }}

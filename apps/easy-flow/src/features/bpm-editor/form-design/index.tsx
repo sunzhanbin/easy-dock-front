@@ -1,4 +1,4 @@
-import { FC, memo, useCallback, useEffect, useState } from 'react';
+import { FC, memo, useCallback, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router';
 import DesignZone from './design-zone';
 import ToolBox from './toolbox';
@@ -10,9 +10,13 @@ import { ComponentConfig, ConfigItem, FieldType, FormField, FormFieldMap, TConfi
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { dirtySelector, selectedFieldSelector } from './formzone-reducer';
 import { axios } from '@/utils';
-import { Prompt, useHistory } from 'react-router-dom';
-import { Popconfirm } from 'antd';
+import { Prompt, useHistory, useLocation, useRouteMatch } from 'react-router-dom';
+import { Modal } from 'antd';
+import { ExclamationCircleFilled } from '@ant-design/icons';
 import styles from './index.module.scss';
+import { saveForm } from '@/features/bpm-editor/form-design/formdesign-slice';
+import useMemoCallback from '@common/hooks/use-memo-callback';
+import { AsyncButton } from '@common/components';
 
 const FormDesign: FC<{}> = () => {
   const dispatch = useAppDispatch();
@@ -21,8 +25,9 @@ const FormDesign: FC<{}> = () => {
   const isDirty = useAppSelector(dirtySelector);
   const { bpmId: subAppId } = useParams<{ bpmId: string }>();
   const [isShowTip, setIsShowTip] = useState<boolean>(false);
-  const [forceLeave, setForceLeave] = useState<boolean>(false);
-  const [pathName, setPathName] = useState<string>('');
+  const cancelSaveRef = useRef<boolean>();
+  const targetUrlRef = useRef<string>();
+  const { url } = useRouteMatch();
   useEffect(() => {
     // 初始化表单数据
     axios.get(`/form/${subAppId}`).then((res) => {
@@ -86,38 +91,64 @@ const FormDesign: FC<{}> = () => {
   );
   const onDragStart = useCallback(() => {}, []);
   const onDragUpdate = useCallback(() => {}, []);
-  const handleConfirmLeave = useCallback(
-    (location) => {
-      if (forceLeave) {
-        return true;
-      }
-      setPathName(location.pathname);
+  const handleConfirmLeave = useMemoCallback((location: ReturnType<typeof useLocation>) => {
+    if (isDirty && url !== location.pathname && !cancelSaveRef.current) {
+      targetUrlRef.current = location.pathname + location.search;
       setIsShowTip(true);
+
       return false;
-    },
-    [forceLeave, setPathName, setIsShowTip],
-  );
-  const handleOk = useCallback(() => {
-    setForceLeave(true);
+    }
+
+    return true;
+  });
+  const handleSave = useMemoCallback(async () => {
+    const formResponse = await dispatch(saveForm({ subAppId: subAppId, isShowTip: false, isShowErrorTip: true }));
+    if (formResponse.meta.requestStatus === 'rejected') {
+      setIsShowTip(false);
+      return;
+    }
+    if (targetUrlRef.current) {
+      history.push(targetUrlRef.current);
+    }
+  });
+  const handleCancelUnSaveModal = useMemoCallback(() => {
     setIsShowTip(false);
-    setTimeout(() => {
-      pathName && history.push(pathName);
-    }, 0);
-  }, [pathName, history, setForceLeave, setIsShowTip]);
-  const handleCancel = useCallback(() => {
+    cancelSaveRef.current = true;
+    if (targetUrlRef.current) {
+      history.push(targetUrlRef.current);
+    }
+  });
+  const handleCloseUnSaveModal = useMemoCallback(() => {
     setIsShowTip(false);
-  }, [setIsShowTip]);
+  });
   return (
     <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart} onDragUpdate={onDragUpdate}>
       <Prompt when={isDirty} message={handleConfirmLeave} />
-      <Popconfirm
-        title="当前表单尚未保存,请确认是否离开?"
+      <Modal
+        maskClosable={false}
+        destroyOnClose
         visible={isShowTip}
-        onConfirm={handleOk}
-        onCancel={handleCancel}
-        overlayClassName="pop_tip"
-      ></Popconfirm>
-      {isShowTip && <div className="mask"></div>}
+        width={352}
+        title={
+          <div className={styles.tipTitle}>
+            <ExclamationCircleFilled />
+            提示
+          </div>
+        }
+        onCancel={handleCloseUnSaveModal}
+        footer={
+          <>
+            <AsyncButton size="large" onClick={handleCancelUnSaveModal}>
+              放弃保存
+            </AsyncButton>
+            <AsyncButton type="primary" size="large" onClick={handleSave}>
+              保存更改
+            </AsyncButton>
+          </>
+        }
+      >
+        当前有未保存的更改，您在离开当前页面前是否要保存这些更改?
+      </Modal>
       <div className={styles.container}>
         <ToolBox></ToolBox>
         <DesignZone></DesignZone>

@@ -13,21 +13,16 @@
     background-color: rgba(24, 31, 67, 0.12);
   }
 }
-:global {
-  .pop_tip.ant-popover-placement-top {
-    position: fixed;
-    top: 100px !important;
-    left: 50% !important;
-    z-index: 88;
-    transform: translateX(-50%);
-  }
-  .mask {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 9;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(24, 31, 67, 0.12);
+.tipTitle {
+  height: 24px;
+  line-height: 24px;
+  color: rgba(#181f43, 0.75);
+  font-size: 16px;
+  font-weight: 500;
+
+  svg {
+    margin-right: 8px;
+    color: #ff9900;
+    font-size: 20px;
   }
 }

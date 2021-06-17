@@ -12,9 +12,10 @@ import {
   comAdded,
   comDeleted,
 } from '@/features/bpm-editor/form-design/formdesign-slice';
-import { useAppDispatch } from '@/app/hooks';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import useLoadComponents from '@/hooks/use-load-components';
 import styles from './index.module.scss';
+import { selectedFieldSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 
 type Component = React.FC | React.ComponentClass;
 const SourceBox: FC<{
@@ -25,6 +26,7 @@ const SourceBox: FC<{
   rowIndex: number;
 }> = ({ type, config, id, moveConfig, rowIndex }) => {
   const dispatch = useAppDispatch();
+  const selectedField = useAppSelector(selectedFieldSelector);
   // 获取组件源码
   const compSources: Component = useLoadComponents(type as AllComponentType['type']) as Component;
   const propList = useMemo(() => {
@@ -102,22 +104,22 @@ const SourceBox: FC<{
             </Tooltip>
           </div>
           {moveConfig.up && (
-            <div className={styles.moveUp}>
+            <div className={styles.moveUp} style={{ display: id === selectedField ? 'block' : 'none' }}>
               <Icon className={styles.iconfont} type="jiantouxiangshang" onClick={handleMoveUp} />
             </div>
           )}
           {moveConfig.down && (
-            <div className={styles.moveDown}>
+            <div className={styles.moveDown} style={{ display: id === selectedField ? 'block' : 'none' }}>
               <Icon className={styles.iconfont} type="jiantouxiangxia" onClick={handleMoveDown} />
             </div>
           )}
           {moveConfig.left && (
-            <div className={styles.moveLeft}>
+            <div className={styles.moveLeft} style={{ display: id === selectedField ? 'block' : 'none' }}>
               <Icon className={styles.iconfont} type="hengxiangqiehuan" onClick={handleMoveLeft} />
             </div>
           )}
           {moveConfig.right && (
-            <div className={styles.moveRight}>
+            <div className={styles.moveRight} style={{ display: id === selectedField ? 'block' : 'none' }}>
               <Icon className={styles.iconfont} type="hengxiangqiehuan" onClick={handleMoveRight} />
             </div>
           )}
@@ -128,6 +130,7 @@ const SourceBox: FC<{
   }, [
     moveConfig,
     compSources,
+    selectedField,
     propList,
     handleCopy,
     handleDelete,

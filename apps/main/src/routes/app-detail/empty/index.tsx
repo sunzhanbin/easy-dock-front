@@ -7,11 +7,13 @@ import { axios } from '@/utils';
 import { useHistory } from 'react-router-dom';
 import { FlowMicroApp } from '@/consts';
 import styles from './index.module.scss';
+import classNames from 'classnames';
 
 const EmptyDetail: FC<{ appId: string }> = ({ appId }) => {
   const [form] = Form.useForm();
   const history = useHistory();
   const [canEdit, setCanEdit] = useState<boolean>(false);
+  const [activeName, setActiveName] = useState<string>('');
   const handleClose = useCallback(
     (e) => {
       e.stopPropagation();
@@ -29,8 +31,9 @@ const EmptyDetail: FC<{ appId: string }> = ({ appId }) => {
   return (
     <div className={styles.empty_app}>
       <div
-        className={styles.flow_app}
+        className={classNames(styles.flow_app, activeName === 'flow' ? styles.active : '')}
         onClick={() => {
+          setActiveName('flow');
           setCanEdit(true);
         }}
       >
@@ -47,9 +50,15 @@ const EmptyDetail: FC<{ appId: string }> = ({ appId }) => {
               label="子应用名称"
               name="subAppName"
               required
-              rules={[{ required: true, message: '请输入子应用名称' }]}
+              rules={[
+                { required: true, message: '请输入子应用名称' },
+                {
+                  pattern: /^[\u4e00-\u9fa5_a-zA-Z0-9]{3,20}$/,
+                  message: '子应用名称应为3-20位汉字、字母、数字或下划线',
+                },
+              ]}
             >
-              <Input size="large" placeholder="请输入" />
+              <Input size="large" placeholder="请输入" autoFocus />
             </Form.Item>
             <Form.Item>
               <Button type="primary" size="large" className={styles.submit} htmlType="submit">
