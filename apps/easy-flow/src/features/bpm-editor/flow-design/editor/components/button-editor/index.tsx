@@ -7,13 +7,13 @@ import styles from './index.module.scss';
 interface ButtonEditorProps extends ButtonAuth {
   onChange(btnKey: this['btnKey'], config: ButtonAuth): void;
   children: ReactNode;
-  editable?: boolean;
+  checkable?: boolean;
   className?: string;
   btnKey: string;
 }
 
 function ButtonEditor(props: ButtonEditorProps) {
-  const { text, enable, children, onChange, editable = true, btnKey, className } = props;
+  const { text, enable, children, onChange, checkable = true, btnKey, className } = props;
 
   return (
     <div className={classnames(styles['btn-editor'], className)}>
@@ -30,7 +30,7 @@ function ButtonEditor(props: ButtonEditorProps) {
       <Checkbox
         className={styles.choose}
         checked={enable}
-        disabled={!editable}
+        disabled={!checkable}
         onChange={(event) => {
           onChange(btnKey, { text, enable: event.target.checked });
         }}

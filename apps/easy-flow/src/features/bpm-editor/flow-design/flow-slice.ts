@@ -241,6 +241,14 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
       const fillNode: FillNode = createNode(NodeType.FillNode, '填写节点');
 
       fillNode.fieldsAuths = getFieldsTemplate(fieldsTemplate);
+      fillNode.btnText = {
+        submit: {
+          enable: true,
+        },
+        save: {
+          enable: true,
+        },
+      };
 
       flowData = [startNode, fillNode, finishNode];
     } else {

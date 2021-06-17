@@ -89,7 +89,7 @@ function ButtonConfigs(props: ButtonConfigsProps) {
         className={styles.editor}
         text={btnText.save.text}
         enable={btnText.save.enable}
-        editable={false}
+        checkable={false}
         btnKey="save"
         onChange={handleButtonChange}
       >
@@ -100,7 +100,7 @@ function ButtonConfigs(props: ButtonConfigsProps) {
         className={styles.editor}
         text={btnText.approve.text}
         enable={btnText.approve.enable}
-        editable={false}
+        checkable={false}
         btnKey="approve"
         onChange={handleButtonChange}
       >
@@ -113,7 +113,7 @@ function ButtonConfigs(props: ButtonConfigsProps) {
         className={styles.editor}
         text={btnText.revert.text}
         enable={btnText.revert.enable}
-        editable={false}
+        checkable={false}
         btnKey="revert"
         onChange={handleButtonChange}
       >
