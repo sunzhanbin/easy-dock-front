@@ -4,6 +4,7 @@ import { ValueType } from './type';
 import { Icon } from '@common/components';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import memberDefaultAvatar from '@assets/members/member-default-avatar.png';
+import { Image } from '@common/components';
 import Selector from './selector';
 import styles from './index.module.scss';
 
@@ -23,7 +24,7 @@ const Member = memo(function Member(props: MemberProps) {
 
   return (
     <div className={styles.member}>
-      <img className={styles.avatar} src={data.avatar || memberDefaultAvatar} alt="头像" />
+      <Image className={styles.avatar} src={data.avatar} placeholder={memberDefaultAvatar} size={24} round />
       <div className={styles.name}>{data.name}</div>
       {editable && <Icon className={styles.delete} type="guanbi" onClick={handleDelete} />}
     </div>

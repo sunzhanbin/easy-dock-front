@@ -11,7 +11,7 @@ import FieldAuths from '../components/field-auths';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { trimInputValue } from '../../util';
 import { name } from '../rules';
-import useValidateForm from '../use-validate-form';
+import useValidateForm from '../../hooks/use-validate-form';
 import styles from './index.module.scss';
 
 interface FillNodeEditorProps {
