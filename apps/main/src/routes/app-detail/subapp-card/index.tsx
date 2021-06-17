@@ -52,6 +52,9 @@ const CardContainer = styled.div`
           display: block;
           width: 20px;
           height: 20px;
+          &:hover {
+            color: #4c5cdb;
+          }
         }
       }
       .operation {
