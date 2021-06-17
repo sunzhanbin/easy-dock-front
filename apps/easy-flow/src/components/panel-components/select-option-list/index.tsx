@@ -110,17 +110,19 @@ const SelectOptionList = (props: editProps) => {
     setComponentKey(e);
   }, []);
   useEffect(() => {
-    axios.get(`/subapp/${appId}/list/all/deployed`).then((res) => {
-      const list = res.data
-        .filter((app: { id: number }) => app.id !== subAppId)
-        .map((app: { name: string; id: number; version: { id: number } }) => ({
-          key: app.id,
-          value: app.name,
-          versionId: app.version.id,
-        }));
-      setAppList(list);
-    });
-  }, [subAppId]);
+    if (type === 'dictionaries') {
+      axios.get(`/subapp/${appId}/list/all/deployed`).then((res) => {
+        const list = res.data
+          .filter((app: { id: number }) => app.id !== subAppId)
+          .map((app: { name: string; id: number; version: { id: number } }) => ({
+            key: app.id,
+            value: app.name,
+            versionId: app.version.id,
+          }));
+        setAppList(list);
+      });
+    }
+  }, [subAppId, type]);
   useEffect(() => {
     onChange && onChange({ type, data: content, appId: subAppKey, fieldId: componentKey });
   }, [type, content, subAppKey, componentKey]);

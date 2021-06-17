@@ -5,6 +5,7 @@ const staticRoutes = {
   BPM_EDITOR: '/bpm-editor/:bpmId',
   FLOW_START: '/flow/start/:subAppId',
   FLOW_DETAIL: '/flow/detail/:subAppId/:flowId/:type',
+  TASK_CENTER: '/task-center/:appId',
 };
 
 export default staticRoutes;

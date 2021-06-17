@@ -96,7 +96,7 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
       schema: schema,
     };
     const errors: string[] = [];
-    const { byId } = formDesign;
+    const { byId = {} } = formDesign;
     Object.keys(byId).forEach((id) => {
       const type = id.split('_')[0] || '';
       const version = schema[type as FieldType]?.baseInfo.version || '';
