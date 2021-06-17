@@ -41,6 +41,7 @@ export default function Login() {
 
         if (hasAuth) {
           const token = loginResponse.data.token;
+
           cookie.set('token', token, { expires: 1 });
           axios.defaults.headers.auth = token;
 

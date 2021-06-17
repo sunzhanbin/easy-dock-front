@@ -213,8 +213,8 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
 
     // 获取流程数据和所需字段
     let [{ data: flowResponse }, { data: fields }] = await Promise.all([
-      builderAxios.get<{ meta: Flow | null }>(`/process/${appkey}`),
-      builderAxios.get<{ field: string; name: string }[]>(`/form/subapp/${appkey}/components`),
+      builderAxios.get<{ data: { meta: Flow | null } }>(`/process/${appkey}`),
+      builderAxios.get<{ data: { field: string; name: string }[] }>(`/form/subapp/${appkey}/components`),
     ]);
 
     const fieldsTemplate: FlowType['fieldsTemplate'] = fields.map((item) => ({ name: item.name, id: item.field }));

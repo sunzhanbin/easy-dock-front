@@ -8,6 +8,11 @@ declare module 'axios' {
     resultMessage: string;
   }
 
+  type ResponseType = {
+    resultCode: number;
+    resultMessage: string;
+    data?: any;
+  };
   export interface AxiosInstance {
     get<T = any>(url: string, config?: AxiosRequestConfig): Promise<T>;
     delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<T>;

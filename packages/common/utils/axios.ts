@@ -1,6 +1,5 @@
 import { message } from 'antd';
 import Axios, { AxiosRequestConfig } from 'axios';
-import { localStorage } from './storage';
 import cookie from 'js-cookie';
 
 function createAxios(config?: AxiosRequestConfig) {

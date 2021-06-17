@@ -31,7 +31,7 @@ export default function Home() {
     setFetching(true);
 
     try {
-      const { data } = await axios.get<ProjectShape[]>('/project/list/all');
+      const { data } = await axios.get<{ data: ProjectShape[] }>('/project/list/all');
       const list: ProjectShape[] = data.map((item) => {
         return {
           id: item.id,
