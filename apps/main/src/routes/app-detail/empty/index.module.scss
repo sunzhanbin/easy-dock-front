@@ -15,8 +15,11 @@
     text-align: center;
     background: #ffffff;
     border-radius: 3px;
-    border: 1px solid rgba(24, 31, 67, 0.5);
+    border: 1px solid rgba(24, 31, 67, 0.12);
     cursor: pointer;
+    &.active {
+      border: 1px solid rgba(24, 31, 67, 0.5);
+    }
     :global {
       .ant-form-item .ant-form-item-explain {
         text-align: left;
@@ -57,7 +60,9 @@
     }
   }
   .flow_app {
-    border: 1px solid rgba(24, 31, 67, 0.5);
+    &:hover {
+      border: 1px solid rgba(24, 31, 67, 0.5);
+    }
     margin-right: 24px;
     .form {
       width: 330px;
@@ -69,7 +74,6 @@
     }
   }
   .screen_app {
-    border: 1px solid rgba(24, 31, 67, 0.12);
     cursor: not-allowed;
   }
 }
