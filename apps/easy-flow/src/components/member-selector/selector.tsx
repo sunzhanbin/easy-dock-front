@@ -5,6 +5,7 @@ import { ValueType } from './type';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { Loading } from '@common/components';
 import memberDefaultAvatar from '@assets/members/member-default-avatar.png';
+import { Image } from '@common/components';
 import { runtimeAxios } from '@utils';
 import styles from './index.module.scss';
 
@@ -158,7 +159,13 @@ function Selector(props: SelectorProps) {
                   className={styles.item}
                   onClick={() => handleChangeMembers(member, !selected)}
                 >
-                  <img className={styles.avatar} src={member.avatar || memberDefaultAvatar} alt="用户头像" />
+                  <Image
+                    src={member.avatar}
+                    placeholder={memberDefaultAvatar}
+                    className={styles.avatar}
+                    size={24}
+                    round
+                  />
                   <span className={styles.name}>{member.name}</span>
                   <Checkbox checked={selected} />
                 </div>

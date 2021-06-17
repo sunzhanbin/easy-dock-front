@@ -8,15 +8,16 @@ declare module 'axios' {
     resultMessage: string;
   }
 
-  type ResponseType = {
+  type ApiResponseSchema = {
     resultCode: number;
     resultMessage: string;
     data?: any;
   };
+
   export interface AxiosInstance {
-    get<T = any>(url: string, config?: AxiosRequestConfig): Promise<T>;
-    delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<T>;
-    post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T>;
-    put<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T>;
+    get<T = ApiResponseSchema>(url: string, config?: AxiosRequestConfig): Promise<T>;
+    delete<T = ApiResponseSchema>(url: string, config?: AxiosRequestConfig): Promise<T>;
+    post<T = ApiResponseSchema>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T>;
+    put<T = ApiResponseSchema>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T>;
   }
 }

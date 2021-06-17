@@ -6,7 +6,7 @@ import { updateNode } from '../../flow-slice';
 import { FinishNode } from '@type/flow';
 import { useAppDispatch } from '@/app/hooks';
 import { trimInputValue } from '../../util';
-import useValidateForm from '../use-validate-form';
+import useValidateForm from '../../hooks/use-validate-form';
 import { name } from '../rules';
 
 interface FinishNodeEditorProps {
