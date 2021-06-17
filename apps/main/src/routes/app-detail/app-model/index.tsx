@@ -8,7 +8,6 @@ import ScreenImage from '@assets/screen-small.png';
 const Container = styled.div`
   position: absolute;
   top: 104px;
-  left: 0;
   z-index: 8;
   width: 392px;
   background: #ffffff;
@@ -106,13 +105,20 @@ const Container = styled.div`
 
 const AppModel: FC<{
   type: 'create' | 'edit';
+  position: 'left' | 'right';
   name?: string;
   className?: string;
   onClose: () => void;
   onOk: (name: string, type: number) => void;
-}> = ({ type, name, className, onClose, onOk }) => {
+}> = ({ type, position, name, className, onClose, onOk }) => {
   const [form] = Form.useForm();
   const [appName, setAppName] = useState<string>(name || '');
+  const containerStyle = useMemo(() => {
+    if (position === 'left') {
+      return { left: 0 };
+    }
+    return { right: 0 };
+  }, [position]);
   const handleClose = useCallback(() => {
     onClose && onClose();
   }, [onClose]);
@@ -125,6 +131,7 @@ const AppModel: FC<{
   return (
     <Container
       className={className}
+      style={containerStyle}
       onClick={(e) => {
         e.stopPropagation();
       }}
