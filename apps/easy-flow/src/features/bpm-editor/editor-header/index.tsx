@@ -13,7 +13,7 @@ import styles from './index.module.scss';
 
 const EditorHeader: FC = () => {
   const dispatch = useAppDispatch();
-  const { name: appName } = useAppSelector(subAppSelector);
+  const { name: appName, appId } = useAppSelector(subAppSelector);
   const layout = useAppSelector(layoutSelector);
   const history = useHistory();
   const { bpmId } = useParams<{ bpmId: string }>();
@@ -69,10 +69,13 @@ const EditorHeader: FC = () => {
 
     message.success('发布成功');
   }, [bpmId, dispatch]);
+  const handleGoBack = useCallback(() => {
+    window.location.href = `${window.location.origin}/scenes-detail/${appId}`;
+  }, [appId]);
 
   return (
     <div className={styles.header_container}>
-      <Header backText={appName} className={styles.edit_header}>
+      <Header backText={appName} className={styles.edit_header} goBack={handleGoBack}>
         <div className={styles.steps}>
           <NavLink className={styles.step} to={`${match.url}/form-design`} activeClassName={styles.active}>
             <span className={styles.number}>01</span>

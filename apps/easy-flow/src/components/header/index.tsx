@@ -1,4 +1,4 @@
-import { ReactNode, memo } from 'react';
+import { ReactNode, memo, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import classnames from 'classnames';
 import { Icon } from '@common/components';
@@ -8,15 +8,22 @@ interface DetailHeaderProps {
   backText: string;
   children?: ReactNode;
   className?: string;
+  goBack?: Function;
 }
 
 function DetailHeader(props: DetailHeaderProps) {
   const history = useHistory();
-  const { backText, children, className } = props;
-
+  const { backText, children, className, goBack } = props;
+  const handelClick = useCallback(() => {
+    if (goBack) {
+      goBack();
+    } else {
+      history.goBack();
+    }
+  }, [history, goBack]);
   return (
     <div className={classnames(styles.header, className)}>
-      <div className={styles.back} onClick={() => history.goBack()}>
+      <div className={styles.back} onClick={handelClick}>
         <Icon className={styles.icon} type="fanhui" />
         {backText}
       </div>
