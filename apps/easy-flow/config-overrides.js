@@ -41,20 +41,21 @@ module.exports = {
     },
 
     function overrideWebpackPlugin(config) {
-      config.plugins.push(
-        new FileManagerPlugin({
-          events: {
-            onEnd: {
-              copy: [
-                {
-                  source: `${paths.appPath}/conf.js`,
-                  destination: `${paths.appPublic}/config.js`,
-                },
-              ],
+      process.env.NODE_ENV === 'development' &&
+        config.plugins.push(
+          new FileManagerPlugin({
+            events: {
+              onEnd: {
+                copy: [
+                  {
+                    source: `${paths.appPath}/conf.js`,
+                    destination: `${paths.appPublic}/config.js`,
+                  },
+                ],
+              },
             },
-          },
-        }),
-      );
+          }),
+        );
 
       process.env.REACT_APP_TARGET_ENV !== 'development' &&
         config.plugins.push(
