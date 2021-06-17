@@ -1,8 +1,9 @@
-import React, { memo, useMemo } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router';
 import { Select } from 'antd';
-import { SelectOptionItem } from '@/type';
+import { OptionItem, SelectOptionItem } from '@/type';
 import { SelectProps } from 'antd/lib/select';
+import { runtimeAxios } from '@/utils';
 
 const { Option } = Select;
 
@@ -11,8 +12,20 @@ const SelectComponent = (
 ) => {
   const { defaultValue, multiple, showSearch, dataSource, readOnly, onChange } = props;
   const location = useLocation();
-  const optionList = useMemo(() => {
-    return dataSource?.data || [];
+  const [options, setOptions] = useState<OptionItem[]>([]);
+  useEffect(() => {
+    if (dataSource?.type === 'custom') {
+      const list = dataSource?.data || [];
+      setOptions(list);
+    } else {
+      const { fieldId, appId } = dataSource || {};
+      if (fieldId && appId) {
+        runtimeAxios.get(`/subapp/${appId}/form/${fieldId}/data`).then((res) => {
+          const list = (res.data?.data || []).map((item: string) => ({ key: item, value: item }));
+          setOptions(list);
+        });
+      }
+    }
   }, [dataSource]);
   const propList = useMemo(() => {
     const prop: { [k: string]: string | boolean | Function } = {
@@ -35,7 +48,7 @@ const SelectComponent = (
   }, [defaultValue, multiple, showSearch, readOnly, location, props, onChange]);
   return (
     <Select {...propList} style={{ width: '100%' }}>
-      {optionList.map(({ key, value }) => (
+      {options.map(({ key, value }) => (
         <Option value={key} key={key}>
           {value}
         </Option>

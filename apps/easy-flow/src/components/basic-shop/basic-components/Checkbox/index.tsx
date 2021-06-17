@@ -2,7 +2,7 @@ import { memo, useEffect, useMemo, useState } from 'react';
 import { Checkbox } from 'antd';
 import { SelectOptionItem } from '@/type';
 import { CheckboxGroupProps } from 'antd/lib/checkbox';
-// import { runtimeAxios } from '@/utils';
+import { runtimeAxios } from '@/utils';
 
 const CheckboxComponent = (props: CheckboxGroupProps & { readOnly: boolean; dataSource: SelectOptionItem }) => {
   const { dataSource, readOnly, onChange } = props;
@@ -14,9 +14,10 @@ const CheckboxComponent = (props: CheckboxGroupProps & { readOnly: boolean; data
     } else {
       const { fieldId, appId } = dataSource || {};
       if (fieldId && appId) {
-        // runtimeAxios.get(`/form/subapp/version/${appId}/form/${fieldId}/data`).then((res) => {
-        //   console.info(res);
-        // });
+        runtimeAxios.get(`/subapp/${appId}/form/${fieldId}/data`).then((res) => {
+          const list = res.data?.data || [];
+          setOptions(list);
+        });
       }
     }
   }, [dataSource]);
