@@ -73,6 +73,10 @@ const EditorHeader: FC = () => {
     window.location.href = `${window.location.origin}/scenes-detail/${appId}`;
   }, [appId]);
 
+  const jumpToTask = useCallback(() => {
+    history.push(`/task-center/${appId}/todo`);
+  }, [appId, history]);
+
   return (
     <div className={styles.header_container}>
       <Header backText={appName} className={styles.edit_header} goBack={handleGoBack}>
@@ -107,6 +111,10 @@ const EditorHeader: FC = () => {
           )}
           <Button type="primary" ghost className={styles.save} size="large" onClick={handleSave}>
             保存
+          </Button>
+          {/* 任务中心临时入口 */}
+          <Button type="primary" className={styles.next} size="large" onClick={jumpToTask}>
+            任务中心
           </Button>
           {pathName === formDesignPath && layout.length > 0 && (
             <Button type="primary" className={styles.next} size="large" onClick={handleNext}>

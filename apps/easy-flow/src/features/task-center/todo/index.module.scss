@@ -1,0 +1,76 @@
+.container {
+  .header {
+    .search {
+      :global {
+        #todo_form {
+          width: 100%;
+          .name {
+            flex: 1;
+            margin-right: 40px;
+          }
+          .starter {
+            flex: 1;
+            margin-right: 40px;
+          }
+          .timeRange {
+            flex: 1;
+            margin-right: 0;
+          }
+        }
+      }
+    }
+    .operationContainer {
+      display: flex;
+      flex-direction: row-reverse;
+      margin-top: 12px;
+      .operation {
+        display: flex;
+        .search {
+          flex: 0 0 60px;
+          border-radius: 3px;
+          border: 1px solid rgba(76, 92, 219, 0.85);
+          font-size: 14px;
+          font-weight: 400;
+          color: #4c5cdb;
+          margin-right: 12px;
+          &:hover {
+            border: 1px solid rgba(76, 92, 219, 0.5);
+            color: rgba(76, 92, 219, 0.8);
+          }
+        }
+        .reset {
+          flex: 0 0 60px;
+          border-radius: 3px;
+          border: 1px solid rgba(24, 31, 67, 0.12);
+          font-size: 14px;
+          font-weight: 400;
+          color: rgba(24, 31, 67, 0.95);
+          // margin-right: 12px;
+          &:hover {
+            border: 1px solid rgba(24, 31, 67, 0.3);
+          }
+        }
+        .unfold {
+          height: 32px;
+          line-height: 32px;
+          cursor: pointer;
+          .icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            color: #818a9e;
+            margin-right: 4px;
+          }
+          .text {
+            font-size: 14px;
+            font-weight: 400;
+            color: rgba(24, 31, 67, 0.95);
+          }
+        }
+      }
+    }
+  }
+  .content {
+    margin-top: 24px;
+  }
+}
