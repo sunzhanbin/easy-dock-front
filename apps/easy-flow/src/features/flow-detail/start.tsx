@@ -1,17 +1,15 @@
-import { memo, useEffect, useState, useMemo } from 'react';
-import { useParams } from 'react-router';
+import { memo, useEffect, useState, useMemo, useRef } from 'react';
+import { useParams, useHistory } from 'react-router';
 import classnames from 'classnames';
+import { FormInstance, message } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { AsyncButton, Icon, Loading } from '@common/components';
-import { axios } from '@utils';
+import { runtimeAxios } from '@utils';
 import { FillNode, FormMeta, FormValue } from '@type/flow';
 import Form from '@components/form-engine';
 import Header from '@components/header';
+import useSubapp from '@/hooks/use-subapp';
 import styles from './index.module.scss';
-
-if (process.env.NODE_ENV === 'development') {
-  require('./mock');
-}
 
 type DataType = {
   processMeta: FillNode;
@@ -21,35 +19,62 @@ type DataType = {
 
 function StartFlow() {
   const { subAppId } = useParams<{ subAppId: string }>();
+  const history = useHistory();
   const [data, setData] = useState<DataType>();
   const [loading, setLoading] = useState(true);
+  const { data: subApp } = useSubapp(subAppId);
+  const formRef = useRef<FormInstance<FormValue>>(null);
 
   useEffect(() => {
-    setLoading(true);
+    if (!subApp) return;
 
-    axios
-      .get<DataType>(`/flow/detail/${subAppId}`)
-      .then((response) => {
-        setData(response.data);
-      })
-      .finally(() => {
+    (async function () {
+      setLoading(true);
+
+      try {
+        const [processMeta, formMeta] = await Promise.all([
+          runtimeAxios.get(`/process_instance/getStartNodeCSS?versionId=${subApp.version.id}`).then((response) => {
+            return JSON.parse(response.data);
+          }),
+          runtimeAxios.get(`/form/version/${subApp.version.id}`).then((response) => {
+            return response.data.meta;
+          }),
+        ]);
+
+        setData({
+          formMeta,
+          processMeta,
+          formData: {},
+        });
+      } finally {
         setLoading(false);
-      });
-  }, [subAppId]);
+      }
+    })();
+  }, [subApp]);
 
   const formVnode = useMemo(() => {
     if (!data) return null;
 
     const { formMeta, formData, processMeta } = data;
-    return <Form data={formMeta} initialValue={formData} fieldsAuths={processMeta.fieldsAuths} />;
+    return <Form ref={formRef} data={formMeta} initialValue={formData} fieldsAuths={processMeta.fieldsAuths} />;
   }, [data]);
 
   const handleSubmit = useMemoCallback(async () => {
-    await new Promise((r) => {
-      setTimeout(r, 1000);
+    if (!formRef.current || !subApp) return;
+
+    const values = await formRef.current.validateFields();
+
+    await runtimeAxios.post(`/process_instance/start`, {
+      formData: values,
+      versionId: subApp.version.id,
     });
 
-    return;
+    message.success('操作成功');
+
+    setTimeout(() => {
+      // 回任务中心
+      history.replace(`/task-center/${subAppId}`);
+    }, 1500);
   });
 
   const btns = data?.processMeta.btnText;
@@ -68,18 +93,20 @@ function StartFlow() {
               size="large"
               icon={<Icon type="fabu" />}
             >
-              {btns.submit.text}
+              {btns.submit.text || '提交'}
             </AsyncButton>
           )}
         </div>
       </Header>
 
-      <div className={styles['start-form-wrapper']}>
-        <div className={classnames(styles.form)}>
-          <div className={styles.title}>燃气报修</div>
-          {formVnode}
+      {subApp && (
+        <div className={styles['start-form-wrapper']}>
+          <div className={classnames(styles.form)}>
+            <div className={styles.title}>{subApp.name}</div>
+            {formVnode}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

@@ -1,9 +1,11 @@
 import React, { memo, useEffect, useState, useMemo } from 'react';
 import { Form, Row, Col, FormInstance } from 'antd';
-import LabelContent from '../label-content';
+import { Rule } from 'antd/lib/form';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import { FieldAuthsMap, AuthType, FormMeta, FormValue } from '@type/flow';
 import useLoadComponents from '@/hooks/use-load-components';
+import { FieldAuthsMap, AuthType, FormMeta, FormValue } from '@type/flow';
+import { AllComponentType } from '@type';
+import LabelContent from '../label-content';
 import styles from './index.module.scss';
 
 type FieldsVisible = { [fieldId: string]: boolean };
@@ -12,6 +14,7 @@ interface FormProps {
   data: FormMeta;
   fieldsAuths: FieldAuthsMap;
   initialValue: { [key: string]: any };
+  readonly?: boolean;
 }
 
 type CompMaps = {
@@ -22,14 +25,15 @@ const FormDetail = React.forwardRef(function FormDetail(
   props: FormProps,
   ref: React.ForwardedRef<FormInstance<FormValue>>,
 ) {
-  const { data, fieldsAuths, initialValue } = props;
+  const { data, fieldsAuths, initialValue, readonly } = props;
   const [form] = Form.useForm<FormValue>();
   const [fieldsVisible, setFieldsVisible] = useState<FieldsVisible>({});
   const [compMaps, setCompMaps] = useState<CompMaps>({});
+  const [showForm, setShowForm] = useState(false);
 
   // 提取所有组件类型
   const componentTypes = useMemo(() => {
-    return data.components.map((comp) => comp.type);
+    return data.components.map((comp) => (comp as any).config.type);
   }, [data]);
 
   // 获取组件源码
@@ -71,23 +75,33 @@ const FormDetail = React.forwardRef(function FormDetail(
   useEffect(() => {
     const visbles: FieldsVisible = {};
     const comMaps: { [key: string]: FormMeta['components'][number] } = {};
+    const formValues: FormProps['initialValue'] = {};
 
     data.components.forEach((com) => {
-      const comId = com.id!;
+      const { fieldName, id } = com.config;
 
-      comMaps[comId] = com;
+      if (initialValue && initialValue[fieldName] !== undefined) {
+        formValues[fieldName] = initialValue[fieldName];
+      } else {
+        formValues[fieldName] = com.props.defaultValue;
+      }
+
+      comMaps[id] = com;
       // 流程编排中没有配置fieldAuths这个字段默认可见
-      visbles[comId] = fieldsAuths[comId] !== AuthType.Denied;
+      visbles[fieldName] = fieldsAuths[fieldName] !== AuthType.Denied;
     });
 
     // 设置表单初始值
-    form.setFieldsValue(initialValue);
+    form.setFieldsValue(formValues);
 
-    setCompMaps(comMaps);
     // 设置字段可见性, 不能和下面代码交互执行顺序
     setFieldsVisible(visbles);
+
+    setCompMaps(comMaps);
     // 设置完初始值后设置当前字段可见状态
-    formValuesChange(initialValue);
+    formValuesChange(formValues);
+
+    setShowForm(true);
   }, [data, fieldsAuths, initialValue, form, formValuesChange]);
 
   return (
@@ -100,29 +114,45 @@ const FormDetail = React.forwardRef(function FormDetail(
       onValuesChange={formValuesChange}
     >
       {data.layout.map((formRow, index) => {
-        // 空行或者该行字段全不可见不渲染
-        if (!formRow.length || !formRow.find((fieldId) => fieldsVisible[fieldId])) return null;
+        // 空行或者所用组件未加载不渲染
+        if (!formRow.length || !showForm || !compSources) return null;
 
         return (
           <Row key={index} className={styles.row}>
             {formRow.map((fieldId) => {
-              if (!fieldsVisible[fieldId] || !compSources) {
-                return null;
+              const { config, props = {} } = compMaps[fieldId];
+              const { fieldName, colSpace, label, desc } = config;
+              const isRequired = fieldsAuths[fieldName] === AuthType.Required;
+              const compProps = { ...props };
+              const Component = compSources[config.type as AllComponentType['type']];
+
+              if (!fieldsVisible[fieldName] || !Component) return null;
+
+              delete compProps['defaultValue'];
+
+              let rules: Rule[] = [];
+
+              if (isRequired) {
+                rules = [
+                  {
+                    required: true,
+                    message: `${label}不能为空`,
+                  },
+                ];
               }
 
-              const Component = compSources[compMaps[fieldId].type]!;
-
               return (
-                <Col span={compMaps[fieldId].colSpace! * 6} key={fieldId} className={styles.col}>
+                <Col span={colSpace * 6} key={fieldId} className={styles.col}>
                   <Form.Item
                     key={fieldId}
-                    name={fieldId}
-                    label={<LabelContent label={compMaps[fieldId].label} desc={compMaps[fieldId].desc} />}
-                    required={fieldsAuths[fieldId] === AuthType.Required}
+                    name={fieldName}
+                    label={<LabelContent label={label} desc={desc} />}
+                    required={isRequired}
+                    rules={rules}
                   >
                     <Component
-                      readOnly={!fieldsAuths[fieldId] || fieldsAuths[fieldId] === AuthType.View}
-                      {...compMaps[fieldId]}
+                      {...compProps}
+                      readOnly={readonly || !fieldsAuths[fieldName] || fieldsAuths[fieldName] === AuthType.View}
                     />
                   </Form.Item>
                 </Col>

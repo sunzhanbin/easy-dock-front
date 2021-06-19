@@ -127,9 +127,9 @@ export interface StartNode extends BaseNode {
 export type Flow = AllNode[];
 
 export enum FlowDetailType {
-  MyInitiation = 1,
+  MyInitiation = 3,
   MyFinish = 2,
-  MyTodo = 3,
+  MyTodo = 1,
 }
 
 export enum NodeStatusType {
@@ -146,7 +146,9 @@ export enum AuditRecordType {
   TURN = 'TURN',
   INSTANCE_STOP = 'INSTANCE_STOP',
   START = 'START',
+  BACK = 'BACK',
   FORM_FILL = 'FORM_FILL',
+  RUNNING = 'RUNNING',
 }
 
 type ComponentInfo = AllComponentType & {
@@ -155,7 +157,7 @@ type ComponentInfo = AllComponentType & {
 
 export interface FormMeta {
   seletedTheme: string;
-  components: ComponentInfo[];
+  components: { config: any; props: any }[];
   layout: [string, string, string, string][];
   events?: {
     onchange: {
