@@ -9,19 +9,6 @@
   .header {
     flex-shrink: 0;
     border-bottom: 1px solid rgba(#181f43, 0.12);
-
-    .btns {
-      @include center('flex');
-
-      button + button {
-        margin-left: 12px;
-      }
-
-      .save {
-        color: $primary-color;
-        border-color: rgba($primary-color, 0.85);
-      }
-    }
   }
 
   .main {
@@ -62,93 +49,6 @@
 
     .form {
       padding-top: 30px;
-    }
-  }
-}
-
-.track {
-  display: inline-flex;
-  align-items: center;
-  padding: 2px 8px;
-  border: 1px solid rgba(#181f43, 0.12);
-  border-radius: 4px;
-  cursor: not-allowed;
-
-  svg {
-    margin-left: 4px;
-    font-size: 12px;
-  }
-}
-
-.cell {
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 0 15px;
-  overflow: hidden;
-
-  .cell-title {
-    @include ellipsis;
-
-    margin-bottom: 4px;
-    line-height: 24px;
-    color: rgba(#000, 0.85);
-    font-size: 16px;
-    font-weight: bold;
-  }
-
-  .cell-desc {
-    line-height: 20px;
-    color: rgba(#181f43, 0.5);
-    font-size: 12px;
-    font-weight: 400;
-  }
-
-  .cell-icon {
-    flex-shrink: 0;
-    margin-top: 1px;
-    margin-right: 8px;
-    font-size: 20px;
-  }
-
-  .cell-content {
-    overflow: hidden;
-  }
-}
-
-.status {
-  @include center('flex');
-
-  width: 750px;
-
-  .cell {
-    flex: 1 1 0;
-
-    &:nth-of-type(2) {
-      border-left: 1px solid rgba(#181f43, 0.12);
-      border-right: 1px solid rgba(#181f43, 0.12);
-    }
-
-    .time-used {
-      line-height: 20px;
-      color: #181f43;
-      font-size: 12px;
-      font-weight: 400;
-    }
-  }
-
-  // 流程办结状态栏
-  &.finish {
-    .cell {
-      justify-content: flex-start;
-    }
-
-    & > div:last-child {
-      flex: 0 0 250px;
-
-      .track {
-        padding: 9px 12px;
-      }
     }
   }
 }

@@ -1,10 +1,10 @@
-import React, { memo, useState, useEffect, useMemo } from 'react';
+import React, { memo, useState, useEffect, useMemo, isValidElement } from 'react';
 import classnames from 'classnames';
 import styles from './index.module.scss';
 
 interface ImageProps {
   placeholder?: string | React.ReactNode;
-  src: string;
+  src?: string;
   size?: number;
   className?: string;
   round?: boolean;
@@ -15,6 +15,8 @@ function CustomImage(props: ImageProps) {
   const [imgUrl, setImgUrl] = useState<string>(typeof placeholder === 'string' ? placeholder : '');
 
   useEffect(() => {
+    if (!src) return;
+
     const tmpImg = new window.Image();
 
     tmpImg.src = src;
@@ -39,7 +41,11 @@ function CustomImage(props: ImageProps) {
     );
   }
 
-  return <>{placeholder}</>;
+  if (isValidElement(placeholder)) {
+    return React.cloneElement(placeholder, { style });
+  }
+
+  return null;
 }
 
 export default memo(CustomImage);

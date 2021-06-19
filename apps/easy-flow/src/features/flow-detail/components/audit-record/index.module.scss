@@ -28,7 +28,7 @@
       background-color: #ff5568;
     }
 
-    &.end {
+    &.processing {
       background-color: #4c5cdb;
     }
   }
@@ -81,8 +81,6 @@
     margin-bottom: 4px;
 
     .avatar {
-      width: 24px;
-      height: 24px;
       margin-right: 8px;
       border-radius: 50%;
     }

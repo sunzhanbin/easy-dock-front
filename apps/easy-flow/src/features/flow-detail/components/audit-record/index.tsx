@@ -1,45 +1,92 @@
 import { memo, useMemo } from 'react';
 import classnames from 'classnames';
-import { Icon } from '@common/components';
+import moment from 'moment';
+import { Icon, Avatar } from '@common/components';
 import { AuditRecordType } from '@type/flow';
-import { FlowDetaiDataType } from '../../type';
+import { AuditRecordSchema } from '../../type';
 import styles from './index.module.scss';
 
-// interface IconBoxProps {
-//   type: 'success' | 'fial' | 'end';
-// }
+function mapActionInfo(type: AuditRecordType) {
+  if (type === AuditRecordType.APPROVE) {
+    return {
+      text: '同意',
+      className: styles.success,
+    };
+  }
 
-// function IconBox(props: IconBoxProps) {
-//   const { type } = props;
+  if (type === AuditRecordType.FORM_FILL) {
+    return {
+      text: '提交',
+      className: styles.primary,
+    };
+  }
 
-//   return (
-//     <div className={styles.icon}>
-//       <Icon type="gou"></Icon>
-//     </div>
-//   );
-// }
+  if (type === AuditRecordType.REJECT) {
+    return {
+      text: '驳回',
+      className: styles.warning,
+    };
+  }
 
-interface AuditRecordProps {
-  data: FlowDetaiDataType['auditRecords'][number];
+  if (type === AuditRecordType.INSTANCE_STOP) {
+    return {
+      text: '终止',
+      className: styles.error,
+    };
+  }
+
+  if (type === AuditRecordType.TURN) {
+    return {
+      text: '转办',
+      className: styles.primary,
+    };
+  }
+
+  if (type === AuditRecordType.START) {
+    return {
+      text: '开始',
+      className: styles.primary,
+    };
+  }
+
+  if (type === AuditRecordType.BACK) {
+    return {
+      text: '撤回',
+      className: styles.success,
+    };
+  }
+
+  if (type === AuditRecordType.RUNNING) {
+    return {
+      text: '进行中',
+      className: styles.primary,
+    };
+  }
+
+  return null as never;
 }
 
-function AuditRecord(props: AuditRecordProps) {
+interface NodeActionRecordProps {
+  data: AuditRecordSchema;
+}
+
+function NodeActionRecord(props: NodeActionRecordProps) {
   const { data } = props;
   const icon = useMemo(() => {
-    const auditType = data.auditType;
+    const isProcessing = data.auditRecordList.find((record) => record.auditType === AuditRecordType.RUNNING);
 
-    if (
-      auditType === AuditRecordType.APPROVE ||
-      auditType === AuditRecordType.FORM_FILL ||
-      auditType === AuditRecordType.TURN
-    ) {
+    if (isProcessing) {
       return {
-        type: 'gou',
-        className: styles.success,
+        type: 'shezhi',
+        className: styles.processing,
       };
     }
 
-    if (auditType === AuditRecordType.REJECT || auditType === AuditRecordType.INSTANCE_STOP) {
+    const isRejected = data.auditRecordList.find((record) => {
+      return record.auditType === AuditRecordType.REJECT || record.auditType === AuditRecordType.INSTANCE_STOP;
+    });
+
+    if (isRejected) {
       return {
         type: 'guanbi',
         className: styles.error,
@@ -47,58 +94,10 @@ function AuditRecord(props: AuditRecordProps) {
     }
 
     return {
-      type: '',
-      className: styles.processing,
+      type: 'gou',
+      className: styles.success,
     };
-  }, [data.auditType]);
-
-  const tag = useMemo(() => {
-    const auditType = data.auditType;
-
-    if (auditType === AuditRecordType.APPROVE) {
-      return {
-        text: '同意',
-        className: styles.success,
-      };
-    }
-
-    if (auditType === AuditRecordType.FORM_FILL) {
-      return {
-        text: '提交',
-        className: styles.primary,
-      };
-    }
-
-    if (auditType === AuditRecordType.REJECT) {
-      return {
-        text: '驳回',
-        className: styles.warning,
-      };
-    }
-
-    if (auditType === AuditRecordType.INSTANCE_STOP) {
-      return {
-        text: '终止',
-        className: styles.error,
-      };
-    }
-
-    if (auditType === AuditRecordType.TURN) {
-      return {
-        text: '转办',
-        className: styles.primary,
-      };
-    }
-
-    if (auditType === AuditRecordType.START) {
-      return {
-        text: '开始',
-        className: styles.primary,
-      };
-    }
-
-    return null as never;
-  }, [data.auditType]);
+  }, [data]);
 
   return (
     <div className={styles.container}>
@@ -106,24 +105,39 @@ function AuditRecord(props: AuditRecordProps) {
         <Icon type={icon.type} />
       </div>
       <div className={styles.content}>
-        <div className={styles['node-name']}>{data.nodeName}</div>
-        <div className={styles.user}>
-          <img className={styles.avatar} src={data.userAvatar} alt="用户头像" />
-          <div className={styles['user-name']}>{data.userName}</div>
-          <div className={classnames(styles.tag, tag.className)}>{tag.text}</div>
-        </div>
+        <div className={styles['node-name']}>{data.taskName}</div>
 
-        <div className={styles.time}>{data.auditTime}</div>
+        {data.auditRecordList.map((record) => {
+          return (
+            <div key={record.taskId}>
+              {record.userList.map((user) => {
+                const action = mapActionInfo(record.auditType);
 
-        {data.comments && (
-          <div className={styles.comment}>
-            <Icon type="xiangqing" />
-            <div className={styles.text}>{data.comments}</div>
-          </div>
-        )}
+                return (
+                  <div className={styles.user} key={user.id}>
+                    <Avatar size={24} className={styles.avatar} src={user.avatar} name={user.name} />
+                    <div className={styles['user-name']}>{user.name}</div>
+                    <div className={classnames(styles.tag, action.className)}>{action.text}</div>
+                  </div>
+                );
+              })}
+
+              {record.auditTime && (
+                <div className={styles.time}>{moment(record.auditTime).format('YY.MM.DD HH:mm:ss')}</div>
+              )}
+
+              {record.comments?.commit && (
+                <div className={styles.comment}>
+                  <Icon type="xiangqing" />
+                  <div className={styles.text}>{record.comments.commit}</div>
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
 }
 
-export default memo(AuditRecord);
+export default memo(NodeActionRecord);

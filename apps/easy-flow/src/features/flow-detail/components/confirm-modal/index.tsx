@@ -38,10 +38,12 @@ function ComfirmModal(props: ConfirmModalProps) {
       cancelButtonProps={{ size: 'large' }}
       destroyOnClose
       getContainer={false}
+      keyboard={false}
+      maskClosable={false}
     >
       <Form form={form} layout="vertical" autoComplete="off">
         <Form.Item label="处理反馈" name="remark">
-          <Input.TextArea maxLength={200} placeholder="请输入反馈意见, 也可不填直接提交" rows={4} />
+          <Input.TextArea maxLength={200} placeholder="请输入反馈意见, 也可不填直接提交" rows={4} autoFocus />
         </Form.Item>
       </Form>
     </Modal>

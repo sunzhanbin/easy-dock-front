@@ -3,20 +3,32 @@ import { FillNode, AuditNode, NodeStatusType, FormMeta, FormValue, AuditRecordTy
 
 export type { SelectField, SingleTextField } from '@type';
 
-export type FlowDetaiDataType = {
-  auditRecords: {
-    auditTime: string;
+type User = { name: string; id: string; avatar: string };
+
+export type AuditRecordSchema = {
+  auditRecordList: {
+    auditTime: number;
     auditType: AuditRecordType;
-    comments?: string;
+    comments?: {
+      actionName: AuditRecordType;
+      commit?: string;
+      targetUser?: User;
+    };
     nodeName: string;
-    userName: string;
-    userAvatar?: string;
+    taskId: string;
+    userList: User[];
   }[];
+  taskName: string;
+};
+
+export type FlowDetaiDataType = {
+  auditRecords: AuditRecordSchema;
   detail: {
     applyUser: string;
-    applyTime: string;
+    applyTime: number;
     state: NodeStatusType;
-    timeUsed: string;
+    endTime: number;
+    currentNodeId: string;
     currentProcessor: {
       groups: Depart[];
       users: { name: string; id: string; avatar: string }[];
@@ -25,4 +37,43 @@ export type FlowDetaiDataType = {
   formMeta: FormMeta;
   formData: FormValue;
   processMeta: FillNode | AuditNode;
+};
+
+export enum TaskDetailType {
+  MyInitiation = 3,
+  MyFinish = 2,
+  MyTodo = 1,
+}
+
+export type DetailData = {
+  task: {
+    id: string;
+    state: TaskDetailType;
+  };
+  flow: {
+    node: FillNode | AuditNode;
+    instance: {
+      applyUser: User;
+      applyTime: number;
+      state: NodeStatusType;
+      endTime: number;
+      currentNodeId: string;
+      processInstanceId: string;
+      currentProcessor: {
+        groups: Depart[];
+        users: User[];
+      };
+      subApp: {
+        name: string;
+        version: {
+          id: number;
+        };
+        id: number;
+      };
+    };
+  };
+  form: {
+    meta: FormMeta;
+    value: FormValue;
+  };
 };
