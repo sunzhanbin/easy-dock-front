@@ -30,7 +30,7 @@ const EditorHeader: FC = () => {
   }, [pathName, history, formDesignPath, match]);
   const handlePrev = useCallback(() => {
     if (pathName === flowDesignPath) {
-      history.push(formDesignPath);
+      history.replace(formDesignPath);
     }
   }, [pathName, history, formDesignPath, flowDesignPath]);
   const handleSave = useCallback(() => {
@@ -44,7 +44,7 @@ const EditorHeader: FC = () => {
   }, [pathName, dispatch, formDesignPath, flowDesignPath, bpmId]);
   const handleNext = useCallback(() => {
     if (pathName === formDesignPath) {
-      history.push(flowDesignPath);
+      history.replace(flowDesignPath);
     }
   }, [pathName, history, formDesignPath, flowDesignPath]);
 
@@ -69,9 +69,6 @@ const EditorHeader: FC = () => {
 
     message.success('发布成功');
   }, [bpmId, dispatch]);
-  const handleGoBack = useCallback(() => {
-    window.location.href = `${window.location.origin}/scenes-detail/${appId}`;
-  }, [appId]);
 
   const jumpToTask = useCallback(() => {
     history.push(`/task-center/${appId}/todo`);
@@ -79,16 +76,26 @@ const EditorHeader: FC = () => {
 
   return (
     <div className={styles.header_container}>
-      <Header backText={appName} className={styles.edit_header} goBack={handleGoBack}>
+      <Header backText={appName} className={styles.edit_header}>
         <div className={styles.steps}>
-          <NavLink className={styles.step} to={`${match.url}/form-design`} activeClassName={styles.active}>
+          <NavLink
+            className={styles.step}
+            replace={true}
+            to={`${match.url}/form-design`}
+            activeClassName={styles.active}
+          >
             <span className={styles.number}>01</span>
             <span>表单设计</span>
           </NavLink>
           <div className={styles.separator}>
             <Icon className={styles.iconfont} type="jinru" />
           </div>
-          <NavLink className={styles.step} to={`${match.url}/flow-design`} activeClassName={styles.active}>
+          <NavLink
+            className={styles.step}
+            replace={true}
+            to={`${match.url}/flow-design`}
+            activeClassName={styles.active}
+          >
             <span className={styles.number}>02</span>
             <span>流程设计</span>
           </NavLink>
