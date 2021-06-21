@@ -2,13 +2,13 @@ import { memo, useState, FC, useMemo, useCallback, useEffect } from 'react';
 import styles from './index.module.scss';
 import { Form, Input, Select, Button, DatePicker, Table } from 'antd';
 import moment from 'moment';
+import { dynamicRoutes } from '@/consts/route';
 import { getStayTime } from '@utils/index';
 import { runtimeAxios } from '@/utils';
 import { useHistory, useLocation } from 'react-router-dom';
 import { Pagination, TodoItem, UserItem } from '../type';
 import { useAppDispatch } from '@/app/hooks';
 import { setTodoNum } from '../taskcenter-slice';
-import { dynamicRoutes } from '@/consts/route';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -100,11 +100,10 @@ const ToDo: FC<{}> = () => {
         render(_: string, record: TodoItem) {
           return <div className={styles.name}>{record.processDefinitionName}</div>;
         },
-        onCell(record: TodoItem) {
+        onCell(data: TodoItem) {
           return {
             onClick() {
-              const url = dynamicRoutes.toFlowDetail(record.taskId);
-              history.push(url);
+              history.push(dynamicRoutes.toTaskDetail(data.taskId));
             },
           };
         },

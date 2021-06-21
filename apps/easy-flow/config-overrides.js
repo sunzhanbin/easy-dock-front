@@ -25,6 +25,7 @@ module.exports = {
       '@consts': path.resolve(__dirname, './src/consts'),
       '@assets': path.resolve(__dirname, './src/assets'),
       '@type': path.resolve(__dirname, './src/type'),
+      '@apis': path.resolve(__dirname, './src/apis'),
       '@app': path.resolve(__dirname, './src/app'),
       '@config': path.resolve(__dirname, './src/config'),
       '@common': path.resolve(__dirname, '../../packages/common'),

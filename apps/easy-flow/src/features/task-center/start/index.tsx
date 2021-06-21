@@ -2,10 +2,9 @@ import { memo, FC, useState, useMemo, useCallback, useEffect } from 'react';
 import { Form, Input, Select, Button, DatePicker, Table } from 'antd';
 import styles from './index.module.scss';
 import { Pagination, StartItem } from '../type';
-import { getStayTime, getPassedTime } from '@/utils';
+import { getStayTime, getPassedTime, runtimeAxios } from '@/utils';
 import classNames from 'classnames';
 import { useHistory, useLocation } from 'react-router-dom';
-import { runtimeAxios } from '@/utils';
 import moment from 'moment';
 import { dynamicRoutes } from '@/consts/route';
 
@@ -95,8 +94,7 @@ const Start: FC<{}> = () => {
         onCell(record: StartItem) {
           return {
             onClick() {
-              const url = dynamicRoutes.toFlowDetail(record.processInstanceId);
-              history.push(url);
+              history.push(dynamicRoutes.toStartDetail(record.processInstanceId));
             },
           };
         },

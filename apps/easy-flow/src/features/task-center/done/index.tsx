@@ -50,8 +50,7 @@ const Done: FC<{}> = () => {
         onCell(record: DoneItem) {
           return {
             onClick() {
-              const url = dynamicRoutes.toFlowDetail(record.taskId);
-              history.push(url);
+              history.push(dynamicRoutes.toTaskDetail(record.taskId));
             },
           };
         },

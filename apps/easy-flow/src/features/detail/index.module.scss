@@ -1,0 +1,43 @@
+@import '@common/styles/var.scss';
+@import '@common/styles/mixin.scss';
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .header {
+    flex-shrink: 0;
+    border-bottom: 1px solid rgba(#181f43, 0.12);
+  }
+
+  .main {
+    flex: 1 1 0;
+    height: 100%;
+    overflow: auto;
+  }
+}
+
+.start-form-wrapper {
+  flex: 1 1 0;
+  padding: 25px;
+  overflow-y: auto;
+
+  .form {
+    width: 705px;
+    margin: 0 auto;
+    padding-top: 30px;
+
+    .title {
+      margin-bottom: 24px;
+      line-height: 34px;
+      color: rgba(#000, 0.85);
+      font-size: 24px;
+      font-weight: bold;
+    }
+  }
+}
+
+.empty {
+  padding-top: 100px;
+}
