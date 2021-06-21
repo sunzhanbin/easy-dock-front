@@ -5,6 +5,7 @@ import { FormInstance, message } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { AsyncButton, Icon, Loading } from '@common/components';
 import { runtimeAxios } from '@utils';
+import { dynamicRoutes } from '@consts';
 import { FillNode, FormMeta, FormValue } from '@type/flow';
 import Form from '@components/form-engine';
 import Header from '@components/header';
@@ -69,11 +70,11 @@ function StartFlow() {
       versionId: subApp.version.id,
     });
 
-    message.success('操作成功');
+    message.success('提交成功');
 
     setTimeout(() => {
       // 回任务中心
-      history.replace(`/task-center/${subAppId}`);
+      history.replace(dynamicRoutes.toTaskCenter(subApp.app.id));
     }, 1500);
   });
 

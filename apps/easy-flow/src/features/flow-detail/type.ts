@@ -21,24 +21,6 @@ export type AuditRecordSchema = {
   taskName: string;
 };
 
-export type FlowDetaiDataType = {
-  auditRecords: AuditRecordSchema;
-  detail: {
-    applyUser: string;
-    applyTime: number;
-    state: NodeStatusType;
-    endTime: number;
-    currentNodeId: string;
-    currentProcessor: {
-      groups: Depart[];
-      users: { name: string; id: string; avatar: string }[];
-    };
-  };
-  formMeta: FormMeta;
-  formData: FormValue;
-  processMeta: FillNode | AuditNode;
-};
-
 export enum TaskDetailType {
   MyInitiation = 3,
   MyFinish = 2,
