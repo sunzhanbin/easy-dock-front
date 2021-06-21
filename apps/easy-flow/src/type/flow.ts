@@ -1,5 +1,3 @@
-import { AllComponentType } from '@type';
-
 export enum NodeType {
   // 开始节点
   StartNode = 1,
@@ -126,12 +124,6 @@ export interface StartNode extends BaseNode {
 
 export type Flow = AllNode[];
 
-export enum FlowDetailType {
-  MyInitiation = 3,
-  MyFinish = 2,
-  MyTodo = 1,
-}
-
 export enum NodeStatusType {
   Processing = 1,
   Terminated = 2,
@@ -150,10 +142,6 @@ export enum AuditRecordType {
   FORM_FILL = 'FORM_FILL',
   RUNNING = 'RUNNING',
 }
-
-type ComponentInfo = AllComponentType & {
-  title: string;
-};
 
 export interface FormMeta {
   seletedTheme: string;

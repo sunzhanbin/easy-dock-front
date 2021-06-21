@@ -1,1 +1,1 @@
-export { default as ROUTES } from './route';
+export { default as ROUTES, dynamicRoutes } from './route';
