@@ -1,9 +1,9 @@
 import React, { memo, useEffect, useState, useMemo } from 'react';
-import { Form, Row, Col, FormInstance } from 'antd';
+import { Form, Row, Col, FormInstance, Select } from 'antd';
 import { Rule } from 'antd/lib/form';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import useLoadComponents from '@/hooks/use-load-components';
-import { AllComponentType } from '@type';
+import { AllComponentType, Datasource } from '@type';
 import { FieldAuthsMap, AuthType } from '@type/flow';
 import { FormMeta, FormValue } from '@type/detail';
 import LabelContent from '../label-content';
@@ -16,6 +16,7 @@ interface FormProps {
   fieldsAuths: FieldAuthsMap;
   initialValue: { [key: string]: any };
   readonly?: boolean;
+  datasource: Datasource;
 }
 
 type CompMaps = {
@@ -26,7 +27,7 @@ const FormDetail = React.forwardRef(function FormDetail(
   props: FormProps,
   ref: React.ForwardedRef<FormInstance<FormValue>>,
 ) {
-  const { data, fieldsAuths, initialValue, readonly } = props;
+  const { data, fieldsAuths, datasource, initialValue, readonly } = props;
   const [form] = Form.useForm<FormValue>();
   const [fieldsVisible, setFieldsVisible] = useState<FieldsVisible>({});
   const [compMaps, setCompMaps] = useState<CompMaps>({});
@@ -151,10 +152,14 @@ const FormDetail = React.forwardRef(function FormDetail(
                     required={isRequired}
                     rules={rules}
                   >
-                    <Component
-                      {...compProps}
-                      disabled={readonly || !fieldsAuths[fieldName] || fieldsAuths[fieldName] === AuthType.View}
-                    />
+                    {compRender(
+                      config.type,
+                      Component,
+                      Object.assign({}, compProps, {
+                        disabled: readonly || !fieldsAuths[fieldName] || fieldsAuths[fieldName] === AuthType.View,
+                      }),
+                      datasource && datasource[fieldName],
+                    )}
                   </Form.Item>
                 </Col>
               );
@@ -167,3 +172,16 @@ const FormDetail = React.forwardRef(function FormDetail(
 });
 
 export default memo(FormDetail);
+
+function compRender(
+  type: AllComponentType['type'],
+  Component: any,
+  props: any,
+  datasource?: Datasource[keyof Datasource],
+) {
+  if ((type === 'Select' || type === 'Radio' || type === 'Checkbox') && datasource) {
+    return <Component {...props} options={datasource} />;
+  }
+
+  return <Component {...props} />;
+}
