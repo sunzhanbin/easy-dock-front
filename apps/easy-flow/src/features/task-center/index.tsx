@@ -1,5 +1,5 @@
 import { memo, useCallback, FC, useState, useEffect, useMemo } from 'react';
-import { NavLink, Route, Switch, useLocation, useParams, useRouteMatch } from 'react-router-dom';
+import { NavLink, Redirect, Route, Switch, useLocation, useParams, useRouteMatch } from 'react-router-dom';
 import { Input, Button, Drawer } from 'antd';
 import { Icon } from '@common/components';
 import styles from './index.module.scss';
@@ -73,6 +73,7 @@ const TaskCenter: FC<{}> = () => {
           <Route path={`${match.url}/start`} component={Start}></Route>
           <Route path={`${match.url}/done`} component={Done}></Route>
           {/* <Route path={`${match.url}/copy`} component={Copy}></Route> */}
+          <Redirect to={`${match.url}/todo`}></Redirect>
         </Switch>
       </div>
       <div className={styles.footer}>
@@ -111,7 +112,7 @@ const TaskCenter: FC<{}> = () => {
             </div>
             <div className={styles.content}>
               {filterSubAppList.map(({ id, name }) => (
-                <Card id={id} name={name} />
+                <Card id={id} name={name} key={id} className={styles.card} />
               ))}
             </div>
           </div>

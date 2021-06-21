@@ -113,6 +113,14 @@
       display: flex;
       flex-wrap: wrap;
       margin: 24px 0;
+      overflow-y: auto;
+      .card {
+        margin-right: 12px;
+        margin-bottom: 12px;
+        &:nth-child(3n) {
+          margin-right: 0;
+        }
+      }
     }
   }
 }
