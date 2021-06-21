@@ -6,7 +6,7 @@ import useMemoCallback from '@common/hooks/use-memo-callback';
 import ConfirmModal from './components/confirm-modal';
 import Header from '@components/header';
 import { runtimeAxios } from '@utils';
-import { loadFlowData } from '@apis/detail';
+import { loadFlowData } from '@/apis/detail';
 import { dynamicRoutes } from '@consts';
 import Detail from './components/detail';
 import Empty from './components/empty';

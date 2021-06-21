@@ -92,13 +92,16 @@ const FormDesign: FC<{}> = () => {
   const onDragStart = useCallback(() => {}, []);
   const onDragUpdate = useCallback(() => {}, []);
   const handleConfirmLeave = useMemoCallback((location: ReturnType<typeof useLocation>) => {
-    if (isDirty && url !== location.pathname && !cancelSaveRef.current) {
+    if (
+      isDirty &&
+      url !== location.pathname &&
+      url.replace('form-design', 'preview-form') !== location.pathname &&
+      !cancelSaveRef.current
+    ) {
       targetUrlRef.current = location.pathname + location.search;
       setIsShowTip(true);
-
       return false;
     }
-
     return true;
   });
   const handleSave = useMemoCallback(async () => {
