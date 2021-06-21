@@ -1,17 +1,19 @@
 import { memo, FC, useMemo, useState, useCallback, useEffect } from 'react';
 import styles from './index.module.scss';
 import { Form, Input, Select, Button, DatePicker, Table } from 'antd';
-import { useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { DoneItem, Pagination, UserItem } from '../type';
 import { getPassedTime } from '@utils/index';
 import { runtimeAxios } from '@/utils';
 import moment from 'moment';
+import { dynamicRoutes } from '@/consts/route';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
 const Done: FC<{}> = () => {
   const [form] = Form.useForm();
+  const history = useHistory();
   const location = useLocation();
   const appId = useMemo(() => {
     return location.pathname.slice(13, -5);
@@ -53,6 +55,17 @@ const Done: FC<{}> = () => {
         dataIndex: 'processName',
         key: 'processName',
         width: '20%',
+        render(_: string, record: DoneItem) {
+          return <div className={styles.name}>{record.processName}</div>;
+        },
+        onCell(record: DoneItem) {
+          return {
+            onClick() {
+              const url = dynamicRoutes.toFlowDetail(record.taskId);
+              history.push(url);
+            },
+          };
+        },
       },
       {
         title: '发起人',

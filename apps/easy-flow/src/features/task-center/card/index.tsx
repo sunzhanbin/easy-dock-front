@@ -8,7 +8,7 @@ import { dynamicRoutes } from '@/consts/route';
 const Card: FC<{ id: number; name: string; className?: string }> = ({ id, name, className }) => {
   const history = useHistory();
   const handleClick = useCallback(() => {
-    const path = dynamicRoutes.toStartFlow(id + '');
+    const path = dynamicRoutes.toStartFlow(id);
     history.push(path);
   }, [id]);
   return (

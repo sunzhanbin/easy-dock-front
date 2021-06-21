@@ -4,9 +4,10 @@ import styles from './index.module.scss';
 import { Pagination, StartItem } from '../type';
 import { getStayTime, getPassedTime } from '@/utils';
 import classNames from 'classnames';
-import { useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { runtimeAxios } from '@/utils';
 import moment from 'moment';
+import { dynamicRoutes } from '@/consts/route';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -58,6 +59,7 @@ const statusMap: { [k: number]: { className: string; text: string } } = {
 
 const Start: FC<{}> = () => {
   const [form] = Form.useForm();
+  const history = useHistory();
   const location = useLocation();
   const appId = useMemo(() => {
     return location.pathname.slice(13, -6);
@@ -86,6 +88,17 @@ const Start: FC<{}> = () => {
         dataIndex: 'processName',
         key: 'processName',
         width: '15%',
+        render(_: string, record: StartItem) {
+          return <div className={styles.name}>{record.processName}</div>;
+        },
+        onCell(record: StartItem) {
+          return {
+            onClick() {
+              const url = dynamicRoutes.toFlowDetail(record.processInstanceId);
+              history.push(url);
+            },
+          };
+        },
       },
       {
         title: '发起时间',

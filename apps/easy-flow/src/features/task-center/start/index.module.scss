@@ -71,6 +71,12 @@
   }
   .content {
     margin-top: 24px;
+    .name {
+      cursor: pointer;
+      &:hover {
+        color: #4c5cdb;
+      }
+    }
     .status {
       width: 52px;
       height: 20px;

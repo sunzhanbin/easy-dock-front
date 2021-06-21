@@ -4,16 +4,18 @@ import { Form, Input, Select, Button, DatePicker, Table } from 'antd';
 import moment from 'moment';
 import { getStayTime } from '@utils/index';
 import { runtimeAxios } from '@/utils';
-import { useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { Pagination, TodoItem, UserItem } from '../type';
 import { useAppDispatch } from '@/app/hooks';
 import { setTodoNum } from '../taskcenter-slice';
+import { dynamicRoutes } from '@/consts/route';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
 const ToDo: FC<{}> = () => {
   const [form] = Form.useForm();
+  const history = useHistory();
   const location = useLocation();
   const appId = useMemo(() => {
     return location.pathname.slice(13, -5);
@@ -93,10 +95,14 @@ const ToDo: FC<{}> = () => {
         dataIndex: 'processDefinitionName',
         key: 'processDefinitionName',
         width: '15%',
-        onCell() {
+        render(_: string, record: TodoItem) {
+          return <div className={styles.name}>{record.processDefinitionName}</div>;
+        },
+        onCell(record: TodoItem) {
           return {
             onClick() {
-              console.info(1111);
+              const url = dynamicRoutes.toFlowDetail(record.taskId);
+              history.push(url);
             },
           };
         },
@@ -149,7 +155,6 @@ const ToDo: FC<{}> = () => {
         {userName}
       </Option>
     ));
-    // console.info(content);
     return content;
   }, [filterOptionList]);
   const handleKeyUp = useCallback((e) => {
@@ -220,24 +225,6 @@ const ToDo: FC<{}> = () => {
             <Button ghost className={styles.reset} onClick={handleReset}>
               重置
             </Button>
-            {/* <div
-              className={styles.unfold}
-              onClick={() => {
-                setIsShowSearch((flag) => !flag);
-              }}
-            >
-              {isShowSearch ? (
-                <>
-                  <Icon type="shangla" className={styles.icon}></Icon>
-                  <span className={styles.text}>收起</span>
-                </>
-              ) : (
-                <>
-                  <Icon type="xiala" className={styles.icon}></Icon>
-                  <span className={styles.text}>展开</span>
-                </>
-              )}
-            </div> */}
           </div>
         </div>
       </div>
