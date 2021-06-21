@@ -2,8 +2,7 @@ import { memo, useMemo } from 'react';
 import classnames from 'classnames';
 import moment from 'moment';
 import { Icon, Avatar } from '@common/components';
-import { AuditRecordType } from '@type/flow';
-import { AuditRecordSchema } from '../../type';
+import { AuditRecordType, AuditRecordSchema } from '@type/detail';
 import styles from './index.module.scss';
 
 function mapActionInfo(type: AuditRecordType) {
@@ -77,7 +76,7 @@ function NodeActionRecord(props: NodeActionRecordProps) {
 
     if (isProcessing) {
       return {
-        type: 'shezhi',
+        type: 'shenhejilujinxingzhong',
         className: styles.processing,
       };
     }
@@ -109,7 +108,7 @@ function NodeActionRecord(props: NodeActionRecordProps) {
 
         {data.auditRecordList.map((record) => {
           return (
-            <div key={record.taskId}>
+            <div className={styles.node} key={record.taskId}>
               {record.userList.map((user) => {
                 const action = mapActionInfo(record.auditType);
 

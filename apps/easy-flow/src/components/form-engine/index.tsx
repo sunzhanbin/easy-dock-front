@@ -3,8 +3,9 @@ import { Form, Row, Col, FormInstance } from 'antd';
 import { Rule } from 'antd/lib/form';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import useLoadComponents from '@/hooks/use-load-components';
-import { FieldAuthsMap, AuthType, FormMeta, FormValue } from '@type/flow';
 import { AllComponentType } from '@type';
+import { FieldAuthsMap, AuthType } from '@type/flow';
+import { FormMeta, FormValue } from '@type/detail';
 import LabelContent from '../label-content';
 import styles from './index.module.scss';
 
@@ -152,7 +153,7 @@ const FormDetail = React.forwardRef(function FormDetail(
                   >
                     <Component
                       {...compProps}
-                      readOnly={readonly || !fieldsAuths[fieldName] || fieldsAuths[fieldName] === AuthType.View}
+                      disabled={readonly || !fieldsAuths[fieldName] || fieldsAuths[fieldName] === AuthType.View}
                     />
                   </Form.Item>
                 </Col>

@@ -1,4 +1,5 @@
 import moment from 'moment';
+
 export { default as axios, runtimeAxios, builderAxios } from './axios';
 export { default as history } from './history';
 
@@ -65,6 +66,7 @@ export function getPassedTime(startTime: number) {
     return moment(startTime).format('YYYY-MM-dd HH:mm');
   }
 }
+
 export function timeDiff(milliseconds: number) {
   const timeValues: number[] = [];
   const data = [

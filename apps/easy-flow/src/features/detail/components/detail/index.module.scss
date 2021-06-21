@@ -1,0 +1,48 @@
+.main {
+  display: flex;
+
+  .content {
+    flex: 1 1 0;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .flow {
+    flex-shrink: 0;
+    width: 310px;
+    padding: 24px;
+    padding-bottom: 0;
+    border-left: 1px solid rgba(#181f43, 0.12);
+    overflow-y: auto;
+
+    .detail {
+      position: relative;
+
+      &::after {
+        content: '';
+        position: absolute;
+        left: 8px;
+        top: 2px;
+        bottom: 0;
+        z-index: -1;
+        width: 1px;
+        background-color: rgba(#181f43, 0.12);
+      }
+    }
+  }
+
+  .form {
+    width: 705px;
+    margin: 0 auto;
+    padding-top: 30px;
+
+    .title {
+      margin-bottom: 24px;
+      line-height: 34px;
+      color: rgba(#000, 0.85);
+      font-size: 24px;
+      font-weight: bold;
+    }
+  }
+}
