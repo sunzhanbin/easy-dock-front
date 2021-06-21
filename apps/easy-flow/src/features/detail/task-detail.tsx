@@ -63,6 +63,7 @@ function FlowDetail() {
   const [loading, setLoading] = useState(false);
   const [showConfirmType, setShowConfirmType] = useState<AudiitConfirmType>(AudiitConfirmType.Cancel);
   const formRef = useRef<FormInstance<FormValue>>(null);
+  const appId = data?.flow.instance.subapp.app.id;
 
   useEffect(() => {
     setLoading(true);
@@ -88,8 +89,7 @@ function FlowDetail() {
   });
 
   const handleSubmitNodeForm = useMemoCallback(async () => {
-    if (!formRef.current || !data) return;
-    const formValues = await formRef.current.validateFields();
+    const formValues = await formRef.current!.validateFields();
 
     await runtimeAxios.post(`/process_instance/submit`, {
       formData: formValues,
@@ -99,14 +99,28 @@ function FlowDetail() {
     message.success('提交成功');
 
     setTimeout(() => {
-      history.replace(dynamicRoutes.toTaskCenter(data.flow.instance.subapp.app.id));
+      history.replace(dynamicRoutes.toTaskCenter(appId!));
+    }, 1500);
+  });
+
+  const handleTerminate = useMemoCallback(async () => {
+    const formValues = await formRef.current!.validateFields();
+
+    await runtimeAxios.post(`/process_instance/stop`, {
+      formData: formValues,
+      taskId,
+      remark: '',
+    });
+
+    message.success('操作成功');
+
+    setTimeout(() => {
+      history.replace(dynamicRoutes.toTaskCenter(appId!));
     }, 1500);
   });
 
   const handleConfirm = useMemoCallback(async (remark: string) => {
-    if (!formRef.current || !data) return;
-
-    const values = await formRef.current.validateFields();
+    const values = await formRef.current!.validateFields();
 
     // 同意
     if (showConfirmType === AudiitConfirmType.Approve) {
@@ -128,15 +142,19 @@ function FlowDetail() {
     setShowConfirmType(AudiitConfirmType.Cancel);
 
     setTimeout(() => {
-      history.replace(dynamicRoutes.toTaskCenter(data.flow.instance.subapp.app.id));
+      history.replace(dynamicRoutes.toTaskCenter(appId!));
     }, 1500);
   });
 
-  const handleApprove = useMemoCallback(() => {
+  const handleApprove = useMemoCallback(async () => {
+    await formRef.current!.validateFields();
+
     setShowConfirmType(AudiitConfirmType.Approve);
   });
 
-  const handleRevert = useMemoCallback(() => {
+  const handleRevert = useMemoCallback(async () => {
+    await formRef.current!.validateFields();
+
     setShowConfirmType(AudiitConfirmType.Revert);
   });
 
@@ -152,6 +170,7 @@ function FlowDetail() {
             onSubmit={handleSubmitNodeForm}
             onApprove={handleApprove}
             onRevert={handleRevert}
+            onTerminate={handleTerminate}
           />
         )}
       </Header>
