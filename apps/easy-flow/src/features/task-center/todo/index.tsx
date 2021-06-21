@@ -30,7 +30,6 @@ const ToDo: FC<{}> = () => {
     showSizeChanger: true,
   });
   const [data, setData] = useState<TodoItem[]>([]);
-  const [keyword, setKeyword] = useState<string>('');
   const fetchData = useCallback(() => {
     setLoading(true);
     const { current, pageSize } = pagination;
@@ -147,17 +146,9 @@ const ToDo: FC<{}> = () => {
       },
     ];
   }, []);
-  const filterOptionList = useMemo(() => {
-    return optionList.filter((option) => option.userName.indexOf(keyword) > -1);
-  }, [optionList, keyword]);
-  const options = useMemo(() => {
-    const content = filterOptionList.map(({ loginName, userName }) => (
-      <Option key={loginName} value={loginName}>
-        {userName}
-      </Option>
-    ));
-    return content;
-  }, [filterOptionList]);
+  const handleFilterOption = useCallback((inputValue, option) => {
+    return option.children.indexOf(inputValue) > -1;
+  }, []);
   const handleKeyUp = useCallback((e) => {
     if (e.keyCode === 13) {
       fetchData();
@@ -197,10 +188,8 @@ const ToDo: FC<{}> = () => {
             </Form.Item>
             <Form.Item label="发起人" name="starter" className="starter">
               <Select
-                // showSearch
-                // onSearch={(val) => {
-                //   setKeyword(val as string);
-                // }}
+                showSearch
+                filterOption={handleFilterOption}
                 onChange={() => {
                   fetchData();
                 }}
@@ -208,7 +197,11 @@ const ToDo: FC<{}> = () => {
                 placeholder="请选择"
                 allowClear
               >
-                {options}
+                {optionList.map(({ loginName, userName }) => (
+                  <Option key={loginName} value={loginName}>
+                    {userName}
+                  </Option>
+                ))}
               </Select>
             </Form.Item>
             <Form.Item label="发起时间" name="timeRange" className="timeRange">

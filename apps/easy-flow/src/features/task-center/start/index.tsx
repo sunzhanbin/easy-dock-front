@@ -225,6 +225,7 @@ const Start: FC<{}> = () => {
             <Form.Item label="状态" name="state" className="state">
               <Select
                 allowClear
+                placeholder="请选择"
                 style={{ width: '100%' }}
                 onClear={() => {
                   form.setFieldsValue(Object.assign(form.getFieldsValue(), { state: undefined }));
