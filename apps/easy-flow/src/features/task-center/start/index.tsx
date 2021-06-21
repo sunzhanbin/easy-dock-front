@@ -185,7 +185,7 @@ const Start: FC<{}> = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, [appId, pagination, form, sortDirection, setLoading, setData, setPagination]);
+  }, [appId, pagination, form, sortDirection]);
   const handleKeyUp = useCallback((e) => {
     if (e.keyCode === 13) {
       fetchData();

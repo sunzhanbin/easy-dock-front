@@ -134,7 +134,7 @@ const AppModel: FC<{
     form.validateFields().then(() => {
       onOk && onOk(appName, 2);
     });
-  }, [onOk, appName]);
+  }, [onOk, appName, form]);
 
   return (
     <Container

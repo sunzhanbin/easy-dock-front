@@ -30,6 +30,7 @@ const ToDo: FC<{}> = () => {
     showSizeChanger: true,
   });
   const [data, setData] = useState<TodoItem[]>([]);
+  const [sortDirection, setSortDirection] = useState<'DESC' | 'ASC'>('DESC');
   const fetchData = useCallback(() => {
     setLoading(true);
     const { current, pageSize } = pagination;
@@ -58,6 +59,7 @@ const ToDo: FC<{}> = () => {
     const params = {
       appId,
       filter,
+      sortDirection,
     };
     runtimeAxios
       .post('/task/todo', params)
@@ -71,7 +73,7 @@ const ToDo: FC<{}> = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, [appId, pagination, form]);
+  }, [appId, pagination, form, sortDirection]);
   const fetchOptionList = useCallback(() => {
     runtimeAxios.post('/user/search', { index: 0, size: 100, keyword: '' }).then((res) => {
       const list = res.data?.data || [];
@@ -162,11 +164,12 @@ const ToDo: FC<{}> = () => {
     fetchData();
   }, [form]);
   const handleTableChange = useCallback((newPagination, filters, sorter) => {
+    sorter.order === 'ascend' ? setSortDirection('ASC') : setSortDirection('DESC');
     setPagination((pagination) => ({ ...pagination, ...newPagination }));
   }, []);
   useEffect(() => {
     fetchData();
-  }, [pagination.current, pagination.pageSize]);
+  }, [pagination.current, pagination.pageSize, sortDirection]);
   useEffect(() => {
     fetchOptionList();
   }, []);

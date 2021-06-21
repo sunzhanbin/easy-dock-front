@@ -27,6 +27,7 @@ const Done: FC<{}> = () => {
   });
   const [data, setData] = useState<DoneItem[]>([]);
   const [optionList, setOptionList] = useState<UserItem[]>([]);
+  const [sortDirection, setSortDirection] = useState<'DESC' | 'ASC'>('DESC');
   const columns = useMemo(() => {
     return [
       {
@@ -116,6 +117,7 @@ const Done: FC<{}> = () => {
     const params = {
       appId,
       filter,
+      sortDirection,
     };
     runtimeAxios
       .post('/task/done', params)
@@ -128,7 +130,7 @@ const Done: FC<{}> = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, [appId, pagination, form]);
+  }, [appId, pagination, form, sortDirection]);
   const fetchOptionList = useCallback(() => {
     runtimeAxios.post('/user/search', { index: 0, size: 100, keyword: '' }).then((res) => {
       const list = res.data?.data || [];
@@ -144,6 +146,7 @@ const Done: FC<{}> = () => {
     }
   }, []);
   const handleTableChange = useCallback((newPagination, filters, sorter) => {
+    sorter.order === 'ascend' ? setSortDirection('ASC') : setSortDirection('DESC');
     setPagination((pagination) => ({ ...pagination, ...newPagination }));
   }, []);
   const handleReset = useCallback(() => {
@@ -155,7 +158,7 @@ const Done: FC<{}> = () => {
   }, []);
   useEffect(() => {
     fetchData();
-  }, [pagination.current, pagination.pageSize]);
+  }, [pagination.current, pagination.pageSize, sortDirection]);
   return (
     <div className={styles.container}>
       <div className={styles.header}>
