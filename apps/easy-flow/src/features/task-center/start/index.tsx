@@ -144,8 +144,10 @@ const Start: FC<{}> = () => {
       pageIndex,
       pageSize,
       processName: flowName,
-      state: +state,
     };
+    if (state) {
+      params.state = +state;
+    }
     if (startTime) {
       params.startTime = startTime;
     }
@@ -197,6 +199,10 @@ const Start: FC<{}> = () => {
               <Select
                 allowClear
                 style={{ width: '100%' }}
+                onClear={() => {
+                  form.setFieldsValue(Object.assign(form.getFieldsValue(), { state: undefined }));
+                  fetchData();
+                }}
                 onClick={() => {
                   fetchData();
                 }}
