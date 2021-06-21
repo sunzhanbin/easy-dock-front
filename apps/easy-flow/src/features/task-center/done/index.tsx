@@ -78,9 +78,14 @@ const Done: FC<{}> = () => {
         dataIndex: 'startTime',
         key: 'startTime',
         width: '20%',
+        sortDirections: ['ascend' as 'ascend', 'descend' as 'descend', 'ascend' as 'ascend'],
+        defaultSortOrder: 'descend' as 'descend',
         render(_: string, record: DoneItem) {
           const { startTime } = record;
           return <div className={styles.startTime}>{getPassedTime(startTime)}</div>;
+        },
+        sorter(rowA: DoneItem, rowB: DoneItem) {
+          return rowA.startTime - rowB.startTime;
         },
       },
       {
@@ -128,6 +133,8 @@ const Done: FC<{}> = () => {
       .post('/task/done', params)
       .then((res) => {
         const list = res.data?.data || [];
+        const total = res.data?.recordTotal || 0;
+        setPagination((pagination) => ({ ...pagination, total }));
         setData(list);
       })
       .finally(() => {
@@ -145,14 +152,19 @@ const Done: FC<{}> = () => {
       fetchData();
     }
   }, []);
+  const handleTableChange = useCallback((newPagination, filters, sorter) => {
+    setPagination((pagination) => ({ ...pagination, ...newPagination }));
+  }, []);
   const handleReset = useCallback(() => {
     form.resetFields();
     fetchData();
   }, [form]);
   useEffect(() => {
-    fetchData();
     fetchOptionList();
   }, []);
+  useEffect(() => {
+    fetchData();
+  }, [pagination.current, pagination.pageSize]);
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -222,6 +234,7 @@ const Done: FC<{}> = () => {
           rowKey="processInstanceId"
           columns={columns}
           dataSource={data}
+          onChange={handleTableChange}
         ></Table>
       </div>
     </div>

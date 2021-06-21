@@ -110,7 +110,7 @@ const SelectOptionList = (props: editProps) => {
     setComponentKey(e);
   }, []);
   useEffect(() => {
-    if (type === 'dictionaries') {
+    if (type === 'subapp') {
       axios.get(`/subapp/${appId}/list/all/deployed`).then((res) => {
         const list = res.data
           .filter((app: { id: number }) => app.id !== subAppId)
@@ -124,7 +124,11 @@ const SelectOptionList = (props: editProps) => {
     }
   }, [subAppId, type]);
   useEffect(() => {
-    onChange && onChange({ type, data: content, appId: subAppKey, fieldId: componentKey });
+    if (type === 'custom') {
+      onChange && onChange({ type, data: content });
+    } else if (type === 'subapp') {
+      onChange && onChange({ type, subappId: subAppKey, fieldName: componentKey });
+    }
   }, [type, content, subAppKey, componentKey]);
   const customContent = useMemo(() => {
     if (Array.isArray(content) && type === 'custom') {
@@ -185,7 +189,7 @@ const SelectOptionList = (props: editProps) => {
     return null;
   }, [type, content, canDrag, addItem, deleteItem, handleBlur, handleDragOver, handleDragstart, handleDrop]);
   const dictContent = useMemo(() => {
-    if (type === 'dictionaries') {
+    if (type === 'subapp') {
       return (
         <>
           <Select placeholder="选择子应用" className={styles.dict_content} size="large" onChange={handleChangeApp}>
@@ -227,9 +231,9 @@ const SelectOptionList = (props: editProps) => {
           自定义数据
         </div>
         <div
-          className={classNames(styles.right, type === 'dictionaries' ? styles.active : '')}
+          className={classNames(styles.right, type === 'subapp' ? styles.active : '')}
           onClick={() => {
-            setType('dictionaries');
+            setType('subapp');
           }}
         >
           其他表单数据

@@ -66,6 +66,7 @@ const ToDo: FC<{}> = () => {
         const list = res.data?.data || [];
         const total = res.data?.recordTotal || 0;
         setData(list);
+        setPagination((pagination) => ({ ...pagination, total }));
         dispatch(setTodoNum({ todoNum: total }));
       })
       .finally(() => {
@@ -134,14 +135,14 @@ const ToDo: FC<{}> = () => {
         dataIndex: 'startTime',
         key: 'startTime',
         width: '15%',
-        sort: {
-          compare(a: TodoItem, b: TodoItem) {
-            return a.taskCreateTime - b.taskCreateTime;
-          },
-        },
+        sortDirections: ['ascend' as 'ascend', 'descend' as 'descend', 'ascend' as 'ascend'],
+        defaultSortOrder: 'descend' as 'descend',
         render(_: string, record: TodoItem) {
           const { taskCreateTime } = record;
           return moment(taskCreateTime).format('YYYY-MM-DD HH:mm');
+        },
+        sorter(rowA: TodoItem, rowB: TodoItem) {
+          return rowA.startTime - rowB.startTime;
         },
       },
     ];
@@ -169,8 +170,13 @@ const ToDo: FC<{}> = () => {
     form.resetFields();
     fetchData();
   }, [form]);
+  const handleTableChange = useCallback((newPagination, filters, sorter) => {
+    setPagination((pagination) => ({ ...pagination, ...newPagination }));
+  }, []);
   useEffect(() => {
     fetchData();
+  }, [pagination.current, pagination.pageSize]);
+  useEffect(() => {
     fetchOptionList();
   }, []);
   return (
@@ -235,6 +241,7 @@ const ToDo: FC<{}> = () => {
           rowKey="processInstanceId"
           columns={columns}
           dataSource={data}
+          onChange={handleTableChange}
         ></Table>
       </div>
     </div>

@@ -11,10 +11,10 @@ const CheckboxComponent = (props: CheckboxGroupProps & { readOnly: boolean; data
     if (dataSource?.type === 'custom') {
       const list = (dataSource?.data || []).map((item) => item.value);
       setOptions(list);
-    } else {
-      const { fieldId, appId } = dataSource || {};
-      if (fieldId && appId) {
-        runtimeAxios.get(`/subapp/${appId}/form/${fieldId}/data`).then((res) => {
+    } else if (dataSource?.type === 'subapp') {
+      const { fieldName, subappId } = dataSource || {};
+      if (fieldName && subappId) {
+        runtimeAxios.get(`/subapp/${subappId}/form/${fieldName}/data`).then((res) => {
           const list = res.data?.data || [];
           setOptions(list);
         });

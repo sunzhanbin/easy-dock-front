@@ -65,6 +65,7 @@ const Start: FC<{}> = () => {
     return location.pathname.slice(13, -6);
   }, [location]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [sortDirection, setSortDirection] = useState<'DESC' | 'ASC'>('DESC');
   const [pagination, setPagination] = useState<Pagination>({
     pageSize: 10,
     current: 1,
@@ -105,9 +106,14 @@ const Start: FC<{}> = () => {
         dataIndex: 'startTime',
         key: 'startTime',
         width: '15%',
+        sortDirections: ['ascend' as 'ascend', 'descend' as 'descend', 'ascend' as 'ascend'],
+        defaultSortOrder: 'descend' as 'descend',
         render(_: string, record: StartItem) {
           const { startTime } = record;
           return <div className={styles.startTime}>{getPassedTime(startTime)}</div>;
+        },
+        sorter(rowA: StartItem, rowB: StartItem) {
+          return rowA.startTime - rowB.startTime;
         },
       },
       {
@@ -141,8 +147,8 @@ const Start: FC<{}> = () => {
   }, []);
   const fetchData = useCallback(() => {
     setLoading(true);
-    const { pageSize, current: pageIndex } = pagination;
     const formValues = form.getFieldsValue(true);
+    const { current: pageIndex, pageSize } = pagination;
     const { flowName = '', state = '', timeRange = [] } = formValues;
     let startTime: number = 0;
     let endTime: number = 0;
@@ -156,6 +162,7 @@ const Start: FC<{}> = () => {
       appId,
       pageIndex,
       pageSize,
+      sortDirection,
       processName: flowName,
     };
     if (state) {
@@ -171,12 +178,14 @@ const Start: FC<{}> = () => {
       .post('/task/myStart', params)
       .then((res) => {
         const list = res.data?.data || [];
+        const total = res.data?.recordTotal || 0;
+        setPagination((pagination) => ({ ...pagination, total }));
         setData(list);
       })
       .finally(() => {
         setLoading(false);
       });
-  }, [appId, pagination, form, setLoading, setData]);
+  }, [appId, pagination, form, sortDirection, setLoading, setData, setPagination]);
   const handleKeyUp = useCallback((e) => {
     if (e.keyCode === 13) {
       fetchData();
@@ -189,9 +198,14 @@ const Start: FC<{}> = () => {
     form.resetFields();
     fetchData();
   }, [form]);
+  const handleTableChange = useCallback((newPagination, filters, sorter) => {
+    sorter.order === 'ascend' ? setSortDirection('ASC') : setSortDirection('DESC');
+    setPagination((pagination) => ({ ...pagination, ...newPagination }));
+  }, []);
+
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [pagination.current, pagination.pageSize, sortDirection]);
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -257,6 +271,7 @@ const Start: FC<{}> = () => {
           rowKey="processInstanceId"
           columns={columns}
           dataSource={data}
+          onChange={handleTableChange}
         ></Table>
       </div>
     </div>
