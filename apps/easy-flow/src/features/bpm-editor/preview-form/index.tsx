@@ -48,7 +48,12 @@ const PreviewForm: FC = () => {
       <div className={styles.content}>
         <div className={styles.title}>{appName}</div>
         <div className={styles.form_content}>
-          <FormEngine initialValue={{}} data={(formDesign as unknown) as FormMeta} fieldsAuths={auths}></FormEngine>
+          <FormEngine
+            datasource={{}}
+            initialValue={{}}
+            data={(formDesign as unknown) as FormMeta}
+            fieldsAuths={auths}
+          ></FormEngine>
         </div>
       </div>
     </div>

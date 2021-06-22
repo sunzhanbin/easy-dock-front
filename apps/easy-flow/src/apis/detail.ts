@@ -1,5 +1,6 @@
 import { runtimeAxios } from '@utils/axios';
-import type { TaskDetailType, FlowMeta, FormMeta, FormValue, FlowInstance } from '@type/detail';
+import { AuthType } from '@type/flow';
+import type { TaskDetailType, FlowMeta, FormMeta, FormValue, FlowInstance, Datasource } from '@type/detail';
 
 export async function loadFlowData(
   flowIns: FlowInstance,
@@ -27,4 +28,29 @@ export async function loadFlowData(
       })
       .then(({ data }) => JSON.parse(data)),
   ]);
+}
+
+export async function loadDatasource(formMeta: FormMeta, flowMeta: FlowMeta, versionId: number) {
+  const allPromises: Promise<void>[] = [];
+  const datasource: Datasource = {};
+  const auths = flowMeta.fieldsAuths;
+
+  formMeta.components.forEach((comp) => {
+    // 有字段权限才去加载
+    if (comp.config.dataSource && auths[comp.config.fieldName] !== AuthType.Denied) {
+      allPromises.push(
+        runtimeAxios
+          .get<{ data: { [key: string]: string } }>(`/form/version/${versionId}/form/${comp.config.fieldName}/data`)
+          .then(({ data }) => {
+            const keys = Object.keys(data);
+
+            datasource[comp.config.fieldName] = keys.map((key) => ({ key: key, value: data[key] }));
+          }),
+      );
+    }
+  });
+
+  await Promise.all(allPromises);
+
+  return datasource;
 }

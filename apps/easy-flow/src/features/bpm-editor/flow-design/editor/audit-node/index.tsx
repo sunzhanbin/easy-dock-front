@@ -1,4 +1,4 @@
-import { memo, useMemo, useEffect } from 'react';
+import { memo, useMemo } from 'react';
 import { Form, Input } from 'antd';
 import { Rule } from 'antd/lib/form';
 import debounce from 'lodash/debounce';

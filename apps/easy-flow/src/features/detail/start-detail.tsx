@@ -3,7 +3,7 @@ import { useParams } from 'react-router';
 import { Loading, AsyncButton } from '@common/components';
 import Header from '@components/header';
 import { runtimeAxios } from '@utils';
-import { loadFlowData } from '@/apis/detail';
+import { loadFlowData } from '@apis/detail';
 import Detail from './components/detail';
 import Empty from './components/empty';
 import { FormValue, FormMeta, FlowMeta, TaskDetailType, FlowInstance } from '@type/detail';

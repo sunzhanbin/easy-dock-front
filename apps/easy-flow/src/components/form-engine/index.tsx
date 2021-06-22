@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useState, useMemo } from 'react';
-import { Form, Row, Col, FormInstance, Select } from 'antd';
+import { Form, Row, Col, FormInstance } from 'antd';
 import { Rule } from 'antd/lib/form';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import useLoadComponents from '@/hooks/use-load-components';
@@ -156,7 +156,7 @@ const FormDetail = React.forwardRef(function FormDetail(
                       config.type,
                       Component,
                       Object.assign({}, compProps, {
-                        disabled: readonly || !fieldsAuths[fieldName] || fieldsAuths[fieldName] === AuthType.View,
+                        readOnly: readonly || !fieldsAuths[fieldName] || fieldsAuths[fieldName] === AuthType.View,
                       }),
                       datasource && datasource[fieldName],
                     )}
