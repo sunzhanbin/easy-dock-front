@@ -1,42 +1,23 @@
-import React, { memo, useEffect, useMemo, useState } from 'react';
+import { memo, useMemo } from 'react';
 import { Radio } from 'antd';
-import { OptionItem, SelectOptionItem } from '@/type';
+import { OptionItem } from '@/type';
 import { RadioGroupProps } from 'antd/lib/radio';
-import { runtimeAxios } from '@/utils';
 
-const RadioComponent = (props: RadioGroupProps & { readOnly: boolean; dataSource: SelectOptionItem }) => {
-  const { dataSource, readOnly, onChange } = props;
+const RadioComponent = (props: RadioGroupProps & { readOnly: boolean; options: OptionItem[] }) => {
+  const { options, readOnly, onChange } = props;
+  const optionList = useMemo(() => {
+    return (options || []).map((item: OptionItem) => item.value);
+  }, [options]);
 
-  const [options, setOptions] = useState<OptionItem[]>([]);
-  useEffect(() => {
-    if (dataSource?.type === 'custom') {
-      const list = dataSource?.data || [];
-      setOptions(list);
-    } else if (dataSource?.type === 'subapp') {
-      const { fieldName, subappId } = dataSource || {};
-      if (fieldName && subappId) {
-        runtimeAxios.get(`/subapp/${subappId}/form/${fieldName}/data`).then((res) => {
-          const list = (res.data?.data || []).map((item: string) => ({ key: item, value: item }));
-          setOptions(list);
-        });
-      }
-    }
-  }, [dataSource]);
   const propList = useMemo(() => {
     return Object.assign({}, props, {
       disabled: readOnly,
       onChange: onChange as Function,
+      options: optionList,
     });
-  }, [readOnly, props, onChange]);
-  return (
-    <Radio.Group {...propList}>
-      {options.map(({ key, value }) => (
-        <Radio value={key} key={key}>
-          {value}
-        </Radio>
-      ))}
-    </Radio.Group>
-  );
+  }, [readOnly, props, optionList, onChange]);
+
+  return <Radio.Group {...propList}></Radio.Group>;
 };
 
 export default memo(RadioComponent);
