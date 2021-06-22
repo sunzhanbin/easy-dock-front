@@ -1,4 +1,5 @@
 import { memo, useEffect, useState, useMemo, useRef } from 'react';
+import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { Tooltip } from 'antd';
 import classnames from 'classnames';
@@ -7,6 +8,7 @@ import { localStorage } from '@common/utils';
 import { runtimeAxios } from '@utils';
 import { AppSchema } from '@schema/app';
 import { MAIN_CONTENT_CLASSNAME, dynamicRoutes } from '@consts';
+import { userSelector } from '@/store/user';
 import AppCard from '@components/app-card';
 import styles from './index.module.scss';
 
@@ -22,6 +24,7 @@ function formatTime(time: Date): string {
 
 function App() {
   const history = useHistory();
+  const loginUser = useSelector(userSelector);
   const [apps, setApps] = useState<AppSchema[]>([]);
   const [loading, setLoading] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -36,15 +39,6 @@ function App() {
         setLoading(false);
       }
     })();
-  }, []);
-
-  const loginUser = useMemo(() => {
-    const user = localStorage.get('user');
-    if (user) {
-      return JSON.parse(user);
-    }
-
-    return null;
   }, []);
 
   const getPopupContainer = useMemo(() => {
@@ -64,7 +58,7 @@ function App() {
       className={classnames(styles.container, MAIN_CONTENT_CLASSNAME)}
     >
       <div className={styles.welcome}>
-        <div className={styles.title}>{`Hi ${loginUser.cnName}`}</div>
+        {loginUser.info && <div className={styles.title}>{`Hi ${loginUser.info.cName}`}</div>}
         <div className={styles.time}>{`${formatTime(new Date())}好!`}</div>
       </div>
       <div>
