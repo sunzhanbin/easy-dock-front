@@ -100,6 +100,15 @@ const reducers = {
     state.isDirty = true;
     return state;
   },
+  moveIndex(state: FormDesign, action: PayloadAction<{ dragIndex: number; hoverIndex: number }>) {
+    const { dragIndex, hoverIndex } = action.payload;
+    if (!dragIndex || !hoverIndex) return state;
+    const dragCard = state.layout[dragIndex];
+    state.layout.splice(dragIndex, 1);
+    state.layout.splice(hoverIndex, 0, dragCard);
+    state.isDirty = true;
+    return state;
+  },
   //exchnage with the com on the left
   exchange(state: FormDesign, action: PayloadAction<{ id: string; direction: string }>) {
     let [row, col] = locateById(action.payload.id, state.layout);
@@ -246,6 +255,7 @@ export const {
   moveRow,
   moveDown,
   moveUp,
+  moveIndex,
   exchange,
   selectField,
   editProps,

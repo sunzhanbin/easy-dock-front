@@ -17,6 +17,8 @@ import styles from './index.module.scss';
 import { saveForm } from '@/features/bpm-editor/form-design/formdesign-slice';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { AsyncButton } from '@common/components';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 const FormDesign: FC<{}> = () => {
   const dispatch = useAppDispatch();
@@ -149,11 +151,13 @@ const FormDesign: FC<{}> = () => {
       >
         当前有未保存的更改，您在离开当前页面前是否要保存这些更改?
       </Modal>
-      <div className={styles.container}>
-        <ToolBox></ToolBox>
-        <DesignZone></DesignZone>
-        {selectedField ? <EditZone></EditZone> : null}
-      </div>
+      <DndProvider backend={HTML5Backend}>
+        <div className={styles.container}>
+          <ToolBox></ToolBox>
+          <DesignZone></DesignZone>
+          {selectedField ? <EditZone></EditZone> : null}
+        </div>
+      </DndProvider>
     </DragDropContext>
   );
 };

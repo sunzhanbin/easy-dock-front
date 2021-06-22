@@ -17,13 +17,14 @@ const ToolBox: FC<{}> = () => {
           {map(value, (tool, index) => {
             const { name, icon, type } = tool;
             return (
-              <Draggable draggableId={type} index={+index} key={name}>
+              <ToolBoxItem icon={icon} displayName={name} type={type} key={type}></ToolBoxItem>
+              /*  <Draggable draggableId={type} index={+index} key={name}>
                 {(dragProvided) => (
                   <div ref={dragProvided.innerRef} {...dragProvided.draggableProps} {...dragProvided.dragHandleProps}>
                     <ToolBoxItem icon={icon} displayName={name} type={type}></ToolBoxItem>
                   </div>
                 )}
-              </Draggable>
+              </Draggable> */
             );
           })}
         </div>
@@ -33,14 +34,15 @@ const ToolBox: FC<{}> = () => {
   if (!comGroups) return <Loading></Loading>;
   return (
     <div className={styles.container}>
-      <Droppable droppableId="component_zone">
+      <div>{comGroups}</div>
+      {/* <Droppable droppableId="component_zone">
         {(dropProvided) => (
           <div ref={dropProvided.innerRef} {...dropProvided.droppableProps}>
             <div>{comGroups}</div>
             {dropProvided.placeholder}
           </div>
         )}
-      </Droppable>
+      </Droppable> */}
     </div>
   );
 };
