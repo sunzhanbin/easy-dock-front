@@ -68,7 +68,11 @@ const EditorHeader: FC = () => {
     });
 
     message.success('发布成功');
-  }, [bpmId, dispatch]);
+
+    setTimeout(() => {
+      window.location.replace(`/scenes-detail/${appId}`);
+    }, 1500);
+  }, [bpmId, dispatch, appId]);
 
   return (
     <div className={styles.header_container}>
