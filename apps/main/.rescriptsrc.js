@@ -44,6 +44,7 @@ module.exports = {
       ['@assets']: path.resolve(__dirname, 'src/assets'),
       ['@styles']: path.resolve(__dirname, 'src/styles'),
       ['@hooks']: path.resolve(__dirname, 'src/hooks'),
+      ['@schema']: path.resolve(__dirname, 'src/schema'),
       ['@common']: path.resolve(__dirname, '../../packages/common'),
     };
 

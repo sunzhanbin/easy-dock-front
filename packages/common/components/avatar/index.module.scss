@@ -7,4 +7,8 @@
   background-color: #4c5cdb;
   font-size: 12px;
   font-weight: bold;
+
+  &.round {
+    border-radius: 50%;
+  }
 }

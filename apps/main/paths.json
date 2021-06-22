@@ -16,6 +16,8 @@
       "@layouts/*": ["src/layouts/*"],
       "@assets": ["src/assets"],
       "@assets/*": ["src/assets/*"],
+      "@schema": ["src/schema"],
+      "@schema/*": ["src/schema/*"],
       "@styles/*": ["src/styles/*"],
       "@hooks/*": ["src/hooks/*"],
       "@common/*": ["../../packages/common/*"]
