@@ -84,3 +84,7 @@ export type AuditRecordSchema = {
   }[];
   taskName: string;
 };
+
+export type Datasource = {
+  [key: string]: { key: string; value: string }[];
+};

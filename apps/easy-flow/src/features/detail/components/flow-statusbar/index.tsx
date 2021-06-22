@@ -111,7 +111,7 @@ function StatusBar(props: StatusBarProps) {
         {trackCell}
       </div>
     );
-  }, [flowIns]);
+  }, [flowIns, showCurrentProcessor]);
 
   return (
     <div className={classnames(styles.statusbar, styleName, className)}>

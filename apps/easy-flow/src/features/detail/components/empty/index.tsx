@@ -12,7 +12,7 @@ function Empty(props: EmptyProps) {
 
   return (
     <div className={styles.container}>
-      <img src={emptyImage} />
+      <img src={emptyImage} alt="" />
       <div>{text}</div>
     </div>
   );

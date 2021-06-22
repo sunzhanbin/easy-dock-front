@@ -1,11 +1,20 @@
-import { forwardRef, memo, useEffect, useState, useMemo } from 'react';
+import { forwardRef, memo, useEffect, useState } from 'react';
 import { FormInstance } from 'antd';
 import classnames from 'classnames';
 import { runtimeAxios } from '@utils';
+import { loadDatasource } from '@apis/detail';
 import FormEngine from '@components/form-engine';
 import FlowStatusBar from '../flow-statusbar';
 import AuditRecord from '../audit-record';
-import { FlowMeta, FlowInstance, FormMeta, FormValue, AuditRecordSchema, TaskDetailType } from '@type/detail';
+import {
+  FlowMeta,
+  FlowInstance,
+  FormMeta,
+  FormValue,
+  AuditRecordSchema,
+  TaskDetailType,
+  Datasource,
+} from '@type/detail';
 import styles from './index.module.scss';
 
 interface DetailProps {
@@ -24,6 +33,7 @@ interface DetailProps {
 const Detail = forwardRef(function Detail(props: DetailProps, ref: React.ForwardedRef<FormInstance<FormValue>>) {
   const { flow, form, type, className } = props;
   const [auditRecords, setAuditRecords] = useState<AuditRecordSchema[]>([]);
+  const [datasource, setDatasource] = useState<Datasource>();
 
   useEffect(() => {
     if (!flow) return;
@@ -37,19 +47,30 @@ const Detail = forwardRef(function Detail(props: DetailProps, ref: React.Forward
       });
   }, [flow]);
 
+  useEffect(() => {
+    if (!flow || !form) return;
+
+    loadDatasource(form.meta, flow.node, flow.instance.subapp.version.id).then((values) => {
+      setDatasource(values);
+    });
+  }, [flow, form]);
+
   return (
     <div className={classnames(styles.main, className)}>
       <div className={styles.content}>
         <FlowStatusBar flowIns={flow.instance} showCurrentProcessor={type === TaskDetailType.MyInitiation} />
         <div className={styles.form}>
           <div className={styles.title}>{flow.instance.subapp.name}</div>
-          <FormEngine
-            readonly={type !== TaskDetailType.MyTodo}
-            ref={ref}
-            data={form.meta}
-            initialValue={form.value}
-            fieldsAuths={flow.node.fieldsAuths}
-          />
+          {datasource && (
+            <FormEngine
+              datasource={datasource}
+              readonly={type !== TaskDetailType.MyTodo}
+              ref={ref}
+              data={form.meta}
+              initialValue={form.value}
+              fieldsAuths={flow.node.fieldsAuths}
+            />
+          )}
         </div>
       </div>
       <div className={styles.flow}>
