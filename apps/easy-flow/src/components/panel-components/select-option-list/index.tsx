@@ -209,7 +209,6 @@ const SelectOptionList = (props: editProps) => {
             className={styles.dict_content}
             size="large"
             onChange={handleChangeApp}
-            defaultValue={subAppKey}
             {...(subAppKey ? { defaultValue: subAppKey } : null)}
           >
             {appList.map(({ key, value }) => (
