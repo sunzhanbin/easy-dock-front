@@ -32,7 +32,7 @@ const SelectComponent = (
   }, [defaultValue, multiple, showSearch, readOnly, props, onChange]);
   return (
     <Select {...propList} style={{ width: '100%' }}>
-      {options.map(({ key, value }) => (
+      {(options || []).map(({ key, value }) => (
         <Option value={key as string} key={key}>
           {value}
         </Option>
