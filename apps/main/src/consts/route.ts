@@ -10,6 +10,8 @@ const staticRoutes = {
   LOGIN: '/login',
   SCENE_MANAGE: '/scenes-manage',
   SCENE_DETAIL: '/scenes-detail/:sceneId',
+  APPS_RUNTIME: '/runtime/all-apps',
+  APP_RUNTIME_DETAIL: '/runtime/:appId',
   INTEGRATION: '/integration',
   INTEGRATION_ORCH_INDEX: `/integration/orch${orchRoutes.ORCH_INDEX}`,
   INTEGRATION_ORCH_INTERFACE_LIST: `/integration/orch${orchRoutes.ORCH_INTERFACE_LIST}`,
@@ -26,5 +28,8 @@ export default staticRoutes;
 export const dynamicRoutes = {
   toSceneDetail(id: string) {
     return staticRoutes.SCENE_DETAIL.replace(/:sceneId$/, id);
+  },
+  toAppRuntimeDetail(appId: string) {
+    return staticRoutes.APP_RUNTIME_DETAIL.replace(/:appId$/, appId) + `/task-center/${appId}`;
   },
 };
