@@ -1,20 +1,44 @@
-import { memo, FC, useMemo, useCallback } from 'react';
+import { memo, FC, useMemo, useCallback, useState, useEffect } from 'react';
 import { useAppSelector } from '@/app/hooks';
 import { componentPropsSelector, layoutSelector, subAppSelector } from '../form-design/formzone-reducer';
 import FormEngine from '@components/form-engine';
-import { FormMeta } from '@type/detail';
+import { Datasource, FormMeta } from '@type/detail';
 import { FieldAuthsMap } from '@type/flow';
 import { useHistory } from 'react-router-dom';
 import { Icon } from '@common/components';
 import styles from './index.module.scss';
+import { ComponentConfig } from '@/type';
+import { fetchDataSource } from '@/apis/detail';
+
+const propsKey = ['defaultValue', 'showSearch'];
 
 const PreviewForm: FC = () => {
   const { name: appName } = useAppSelector(subAppSelector);
   const layout = useAppSelector(layoutSelector);
   const byId = useAppSelector(componentPropsSelector);
   const history = useHistory();
+  const [dataSource, setDataSource] = useState<Datasource>({});
+  useEffect(() => {
+    fetchDataSource(byId).then((res) => {
+      console.info(res, 'res');
+      setDataSource(res);
+    });
+  }, [byId]);
 
   const formDesign = useMemo(() => {
+    const components: ComponentConfig[] = [];
+    Object.keys(byId).forEach((id) => {
+      const object = byId[id];
+      const component: ComponentConfig = { config: {}, props: {} };
+      Object.keys(object).forEach((key) => {
+        if (propsKey.includes(key)) {
+          component.props[key] = (object as any)[key];
+        } else {
+          component.config[key] = (object as any)[key];
+        }
+      });
+      components.push(component);
+    });
     const formMeta = {
       layout,
       events: {
@@ -22,7 +46,7 @@ const PreviewForm: FC = () => {
       },
       rules: [],
       themes: [{}],
-      components: Object.keys(byId).map((id) => Object.assign({}, byId[id], { type: id.split('_')[0] || '', id })),
+      components: components,
       selectedTheme: '',
     };
     return formMeta;
@@ -49,7 +73,7 @@ const PreviewForm: FC = () => {
         <div className={styles.title}>{appName}</div>
         <div className={styles.form_content}>
           <FormEngine
-            datasource={{}}
+            datasource={dataSource}
             initialValue={{}}
             data={(formDesign as unknown) as FormMeta}
             fieldsAuths={auths}

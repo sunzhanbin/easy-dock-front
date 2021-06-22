@@ -39,7 +39,7 @@ const FormDesign: FC<{}> = () => {
         components.forEach(({ config, props }: ComponentConfig) => {
           const { id } = config;
           const componentConfig: ConfigItem = {};
-          const excludeKeys = ['id', 'type', 'version', 'rules', 'canSubmit'];
+          const excludeKeys = ['version', 'rules', 'canSubmit'];
           Object.keys(config).forEach((key) => {
             if (!excludeKeys.includes(key)) {
               componentConfig[key] = config[key];

@@ -54,3 +54,33 @@ export async function loadDatasource(formMeta: FormMeta, flowMeta: FlowMeta, ver
 
   return datasource;
 }
+
+export async function fetchDataSource(byId: { [k: string]: any }) {
+  const allPromises: Promise<void>[] = [];
+  const source: Datasource = {};
+  Object.keys(byId).forEach(async (id) => {
+    const object = byId[id];
+    if ((object as any)?.dataSource) {
+      const { dataSource } = object as any;
+      if (dataSource.type === 'custom') {
+        allPromises.push(
+          Promise.resolve(dataSource.data).then((data) => {
+            source[object.fieldName] = data;
+          }),
+        );
+      } else if (dataSource.type === 'subapp') {
+        const { fieldName = '', subappId = '' } = dataSource;
+        if (fieldName && subappId) {
+          allPromises.push(
+            runtimeAxios.get(`/subapp/${subappId}/form/${fieldName}/data`).then((res) => {
+              const list = (res.data?.data || []).map((val: string) => ({ key: val, value: val }));
+              source[object.fieldName] = list;
+            }),
+          );
+        }
+      }
+    }
+  });
+  await Promise.all(allPromises);
+  return source;
+}

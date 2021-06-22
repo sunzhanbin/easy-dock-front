@@ -28,7 +28,7 @@ const SourceBox: FC<{
 }> = ({ type, config, id, moveConfig, rowIndex }) => {
   const dispatch = useAppDispatch();
   const selectedField = useAppSelector(selectedFieldSelector);
-  const options = useDataSource((config as any).dataSource);
+  const options = useDataSource((config as any)?.dataSource);
   // 获取组件源码
   const compSources: any = useLoadComponents(type as AllComponentType['type']) as Component;
   const propList = useMemo(() => {
