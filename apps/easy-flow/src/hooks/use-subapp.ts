@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { builderAxios } from '@utils';
+import { runtimeAxios } from '@utils';
 import { SubApp } from '@type/subapp';
 
 export default function useSubapp(subAppId: string) {
@@ -9,7 +9,7 @@ export default function useSubapp(subAppId: string) {
   useEffect(() => {
     setLoading(true);
 
-    builderAxios
+    runtimeAxios
       .get(`/subapp/${subAppId}`)
       .then((apiRes) => {
         setData(apiRes.data);

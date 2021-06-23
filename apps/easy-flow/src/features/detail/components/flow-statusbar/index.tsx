@@ -88,7 +88,7 @@ function StatusBar(props: StatusBarProps) {
     );
 
     // 显示当前处理人
-    if (showCurrentProcessor) {
+    if (showCurrentProcessor && flowIns.state !== NodeStatusType.Terminated) {
       return (
         <div className={styles.status}>
           <Cell icon="dangqianjiedian" title={flowIns.currentNodeName} desc="当前节点" />

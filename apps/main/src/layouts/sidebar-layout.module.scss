@@ -55,8 +55,6 @@
   }
 
   .main {
-    display: flex;
-    flex-direction: column;
     flex: 1 1 0;
 
     .header {
@@ -69,17 +67,12 @@
     }
 
     .content {
-      position: relative;
       flex: 1 1 0;
+      height: 100vh;
+      overflow-y: auto;
 
-      .micro {
-        position: absolute;
-        left: 0;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 1;
-        overflow-y: auto;
+      &.with-header {
+        height: calc(100vh - 65px);
       }
     }
   }

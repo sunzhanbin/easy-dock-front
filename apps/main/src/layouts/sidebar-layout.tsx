@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useRouteMatch } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { loadMicroApp } from 'qiankun';
+import classnames from 'classnames';
 import UserComponent from '@components/header/user';
 import { Loading, Icon } from '@common/components';
+import MicroApp from '@components/micro-app';
 import { getUserInfo } from '@/store/user';
 import { runtimeAxios, getSceneImageUrl } from '@utils';
 import { envs } from '@consts';
@@ -30,38 +31,6 @@ function SidebarLayout() {
   useEffect(() => {
     dispatch(getUserInfo());
   }, [dispatch]);
-
-  useEffect(() => {
-    if (!contentRef.current) return;
-
-    const easyFlow = loadMicroApp(
-      {
-        name: 'easy-flow',
-        entry: envs.EASY_FLOW_FRONTEND_ENTRY,
-        container: contentRef.current,
-        props: {
-          basename: currentUrl,
-        },
-      },
-      {
-        sandbox: {
-          // 严格隔离样式
-          // strictStyleIsolation: true,
-        },
-      },
-    );
-
-    easyFlow.mountPromise.finally(() => {
-      // 防止页面跳走后才加载成功时setstate的警告;
-      if (contentRef.current) {
-        setLoading(false);
-      }
-    });
-
-    return () => {
-      easyFlow.unmount();
-    };
-  }, [currentUrl]);
 
   return (
     <>
@@ -92,9 +61,12 @@ function SidebarLayout() {
             </div>
           )}
 
-          <div className={styles.content}>
-            <div className={styles.micro} ref={contentRef}></div>
-          </div>
+          <MicroApp
+            entry={envs.EASY_FLOW_FRONTEND_ENTRY}
+            name="easy-flow"
+            className={classnames(styles.content, { [styles['with-header']]: showHeader })}
+            basename={currentUrl}
+          />
         </div>
       </div>
     </>

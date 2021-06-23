@@ -4,7 +4,6 @@ import { useHistory } from 'react-router';
 import { Tooltip } from 'antd';
 import classnames from 'classnames';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import { localStorage } from '@common/utils';
 import { runtimeAxios } from '@utils';
 import { AppSchema } from '@schema/app';
 import { MAIN_CONTENT_CLASSNAME, dynamicRoutes } from '@consts';
