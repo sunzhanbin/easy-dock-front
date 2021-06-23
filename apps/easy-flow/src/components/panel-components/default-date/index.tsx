@@ -9,12 +9,12 @@ import styles from './index.module.scss';
 
 interface editProps {
   id: string;
-  value?: string;
+  value?: number;
   onChange?: (v: string) => void;
 }
 
 const DefaultDate = (props: editProps) => {
-  const { id, onChange } = props;
+  const { id, value, onChange } = props;
   const byId = useAppSelector(componentPropsSelector);
   const formatType = useMemo(() => {
     return (byId[id] as DateField)?.format;
@@ -23,7 +23,7 @@ const DefaultDate = (props: editProps) => {
     return (byId[id] as DateField)?.notSelectPassed;
   }, [id, byId]);
   const propList = useMemo(() => {
-    const props: { [k: string]: string | boolean | Function } = { size: 'large' };
+    const props: { [k: string]: string | boolean | Function | Moment } = { size: 'large' };
     if (formatType === '2') {
       props.showTime = true;
       props.format = 'YYYY-MM-DD HH:mm:ss';
@@ -35,14 +35,16 @@ const DefaultDate = (props: editProps) => {
         return current && current < moment().endOf('second');
       };
     }
+    if (value) {
+      props.value = moment(value);
+    }
     return props;
-  }, [formatType, notSelectPassed]);
+  }, [formatType, notSelectPassed, value]);
   const handleChange = useCallback(
     (e) => {
-      const format = formatType === '2' ? 'YYYY-MM-DD HH:mm:ss' : formatType === '1' ? 'YYYY-MM-DD' : 'YYYY-MM-DD';
-      onChange && onChange(e.format(format));
+      onChange && onChange(e.valueOf());
     },
-    [onChange, formatType],
+    [onChange],
   );
   return (
     <div className={styles.container}>

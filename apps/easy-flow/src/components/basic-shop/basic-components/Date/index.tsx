@@ -29,7 +29,7 @@ const Date = (props: DatePickerProps & { readOnly: boolean; notSelectPassed: boo
       };
     }
     if (defaultValue) {
-      const value = moment(defaultValue, formatStr);
+      const value = typeof defaultValue === 'number' ? moment(defaultValue) : defaultValue;
       prop.defaultValue = value;
       if (location.pathname === `${match.url}`) {
         prop.value = value;
