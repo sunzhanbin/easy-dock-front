@@ -119,7 +119,9 @@ const EditorHeader: FC = () => {
           */}
           {pathName === formDesignPath && (
             <Tooltip title="预览">
-              <Icon className={styles.iconfont} type="yulan" onClick={handlePreview} />
+              <span>
+                <Icon className={styles.iconfont} type="yulan" onClick={handlePreview} />
+              </span>
             </Tooltip>
           )}
           {pathName === flowDesignPath && (

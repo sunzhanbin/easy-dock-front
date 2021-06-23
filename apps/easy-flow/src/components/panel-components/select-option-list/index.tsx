@@ -166,7 +166,9 @@ const SelectOptionList = (props: editProps) => {
                 }}
               >
                 <Tooltip title="删除">
-                  <Icon className={styles.iconfont} type="shanchu" />
+                  <span>
+                    <Icon className={styles.iconfont} type="shanchu" />
+                  </span>
                 </Tooltip>
               </div>
               <div
@@ -179,7 +181,9 @@ const SelectOptionList = (props: editProps) => {
                 }}
               >
                 <Tooltip title="拖动换行">
-                  <Icon className={styles.iconfont} type="caidan" />
+                  <span>
+                    <Icon className={styles.iconfont} type="caidan" />
+                  </span>
                 </Tooltip>
               </div>
               <Input

@@ -103,10 +103,14 @@ const SourceBox: FC<{
           </div>
           <div className={styles.operation}>
             <Tooltip title="复制">
-              <Icon className={styles.iconfont} type="fuzhi" onClick={handleCopy} />
+              <span>
+                <Icon className={styles.iconfont} type="fuzhi" onClick={handleCopy} />
+              </span>
             </Tooltip>
             <Tooltip title="删除">
-              <Icon className={styles.iconfont} type="shanchu" onClick={handleDelete} />
+              <span>
+                <Icon className={styles.iconfont} type="shanchu" onClick={handleDelete} />
+              </span>
             </Tooltip>
           </div>
           {moveConfig.up && (
