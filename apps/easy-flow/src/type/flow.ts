@@ -1,5 +1,3 @@
-import { AllComponentType } from '@type';
-
 export enum NodeType {
   // 开始节点
   StartNode = 1,
@@ -68,9 +66,9 @@ export interface AuditNode extends UserNode {
 
 export interface FillNode extends UserNode {
   type: NodeType.FillNode;
-  btnText?: {
-    submit?: ButtonAuth;
-    save?: ButtonAuth;
+  btnText: {
+    submit: ButtonAuth;
+    save: ButtonAuth;
   };
 }
 
@@ -125,57 +123,5 @@ export interface StartNode extends BaseNode {
 }
 
 export type Flow = AllNode[];
-
-export enum FlowDetailType {
-  MyInitiation = 1,
-  MyFinish = 2,
-  MyTodo = 3,
-}
-
-export enum NodeStatusType {
-  Processing = 1,
-  Terminated = 2,
-  Undo = 3,
-  Finish = 4,
-  Revert = 5,
-}
-
-export enum AuditRecordType {
-  APPROVE = 'APPROVE',
-  REJECT = 'REJECT',
-  TURN = 'TURN',
-  INSTANCE_STOP = 'INSTANCE_STOP',
-  START = 'START',
-  FORM_FILL = 'FORM_FILL',
-}
-
-type ComponentInfo = AllComponentType & {
-  title: string;
-};
-
-export interface FormMeta {
-  seletedTheme: string;
-  components: ComponentInfo[];
-  layout: [string, string, string, string][];
-  events?: {
-    onchange: {
-      fieldId: string;
-      value: string;
-      listeners: {
-        visible?: string[];
-        reset?: string[];
-      };
-    }[];
-  };
-  rules?: {
-    type: 'reg' | '<' | '>' | '=' | '||';
-    field: string;
-    validator?: RegExp | { type: 'ref'; value: string };
-    message?: string;
-    children?: Omit<NonNullable<FormMeta['rules']>[number], 'children'>[];
-  }[];
-}
-
-export type FormValue = { [key: string]: any };
 
 export type FieldTemplate = { id: string; name: string };

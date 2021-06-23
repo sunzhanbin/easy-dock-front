@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useState, FC, useCallback, useEffect } from 'react';
+import React, { memo, useMemo, useState, FC, useCallback, useRef } from 'react';
 import styled from 'styled-components';
 import FlowImage from '@assets/flow-big.png';
 import ScreenImage from '@assets/screen-big.png';
@@ -52,6 +52,9 @@ const CardContainer = styled.div`
           display: block;
           width: 20px;
           height: 20px;
+          &:hover {
+            color: #4c5cdb;
+          }
         }
       }
       .operation {
@@ -139,7 +142,9 @@ const Card: FC<{
 }> = ({ id, name, status, type, className, version, onChange }) => {
   const [isShowOperation, setIsShowOperation] = useState<boolean>(false);
   const [isShowModel, setIsShowModel] = useState<boolean>(false);
+  const [position, setPosition] = useState<'left' | 'right'>('left');
   const history = useHistory();
+  const containerRef = useRef<HTMLDivElement>(null);
   const statusObj: StatusMap = useMemo(() => {
     // 未发布(没有版本信息)的子应用为编排中状态
     if (!version) {
@@ -189,9 +194,13 @@ const Card: FC<{
     (e: React.MouseEvent) => {
       e.stopPropagation();
       setIsShowOperation(false);
+      const { x = 0 } = containerRef.current?.getBoundingClientRect() as DOMRect;
+      if (document.body.clientWidth - x < 400) {
+        setPosition('right');
+      }
       setIsShowModel(true);
     },
-    [setIsShowModel, setIsShowOperation],
+    [setIsShowModel, setIsShowOperation, setPosition],
   );
   const handleDelete = useCallback(
     (e) => {
@@ -218,6 +227,7 @@ const Card: FC<{
   return (
     <CardContainer
       className={className}
+      ref={containerRef}
       onClick={handleJump}
       onMouseLeave={() => {
         setIsShowOperation(false);
@@ -295,6 +305,7 @@ const Card: FC<{
         {isShowModel && (
           <AppModel
             type="edit"
+            position={position}
             className="edit_model"
             name={name}
             onClose={() => {

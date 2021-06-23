@@ -21,9 +21,9 @@ const SelectOptionList = (props: editProps) => {
   const [type, setType] = useState<OptionMode>(value?.type || 'custom');
   const [content, setContent] = useState<OptionItem[]>(value?.data || []);
   const [canDrag, setCanDrag] = useState<boolean>(false);
-  const [subAppKey, setSubAppKey] = useState<string>('');
+  const [subAppKey, setSubAppKey] = useState<string>(value?.subappId || '');
   const [appList, setAppList] = useState<(OptionItem & { versionId: number })[]>([]);
-  const [componentKey, setComponentKey] = useState<string>('');
+  const [componentKey, setComponentKey] = useState<string>(value?.fieldName || '');
   const [componentList, setComponentList] = useState<OptionItem[]>([]);
   const addItem = useCallback(() => {
     const list: OptionItem[] = [...content];
@@ -79,13 +79,11 @@ const SelectOptionList = (props: editProps) => {
     },
     [content],
   );
-  const handleChangeApp = useCallback(
-    (e) => {
-      setSubAppKey(e as string);
-      setComponentKey('');
+  const fetchFieldNames = useCallback(
+    (appList, selectedKey: string) => {
       let versionId: number = 0;
       for (let i = 0, len = appList.length; i < len; i++) {
-        if (appList[i].key === e) {
+        if (appList[i].key === selectedKey) {
           versionId = appList[i].versionId;
           break;
         }
@@ -104,25 +102,45 @@ const SelectOptionList = (props: editProps) => {
           });
       }
     },
+    [setComponentList],
+  );
+  const handleChangeApp = useCallback(
+    (e) => {
+      setSubAppKey(e as string);
+      setComponentKey('');
+      fetchFieldNames(appList, e);
+    },
     [appList],
   );
   const handleChangeComponent = useCallback((e) => {
     setComponentKey(e);
   }, []);
   useEffect(() => {
-    axios.get(`/subapp/${appId}/list/all/deployed`).then((res) => {
-      const list = res.data
-        .filter((app: { id: number }) => app.id !== subAppId)
-        .map((app: { name: string; id: number; version: { id: number } }) => ({
-          key: app.version.id,
-          value: app.name,
-          versionId: app.version.id,
-        }));
-      setAppList(list);
-    });
-  }, [subAppId]);
+    if (type === 'subapp') {
+      axios
+        .get(`/subapp/${appId}/list/all/deployed`)
+        .then((res) => {
+          const list = res.data
+            .filter((app: { id: number }) => app.id !== subAppId)
+            .map((app: { name: string; id: number; version: { id: number } }) => ({
+              key: app.id,
+              value: app.name,
+              versionId: app.version.id,
+            }));
+          setAppList(list);
+          return Promise.resolve(list);
+        })
+        .then((list) => {
+          fetchFieldNames(list, subAppKey);
+        });
+    }
+  }, [subAppId, type, subAppKey]);
   useEffect(() => {
-    onChange && onChange({ type, data: content, appId: subAppKey, fieldId: componentKey });
+    if (type === 'custom') {
+      onChange && onChange({ type, data: content });
+    } else if (type === 'subapp') {
+      onChange && onChange({ type, subappId: subAppKey, fieldName: componentKey });
+    }
   }, [type, content, subAppKey, componentKey]);
   const customContent = useMemo(() => {
     if (Array.isArray(content) && type === 'custom') {
@@ -183,10 +201,16 @@ const SelectOptionList = (props: editProps) => {
     return null;
   }, [type, content, canDrag, addItem, deleteItem, handleBlur, handleDragOver, handleDragstart, handleDrop]);
   const dictContent = useMemo(() => {
-    if (type === 'dictionaries') {
+    if (type === 'subapp') {
       return (
         <>
-          <Select placeholder="选择子应用" className={styles.dict_content} size="large" onChange={handleChangeApp}>
+          <Select
+            placeholder="选择子应用"
+            className={styles.dict_content}
+            size="large"
+            onChange={handleChangeApp}
+            {...(subAppKey ? { defaultValue: subAppKey } : null)}
+          >
             {appList.map(({ key, value }) => (
               <Option value={key} key={key}>
                 {value}
@@ -198,8 +222,8 @@ const SelectOptionList = (props: editProps) => {
               placeholder="选择控件"
               className={styles.dict_content}
               size="large"
-              {...(componentKey ? { value: componentKey } : null)}
               onChange={handleChangeComponent}
+              {...(componentKey ? { defaultValue: componentKey } : null)}
             >
               {componentList.map(({ key, value }) => (
                 <Option value={key} key={key}>
@@ -225,9 +249,9 @@ const SelectOptionList = (props: editProps) => {
           自定义数据
         </div>
         <div
-          className={classNames(styles.right, type === 'dictionaries' ? styles.active : '')}
+          className={classNames(styles.right, type === 'subapp' ? styles.active : '')}
           onClick={() => {
-            setType('dictionaries');
+            setType('subapp');
           }}
         >
           其他表单数据

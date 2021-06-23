@@ -25,6 +25,7 @@ function ButtonConfigs(props: ButtonConfigsProps) {
         className={styles.editor}
         text={value?.save?.text}
         enable={value?.save?.enable}
+        checkable={false}
         btnKey="save"
         onChange={handleButtonChange}
       >
@@ -35,6 +36,7 @@ function ButtonConfigs(props: ButtonConfigsProps) {
         className={styles.editor}
         text={value?.submit?.text}
         enable={value?.submit?.enable}
+        checkable={false}
         btnKey="submit"
         onChange={handleButtonChange}
       >

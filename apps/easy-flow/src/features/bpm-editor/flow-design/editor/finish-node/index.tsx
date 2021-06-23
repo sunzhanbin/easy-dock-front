@@ -6,15 +6,18 @@ import { updateNode } from '../../flow-slice';
 import { FinishNode } from '@type/flow';
 import { useAppDispatch } from '@/app/hooks';
 import { trimInputValue } from '../../util';
+import useValidateForm from '../../hooks/use-validate-form';
 import { name } from '../rules';
 
 interface FinishNodeEditorProps {
   node: FinishNode;
 }
 
+type FormValuesType = { name: string };
+
 function FinishNodeEditor(props: FinishNodeEditorProps) {
   const { node } = props;
-  const [form] = Form.useForm();
+  const [form] = Form.useForm<FormValuesType>();
   const dispatch = useAppDispatch();
   const handleFormValuesChange = useMemoCallback(
     debounce((_, allValues: { name: string }) => {
@@ -32,6 +35,8 @@ function FinishNodeEditor(props: FinishNodeEditorProps) {
       name: node.name,
     };
   }, [node]);
+
+  useValidateForm<FormValuesType>(form);
 
   return (
     <Form

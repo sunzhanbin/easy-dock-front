@@ -87,11 +87,11 @@ export default function SceneDetail() {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    axios.get<SceneShape>(`/app/${sceneId}`).then(({ data }) => {
+    axios.get<{ data: SceneShape }>(`/app/${sceneId}`).then(({ data }) => {
       setCurrentScene(data);
 
       // 获取项目所有应用
-      axios.get<SceneBaseType[]>(`/app/${data.project.id}/list/all`).then(({ data }) => {
+      axios.get<{ data: SceneBaseType[] }>(`/app/${data.project.id}/list/all`).then(({ data }) => {
         setSceneMenusItems(data);
       });
     });

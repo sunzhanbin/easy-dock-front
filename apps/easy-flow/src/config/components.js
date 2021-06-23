@@ -17,9 +17,7 @@ const componentSchema = {
         direction: 'vertical',
         required: true,
         requiredMessage: '请输入数据库字段名',
-        rules: [
-          { pattern: '^[a-zA-Z]+[a-zA-Z0-9_]*$', message: '请以字母开头,数字或下划线组成' }
-        ],
+        rules: [{ pattern: '^[a-zA-Z]+[a-zA-Z0-9_]*$', message: '请以字母开头,数字或下划线组成' }],
         isProps: false,
       },
       {
@@ -91,9 +89,7 @@ const componentSchema = {
         direction: 'vertical',
         required: true,
         requiredMessage: '请输入数据库字段名',
-        rules: [
-          { pattern: '^[a-zA-Z]+[a-zA-Z0-9_]*$', message: '请以字母开头,数字或下划线组成' }
-        ],
+        rules: [{ pattern: '^[a-zA-Z]+[a-zA-Z0-9_]*$', message: '请以字母开头,数字或下划线组成' }],
         isProps: false,
       },
       {
@@ -136,7 +132,7 @@ const componentSchema = {
         required: false,
         isProps: false,
       },
-    ]
+    ],
   },
   Select: {
     baseInfo: {
@@ -156,9 +152,7 @@ const componentSchema = {
         direction: 'vertical',
         required: true,
         requiredMessage: '请输入数据库字段名',
-        rules: [
-          { pattern: '^[a-zA-Z]+[a-zA-Z0-9_]*$', message: '请以字母开头,数字或下划线组成' }
-        ],
+        rules: [{ pattern: '^[a-zA-Z]+[a-zA-Z0-9_]*$', message: '请以字母开头,数字或下划线组成' }],
         isProps: false,
       },
       {
@@ -253,9 +247,7 @@ const componentSchema = {
         direction: 'vertical',
         required: true,
         requiredMessage: '请输入数据库字段名',
-        rules: [
-          { pattern: '^[a-zA-Z]+[a-zA-Z0-9_]*$', message: '请以字母开头,数字或下划线组成' }
-        ],
+        rules: [{ pattern: '^[a-zA-Z]+[a-zA-Z0-9_]*$', message: '请以字母开头,数字或下划线组成' }],
         isProps: false,
       },
       {
@@ -324,9 +316,7 @@ const componentSchema = {
         direction: 'vertical',
         required: true,
         requiredMessage: '请输入数据库字段名',
-        rules: [
-          { pattern: '^[a-zA-Z]+[a-zA-Z0-9_]*$', message: '请以字母开头,数字或下划线组成' }
-        ],
+        rules: [{ pattern: '^[a-zA-Z]+[a-zA-Z0-9_]*$', message: '请以字母开头,数字或下划线组成' }],
         isProps: false,
       },
       {
@@ -395,9 +385,7 @@ const componentSchema = {
         direction: 'vertical',
         required: true,
         requiredMessage: '请输入数据库字段名',
-        rules: [
-          { pattern: '^[a-zA-Z]+[a-zA-Z0-9_]*$', message: '请以字母开头,数字或下划线组成' }
-        ],
+        rules: [{ pattern: '^[a-zA-Z]+[a-zA-Z0-9_]*$', message: '请以字母开头,数字或下划线组成' }],
         isProps: false,
       },
       {
@@ -431,11 +419,11 @@ const componentSchema = {
         range: [
           {
             key: '1',
-            value: '年-月-日'
+            value: '年-月-日',
           },
           {
             key: '2',
-            value: '年-月-日 时:分:秒'
+            value: '年-月-日 时:分:秒',
           },
         ],
         required: false,
@@ -469,7 +457,7 @@ const componentSchema = {
         required: false,
         isProps: false,
       },
-    ]
+    ],
   },
   InputNumber: {
     baseInfo: {
@@ -489,9 +477,7 @@ const componentSchema = {
         direction: 'vertical',
         required: true,
         requiredMessage: '请输入数据库字段名',
-        rules: [
-          { pattern: '^[a-zA-Z]+[a-zA-Z0-9_]*$', message: '请以字母开头,数字或下划线组成' }
-        ],
+        rules: [{ pattern: '^[a-zA-Z]+[a-zA-Z0-9_]*$', message: '请以字母开头,数字或下划线组成' }],
         isProps: false,
       },
       {
@@ -534,7 +520,7 @@ const componentSchema = {
         required: false,
         isProps: false,
       },
-    ]
+    ],
   },
   DescText: {
     baseInfo: {
@@ -546,7 +532,7 @@ const componentSchema = {
     },
     config: [
       {
-        key: 'content',
+        key: 'value',
         defaultValue: '',
         label: '内容',
         type: 'Editor',
@@ -563,8 +549,8 @@ const componentSchema = {
         required: false,
         isProps: false,
       },
-    ]
-  }
+    ],
+  },
 };
 
 export default componentSchema;

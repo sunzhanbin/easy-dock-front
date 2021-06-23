@@ -11,6 +11,7 @@ import FieldAuths from '../components/field-auths';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { trimInputValue } from '../../util';
 import { name } from '../rules';
+import useValidateForm from '../../hooks/use-validate-form';
 import styles from './index.module.scss';
 
 interface FillNodeEditorProps {
@@ -30,6 +31,9 @@ function FillNodeEditor(props: FillNodeEditorProps) {
   const { node, prevNodes } = props;
   const { fieldsTemplate } = useAppSelector(flowDataSelector);
   const [form] = Form.useForm<FormValuesType>();
+
+  useValidateForm<FormValuesType>(form);
+
   const formInitialValues = useMemo(() => {
     return {
       name: node.name,

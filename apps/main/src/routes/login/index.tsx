@@ -10,6 +10,16 @@ import { ROUTES, envs } from '@consts';
 import { Loading } from '@components';
 import styles from './index.module.scss';
 
+type LoginResponseType = {
+  data?: {
+    token: string;
+    embedUser: {
+      roles: string[];
+    };
+  };
+  resultMessage: string;
+};
+
 export default function Login() {
   const [form] = Form.useForm();
   const { search } = useLocation();
@@ -22,7 +32,7 @@ export default function Login() {
     try {
       const values = await form.validateFields();
       const data = Object.assign({}, { loginType: 1 }, values);
-      const loginResponse = await axios.post('/api/auth/v1/login', data, {
+      const loginResponse = await axios.post<LoginResponseType>('/api/auth/v1/login', data, {
         baseURL: envs.COMMON_LOGIN_DOMAIN,
       });
 
@@ -31,6 +41,7 @@ export default function Login() {
 
         if (hasAuth) {
           const token = loginResponse.data.token;
+
           cookie.set('token', token, { expires: 1 });
           axios.defaults.headers.auth = token;
 
@@ -49,7 +60,7 @@ export default function Login() {
           message.error('您没有访问权限');
         }
       } else {
-        message.error((loginResponse as any).resultMessage);
+        message.error(loginResponse.resultMessage);
       }
     } finally {
       setLoading(false);

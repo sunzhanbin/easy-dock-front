@@ -10,6 +10,7 @@ import ButtonConfigs from './button-configs';
 import FieldAuths from '../components/field-auths';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { trimInputValue } from '../../util';
+import useValidateForm from '../../hooks/use-validate-form';
 import { name } from '../rules';
 
 interface AuditNodeEditorProps {
@@ -32,6 +33,9 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
   const { node, prevNodes } = props;
   const { fieldsTemplate } = useAppSelector(flowDataSelector);
   const [form] = Form.useForm<FormValuesType>();
+
+  useValidateForm<FormValuesType>(form);
+
   const formInitialValues = useMemo(() => {
     return {
       name: node.name,

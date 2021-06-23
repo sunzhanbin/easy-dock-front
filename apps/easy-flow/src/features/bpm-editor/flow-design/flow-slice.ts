@@ -21,6 +21,7 @@ import { fielduuid, createNode } from './util';
 
 export type FlowType = {
   loading: boolean;
+  saving: boolean;
   data: Flow;
   dirty: boolean;
   invalidNodesMap: {
@@ -38,6 +39,7 @@ export type FlowType = {
 
 const flowInitial: FlowType = {
   loading: false,
+  saving: false,
   data: [],
   dirty: false,
   invalidNodesMap: {},
@@ -141,6 +143,9 @@ const flow = createSlice({
   name: 'flow',
   initialState: flowInitial,
   reducers: {
+    setSaving(state, { payload }: PayloadAction<boolean>) {
+      state.saving = payload;
+    },
     setFieldsTemplate(state, { payload }: PayloadAction<FlowType['fieldsTemplate']>) {
       state.fieldsTemplate = payload;
     },
@@ -189,7 +194,7 @@ const flow = createSlice({
 });
 
 const flowActions = flow.actions;
-export const { setLoading, updateNode, delNode, setCacheMembers, setDirty } = flow.actions;
+export const { setLoading, updateNode, delNode, setCacheMembers, setDirty, setSaving } = flow.actions;
 
 function getFieldsTemplate(fieldsTemplate: FlowType['fieldsTemplate']) {
   return fieldsTemplate.reduce((fieldsAuths, item) => {
@@ -208,8 +213,8 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
 
     // 获取流程数据和所需字段
     let [{ data: flowResponse }, { data: fields }] = await Promise.all([
-      builderAxios.get<{ meta: Flow | null }>(`/process/${appkey}`),
-      builderAxios.get<{ field: string; name: string }[]>(`/form/subapp/${appkey}/components`),
+      builderAxios.get<{ data: { meta: Flow | null } }>(`/process/${appkey}`),
+      builderAxios.get<{ data: { field: string; name: string }[] }>(`/form/subapp/${appkey}/components`),
     ]);
 
     const fieldsTemplate: FlowType['fieldsTemplate'] = fields.map((item) => ({ name: item.name, id: item.field }));
@@ -236,6 +241,14 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
       const fillNode: FillNode = createNode(NodeType.FillNode, '填写节点');
 
       fillNode.fieldsAuths = getFieldsTemplate(fieldsTemplate);
+      fillNode.btnText = {
+        submit: {
+          enable: true,
+        },
+        save: {
+          enable: true,
+        },
+      };
 
       flowData = [startNode, fillNode, finishNode];
     } else {
@@ -286,25 +299,31 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
 export const save = createAsyncThunk<void, string, { state: RootState }>(
   'flow/save',
   async (subappId, { getState, dispatch }) => {
+    dispatch(setSaving(true));
+
     const flow = getState().flow;
     const flowData = flow.data;
     const validResult: FlowType['invalidNodesMap'] = valid(flowData, {});
 
-    if (Object.keys(validResult).length) {
-      dispatch(flowActions.setInvalidMaps(validResult));
-
-      message.error('数据填写不完整');
-
-      return Promise.reject('数据填写不完整');
-    }
-
-    if (!flow.dirty) {
-      message.success('保存成功');
-
-      return;
-    }
-
     try {
+      await new Promise<void>((resolve, reject) => {
+        if (Object.keys(validResult).length) {
+          dispatch(flowActions.setInvalidMaps(validResult));
+
+          message.error('数据填写不完整');
+
+          return reject('数据填写不完整');
+        } else {
+          resolve();
+        }
+      });
+
+      if (!flow.dirty) {
+        message.success('保存成功');
+
+        return;
+      }
+
       dispatch(setLoading(true));
 
       await builderAxios.post('/process/add', { meta: flowData, subappId });
@@ -313,6 +332,7 @@ export const save = createAsyncThunk<void, string, { state: RootState }>(
       message.success('保存成功');
     } finally {
       dispatch(setLoading(false));
+      dispatch(setSaving(false));
     }
   },
 );
@@ -321,6 +341,8 @@ export const saveWithForm = createAsyncThunk<void, string, { state: RootState }>
   'flow/save-with-form',
   async (subappId, { getState, dispatch }) => {
     try {
+      dispatch(setSaving(true));
+
       const { flow, formDesign } = getState();
       const validResult: FlowType['invalidNodesMap'] = valid(flow.data, {});
 
@@ -353,7 +375,7 @@ export const saveWithForm = createAsyncThunk<void, string, { state: RootState }>
       // 如果不需要更新flow数据
       if (!isNeedUpdateFieldTemplate && !flow.dirty) return;
 
-      dispatch(flowActions.setLoading(true));
+      dispatch(setLoading(true));
       // 需要根据表单字段更新flow
       if (isNeedUpdateFieldTemplate) {
         const flowData = cloneDeep(flow.data);
@@ -387,7 +409,8 @@ export const saveWithForm = createAsyncThunk<void, string, { state: RootState }>
 
       dispatch(flowActions.setDirty(false));
     } finally {
-      dispatch(flowActions.setLoading(false));
+      dispatch(setSaving(false));
+      dispatch(setLoading(false));
     }
   },
 );

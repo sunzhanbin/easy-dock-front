@@ -4,11 +4,11 @@ import { Icon } from '@/components';
 import { Input, Button, Form } from 'antd';
 import FlowImage from '@assets/flow-small.png';
 import ScreenImage from '@assets/screen-small.png';
+import classNames from 'classnames';
 
 const Container = styled.div`
   position: absolute;
   top: 104px;
-  left: 0;
   z-index: 8;
   width: 392px;
   background: #ffffff;
@@ -86,7 +86,13 @@ const Container = styled.div`
         }
         .flow {
           cursor: pointer;
-          border: 1px solid rgba(24, 31, 67, 0.5);
+          border: 1px solid rgba(24, 31, 67, 0.12);
+          &:hover {
+            border: 1px solid rgba(24, 31, 67, 0.5);
+          }
+          &.active {
+            border: 1px solid rgba(24, 31, 67, 0.5);
+          }
         }
       }
       &.mt24 {
@@ -106,13 +112,21 @@ const Container = styled.div`
 
 const AppModel: FC<{
   type: 'create' | 'edit';
+  position: 'left' | 'right';
   name?: string;
   className?: string;
   onClose: () => void;
   onOk: (name: string, type: number) => void;
-}> = ({ type, name, className, onClose, onOk }) => {
+}> = ({ type, position, name, className, onClose, onOk }) => {
   const [form] = Form.useForm();
   const [appName, setAppName] = useState<string>(name || '');
+  const [selectedType, setSelectedType] = useState<'flow' | 'screen'>();
+  const containerStyle = useMemo(() => {
+    if (position === 'left') {
+      return { left: 0 };
+    }
+    return { right: 0 };
+  }, [position]);
   const handleClose = useCallback(() => {
     onClose && onClose();
   }, [onClose]);
@@ -120,11 +134,12 @@ const AppModel: FC<{
     form.validateFields().then(() => {
       onOk && onOk(appName, 2);
     });
-  }, [onOk, appName]);
+  }, [onOk, appName, form]);
 
   return (
     <Container
       className={className}
+      style={containerStyle}
       onClick={(e) => {
         e.stopPropagation();
       }}
@@ -164,7 +179,12 @@ const AppModel: FC<{
           <div className="form-item mt24">
             <div className="label">子应用类型</div>
             <div className="type">
-              <div className="flow">
+              <div
+                className={classNames('flow', selectedType === 'flow' ? 'active' : '')}
+                onClick={() => {
+                  setSelectedType('flow');
+                }}
+              >
                 <img src={FlowImage} alt="FlowImage" className="image" />
                 <div className="text">
                   <div className="title">新建流程子应用</div>

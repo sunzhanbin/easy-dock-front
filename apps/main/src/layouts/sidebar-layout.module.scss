@@ -1,0 +1,79 @@
+@import '@common/styles/var.scss';
+@import '@common/styles/mixin.scss';
+
+.layout {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+
+  .sidebar {
+    width: 240px;
+    border-right: 1px solid rgba(#181f43, 0.12);
+    background-color: rgba(#182743, 0.04);
+
+    .title {
+      margin-top: 12px;
+      margin-bottom: 24px;
+      line-height: 32px;
+      font-size: 20px;
+      color: rgba(#000, 0.85);
+      text-align: center;
+    }
+
+    .img {
+      display: block;
+      width: 86px;
+      height: 86px;
+      margin: auto;
+      margin-top: 32px;
+      border-radius: 3px;
+      border: 1px solid #fff;
+    }
+
+    .menus {
+      .menu {
+        display: flex;
+        align-items: center;
+        padding: 13px 24px;
+        color: $primary-color;
+        background-color: #fff;
+
+        .icon {
+          flex-shrink: 0;
+          margin-right: 10px;
+          color: inherit;
+          font-size: 20px;
+        }
+
+        .text {
+          flex: 1 1 0;
+          line-height: 22px;
+          font-size: 14px;
+        }
+      }
+    }
+  }
+
+  .main {
+    flex: 1 1 0;
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      height: 64px;
+      padding-right: 54px;
+      border-bottom: 1px solid rgba(#181f43, 0.12);
+    }
+
+    .content {
+      flex: 1 1 0;
+      height: 100vh;
+      overflow-y: auto;
+
+      &.with-header {
+        height: calc(100vh - 65px);
+      }
+    }
+  }
+}

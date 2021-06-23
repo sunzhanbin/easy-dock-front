@@ -1,19 +1,19 @@
-import React, { memo, useMemo } from 'react';
-import { useLocation } from 'react-router';
+import { memo, useMemo } from 'react';
 import { Select } from 'antd';
-import { SelectOptionItem } from '@/type';
+import { OptionItem } from '@/type';
 import { SelectProps } from 'antd/lib/select';
 
 const { Option } = Select;
 
 const SelectComponent = (
-  props: SelectProps<string> & { readOnly: boolean; multiple: boolean; dataSource: SelectOptionItem },
+  props: SelectProps<string> & {
+    readOnly: boolean;
+    multiple: boolean;
+    options: OptionItem;
+  },
 ) => {
-  const { defaultValue, multiple, showSearch, dataSource, readOnly, onChange } = props;
-  const location = useLocation();
-  const optionList = useMemo(() => {
-    return dataSource?.data || [];
-  }, [dataSource]);
+  const { defaultValue, multiple, showSearch, options, readOnly, onChange } = props;
+
   const propList = useMemo(() => {
     const prop: { [k: string]: string | boolean | Function } = {
       size: 'large',
@@ -27,16 +27,13 @@ const SelectComponent = (
     }
     if (defaultValue) {
       prop.defaultValue = defaultValue as string;
-      if (location.pathname === '/form-design') {
-        prop.value = defaultValue as string;
-      }
     }
     return Object.assign({}, props, prop);
-  }, [defaultValue, multiple, showSearch, readOnly, location, props, onChange]);
+  }, [defaultValue, multiple, showSearch, readOnly, props, onChange]);
   return (
     <Select {...propList} style={{ width: '100%' }}>
-      {optionList.map(({ key, value }) => (
-        <Option value={key} key={key}>
+      {(options || []).map(({ key, value }) => (
+        <Option value={key as string} key={key}>
           {value}
         </Option>
       ))}

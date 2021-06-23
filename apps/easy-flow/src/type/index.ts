@@ -1,5 +1,4 @@
 import { Rule } from 'antd/lib/form';
-import { Moment } from 'moment';
 
 export type FieldType = 'Select' | 'Input' | 'Textarea' | 'Radio' | 'Checkbox' | 'Date' | 'InputNumber' | 'DescText';
 
@@ -114,7 +113,7 @@ export type SelectBaseField = {
 } & DataBaseField &
   BaseField;
 
-export type OptionMode = 'custom' | 'dictionaries';
+export type OptionMode = 'custom' | 'subapp';
 export type OptionItem = {
   key: string;
   value: string;
@@ -122,8 +121,8 @@ export type OptionItem = {
 export type SelectOptionItem = {
   type: OptionMode;
   data?: OptionItem[];
-  appId?: string;
-  fieldId?: string;
+  subappId?: string;
+  fieldName?: string;
 };
 
 export type SelectField = {
@@ -245,4 +244,8 @@ export type FormMeta = {
   schema: { [k: string]: SchemaItem };
   rules?: FormRule[];
   themes?: Theme[];
+};
+
+export type Datasource = {
+  [key: string]: { key: string; value: string }[];
 };

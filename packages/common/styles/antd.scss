@@ -339,3 +339,25 @@
   border-radius: 3px;
   border: none;
 }
+
+// 定制表格
+.ant-table {
+  .ant-table-thead {
+    & > tr {
+      & > th {
+        border-top: 1px solid rgba(24, 31, 67, 0.12);
+        background-color: #fff;
+      }
+    }
+  }
+  .ant-table-tbody {
+    & > tr.ant-table-row:hover {
+      & > td {
+        background: rgba(76, 92, 219, 0.06);
+      }
+    }
+  }
+  td.ant-table-column-sort {
+    background-color: #fff;
+  }
+}

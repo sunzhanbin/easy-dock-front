@@ -1,4 +1,3 @@
-import './index.css';
 import appConfig from './init';
 import ReactDOM from 'react-dom';
 import { Router } from 'react-router-dom';
