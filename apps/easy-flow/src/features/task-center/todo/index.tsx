@@ -5,9 +5,11 @@ import moment from 'moment';
 import { dynamicRoutes } from '@/consts/route';
 import { getStayTime } from '@utils/index';
 import { runtimeAxios } from '@/utils';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Pagination, TodoItem, UserItem } from '../type';
 import { useAppDispatch } from '@/app/hooks';
+import useApp from '@/hooks/use-app';
+import useMemoCallback from '@common/hooks/use-memo-callback';
 import { setTodoNum } from '../taskcenter-slice';
 
 const { RangePicker } = DatePicker;
@@ -16,10 +18,7 @@ const { Option } = Select;
 const ToDo: FC<{}> = () => {
   const [form] = Form.useForm();
   const history = useHistory();
-  const location = useLocation();
-  const appId = useMemo(() => {
-    return location.pathname.slice(13, -5);
-  }, [location]);
+  const app = useApp();
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState<boolean>(false);
   const [optionList, setOptionList] = useState<UserItem[]>([]);
@@ -29,9 +28,12 @@ const ToDo: FC<{}> = () => {
     total: 0,
     showSizeChanger: true,
   });
+
   const [data, setData] = useState<TodoItem[]>([]);
   const [sortDirection, setSortDirection] = useState<'DESC' | 'ASC'>('DESC');
-  const fetchData = useCallback(() => {
+  const fetchData = useMemoCallback(() => {
+    if (!app) return;
+
     setLoading(true);
     const { current, pageSize } = pagination;
     const formValues = form.getFieldsValue(true);
@@ -57,7 +59,7 @@ const ToDo: FC<{}> = () => {
       filter.endTime = endTime;
     }
     const params = {
-      appId,
+      appId: app.id,
       filter,
       sortDirection,
     };
@@ -73,7 +75,7 @@ const ToDo: FC<{}> = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, [appId, pagination, form, sortDirection]);
+  });
   const fetchOptionList = useCallback(() => {
     runtimeAxios.post('/user/search', { index: 0, size: 100, keyword: '' }).then((res) => {
       const list = res.data?.data || [];
@@ -167,8 +169,8 @@ const ToDo: FC<{}> = () => {
     setPagination((pagination) => ({ ...pagination, ...newPagination }));
   }, []);
   useEffect(() => {
-    fetchData();
-  }, [pagination.current, pagination.pageSize, sortDirection]);
+    app && fetchData();
+  }, [fetchData, app]);
   useEffect(() => {
     fetchOptionList();
   }, []);

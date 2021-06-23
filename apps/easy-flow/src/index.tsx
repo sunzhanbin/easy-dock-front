@@ -1,3 +1,5 @@
+import 'antd/dist/antd.css';
+import './styles/base.scss';
 import appConfig from './init';
 import ReactDOM from 'react-dom';
 import { Router } from 'react-router-dom';
@@ -9,15 +11,15 @@ import App from './App';
 
 const APP_CONTAINER_ID = '#easy-flow-root';
 
-export async function mount(props?: { container: HTMLElement; basename: string }) {
-  const { container, basename = '/' } = props || {};
+export async function mount(props?: { container: HTMLElement; basename: string; appId: string }) {
+  const { container, basename = '/', appId } = props || {};
   const history = createBrowserHistory({ basename });
 
   ReactDOM.render(
     <AntdProvider>
       <Provider store={store}>
         <Router history={history}>
-          <App />
+          <App appId={appId} />
         </Router>
       </Provider>
     </AntdProvider>,

@@ -7,6 +7,7 @@ import classNames from 'classnames';
 import { useHistory, useLocation } from 'react-router-dom';
 import moment from 'moment';
 import { dynamicRoutes } from '@/consts/route';
+import useApp from '@/hooks/use-app';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -60,9 +61,7 @@ const Start: FC<{}> = () => {
   const [form] = Form.useForm();
   const history = useHistory();
   const location = useLocation();
-  const appId = useMemo(() => {
-    return location.pathname.slice(13, -6);
-  }, [location]);
+  const app = useApp();
   const [loading, setLoading] = useState<boolean>(false);
   const [sortDirection, setSortDirection] = useState<'DESC' | 'ASC'>('DESC');
   const [pagination, setPagination] = useState<Pagination>({
@@ -144,6 +143,8 @@ const Start: FC<{}> = () => {
     ];
   }, []);
   const fetchData = useCallback(() => {
+    if (!app) return;
+
     setLoading(true);
     const formValues = form.getFieldsValue(true);
     const { current: pageIndex, pageSize } = pagination;
@@ -157,7 +158,7 @@ const Start: FC<{}> = () => {
       endTime = moment(timeRange[1]._d).valueOf();
     }
     const params: { [K: string]: string | number } = {
-      appId,
+      appId: app.id,
       pageIndex,
       pageSize,
       sortDirection,
@@ -183,7 +184,7 @@ const Start: FC<{}> = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, [appId, pagination, form, sortDirection]);
+  }, [app, pagination, form, sortDirection]);
   const handleKeyUp = useCallback((e) => {
     if (e.keyCode === 13) {
       fetchData();
