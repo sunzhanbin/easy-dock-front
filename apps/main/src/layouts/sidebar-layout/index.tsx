@@ -43,8 +43,6 @@ function SidebarLayout() {
   return (
     <>
       <div className={styles.layout}>
-        {loading && <Loading />}
-
         {showHeader && (
           <div className={styles.sidebar}>
             <div className={styles.info}>
@@ -72,6 +70,8 @@ function SidebarLayout() {
           )}
 
           <div className={styles.content}>
+            {loading && <Loading />}
+
             {
               <Suspense fallback={fallback}>
                 <Route path={ROUTES.APP_TASK_CENTER} component={TaskCenter}></Route>

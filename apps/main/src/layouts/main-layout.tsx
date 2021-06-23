@@ -40,7 +40,7 @@ export default function PrimaryLayout() {
         <Route path={ROUTES.SCENE_MANAGE} exact component={ScenesListPage}></Route>
         <Route path={ROUTES.SCENE_DETAIL} component={AppPage}></Route>
         <Route path={ROUTES.INTEGRATION} component={IntegrationPage}></Route>
-        <Route path={ROUTES.INDEX} component={AppsRuntimePage}></Route>
+        <Route path={ROUTES.INDEX} exact component={AppsRuntimePage}></Route>
         <Route path={microsUrls} component={MicroPage}></Route>
       </Suspense>
     </>
