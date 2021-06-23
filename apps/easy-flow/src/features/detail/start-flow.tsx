@@ -13,6 +13,7 @@ import Form from '@components/form-engine';
 import Header from '@components/header';
 import useSubapp from '@/hooks/use-subapp';
 import styles from './index.module.scss';
+import moment from 'moment';
 
 type DataType = {
   processMeta: FillNode;
@@ -83,7 +84,12 @@ function StartFlow() {
     if (!formRef.current || !subApp) return;
 
     const values = await formRef.current.validateFields();
-
+    // 处理日期，将其转化为时间戳
+    Object.keys(values).forEach((key: string) => {
+      if (values[key]?._isAMomentObject) {
+        values[key] = moment(values[key]).valueOf();
+      }
+    });
     await runtimeAxios.post(`/process_instance/start`, {
       formData: values,
       versionId: subApp.version.id,

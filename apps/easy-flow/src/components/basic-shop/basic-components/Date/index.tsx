@@ -6,7 +6,7 @@ import moment, { Moment } from 'moment';
 import { useRouteMatch } from 'react-router-dom';
 
 const Date = (props: DatePickerProps & { readOnly: boolean; notSelectPassed: boolean }) => {
-  const { format, notSelectPassed, defaultValue, readOnly, onChange } = props;
+  const { format, notSelectPassed, defaultValue, readOnly, value, onChange } = props;
   const location = useLocation();
   const match = useRouteMatch();
   const propList = useMemo(() => {
@@ -32,6 +32,13 @@ const Date = (props: DatePickerProps & { readOnly: boolean; notSelectPassed: boo
       const value = moment(defaultValue, formatStr);
       prop.defaultValue = value;
       if (location.pathname === `${match.url}`) {
+        prop.value = value;
+      }
+    }
+    if (value) {
+      if (typeof value === 'number') {
+        prop.value = moment(value);
+      } else if ((value as any)._isAMomentObject) {
         prop.value = value;
       }
     }
