@@ -65,7 +65,7 @@ export async function fetchDataSource(byId: { [k: string]: any }) {
       if (dataSource.type === 'custom') {
         allPromises.push(
           Promise.resolve(dataSource.data).then((data) => {
-            source[object.fieldName] = data;
+            source[object.fieldName || object.id] = data;
           }),
         );
       } else if (dataSource.type === 'subapp') {
@@ -74,7 +74,7 @@ export async function fetchDataSource(byId: { [k: string]: any }) {
           allPromises.push(
             runtimeAxios.get(`/subapp/${subappId}/form/${fieldName}/data`).then((res) => {
               const list = (res.data?.data || []).map((val: string) => ({ key: val, value: val }));
-              source[object.fieldName] = list;
+              source[object.fieldName || object.id] = list;
             }),
           );
         }

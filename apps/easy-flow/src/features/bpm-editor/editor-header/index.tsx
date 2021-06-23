@@ -1,5 +1,6 @@
-import { FC, memo, useCallback, useMemo } from 'react';
+import { FC, memo, useCallback, useMemo, useState } from 'react';
 import { Button, Tooltip, message } from 'antd';
+import PreviewModal from '@components/preview-model';
 import { useHistory, useRouteMatch, NavLink, useLocation, useParams } from 'react-router-dom';
 import { save, saveWithForm } from '../flow-design/flow-slice';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
@@ -13,6 +14,7 @@ import styles from './index.module.scss';
 
 const EditorHeader: FC = () => {
   const dispatch = useAppDispatch();
+  const [showModel, setShowModel] = useState<boolean>(false);
   const { name: appName, appId } = useAppSelector(subAppSelector);
   const layout = useAppSelector(layoutSelector);
   const history = useHistory();
@@ -24,9 +26,10 @@ const EditorHeader: FC = () => {
     return `${match.url}/form-design`;
   }, [match]);
   const handlePreview = useCallback(() => {
-    if (pathName === formDesignPath) {
-      history.push(`${match.url}/preview-form`);
-    }
+    // if (pathName === formDesignPath) {
+    //   history.push(`${match.url}/preview-form`);
+    // }
+    setShowModel(true);
   }, [pathName, history, formDesignPath, match]);
   const handlePrev = useCallback(() => {
     if (pathName === flowDesignPath) {
@@ -95,6 +98,14 @@ const EditorHeader: FC = () => {
             replace={true}
             to={`${match.url}/flow-design`}
             activeClassName={styles.active}
+            style={{
+              cursor: layout.length === 0 ? 'not-allowed' : 'pointer',
+            }}
+            onClick={(e) => {
+              if (layout.length === 0) {
+                e.preventDefault();
+              }
+            }}
           >
             <span className={styles.number}>02</span>
             <span>流程设计</span>
@@ -119,8 +130,14 @@ const EditorHeader: FC = () => {
           <Button type="primary" ghost className={styles.save} size="large" onClick={handleSave}>
             保存
           </Button>
-          {pathName === formDesignPath && layout.length > 0 && (
-            <Button type="primary" className={styles.next} size="large" onClick={handleNext}>
+          {pathName === formDesignPath && (
+            <Button
+              type="primary"
+              className={styles.next}
+              size="large"
+              onClick={handleNext}
+              disabled={layout.length === 0}
+            >
               下一步
             </Button>
           )}
@@ -137,6 +154,14 @@ const EditorHeader: FC = () => {
           )}
         </div>
       </Header>
+      {showModel && (
+        <PreviewModal
+          visible={showModel}
+          onClose={() => {
+            setShowModel(false);
+          }}
+        />
+      )}
     </div>
   );
 };

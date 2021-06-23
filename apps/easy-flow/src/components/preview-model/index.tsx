@@ -1,30 +1,31 @@
-import { memo, FC, useMemo, useCallback, useState, useEffect } from 'react';
+import { memo, FC, useMemo, useState, useEffect } from 'react';
+import { Modal } from 'antd';
+import { Icon } from '@common/components';
 import { useAppSelector } from '@/app/hooks';
-import { componentPropsSelector, layoutSelector, subAppSelector } from '../form-design/formzone-reducer';
+import {
+  componentPropsSelector,
+  layoutSelector,
+  subAppSelector,
+} from '@/features/bpm-editor/form-design/formzone-reducer';
 import FormEngine from '@components/form-engine';
 import { Datasource, FormMeta } from '@type/detail';
-import { FieldAuthsMap } from '@type/flow';
-import { useHistory } from 'react-router-dom';
-import { Icon } from '@common/components';
-import styles from './index.module.scss';
+import { FieldAuthsMap, AuthType } from '@type/flow';
 import { ComponentConfig } from '@/type';
 import { fetchDataSource } from '@/apis/detail';
+import styles from './index.module.scss';
 
 const propsKey = ['defaultValue', 'showSearch'];
 
-const PreviewForm: FC = () => {
+const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, onClose }) => {
   const { name: appName } = useAppSelector(subAppSelector);
   const layout = useAppSelector(layoutSelector);
-  const byId = useAppSelector(componentPropsSelector);
-  const history = useHistory();
+  const byId: { [k: string]: any } = useAppSelector(componentPropsSelector);
   const [dataSource, setDataSource] = useState<Datasource>({});
   useEffect(() => {
     fetchDataSource(byId).then((res) => {
-      console.info(res, 'res');
       setDataSource(res);
     });
-  }, [byId]);
-
+  }, []);
   const formDesign = useMemo(() => {
     const components: ComponentConfig[] = [];
     Object.keys(byId).forEach((id) => {
@@ -54,24 +55,33 @@ const PreviewForm: FC = () => {
   const auths = useMemo(() => {
     const res: FieldAuthsMap = {};
     Object.keys(byId).forEach((id) => {
-      res[id] = 2;
+      const { fieldName = '' } = byId[id];
+      res[fieldName || id] = AuthType.Edit;
     });
     return res;
   }, [byId]);
-  const handleClose = useCallback(() => {
-    history.goBack();
-  }, [history]);
-  return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <div className={styles.title}>预览表单</div>
-        <div className={styles.close} onClick={handleClose}>
-          <Icon className={styles.iconfont} type="guanbi" />
+  const title = useMemo(() => {
+    return (
+      <div className="header">
+        <div className="title">预览表单</div>
+        <div className="close" onClick={onClose}>
+          <Icon className="iconfont" type="guanbi" />
         </div>
       </div>
-      <div className={styles.content}>
-        <div className={styles.title}>{appName}</div>
-        <div className={styles.form_content}>
+    );
+  }, []);
+  return (
+    <Modal
+      visible={visible}
+      title={title}
+      footer={null}
+      onCancel={onClose}
+      wrapClassName={styles.container}
+      destroyOnClose={true}
+    >
+      <div className="content">
+        <div className="title">{appName}</div>
+        <div className="form_content">
           <FormEngine
             datasource={dataSource}
             initialValue={{}}
@@ -80,8 +90,8 @@ const PreviewForm: FC = () => {
           ></FormEngine>
         </div>
       </div>
-    </div>
+    </Modal>
   );
 };
 
-export default memo(PreviewForm);
+export default memo(PreviewModal);

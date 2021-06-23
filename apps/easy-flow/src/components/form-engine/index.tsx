@@ -85,12 +85,12 @@ const FormDetail = React.forwardRef(function FormDetail(
       if (initialValue && initialValue[fieldName] !== undefined) {
         formValues[fieldName] = initialValue[fieldName];
       } else {
-        formValues[fieldName] = com.props.defaultValue;
+        formValues[fieldName || id] = com.props.defaultValue || com.config.value;
       }
 
       comMaps[id] = com;
       // 流程编排中没有配置fieldAuths这个字段默认可见
-      visbles[fieldName] = fieldsAuths[fieldName] !== AuthType.Denied;
+      visbles[fieldName || id] = fieldsAuths[fieldName || id] !== AuthType.Denied;
     });
 
     // 设置表单初始值
@@ -122,18 +122,17 @@ const FormDetail = React.forwardRef(function FormDetail(
         return (
           <Row key={index} className={styles.row}>
             {formRow.map((fieldId) => {
-              const { config, props = {} } = compMaps[fieldId];
-              const { fieldName, colSpace, label, desc } = config;
+              const { config = {}, props = {} } = compMaps[fieldId];
+              const { fieldName = '', colSpace = '', label = '', desc = '' } = config;
               const isRequired = fieldsAuths[fieldName] === AuthType.Required;
               const compProps = { ...props };
-              const Component = compSources[config.type as AllComponentType['type']];
+              const Component = compSources[config?.type as AllComponentType['type']];
 
-              if (!fieldsVisible[fieldName] || !Component) return null;
+              if (!fieldsVisible[fieldName || fieldId] || !Component) return null;
 
               delete compProps['defaultValue'];
 
               let rules: Rule[] = [];
-
               if (isRequired) {
                 rules = [
                   {
@@ -147,7 +146,7 @@ const FormDetail = React.forwardRef(function FormDetail(
                 <Col span={colSpace * 6} key={fieldId} className={styles.col}>
                   <Form.Item
                     key={fieldId}
-                    name={fieldName}
+                    name={fieldName || fieldId}
                     label={<LabelContent label={label} desc={desc} />}
                     required={isRequired}
                     rules={rules}
@@ -156,9 +155,12 @@ const FormDetail = React.forwardRef(function FormDetail(
                       config.type,
                       Component,
                       Object.assign({}, compProps, {
-                        readOnly: readonly || !fieldsAuths[fieldName] || fieldsAuths[fieldName] === AuthType.View,
+                        readOnly:
+                          readonly ||
+                          !(fieldsAuths[fieldName] || fieldsAuths[fieldId]) ||
+                          fieldsAuths[fieldName] === AuthType.View,
                       }),
-                      datasource && datasource[fieldName],
+                      datasource && (datasource[fieldName] || datasource[fieldId]),
                     )}
                   </Form.Item>
                 </Col>
