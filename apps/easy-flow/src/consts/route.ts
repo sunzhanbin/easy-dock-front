@@ -1,7 +1,9 @@
+import appConfig from '../init';
+
 const staticRoutes = {
   INDEX: '/',
   BPM_EDITOR: '/bpm-editor/:bpmId',
-  TASK_CENTER: '/task-center/:appId',
+  TASK_CENTER: appConfig.micro ? '/' : '/:id',
   START_FLOW: '/start/flow/:subAppId',
   START_DETAIL: '/start/detail/:flowId',
   TASK_DETAIL: '/task/detail/:taskId',

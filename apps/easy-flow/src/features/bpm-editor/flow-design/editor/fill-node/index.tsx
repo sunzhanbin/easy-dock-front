@@ -10,7 +10,7 @@ import ButtonConfigs from './button-configs';
 import FieldAuths from '../components/field-auths';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { trimInputValue } from '../../util';
-import { name } from '../rules';
+import { name } from '@common/rule';
 import useValidateForm from '../../hooks/use-validate-form';
 import styles from './index.module.scss';
 

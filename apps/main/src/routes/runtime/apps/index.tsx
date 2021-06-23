@@ -47,7 +47,7 @@ function App() {
   }, []);
 
   const handleClickCard = useMemoCallback((app: AppSchema) => {
-    history.push(dynamicRoutes.toAppRuntimeDetail(String(app.id)));
+    history.push(dynamicRoutes.toAppDashboard(String(app.id)));
   });
 
   return (

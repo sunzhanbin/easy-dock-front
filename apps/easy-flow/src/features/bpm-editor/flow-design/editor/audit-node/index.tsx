@@ -3,6 +3,7 @@ import { Form, Input } from 'antd';
 import { Rule } from 'antd/lib/form';
 import debounce from 'lodash/debounce';
 import useMemoCallback from '@common/hooks/use-memo-callback';
+import { name } from '@common/rule';
 import MemberSelector from '../components/member-selector';
 import { updateNode, flowDataSelector } from '../../flow-slice';
 import { AuditNode, AllNode } from '@type/flow';
@@ -11,7 +12,6 @@ import FieldAuths from '../components/field-auths';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { trimInputValue } from '../../util';
 import useValidateForm from '../../hooks/use-validate-form';
-import { name } from '../rules';
 
 interface AuditNodeEditorProps {
   node: AuditNode;
