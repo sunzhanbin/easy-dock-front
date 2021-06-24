@@ -5,7 +5,7 @@
   "scripts": {
     "start": "rescripts start",
     "build:test": "sh -ac '. .env.staging; rescripts build'",
-    "build": "REACT_APP_TARGET_ENV=production rescripts build",
+    "build": "REACT_APP_TARGET_ENV=staging rescripts build",
     "eject": "rescripts eject"
   },
   "eslintConfig": {
