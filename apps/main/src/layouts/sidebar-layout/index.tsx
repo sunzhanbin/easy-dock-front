@@ -59,11 +59,7 @@ function SidebarLayout() {
             </div>
 
             <div className={styles.menus}>
-              <NavLink
-                to={`${matchedUrl}/dashboard/task-center`}
-                className={styles.nav}
-                activeClassName={styles.active}
-              >
+              <NavLink to={`${matchedUrl}/process/task-center`} className={styles.nav} activeClassName={styles.active}>
                 <Icon type="renwu" className={styles.icon}></Icon>
                 <div className={styles.text}>任务中心</div>
               </NavLink>
