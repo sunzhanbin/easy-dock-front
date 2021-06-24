@@ -1,4 +1,4 @@
-import { memo, useEffect } from 'react';
+import { memo, useEffect, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { Switch, Route, useLocation, matchPath } from 'react-router-dom';
 import { ROUTES } from './consts';
@@ -13,20 +13,23 @@ import { setApp } from '@/features/task-center/taskcenter-slice';
 function App({ appId }: { appId?: string }) {
   const { pathname } = useLocation();
   const dispatch = useDispatch();
-
-  useEffect(() => {
+  const id = useMemo(() => {
     if (appConfig.micro && appId) {
-      dispatch(setApp({ id: appId }));
-
-      return;
+      return appId;
     }
 
     const match = matchPath<{ id: string }>(pathname, { path: ROUTES.TASK_CENTER });
 
     if (match && match.params) {
-      dispatch(setApp({ id: match.params.id }));
+      return match.params.id;
     }
-  }, [appId, pathname, dispatch]);
+  }, [appId, pathname]);
+
+  useEffect(() => {
+    if (id) {
+      dispatch(setApp({ id }));
+    }
+  }, [dispatch, id]);
 
   return (
     <Switch>
