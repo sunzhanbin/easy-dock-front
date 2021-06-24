@@ -58,7 +58,10 @@ const FormDesign: FC<{}> = () => {
         dispatch(setLayout({ layout: [] }));
         dispatch(selectField({ id: '' }));
       }
-      dispatch(setIsDirty({ isDirty: false }));
+      // 临时规避dispatch时序的问题
+      setTimeout(() => {
+        dispatch(setIsDirty({ isDirty: false }));
+      }, 10);
     });
   }, [subAppId, dispatch]);
   const onDragEnd = useCallback(
