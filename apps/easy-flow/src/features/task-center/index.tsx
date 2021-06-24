@@ -49,9 +49,8 @@ const TaskCenter: FC<{}> = () => {
           <div className={styles.navLink}>
             <NavLink to={`${matchedUrl}`} exact className={styles.nav} activeClassName={styles.active}>
               我的待办
-              {location.pathname === `${matchedUrl}/todo` && todoNum > 0 && (
-                <div className={styles.todoNum}>{todoNum}</div>
-              )}
+              {(location.pathname === `${matchedUrl}/${app?.id}` || location.pathname === `${matchedUrl}`) &&
+                todoNum > 0 && <div className={styles.todoNum}>{todoNum}</div>}
             </NavLink>
             <NavLink to={`${matchedUrl}/start`} className={styles.nav} activeClassName={styles.active}>
               我的发起

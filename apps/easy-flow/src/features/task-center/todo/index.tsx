@@ -31,51 +31,53 @@ const ToDo: FC<{}> = () => {
 
   const [data, setData] = useState<TodoItem[]>([]);
   const [sortDirection, setSortDirection] = useState<'DESC' | 'ASC'>('DESC');
-  const fetchData = useMemoCallback(() => {
-    if (!app) return;
+  const fetchData = useMemoCallback(
+    (pagination: Pagination = { pageSize: 10, current: 1, total: 0, showSizeChanger: true }) => {
+      if (!app) return;
 
-    setLoading(true);
-    const { current, pageSize } = pagination;
-    const formValues = form.getFieldsValue(true);
-    const { name = '', starter = '', timeRange = [] } = formValues;
-    let startTime: number = 0;
-    let endTime: number = 0;
-    if (timeRange && timeRange[0]) {
-      startTime = moment(timeRange[0]._d).valueOf();
-    }
-    if (timeRange && timeRange[1]) {
-      endTime = moment(timeRange[1]._d).valueOf();
-    }
-    const filter: { [k: string]: string | number } = {
-      pageIndex: current,
-      pageSize,
-      starter,
-      processName: name,
-    };
-    if (startTime) {
-      filter.startTime = startTime;
-    }
-    if (endTime) {
-      filter.endTime = endTime;
-    }
-    const params = {
-      appId: app.id,
-      filter,
-      sortDirection,
-    };
-    runtimeAxios
-      .post('/task/todo', params)
-      .then((res) => {
-        const list = res.data?.data || [];
-        const total = res.data?.recordTotal || 0;
-        setData(list);
-        setPagination((pagination) => ({ ...pagination, total }));
-        dispatch(setTodoNum({ todoNum: total }));
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  });
+      setLoading(true);
+      const { current, pageSize } = pagination;
+      const formValues = form.getFieldsValue(true);
+      const { name = '', starter = '', timeRange = [] } = formValues;
+      let startTime: number = 0;
+      let endTime: number = 0;
+      if (timeRange && timeRange[0]) {
+        startTime = moment(timeRange[0]._d).valueOf();
+      }
+      if (timeRange && timeRange[1]) {
+        endTime = moment(timeRange[1]._d).valueOf();
+      }
+      const filter: { [k: string]: string | number } = {
+        pageIndex: current,
+        pageSize,
+        starter,
+        processName: name,
+      };
+      if (startTime) {
+        filter.startTime = startTime;
+      }
+      if (endTime) {
+        filter.endTime = endTime;
+      }
+      const params = {
+        appId: app.id,
+        filter,
+        sortDirection,
+      };
+      runtimeAxios
+        .post('/task/todo', params)
+        .then((res) => {
+          const list = res.data?.data || [];
+          const total = res.data?.recordTotal || 0;
+          setData(list);
+          setPagination((pagination) => ({ ...pagination, total }));
+          dispatch(setTodoNum({ todoNum: total }));
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    },
+  );
   const fetchOptionList = useCallback(() => {
     runtimeAxios.post('/user/search', { index: 0, size: 100, keyword: '' }).then((res) => {
       const list = res.data?.data || [];
@@ -169,11 +171,14 @@ const ToDo: FC<{}> = () => {
   }, [form, fetchData]);
   const handleTableChange = useCallback((newPagination, filters, sorter) => {
     sorter.order === 'ascend' ? setSortDirection('ASC') : setSortDirection('DESC');
-    setPagination((pagination) => ({ ...pagination, ...newPagination }));
+    setPagination((pagination) => {
+      fetchData(newPagination);
+      return { ...pagination, ...newPagination };
+    });
   }, []);
   useEffect(() => {
-    app && fetchData();
-  }, [fetchData, app]);
+    app?.id && fetchData();
+  }, [fetchData, app?.id]);
   useEffect(() => {
     fetchOptionList();
   }, [fetchOptionList]);
