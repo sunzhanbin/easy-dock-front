@@ -10,8 +10,9 @@ const staticRoutes = {
   LOGIN: '/login',
   SCENE_MANAGE: '/scenes-manage',
   SCENE_DETAIL: '/scenes-detail/:sceneId',
-  APP_DASHBOARD: '/dashboard/:appId',
-  APP_TASK_CENTER: '/dashboard/:appId/task-center',
+  APP_PANEL: '/app/:appId',
+  APP_DASHBOARD: '/app/:appId/dashboard',
+  APP_TASK_CENTER: '/app/:appId/dashboard/task-center',
   INTEGRATION: '/integration',
   INTEGRATION_ORCH_INDEX: `/integration/orch${orchRoutes.ORCH_INDEX}`,
   INTEGRATION_ORCH_INTERFACE_LIST: `/integration/orch${orchRoutes.ORCH_INTERFACE_LIST}`,
@@ -30,6 +31,9 @@ export const dynamicRoutes = {
     return staticRoutes.SCENE_DETAIL.replace(/:sceneId$/, id);
   },
   toAppDashboard(appId: string) {
-    return staticRoutes.APP_DASHBOARD.replace(/:appId/, appId);
+    return staticRoutes.APP_PANEL.replace(/:appId/, appId);
+  },
+  toAppTaskCenter(appId: string) {
+    return staticRoutes.APP_TASK_CENTER.replace(/:appId/, appId);
   },
 };
