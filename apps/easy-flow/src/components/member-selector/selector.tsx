@@ -1,6 +1,6 @@
 import React, { memo, useState, useEffect, useMemo, useRef } from 'react';
 import { Tabs, Input, Checkbox } from 'antd';
-import { debounce, throttle } from 'lodash';
+import { throttle } from 'lodash';
 import { ValueType } from './type';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { Loading } from '@common/components';
@@ -21,7 +21,7 @@ const fetchUser = async (data: { name: string; page: number }) => {
   return {
     total: memberResponse.data.recordTotal,
     index: memberResponse.data.pageIndex,
-    members: memberResponse.data.data.map((item: any) => {
+    members: memberResponse.data.data.map((item: { userName: string; loginName: string; avatar: string }) => {
       return {
         name: item.userName,
         loginName: item.loginName,
@@ -39,10 +39,11 @@ interface SelectorProps {
 function Selector(props: SelectorProps) {
   const { value, onMembersChange } = props;
   const [members, setMembers] = useState<ValueType['members']>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [memberTotal, setMemberTotal] = useState(0);
   const [memberSearchText, setMemberSearchText] = useState('');
   const memberPageNumberRef = useRef(1);
+  const timerRef = useRef<NodeJS.Timeout>();
   const searchMembers = useMemoCallback(async (payload: { name: string; page: number }) => {
     if (loading) return;
 
@@ -67,15 +68,19 @@ function Selector(props: SelectorProps) {
     }
   });
 
-  const debounceSearchUser = debounce(searchMembers, 300);
-
   const handleMemberSearchTextChange: React.ChangeEventHandler<HTMLInputElement> = useMemoCallback(async (event) => {
     const name = (event.target.value || '').trim();
 
     setMemberSearchText(name);
     memberPageNumberRef.current = 1;
 
-    debounceSearchUser({ page: 1, name });
+    if (timerRef.current !== undefined) {
+      clearTimeout(timerRef.current);
+    }
+
+    timerRef.current = setTimeout(() => {
+      searchMembers({ page: 1, name });
+    }, 300);
   });
 
   const valueMaps = useMemo(() => {
@@ -107,16 +112,8 @@ function Selector(props: SelectorProps) {
   });
 
   useEffect(() => {
-    fetchUser({ name: '', page: 1 })
-      .then(({ total, members }) => {
-        setMemberTotal(total);
-        setMembers(members);
-        memberPageNumberRef.current = 1;
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
+    searchMembers({ name: '', page: 1 });
+  }, [searchMembers]);
 
   const handleMemberListScroll = useMemoCallback(
     throttle((event: React.UIEvent<HTMLDivElement, UIEvent>) => {
