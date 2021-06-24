@@ -66,37 +66,6 @@ const FormDesign: FC<{}> = () => {
       }, 10);
     });
   }, [subAppId, dispatch]);
-  const onDragEnd = useCallback(
-    (result: DropResult) => {
-      const { destination, source, draggableId } = result;
-      if (destination && source) {
-        const { droppableId: targetId, index: targetIndex } = destination as DraggableLocation;
-        const { droppableId: sourceId, index: sourceIndex } = source as DraggableLocation;
-        if (targetId === 'form_zone' && sourceId === 'form_zone') {
-          dispatch(moveRow({ sourceIndex, targetIndex }));
-        }
-        if (targetId === 'form_zone' && sourceId === 'component_zone') {
-          const schema = store.getState().formDesign.schema;
-          const configMap: TConfigMap = {};
-          if (schema) {
-            const keys: string[] = Object.keys(schema);
-            keys.forEach((key) => {
-              const configItem: TConfigItem = { type: key };
-              schema[key as FieldType]?.config.forEach(({ key, defaultValue }) => {
-                configItem[key] = defaultValue;
-              });
-              configMap[key as FieldType] = configItem;
-            });
-            const com = { ...configMap[draggableId] };
-            dispatch(comAdded(com as FormField, targetIndex));
-          }
-        }
-      }
-    },
-    [dispatch],
-  );
-  const onDragStart = useCallback(() => {}, []);
-  const onDragUpdate = useCallback(() => {}, []);
   const handleConfirmLeave = useMemoCallback((location: ReturnType<typeof useLocation>) => {
     if (isDirty && url !== location.pathname && !cancelSaveRef.current) {
       targetUrlRef.current = location.pathname + location.search;
