@@ -3,12 +3,13 @@ import styled from 'styled-components';
 import FlowImage from '@assets/flow-big.png';
 import ScreenImage from '@assets/screen-big.png';
 import { axios, getShorterText } from '@/utils';
-import { Icon } from '@/components';
+import { Popconfirm, Icon } from '@components';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 import { FlowMicroApp } from '@/consts';
-import { message, Popconfirm } from 'antd';
+import { message } from 'antd';
 import AppModel from '../app-model';
+import { stopPropagation } from '@consts';
 
 const CardContainer = styled.div`
   position: relative;
@@ -133,13 +134,14 @@ type StatusMap = {
 
 const Card: FC<{
   id: number;
+  containerId?: string;
   name: string;
   status: number;
   type: 1 | 2;
   className?: string;
   version?: { id: number; remark: string; version: string } | null | undefined;
   onChange: Function;
-}> = ({ id, name, status, type, className, version, onChange }) => {
+}> = ({ id, containerId, name, status, type, className, version, onChange }) => {
   const [isShowOperation, setIsShowOperation] = useState<boolean>(false);
   const [isShowModel, setIsShowModel] = useState<boolean>(false);
   const [position, setPosition] = useState<'left' | 'right'>('left');
@@ -165,31 +167,26 @@ const Card: FC<{
     e.stopPropagation();
     setIsShowOperation(true);
   }, []);
-  const handleStart = useCallback(
-    (e) => {
-      e.stopPropagation();
-      axios.put('/subapp/status', { id, status: 1 }).then(() => {
-        setIsShowOperation(false);
-        message.success('启用成功!');
-        onChange && onChange();
-      });
-    },
-    [id, setIsShowOperation, onChange],
-  );
-  const handleCancel = useCallback(() => {
-    setIsShowOperation(false);
-  }, [setIsShowOperation]);
-  const handleStop = useCallback(
-    (e) => {
-      e.stopPropagation();
-      axios.put('/subapp/status', { id, status: -1 }).then(() => {
-        setIsShowOperation(false);
-        message.success('停用成功!');
-        onChange && onChange();
-      });
-    },
-    [id, setIsShowOperation, onChange],
-  );
+  const getPopupContainer = useMemo(() => {
+    if (containerId) {
+      return () => document.getElementById(containerId)!;
+    }
+    return () => containerRef.current!;
+  }, [containerId]);
+  const handleStart = useCallback(() => {
+    axios.put('/subapp/status', { id, status: 1 }).then(() => {
+      setIsShowOperation(false);
+      message.success('启用成功!');
+      onChange && onChange();
+    });
+  }, [id, setIsShowOperation, onChange]);
+  const handleStop = useCallback(() => {
+    axios.put('/subapp/status', { id, status: -1 }).then(() => {
+      setIsShowOperation(false);
+      message.success('停用成功!');
+      onChange && onChange();
+    });
+  }, [id, setIsShowOperation, onChange]);
   const handleEdit = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
@@ -202,17 +199,13 @@ const Card: FC<{
     },
     [setIsShowModel, setIsShowOperation, setPosition],
   );
-  const handleDelete = useCallback(
-    (e) => {
-      e.stopPropagation();
-      setIsShowOperation(false);
-      axios.delete(`/subapp/${id}`).then(() => {
-        message.success('删除成功!');
-        onChange && onChange();
-      });
-    },
-    [id, setIsShowOperation, onChange],
-  );
+  const handleDelete = useCallback(() => {
+    setIsShowOperation(false);
+    axios.delete(`/subapp/${id}`).then(() => {
+      message.success('删除成功!');
+      onChange && onChange();
+    });
+  }, [id, setIsShowOperation, onChange]);
   const handleOK = useCallback(
     (name) => {
       axios.put('/subapp', { id, name }).then(() => {
@@ -243,21 +236,16 @@ const Card: FC<{
             <Icon type="gengduo" className="more" />
           </div>
           {isShowOperation && (
-            <div
-              className="operation subApp_card_operation"
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-            >
+            <div className="operation subApp_card_operation" onClick={stopPropagation}>
               {statusObj.className === 'stoped' && (
                 <Popconfirm
-                  title="请确认是否启用该子应用?"
+                  title="提示"
+                  content="请确认是否启用该子应用?"
+                  placement="bottom"
                   onConfirm={handleStart}
-                  onCancel={handleCancel}
-                  okText="确认"
-                  cancelText="取消"
+                  getPopupContainer={getPopupContainer}
                 >
-                  <div className="app_operation_item">
+                  <div className="app_operation_item" onClick={stopPropagation}>
                     <Icon type="gou" />
                     <div>启用</div>
                   </div>
@@ -265,13 +253,13 @@ const Card: FC<{
               )}
               {statusObj.className === 'used' && (
                 <Popconfirm
-                  title="请确认是否停用该子应用?"
+                  title="提示"
+                  content="请确认是否停用该子应用?"
+                  placement="bottom"
                   onConfirm={handleStop}
-                  onCancel={handleCancel}
-                  okText="确认"
-                  cancelText="取消"
+                  getPopupContainer={getPopupContainer}
                 >
-                  <div className="app_operation_item">
+                  <div className="app_operation_item" onClick={stopPropagation}>
                     <Icon type="guanbi" />
                     <div>停用</div>
                   </div>
@@ -283,13 +271,13 @@ const Card: FC<{
               </div>
               {statusObj.className !== 'used' && (
                 <Popconfirm
-                  title="删除后不可恢复,请确认是否删除该子应用?"
+                  title="提示"
+                  content="删除后不可恢复,请确认是否删除该子应用?"
+                  placement="bottom"
                   onConfirm={handleDelete}
-                  onCancel={handleCancel}
-                  okText="确认"
-                  cancelText="取消"
+                  getPopupContainer={getPopupContainer}
                 >
-                  <div className="app_operation_item">
+                  <div className="app_operation_item" onClick={stopPropagation}>
                     <Icon type="shanchu" />
                     <div>删除</div>
                   </div>

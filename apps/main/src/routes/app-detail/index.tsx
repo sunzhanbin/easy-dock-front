@@ -80,7 +80,7 @@ const AppDetail: FC = () => {
         {subAppList.length > 0 ? (
           <div
             className={classNames(styles.scenes, { [styles['no-scene']]: subAppList.length === 0 })}
-            id="scenes-list"
+            id="sub_app_card_list"
           >
             <div className={classNames(styles.card, styles.scene)}>
               <Button
@@ -114,6 +114,7 @@ const AppDetail: FC = () => {
                 version={version}
                 key={name}
                 onChange={handleChange}
+                containerId="sub_app_card_list"
               />
             ))}
           </div>
