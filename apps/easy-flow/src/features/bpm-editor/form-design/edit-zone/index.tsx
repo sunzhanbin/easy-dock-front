@@ -14,14 +14,16 @@ const EditZone = () => {
   const [title, setTitle] = useState<string>('');
   const [editList, setEditList] = useState<SchemaConfigItem[]>([]);
   useEffect(() => {
-    const formDesign = store.getState().formDesign;
-    const filedType = formDesign.selectedField?.split('_')[0] || '';
-    if (filedType) {
-      const editConfig = formDesign.schema[filedType as FieldType]?.config;
-      const baseInfo = formDesign.schema[filedType as FieldType]?.baseInfo;
-      setEditList(editConfig as SchemaConfigItem[]);
-      setTitle(baseInfo?.name as string);
-    }
+    setTimeout(() => {
+      const formDesign = store.getState().formDesign;
+      const filedType = formDesign.selectedField?.split('_')[0] || '';
+      if (filedType) {
+        const editConfig = formDesign.schema[filedType as FieldType]?.config;
+        const baseInfo = formDesign.schema[filedType as FieldType]?.baseInfo;
+        setEditList(editConfig as SchemaConfigItem[]);
+        setTitle(baseInfo?.name as string);
+      }
+    }, 0);
   }, [selectedField, byId]);
   const onSave = useCallback(
     (values) => {

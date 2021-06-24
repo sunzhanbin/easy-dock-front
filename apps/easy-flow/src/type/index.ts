@@ -245,3 +245,7 @@ export type FormMeta = {
   rules?: FormRule[];
   themes?: Theme[];
 };
+
+export type Datasource = {
+  [key: string]: { key: string; value: string }[];
+};

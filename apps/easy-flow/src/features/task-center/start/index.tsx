@@ -2,12 +2,13 @@ import { memo, FC, useState, useMemo, useCallback, useEffect } from 'react';
 import { Form, Input, Select, Button, DatePicker, Table } from 'antd';
 import styles from './index.module.scss';
 import { Pagination, StartItem } from '../type';
-import { getStayTime, getPassedTime } from '@/utils';
+import { getStayTime, getPassedTime, runtimeAxios } from '@/utils';
 import classNames from 'classnames';
-import { useHistory, useLocation } from 'react-router-dom';
-import { runtimeAxios } from '@/utils';
+import { useHistory } from 'react-router-dom';
 import moment from 'moment';
 import { dynamicRoutes } from '@/consts/route';
+import useMemoCallback from '@common/hooks/use-memo-callback';
+import useApp from '@/hooks/use-app';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -60,10 +61,7 @@ const statusMap: { [k: number]: { className: string; text: string } } = {
 const Start: FC<{}> = () => {
   const [form] = Form.useForm();
   const history = useHistory();
-  const location = useLocation();
-  const appId = useMemo(() => {
-    return location.pathname.slice(13, -6);
-  }, [location]);
+  const app = useApp();
   const [loading, setLoading] = useState<boolean>(false);
   const [sortDirection, setSortDirection] = useState<'DESC' | 'ASC'>('DESC');
   const [pagination, setPagination] = useState<Pagination>({
@@ -95,8 +93,7 @@ const Start: FC<{}> = () => {
         onCell(record: StartItem) {
           return {
             onClick() {
-              const url = dynamicRoutes.toFlowDetail(record.processInstanceId);
-              history.push(url);
+              history.push(dynamicRoutes.toStartDetail(record.processInstanceId));
             },
           };
         },
@@ -144,8 +141,10 @@ const Start: FC<{}> = () => {
         },
       },
     ];
-  }, []);
-  const fetchData = useCallback(() => {
+  }, [history]);
+  const fetchData = useMemoCallback(() => {
+    if (!app) return;
+
     setLoading(true);
     const formValues = form.getFieldsValue(true);
     const { current: pageIndex, pageSize } = pagination;
@@ -159,7 +158,7 @@ const Start: FC<{}> = () => {
       endTime = moment(timeRange[1]._d).valueOf();
     }
     const params: { [K: string]: string | number } = {
-      appId,
+      appId: app.id,
       pageIndex,
       pageSize,
       sortDirection,
@@ -185,27 +184,30 @@ const Start: FC<{}> = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, [appId, pagination, form, sortDirection, setLoading, setData, setPagination]);
-  const handleKeyUp = useCallback((e) => {
-    if (e.keyCode === 13) {
-      fetchData();
-    }
-  }, []);
+  });
+  const handleKeyUp = useCallback(
+    (e) => {
+      if (e.keyCode === 13) {
+        fetchData();
+      }
+    },
+    [fetchData],
+  );
   const handleSearch = useCallback(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
   const handleReset = useCallback(() => {
     form.resetFields();
     fetchData();
-  }, [form]);
+  }, [form, fetchData]);
   const handleTableChange = useCallback((newPagination, filters, sorter) => {
     sorter.order === 'ascend' ? setSortDirection('ASC') : setSortDirection('DESC');
     setPagination((pagination) => ({ ...pagination, ...newPagination }));
   }, []);
 
   useEffect(() => {
-    fetchData();
-  }, [pagination.current, pagination.pageSize, sortDirection]);
+    app && fetchData();
+  }, [app, fetchData]);
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -225,6 +227,7 @@ const Start: FC<{}> = () => {
             <Form.Item label="状态" name="state" className="state">
               <Select
                 allowClear
+                placeholder="请选择"
                 style={{ width: '100%' }}
                 onClear={() => {
                   form.setFieldsValue(Object.assign(form.getFieldsValue(), { state: undefined }));

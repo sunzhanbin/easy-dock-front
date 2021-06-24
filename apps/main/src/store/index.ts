@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import layout from './layout';
+import user from './user';
 
 export const store = configureStore({
   reducer: {
-    layout: layout,
+    layout,
+    user,
   },
 });
 

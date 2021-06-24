@@ -49,6 +49,11 @@ export type SubAppItem = {
   type: 1 | 2;
 };
 
+export type App = {
+  id: string;
+};
+
 export type TaskCenterState = {
   todoNum: number;
+  app?: App;
 };

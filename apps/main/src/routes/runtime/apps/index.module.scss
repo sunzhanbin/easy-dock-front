@@ -1,0 +1,60 @@
+@import '@common/styles/mixin.scss';
+
+.welcome {
+  display: flex;
+  align-items: flex-end;
+  margin-top: 25px;
+  margin-bottom: 28px;
+
+  .title {
+    margin-right: 4px;
+    line-height: 34px;
+    font-size: 24px;
+    color: rgba(#000, 0.85);
+    font-weight: bold;
+  }
+
+  .time {
+    padding-bottom: 3px;
+    line-height: 22px;
+    color: rgba(#181f43, 0.5);
+    font-size: 14px;
+  }
+}
+
+.apps {
+  position: relative;
+  display: grid;
+  grid-row-gap: 24px;
+  grid-column-gap: 24px;
+
+  &.no-scene {
+    grid-template-columns: 1fr;
+  }
+
+  .remark {
+    max-height: 40px;
+    line-height: 20px;
+    font-size: 12px;
+    color: rgba(#181f43, 0.5);
+    overflow: hidden;
+  }
+}
+
+@media screen and (min-width: 1640px) and (max-width: 1919px) {
+  .apps {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media screen and (max-width: 1639px) {
+  .apps {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media screen and (min-width: 1920px) {
+  .apps {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}

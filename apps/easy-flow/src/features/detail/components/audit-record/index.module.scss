@@ -75,51 +75,57 @@
     font-weight: 400;
   }
 
-  .user {
-    @include center('flex');
+  .node {
+    & > .user {
+      @include center('flex');
 
-    margin-bottom: 4px;
+      margin-bottom: 4px;
 
-    .avatar {
-      margin-right: 8px;
-      border-radius: 50%;
+      .avatar {
+        margin-right: 8px;
+        border-radius: 50%;
+      }
+
+      .user-name {
+        margin-right: 4px;
+        line-height: 22px;
+        color: #181f43;
+        font-size: 14px;
+        font-weight: 400;
+      }
+
+      &:last-child {
+        margin-bottom: 0;
+      }
     }
 
-    .user-name {
-      margin-right: 4px;
-      line-height: 22px;
-      color: #181f43;
-      font-size: 14px;
-      font-weight: 400;
-    }
-  }
-
-  .time {
-    margin-bottom: 4px;
-    line-height: 20px;
-    color: rgba(#181f43, 0.5);
-    font-size: 12px;
-    font-weight: 400;
-  }
-
-  .comment {
-    @include center('flex');
-
-    align-items: flex-start;
-
-    & > svg {
-      flex-shrink: 0;
-      margin-top: 4px;
-      margin-right: 8px;
-      font-size: 12px;
-    }
-
-    .text {
-      flex: 1 1 0;
+    .time {
+      margin-bottom: 4px;
       line-height: 20px;
-      color: rgba(#181f43, 0.75);
+      color: rgba(#181f43, 0.5);
       font-size: 12px;
       font-weight: 400;
+    }
+
+    .comment {
+      @include center('flex');
+
+      align-items: flex-start;
+
+      & > svg {
+        flex-shrink: 0;
+        margin-top: 4px;
+        margin-right: 8px;
+        font-size: 12px;
+      }
+
+      .text {
+        flex: 1 1 0;
+        line-height: 20px;
+        color: rgba(#181f43, 0.75);
+        font-size: 12px;
+        font-weight: 400;
+      }
     }
   }
 }

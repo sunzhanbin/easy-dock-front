@@ -3,8 +3,9 @@ import { Form, Row, Col, FormInstance } from 'antd';
 import { Rule } from 'antd/lib/form';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import useLoadComponents from '@/hooks/use-load-components';
-import { FieldAuthsMap, AuthType, FormMeta, FormValue } from '@type/flow';
-import { AllComponentType } from '@type';
+import { AllComponentType, Datasource } from '@type';
+import { FieldAuthsMap, AuthType } from '@type/flow';
+import { FormMeta, FormValue } from '@type/detail';
 import LabelContent from '../label-content';
 import styles from './index.module.scss';
 
@@ -15,6 +16,7 @@ interface FormProps {
   fieldsAuths: FieldAuthsMap;
   initialValue: { [key: string]: any };
   readonly?: boolean;
+  datasource: Datasource;
 }
 
 type CompMaps = {
@@ -25,7 +27,7 @@ const FormDetail = React.forwardRef(function FormDetail(
   props: FormProps,
   ref: React.ForwardedRef<FormInstance<FormValue>>,
 ) {
-  const { data, fieldsAuths, initialValue, readonly } = props;
+  const { data, fieldsAuths, datasource, initialValue, readonly } = props;
   const [form] = Form.useForm<FormValue>();
   const [fieldsVisible, setFieldsVisible] = useState<FieldsVisible>({});
   const [compMaps, setCompMaps] = useState<CompMaps>({});
@@ -83,12 +85,12 @@ const FormDetail = React.forwardRef(function FormDetail(
       if (initialValue && initialValue[fieldName] !== undefined) {
         formValues[fieldName] = initialValue[fieldName];
       } else {
-        formValues[fieldName] = com.props.defaultValue;
+        formValues[fieldName || id] = com.props.defaultValue || com.config.value;
       }
 
       comMaps[id] = com;
       // 流程编排中没有配置fieldAuths这个字段默认可见
-      visbles[fieldName] = fieldsAuths[fieldName] !== AuthType.Denied;
+      visbles[fieldName || id] = fieldsAuths[fieldName || id] !== AuthType.Denied;
     });
 
     // 设置表单初始值
@@ -120,18 +122,17 @@ const FormDetail = React.forwardRef(function FormDetail(
         return (
           <Row key={index} className={styles.row}>
             {formRow.map((fieldId) => {
-              const { config, props = {} } = compMaps[fieldId];
-              const { fieldName, colSpace, label, desc } = config;
+              const { config = {}, props = {} } = compMaps[fieldId];
+              const { fieldName = '', colSpace = '', label = '', desc = '' } = config;
               const isRequired = fieldsAuths[fieldName] === AuthType.Required;
               const compProps = { ...props };
-              const Component = compSources[config.type as AllComponentType['type']];
+              const Component = compSources[config?.type as AllComponentType['type']];
 
-              if (!fieldsVisible[fieldName] || !Component) return null;
+              if (!fieldsVisible[fieldName || fieldId] || !Component) return null;
 
               delete compProps['defaultValue'];
 
               let rules: Rule[] = [];
-
               if (isRequired) {
                 rules = [
                   {
@@ -145,15 +146,22 @@ const FormDetail = React.forwardRef(function FormDetail(
                 <Col span={colSpace * 6} key={fieldId} className={styles.col}>
                   <Form.Item
                     key={fieldId}
-                    name={fieldName}
+                    name={fieldName || fieldId}
                     label={<LabelContent label={label} desc={desc} />}
                     required={isRequired}
                     rules={rules}
                   >
-                    <Component
-                      {...compProps}
-                      readOnly={readonly || !fieldsAuths[fieldName] || fieldsAuths[fieldName] === AuthType.View}
-                    />
+                    {compRender(
+                      config.type,
+                      Component,
+                      Object.assign({}, compProps, {
+                        readOnly:
+                          readonly ||
+                          !(fieldsAuths[fieldName] || fieldsAuths[fieldId]) ||
+                          fieldsAuths[fieldName] === AuthType.View,
+                      }),
+                      datasource && (datasource[fieldName] || datasource[fieldId]),
+                    )}
                   </Form.Item>
                 </Col>
               );
@@ -166,3 +174,16 @@ const FormDetail = React.forwardRef(function FormDetail(
 });
 
 export default memo(FormDetail);
+
+function compRender(
+  type: AllComponentType['type'],
+  Component: any,
+  props: any,
+  datasource?: Datasource[keyof Datasource],
+) {
+  if ((type === 'Select' || type === 'Radio' || type === 'Checkbox') && datasource) {
+    return <Component {...props} options={datasource} />;
+  }
+
+  return <Component {...props} />;
+}

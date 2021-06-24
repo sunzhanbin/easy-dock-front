@@ -8,17 +8,20 @@ interface AvatarProps {
   size: number;
   src?: string;
   className?: string;
+  round?: boolean;
 }
 
 function Avatar(props: AvatarProps) {
-  const { name, size, src, className } = props;
+  const { name, size, src, className, round = true } = props;
 
   return (
     <Image
       className={className}
       size={size}
       src={src}
-      placeholder={<span className={classnames(styles.name, className)}>{name.slice(0, 1)}</span>}
+      placeholder={
+        <span className={classnames(styles.name, className, { [styles.round]: round })}>{name.slice(0, 1)}</span>
+      }
     ></Image>
   );
 }

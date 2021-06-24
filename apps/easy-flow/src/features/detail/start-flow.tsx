@@ -6,7 +6,9 @@ import useMemoCallback from '@common/hooks/use-memo-callback';
 import { AsyncButton, Icon, Loading } from '@common/components';
 import { runtimeAxios } from '@utils';
 import { dynamicRoutes } from '@consts';
-import { FillNode, FormMeta, FormValue } from '@type/flow';
+import { loadDatasource } from '@apis/detail';
+import { FillNode } from '@type/flow';
+import { FormMeta, FormValue, Datasource } from '@type/detail';
 import Form from '@components/form-engine';
 import Header from '@components/header';
 import useSubapp from '@/hooks/use-subapp';
@@ -25,6 +27,7 @@ function StartFlow() {
   const [loading, setLoading] = useState(true);
   const { data: subApp } = useSubapp(subAppId);
   const formRef = useRef<FormInstance<FormValue>>(null);
+  const [datasource, serDatasource] = useState<Datasource>();
 
   useEffect(() => {
     if (!subApp) return;
@@ -53,18 +56,33 @@ function StartFlow() {
     })();
   }, [subApp]);
 
+  useEffect(() => {
+    if (!data || !subApp) return;
+
+    loadDatasource(data.formMeta, data.processMeta, subApp.version.id).then((values) => {
+      serDatasource(values);
+    });
+  }, [data, subApp]);
+
   const formVnode = useMemo(() => {
-    if (!data) return null;
+    if (!data || !datasource) return null;
 
     const { formMeta, formData, processMeta } = data;
-    return <Form ref={formRef} data={formMeta} initialValue={formData} fieldsAuths={processMeta.fieldsAuths} />;
-  }, [data]);
+    return (
+      <Form
+        datasource={datasource}
+        ref={formRef}
+        data={formMeta}
+        initialValue={formData}
+        fieldsAuths={processMeta.fieldsAuths}
+      />
+    );
+  }, [data, datasource]);
 
   const handleSubmit = useMemoCallback(async () => {
     if (!formRef.current || !subApp) return;
 
     const values = await formRef.current.validateFields();
-
     await runtimeAxios.post(`/process_instance/start`, {
       formData: values,
       versionId: subApp.version.id,

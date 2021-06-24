@@ -1,5 +1,6 @@
-import { FC, memo, useCallback, useMemo } from 'react';
+import { FC, memo, useCallback, useMemo, useState } from 'react';
 import { Button, Tooltip, message } from 'antd';
+import PreviewModal from '@components/preview-model';
 import { useHistory, useRouteMatch, NavLink, useLocation, useParams } from 'react-router-dom';
 import { save, saveWithForm } from '../flow-design/flow-slice';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
@@ -13,6 +14,7 @@ import styles from './index.module.scss';
 
 const EditorHeader: FC = () => {
   const dispatch = useAppDispatch();
+  const [showModel, setShowModel] = useState<boolean>(false);
   const { name: appName, appId } = useAppSelector(subAppSelector);
   const layout = useAppSelector(layoutSelector);
   const history = useHistory();
@@ -24,13 +26,11 @@ const EditorHeader: FC = () => {
     return `${match.url}/form-design`;
   }, [match]);
   const handlePreview = useCallback(() => {
-    if (pathName === formDesignPath) {
-      history.push(`${match.url}/preview-form`);
-    }
-  }, [pathName, history, formDesignPath, match]);
+    setShowModel(true);
+  }, []);
   const handlePrev = useCallback(() => {
     if (pathName === flowDesignPath) {
-      history.push(formDesignPath);
+      history.replace(formDesignPath);
     }
   }, [pathName, history, formDesignPath, flowDesignPath]);
   const handleSave = useCallback(() => {
@@ -44,7 +44,7 @@ const EditorHeader: FC = () => {
   }, [pathName, dispatch, formDesignPath, flowDesignPath, bpmId]);
   const handleNext = useCallback(() => {
     if (pathName === formDesignPath) {
-      history.push(flowDesignPath);
+      history.replace(flowDesignPath);
     }
   }, [pathName, history, formDesignPath, flowDesignPath]);
 
@@ -68,27 +68,42 @@ const EditorHeader: FC = () => {
     });
 
     message.success('发布成功');
-  }, [bpmId, dispatch]);
-  const handleGoBack = useCallback(() => {
-    window.location.href = `${window.location.origin}/scenes-detail/${appId}`;
-  }, [appId]);
 
-  const jumpToTask = useCallback(() => {
-    history.push(`/task-center/${appId}/todo`);
-  }, [appId, history]);
+    setTimeout(() => {
+      window.location.replace(`/scenes-detail/${appId}`);
+    }, 1500);
+  }, [bpmId, dispatch, appId]);
 
   return (
     <div className={styles.header_container}>
-      <Header backText={appName} className={styles.edit_header} goBack={handleGoBack}>
+      <Header backText={appName} className={styles.edit_header}>
         <div className={styles.steps}>
-          <NavLink className={styles.step} to={`${match.url}/form-design`} activeClassName={styles.active}>
+          <NavLink
+            className={styles.step}
+            replace={true}
+            to={`${match.url}/form-design`}
+            activeClassName={styles.active}
+          >
             <span className={styles.number}>01</span>
             <span>表单设计</span>
           </NavLink>
           <div className={styles.separator}>
             <Icon className={styles.iconfont} type="jinru" />
           </div>
-          <NavLink className={styles.step} to={`${match.url}/flow-design`} activeClassName={styles.active}>
+          <NavLink
+            className={styles.step}
+            replace={true}
+            to={`${match.url}/flow-design`}
+            activeClassName={styles.active}
+            style={{
+              cursor: layout.length === 0 ? 'not-allowed' : 'pointer',
+            }}
+            onClick={(e) => {
+              if (layout.length === 0) {
+                e.preventDefault();
+              }
+            }}
+          >
             <span className={styles.number}>02</span>
             <span>流程设计</span>
           </NavLink>
@@ -101,7 +116,9 @@ const EditorHeader: FC = () => {
           */}
           {pathName === formDesignPath && (
             <Tooltip title="预览">
-              <Icon className={styles.iconfont} type="yulan" onClick={handlePreview} />
+              <span>
+                <Icon className={styles.iconfont} type="yulan" onClick={handlePreview} />
+              </span>
             </Tooltip>
           )}
           {pathName === flowDesignPath && (
@@ -112,12 +129,14 @@ const EditorHeader: FC = () => {
           <Button type="primary" ghost className={styles.save} size="large" onClick={handleSave}>
             保存
           </Button>
-          {/* 任务中心临时入口 */}
-          <Button type="primary" className={styles.next} size="large" onClick={jumpToTask}>
-            任务中心
-          </Button>
-          {pathName === formDesignPath && layout.length > 0 && (
-            <Button type="primary" className={styles.next} size="large" onClick={handleNext}>
+          {pathName === formDesignPath && (
+            <Button
+              type="primary"
+              className={styles.next}
+              size="large"
+              onClick={handleNext}
+              disabled={layout.length === 0}
+            >
               下一步
             </Button>
           )}
@@ -134,6 +153,14 @@ const EditorHeader: FC = () => {
           )}
         </div>
       </Header>
+      {showModel && (
+        <PreviewModal
+          visible={showModel}
+          onClose={() => {
+            setShowModel(false);
+          }}
+        />
+      )}
     </div>
   );
 };

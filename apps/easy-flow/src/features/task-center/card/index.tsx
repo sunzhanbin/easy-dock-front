@@ -10,7 +10,7 @@ const Card: FC<{ id: number; name: string; className?: string }> = ({ id, name, 
   const handleClick = useCallback(() => {
     const path = dynamicRoutes.toStartFlow(id);
     history.push(path);
-  }, [id]);
+  }, [id, history]);
   return (
     <div className={classNames(styles.container, className)} onClick={handleClick}>
       <div className={styles.left}>

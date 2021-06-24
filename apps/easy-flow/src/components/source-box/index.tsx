@@ -16,6 +16,7 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import useLoadComponents from '@/hooks/use-load-components';
 import styles from './index.module.scss';
 import { selectedFieldSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
+import useDataSource from '@/hooks/use-data-source';
 
 type Component = React.FC | React.ComponentClass;
 const SourceBox: FC<{
@@ -27,8 +28,9 @@ const SourceBox: FC<{
 }> = ({ type, config, id, moveConfig, rowIndex }) => {
   const dispatch = useAppDispatch();
   const selectedField = useAppSelector(selectedFieldSelector);
+  const options = useDataSource((config as any)?.dataSource);
   // 获取组件源码
-  const compSources: Component = useLoadComponents(type as AllComponentType['type']) as Component;
+  const compSources: any = useLoadComponents(type as AllComponentType['type']) as Component;
   const propList = useMemo(() => {
     return Object.assign({}, config, { id });
   }, [config, id]);
@@ -93,14 +95,22 @@ const SourceBox: FC<{
         <div className={styles.container}>
           <div className={styles.component_container}>
             <LabelContent label={propList.label} desc={propList.desc} />
-            <Component {...(propList as TConfigItem)} />
+            {(type === 'Radio' || type === 'Checkbox' || type === 'Select') && options ? (
+              <Component {...(propList as TConfigItem)} options={options} />
+            ) : (
+              <Component {...(propList as TConfigItem)} />
+            )}
           </div>
           <div className={styles.operation}>
             <Tooltip title="复制">
-              <Icon className={styles.iconfont} type="fuzhi" onClick={handleCopy} />
+              <span>
+                <Icon className={styles.iconfont} type="fuzhi" onClick={handleCopy} />
+              </span>
             </Tooltip>
             <Tooltip title="删除">
-              <Icon className={styles.iconfont} type="shanchu" onClick={handleDelete} />
+              <span>
+                <Icon className={styles.iconfont} type="shanchu" onClick={handleDelete} />
+              </span>
             </Tooltip>
           </div>
           {moveConfig.up && (
@@ -128,10 +138,13 @@ const SourceBox: FC<{
     }
     return null;
   }, [
+    id,
+    type,
     moveConfig,
     compSources,
     selectedField,
     propList,
+    options,
     handleCopy,
     handleDelete,
     handleMoveDown,

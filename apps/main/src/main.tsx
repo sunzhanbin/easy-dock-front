@@ -6,8 +6,9 @@ import { Switch, Route, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import AntdProvider from '@common/components/antd-provider';
 import LoginLayout from '@layouts/login-layout';
+import SidebarLayout from '@/layouts/sidebar-layout';
 import PrimaryLayout from '@layouts/main-layout';
-import { shouldHideHeaderUrls } from '@consts';
+import { shouldHideHeaderUrls, ROUTES } from '@consts';
 import { toggleHeader } from '@/store/layout';
 
 function AppEntry() {
@@ -25,8 +26,9 @@ function AppEntry() {
   return (
     <AntdProvider>
       <Switch>
-        <Route path="/login" component={LoginLayout}></Route>
-        <Route path="/" component={PrimaryLayout}></Route>
+        <Route path={ROUTES.LOGIN} component={LoginLayout}></Route>
+        <Route path={ROUTES.APP_DASHBOARD} component={SidebarLayout}></Route>
+        <Route path={ROUTES.INDEX} component={PrimaryLayout}></Route>
       </Switch>
     </AntdProvider>
   );

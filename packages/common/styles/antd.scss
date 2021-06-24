@@ -251,6 +251,38 @@
   font-weight: 400;
 }
 
+// 定制时间框
+.ant-picker {
+  border-radius: 3px;
+  border-color: transparent;
+  background-color: rgba(24, 39, 67, 0.04);
+  &:hover {
+    border-color: rgba($primary-color, 0.85);
+    background-color: transparent;
+  }
+
+  &:focus {
+    border-color: rgba($primary-color, 0.85);
+    box-shadow: 0 0 0 3px rgba(76, 92, 219, 0.2);
+    background-color: transparent;
+  }
+}
+// 定制数字输入框
+.ant-input-number {
+  border-radius: 3px;
+  border-color: transparent;
+  background-color: rgba(24, 39, 67, 0.04);
+  &:hover {
+    border-color: rgba($primary-color, 0.85);
+    background-color: transparent;
+  }
+
+  &:focus {
+    border-color: rgba($primary-color, 0.85);
+    box-shadow: 0 0 0 3px rgba(76, 92, 219, 0.2);
+    background-color: transparent;
+  }
+}
 // 定制抽屉
 .ant-drawer-content {
   padding: 0;
@@ -356,5 +388,8 @@
         background: rgba(76, 92, 219, 0.06);
       }
     }
+  }
+  td.ant-table-column-sort {
+    background-color: #fff;
   }
 }

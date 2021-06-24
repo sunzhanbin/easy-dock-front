@@ -2,13 +2,15 @@ import { memo, useState, FC, useMemo, useCallback, useEffect } from 'react';
 import styles from './index.module.scss';
 import { Form, Input, Select, Button, DatePicker, Table } from 'antd';
 import moment from 'moment';
+import { dynamicRoutes } from '@/consts/route';
 import { getStayTime } from '@utils/index';
 import { runtimeAxios } from '@/utils';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Pagination, TodoItem, UserItem } from '../type';
 import { useAppDispatch } from '@/app/hooks';
+import useApp from '@/hooks/use-app';
+import useMemoCallback from '@common/hooks/use-memo-callback';
 import { setTodoNum } from '../taskcenter-slice';
-import { dynamicRoutes } from '@/consts/route';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -16,10 +18,7 @@ const { Option } = Select;
 const ToDo: FC<{}> = () => {
   const [form] = Form.useForm();
   const history = useHistory();
-  const location = useLocation();
-  const appId = useMemo(() => {
-    return location.pathname.slice(13, -5);
-  }, [location]);
+  const app = useApp();
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState<boolean>(false);
   const [optionList, setOptionList] = useState<UserItem[]>([]);
@@ -29,9 +28,12 @@ const ToDo: FC<{}> = () => {
     total: 0,
     showSizeChanger: true,
   });
+
   const [data, setData] = useState<TodoItem[]>([]);
-  const [keyword, setKeyword] = useState<string>('');
-  const fetchData = useCallback(() => {
+  const [sortDirection, setSortDirection] = useState<'DESC' | 'ASC'>('DESC');
+  const fetchData = useMemoCallback(() => {
+    if (!app) return;
+
     setLoading(true);
     const { current, pageSize } = pagination;
     const formValues = form.getFieldsValue(true);
@@ -57,8 +59,9 @@ const ToDo: FC<{}> = () => {
       filter.endTime = endTime;
     }
     const params = {
-      appId,
+      appId: app.id,
       filter,
+      sortDirection,
     };
     runtimeAxios
       .post('/task/todo', params)
@@ -72,7 +75,7 @@ const ToDo: FC<{}> = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, [appId, pagination, form]);
+  });
   const fetchOptionList = useCallback(() => {
     runtimeAxios.post('/user/search', { index: 0, size: 100, keyword: '' }).then((res) => {
       const list = res.data?.data || [];
@@ -99,11 +102,10 @@ const ToDo: FC<{}> = () => {
         render(_: string, record: TodoItem) {
           return <div className={styles.name}>{record.processDefinitionName}</div>;
         },
-        onCell(record: TodoItem) {
+        onCell(data: TodoItem) {
           return {
             onClick() {
-              const url = dynamicRoutes.toFlowDetail(record.taskId);
-              history.push(url);
+              history.push(dynamicRoutes.toTaskDetail(data.taskId));
             },
           };
         },
@@ -146,39 +148,35 @@ const ToDo: FC<{}> = () => {
         },
       },
     ];
+  }, [history]);
+  const handleFilterOption = useCallback((inputValue, option) => {
+    return option.children.indexOf(inputValue) > -1;
   }, []);
-  const filterOptionList = useMemo(() => {
-    return optionList.filter((option) => option.userName.indexOf(keyword) > -1);
-  }, [optionList, keyword]);
-  const options = useMemo(() => {
-    const content = filterOptionList.map(({ loginName, userName }) => (
-      <Option key={loginName} value={loginName}>
-        {userName}
-      </Option>
-    ));
-    return content;
-  }, [filterOptionList]);
-  const handleKeyUp = useCallback((e) => {
-    if (e.keyCode === 13) {
-      fetchData();
-    }
-  }, []);
+  const handleKeyUp = useCallback(
+    (e) => {
+      if (e.keyCode === 13) {
+        fetchData();
+      }
+    },
+    [fetchData],
+  );
   const handleSearch = useCallback(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
   const handleReset = useCallback(() => {
     form.resetFields();
     fetchData();
-  }, [form]);
+  }, [form, fetchData]);
   const handleTableChange = useCallback((newPagination, filters, sorter) => {
+    sorter.order === 'ascend' ? setSortDirection('ASC') : setSortDirection('DESC');
     setPagination((pagination) => ({ ...pagination, ...newPagination }));
   }, []);
   useEffect(() => {
-    fetchData();
-  }, [pagination.current, pagination.pageSize]);
+    app && fetchData();
+  }, [fetchData, app]);
   useEffect(() => {
     fetchOptionList();
-  }, []);
+  }, [fetchOptionList]);
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -197,10 +195,8 @@ const ToDo: FC<{}> = () => {
             </Form.Item>
             <Form.Item label="发起人" name="starter" className="starter">
               <Select
-                // showSearch
-                // onSearch={(val) => {
-                //   setKeyword(val as string);
-                // }}
+                showSearch
+                filterOption={handleFilterOption}
                 onChange={() => {
                   fetchData();
                 }}
@@ -208,7 +204,11 @@ const ToDo: FC<{}> = () => {
                 placeholder="请选择"
                 allowClear
               >
-                {options}
+                {optionList.map(({ loginName, userName }) => (
+                  <Option key={loginName} value={loginName}>
+                    {userName}
+                  </Option>
+                ))}
               </Select>
             </Form.Item>
             <Form.Item label="发起时间" name="timeRange" className="timeRange">

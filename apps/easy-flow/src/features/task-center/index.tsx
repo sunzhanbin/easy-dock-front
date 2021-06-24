@@ -1,5 +1,5 @@
 import { memo, useCallback, FC, useState, useEffect, useMemo } from 'react';
-import { NavLink, Redirect, Route, Switch, useLocation, useParams, useRouteMatch } from 'react-router-dom';
+import { NavLink, Redirect, Route, Switch, useLocation, useRouteMatch } from 'react-router-dom';
 import { Input, Button, Drawer } from 'antd';
 import { Icon } from '@common/components';
 import styles from './index.module.scss';
@@ -9,6 +9,7 @@ import Done from './done';
 import Card from './card';
 import { useAppSelector } from '@/app/hooks';
 import { todoNumSelector } from './taskcenter-reducer';
+import useApp from '@/hooks/use-app';
 import { SubAppItem } from './type';
 import { axios } from '@/utils';
 
@@ -16,26 +17,30 @@ import { axios } from '@/utils';
 
 const TaskCenter: FC<{}> = () => {
   const match = useRouteMatch();
+  const matchedPath = match.path.replace(/\/$/, '');
+  const matchedUrl = match.url.replace(/\/$/, '');
   const todoNum = useAppSelector(todoNumSelector);
-  const { appId } = useParams<{ appId: string }>();
+  const app = useApp();
   const location = useLocation();
   const [isShowDrawer, setIsShowDrawer] = useState<boolean>(false);
   const [subAppList, setSubAppList] = useState<SubAppItem[]>([]);
   const [keyword, setKeyWord] = useState<string>('');
+
   const handleStart = useCallback(() => {
     setIsShowDrawer(true);
-  }, [match]);
+  }, []);
   const filterSubAppList = useMemo(() => {
     return subAppList.filter(({ name }) => name.indexOf(keyword) > -1);
   }, [subAppList, keyword]);
+
   useEffect(() => {
-    if (isShowDrawer) {
-      axios.get(`/subapp/${appId}/list/all/deployed`).then((res) => {
+    if (isShowDrawer && app) {
+      axios.get(`/subapp/${app.id}/list/all/deployed`).then((res) => {
         const list = res.data || [];
         setSubAppList(list);
       });
     }
-  }, [appId, isShowDrawer]);
+  }, [app, isShowDrawer]);
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -43,20 +48,20 @@ const TaskCenter: FC<{}> = () => {
           <div className={styles.title}>任务中心</div>
           <div className={styles.line}></div>
           <div className={styles.navLink}>
-            <NavLink to={`${match.url}/todo`} className={styles.nav} activeClassName={styles.active}>
+            <NavLink to={`${matchedUrl}/todo`} className={styles.nav} activeClassName={styles.active}>
               我的待办
-              {location.pathname === `${match.url}/todo` && todoNum > 0 && (
+              {location.pathname === `${matchedUrl}/todo` && todoNum > 0 && (
                 <div className={styles.todoNum}>{todoNum}</div>
               )}
             </NavLink>
-            <NavLink to={`${match.url}/start`} className={styles.nav} activeClassName={styles.active}>
+            <NavLink to={`${matchedUrl}/start`} className={styles.nav} activeClassName={styles.active}>
               我的发起
             </NavLink>
-            <NavLink to={`${match.url}/done`} className={styles.nav} activeClassName={styles.active}>
+            <NavLink to={`${matchedUrl}/done`} className={styles.nav} activeClassName={styles.active}>
               我的已办
             </NavLink>
             {/* 这个版本暂时不做 */}
-            {/* <NavLink to={`${match.url}/copy`} className={styles.nav} activeClassName={styles.active}>
+            {/* <NavLink to={`${matchedUrl}/copy`} className={styles.nav} activeClassName={styles.active}>
               抄送我的
             </NavLink> */}
           </div>
@@ -69,11 +74,11 @@ const TaskCenter: FC<{}> = () => {
       </div>
       <div className={styles.content}>
         <Switch>
-          <Route path={`${match.url}/todo`} component={Todo}></Route>
-          <Route path={`${match.url}/start`} component={Start}></Route>
-          <Route path={`${match.url}/done`} component={Done}></Route>
-          {/* <Route path={`${match.url}/copy`} component={Copy}></Route> */}
-          <Redirect to={`${match.url}/todo`}></Redirect>
+          <Route path={`${matchedPath}/todo`} component={Todo}></Route>
+          <Route path={`${matchedPath}/start`} component={Start}></Route>
+          <Route path={`${matchedPath}/done`} component={Done}></Route>
+          {/* <Route path={`${matchedPath}/copy`} component={Copy}></Route> */}
+          <Redirect to={`${matchedPath}/todo`}></Redirect>
         </Switch>
       </div>
       <div className={styles.footer}>

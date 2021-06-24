@@ -1,0 +1,11 @@
+@import '@common/styles/mixin.scss';
+
+.container {
+  @include center('flex');
+
+  flex-direction: column;
+
+  img {
+    width: 200px;
+  }
+}

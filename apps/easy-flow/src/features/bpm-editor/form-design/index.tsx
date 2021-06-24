@@ -41,7 +41,7 @@ const FormDesign: FC<{}> = () => {
         components.forEach(({ config, props }: ComponentConfig) => {
           const { id } = config;
           const componentConfig: ConfigItem = {};
-          const excludeKeys = ['id', 'type', 'version', 'rules', 'canSubmit'];
+          const excludeKeys = ['version', 'rules', 'canSubmit'];
           Object.keys(config).forEach((key) => {
             if (!excludeKeys.includes(key)) {
               componentConfig[key] = config[key];
@@ -61,7 +61,7 @@ const FormDesign: FC<{}> = () => {
       }
       dispatch(setIsDirty({ isDirty: false }));
     });
-  }, [subAppId]);
+  }, [subAppId, dispatch]);
   const onDragEnd = useCallback(
     (result: DropResult) => {
       const { destination, source, draggableId } = result;
@@ -94,13 +94,16 @@ const FormDesign: FC<{}> = () => {
   const onDragStart = useCallback(() => {}, []);
   const onDragUpdate = useCallback(() => {}, []);
   const handleConfirmLeave = useMemoCallback((location: ReturnType<typeof useLocation>) => {
-    if (isDirty && url !== location.pathname && !cancelSaveRef.current) {
+    if (
+      isDirty &&
+      url !== location.pathname &&
+      url.replace('form-design', 'preview-form') !== location.pathname &&
+      !cancelSaveRef.current
+    ) {
       targetUrlRef.current = location.pathname + location.search;
       setIsShowTip(true);
-
       return false;
     }
-
     return true;
   });
   const handleSave = useMemoCallback(async () => {

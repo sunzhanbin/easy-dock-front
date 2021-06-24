@@ -1,5 +1,5 @@
 import { SCENE_IAMGES } from '@consts';
-export { default as axios } from './axios';
+export { default as axios, builderAxios, runtimeAxios } from './axios';
 export { default as history } from './history';
 
 export function getSceneImageUrl(type: keyof typeof SCENE_IAMGES) {

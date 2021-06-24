@@ -4,8 +4,7 @@ import moment from 'moment';
 import appConfig from '@/init';
 import { timeDiff } from '@utils';
 import { Icon } from '@common/components';
-import { NodeStatusType } from '@type/flow';
-import { DetailData, TaskDetailType } from '../../type';
+import { NodeStatusType, FlowInstance } from '@type/detail';
 import styles from './index.module.scss';
 
 interface CellProps {
@@ -28,13 +27,14 @@ const Cell = memo(function Cell(props: CellProps) {
 });
 
 interface StatusBarProps {
-  data: DetailData;
+  flowIns: FlowInstance;
+  showCurrentProcessor?: boolean;
   className?: string;
 }
 
 function StatusBar(props: StatusBarProps) {
-  const { data, className } = props;
-  const status = data.flow.instance.state;
+  const { flowIns, showCurrentProcessor, className } = props;
+  const status = flowIns.state;
   const { image, styleName } = useMemo(() => {
     let image = '';
     let styleName = '';
@@ -62,7 +62,6 @@ function StatusBar(props: StatusBarProps) {
 
   // 渲染statusbar内容
   const content = useMemo(() => {
-    const flowDetail = data.flow.instance;
     const trackNode = (
       <div className={styles.track}>
         <span>流程跟踪</span>
@@ -71,10 +70,10 @@ function StatusBar(props: StatusBarProps) {
     );
 
     // 办结状态显示
-    if (data.flow.instance.state === NodeStatusType.Finish) {
+    if (flowIns.state === NodeStatusType.Finish) {
       return (
         <div className={classnames(styles.status, styles.finish)}>
-          <Cell title={timeDiff(flowDetail.endTime - flowDetail.applyTime)} desc="流程耗时" />
+          <Cell title={timeDiff(flowIns.endTime - flowIns.applyTime)} desc="流程耗时" />
 
           <div>{trackNode}</div>
         </div>
@@ -83,19 +82,19 @@ function StatusBar(props: StatusBarProps) {
 
     const trackCell = (
       <Cell
-        title={<div className={styles['time-used']}>{`流程用时 ${timeDiff(Date.now() - flowDetail.applyTime)}`}</div>}
+        title={<div className={styles['time-used']}>{`流程用时 ${timeDiff(Date.now() - flowIns.applyTime)}`}</div>}
         desc={trackNode}
       />
     );
 
-    // 我的发起
-    if (TaskDetailType.MyInitiation === data.task.state) {
+    // 显示当前处理人
+    if (showCurrentProcessor && flowIns.state !== NodeStatusType.Terminated) {
       return (
         <div className={styles.status}>
-          <Cell icon="dangqianjiedian" title={data.flow.node.name} desc="当前节点" />
+          <Cell icon="dangqianjiedian" title={flowIns.currentNodeName} desc="当前节点" />
           <Cell
             icon="dangqianchuliren"
-            title={flowDetail.currentProcessor.users.map((user) => user.name).join(',')}
+            title={flowIns.currentProcessor.users.map((user) => user.name).join(',')}
             desc="当前处理人"
           />
 
@@ -106,13 +105,13 @@ function StatusBar(props: StatusBarProps) {
 
     return (
       <div className={styles.status}>
-        <Cell icon="dangqianchuliren" title={flowDetail.applyUser.name} desc="申请人" />
-        <Cell icon="xuanzeshijian" title={moment(flowDetail.applyTime).format('YYYY-MM-DD HH:mm:ss')} desc="申请时间" />
+        <Cell icon="dangqianchuliren" title={flowIns.applyUser.name} desc="申请人" />
+        <Cell icon="xuanzeshijian" title={moment(flowIns.applyTime).format('YYYY-MM-DD HH:mm:ss')} desc="申请时间" />
 
         {trackCell}
       </div>
     );
-  }, [data]);
+  }, [flowIns, showCurrentProcessor]);
 
   return (
     <div className={classnames(styles.statusbar, styleName, className)}>
