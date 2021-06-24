@@ -59,7 +59,7 @@ const reducers = {
       if (state.byId[com.id!]) return state;
       state.byId[com.id!] = com;
       // 如果当前选中了某一行，则在当前行之后插入；否则在末尾插入
-      state.layout.splice(rowIndex, 0, [com.id!]);
+      state.layout.splice(rowIndex + 1, 0, [com.id!]);
       state.isDirty = true;
       state.selectedField = com.id as string;
       return state;
@@ -129,7 +129,7 @@ const reducers = {
   },
   moveIndex(state: FormDesign, action: PayloadAction<{ dragIndex: number; hoverIndex: number }>) {
     const { dragIndex, hoverIndex } = action.payload;
-    if (!dragIndex || !hoverIndex) return state;
+    if (hoverIndex === undefined) return state;
     const dragCard = state.layout[dragIndex];
     state.layout.splice(dragIndex, 1);
     state.layout.splice(hoverIndex, 0, dragCard);

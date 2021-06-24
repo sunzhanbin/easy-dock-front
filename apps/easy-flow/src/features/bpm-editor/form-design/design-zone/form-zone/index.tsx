@@ -15,6 +15,7 @@ import emptyImage from '@assets/drag.png';
 import styles from './index.module.scss';
 import classNames from 'classnames';
 import { Card, CardProps } from '@/components/card';
+import { useDrop } from 'react-dnd';
 
 const spaceMap = {
   1: 6,
@@ -32,6 +33,16 @@ const FormZone: FC<{}> = () => {
     },
     [layout],
   );
+  const [{ canDrop, isOver }, drop] = useDrop(
+    () => ({
+      accept: 'toolItem',
+      collect: (monitor) => ({
+        isOver: monitor.isOver(),
+        canDrop: monitor.canDrop(),
+      }),
+    }),
+    [],
+  );
   const renderCard = (card: CardProps, index: number) => {
     return <Card row={card.row} key={JSON.stringify(card.row)} rowIndex={index} moveCard={card.moveCard}></Card>;
   };
@@ -41,7 +52,7 @@ const FormZone: FC<{}> = () => {
         {layout && layout.length > 0 ? (
           layout.map((row, rowIndex) => renderCard({ row, rowIndex, moveCard }, rowIndex))
         ) : (
-          <div className={styles.empty_tip}>
+          <div className={styles.empty_tip} ref={drop}>
             <img src={emptyImage} className={styles.image} alt="empty" />
             <div className={styles.text}>拖动或点击左侧控件到这里</div>
           </div>
