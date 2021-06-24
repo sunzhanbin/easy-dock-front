@@ -19,7 +19,7 @@ function SidebarLayout() {
   const [appDetail, setAppDetail] = useState<AppSchema>();
   const [loading, setLoading] = useState(false);
   const showHeader = useMemo(() => {
-    return pathname.replace(ROUTES.APP_DASHBOARD.replace(':appId', appId), '').startsWith('/task-center');
+    return pathname.replace(ROUTES.APP_PROCESS.replace(':appId', appId), '').startsWith('/task-center');
   }, [pathname, appId]);
 
   useEffect(() => {
@@ -82,7 +82,7 @@ function SidebarLayout() {
 
             {
               <Suspense fallback={fallback}>
-                <Route path={ROUTES.APP_DASHBOARD} component={TaskCenter}></Route>
+                <Route path={ROUTES.APP_PROCESS} component={TaskCenter}></Route>
               </Suspense>
             }
           </div>
