@@ -2,7 +2,7 @@ import { AllComponentType, FormField, MoveConfig, TConfigItem } from '@/type';
 import { Tooltip } from 'antd';
 import LabelContent from '../label-content';
 import { Icon } from '@common/components';
-import React, { memo, FC, useMemo, useCallback, useEffect } from 'react';
+import React, { memo, FC, useMemo, useCallback } from 'react';
 import { store } from '@app/store';
 import {
   moveUp,
@@ -103,10 +103,14 @@ const SourceBox: FC<{
           </div>
           <div className={styles.operation}>
             <Tooltip title="复制">
-              <Icon className={styles.iconfont} type="fuzhi" onClick={handleCopy} />
+              <span>
+                <Icon className={styles.iconfont} type="fuzhi" onClick={handleCopy} />
+              </span>
             </Tooltip>
             <Tooltip title="删除">
-              <Icon className={styles.iconfont} type="shanchu" onClick={handleDelete} />
+              <span>
+                <Icon className={styles.iconfont} type="shanchu" onClick={handleDelete} />
+              </span>
             </Tooltip>
           </div>
           {moveConfig.up && (
@@ -134,6 +138,8 @@ const SourceBox: FC<{
     }
     return null;
   }, [
+    id,
+    type,
     moveConfig,
     compSources,
     selectedField,

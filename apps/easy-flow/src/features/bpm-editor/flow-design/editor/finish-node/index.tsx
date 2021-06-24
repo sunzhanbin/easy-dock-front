@@ -2,12 +2,12 @@ import { memo, useMemo } from 'react';
 import { Input, Form } from 'antd';
 import debounce from 'lodash/debounce';
 import useMemoCallback from '@common/hooks/use-memo-callback';
+import { name } from '@common/rule';
 import { updateNode } from '../../flow-slice';
 import { FinishNode } from '@type/flow';
 import { useAppDispatch } from '@/app/hooks';
 import { trimInputValue } from '../../util';
 import useValidateForm from '../../hooks/use-validate-form';
-import { name } from '../rules';
 
 interface FinishNodeEditorProps {
   node: FinishNode;

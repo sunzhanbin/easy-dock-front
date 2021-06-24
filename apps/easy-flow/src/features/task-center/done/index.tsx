@@ -1,12 +1,14 @@
 import { memo, FC, useMemo, useState, useCallback, useEffect } from 'react';
 import styles from './index.module.scss';
 import { Form, Input, Select, Button, DatePicker, Table } from 'antd';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { DoneItem, Pagination, UserItem } from '../type';
 import { getPassedTime } from '@utils/index';
 import { runtimeAxios } from '@/utils';
 import moment from 'moment';
 import { dynamicRoutes } from '@/consts/route';
+import useApp from '@/hooks/use-app';
+import useMemoCallback from '@common/hooks/use-memo-callback';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -14,10 +16,7 @@ const { Option } = Select;
 const Done: FC<{}> = () => {
   const [form] = Form.useForm();
   const history = useHistory();
-  const location = useLocation();
-  const appId = useMemo(() => {
-    return location.pathname.slice(13, -5);
-  }, [location]);
+  const app = useApp();
   const [loading, setLoading] = useState<boolean>(false);
   const [pagination, setPagination] = useState<Pagination>({
     pageSize: 10,
@@ -87,8 +86,10 @@ const Done: FC<{}> = () => {
         },
       },
     ];
-  }, []);
-  const fetchData = useCallback(() => {
+  }, [history]);
+  const fetchData = useMemoCallback(() => {
+    if (!app) return;
+
     setLoading(true);
     const { current: pageIndex, pageSize } = pagination;
     const formValues = form.getFieldsValue(true);
@@ -114,7 +115,7 @@ const Done: FC<{}> = () => {
       filter.endTime = endTime;
     }
     const params = {
-      appId,
+      appId: app.id,
       filter,
       sortDirection,
     };
@@ -129,7 +130,7 @@ const Done: FC<{}> = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, [appId, pagination, form, sortDirection]);
+  });
   const fetchOptionList = useCallback(() => {
     runtimeAxios.post('/user/search', { index: 0, size: 100, keyword: '' }).then((res) => {
       const list = res.data?.data || [];
@@ -139,11 +140,14 @@ const Done: FC<{}> = () => {
   const handleFilterOption = useCallback((inputValue, option) => {
     return option.children.indexOf(inputValue) > -1;
   }, []);
-  const handleKeyUp = useCallback((e) => {
-    if (e.keyCode === 13) {
-      fetchData();
-    }
-  }, []);
+  const handleKeyUp = useCallback(
+    (e) => {
+      if (e.keyCode === 13) {
+        fetchData();
+      }
+    },
+    [fetchData],
+  );
   const handleTableChange = useCallback((newPagination, filters, sorter) => {
     sorter.order === 'ascend' ? setSortDirection('ASC') : setSortDirection('DESC');
     setPagination((pagination) => ({ ...pagination, ...newPagination }));
@@ -151,13 +155,13 @@ const Done: FC<{}> = () => {
   const handleReset = useCallback(() => {
     form.resetFields();
     fetchData();
-  }, [form]);
+  }, [form, fetchData]);
   useEffect(() => {
     fetchOptionList();
-  }, []);
+  }, [fetchOptionList]);
   useEffect(() => {
-    fetchData();
-  }, [pagination.current, pagination.pageSize, sortDirection]);
+    app && fetchData();
+  }, [app, fetchData]);
   return (
     <div className={styles.container}>
       <div className={styles.header}>

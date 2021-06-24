@@ -17,6 +17,6 @@ export default function useDataSource(dataSource: SelectOptionItem) {
         });
       }
     }
-  }, [dataSource?.type, dataSource?.fieldName, dataSource?.subappId, dataSource?.data]);
+  }, [dataSource?.type, dataSource?.fieldName, dataSource?.subappId, dataSource?.data, dataSource]);
   return data;
 }

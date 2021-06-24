@@ -59,7 +59,7 @@ const FormDesign: FC<{}> = () => {
       }
       dispatch(setIsDirty({ isDirty: false }));
     });
-  }, [subAppId]);
+  }, [subAppId, dispatch]);
   const onDragEnd = useCallback(
     (result: DropResult) => {
       const { destination, source, draggableId } = result;

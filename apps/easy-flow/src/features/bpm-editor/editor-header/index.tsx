@@ -26,11 +26,8 @@ const EditorHeader: FC = () => {
     return `${match.url}/form-design`;
   }, [match]);
   const handlePreview = useCallback(() => {
-    // if (pathName === formDesignPath) {
-    //   history.push(`${match.url}/preview-form`);
-    // }
     setShowModel(true);
-  }, [pathName, history, formDesignPath, match]);
+  }, []);
   const handlePrev = useCallback(() => {
     if (pathName === flowDesignPath) {
       history.replace(formDesignPath);
@@ -119,7 +116,9 @@ const EditorHeader: FC = () => {
           */}
           {pathName === formDesignPath && (
             <Tooltip title="预览">
-              <Icon className={styles.iconfont} type="yulan" onClick={handlePreview} />
+              <span>
+                <Icon className={styles.iconfont} type="yulan" onClick={handlePreview} />
+              </span>
             </Tooltip>
           )}
           {pathName === flowDesignPath && (

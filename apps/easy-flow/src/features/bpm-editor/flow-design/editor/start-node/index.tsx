@@ -3,13 +3,13 @@ import { Input, Form, Space, Button } from 'antd';
 import debounce from 'lodash/debounce';
 import classnames from 'classnames';
 import useMemoCallback from '@common/hooks/use-memo-callback';
+import { name } from '@common/rule';
 import { updateNode } from '../../flow-slice';
 import { StartNode, TriggerType } from '@type/flow';
 import styles from './index.module.scss';
 import { useAppDispatch } from '@/app/hooks';
 import { trimInputValue } from '../../util';
 import useValidateForm from '../../hooks/use-validate-form';
-import { name } from '../rules';
 
 interface StartNodeEditorProps {
   node: StartNode;

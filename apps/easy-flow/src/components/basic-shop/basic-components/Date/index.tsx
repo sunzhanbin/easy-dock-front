@@ -1,19 +1,19 @@
 import { memo, useMemo } from 'react';
-import { useLocation } from 'react-router';
 import { DatePicker } from 'antd';
 import { DatePickerProps } from 'antd/lib/date-picker';
 import moment, { Moment } from 'moment';
-import { useRouteMatch } from 'react-router-dom';
 
-const Date = (props: DatePickerProps & { readOnly: boolean; notSelectPassed: boolean }) => {
+const Date = (
+  props: DatePickerProps & { readOnly: boolean; notSelectPassed: boolean; onChange: (value: number) => void },
+) => {
   const { format, notSelectPassed, defaultValue, readOnly, value, onChange } = props;
-  const location = useLocation();
-  const match = useRouteMatch();
   const propList = useMemo(() => {
     const prop: { [k: string]: string | boolean | Function | Moment } = {
       size: 'large',
       disabled: readOnly as boolean,
-      onChange: onChange as Function,
+      onChange(val: moment.Moment) {
+        onChange && onChange(moment(val).valueOf());
+      },
     };
     let formatStr: string = '';
     if (format === '2') {
@@ -29,21 +29,13 @@ const Date = (props: DatePickerProps & { readOnly: boolean; notSelectPassed: boo
       };
     }
     if (defaultValue) {
-      const value = moment(defaultValue, formatStr);
-      prop.defaultValue = value;
-      if (location.pathname === `${match.url}`) {
-        prop.value = value;
-      }
+      prop.defaultValue = typeof defaultValue === 'number' ? moment(defaultValue) : defaultValue;
     }
     if (value) {
-      if (typeof value === 'number') {
-        prop.value = moment(value);
-      } else if ((value as any)._isAMomentObject) {
-        prop.value = value;
-      }
+      prop.value = typeof value === 'number' ? moment(value) : value;
     }
     return Object.assign({}, props, prop);
-  }, [format, notSelectPassed, defaultValue, readOnly, location, props, match, onChange]);
-  return <DatePicker {...propList} style={{ width: '100%' }} />;
+  }, [format, notSelectPassed, defaultValue, value, readOnly, props, onChange]);
+  return <DatePicker {...propList} style={{ width: '100%' }} key={defaultValue?.toString()} />;
 };
 export default memo(Date);

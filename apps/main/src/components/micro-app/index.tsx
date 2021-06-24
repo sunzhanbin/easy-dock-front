@@ -10,10 +10,11 @@ interface MicroAppProps {
   entry: string;
   className?: string;
   basename?: string;
+  extra?: any;
 }
 
 function MicroApp(props: MicroAppProps) {
-  const { name, entry, className, basename } = props;
+  const { name, entry, className, basename, extra } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(true);
   const matchedRoute = useMatchRoute();
@@ -26,6 +27,7 @@ function MicroApp(props: MicroAppProps) {
         container: containerRef.current,
         props: {
           basename: basename || matchedRoute,
+          ...extra,
         },
       });
 
@@ -40,7 +42,7 @@ function MicroApp(props: MicroAppProps) {
         app.unmount();
       };
     }
-  }, [name, entry, basename, matchedRoute]);
+  }, [name, entry, basename, matchedRoute, extra]);
 
   return (
     <div className={classnames(styles.container, className)}>

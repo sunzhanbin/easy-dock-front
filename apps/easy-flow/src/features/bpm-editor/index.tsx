@@ -19,7 +19,7 @@ const BpmEditor: FC = () => {
         const { name, id, app } = res.data;
         dispatch(setAppInfo({ id, name, appId: app.id }));
       });
-  }, [bpmId]);
+  }, [bpmId, dispatch]);
 
   useEffect(() => {
     dispatch(loadComponents());

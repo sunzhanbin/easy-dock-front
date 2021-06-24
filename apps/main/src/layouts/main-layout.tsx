@@ -37,10 +37,10 @@ export default function PrimaryLayout() {
       {showHeader && <Header />}
 
       <Suspense fallback={fallback}>
-        <Route path={[ROUTES.INDEX, ROUTES.SCENE_MANAGE]} exact component={ScenesListPage}></Route>
+        <Route path={ROUTES.SCENE_MANAGE} exact component={ScenesListPage}></Route>
         <Route path={ROUTES.SCENE_DETAIL} component={AppPage}></Route>
         <Route path={ROUTES.INTEGRATION} component={IntegrationPage}></Route>
-        <Route path={ROUTES.APPS_RUNTIME} component={AppsRuntimePage}></Route>
+        <Route path={ROUTES.INDEX} exact component={AppsRuntimePage}></Route>
         <Route path={microsUrls} component={MicroPage}></Route>
       </Suspense>
     </>

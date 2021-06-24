@@ -110,7 +110,7 @@ const SelectOptionList = (props: editProps) => {
       setComponentKey('');
       fetchFieldNames(appList, e);
     },
-    [appList],
+    [appList, fetchFieldNames],
   );
   const handleChangeComponent = useCallback((e) => {
     setComponentKey(e);
@@ -134,14 +134,14 @@ const SelectOptionList = (props: editProps) => {
           fetchFieldNames(list, subAppKey);
         });
     }
-  }, [subAppId, type, subAppKey]);
+  }, [appId, subAppId, type, subAppKey, fetchFieldNames]);
   useEffect(() => {
     if (type === 'custom') {
       onChange && onChange({ type, data: content });
     } else if (type === 'subapp') {
       onChange && onChange({ type, subappId: subAppKey, fieldName: componentKey });
     }
-  }, [type, content, subAppKey, componentKey]);
+  }, [type, content, subAppKey, componentKey, onChange]);
   const customContent = useMemo(() => {
     if (Array.isArray(content) && type === 'custom') {
       return (
@@ -166,7 +166,9 @@ const SelectOptionList = (props: editProps) => {
                 }}
               >
                 <Tooltip title="删除">
-                  <Icon className={styles.iconfont} type="shanchu" />
+                  <span>
+                    <Icon className={styles.iconfont} type="shanchu" />
+                  </span>
                 </Tooltip>
               </div>
               <div
@@ -179,7 +181,9 @@ const SelectOptionList = (props: editProps) => {
                 }}
               >
                 <Tooltip title="拖动换行">
-                  <Icon className={styles.iconfont} type="caidan" />
+                  <span>
+                    <Icon className={styles.iconfont} type="caidan" />
+                  </span>
                 </Tooltip>
               </div>
               <Input
