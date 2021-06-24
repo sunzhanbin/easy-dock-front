@@ -119,12 +119,12 @@ export const Card: FC<CardProps> = ({ rowIndex, row, moveCard }) => {
         // When dragging upwards, only move when the cursor is above 50%
 
         // Dragging downwards
-        if (dragIndex !== -1 && dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+        if (dragIndex === -1 || (dragIndex < hoverIndex && hoverClientY < hoverMiddleY)) {
           return;
         }
 
         // Dragging upwards
-        if (dragIndex !== -1 && dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+        if (dragIndex === -1 || (dragIndex > hoverIndex && hoverClientY > hoverMiddleY)) {
           return;
         }
 
