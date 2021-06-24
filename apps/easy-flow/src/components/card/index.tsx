@@ -79,72 +79,80 @@ export const Card: FC<CardProps> = ({ rowIndex, row, moveCard }) => {
     [layout],
   );
   const ref = useRef<HTMLDivElement>(null);
-  const [{ handlerId }, drop] = useDrop({
-    accept: ['toolItem', 'card'],
-    collect(monitor) {
-      console.log(`monitor.getHandlerId()`, monitor.getHandlerId());
-      return {
-        handlerId: monitor.getHandlerId(),
-      };
+  const [{ handlerId }, drop] = useDrop(
+    {
+      accept: ['toolItem', 'card'],
+      collect(monitor) {
+        return {
+          handlerId: monitor.getHandlerId(),
+        };
+      },
+      drop: (item: DragItem, monitor: DropTargetMonitor) => {
+        return { ...item, hoverIndex: rowIndex };
+      },
+      hover(item: DragItem, monitor: DropTargetMonitor) {
+        if (!ref.current) {
+          return;
+        }
+        const dragIndex = item.rowIndex;
+        const hoverIndex = rowIndex;
+
+        // Don't replace items with themselves
+        if (dragIndex === hoverIndex) {
+          return;
+        }
+
+        // Determine rectangle on screen
+        const hoverBoundingRect = ref.current?.getBoundingClientRect();
+
+        // Get vertical middle
+        const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+
+        // Determine mouse position
+        const clientOffset = monitor.getClientOffset();
+
+        // Get pixels to the top
+        const hoverClientY = (clientOffset as XYCoord).y - hoverBoundingRect.top;
+
+        // Only perform the move when the mouse has crossed half of the items height
+        // When dragging downwards, only move when the cursor is below 50%
+        // When dragging upwards, only move when the cursor is above 50%
+
+        // Dragging downwards
+        if (dragIndex === -1 || (dragIndex < hoverIndex && hoverClientY < hoverMiddleY)) {
+          return;
+        }
+
+        // Dragging upwards
+        if (dragIndex === -1 || (dragIndex > hoverIndex && hoverClientY > hoverMiddleY)) {
+          return;
+        }
+
+        // Time to actually perform the action
+        moveCard(dragIndex, hoverIndex);
+
+        // Note: we're mutating the monitor item here!
+        // Generally it's better to avoid mutations,
+        // but it's good here for the sake of performance
+        // to avoid expensive index searches.
+        item.rowIndex = hoverIndex;
+      },
     },
-    hover(item: DragItem, monitor: DropTargetMonitor) {
-      if (!ref.current) {
-        return;
-      }
-      const dragIndex = item.rowIndex;
-      const hoverIndex = rowIndex;
+    [rowIndex, row],
+  );
 
-      // Don't replace items with themselves
-      if (dragIndex === hoverIndex) {
-        return;
-      }
-
-      // Determine rectangle on screen
-      const hoverBoundingRect = ref.current?.getBoundingClientRect();
-
-      // Get vertical middle
-      const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
-
-      // Determine mouse position
-      const clientOffset = monitor.getClientOffset();
-
-      // Get pixels to the top
-      const hoverClientY = (clientOffset as XYCoord).y - hoverBoundingRect.top;
-
-      // Only perform the move when the mouse has crossed half of the items height
-      // When dragging downwards, only move when the cursor is below 50%
-      // When dragging upwards, only move when the cursor is above 50%
-
-      // Dragging downwards
-      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-        return;
-      }
-
-      // Dragging upwards
-      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-        return;
-      }
-
-      // Time to actually perform the action
-      moveCard(dragIndex, hoverIndex);
-
-      // Note: we're mutating the monitor item here!
-      // Generally it's better to avoid mutations,
-      // but it's good here for the sake of performance
-      // to avoid expensive index searches.
-      item.rowIndex = hoverIndex;
+  const [{ isDragging }, drag] = useDrag(
+    {
+      type: 'card',
+      item: () => {
+        return { rowIndex, id: JSON.stringify(row) };
+      },
+      collect: (monitor: any) => ({
+        isDragging: monitor.isDragging(),
+      }),
     },
-  });
-
-  const [{ isDragging }, drag] = useDrag({
-    type: 'card',
-    item: () => {
-      return { rowIndex, id: JSON.stringify(row) };
-    },
-    collect: (monitor: any) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  });
+    [rowIndex, row],
+  );
 
   const opacity = isDragging ? 0 : 1;
   drag(drop(ref));

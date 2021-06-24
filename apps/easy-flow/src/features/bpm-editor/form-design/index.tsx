@@ -127,7 +127,7 @@ const FormDesign: FC<{}> = () => {
     setIsShowTip(false);
   });
   return (
-    <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart} onDragUpdate={onDragUpdate}>
+    <>
       <Prompt when={isDirty} message={handleConfirmLeave} />
       <Modal
         maskClosable={false}
@@ -161,7 +161,7 @@ const FormDesign: FC<{}> = () => {
           {selectedField ? <EditZone></EditZone> : null}
         </div>
       </DndProvider>
-    </DragDropContext>
+    </>
   );
 };
 

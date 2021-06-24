@@ -28,8 +28,7 @@ const FormZone: FC<{}> = () => {
   const layout = useAppSelector(layoutSelector);
   const moveCard = useCallback(
     (dragIndex: number, hoverIndex: number) => {
-      const dragCard = layout[dragIndex];
-      dispatch(moveIndex({ dragIndex, hoverIndex }));
+      if (dragIndex !== -1) dispatch(moveIndex({ dragIndex, hoverIndex }));
     },
     [layout],
   );
