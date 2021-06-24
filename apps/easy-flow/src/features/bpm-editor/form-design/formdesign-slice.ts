@@ -107,6 +107,7 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
         version,
         rules: [],
         canSubmit: type === 'DescText' ? false : true,
+        multiple: type === 'Checkbox' || (type === 'Select' && (byId[id] as any).multiple) ? true : false,
       };
       const props: ConfigItem = {};
       componentConfig?.forEach(({ isProps, key }) => {
