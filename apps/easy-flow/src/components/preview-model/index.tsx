@@ -25,7 +25,7 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
     fetchDataSource(byId).then((res) => {
       setDataSource(res);
     });
-  }, []);
+  }, [byId]);
   const formDesign = useMemo(() => {
     const components: ComponentConfig[] = [];
     Object.keys(byId).forEach((id) => {
@@ -69,7 +69,7 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
         </div>
       </div>
     );
-  }, []);
+  }, [onClose]);
   return (
     <Modal
       visible={visible}

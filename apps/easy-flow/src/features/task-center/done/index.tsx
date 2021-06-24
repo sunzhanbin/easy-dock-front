@@ -8,6 +8,7 @@ import { runtimeAxios } from '@/utils';
 import moment from 'moment';
 import { dynamicRoutes } from '@/consts/route';
 import useApp from '@/hooks/use-app';
+import useMemoCallback from '@common/hooks/use-memo-callback';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -85,8 +86,8 @@ const Done: FC<{}> = () => {
         },
       },
     ];
-  }, []);
-  const fetchData = useCallback(() => {
+  }, [history]);
+  const fetchData = useMemoCallback(() => {
     if (!app) return;
 
     setLoading(true);
@@ -129,7 +130,7 @@ const Done: FC<{}> = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, [app, pagination, form, sortDirection]);
+  });
   const fetchOptionList = useCallback(() => {
     runtimeAxios.post('/user/search', { index: 0, size: 100, keyword: '' }).then((res) => {
       const list = res.data?.data || [];
@@ -139,11 +140,14 @@ const Done: FC<{}> = () => {
   const handleFilterOption = useCallback((inputValue, option) => {
     return option.children.indexOf(inputValue) > -1;
   }, []);
-  const handleKeyUp = useCallback((e) => {
-    if (e.keyCode === 13) {
-      fetchData();
-    }
-  }, []);
+  const handleKeyUp = useCallback(
+    (e) => {
+      if (e.keyCode === 13) {
+        fetchData();
+      }
+    },
+    [fetchData],
+  );
   const handleTableChange = useCallback((newPagination, filters, sorter) => {
     sorter.order === 'ascend' ? setSortDirection('ASC') : setSortDirection('DESC');
     setPagination((pagination) => ({ ...pagination, ...newPagination }));
@@ -151,13 +155,13 @@ const Done: FC<{}> = () => {
   const handleReset = useCallback(() => {
     form.resetFields();
     fetchData();
-  }, [form]);
+  }, [form, fetchData]);
   useEffect(() => {
     fetchOptionList();
-  }, []);
+  }, [fetchOptionList]);
   useEffect(() => {
-    fetchData();
-  }, [pagination.current, pagination.pageSize, sortDirection]);
+    app && fetchData();
+  }, [app, fetchData]);
   return (
     <div className={styles.container}>
       <div className={styles.header}>

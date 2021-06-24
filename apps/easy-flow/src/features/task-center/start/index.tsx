@@ -4,9 +4,10 @@ import styles from './index.module.scss';
 import { Pagination, StartItem } from '../type';
 import { getStayTime, getPassedTime, runtimeAxios } from '@/utils';
 import classNames from 'classnames';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import moment from 'moment';
 import { dynamicRoutes } from '@/consts/route';
+import useMemoCallback from '@common/hooks/use-memo-callback';
 import useApp from '@/hooks/use-app';
 
 const { RangePicker } = DatePicker;
@@ -60,7 +61,6 @@ const statusMap: { [k: number]: { className: string; text: string } } = {
 const Start: FC<{}> = () => {
   const [form] = Form.useForm();
   const history = useHistory();
-  const location = useLocation();
   const app = useApp();
   const [loading, setLoading] = useState<boolean>(false);
   const [sortDirection, setSortDirection] = useState<'DESC' | 'ASC'>('DESC');
@@ -141,8 +141,8 @@ const Start: FC<{}> = () => {
         },
       },
     ];
-  }, []);
-  const fetchData = useCallback(() => {
+  }, [history]);
+  const fetchData = useMemoCallback(() => {
     if (!app) return;
 
     setLoading(true);
@@ -184,27 +184,30 @@ const Start: FC<{}> = () => {
       .finally(() => {
         setLoading(false);
       });
-  }, [app, pagination, form, sortDirection]);
-  const handleKeyUp = useCallback((e) => {
-    if (e.keyCode === 13) {
-      fetchData();
-    }
-  }, []);
+  });
+  const handleKeyUp = useCallback(
+    (e) => {
+      if (e.keyCode === 13) {
+        fetchData();
+      }
+    },
+    [fetchData],
+  );
   const handleSearch = useCallback(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
   const handleReset = useCallback(() => {
     form.resetFields();
     fetchData();
-  }, [form]);
+  }, [form, fetchData]);
   const handleTableChange = useCallback((newPagination, filters, sorter) => {
     sorter.order === 'ascend' ? setSortDirection('ASC') : setSortDirection('DESC');
     setPagination((pagination) => ({ ...pagination, ...newPagination }));
   }, []);
 
   useEffect(() => {
-    fetchData();
-  }, [pagination.current, pagination.pageSize, sortDirection]);
+    app && fetchData();
+  }, [app, fetchData]);
   return (
     <div className={styles.container}>
       <div className={styles.header}>

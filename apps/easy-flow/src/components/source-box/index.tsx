@@ -2,7 +2,7 @@ import { AllComponentType, FormField, MoveConfig, TConfigItem } from '@/type';
 import { Tooltip } from 'antd';
 import LabelContent from '../label-content';
 import { Icon } from '@common/components';
-import React, { memo, FC, useMemo, useCallback, useEffect } from 'react';
+import React, { memo, FC, useMemo, useCallback } from 'react';
 import { store } from '@app/store';
 import {
   moveUp,
@@ -138,6 +138,8 @@ const SourceBox: FC<{
     }
     return null;
   }, [
+    id,
+    type,
     moveConfig,
     compSources,
     selectedField,

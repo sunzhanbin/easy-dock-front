@@ -148,22 +148,25 @@ const ToDo: FC<{}> = () => {
         },
       },
     ];
-  }, []);
+  }, [history]);
   const handleFilterOption = useCallback((inputValue, option) => {
     return option.children.indexOf(inputValue) > -1;
   }, []);
-  const handleKeyUp = useCallback((e) => {
-    if (e.keyCode === 13) {
-      fetchData();
-    }
-  }, []);
+  const handleKeyUp = useCallback(
+    (e) => {
+      if (e.keyCode === 13) {
+        fetchData();
+      }
+    },
+    [fetchData],
+  );
   const handleSearch = useCallback(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
   const handleReset = useCallback(() => {
     form.resetFields();
     fetchData();
-  }, [form]);
+  }, [form, fetchData]);
   const handleTableChange = useCallback((newPagination, filters, sorter) => {
     sorter.order === 'ascend' ? setSortDirection('ASC') : setSortDirection('DESC');
     setPagination((pagination) => ({ ...pagination, ...newPagination }));
@@ -173,7 +176,7 @@ const ToDo: FC<{}> = () => {
   }, [fetchData, app]);
   useEffect(() => {
     fetchOptionList();
-  }, []);
+  }, [fetchOptionList]);
   return (
     <div className={styles.container}>
       <div className={styles.header}>

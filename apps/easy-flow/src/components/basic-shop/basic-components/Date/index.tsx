@@ -35,7 +35,7 @@ const Date = (
       prop.value = typeof value === 'number' ? moment(value) : value;
     }
     return Object.assign({}, props, prop);
-  }, [format, notSelectPassed, defaultValue, readOnly, props, onChange]);
+  }, [format, notSelectPassed, defaultValue, value, readOnly, props, onChange]);
   return <DatePicker {...propList} style={{ width: '100%' }} key={defaultValue?.toString()} />;
 };
 export default memo(Date);

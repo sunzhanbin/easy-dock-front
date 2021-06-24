@@ -28,7 +28,7 @@ const TaskCenter: FC<{}> = () => {
 
   const handleStart = useCallback(() => {
     setIsShowDrawer(true);
-  }, [match]);
+  }, []);
   const filterSubAppList = useMemo(() => {
     return subAppList.filter(({ name }) => name.indexOf(keyword) > -1);
   }, [subAppList, keyword]);
