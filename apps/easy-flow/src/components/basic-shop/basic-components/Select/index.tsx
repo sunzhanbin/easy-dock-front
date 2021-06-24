@@ -28,7 +28,11 @@ const SelectComponent = (
     if (defaultValue) {
       prop.defaultValue = defaultValue as string;
     }
-    return Object.assign({}, props, prop);
+    const result = Object.assign({}, props, prop);
+    delete result.fieldName;
+    delete result.colSpace;
+    delete result.dataSource;
+    return result;
   }, [defaultValue, multiple, showSearch, readOnly, props, onChange]);
   return (
     <Select {...propList} style={{ width: '100%' }}>

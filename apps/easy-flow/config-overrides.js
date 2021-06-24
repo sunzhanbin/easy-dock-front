@@ -58,7 +58,7 @@ module.exports = {
           }),
         );
 
-      process.env.REACT_APP_TARGET_ENV !== 'development' &&
+      process.env.NODE_ENV !== 'development' &&
         config.plugins.push(
           new FileManagerPlugin({
             events: {

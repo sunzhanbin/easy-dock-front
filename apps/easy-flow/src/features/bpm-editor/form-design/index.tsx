@@ -58,6 +58,7 @@ const FormDesign: FC<{}> = () => {
       } else {
         dispatch(setById({ byId: {} }));
         dispatch(setLayout({ layout: [] }));
+        dispatch(selectField({ id: '' }));
       }
       dispatch(setIsDirty({ isDirty: false }));
     });
@@ -94,12 +95,7 @@ const FormDesign: FC<{}> = () => {
   const onDragStart = useCallback(() => {}, []);
   const onDragUpdate = useCallback(() => {}, []);
   const handleConfirmLeave = useMemoCallback((location: ReturnType<typeof useLocation>) => {
-    if (
-      isDirty &&
-      url !== location.pathname &&
-      url.replace('form-design', 'preview-form') !== location.pathname &&
-      !cancelSaveRef.current
-    ) {
+    if (isDirty && url !== location.pathname && !cancelSaveRef.current) {
       targetUrlRef.current = location.pathname + location.search;
       setIsShowTip(true);
       return false;
@@ -113,14 +109,14 @@ const FormDesign: FC<{}> = () => {
       return;
     }
     if (targetUrlRef.current) {
-      history.push(targetUrlRef.current);
+      history.replace(targetUrlRef.current);
     }
   });
   const handleCancelUnSaveModal = useMemoCallback(() => {
     setIsShowTip(false);
     cancelSaveRef.current = true;
     if (targetUrlRef.current) {
-      history.push(targetUrlRef.current);
+      history.replace(targetUrlRef.current);
     }
   });
   const handleCloseUnSaveModal = useMemoCallback(() => {

@@ -4,6 +4,7 @@ declare type User = {
   id: number;
   cName: string; // 中文名
   nick: string; // 昵称
+  loginName: string;
 };
 
 interface Window {

@@ -43,7 +43,8 @@ export const getUserInfo = createAsyncThunk('main-app-user/get-user', (_, { disp
           id: user.id,
           nick: user.username,
           email: user.email,
-          cName: user.cnName,
+          cName: (user.cnName && user.cnName.trim()) || '',
+          loginName: data.loginName,
         }),
       );
     });
