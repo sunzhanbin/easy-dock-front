@@ -7,8 +7,6 @@ import { useRouteMatch } from 'react-router-dom';
 
 const Date = (props: DatePickerProps & { readOnly: boolean; notSelectPassed: boolean }) => {
   const { format, notSelectPassed, defaultValue, readOnly, value, onChange } = props;
-  const location = useLocation();
-  const match = useRouteMatch();
   const propList = useMemo(() => {
     const prop: { [k: string]: string | boolean | Function | Moment } = {
       size: 'large',
@@ -31,9 +29,6 @@ const Date = (props: DatePickerProps & { readOnly: boolean; notSelectPassed: boo
     if (defaultValue) {
       const value = typeof defaultValue === 'number' ? moment(defaultValue) : defaultValue;
       prop.defaultValue = value;
-      if (location.pathname === `${match.url}`) {
-        prop.value = value;
-      }
     }
     if (value) {
       if (typeof value === 'number') {
@@ -43,7 +38,7 @@ const Date = (props: DatePickerProps & { readOnly: boolean; notSelectPassed: boo
       }
     }
     return Object.assign({}, props, prop);
-  }, [format, notSelectPassed, defaultValue, readOnly, location, props, match, onChange]);
-  return <DatePicker {...propList} style={{ width: '100%' }} />;
+  }, [format, notSelectPassed, defaultValue, readOnly, props, onChange]);
+  return <DatePicker {...propList} style={{ width: '100%' }} key={defaultValue?.toString()} />;
 };
 export default memo(Date);
