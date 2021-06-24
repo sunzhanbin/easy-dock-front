@@ -1,5 +1,5 @@
 import { memo, useCallback, FC, useState, useEffect, useMemo } from 'react';
-import { NavLink, Redirect, Route, Switch, useLocation, useRouteMatch } from 'react-router-dom';
+import { NavLink, Route, Switch, useLocation, useRouteMatch } from 'react-router-dom';
 import { Input, Button, Drawer } from 'antd';
 import { Icon } from '@common/components';
 import styles from './index.module.scss';
