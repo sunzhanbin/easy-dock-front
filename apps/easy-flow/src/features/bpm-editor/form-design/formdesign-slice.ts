@@ -101,7 +101,17 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
       const type = id.split('_')[0] || '';
       const version = schema[type as FieldType]?.baseInfo.version || '';
       const componentConfig = schema[type as FieldType]?.config;
-      const config: ConfigItem = { id, type, version, rules: [], canSubmit: type === 'DescText' ? false : true };
+      const config: ConfigItem = {
+        id,
+        type,
+        version,
+        rules: [],
+        canSubmit: type === 'DescText' ? false : true,
+        multiple:
+          type === 'Radio' || type === 'Checkbox' || (type === 'Select' && (componentConfig as any).multiple)
+            ? true
+            : false,
+      };
       const props: ConfigItem = {};
       componentConfig?.forEach(({ isProps, key }) => {
         if (isProps) {

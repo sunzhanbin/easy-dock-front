@@ -15,7 +15,10 @@ const InputComponent = (props: InputProps & { unique: boolean }) => {
     if (defaultValue) {
       prop.defaultValue = defaultValue as string;
     }
-    return Object.assign({}, props, prop);
+    const result = Object.assign({}, props, prop);
+    delete result.fieldName;
+    delete result.colSpace;
+    return result;
   }, [defaultValue, readOnly, unique, props, onChange]);
   return <Input {...propList} key={defaultValue as string} />;
 };

@@ -141,7 +141,7 @@ const SelectOptionList = (props: editProps) => {
     } else if (type === 'subapp') {
       onChange && onChange({ type, subappId: subAppKey, fieldName: componentKey });
     }
-  }, [type, content, subAppKey, componentKey, onChange]);
+  }, [type, content, subAppKey, componentKey]);
   const customContent = useMemo(() => {
     if (Array.isArray(content) && type === 'custom') {
       return (
