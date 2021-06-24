@@ -14,7 +14,7 @@ import { ComponentConfig } from '@/type';
 import { fetchDataSource } from '@/apis/detail';
 import styles from './index.module.scss';
 
-const propsKey = ['defaultValue', 'showSearch'];
+const propsKey = ['defaultValue', 'showSearch', 'multiple'];
 
 const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, onClose }) => {
   const { name: appName } = useAppSelector(subAppSelector);
