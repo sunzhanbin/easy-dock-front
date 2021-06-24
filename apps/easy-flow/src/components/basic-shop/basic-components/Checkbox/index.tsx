@@ -14,7 +14,11 @@ const CheckboxComponent = (props: CheckboxGroupProps & { readOnly: boolean; opti
       options: optionList,
       onChange: onChange as Function,
     };
-    return Object.assign({}, props, prop);
+    const result = Object.assign({}, props, prop);
+    delete result.fieldName;
+    delete result.colSpace;
+    delete result.dataSource;
+    return result;
   }, [optionList, readOnly, props, onChange]);
   return <Checkbox.Group {...propList}></Checkbox.Group>;
 };
