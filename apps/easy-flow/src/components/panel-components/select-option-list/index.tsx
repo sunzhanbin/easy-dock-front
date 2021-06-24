@@ -1,6 +1,5 @@
-import { memo, useCallback, useMemo, useState, useEffect } from 'react';
+import { memo, useCallback, useMemo, useState, useEffect, useRef } from 'react';
 import { Select, Input, Tooltip } from 'antd';
-import { uniqueId } from 'lodash';
 import { axios } from '@utils';
 import { OptionItem, OptionMode, SelectOptionItem } from '@/type';
 import { Icon } from '@common/components';
@@ -25,9 +24,12 @@ const SelectOptionList = (props: editProps) => {
   const [appList, setAppList] = useState<(OptionItem & { versionId: number })[]>([]);
   const [componentKey, setComponentKey] = useState<string>(value?.fieldName || '');
   const [componentList, setComponentList] = useState<OptionItem[]>([]);
+  const indexRef = useRef<number>(0);
+
   const addItem = useCallback(() => {
+    indexRef.current++;
     const list: OptionItem[] = [...content];
-    const name = uniqueId('未命名');
+    const name = `未命名${indexRef.current}`;
     list.push({ key: name, value: name });
     setContent(list);
   }, [content]);
