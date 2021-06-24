@@ -25,7 +25,6 @@ const TaskCenter: FC<{}> = () => {
   const [isShowDrawer, setIsShowDrawer] = useState<boolean>(false);
   const [subAppList, setSubAppList] = useState<SubAppItem[]>([]);
   const [keyword, setKeyWord] = useState<string>('');
-
   const handleStart = useCallback(() => {
     setIsShowDrawer(true);
   }, []);
@@ -48,7 +47,7 @@ const TaskCenter: FC<{}> = () => {
           <div className={styles.title}>任务中心</div>
           <div className={styles.line}></div>
           <div className={styles.navLink}>
-            <NavLink to={`${matchedUrl}/todo`} className={styles.nav} activeClassName={styles.active}>
+            <NavLink to={`${matchedUrl}`} exact className={styles.nav} activeClassName={styles.active}>
               我的待办
               {location.pathname === `${matchedUrl}/todo` && todoNum > 0 && (
                 <div className={styles.todoNum}>{todoNum}</div>
@@ -74,11 +73,11 @@ const TaskCenter: FC<{}> = () => {
       </div>
       <div className={styles.content}>
         <Switch>
-          <Route path={`${matchedPath}/todo`} component={Todo}></Route>
           <Route path={`${matchedPath}/start`} component={Start}></Route>
           <Route path={`${matchedPath}/done`} component={Done}></Route>
+          <Route path="*" component={Todo}></Route>
           {/* <Route path={`${matchedPath}/copy`} component={Copy}></Route> */}
-          <Redirect to={`${matchedPath}/todo`}></Redirect>
+          {/* <Redirect to={`${matchedPath}/todo`}></Redirect> */}
         </Switch>
       </div>
       <div className={styles.footer}>

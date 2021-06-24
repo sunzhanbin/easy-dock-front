@@ -4,6 +4,7 @@ import { useHistory } from 'react-router';
 import { Tooltip } from 'antd';
 import classnames from 'classnames';
 import useMemoCallback from '@common/hooks/use-memo-callback';
+import { Loading } from '@common/components';
 import { runtimeAxios } from '@utils';
 import { AppSchema } from '@schema/app';
 import { MAIN_CONTENT_CLASSNAME, dynamicRoutes } from '@consts';
@@ -47,7 +48,7 @@ function App() {
   }, []);
 
   const handleClickCard = useMemoCallback((app: AppSchema) => {
-    history.push(dynamicRoutes.toAppDashboard(String(app.id)));
+    history.push(dynamicRoutes.toAppTaskCenter(String(app.id)));
   });
 
   return (
@@ -56,6 +57,8 @@ function App() {
       id="easydock-apps-container"
       className={classnames(styles.container, MAIN_CONTENT_CLASSNAME)}
     >
+      {loading && <Loading />}
+
       <div className={styles.welcome}>
         {loginUser.info && <div className={styles.title}>{`Hi ${loginUser.info.cName}`}</div>}
         <div className={styles.time}>{`${formatTime(new Date())}好!`}</div>

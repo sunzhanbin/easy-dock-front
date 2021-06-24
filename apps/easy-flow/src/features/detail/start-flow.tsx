@@ -83,6 +83,7 @@ function StartFlow() {
     if (!formRef.current || !subApp) return;
 
     const values = await formRef.current.validateFields();
+
     await runtimeAxios.post(`/process_instance/start`, {
       formData: values,
       versionId: subApp.version.id,

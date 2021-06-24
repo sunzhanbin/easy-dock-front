@@ -27,7 +27,7 @@ function AppEntry() {
     <AntdProvider>
       <Switch>
         <Route path={ROUTES.LOGIN} component={LoginLayout}></Route>
-        <Route path={ROUTES.APP_DASHBOARD} component={SidebarLayout}></Route>
+        <Route path={ROUTES.APP_PANEL} component={SidebarLayout}></Route>
         <Route path={ROUTES.INDEX} component={PrimaryLayout}></Route>
       </Switch>
     </AntdProvider>

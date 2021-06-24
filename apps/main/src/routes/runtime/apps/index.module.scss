@@ -22,6 +22,11 @@
   }
 }
 
+.container {
+  position: relative;
+  min-height: 300px;
+}
+
 .apps {
   position: relative;
   display: grid;
