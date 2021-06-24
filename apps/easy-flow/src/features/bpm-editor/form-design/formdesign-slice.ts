@@ -1,9 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
   comAdded as addedReducer,
+  comInserted as insertedReducer,
   moveDown as moveDownReducer,
   moveRow as moveRowReducer,
   moveUp as moveUpReducer,
+  moveIndex as moveIndexReducer,
   exchange as exchangeReducer,
   selectField as selectFieldReducer,
   editProps as editPropsReducer,
@@ -26,10 +28,12 @@ const formDesign = createSlice({
   initialState,
   reducers: {
     comAdded: addedReducer,
+    comInserted: insertedReducer,
     comDeleted: comDeletedReducer,
     moveDown: moveDownReducer,
     moveRow: moveRowReducer,
     moveUp: moveUpReducer,
+    moveIndex: moveIndexReducer,
     exchange: exchangeReducer,
     selectField: selectFieldReducer,
     editProps: editPropsReducer,
@@ -48,10 +52,12 @@ const formDesign = createSlice({
 
 export const {
   comAdded,
+  comInserted,
   comDeleted,
   moveDown,
   moveRow,
   moveUp,
+  moveIndex,
   exchange,
   selectField,
   editProps,
