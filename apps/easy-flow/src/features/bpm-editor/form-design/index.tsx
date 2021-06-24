@@ -111,14 +111,14 @@ const FormDesign: FC<{}> = () => {
       return;
     }
     if (targetUrlRef.current) {
-      history.push(targetUrlRef.current);
+      history.replace(targetUrlRef.current);
     }
   });
   const handleCancelUnSaveModal = useMemoCallback(() => {
     setIsShowTip(false);
     cancelSaveRef.current = true;
     if (targetUrlRef.current) {
-      history.push(targetUrlRef.current);
+      history.replace(targetUrlRef.current);
     }
   });
   const handleCloseUnSaveModal = useMemoCallback(() => {
