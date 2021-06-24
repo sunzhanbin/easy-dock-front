@@ -104,6 +104,7 @@ function FlowDesign() {
 
   const handleSave = useMemoCallback(async () => {
     await dispatch(save(bpmId));
+    setShowUnsaveModal(false);
   });
 
   const handleCloseUnsaveModal = useMemoCallback(() => {
