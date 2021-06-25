@@ -14,7 +14,7 @@ const IntegrationPage = React.lazy(() => import(/* webpackChunkName: "integratio
 
 const MicroPage = React.lazy(() => import(/* webpackChunkName: "micro" */ '@/routes/micro-page'));
 
-export default function PrimaryLayout() {
+function BuilderLayout() {
   const dispatch = useDispatch();
   const { pathname } = useLocation();
   const showHeader = useMemo(() => {
@@ -74,3 +74,5 @@ export default function PrimaryLayout() {
     </>
   );
 }
+
+export default React.memo(BuilderLayout);
