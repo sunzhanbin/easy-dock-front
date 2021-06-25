@@ -71,8 +71,13 @@
     margin-top: 24px;
   }
 }
-.drawer {
+.footer {
   .model {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 88;
+    transform: translate(-50%, -50%);
     width: 868px;
     height: 286px;
     background: #ffffff;
@@ -123,5 +128,12 @@
         }
       }
     }
+  }
+  .mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 66;
+    background: rgba(24, 31, 67, 0.3);
   }
 }

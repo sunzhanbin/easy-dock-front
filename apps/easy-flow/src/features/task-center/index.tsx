@@ -1,6 +1,6 @@
 import { memo, useCallback, FC, useState, useEffect, useMemo } from 'react';
 import { NavLink, Route, Switch, useLocation, useRouteMatch } from 'react-router-dom';
-import { Input, Button, Drawer } from 'antd';
+import { Input, Button } from 'antd';
 import { Icon } from '@common/components';
 import styles from './index.module.scss';
 import Todo from './todo';
@@ -80,46 +80,47 @@ const TaskCenter: FC<{}> = () => {
         </Switch>
       </div>
       <div className={styles.footer}>
-        <Drawer
-          placement="bottom"
-          visible={isShowDrawer}
-          closable={false}
-          maskClosable={false}
-          height={437}
-          className={styles.drawer}
-          bodyStyle={{ background: 'rgba(24, 31, 67, 0.75)', overflow: 'hidden' }}
-        >
-          <div className={styles.model}>
-            <div className={styles.header}>
-              <div className={styles.left}>
-                <div className={styles.title}>发起流程</div>
-                <Input
-                  size="small"
-                  placeholder="搜索子应用名称"
-                  bordered={false}
-                  className={styles.search}
-                  onChange={(e) => {
-                    setKeyWord(e.target.value);
+        {isShowDrawer && (
+          <>
+            <div
+              className={styles.mask}
+              style={{
+                width: `${document.body.clientWidth}px`,
+                height: `${document.body.clientHeight}px`,
+              }}
+            ></div>
+            <div className={styles.model}>
+              <div className={styles.header}>
+                <div className={styles.left}>
+                  <div className={styles.title}>发起流程</div>
+                  <Input
+                    size="small"
+                    placeholder="搜索子应用名称"
+                    bordered={false}
+                    className={styles.search}
+                    onChange={(e) => {
+                      setKeyWord(e.target.value);
+                    }}
+                    prefix={<Icon type="sousuo" className={styles.icon} />}
+                  />
+                </div>
+                <div
+                  className={styles.right}
+                  onClick={() => {
+                    setIsShowDrawer(false);
                   }}
-                  prefix={<Icon type="sousuo" className={styles.icon} />}
-                />
+                >
+                  <Icon type="guanbi" className={styles.close} />
+                </div>
               </div>
-              <div
-                className={styles.right}
-                onClick={() => {
-                  setIsShowDrawer(false);
-                }}
-              >
-                <Icon type="guanbi" className={styles.close} />
+              <div className={styles.content}>
+                {filterSubAppList.map(({ id, name }) => (
+                  <Card id={id} name={name} key={id} className={styles.card} />
+                ))}
               </div>
             </div>
-            <div className={styles.content}>
-              {filterSubAppList.map(({ id, name }) => (
-                <Card id={id} name={name} key={id} className={styles.card} />
-              ))}
-            </div>
-          </div>
-        </Drawer>
+          </>
+        )}
       </div>
     </div>
   );
