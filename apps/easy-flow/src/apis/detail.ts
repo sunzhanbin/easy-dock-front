@@ -40,11 +40,9 @@ export async function loadDatasource(formMeta: FormMeta, flowMeta: FlowMeta, ver
     if (comp.config.dataSource && auths[comp.config.fieldName] !== AuthType.Denied) {
       allPromises.push(
         runtimeAxios
-          .get<{ data: { [key: string]: string } }>(`/form/version/${versionId}/form/${comp.config.fieldName}/data`)
+          .get<{ data: Datasource[string] }>(`/form/version/${versionId}/form/${comp.config.fieldName}/data`)
           .then(({ data }) => {
-            const keys = Object.keys(data);
-
-            datasource[comp.config.fieldName] = keys.map((key) => ({ key: key, value: data[key] }));
+            datasource[comp.config.fieldName] = data;
           }),
       );
     }
