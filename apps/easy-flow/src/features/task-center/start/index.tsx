@@ -22,7 +22,7 @@ const stateList: { key: number; value: string }[] = [
     value: '已终止',
   },
   {
-    key: 3,
+    key: 5,
     value: '已驳回',
   },
   {
@@ -30,7 +30,7 @@ const stateList: { key: number; value: string }[] = [
     value: '已办结',
   },
   {
-    key: 5,
+    key: 3,
     value: '已撤回',
   },
 ];
@@ -44,7 +44,7 @@ const statusMap: { [k: number]: { className: string; text: string } } = {
     className: 'stop',
     text: '已终止',
   },
-  3: {
+  5: {
     className: 'reject',
     text: '已驳回',
   },
@@ -52,7 +52,7 @@ const statusMap: { [k: number]: { className: string; text: string } } = {
     className: 'done',
     text: '已办结',
   },
-  5: {
+  3: {
     className: 'recall',
     text: '已撤回',
   },
