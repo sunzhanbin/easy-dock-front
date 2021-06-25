@@ -12,6 +12,7 @@ const TextareaComponent = (props: TextAreaProps) => {
       size: 'large',
       placeholder: '请输入',
       readOnly: readOnly,
+      disabled: readOnly,
       onChange: onChange,
     };
     if (defaultValue) {
