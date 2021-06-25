@@ -47,6 +47,33 @@ const reducers = {
       };
     },
   },
+  comInserted: {
+    reducer: (state: FormDesign, action: PayloadAction<{ com: FormField; rowIndex: number }>) => {
+      const { com, rowIndex } = action.payload;
+      if (!state.byId) {
+        state.byId = {};
+      }
+      if (!state.layout) {
+        state.layout = [];
+      }
+      if (state.byId[com.id!]) return state;
+      state.byId[com.id!] = com;
+      // 如果当前选中了某一行，则在当前行之后插入；否则在末尾插入
+      state.layout.splice(rowIndex + 1, 0, [com.id!]);
+      state.isDirty = true;
+      state.selectedField = com.id as string;
+      return state;
+    },
+    prepare: (com: FormField, rowIndex: number) => {
+      com.id = uniqueId(`${com.type}_`);
+      return {
+        payload: {
+          rowIndex,
+          com,
+        },
+      };
+    },
+  },
   comDeleted(state: FormDesign, action: PayloadAction<{ id: string }>) {
     const { id } = action.payload;
     let [row, col] = locateById(id, state.layout);
@@ -97,6 +124,15 @@ const reducers = {
     rowLayout.splice(col, 1);
     state.layout.splice(row, 1, rowLayout);
     state.layout.splice(row + 1, 0, [id]);
+    state.isDirty = true;
+    return state;
+  },
+  moveIndex(state: FormDesign, action: PayloadAction<{ dragIndex: number; hoverIndex: number }>) {
+    const { dragIndex, hoverIndex } = action.payload;
+    if (hoverIndex === undefined) return state;
+    const dragCard = state.layout[dragIndex];
+    state.layout.splice(dragIndex, 1);
+    state.layout.splice(hoverIndex, 0, dragCard);
     state.isDirty = true;
     return state;
   },
@@ -242,10 +278,12 @@ export const dirtySelector = createSelector([(state: RootState) => state.formDes
 
 export const {
   comAdded,
+  comInserted,
   comDeleted,
   moveRow,
   moveDown,
   moveUp,
+  moveIndex,
   exchange,
   selectField,
   editProps,

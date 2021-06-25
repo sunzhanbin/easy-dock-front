@@ -10,11 +10,11 @@ import { Icon } from '@/components';
 import { Button, Input } from 'antd';
 import Card from './subapp-card';
 import AppModel from './app-model';
-import { FlowMicroApp } from '@/consts';
+import { FlowMicroApp, MAIN_CONTENT_CLASSNAME } from '@/consts';
 
 const AppDetail: FC = () => {
   const history = useHistory();
-  const { sceneId: appId } = useParams<{ sceneId: string }>();
+  const { appId } = useParams<{ appId: string }>();
   const [appInfo, setAppInfo] = useState<SceneShape>();
   const [subAppList, setSubAppList] = useState<SubAppInfo[]>([]);
   const [isShowModel, setIsShowModel] = useState<boolean>(false);
@@ -55,7 +55,7 @@ const AppDetail: FC = () => {
     });
   }, [appId]);
   return (
-    <div className={styles.container}>
+    <div className={classNames(styles.container, MAIN_CONTENT_CLASSNAME)}>
       <div className={styles.header}>
         <Icon className={styles.back} type="fanhui" onClick={history.goBack} />
         <div className={styles.app_name}>{appInfo?.name && getShorterText(appInfo.name)}</div>
@@ -65,22 +65,23 @@ const AppDetail: FC = () => {
             <div className={classNames(styles.status, appInfo?.status === 1 ? styles.active : styles.negative)}>
               {appInfo?.status === 1 ? '已启用' : '已停用'}
             </div>
-            <div className={styles.search_container}>
-              <Input
-                prefix={<Icon className={styles.search} type="sousuo" />}
-                size="large"
-                placeholder="搜索子应用名称"
-                onBlur={handleSearch}
-              />
-            </div>
           </div>
         )}
+        <div className={styles.search_container}>
+          <Input
+            className={styles.search}
+            prefix={<Icon type="sousuo" />}
+            size="large"
+            placeholder="搜索子应用名称"
+            onBlur={handleSearch}
+          />
+        </div>
       </div>
       <div className={styles.content}>
         {subAppList.length > 0 ? (
           <div
             className={classNames(styles.scenes, { [styles['no-scene']]: subAppList.length === 0 })}
-            id="scenes-list"
+            id="sub_app_card_list"
           >
             <div className={classNames(styles.card, styles.scene)}>
               <Button
@@ -114,6 +115,7 @@ const AppDetail: FC = () => {
                 version={version}
                 key={name}
                 onChange={handleChange}
+                containerId="sub_app_card_list"
               />
             ))}
           </div>

@@ -1,47 +1,47 @@
 import { memo, useMemo, useCallback } from 'react';
 import { NavLink, useHistory } from 'react-router-dom';
 import { Dropdown, Menu } from 'antd';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Avatar } from '@common/components';
-import { userSelector } from '@/store/user';
-import { axios } from '@utils';
-import { ROUTES, envs } from '@consts';
-import { localStorage } from '@common/utils';
+import { userSelector, logout } from '@/store/user';
+import { ROUTES } from '@consts';
 import styles from './index.module.scss';
 
 function HeaderUser() {
   const history = useHistory();
+  const dispatch = useDispatch();
+  const handleLogout = useCallback(async () => {
+    const logoutResponse = await dispatch(logout());
 
-  const logout = useCallback(async () => {
-    await axios.get('/api/auth/v1/logout', { baseURL: envs.COMMON_LOGIN_DOMAIN });
+    if (logoutResponse.meta.requestStatus === 'rejected') {
+      return;
+    }
 
-    delete axios.defaults.headers.auth;
-    localStorage.clear('token');
-    history.replace(ROUTES.LOGIN);
-  }, [history]);
+    history.replace(ROUTES.LOGIN + `?redirect=${encodeURIComponent(window.location.href)}`);
+  }, [history, dispatch]);
 
   const user = useSelector(userSelector);
   const dropownOverlay = useMemo(() => {
     return (
       <Menu>
-        <Menu.Item key="1" onClick={logout}>
+        <Menu.Item key="1" onClick={handleLogout}>
           退出登陆
         </Menu.Item>
       </Menu>
     );
-  }, [logout]);
+  }, [handleLogout]);
 
   return (
     <>
       {user.info ? (
-        <div className={styles.user}>
-          <Dropdown overlay={dropownOverlay} getPopupContainer={(c) => c} placement="bottomCenter">
+        <Dropdown overlay={dropownOverlay} getPopupContainer={(c) => c} placement="bottomLeft">
+          <div className={styles.user}>
             <div className={styles.avatar}>
-              <Avatar round size={32} src={user.info.avatar} name={user.info.cName || user.info.loginName} />
+              <Avatar round size={32} src={user.info.avatar} name={user.info.username} />
             </div>
-          </Dropdown>
-          <div className={styles.name}>{user.info.cName}</div>
-        </div>
+            <div className={styles.name}>{user.info.username}</div>
+          </div>
+        </Dropdown>
       ) : (
         <NavLink to={ROUTES.LOGIN}>登陆</NavLink>
       )}

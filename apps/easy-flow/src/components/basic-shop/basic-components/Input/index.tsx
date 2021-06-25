@@ -9,6 +9,7 @@ const InputComponent = (props: InputProps & { unique: boolean }) => {
       size: 'large',
       placeholder: '请输入',
       readOnly: readOnly,
+      disabled: readOnly,
       unique: String(unique),
       onChange: onChange,
     };

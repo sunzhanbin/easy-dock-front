@@ -8,7 +8,7 @@ import { useHistory } from 'react-router-dom';
 import moment from 'moment';
 import { dynamicRoutes } from '@/consts/route';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import useApp from '@/hooks/use-app';
+import useAppId from '@/hooks/use-app-id';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -22,7 +22,7 @@ const stateList: { key: number; value: string }[] = [
     value: '已终止',
   },
   {
-    key: 3,
+    key: 5,
     value: '已驳回',
   },
   {
@@ -30,7 +30,7 @@ const stateList: { key: number; value: string }[] = [
     value: '已办结',
   },
   {
-    key: 5,
+    key: 3,
     value: '已撤回',
   },
 ];
@@ -44,7 +44,7 @@ const statusMap: { [k: number]: { className: string; text: string } } = {
     className: 'stop',
     text: '已终止',
   },
-  3: {
+  5: {
     className: 'reject',
     text: '已驳回',
   },
@@ -52,7 +52,7 @@ const statusMap: { [k: number]: { className: string; text: string } } = {
     className: 'done',
     text: '已办结',
   },
-  5: {
+  3: {
     className: 'recall',
     text: '已撤回',
   },
@@ -61,7 +61,7 @@ const statusMap: { [k: number]: { className: string; text: string } } = {
 const Start: FC<{}> = () => {
   const [form] = Form.useForm();
   const history = useHistory();
-  const app = useApp();
+  const appId = useAppId();
   const [loading, setLoading] = useState<boolean>(false);
   const [sortDirection, setSortDirection] = useState<'DESC' | 'ASC'>('DESC');
   const [pagination, setPagination] = useState<Pagination>({
@@ -107,7 +107,7 @@ const Start: FC<{}> = () => {
         defaultSortOrder: 'descend' as 'descend',
         render(_: string, record: StartItem) {
           const { startTime } = record;
-          return <div className={styles.startTime}>{getPassedTime(startTime)}</div>;
+          return <div className={styles.startTime}>{startTime ? getPassedTime(startTime) : ''}</div>;
         },
         sorter(rowA: StartItem, rowB: StartItem) {
           return rowA.startTime - rowB.startTime;
@@ -125,8 +125,8 @@ const Start: FC<{}> = () => {
         key: 'stayTime',
         width: '15%',
         render(_: string, record: StartItem) {
-          const { startTime } = record;
-          return <div className={styles.stayTime}>{getStayTime(startTime)}</div>;
+          const { currentNodeStartTime } = record;
+          return <div className={styles.stayTime}>{currentNodeStartTime ? getStayTime(currentNodeStartTime) : ''}</div>;
         },
       },
       {
@@ -142,49 +142,51 @@ const Start: FC<{}> = () => {
       },
     ];
   }, [history]);
-  const fetchData = useMemoCallback(() => {
-    if (!app) return;
+  const fetchData = useMemoCallback(
+    (pagination: Pagination = { pageSize: 10, current: 1, total: 0, showSizeChanger: true }) => {
+      if (!appId) return;
 
-    setLoading(true);
-    const formValues = form.getFieldsValue(true);
-    const { current: pageIndex, pageSize } = pagination;
-    const { flowName = '', state = '', timeRange = [] } = formValues;
-    let startTime: number = 0;
-    let endTime: number = 0;
-    if (timeRange && timeRange[0]) {
-      startTime = moment(timeRange[0]._d).valueOf();
-    }
-    if (timeRange && timeRange[1]) {
-      endTime = moment(timeRange[1]._d).valueOf();
-    }
-    const params: { [K: string]: string | number } = {
-      appId: app.id,
-      pageIndex,
-      pageSize,
-      sortDirection,
-      processName: flowName,
-    };
-    if (state) {
-      params.state = +state;
-    }
-    if (startTime) {
-      params.startTime = startTime;
-    }
-    if (endTime) {
-      params.endTime = endTime;
-    }
-    runtimeAxios
-      .post('/task/myStart', params)
-      .then((res) => {
-        const list = res.data?.data || [];
-        const total = res.data?.recordTotal || 0;
-        setPagination((pagination) => ({ ...pagination, total }));
-        setData(list);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  });
+      setLoading(true);
+      const formValues = form.getFieldsValue(true);
+      const { current: pageIndex, pageSize } = pagination;
+      const { flowName = '', state = '', timeRange = [] } = formValues;
+      let startTime: number = 0;
+      let endTime: number = 0;
+      if (timeRange && timeRange[0]) {
+        startTime = moment(timeRange[0]._d).valueOf();
+      }
+      if (timeRange && timeRange[1]) {
+        endTime = moment(timeRange[1]._d).valueOf();
+      }
+      const params: { [K: string]: string | number } = {
+        appId,
+        pageIndex,
+        pageSize,
+        sortDirection,
+        processName: flowName,
+      };
+      if (state) {
+        params.state = +state;
+      }
+      if (startTime) {
+        params.startTime = startTime;
+      }
+      if (endTime) {
+        params.endTime = endTime;
+      }
+      runtimeAxios
+        .post('/task/myStart', params)
+        .then((res) => {
+          const list = res.data?.data || [];
+          const total = res.data?.recordTotal || 0;
+          setPagination((pagination) => ({ ...pagination, total }));
+          setData(list);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    },
+  );
   const handleKeyUp = useCallback(
     (e) => {
       if (e.keyCode === 13) {
@@ -202,12 +204,15 @@ const Start: FC<{}> = () => {
   }, [form, fetchData]);
   const handleTableChange = useCallback((newPagination, filters, sorter) => {
     sorter.order === 'ascend' ? setSortDirection('ASC') : setSortDirection('DESC');
-    setPagination((pagination) => ({ ...pagination, ...newPagination }));
+    setPagination((pagination) => {
+      fetchData(newPagination);
+      return { ...pagination, ...newPagination };
+    });
   }, []);
 
   useEffect(() => {
-    app && fetchData();
-  }, [app, fetchData]);
+    appId && fetchData();
+  }, [appId, fetchData]);
   return (
     <div className={styles.container}>
       <div className={styles.header}>

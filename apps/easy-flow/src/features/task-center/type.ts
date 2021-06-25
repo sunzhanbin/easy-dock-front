@@ -19,6 +19,7 @@ export type TodoItem = {
 export type StartItem = {
   currentNode: string;
   currentNodeId: string;
+  currentNodeStartTime: number | null;
   endTime: number;
   processInstanceId: string;
   processName: string;

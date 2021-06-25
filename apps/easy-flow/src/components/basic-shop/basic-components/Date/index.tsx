@@ -16,10 +16,12 @@ const Date = (
       },
     };
     let formatStr: string = '';
-    if (format === '2') {
+    if (format === 'YYYY-MM-DD HH:mm:ss') {
       prop.showTime = true;
       formatStr = 'YYYY-MM-DD HH:mm:ss';
-    } else if (format === '1') {
+    } else if (format === 'YYYY-MM-DD') {
+      formatStr = 'YYYY-MM-DD';
+    } else {
       formatStr = 'YYYY-MM-DD';
     }
     prop.format = formatStr;

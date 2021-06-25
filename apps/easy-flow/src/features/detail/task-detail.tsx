@@ -3,7 +3,7 @@ import { useParams, useHistory } from 'react-router';
 import { message, FormInstance } from 'antd';
 import { Loading } from '@common/components';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import ConfirmModal from './components/confirm-modal';
+import ConfirmModal, { ActionType } from './components/confirm-modal';
 import Header from '@components/header';
 import { runtimeAxios } from '@utils';
 import { loadFlowData } from '@/apis/detail';
@@ -50,18 +50,12 @@ const loadData = async function (taskId: string): Promise<DataType> {
   };
 };
 
-enum AudiitConfirmType {
-  Approve = 1,
-  Revert = 2,
-  Cancel = 0,
-}
-
 function FlowDetail() {
   const { taskId } = useParams<{ taskId: string }>();
   const history = useHistory();
   const [data, setData] = useState<DataType>();
   const [loading, setLoading] = useState(false);
-  const [showConfirmType, setShowConfirmType] = useState<AudiitConfirmType>(AudiitConfirmType.Cancel);
+  const [showConfirmType, setShowConfirmType] = useState<ActionType>();
   const formRef = useRef<FormInstance<FormValue>>(null);
   const appId = data?.flow.instance.subapp.app.id;
 
@@ -103,33 +97,23 @@ function FlowDetail() {
     }, 1500);
   });
 
-  const handleTerminate = useMemoCallback(async () => {
-    const formValues = await formRef.current!.validateFields();
-
-    await runtimeAxios.post(`/process_instance/stop`, {
-      formData: formValues,
-      taskId,
-      remark: '',
-    });
-
-    message.success('操作成功');
-
-    setTimeout(() => {
-      history.replace(dynamicRoutes.toTaskCenter(appId!));
-    }, 1500);
-  });
-
   const handleConfirm = useMemoCallback(async (remark: string) => {
     const values = await formRef.current!.validateFields();
 
     // 同意
-    if (showConfirmType === AudiitConfirmType.Approve) {
+    if (showConfirmType === ActionType.Approve) {
       await runtimeAxios.post(`/process_instance/approve`, {
         formData: values,
         remark,
         taskId,
       });
-    } else {
+    } else if (ActionType.Terminate) {
+      await runtimeAxios.post(`/process_instance/stop`, {
+        formData: values,
+        taskId,
+        remark: '',
+      });
+    } else if (ActionType.Revert) {
       // 驳回
       await runtimeAxios.post(`/process_instance/backTo`, {
         formData: values,
@@ -139,7 +123,7 @@ function FlowDetail() {
     }
 
     message.success('操作成功');
-    setShowConfirmType(AudiitConfirmType.Cancel);
+    setShowConfirmType(ActionType.Cancel);
 
     setTimeout(() => {
       history.replace(dynamicRoutes.toTaskCenter(appId!));
@@ -149,13 +133,19 @@ function FlowDetail() {
   const handleApprove = useMemoCallback(async () => {
     await formRef.current!.validateFields();
 
-    setShowConfirmType(AudiitConfirmType.Approve);
+    setShowConfirmType(ActionType.Approve);
   });
 
   const handleRevert = useMemoCallback(async () => {
     await formRef.current!.validateFields();
 
-    setShowConfirmType(AudiitConfirmType.Revert);
+    setShowConfirmType(ActionType.Revert);
+  });
+
+  const handleTerminate = useMemoCallback(async () => {
+    await formRef.current!.validateFields();
+
+    setShowConfirmType(ActionType.Terminate);
   });
 
   return (
@@ -181,10 +171,10 @@ function FlowDetail() {
 
       {showConfirmType !== undefined && (
         <ConfirmModal
-          visble={showConfirmType !== AudiitConfirmType.Cancel}
-          isApprove={showConfirmType === AudiitConfirmType.Approve}
+          visble={showConfirmType !== ActionType.Cancel}
+          type={showConfirmType}
           onCanel={() => {
-            setShowConfirmType(AudiitConfirmType.Cancel);
+            setShowConfirmType(ActionType.Cancel);
           }}
           onConfirm={handleConfirm}
         />

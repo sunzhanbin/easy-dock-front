@@ -1,6 +1,7 @@
+import cookie from 'js-cookie';
 import { createSlice, PayloadAction, createAsyncThunk, createSelector } from '@reduxjs/toolkit';
-import { axios } from '@utils';
-import { envs } from '@consts';
+import { runtimeAxios } from '@utils';
+
 import type { RootState } from './index';
 
 type UserState = {
@@ -27,27 +28,27 @@ const user = createSlice({
 });
 
 export const getUserInfo = createAsyncThunk('main-app-user/get-user', (_, { dispatch }) => {
-  axios
-    .get('/api/auth/v1/user/currentInfo', {
-      baseURL: envs.COMMON_LOGIN_DOMAIN,
-      silence: true,
-    })
-    .then(({ data }) => {
-      const user = data.userInfo.find((user: any) => user.userId === data.id);
+  runtimeAxios.get('/auth/current', { silence: true }).then(({ data }) => {
+    dispatch(
+      setUser({
+        avatar: data.user.avatar,
+        username: data.user.userName,
+        loginName: data.user.loginName,
+      }),
+    );
+  });
+});
 
-      if (!user) return;
+export const logout = createAsyncThunk('main-app-user/logout', async (_, { dispatch }) => {
+  await runtimeAxios.delete('/auth/logout');
 
-      dispatch(
-        setUser({
-          avatar: user.staffPhoto,
-          id: user.id,
-          nick: user.username,
-          email: user.email,
-          cName: (user.cnName && user.cnName.trim()) || '',
-          loginName: data.loginName,
-        }),
-      );
-    });
+  // 删除请求头里的auth
+  delete runtimeAxios.defaults.headers.auth;
+
+  // 清掉cookie
+  cookie.remove('token');
+
+  dispatch(clear());
 });
 
 export default user.reducer;

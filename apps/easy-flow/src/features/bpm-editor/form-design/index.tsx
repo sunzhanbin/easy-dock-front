@@ -17,6 +17,8 @@ import styles from './index.module.scss';
 import { saveForm } from '@/features/bpm-editor/form-design/formdesign-slice';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { AsyncButton } from '@common/components';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 const FormDesign: FC<{}> = () => {
   const dispatch = useAppDispatch();
@@ -58,40 +60,12 @@ const FormDesign: FC<{}> = () => {
         dispatch(setLayout({ layout: [] }));
         dispatch(selectField({ id: '' }));
       }
-      dispatch(setIsDirty({ isDirty: false }));
+      // 临时规避dispatch时序的问题
+      setTimeout(() => {
+        dispatch(setIsDirty({ isDirty: false }));
+      }, 10);
     });
   }, [subAppId, dispatch]);
-  const onDragEnd = useCallback(
-    (result: DropResult) => {
-      const { destination, source, draggableId } = result;
-      if (destination && source) {
-        const { droppableId: targetId, index: targetIndex } = destination as DraggableLocation;
-        const { droppableId: sourceId, index: sourceIndex } = source as DraggableLocation;
-        if (targetId === 'form_zone' && sourceId === 'form_zone') {
-          dispatch(moveRow({ sourceIndex, targetIndex }));
-        }
-        if (targetId === 'form_zone' && sourceId === 'component_zone') {
-          const schema = store.getState().formDesign.schema;
-          const configMap: TConfigMap = {};
-          if (schema) {
-            const keys: string[] = Object.keys(schema);
-            keys.forEach((key) => {
-              const configItem: TConfigItem = { type: key };
-              schema[key as FieldType]?.config.forEach(({ key, defaultValue }) => {
-                configItem[key] = defaultValue;
-              });
-              configMap[key as FieldType] = configItem;
-            });
-            const com = { ...configMap[draggableId] };
-            dispatch(comAdded(com as FormField, targetIndex));
-          }
-        }
-      }
-    },
-    [dispatch],
-  );
-  const onDragStart = useCallback(() => {}, []);
-  const onDragUpdate = useCallback(() => {}, []);
   const handleConfirmLeave = useMemoCallback((location: ReturnType<typeof useLocation>) => {
     if (isDirty && url !== location.pathname && !cancelSaveRef.current) {
       targetUrlRef.current = location.pathname + location.search;
@@ -121,7 +95,7 @@ const FormDesign: FC<{}> = () => {
     setIsShowTip(false);
   });
   return (
-    <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart} onDragUpdate={onDragUpdate}>
+    <>
       <Prompt when={isDirty} message={handleConfirmLeave} />
       <Modal
         maskClosable={false}
@@ -148,12 +122,14 @@ const FormDesign: FC<{}> = () => {
       >
         当前有未保存的更改，您在离开当前页面前是否要保存这些更改?
       </Modal>
-      <div className={styles.container}>
-        <ToolBox></ToolBox>
-        <DesignZone></DesignZone>
-        {selectedField ? <EditZone></EditZone> : null}
-      </div>
-    </DragDropContext>
+      <DndProvider backend={HTML5Backend}>
+        <div className={styles.container}>
+          <ToolBox></ToolBox>
+          <DesignZone></DesignZone>
+          {selectedField ? <EditZone></EditZone> : null}
+        </div>
+      </DndProvider>
+    </>
   );
 };
 
