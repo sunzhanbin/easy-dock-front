@@ -107,7 +107,7 @@ const Start: FC<{}> = () => {
         defaultSortOrder: 'descend' as 'descend',
         render(_: string, record: StartItem) {
           const { startTime } = record;
-          return <div className={styles.startTime}>{getPassedTime(startTime)}</div>;
+          return <div className={styles.startTime}>{startTime ? getPassedTime(startTime) : ''}</div>;
         },
         sorter(rowA: StartItem, rowB: StartItem) {
           return rowA.startTime - rowB.startTime;
@@ -125,8 +125,8 @@ const Start: FC<{}> = () => {
         key: 'stayTime',
         width: '15%',
         render(_: string, record: StartItem) {
-          const { startTime } = record;
-          return <div className={styles.stayTime}>{getStayTime(startTime)}</div>;
+          const { currentNodeStartTime } = record;
+          return <div className={styles.stayTime}>{currentNodeStartTime ? getStayTime(currentNodeStartTime) : ''}</div>;
         },
       },
       {
