@@ -372,6 +372,14 @@
   border: none;
 }
 
+.ant-select-multiple.ant-select {
+  .ant-select-selector {
+    background: rgba(24, 39, 67, 0.04);
+    border-radius: 3px;
+    border: none;
+  }
+}
+
 // 定制表格
 .ant-table {
   .ant-table-thead {
