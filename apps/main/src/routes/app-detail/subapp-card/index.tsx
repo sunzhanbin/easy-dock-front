@@ -15,6 +15,8 @@ const CardContainer = styled.div`
   position: relative;
   display: flex;
   cursor: pointer;
+  transition: all ease-in-out 0.3s;
+
   &:hover {
     box-shadow: 0px 6px 24px 0px rgba(24, 31, 67, 0.1);
     border-radius: 3px;

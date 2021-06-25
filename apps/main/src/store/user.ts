@@ -40,7 +40,7 @@ export const getUserInfo = createAsyncThunk('main-app-user/get-user', (_, { disp
 });
 
 export const logout = createAsyncThunk('main-app-user/logout', async (_, { dispatch }) => {
-  await runtimeAxios.get('/auth/logout');
+  await runtimeAxios.delete('/auth/logout');
 
   // 删除请求头里的auth
   delete runtimeAxios.defaults.headers.auth;

@@ -28,14 +28,14 @@ export const OrchMicroApp: Readonly<MicroApp> = {
   name: 'orch',
   entry: window.ALGOR_ORCH_FRONTEND_ENTRY,
   title: '服务编排',
-  route: '/micro/orch',
+  route: 'builder/orch',
 };
 
 export const FlowMicroApp: Readonly<MicroApp> = {
   name: 'flow',
   entry: window.EASY_FLOW_FRONTEND_ENTRY,
   title: '流程编排',
-  route: '/micro/flow',
+  route: '/builder/flow',
 };
 
 // 导出微前端应用集合

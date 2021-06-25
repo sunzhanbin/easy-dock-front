@@ -3,17 +3,17 @@
 
 .container {
   & > .header {
-    display: flex;
+    @include center('flex');
+
     height: 40px;
+    margin-bottom: 24px;
+    padding-top: 12px;
     line-height: 40px;
-    margin: 23px 68px;
 
     .back {
-      display: inline-block;
       width: 20px;
       height: 20px;
       margin-right: 16px;
-      margin-top: 10px;
       cursor: pointer;
     }
 
@@ -26,7 +26,7 @@
     .more_info {
       position: relative;
       display: flex;
-      flex: 1;
+      align-items: center;
 
       .number {
         margin: 0 8px 0 4px;
@@ -43,7 +43,6 @@
         border-radius: 3px;
         font-size: 12px;
         font-weight: 400;
-        margin-top: 9px;
 
         &.active {
           color: #03a882;
@@ -55,21 +54,22 @@
           background: #b9bcc6;
         }
       }
+    }
 
-      .search_container {
-        position: absolute;
-        right: 0;
+    .search_container {
+      @include center('flex');
+
+      justify-content: flex-end;
+      flex: 1 1 0;
+
+      .search {
         width: 382px;
-
-        .search {
-          cursor: pointer;
-        }
+        cursor: pointer;
       }
     }
   }
 
   & > .content {
-    margin: 0 68px 24px 68px;
     .scenes {
       position: relative;
       display: grid;

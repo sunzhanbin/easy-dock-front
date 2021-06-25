@@ -8,30 +8,32 @@ export const orchRoutes = {
 const staticRoutes = {
   INDEX: '/',
   LOGIN: '/login',
-  SCENE_MANAGE: '/scenes-manage',
-  SCENE_DETAIL: '/scenes-detail/:sceneId',
-  APP_PANEL: '/app/:appId',
+  MICRO: '/micro',
+  BUILDER: '/builder',
+  BUILDER_INDEX: '/builder/app',
+  BUILDER_APP: '/builder/app/:appId',
+  APP_RUNTIME_DETAIL: '/app/:appId',
   APP_PROCESS: '/app/:appId/process',
   APP_TASK_CENTER: '/app/:appId/process/task-center',
-  INTEGRATION: '/integration',
-  INTEGRATION_ORCH_INDEX: `/integration/orch${orchRoutes.ORCH_INDEX}`,
-  INTEGRATION_ORCH_INTERFACE_LIST: `/integration/orch${orchRoutes.ORCH_INTERFACE_LIST}`,
-  INTEGRATION_ORCH_REGIST_API: `/integration/orch${orchRoutes.ORCH_REGIST_API}`,
-  INTEGRATION_ORCH_EDIT_GENERATION_API: `/integration/orch${orchRoutes.ORCH_EDIT_GENERATION_API}`,
-  INTEGRATION_DATA_MANAGE: '/integration/data-manage',
-  INTEGRATION_MODEL_MANAGE: '/integration/model-manage',
-  TMPLATE_CENTER: '/tmpl',
-  SYSTEM_MANAGE: '/system',
+  INTEGRATION: '/builder/integration',
+  INTEGRATION_ORCH_INDEX: `/builder/integration/orch${orchRoutes.ORCH_INDEX}`,
+  INTEGRATION_ORCH_INTERFACE_LIST: `/builder/integration/orch${orchRoutes.ORCH_INTERFACE_LIST}`,
+  INTEGRATION_ORCH_REGIST_API: `/builder/integration/orch${orchRoutes.ORCH_REGIST_API}`,
+  INTEGRATION_ORCH_EDIT_GENERATION_API: `/builder/integration/orch${orchRoutes.ORCH_EDIT_GENERATION_API}`,
+  INTEGRATION_DATA_MANAGE: '/builder/integration/data-manage',
+  INTEGRATION_MODEL_MANAGE: '/builder/integration/model-manage',
+  TMPLATE_CENTER: '/builder/tmpl',
+  SYSTEM_MANAGE: '/builder/system',
 };
 
 export default staticRoutes;
 
 export const dynamicRoutes = {
   toSceneDetail(id: string) {
-    return staticRoutes.SCENE_DETAIL.replace(/:sceneId$/, id);
+    return staticRoutes.BUILDER_APP.replace(/:appId$/, id);
   },
   toAppDashboard(appId: string) {
-    return staticRoutes.APP_PANEL.replace(/:appId/, appId);
+    return staticRoutes.APP_RUNTIME_DETAIL.replace(/:appId/, appId);
   },
   toAppTaskCenter(appId: string) {
     return staticRoutes.APP_TASK_CENTER.replace(/:appId/, appId);
