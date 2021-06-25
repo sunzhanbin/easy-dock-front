@@ -1,6 +1,9 @@
 import { createSlice, PayloadAction, createAsyncThunk, createSelector } from '@reduxjs/toolkit';
 import { axios } from '@utils';
 import { envs } from '@consts';
+import cookie from 'js-cookie';
+import { localStorage } from '@common/utils';
+
 import type { RootState } from './index';
 
 type UserState = {
@@ -48,6 +51,22 @@ export const getUserInfo = createAsyncThunk('main-app-user/get-user', (_, { disp
         }),
       );
     });
+});
+
+export const logout = createAsyncThunk('main-app-user/logout', async (_, { dispatch }) => {
+  await axios.get('/api/auth/v1/logout', {
+    baseURL: envs.COMMON_LOGIN_DOMAIN,
+  });
+
+  // 删除请求头里的auth
+  delete axios.defaults.headers.auth;
+
+  // 清掉cookie
+  localStorage.clear('token');
+
+  // cookie.remove('token')
+
+  dispatch(clear());
 });
 
 export default user.reducer;
