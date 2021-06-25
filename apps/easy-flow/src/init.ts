@@ -2,6 +2,7 @@ const appConfig = {
   micro: false,
   basename: '/',
   publicPath: process.env.PUBLIC_URL,
+  appId: '',
 };
 
 // 微前端里的配置

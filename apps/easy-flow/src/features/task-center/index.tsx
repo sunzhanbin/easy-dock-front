@@ -2,6 +2,7 @@ import { memo, useCallback, FC, useState, useEffect, useMemo } from 'react';
 import { NavLink, Route, Switch, useLocation, useRouteMatch } from 'react-router-dom';
 import { Input, Button } from 'antd';
 import { Icon } from '@common/components';
+import appConfig from '@/init';
 import styles from './index.module.scss';
 import Todo from './todo';
 import Start from './start';
@@ -9,7 +10,7 @@ import Done from './done';
 import Card from './card';
 import { useAppSelector } from '@/app/hooks';
 import { todoNumSelector } from './taskcenter-reducer';
-import useApp from '@/hooks/use-app';
+import useAppId from '@/hooks/use-app-id';
 import { SubAppItem } from './type';
 import { axios } from '@/utils';
 
@@ -20,7 +21,7 @@ const TaskCenter: FC<{}> = () => {
   const matchedPath = match.path.replace(/\/$/, '');
   const matchedUrl = match.url.replace(/\/$/, '');
   const todoNum = useAppSelector(todoNumSelector);
-  const app = useApp();
+  const appId = useAppId();
   const location = useLocation();
   const [isShowDrawer, setIsShowDrawer] = useState<boolean>(false);
   const [subAppList, setSubAppList] = useState<SubAppItem[]>([]);
@@ -33,13 +34,13 @@ const TaskCenter: FC<{}> = () => {
   }, [subAppList, keyword]);
 
   useEffect(() => {
-    if (isShowDrawer && app) {
-      axios.get(`/subapp/${app.id}/list/all/deployed`).then((res) => {
+    if (isShowDrawer && appId) {
+      axios.get(`/subapp/${appId}/list/all/deployed`).then((res) => {
         const list = res.data || [];
         setSubAppList(list);
       });
     }
-  }, [app, isShowDrawer]);
+  }, [appId, isShowDrawer]);
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -49,8 +50,7 @@ const TaskCenter: FC<{}> = () => {
           <div className={styles.navLink}>
             <NavLink to={`${matchedUrl}`} exact className={styles.nav} activeClassName={styles.active}>
               我的待办
-              {(location.pathname === `${matchedUrl}/${app?.id}` || location.pathname === `${matchedUrl}`) &&
-                todoNum > 0 && <div className={styles.todoNum}>{todoNum}</div>}
+              {location.pathname === `${matchedUrl}` && todoNum > 0 && <div className={styles.todoNum}>{todoNum}</div>}
             </NavLink>
             <NavLink to={`${matchedUrl}/start`} className={styles.nav} activeClassName={styles.active}>
               我的发起

@@ -1,7 +1,9 @@
+import appConfig from '@/init';
+
 const staticRoutes = {
   INDEX: '/',
   BPM_EDITOR: '/bpm-editor/:bpmId',
-  TASK_CENTER: '/task-center/:id',
+  TASK_CENTER: '/task-center/:appId',
   TASK_CENTER_WITH_NO_APPID: '/task-center',
   START_FLOW: '/start/flow/:subAppId',
   START_DETAIL: '/start/detail/:flowId',
@@ -21,6 +23,10 @@ export const dynamicRoutes = {
     return staticRoutes.START_DETAIL.replace(/:flowId/, flowId);
   },
   toTaskCenter(appId: number) {
-    return staticRoutes.TASK_CENTER.replace(/:id/, String(appId));
+    if (appConfig.appId) {
+      return staticRoutes.TASK_CENTER_WITH_NO_APPID;
+    }
+
+    return staticRoutes.TASK_CENTER.replace(/:appId/, String(appId));
   },
 };

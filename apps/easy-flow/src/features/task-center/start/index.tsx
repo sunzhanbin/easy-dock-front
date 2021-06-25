@@ -8,7 +8,7 @@ import { useHistory } from 'react-router-dom';
 import moment from 'moment';
 import { dynamicRoutes } from '@/consts/route';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import useApp from '@/hooks/use-app';
+import useAppId from '@/hooks/use-app-id';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -61,7 +61,7 @@ const statusMap: { [k: number]: { className: string; text: string } } = {
 const Start: FC<{}> = () => {
   const [form] = Form.useForm();
   const history = useHistory();
-  const app = useApp();
+  const appId = useAppId();
   const [loading, setLoading] = useState<boolean>(false);
   const [sortDirection, setSortDirection] = useState<'DESC' | 'ASC'>('DESC');
   const [pagination, setPagination] = useState<Pagination>({
@@ -144,7 +144,7 @@ const Start: FC<{}> = () => {
   }, [history]);
   const fetchData = useMemoCallback(
     (pagination: Pagination = { pageSize: 10, current: 1, total: 0, showSizeChanger: true }) => {
-      if (!app) return;
+      if (!appId) return;
 
       setLoading(true);
       const formValues = form.getFieldsValue(true);
@@ -159,7 +159,7 @@ const Start: FC<{}> = () => {
         endTime = moment(timeRange[1]._d).valueOf();
       }
       const params: { [K: string]: string | number } = {
-        appId: app.id,
+        appId,
         pageIndex,
         pageSize,
         sortDirection,
@@ -211,8 +211,8 @@ const Start: FC<{}> = () => {
   }, []);
 
   useEffect(() => {
-    app?.id && fetchData();
-  }, [app?.id, fetchData]);
+    appId && fetchData();
+  }, [appId, fetchData]);
   return (
     <div className={styles.container}>
       <div className={styles.header}>

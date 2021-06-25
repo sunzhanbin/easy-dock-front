@@ -1,24 +1,14 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Form, Input, message } from 'antd';
+import { Form, Input } from 'antd';
 import { UserOutlined, KeyOutlined } from '@ant-design/icons';
 import cookie from 'js-cookie';
 import loginIcon from '@assets/login-icon.png';
 import logoIcon from '@assets/logo-icon.png';
-import { axios } from '@utils';
-import { ROUTES, envs } from '@consts';
+import { runtimeAxios } from '@utils';
+import { ROUTES } from '@consts';
 import { Loading } from '@components';
 import styles from './index.module.scss';
-
-type LoginResponseType = {
-  data?: {
-    token: string;
-    embedUser: {
-      roles: string[];
-    };
-  };
-  resultMessage: string;
-};
 
 export default function Login() {
   const [form] = Form.useForm();
@@ -32,36 +22,23 @@ export default function Login() {
     try {
       const values = await form.validateFields();
       const data = Object.assign({}, { loginType: 1 }, values);
-      const loginResponse = await axios.post<LoginResponseType>('/api/auth/v1/login', data, {
-        baseURL: envs.COMMON_LOGIN_DOMAIN,
-      });
+      const loginResponse = await runtimeAxios.post<{ data: { token: string } }>('/auth/login', data);
+      const token = loginResponse.data.token;
+      let redirectUrl = '';
 
-      if (loginResponse.data) {
-        const hasAuth = loginResponse.data.embedUser.roles.find((item: string) => item === '1');
+      // 记录token
+      cookie.set('token', token, { expires: 1 });
 
-        if (hasAuth) {
-          const token = loginResponse.data.token;
+      const keyValues = decodeURIComponent(search.slice(1)).split('=');
+      const redirectUrlIndex = keyValues.findIndex((item) => item === 'redirect');
 
-          cookie.set('token', token, { expires: 1 });
-          axios.defaults.headers.auth = token;
-
-          let redirectUrl = '';
-          const keyValues = decodeURIComponent(search.slice(1)).split('=');
-          const redirectUrlIndex = keyValues.findIndex((item) => item === 'redirect');
-
-          if (redirectUrlIndex !== -1) {
-            redirectUrl = keyValues[redirectUrlIndex + 1];
-          } else {
-            redirectUrl = ROUTES.INDEX;
-          }
-
-          window.location.replace(redirectUrl);
-        } else {
-          message.error('您没有访问权限');
-        }
+      if (redirectUrlIndex !== -1) {
+        redirectUrl = keyValues[redirectUrlIndex + 1];
       } else {
-        message.error(loginResponse.resultMessage);
+        redirectUrl = ROUTES.INDEX;
       }
+
+      window.location.replace(redirectUrl);
     } finally {
       setLoading(false);
     }
@@ -97,6 +74,15 @@ export default function Login() {
     ];
   }, []);
 
+  const handleKeydown = useCallback(
+    (event: React.KeyboardEvent) => {
+      if (event.code === 'Enter') {
+        login();
+      }
+    },
+    [login],
+  );
+
   return (
     <div className={styles.content}>
       <img className={styles.image} src={`${process.env.PUBLIC_URL}/images/login.png`} alt="login" />
@@ -111,7 +97,13 @@ export default function Login() {
             <Input placeholder="请输入用户名" prefix={<UserOutlined />} size="large" />
           </Form.Item>
           <Form.Item name="password" rules={passwordRules}>
-            <Input placeholder="请输入密码" type="password" prefix={<KeyOutlined />} size="large" />
+            <Input
+              placeholder="请输入密码"
+              type="password"
+              prefix={<KeyOutlined />}
+              size="large"
+              onKeyDown={handleKeydown}
+            />
           </Form.Item>
         </Form>
         <div className={styles['login-icon']}>
