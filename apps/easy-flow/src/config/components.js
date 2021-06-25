@@ -411,23 +411,23 @@ const componentSchema = {
       },
       {
         key: 'format',
-        defaultValue: '1',
+        defaultValue: 'YYYY-MM-DD',
         label: '显示格式',
         placeholder: '请选择',
         type: 'Select',
         direction: 'vertical',
         range: [
           {
-            key: '1',
+            key: 'YYYY-MM-DD',
             value: '年-月-日',
           },
           {
-            key: '2',
+            key: 'YYYY-MM-DD HH:mm:ss',
             value: '年-月-日 时:分:秒',
           },
         ],
         required: false,
-        isProps: false,
+        isProps: true,
       },
       {
         key: 'notSelectPassed',

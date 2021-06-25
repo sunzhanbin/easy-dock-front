@@ -24,10 +24,12 @@ const DefaultDate = (props: editProps) => {
   }, [id, byId]);
   const propList = useMemo(() => {
     const props: { [k: string]: string | boolean | Function | Moment } = { size: 'large' };
-    if (formatType === '2') {
+    if (formatType === 'YYYY-MM-DD HH:mm:ss') {
       props.showTime = true;
       props.format = 'YYYY-MM-DD HH:mm:ss';
-    } else if (formatType === '1') {
+    } else if (formatType === 'YYYY-MM-DD') {
+      props.format = 'YYYY-MM-DD';
+    } else {
       props.format = 'YYYY-MM-DD';
     }
     if (notSelectPassed) {
