@@ -93,10 +93,6 @@
         font-size: 14px;
         font-weight: 400;
       }
-
-      &:last-child {
-        margin-bottom: 0;
-      }
     }
 
     .time {
@@ -126,6 +122,10 @@
         font-size: 12px;
         font-weight: 400;
       }
+    }
+
+    :last-child {
+      margin-bottom: 0;
     }
   }
 }

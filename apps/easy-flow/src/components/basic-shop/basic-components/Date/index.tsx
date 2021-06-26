@@ -31,10 +31,10 @@ const Date = (
       };
     }
     if (defaultValue) {
-      prop.defaultValue = typeof defaultValue === 'number' ? moment(defaultValue) : defaultValue;
+      // prop.defaultValue = typeof defaultValue === 'number' ? moment(defaultValue) : defaultValue;
     }
     if (value) {
-      prop.value = typeof value === 'number' ? moment(value) : value;
+      // prop.value = typeof value === 'number' ? moment(value) : value;
     }
 
     return Object.assign({}, props, prop);
