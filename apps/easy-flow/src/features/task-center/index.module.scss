@@ -78,7 +78,7 @@
     left: 50%;
     z-index: 88;
     transform: translate(-50%, -50%);
-    width: 868px;
+    width: 880px;
     height: 286px;
     background: #ffffff;
     border-radius: 3px;
@@ -117,6 +117,7 @@
     }
     .content {
       display: flex;
+      height: 174px;
       flex-wrap: wrap;
       margin: 24px 0;
       overflow-y: auto;

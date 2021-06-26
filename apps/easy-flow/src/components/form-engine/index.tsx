@@ -155,7 +155,7 @@ const FormDetail = React.forwardRef(function FormDetail(
                       config.type,
                       Component,
                       Object.assign({}, compProps, {
-                        readOnly:
+                        disabled:
                           readonly ||
                           !(fieldsAuths[fieldName] || fieldsAuths[fieldId]) ||
                           fieldsAuths[fieldName] === AuthType.View,

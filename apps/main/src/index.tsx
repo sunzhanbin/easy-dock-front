@@ -13,3 +13,6 @@ ReactDOM.render(
   </Provider>,
   document.getElementById('root'),
 );
+
+// 解决微前端easyflow里富文本组件使用到setImmediate报错
+(window as any).setImmediate = () => {};

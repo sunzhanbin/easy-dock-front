@@ -187,6 +187,12 @@
     padding: 8px 12px;
     font-size: 14px;
   }
+  &[disabled] {
+    background-color: rgba(24, 39, 67, 0.04);
+    &:hover {
+      border-color: transparent;
+    }
+  }
 }
 
 .ant-input-affix-wrapper {
@@ -286,6 +292,13 @@
     box-shadow: 0 0 0 3px rgba(76, 92, 219, 0.2);
     background-color: transparent;
   }
+  &.ant-picker-disabled {
+    background-color: rgba(24, 39, 67, 0.04);
+    border-color: transparent;
+    &:hover {
+      border-color: transparent;
+    }
+  }
 }
 // 定制数字输入框
 .ant-input-number {
@@ -296,11 +309,22 @@
     border-color: rgba($primary-color, 0.85);
     background-color: transparent;
   }
+  &.ant-input-number-disabled {
+    background-color: inherit;
+    &:hover {
+      border-color: transparent;
+    }
+  }
 
   &:focus {
     border-color: rgba($primary-color, 0.85);
     box-shadow: 0 0 0 3px rgba(76, 92, 219, 0.2);
     background-color: transparent;
+  }
+  .ant-input-number-input {
+    &[disabled] {
+      background-color: rgba(24, 39, 67, 0.04);
+    }
   }
 }
 // 定制抽屉

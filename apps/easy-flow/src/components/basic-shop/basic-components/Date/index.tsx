@@ -3,14 +3,11 @@ import { DatePicker } from 'antd';
 import { DatePickerProps } from 'antd/lib/date-picker';
 import moment, { Moment } from 'moment';
 
-const Date = (
-  props: DatePickerProps & { readOnly: boolean; notSelectPassed: boolean; onChange: (value: number) => void },
-) => {
-  const { format, notSelectPassed, defaultValue, readOnly, value, onChange } = props;
+const Date = (props: DatePickerProps & { notSelectPassed: boolean; onChange: (value: number) => void }) => {
+  const { format, notSelectPassed, defaultValue, value, onChange } = props;
   const propList = useMemo(() => {
     const prop: { [k: string]: string | boolean | Function | Moment } = {
       size: 'large',
-      disabled: readOnly as boolean,
       onChange(val: moment.Moment) {
         onChange && onChange(moment(val).valueOf());
       },
@@ -38,7 +35,7 @@ const Date = (
     }
 
     return Object.assign({}, props, prop);
-  }, [format, notSelectPassed, defaultValue, value, readOnly, props, onChange]);
+  }, [format, notSelectPassed, defaultValue, value, props, onChange]);
   return <DatePicker {...propList} style={{ width: '100%' }} key={defaultValue?.toString()} />;
 };
 export default memo(Date);

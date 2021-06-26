@@ -26,12 +26,13 @@ const EditZone = () => {
     }, 0);
   }, [selectedField, byId]);
   const onSave = useCallback(
-    (values) => {
+    (values, isValidate) => {
       dispatch(
         editProps({
           id: selectedField,
           config: { ...values, type: selectedField?.split('_')[0] || '', id: selectedField },
           isEdit: true,
+          isValidate,
         }),
       );
     },

@@ -26,8 +26,8 @@ const EditorHeader: FC = () => {
     return `${match.url}/form-design`;
   }, [match]);
   const handlePreview = useCallback(() => {
-    setShowModel(true);
-  }, []);
+    layout.length > 0 && setShowModel(true);
+  }, [layout]);
   const handlePrev = useCallback(() => {
     if (pathName === flowDesignPath) {
       history.replace(formDesignPath);
@@ -97,6 +97,7 @@ const EditorHeader: FC = () => {
             activeClassName={styles.active}
             style={{
               cursor: layout.length === 0 ? 'not-allowed' : 'pointer',
+              color: layout.length === 0 ? 'rgba(24, 31, 67, 0.5)' : 'rgba(24, 31, 67, 0.95)',
             }}
             onClick={(e) => {
               if (layout.length === 0) {
@@ -115,9 +116,14 @@ const EditorHeader: FC = () => {
             <Icon className={styles.iconfont} type="jiantouxiayibu" />
           */}
           {pathName === formDesignPath && (
-            <Tooltip title="预览">
+            <Tooltip title="预览" placement="left">
               <span>
-                <Icon className={styles.iconfont} type="yulan" onClick={handlePreview} />
+                <Icon
+                  className={styles.iconfont}
+                  type="yulan"
+                  onClick={handlePreview}
+                  style={{ cursor: layout.length === 0 ? 'not-allowed' : 'pointer' }}
+                />
               </span>
             </Tooltip>
           )}
@@ -126,7 +132,14 @@ const EditorHeader: FC = () => {
               上一步
             </Button>
           )}
-          <Button type="primary" ghost className={styles.save} size="large" onClick={handleSave}>
+          <Button
+            type="primary"
+            ghost
+            className={styles.save}
+            size="large"
+            disabled={layout.length === 0}
+            onClick={handleSave}
+          >
             保存
           </Button>
           {pathName === formDesignPath && (

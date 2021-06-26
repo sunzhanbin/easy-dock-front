@@ -122,7 +122,7 @@ function NodeActionRecord(props: NodeActionRecordProps) {
               })}
 
               {record.auditTime && (
-                <div className={styles.time}>{moment(record.auditTime).format('YY.MM.DD HH:mm:ss')}</div>
+                <div className={styles.time}>{moment(record.auditTime).format('YYYY.MM.DD HH:mm:ss')}</div>
               )}
 
               {record.comments?.commit && (

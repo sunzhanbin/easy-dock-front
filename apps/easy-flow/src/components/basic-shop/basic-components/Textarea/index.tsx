@@ -5,14 +5,12 @@ import { TextAreaProps } from 'antd/lib/input';
 const { TextArea } = Input;
 
 const TextareaComponent = (props: TextAreaProps) => {
-  const { defaultValue, readOnly, onChange } = props;
+  const { defaultValue, onChange } = props;
   const propList = useMemo(() => {
     const prop: { [k: string]: string | number | boolean | undefined | Function } = {
       rows: 4,
       size: 'large',
       placeholder: '请输入',
-      readOnly: readOnly,
-      disabled: readOnly,
       onChange: onChange,
     };
     if (defaultValue) {
@@ -22,7 +20,7 @@ const TextareaComponent = (props: TextAreaProps) => {
     delete result.fieldName;
     delete result.colSpace;
     return result;
-  }, [defaultValue, readOnly, props, onChange]);
+  }, [defaultValue, props, onChange]);
   return <TextArea {...propList} key={defaultValue as string} />;
 };
 

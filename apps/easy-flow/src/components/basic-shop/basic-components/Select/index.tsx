@@ -12,14 +12,13 @@ const SelectComponent = (
     options: OptionItem;
   },
 ) => {
-  const { defaultValue, multiple, showSearch, options, readOnly, onChange } = props;
+  const { defaultValue, multiple, showSearch, options, onChange } = props;
 
   const propList = useMemo(() => {
     const prop: { [k: string]: string | boolean | Function } = {
       size: 'large',
       showSearch: showSearch as boolean,
       placeholder: '请选择',
-      disabled: readOnly as boolean,
       onChange: onChange as Function,
     };
     if (multiple) {
@@ -33,7 +32,7 @@ const SelectComponent = (
     delete result.colSpace;
     delete result.dataSource;
     return result;
-  }, [defaultValue, multiple, showSearch, readOnly, props, onChange]);
+  }, [defaultValue, multiple, showSearch, props, onChange]);
   return (
     <Select {...propList} style={{ width: '100%' }}>
       {(options || []).map(({ key, value }) => (

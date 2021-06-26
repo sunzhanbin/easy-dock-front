@@ -234,11 +234,7 @@ const Start: FC<{}> = () => {
                 allowClear
                 placeholder="请选择"
                 style={{ width: '100%' }}
-                onClear={() => {
-                  form.setFieldsValue(Object.assign(form.getFieldsValue(), { state: undefined }));
-                  fetchData();
-                }}
-                onClick={() => {
+                onChange={() => {
                   fetchData();
                 }}
               >

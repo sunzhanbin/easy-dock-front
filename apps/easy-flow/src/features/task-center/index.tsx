@@ -48,14 +48,14 @@ const TaskCenter: FC<{}> = () => {
           <div className={styles.title}>任务中心</div>
           <div className={styles.line}></div>
           <div className={styles.navLink}>
-            <NavLink to={`${matchedUrl}`} exact className={styles.nav} activeClassName={styles.active}>
+            <NavLink to={`${matchedUrl}`} replace exact className={styles.nav} activeClassName={styles.active}>
               我的待办
               {location.pathname === `${matchedUrl}` && todoNum > 0 && <div className={styles.todoNum}>{todoNum}</div>}
             </NavLink>
-            <NavLink to={`${matchedUrl}/start`} className={styles.nav} activeClassName={styles.active}>
+            <NavLink to={`${matchedUrl}/start`} replace className={styles.nav} activeClassName={styles.active}>
               我的发起
             </NavLink>
-            <NavLink to={`${matchedUrl}/done`} className={styles.nav} activeClassName={styles.active}>
+            <NavLink to={`${matchedUrl}/done`} replace className={styles.nav} activeClassName={styles.active}>
               我的已办
             </NavLink>
             {/* 这个版本暂时不做 */}
@@ -74,7 +74,7 @@ const TaskCenter: FC<{}> = () => {
         <Switch>
           <Route path={`${matchedPath}/start`} component={Start}></Route>
           <Route path={`${matchedPath}/done`} component={Done}></Route>
-          <Route path="*" component={Todo}></Route>
+          <Route path={matchedPath} component={Todo}></Route>
           {/* <Route path={`${matchedPath}/copy`} component={Copy}></Route> */}
           {/* <Redirect to={`${matchedPath}/todo`}></Redirect> */}
         </Switch>

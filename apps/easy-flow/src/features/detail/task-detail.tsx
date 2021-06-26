@@ -107,13 +107,14 @@ function FlowDetail() {
         remark,
         taskId,
       });
-    } else if (ActionType.Terminate) {
+      // 终止
+    } else if (showConfirmType === ActionType.Terminate) {
       await runtimeAxios.post(`/process_instance/stop`, {
         formData: values,
         taskId,
         remark: '',
       });
-    } else if (ActionType.Revert) {
+    } else if (showConfirmType === ActionType.Revert) {
       // 驳回
       await runtimeAxios.post(`/process_instance/backTo`, {
         formData: values,
