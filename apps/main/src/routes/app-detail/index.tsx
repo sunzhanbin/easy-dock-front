@@ -45,6 +45,14 @@ const AppDetail: FC = () => {
       setSubAppList(res.data);
     });
   }, [appId]);
+  const handleKeyUp = useCallback(
+    (e) => {
+      if (e.keyCode === 13) {
+        handleSearch(e);
+      }
+    },
+    [handleSearch],
+  );
   useEffect(() => {
     const appPromise = axios.get(`/app/${appId}`);
     const subAppListPromise = axios.get(`/subapp/${appId}/list/all`);
@@ -74,6 +82,7 @@ const AppDetail: FC = () => {
             size="large"
             placeholder="搜索子应用名称"
             onBlur={handleSearch}
+            onKeyUp={handleKeyUp}
           />
         </div>
       </div>

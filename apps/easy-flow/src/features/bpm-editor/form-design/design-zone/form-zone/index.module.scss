@@ -8,7 +8,7 @@
     margin-bottom: 30px;
     padding: 12px 0;
     > div {
-      min-height: 200px;
+      min-height: calc(100vh - 104px);
     }
     :global {
       .form_row {
