@@ -11,6 +11,7 @@ interface Window {
   ALGOR_ORCH_FRONTEND_ENTRY: string;
   EASY_FLOW_FRONTEND_ENTRY: string;
   COMMON_LOGIN_URL: string;
+  setImmediate(): void;
 }
 
 interface MicroApp {
