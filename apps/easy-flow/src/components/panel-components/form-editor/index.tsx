@@ -1,4 +1,4 @@
-import { memo, useEffect, Fragment } from 'react';
+import { memo, useEffect, Fragment, useMemo } from 'react';
 import { Form, Select, Input, Switch, Radio, Checkbox, InputNumber } from 'antd';
 import SelectOptionList from '../select-option-list';
 import SelectDefaultOption from '../select-default-option';
@@ -7,6 +7,8 @@ import Editor from '../editor';
 import { FormField, SchemaConfigItem } from '@/type';
 import { Store } from 'antd/lib/form/interface';
 import styles from './index.module.scss';
+import { useAppSelector } from '@/app/hooks';
+import { errorSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 
 const { Option } = Select;
 
@@ -26,18 +28,24 @@ const options = [
 const FormEditor = (props: FormEditorProps) => {
   const { config, initValues, componentId, onSave } = props;
   const [form] = Form.useForm();
+  const errors = useAppSelector(errorSelector);
+  const errorIdList = useMemo(() => (errors || []).map(({ id }) => id), [errors]);
   const onFinish = (values: Store) => {
-    onSave && onSave(values);
+    const isValidate = form.isFieldsTouched(['fieldName', 'label']);
+    onSave && onSave(values, isValidate);
   };
   const handleChange = () => {
     onFinish(form.getFieldsValue());
   };
 
   useEffect(() => {
+    if (errorIdList.includes(componentId)) {
+      form.validateFields();
+    }
     return () => {
       form.resetFields();
     };
-  }, [componentId, form]);
+  }, [componentId, form, errorIdList]);
   useEffect(() => {
     form.setFieldsValue(initValues);
   }, [initValues, form]);

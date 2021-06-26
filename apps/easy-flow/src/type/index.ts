@@ -155,12 +155,17 @@ export type FormField = SingleTextField | MultipleTextField | SelectField | Date
 export type FormFieldMap = {
   [k: string]: FormField;
 };
+export type ErrorItem = {
+  id: string;
+  content: string;
+};
 
 export type FormDesign = {
   formId?: string;
   selectedField: string | null;
   byId: FormFieldMap;
   layout: string[][];
+  errors: ErrorItem[];
   schema: Schema;
   isDirty: boolean;
   subAppInfo: {

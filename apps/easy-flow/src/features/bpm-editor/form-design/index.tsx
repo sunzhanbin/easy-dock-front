@@ -1,12 +1,10 @@
-import { FC, memo, useCallback, useEffect, useRef, useState } from 'react';
+import { FC, memo, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router';
 import DesignZone from './design-zone';
 import ToolBox from './toolbox';
 import EditZone from './edit-zone';
-import { DragDropContext, DraggableLocation, DropResult } from 'react-beautiful-dnd';
-import { store } from '@app/store';
-import { moveRow, comAdded, setLayout, setById, selectField, setIsDirty } from './formdesign-slice';
-import { ComponentConfig, ConfigItem, FieldType, FormField, FormFieldMap, TConfigItem, TConfigMap } from '@/type';
+import { setLayout, setById, selectField, setIsDirty, setErrors } from './formdesign-slice';
+import { ComponentConfig, ConfigItem, FormFieldMap } from '@/type';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { dirtySelector, selectedFieldSelector } from './formzone-reducer';
 import { axios } from '@/utils';
@@ -60,6 +58,7 @@ const FormDesign: FC<{}> = () => {
         dispatch(setLayout({ layout: [] }));
         dispatch(selectField({ id: '' }));
       }
+      dispatch(setErrors({ errors: [] }));
       // 临时规避dispatch时序的问题
       setTimeout(() => {
         dispatch(setIsDirty({ isDirty: false }));

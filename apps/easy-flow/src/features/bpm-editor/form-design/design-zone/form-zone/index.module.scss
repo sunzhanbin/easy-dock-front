@@ -14,6 +14,7 @@
       .form_row {
         display: flex;
         padding: 0 12px;
+        margin-bottom: 4px;
 
         .form_item {
           position: relative;
@@ -32,6 +33,9 @@
             .moveRight {
               display: block;
             }
+          }
+          &.error {
+            border: 1px dashed #ff5568;
           }
           .label_container {
             .label {

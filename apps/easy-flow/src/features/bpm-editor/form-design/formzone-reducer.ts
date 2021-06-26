@@ -1,6 +1,6 @@
 import { createSelector, PayloadAction } from '@reduxjs/toolkit';
 import { uniqueId } from 'lodash';
-import { FieldType, FormDesign, FormField, FormFieldMap, TConfigItem, TConfigMap } from '@type';
+import { ErrorItem, FieldType, FormDesign, FormField, FormFieldMap, TConfigItem, TConfigMap } from '@type';
 import { RootState } from '@/app/store';
 
 function locateById(target: string, layout: Array<string[]>): [number, number] {
@@ -156,8 +156,11 @@ const reducers = {
     state.selectedField = id;
     return state;
   },
-  editProps(state: FormDesign, action: PayloadAction<{ id: string; config: TConfigItem; isEdit?: boolean }>) {
-    const { id, config, isEdit } = action.payload;
+  editProps(
+    state: FormDesign,
+    action: PayloadAction<{ id: string; config: TConfigItem; isEdit?: boolean; isValidate?: boolean }>,
+  ) {
+    const { id, config, isEdit, isValidate } = action.payload;
     state.byId[id] = config as FormField;
     // 如果改变控件宽度后导致整行的宽度大于100%,则需要改变layout布局以实现换行
     if (isEdit) {
@@ -191,6 +194,10 @@ const reducers = {
       }
     }
     state.isDirty = true;
+    if (isValidate) {
+      const index = state.errors.findIndex((item) => item.id === id);
+      state.errors.splice(index, 1);
+    }
     return state;
   },
   setAppInfo(state: FormDesign, action: PayloadAction<{ id: string | number; appId: string | number; name: string }>) {
@@ -211,6 +218,11 @@ const reducers = {
   setIsDirty(state: FormDesign, action: PayloadAction<{ isDirty: boolean }>) {
     const { isDirty } = action.payload;
     state.isDirty = isDirty;
+    return state;
+  },
+  setErrors(state: FormDesign, action: PayloadAction<{ errors: ErrorItem[] }>) {
+    const { errors } = action.payload;
+    state.errors = errors;
     return state;
   },
 };
@@ -275,6 +287,9 @@ export const subAppSelector = createSelector([(state: RootState) => state.formDe
 export const dirtySelector = createSelector([(state: RootState) => state.formDesign], (formDesign) => {
   return formDesign.isDirty;
 });
+export const errorSelector = createSelector([(state: RootState) => state.formDesign], (formDesign) => {
+  return formDesign.errors;
+});
 
 export const {
   comAdded,
@@ -291,4 +306,5 @@ export const {
   setLayout,
   setById,
   setIsDirty,
+  setErrors,
 } = reducers;

@@ -1,4 +1,4 @@
-import { FC, useRef, useCallback } from 'react';
+import { FC, useRef, useCallback, useMemo } from 'react';
 import { useDrag, useDrop, DropTargetMonitor } from 'react-dnd';
 import { XYCoord } from 'dnd-core';
 import { Row, Col } from 'antd';
@@ -9,6 +9,7 @@ import {
   layoutSelector,
   componentPropsSelector,
   selectedFieldSelector,
+  errorSelector,
 } from '@/features/bpm-editor/form-design/formzone-reducer';
 import { MoveConfig } from '@/type';
 import SourceBox from '@/components/source-box';
@@ -44,6 +45,8 @@ export const Card: FC<CardProps> = ({ rowIndex, row, moveCard }) => {
   const dispatch = useAppDispatch();
   const layout = useAppSelector(layoutSelector);
   const byId = useAppSelector(componentPropsSelector);
+  const errors = useAppSelector(errorSelector);
+  const errorIdList = useMemo(() => (errors || []).map(({ id }) => id), [errors]);
   const handleSelect = useCallback(
     (id) => {
       dispatch(selectField({ id }));
@@ -163,7 +166,11 @@ export const Card: FC<CardProps> = ({ rowIndex, row, moveCard }) => {
           {row.map((id, colIndex) => (
             <Col
               key={id}
-              className={classNames('form_item', id === selectedField ? 'active' : '')}
+              className={classNames(
+                'form_item',
+                id === selectedField ? 'active' : '',
+                errorIdList.includes(id) ? 'error' : '',
+              )}
               onClick={() => {
                 handleSelect(id);
               }}

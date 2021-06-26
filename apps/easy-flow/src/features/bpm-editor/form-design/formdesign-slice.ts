@@ -14,8 +14,9 @@ import {
   setLayout as setLayoutReducer,
   setById as setByIdReducer,
   setIsDirty as setIsDirtyReducer,
+  setErrors as setErrorsReducer,
 } from './formzone-reducer';
-import { ConfigItem, FieldType, FormDesign, FormMeta } from '@/type';
+import { ConfigItem, ErrorItem, FieldType, FormDesign, FormMeta } from '@/type';
 import { loadComponents } from './toolbox/toolbox-reducer';
 import { RootState } from '@/app/store';
 import { axios } from '@/utils';
@@ -41,6 +42,7 @@ const formDesign = createSlice({
     setLayout: setLayoutReducer,
     setById: setByIdReducer,
     setIsDirty: setIsDirtyReducer,
+    setErrors: setErrorsReducer,
   },
   extraReducers: (builder) => {
     builder.addCase(loadComponents.fulfilled, (state, action) => {
@@ -65,6 +67,7 @@ export const {
   setLayout,
   setById,
   setIsDirty,
+  setErrors,
 } = formDesign.actions;
 
 export default formDesign.reducer;
@@ -72,19 +75,28 @@ export default formDesign.reducer;
 const validComponentConfig = (config: ConfigItem) => {
   const label = config.label || '';
   const reg = /[a-zA-Z]+[a-zA-Z0-9_]*/;
-  let errorText = '';
-  Object.keys(config).forEach((key: string) => {
+  const errorItem: ErrorItem = { id: '', content: '' };
+  const configKeys: string[] = Object.keys(config);
+  for (let i = 0, len = configKeys.length; i < len; i++) {
+    const key = configKeys[i];
     if (key === 'fieldName') {
-      errorText = config.fieldName
+      const errorText = config.fieldName
         ? reg.test(config.fieldName as string)
           ? ''
           : `${label}的数据库字段名不符合规范`
         : `请填写${label}的数据库字段名`;
+      if (errorText) {
+        errorItem.id = config.id as string;
+        errorItem.content = errorText;
+        break;
+      }
     } else if (key === 'label' && !config.label) {
-      errorText = `请填写控件名称`;
+      errorItem.id = config.id as string;
+      errorItem.content = '请输入控件名称';
+      break;
     }
-  });
-  return errorText;
+  }
+  return errorItem.id ? errorItem : null;
 };
 type SaveParams = {
   subAppId: string;
@@ -101,7 +113,7 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
       layout: layout,
       schema: schema,
     };
-    const errors: string[] = [];
+    const errors: ErrorItem[] = [];
     const { byId = {} } = formDesign;
     Object.keys(byId).forEach((id) => {
       const type = id.split('_')[0] || '';
@@ -123,14 +135,17 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
           config[key] = (byId[id] as any)[key];
         }
       });
-      const errorText = validComponentConfig(config);
-      if (errorText) {
-        errors.push(errorText);
+      const errorItem = validComponentConfig(config);
+      if (errorItem) {
+        errors.push(errorItem);
       }
       formMeta.components.push({ config, props });
     });
     if (errors.length > 0) {
-      isShowErrorTip && message.error(errors.toString());
+      const id = errors[0].id || '';
+      id && dispatch(selectField({ id }));
+      dispatch(setErrors({ errors }));
+      isShowErrorTip && message.error('请检查控件属性配置是否正确');
       return Promise.reject(errors);
     }
     // 表单改变之后才有必要调后台接口
