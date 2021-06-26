@@ -7,7 +7,7 @@ import { getPassedTime } from '@utils/index';
 import { runtimeAxios } from '@/utils';
 import moment from 'moment';
 import { dynamicRoutes } from '@/consts/route';
-import useApp from '@/hooks/use-app';
+import useAppId from '@/hooks/use-app-id';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 
 const { RangePicker } = DatePicker;
@@ -16,7 +16,7 @@ const { Option } = Select;
 const Done: FC<{}> = () => {
   const [form] = Form.useForm();
   const history = useHistory();
-  const app = useApp();
+  const appId = useAppId();
   const [loading, setLoading] = useState<boolean>(false);
   const [pagination, setPagination] = useState<Pagination>({
     pageSize: 10,
@@ -89,7 +89,7 @@ const Done: FC<{}> = () => {
   }, [history]);
   const fetchData = useMemoCallback(
     (pagination: Pagination = { pageSize: 10, current: 1, total: 0, showSizeChanger: true }) => {
-      if (!app) return;
+      if (!appId) return;
 
       setLoading(true);
       const { current: pageIndex, pageSize } = pagination;
@@ -116,7 +116,7 @@ const Done: FC<{}> = () => {
         filter.endTime = endTime;
       }
       const params = {
-        appId: app.id,
+        appId,
         filter,
         sortDirection,
       };
@@ -165,8 +165,8 @@ const Done: FC<{}> = () => {
     fetchOptionList();
   }, [fetchOptionList]);
   useEffect(() => {
-    app?.id && fetchData();
-  }, [app?.id, fetchData]);
+    appId && fetchData();
+  }, [appId, fetchData]);
   return (
     <div className={styles.container}>
       <div className={styles.header}>

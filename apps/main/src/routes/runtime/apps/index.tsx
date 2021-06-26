@@ -60,7 +60,7 @@ function App() {
       {loading && <Loading />}
 
       <div className={styles.welcome}>
-        {loginUser.info && <div className={styles.title}>{`Hi ${loginUser.info.cName}`}</div>}
+        {loginUser.info && <div className={styles.title}>{`Hi ${loginUser.info.username}`}</div>}
         <div className={styles.time}>{`${formatTime(new Date())}好!`}</div>
       </div>
       <div>

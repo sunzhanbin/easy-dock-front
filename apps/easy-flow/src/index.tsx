@@ -15,11 +15,15 @@ export async function mount(props?: { container: HTMLElement; basename: string; 
   const { container, basename = '/', appId } = props || {};
   const history = createBrowserHistory({ basename });
 
+  if (appId) {
+    appConfig.appId = appId;
+  }
+
   ReactDOM.render(
     <AntdProvider>
       <Provider store={store}>
         <Router history={history}>
-          <App appId={appId} />
+          <App />
         </Router>
       </Provider>
     </AntdProvider>,

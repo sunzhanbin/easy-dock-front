@@ -1,8 +1,6 @@
-import { createSlice, PayloadAction, createAsyncThunk, createSelector } from '@reduxjs/toolkit';
-import { axios } from '@utils';
-import { envs } from '@consts';
 import cookie from 'js-cookie';
-import { localStorage } from '@common/utils';
+import { createSlice, PayloadAction, createAsyncThunk, createSelector } from '@reduxjs/toolkit';
+import { runtimeAxios } from '@utils';
 
 import type { RootState } from './index';
 
@@ -30,41 +28,25 @@ const user = createSlice({
 });
 
 export const getUserInfo = createAsyncThunk('main-app-user/get-user', (_, { dispatch }) => {
-  axios
-    .get('/api/auth/v1/user/currentInfo', {
-      baseURL: envs.COMMON_LOGIN_DOMAIN,
-      silence: true,
-    })
-    .then(({ data }) => {
-      const user = data.userInfo.find((user: any) => user.userId === data.id);
-
-      if (!user) return;
-
-      dispatch(
-        setUser({
-          avatar: user.staffPhoto,
-          id: user.id,
-          nick: user.username,
-          email: user.email,
-          cName: (user.cnName && user.cnName.trim()) || '',
-          loginName: data.loginName,
-        }),
-      );
-    });
+  runtimeAxios.get('/auth/current', { silence: true }).then(({ data }) => {
+    dispatch(
+      setUser({
+        avatar: data.user.avatar,
+        username: data.user.userName,
+        loginName: data.user.loginName,
+      }),
+    );
+  });
 });
 
 export const logout = createAsyncThunk('main-app-user/logout', async (_, { dispatch }) => {
-  await axios.get('/api/auth/v1/logout', {
-    baseURL: envs.COMMON_LOGIN_DOMAIN,
-  });
+  await runtimeAxios.delete('/auth/logout');
 
   // 删除请求头里的auth
-  delete axios.defaults.headers.auth;
+  delete runtimeAxios.defaults.headers.auth;
 
   // 清掉cookie
-  localStorage.clear('token');
-
-  // cookie.remove('token')
+  cookie.remove('token');
 
   dispatch(clear());
 });

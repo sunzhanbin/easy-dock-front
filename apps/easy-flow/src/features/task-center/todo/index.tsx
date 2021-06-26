@@ -8,7 +8,7 @@ import { runtimeAxios } from '@/utils';
 import { useHistory } from 'react-router-dom';
 import { Pagination, TodoItem, UserItem } from '../type';
 import { useAppDispatch } from '@/app/hooks';
-import useApp from '@/hooks/use-app';
+import useAppId from '@/hooks/use-app-id';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { setTodoNum } from '../taskcenter-slice';
 
@@ -18,7 +18,7 @@ const { Option } = Select;
 const ToDo: FC<{}> = () => {
   const [form] = Form.useForm();
   const history = useHistory();
-  const app = useApp();
+  const appId = useAppId();
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState<boolean>(false);
   const [optionList, setOptionList] = useState<UserItem[]>([]);
@@ -33,7 +33,7 @@ const ToDo: FC<{}> = () => {
   const [sortDirection, setSortDirection] = useState<'DESC' | 'ASC'>('DESC');
   const fetchData = useMemoCallback(
     (pagination: Pagination = { pageSize: 10, current: 1, total: 0, showSizeChanger: true }) => {
-      if (!app) return;
+      if (!appId) return;
 
       setLoading(true);
       const { current, pageSize } = pagination;
@@ -60,7 +60,7 @@ const ToDo: FC<{}> = () => {
         filter.endTime = endTime;
       }
       const params = {
-        appId: app.id,
+        appId: appId,
         filter,
         sortDirection,
       };
@@ -177,8 +177,8 @@ const ToDo: FC<{}> = () => {
     });
   }, []);
   useEffect(() => {
-    app?.id && fetchData();
-  }, [fetchData, app?.id]);
+    appId && fetchData();
+  }, [fetchData, appId]);
   useEffect(() => {
     fetchOptionList();
   }, [fetchOptionList]);

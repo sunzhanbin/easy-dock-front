@@ -9,7 +9,7 @@ import Project from './project';
 import Form from './project/form';
 import emptyImage from '@assets/empty.png';
 import { axios } from '@utils';
-import { MAIN_CONTENT_CLASSNAME, dynamicRoutes } from '@consts';
+import { MAIN_CONTENT_CLASSNAME, dynamicRoutes, ROUTES } from '@consts';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import Scene, { SceneProps } from './scene';
 import EditScene, { EditSceneProps } from './edit-scene';
@@ -250,7 +250,7 @@ export default function Home() {
               </div>
             </Popover>
             <span className={styles.line}></span>
-            <Link to="/integration/orch/interface-manage" className={styles.action}>
+            <Link to={ROUTES.INTEGRATION_ORCH_INTERFACE_LIST} className={styles.action}>
               <Icon type="jicheng" className={styles.icon} />
               <span>集成管理</span>
             </Link>

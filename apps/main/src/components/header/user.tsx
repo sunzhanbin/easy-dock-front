@@ -37,9 +37,9 @@ function HeaderUser() {
         <Dropdown overlay={dropownOverlay} getPopupContainer={(c) => c} placement="bottomLeft">
           <div className={styles.user}>
             <div className={styles.avatar}>
-              <Avatar round size={32} src={user.info.avatar} name={user.info.cName || user.info.loginName} />
+              <Avatar round size={32} src={user.info.avatar} name={user.info.username} />
             </div>
-            <div className={styles.name}>{user.info.cName}</div>
+            <div className={styles.name}>{user.info.username}</div>
           </div>
         </Dropdown>
       ) : (

@@ -70,7 +70,7 @@ const EditorHeader: FC = () => {
     message.success('发布成功');
 
     setTimeout(() => {
-      window.location.replace(`/scenes-detail/${appId}`);
+      window.location.replace(`/builder/app/${appId}`);
     }, 1500);
   }, [bpmId, dispatch, appId]);
 
