@@ -5,13 +5,11 @@ import { InputNumberProps } from 'antd/lib/input-number';
 import styles from './index.module.scss';
 
 const TextareaComponent = (props: InputNumberProps) => {
-  const { defaultValue, readOnly, onChange } = props;
+  const { defaultValue, onChange } = props;
   const propList = useMemo(() => {
     const prop: { [k: string]: string | number | boolean | undefined | Function } = {
       size: 'large',
       placeholder: '请输入',
-      readOnly: readOnly,
-      disabled: readOnly,
       onChange: onChange,
     };
     if (defaultValue) {
@@ -21,7 +19,7 @@ const TextareaComponent = (props: InputNumberProps) => {
     delete result.fieldName;
     delete result.colSpace;
     return result;
-  }, [defaultValue, readOnly, props, onChange]);
+  }, [defaultValue, props, onChange]);
 
   return (
     <div className={styles.container}>

@@ -3,14 +3,13 @@ import { Checkbox } from 'antd';
 import { OptionItem } from '@/type';
 import { CheckboxGroupProps } from 'antd/lib/checkbox';
 
-const CheckboxComponent = (props: CheckboxGroupProps & { readOnly: boolean; options: OptionItem[] }) => {
-  const { readOnly, onChange, options } = props;
+const CheckboxComponent = (props: CheckboxGroupProps & { options: OptionItem[] }) => {
+  const { onChange, options } = props;
   const optionList = useMemo(() => {
     return (options || []).map((item: OptionItem) => item.value);
   }, [options]);
   const propList = useMemo(() => {
     const prop: { [k: string]: string | boolean | string[] | Function } = {
-      disabled: readOnly,
       options: optionList,
       onChange: onChange as Function,
     };
@@ -19,7 +18,7 @@ const CheckboxComponent = (props: CheckboxGroupProps & { readOnly: boolean; opti
     delete result.colSpace;
     delete result.dataSource;
     return result;
-  }, [optionList, readOnly, props, onChange]);
+  }, [optionList, props, onChange]);
   return <Checkbox.Group {...propList}></Checkbox.Group>;
 };
 
