@@ -12,7 +12,7 @@
     flex-shrink: 0;
     width: 310px;
     padding: 24px;
-    padding-bottom: 0;
+    padding-bottom: 32px;
     border-left: 1px solid rgba(#181f43, 0.12);
     overflow-y: auto;
 
@@ -28,6 +28,20 @@
         z-index: -1;
         width: 1px;
         background-color: rgba(#181f43, 0.12);
+      }
+
+      .last-record {
+        position: relative;
+
+        &::after {
+          content: '';
+          position: absolute;
+          left: 6px;
+          top: 17px;
+          bottom: 0;
+          width: 5px;
+          background-color: #fff;
+        }
       }
     }
   }

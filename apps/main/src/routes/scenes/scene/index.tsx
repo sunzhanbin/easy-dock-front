@@ -1,7 +1,7 @@
 import { useCallback, useState, useMemo, useRef } from 'react';
 import { Switch, Dropdown, Tooltip } from 'antd';
 import classnames from 'classnames';
-import { Popconfirm, Icon } from '@components';
+import { PopoverConfirm, Icon } from '@common/components';
 import { getSceneImageUrl } from '@utils';
 import { stopPropagation } from '@consts';
 import { SceneShape } from '../types';
@@ -121,7 +121,7 @@ export default function Scene(props: SceneProps) {
         )}
 
         <div className={styles.footer}>
-          <Popconfirm
+          <PopoverConfirm
             title="提示"
             key="switch-status"
             content={`确认${data.status === 1 ? '关闭' : '启用'}所选应用吗?`}
@@ -131,10 +131,10 @@ export default function Scene(props: SceneProps) {
             <div onClick={stopPropagation}>
               <Switch checkedChildren="开启" unCheckedChildren="关闭" checked={data.status === 1} />
             </div>
-          </Popconfirm>
+          </PopoverConfirm>
         </div>
         <div className={styles.tool}>
-          <Popconfirm
+          <PopoverConfirm
             title="确认删除"
             content="删除后不可恢复，确认删除？"
             placement="bottomRight"
@@ -144,7 +144,7 @@ export default function Scene(props: SceneProps) {
             getPopupContainer={getPopupContainer}
           >
             <div className={styles.del}></div>
-          </Popconfirm>
+          </PopoverConfirm>
 
           <Dropdown
             overlayClassName="dark"
