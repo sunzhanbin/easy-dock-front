@@ -76,7 +76,11 @@ const Detail = forwardRef(function Detail(props: DetailProps, ref: React.Forward
       <div className={styles.flow}>
         <div className={styles.detail}>
           {auditRecords.map((record, index) => (
-            <AuditRecord data={record} key={index}></AuditRecord>
+            <AuditRecord
+              className={auditRecords.length === index + 1 ? styles['last-record'] : ''}
+              data={record}
+              key={index}
+            ></AuditRecord>
           ))}
         </div>
       </div>
