@@ -25,7 +25,7 @@ const reducers = {
         state.layout = [];
       }
       if (state.byId[com.id!]) return state;
-      state.byId[com.id!] = com;
+      state.byId[com.id!] = Object.assign({}, com, { fieldName: com.id });
       // 如果当前选中了某一行，则在当前行之后插入；否则在末尾插入
       if (state.selectedField) {
         const rowNumber = locateById(state.selectedField, state.layout)[0];
