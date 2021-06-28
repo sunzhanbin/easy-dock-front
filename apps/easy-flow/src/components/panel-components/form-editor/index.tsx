@@ -9,6 +9,7 @@ import { Store } from 'antd/lib/form/interface';
 import styles from './index.module.scss';
 import { useAppSelector } from '@/app/hooks';
 import { errorSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
+import { Icon } from '@common/components';
 
 const { Option } = Select;
 
@@ -92,7 +93,7 @@ const FormEditor = (props: FormEditorProps) => {
                   required={required}
                   rules={[{ required: required, message: requiredMessage }]}
                 >
-                  <Select placeholder={placeholder || '请选择'} size="large">
+                  <Select placeholder={placeholder || '请选择'} size="large" suffixIcon={<Icon type="xiala" />}>
                     {range &&
                       range.map((v) => (
                         <Option value={v.key} key={v.key}>

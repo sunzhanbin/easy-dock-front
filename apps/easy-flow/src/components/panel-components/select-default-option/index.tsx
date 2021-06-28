@@ -3,6 +3,7 @@ import { componentPropsSelector } from '@/features/bpm-editor/form-design/formzo
 import { memo, useCallback, useMemo } from 'react';
 import { Select } from 'antd';
 import { OptionItem, SelectField } from '@/type';
+import { Icon } from '@common/components';
 
 const { Option } = Select;
 
@@ -39,7 +40,7 @@ const SelectDefaultOption = (props: editProps) => {
     [onChange],
   );
   return (
-    <Select {...propList} onChange={handleChange}>
+    <Select {...propList} onChange={handleChange} suffixIcon={<Icon type="xiala" />}>
       {optionList.map(({ key, value }: OptionItem) => (
         <Option value={key} key={key}>
           {value}

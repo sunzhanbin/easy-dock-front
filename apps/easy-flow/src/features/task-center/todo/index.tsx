@@ -11,6 +11,7 @@ import { useAppDispatch } from '@/app/hooks';
 import useAppId from '@/hooks/use-app-id';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { setTodoNum } from '../taskcenter-slice';
+import { Icon } from '@common/components';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -206,6 +207,7 @@ const ToDo: FC<{}> = () => {
                   fetchData();
                 }}
                 style={{ width: '100%' }}
+                suffixIcon={<Icon type="xiala" />}
                 placeholder="请选择"
                 allowClear
               >
@@ -221,6 +223,7 @@ const ToDo: FC<{}> = () => {
                 showTime={{ format: 'HH:mm' }}
                 format="YYYY-MM-DD HH:mm"
                 style={{ width: '100%' }}
+                suffixIcon={<Icon type="riqi" />}
                 onChange={() => {
                   fetchData();
                 }}

@@ -1,4 +1,4 @@
-import { memo, useMemo, useCallback } from 'react';
+import { memo, useMemo, useCallback, ReactNode } from 'react';
 import { DatePicker } from 'antd';
 import moment, { Moment } from 'moment';
 import locale from 'antd/lib/date-picker/locale/zh_CN';
@@ -6,6 +6,7 @@ import { componentPropsSelector } from '@/features/bpm-editor/form-design/formzo
 import { useAppSelector } from '@/app/hooks';
 import { DateField } from '@/type';
 import styles from './index.module.scss';
+import { Icon } from '@common/components';
 
 interface editProps {
   id: string;
@@ -23,7 +24,10 @@ const DefaultDate = (props: editProps) => {
     return (byId[id] as DateField)?.notSelectPassed;
   }, [id, byId]);
   const propList = useMemo(() => {
-    const props: { [k: string]: string | boolean | Function | Moment } = { size: 'large' };
+    const props: { [k: string]: string | boolean | Function | Moment | ReactNode } = {
+      size: 'large',
+      suffixIcon: <Icon type="riqi" />,
+    };
     if (formatType === 'YYYY-MM-DD HH:mm:ss') {
       props.showTime = true;
       props.format = 'YYYY-MM-DD HH:mm:ss';

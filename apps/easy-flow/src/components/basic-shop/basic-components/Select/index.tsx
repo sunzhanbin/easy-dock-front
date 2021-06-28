@@ -1,7 +1,8 @@
-import { memo, useMemo } from 'react';
+import { memo, ReactNode, useMemo } from 'react';
 import { Select } from 'antd';
 import { OptionItem } from '@/type';
 import { SelectProps } from 'antd/lib/select';
+import { Icon } from '@common/components';
 
 const { Option } = Select;
 
@@ -15,10 +16,11 @@ const SelectComponent = (
   const { defaultValue, multiple, showSearch, options, onChange } = props;
 
   const propList = useMemo(() => {
-    const prop: { [k: string]: string | boolean | Function } = {
+    const prop: { [k: string]: string | boolean | Function | ReactNode } = {
       size: 'large',
       showSearch: showSearch as boolean,
       placeholder: '请选择',
+      suffixIcon: <Icon type="xiala" />,
       onChange: onChange as Function,
     };
     if (multiple) {

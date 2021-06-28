@@ -1,13 +1,15 @@
-import { memo, useMemo } from 'react';
+import { memo, ReactNode, useMemo } from 'react';
 import { DatePicker } from 'antd';
+import { Icon } from '@common/components';
 import { DatePickerProps } from 'antd/lib/date-picker';
 import moment, { Moment } from 'moment';
 
 const Date = (props: DatePickerProps & { notSelectPassed: boolean; onChange: (value: number) => void }) => {
   const { format, notSelectPassed, defaultValue, value, onChange } = props;
   const propList = useMemo(() => {
-    const prop: { [k: string]: string | boolean | Function | Moment } = {
+    const prop: { [k: string]: string | boolean | Function | Moment | ReactNode } = {
       size: 'large',
+      suffixIcon: <Icon type="riqi" />,
       onChange(val: moment.Moment) {
         onChange && onChange(moment(val).valueOf());
       },

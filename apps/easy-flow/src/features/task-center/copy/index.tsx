@@ -1,6 +1,7 @@
 import { memo, FC } from 'react';
 import { Form, Input, Button, DatePicker, Select } from 'antd';
 import styles from './index.module.scss';
+import { Icon } from '@common/components';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -38,7 +39,7 @@ const Copy: FC<{}> = () => {
             <Input placeholder="请输入" />
           </Form.Item>
           <Form.Item label="状态" name="state" className="state">
-            <Select style={{ width: '100%' }}>
+            <Select style={{ width: '100%' }} suffixIcon={<Icon type="xiala" />}>
               {stateList.map(({ key, value }) => (
                 <Option key={key} value={key}>
                   {value}
@@ -53,6 +54,7 @@ const Copy: FC<{}> = () => {
             <RangePicker
               showTime={{ format: 'HH:mm' }}
               format="YYYY-MM-DD HH:mm"
+              suffixIcon={<Icon type="riqi" />}
               style={{ width: '100%' }}
             ></RangePicker>
           </Form.Item>
