@@ -81,7 +81,7 @@ const AppDetail: FC = () => {
             prefix={<Icon type="sousuo" />}
             size="large"
             placeholder="搜索子应用名称"
-            onBlur={handleSearch}
+            onChange={handleSearch}
             onKeyUp={handleKeyUp}
           />
         </div>
