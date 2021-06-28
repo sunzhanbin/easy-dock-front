@@ -145,7 +145,7 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
       const id = errors[0].id || '';
       id && dispatch(selectField({ id }));
       dispatch(setErrors({ errors }));
-      isShowErrorTip && message.error('请检查控件属性配置是否正确');
+      isShowErrorTip && message.error('您有内容未填写或填写错误，请检查');
       return Promise.reject(errors);
     }
     // 表单改变之后才有必要调后台接口
