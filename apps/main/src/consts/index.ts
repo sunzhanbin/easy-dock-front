@@ -46,5 +46,4 @@ export const shouldHideHeaderUrls = [
   OrchMicroApp.route + orchRoutes.ORCH_EDIT_GENERATION_API, // 微前端服务编排积木页面
   ROUTES.INTEGRATION_ORCH_EDIT_GENERATION_API, // 集成管理页面加载服务编排时积木页面
   FlowMicroApp.route + '/*',
-  // '/dashboard/\\d+/*',
 ];

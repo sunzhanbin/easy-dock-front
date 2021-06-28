@@ -50,14 +50,28 @@
   }
 
   .card {
+    position: relative;
     border-radius: 3px;
     overflow: hidden;
     cursor: pointer;
-    border: 1px solid transparent;
+
+    &:hover {
+      box-shadow: 0 6px 24px 0 rgba(#181f43, 0.12);
+    }
 
     &.invalid {
-      border-color: #ff5568;
       box-shadow: 0 0 0 4px rgba(#ff5568, 0.12);
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border: 2px solid #ff5568;
+        border-radius: 3px;
+      }
     }
   }
 
@@ -112,6 +126,10 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
+
+      &:hover > .icon {
+        color: $primary-color;
+      }
     }
 
     .action + .action {
