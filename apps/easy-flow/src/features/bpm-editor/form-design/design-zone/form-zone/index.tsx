@@ -9,20 +9,10 @@ import {
   selectedFieldSelector,
 } from '@/features/bpm-editor/form-design/formzone-reducer';
 import { moveIndex } from '@/features/bpm-editor/form-design/formdesign-slice';
-import { MoveConfig } from '@/type';
-import { Draggable, Droppable } from 'react-beautiful-dnd';
 import emptyImage from '@assets/drag.png';
 import styles from './index.module.scss';
-import classNames from 'classnames';
 import { Card, CardProps } from '@/components/card';
 import { useDrop } from 'react-dnd';
-
-const spaceMap = {
-  1: 6,
-  2: 12,
-  3: 18,
-  4: 24,
-};
 
 const FormZone: FC<{}> = () => {
   const dispatch = useAppDispatch();

@@ -4,7 +4,6 @@ import { useAppSelector } from '@app/hooks';
 import { toolboxSelector } from './toolbox-reducer';
 import Loading from '@components/loading';
 import { map } from 'lodash';
-import { Draggable, Droppable } from 'react-beautiful-dnd';
 import styles from './index.module.scss';
 
 const ToolBox: FC<{}> = () => {
@@ -16,16 +15,7 @@ const ToolBox: FC<{}> = () => {
         <div className={styles.componentContainer}>
           {map(value, (tool, index) => {
             const { name, icon, type } = tool;
-            return (
-              <ToolBoxItem icon={icon} displayName={name} type={type} key={type}></ToolBoxItem>
-              /*  <Draggable draggableId={type} index={+index} key={name}>
-                {(dragProvided) => (
-                  <div ref={dragProvided.innerRef} {...dragProvided.draggableProps} {...dragProvided.dragHandleProps}>
-                    <ToolBoxItem icon={icon} displayName={name} type={type}></ToolBoxItem>
-                  </div>
-                )}
-              </Draggable> */
-            );
+            return <ToolBoxItem icon={icon} displayName={name} type={type} key={type}></ToolBoxItem>;
           })}
         </div>
       </div>
@@ -35,14 +25,6 @@ const ToolBox: FC<{}> = () => {
   return (
     <div className={styles.container}>
       <div>{comGroups}</div>
-      {/* <Droppable droppableId="component_zone">
-        {(dropProvided) => (
-          <div ref={dropProvided.innerRef} {...dropProvided.droppableProps}>
-            <div>{comGroups}</div>
-            {dropProvided.placeholder}
-          </div>
-        )}
-      </Droppable> */}
     </div>
   );
 };
