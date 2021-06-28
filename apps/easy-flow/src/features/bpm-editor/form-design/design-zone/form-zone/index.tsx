@@ -38,11 +38,11 @@ const FormZone: FC<{}> = () => {
   };
   const content = useMemo(() => {
     return (
-      <div className={styles.form_design}>
+      <div className={styles.form_design} ref={drop}>
         {layout && layout.length > 0 ? (
           layout.map((row, rowIndex) => renderCard({ row, rowIndex, moveCard }, rowIndex))
         ) : (
-          <div className={styles.empty_tip} ref={drop}>
+          <div className={styles.empty_tip}>
             <img src={emptyImage} className={styles.image} alt="empty" />
             <div className={styles.text}>拖动或点击左侧控件到这里</div>
           </div>
