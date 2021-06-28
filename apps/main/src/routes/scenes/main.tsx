@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { Button, message } from 'antd';
 import { FormInstance } from 'antd/lib/form';
@@ -16,7 +16,7 @@ import EditScene, { EditSceneProps } from './edit-scene';
 import { ProjectShape, SceneShape } from './types';
 import styles from './index.module.scss';
 
-export default function Home() {
+export default memo(function Main() {
   const history = useHistory();
   const [fetching, setFetching] = useState(false);
   const [projects, setProjects] = useState<ProjectShape[]>([]);
@@ -310,4 +310,4 @@ export default function Home() {
       />
     </div>
   );
-}
+});
