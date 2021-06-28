@@ -20,12 +20,7 @@ const SelectImage = React.memo(function SelectImage(props: SelectImageProps) {
         const image = getSceneImageUrl(key as keyof typeof SCENE_IAMGES);
 
         return (
-          <Col
-            key={key}
-            className={styles.col}
-            span={6}
-            onClick={onChange && (() => onChange(key))}
-          >
+          <Col key={key} className={styles.col} span={6} onClick={onChange && (() => onChange(key))}>
             <div className={styles.box}>
               {value === key && (
                 <div className={styles.mask}>
@@ -118,15 +113,10 @@ function EditScene(props: EditSceneProps) {
       <Form form={form} className={styles.form} layout="vertical" autoComplete="off">
         <div className={styles.column}>
           <Form.Item label="应用名称" name="name" rules={nameRules}>
-            <Input placeholder="请填写应用名称" size="large" />
+            <Input placeholder="请填写应用名称" size="large" autoFocus />
           </Form.Item>
           <Form.Item label="应用描述" name="remark" getValueFromEvent={formatInputValue}>
-            <Input.TextArea
-              className={styles.textarea}
-              size="large"
-              placeholder="请填写应用描述"
-              maxLength={200}
-            />
+            <Input.TextArea className={styles.textarea} size="large" placeholder="请填写应用描述" maxLength={200} />
           </Form.Item>
         </div>
         <div className={styles.column}>
