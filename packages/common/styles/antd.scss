@@ -202,6 +202,7 @@
 
   &:not(&-disabled):hover {
     border-color: rgba(76, 92, 219, 0.85);
+    background-color: transparent;
   }
 
   .ant-input {
