@@ -77,23 +77,25 @@ const AppDetail: FC = () => {
             ))}
         </div>
         {subAppList.length > 0 && (
-          <div className={styles.more_info}>
-            <div className={styles.number}>({subAppList.length})</div>
-            <div className={classNames(styles.status, appInfo?.status === 1 ? styles.active : styles.negative)}>
-              {appInfo?.status === 1 ? '已启用' : '已停用'}
+          <>
+            <div className={styles.more_info}>
+              <div className={styles.number}>({subAppList.length})</div>
+              <div className={classNames(styles.status, appInfo?.status === 1 ? styles.active : styles.negative)}>
+                {appInfo?.status === 1 ? '已启用' : '已停用'}
+              </div>
             </div>
-          </div>
+            <div className={styles.search_container}>
+              <Input
+                className={styles.search}
+                prefix={<Icon type="sousuo" />}
+                size="large"
+                placeholder="搜索子应用名称"
+                onChange={handleSearch}
+                onKeyUp={handleKeyUp}
+              />
+            </div>
+          </>
         )}
-        <div className={styles.search_container}>
-          <Input
-            className={styles.search}
-            prefix={<Icon type="sousuo" />}
-            size="large"
-            placeholder="搜索子应用名称"
-            onChange={handleSearch}
-            onKeyUp={handleKeyUp}
-          />
-        </div>
       </div>
       <div className={styles.content}>
         {subAppList.length > 0 ? (
