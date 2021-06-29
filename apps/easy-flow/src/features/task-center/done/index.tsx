@@ -9,6 +9,7 @@ import moment from 'moment';
 import { dynamicRoutes } from '@/consts/route';
 import useAppId from '@/hooks/use-app-id';
 import useMemoCallback from '@common/hooks/use-memo-callback';
+import { Icon } from '@common/components';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -189,6 +190,7 @@ const Done: FC<{}> = () => {
                 filterOption={handleFilterOption}
                 allowClear
                 style={{ width: '100%' }}
+                suffixIcon={<Icon type="xiala" />}
                 placeholder="请选择"
                 onChange={() => {
                   fetchData();
@@ -205,6 +207,7 @@ const Done: FC<{}> = () => {
               <RangePicker
                 showTime={{ format: 'HH:mm' }}
                 format="YYYY-MM-DD HH:mm"
+                suffixIcon={<Icon type="riqi" />}
                 style={{ width: '100%' }}
                 onChange={() => {
                   fetchData();

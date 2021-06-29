@@ -26,8 +26,8 @@ const EditorHeader: FC = () => {
     return `${match.url}/form-design`;
   }, [match]);
   const handlePreview = useCallback(() => {
-    layout.length > 0 && setShowModel(true);
-  }, [layout]);
+    setShowModel(true);
+  }, []);
   const handlePrev = useCallback(() => {
     if (pathName === flowDesignPath) {
       history.replace(formDesignPath);
@@ -122,7 +122,7 @@ const EditorHeader: FC = () => {
                   className={styles.iconfont}
                   type="yulan"
                   onClick={handlePreview}
-                  style={{ cursor: layout.length === 0 ? 'not-allowed' : 'pointer' }}
+                  // style={{ cursor: layout.length === 0 ? 'not-allowed' : 'pointer' }}
                 />
               </span>
             </Tooltip>
@@ -132,14 +132,7 @@ const EditorHeader: FC = () => {
               上一步
             </Button>
           )}
-          <Button
-            type="primary"
-            ghost
-            className={styles.save}
-            size="large"
-            disabled={layout.length === 0}
-            onClick={handleSave}
-          >
+          <Button type="primary" ghost className={styles.save} size="large" onClick={handleSave}>
             保存
           </Button>
           {pathName === formDesignPath && (

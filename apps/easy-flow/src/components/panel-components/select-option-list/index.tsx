@@ -212,6 +212,7 @@ const SelectOptionList = (props: editProps) => {
             placeholder="选择子应用"
             className={styles.dict_content}
             size="large"
+            suffixIcon={<Icon type="xiala" />}
             onChange={handleChangeApp}
             {...(subAppKey ? { defaultValue: subAppKey } : null)}
           >
@@ -226,6 +227,7 @@ const SelectOptionList = (props: editProps) => {
               placeholder="选择控件"
               className={styles.dict_content}
               size="large"
+              suffixIcon={<Icon type="xiala" />}
               onChange={handleChangeComponent}
               {...(componentKey ? { defaultValue: componentKey } : null)}
             >

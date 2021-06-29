@@ -67,10 +67,11 @@ function mapActionInfo(type: AuditRecordType) {
 
 interface NodeActionRecordProps {
   data: AuditRecordSchema;
+  className?: string;
 }
 
 function NodeActionRecord(props: NodeActionRecordProps) {
-  const { data } = props;
+  const { data, className } = props;
   const icon = useMemo(() => {
     const isProcessing = data.auditRecordList.find((record) => record.auditType === AuditRecordType.RUNNING);
 
@@ -99,7 +100,7 @@ function NodeActionRecord(props: NodeActionRecordProps) {
   }, [data]);
 
   return (
-    <div className={styles.container}>
+    <div className={classnames(styles.container, className)}>
       <div className={classnames(styles.icon, icon.className)}>
         <Icon type={icon.type} />
       </div>

@@ -29,7 +29,11 @@ function BuilderLayout() {
   }, []);
 
   const indexNavIsActive: NavLinkProps['isActive'] = useCallback((match, location) => {
-    if (match || /^\/scenes-detail\/\d+/.test(location.pathname)) {
+    if (
+      match ||
+      location.pathname.startsWith(ROUTES.BUILDER_INDEX) ||
+      location.pathname.startsWith(ROUTES.INTEGRATION)
+    ) {
       return true;
     } else {
       return false;
@@ -50,6 +54,7 @@ function BuilderLayout() {
               isActive={indexNavIsActive}
               className={styles.nav}
               activeClassName={styles.active}
+              exact
             >
               应用管理
             </NavLink>

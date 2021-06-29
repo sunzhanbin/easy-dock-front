@@ -1,6 +1,5 @@
 import { memo, useEffect, useState, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import { useHistory } from 'react-router';
 import { Tooltip } from 'antd';
 import classnames from 'classnames';
 import useMemoCallback from '@common/hooks/use-memo-callback';
@@ -23,7 +22,6 @@ function formatTime(time: Date): string {
 }
 
 function App() {
-  const history = useHistory();
   const loginUser = useSelector(userSelector);
   const [apps, setApps] = useState<AppSchema[]>([]);
   const [loading, setLoading] = useState(true);
@@ -48,7 +46,7 @@ function App() {
   }, []);
 
   const handleClickCard = useMemoCallback((app: AppSchema) => {
-    history.push(dynamicRoutes.toAppTaskCenter(String(app.id)));
+    window.open(dynamicRoutes.toAppTaskCenter(String(app.id)));
   });
 
   return (

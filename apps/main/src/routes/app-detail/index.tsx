@@ -7,7 +7,7 @@ import { axios, getShorterText } from '@/utils';
 import { SceneShape, SubAppInfo } from '../scenes/types';
 import Empty from './empty/index';
 import { Icon } from '@/components';
-import { Button, Input } from 'antd';
+import { Button, Input, Tooltip } from 'antd';
 import Card from './subapp-card';
 import AppModel from './app-model';
 import { FlowMicroApp, MAIN_CONTENT_CLASSNAME } from '@/consts';
@@ -65,26 +65,43 @@ const AppDetail: FC = () => {
   return (
     <div className={classNames(styles.container, MAIN_CONTENT_CLASSNAME)}>
       <div className={styles.header}>
-        <Icon className={styles.back} type="fanhui" onClick={history.goBack} />
-        <div className={styles.app_name}>{appInfo?.name && getShorterText(appInfo.name)}</div>
-        {subAppList.length > 0 && (
-          <div className={styles.more_info}>
-            <div className={styles.number}>({subAppList.length})</div>
-            <div className={classNames(styles.status, appInfo?.status === 1 ? styles.active : styles.negative)}>
-              {appInfo?.status === 1 ? '已启用' : '已停用'}
-            </div>
-          </div>
-        )}
-        <div className={styles.search_container}>
-          <Input
-            className={styles.search}
-            prefix={<Icon type="sousuo" />}
-            size="large"
-            placeholder="搜索子应用名称"
-            onBlur={handleSearch}
-            onKeyUp={handleKeyUp}
-          />
+        <Icon
+          className={styles.back}
+          type="fanhui"
+          onClick={() => {
+            history.replace('/builder');
+          }}
+        />
+        <div className={styles.app_name}>
+          {appInfo?.name &&
+            (appInfo.name.length > 8 ? (
+              <Tooltip title={appInfo.name}>
+                <div>{getShorterText(appInfo.name)}</div>
+              </Tooltip>
+            ) : (
+              <div>{appInfo.name}</div>
+            ))}
         </div>
+        {subAppList.length > 0 && (
+          <>
+            <div className={styles.more_info}>
+              <div className={styles.number}>({subAppList.length})</div>
+              <div className={classNames(styles.status, appInfo?.status === 1 ? styles.active : styles.negative)}>
+                {appInfo?.status === 1 ? '已启用' : '已停用'}
+              </div>
+            </div>
+            <div className={styles.search_container}>
+              <Input
+                className={styles.search}
+                prefix={<Icon type="sousuo" />}
+                size="large"
+                placeholder="搜索子应用名称"
+                onChange={handleSearch}
+                onKeyUp={handleKeyUp}
+              />
+            </div>
+          </>
+        )}
       </div>
       <div className={styles.content}>
         {subAppList.length > 0 ? (

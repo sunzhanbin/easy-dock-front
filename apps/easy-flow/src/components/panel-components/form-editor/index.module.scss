@@ -38,6 +38,7 @@
         background-image: url('../../../assets/selected.png');
         background-position: top right;
         background-repeat: no-repeat;
+        background-color: rgba(76, 92, 219, 0.08);
       }
     }
     .ant-form-item-label-left {
@@ -49,10 +50,6 @@
     }
     .input_number {
       width: 100%;
-    }
-    .ant-input-number-input {
-      background: rgba(24, 39, 67, 0.04);
-      border-radius: 3px;
     }
   }
 }

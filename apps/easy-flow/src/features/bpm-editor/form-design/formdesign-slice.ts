@@ -74,7 +74,7 @@ export default formDesign.reducer;
 
 const validComponentConfig = (config: ConfigItem) => {
   const label = config.label || '';
-  const reg = /[a-zA-Z]+[a-zA-Z0-9_]*/;
+  const reg = /^[a-zA-Z][a-zA-Z0-9_]{0,29}$/;
   const errorItem: ErrorItem = { id: '', content: '' };
   const configKeys: string[] = Object.keys(config);
   for (let i = 0, len = configKeys.length; i < len; i++) {
@@ -107,45 +107,46 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
   'form/save',
   async ({ subAppId, isShowTip, isShowErrorTip }, { getState, dispatch }) => {
     const { formDesign } = getState();
-    const { layout, schema, isDirty } = formDesign;
+    const { layout, schema, isDirty, byId = {} } = formDesign;
     const formMeta: FormMeta = {
       components: [],
       layout: layout,
       schema: schema,
     };
     const errors: ErrorItem[] = [];
-    const { byId = {} } = formDesign;
-    Object.keys(byId).forEach((id) => {
-      const type = id.split('_')[0] || '';
-      const version = schema[type as FieldType]?.baseInfo.version || '';
-      const componentConfig = schema[type as FieldType]?.config;
-      const config: ConfigItem = {
-        id,
-        type,
-        version,
-        rules: [],
-        canSubmit: type === 'DescText' ? false : true,
-        multiple: type === 'Checkbox' || (type === 'Select' && (byId[id] as any).multiple) ? true : false,
-      };
-      const props: ConfigItem = {};
-      componentConfig?.forEach(({ isProps, key }) => {
-        if (isProps) {
-          props[key] = (byId[id] as any)[key];
-        } else {
-          config[key] = (byId[id] as any)[key];
+    layout.forEach((row) => {
+      row.forEach((id: string) => {
+        const type = id.split('_')[0] || '';
+        const version = schema[type as FieldType]?.baseInfo.version || '';
+        const componentConfig = schema[type as FieldType]?.config;
+        const config: ConfigItem = {
+          id,
+          type,
+          version,
+          rules: [],
+          canSubmit: type === 'DescText' ? false : true,
+          multiple: type === 'Checkbox' || (type === 'Select' && (byId[id] as any).multiple) ? true : false,
+        };
+        const props: ConfigItem = {};
+        componentConfig?.forEach(({ isProps, key }) => {
+          if (isProps) {
+            props[key] = (byId[id] as any)[key];
+          } else {
+            config[key] = (byId[id] as any)[key];
+          }
+        });
+        const errorItem = validComponentConfig(config);
+        if (errorItem) {
+          errors.push(errorItem);
         }
+        formMeta.components.push({ config, props });
       });
-      const errorItem = validComponentConfig(config);
-      if (errorItem) {
-        errors.push(errorItem);
-      }
-      formMeta.components.push({ config, props });
     });
     if (errors.length > 0) {
       const id = errors[0].id || '';
       id && dispatch(selectField({ id }));
       dispatch(setErrors({ errors }));
-      isShowErrorTip && message.error('请检查控件属性配置是否正确');
+      isShowErrorTip && message.error('您有内容未填写或填写错误，请检查');
       return Promise.reject(errors);
     }
     // 表单改变之后才有必要调后台接口

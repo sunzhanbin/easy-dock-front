@@ -7,7 +7,7 @@ import { Popconfirm, Icon } from '@components';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 import { FlowMicroApp } from '@/consts';
-import { message } from 'antd';
+import { message, Tooltip } from 'antd';
 import AppModel from '../app-model';
 import { stopPropagation } from '@consts';
 
@@ -23,6 +23,9 @@ const CardContainer = styled.div`
   }
   .image {
     flex: 0 0 74px;
+    & > img {
+      width: 100%;
+    }
   }
   .content {
     flex: 1;
@@ -64,6 +67,7 @@ const CardContainer = styled.div`
         position: absolute;
         top: 28px;
         right: 0;
+        z-index: 8;
         width: 92px;
         padding: 16px;
         background: rgba(26, 27, 30, 0.85);
@@ -77,6 +81,12 @@ const CardContainer = styled.div`
           line-height: 20px;
           margin-bottom: 16px;
           cursor: pointer;
+          &:hover {
+            color: rgba(255, 255, 255, 0.8);
+            & > svg {
+              color: rgba(255, 255, 255, 0.8);
+            }
+          }
           & > svg {
             flex: 0 0 20px;
             font-size: 18px;
@@ -233,7 +243,15 @@ const Card: FC<{
       </div>
       <div className="content">
         <div className="header">
-          <div className="name">{getShorterText(name)}</div>
+          <div className="name">
+            {name.length > 8 ? (
+              <Tooltip title={name}>
+                <div>{getShorterText(name)}</div>
+              </Tooltip>
+            ) : (
+              <div>{name}</div>
+            )}
+          </div>
           <div className="icon_wrapper" onClick={handleShowOperation}>
             <Icon type="gengduo" className="more" />
           </div>

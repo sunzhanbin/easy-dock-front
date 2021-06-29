@@ -25,8 +25,8 @@ export default function Orch() {
       },
       {
         sandbox: {
-          // 严格隔离样式
-          strictStyleIsolation: true,
+          // 严格隔离样式会导致icon失效, 暂时关闭, TODO: 优化
+          strictStyleIsolation: false,
         },
       },
     );

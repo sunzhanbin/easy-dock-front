@@ -4,8 +4,9 @@ import { Icon, PopoverConfirm } from '@common/components';
 import { delNode, flowDataSelector } from '../../flow-slice';
 import { NodeType, AllNode, BranchNode } from '@type/flow';
 import AddNodeButton from '../../editor/components/add-node-button';
-import styles from './index.module.scss';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import styles from './index.module.scss';
+
 interface BaseProps {
   onClick(): void;
   children: ReactNode;

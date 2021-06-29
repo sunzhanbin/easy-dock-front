@@ -202,6 +202,7 @@
 
   &:not(&-disabled):hover {
     border-color: rgba(76, 92, 219, 0.85);
+    background-color: transparent;
   }
 
   .ant-input {
@@ -237,10 +238,25 @@
 }
 
 .ant-form-item {
+  &.ant-form-item-has-error {
+    .ant-input {
+      box-shadow: none;
+    }
+    .ant-input,
+    .ant-input-affix-wrapper {
+      border-color: #ff5568;
+      &:hover {
+        border-color: #ff5568;
+      }
+    }
+  }
   .ant-form-item-explain {
     line-height: 20px;
     font-size: 12px;
     font-weight: 400;
+    &.ant-form-item-explain-error {
+      color: #ff5568;
+    }
   }
 }
 
