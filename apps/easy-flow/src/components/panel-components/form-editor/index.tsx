@@ -43,9 +43,9 @@ const FormEditor = (props: FormEditorProps) => {
     if (errorIdList.includes(componentId)) {
       form.validateFields();
     }
-    return () => {
-      form.resetFields();
-    };
+    // return () => {
+    //   form.resetFields();
+    // };
   }, [componentId, form, errorIdList]);
   useEffect(() => {
     form.setFieldsValue(initValues);
