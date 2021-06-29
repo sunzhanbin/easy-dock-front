@@ -18,7 +18,7 @@ const componentSchema = {
         required: true,
         requiredMessage: '请输入数据库字段名',
         rules: [
-          { pattern: '^^[a-zA-Z][a-zA-Z0-9_]{1,29}$$', message: '请输入字母开头，包含字母、数字、下划线的1-30位字符' },
+          { pattern: '^[a-zA-Z][a-zA-Z0-9_]{0,29}$', message: '请输入字母开头，包含字母、数字、下划线的1-30位字符' },
         ],
         isProps: false,
       },
@@ -92,7 +92,7 @@ const componentSchema = {
         required: true,
         requiredMessage: '请输入数据库字段名',
         rules: [
-          { pattern: '^^[a-zA-Z][a-zA-Z0-9_]{1,29}$$', message: '请输入字母开头，包含字母、数字、下划线的1-30位字符' },
+          { pattern: '^[a-zA-Z][a-zA-Z0-9_]{0,29}$', message: '请输入字母开头，包含字母、数字、下划线的1-30位字符' },
         ],
         isProps: false,
       },
@@ -157,7 +157,7 @@ const componentSchema = {
         required: true,
         requiredMessage: '请输入数据库字段名',
         rules: [
-          { pattern: '^^[a-zA-Z][a-zA-Z0-9_]{1,29}$$', message: '请输入字母开头，包含字母、数字、下划线的1-30位字符' },
+          { pattern: '^[a-zA-Z][a-zA-Z0-9_]{0,29}$', message: '请输入字母开头，包含字母、数字、下划线的1-30位字符' },
         ],
         isProps: false,
       },
@@ -254,7 +254,7 @@ const componentSchema = {
         required: true,
         requiredMessage: '请输入数据库字段名',
         rules: [
-          { pattern: '^^[a-zA-Z][a-zA-Z0-9_]{1,29}$$', message: '请输入字母开头，包含字母、数字、下划线的1-30位字符' },
+          { pattern: '^[a-zA-Z][a-zA-Z0-9_]{0,29}$', message: '请输入字母开头，包含字母、数字、下划线的1-30位字符' },
         ],
         isProps: false,
       },
@@ -325,7 +325,7 @@ const componentSchema = {
         required: true,
         requiredMessage: '请输入数据库字段名',
         rules: [
-          { pattern: '^^[a-zA-Z][a-zA-Z0-9_]{1,29}$$', message: '请输入字母开头，包含字母、数字、下划线的1-30位字符' },
+          { pattern: '^[a-zA-Z][a-zA-Z0-9_]{0,29}$', message: '请输入字母开头，包含字母、数字、下划线的1-30位字符' },
         ],
         isProps: false,
       },
@@ -396,7 +396,7 @@ const componentSchema = {
         required: true,
         requiredMessage: '请输入数据库字段名',
         rules: [
-          { pattern: '^^[a-zA-Z][a-zA-Z0-9_]{1,29}$$', message: '请输入字母开头，包含字母、数字、下划线的1-30位字符' },
+          { pattern: '^[a-zA-Z][a-zA-Z0-9_]{0,29}$', message: '请输入字母开头，包含字母、数字、下划线的1-30位字符' },
         ],
         isProps: false,
       },
@@ -490,7 +490,7 @@ const componentSchema = {
         required: true,
         requiredMessage: '请输入数据库字段名',
         rules: [
-          { pattern: '^^[a-zA-Z][a-zA-Z0-9_]{1,29}$$', message: '请输入字母开头，包含字母、数字、下划线的1-30位字符' },
+          { pattern: '^[a-zA-Z][a-zA-Z0-9_]{0,29}$', message: '请输入字母开头，包含字母、数字、下划线的1-30位字符' },
         ],
         isProps: false,
       },

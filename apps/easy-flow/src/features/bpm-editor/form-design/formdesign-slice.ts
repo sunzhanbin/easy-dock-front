@@ -74,7 +74,7 @@ export default formDesign.reducer;
 
 const validComponentConfig = (config: ConfigItem) => {
   const label = config.label || '';
-  const reg = /^[a-zA-Z][a-zA-Z0-9_]{1,29}$/;
+  const reg = /^[a-zA-Z][a-zA-Z0-9_]{0,29}$/;
   const errorItem: ErrorItem = { id: '', content: '' };
   const configKeys: string[] = Object.keys(config);
   for (let i = 0, len = configKeys.length; i < len; i++) {
