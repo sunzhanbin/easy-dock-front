@@ -18,6 +18,7 @@ import {
 } from '@type/flow';
 import { RootState } from '@app/store';
 import { fielduuid, createNode } from './util';
+import { validName } from '@common/rule';
 
 export type FlowType = {
   loading: boolean;
@@ -95,9 +96,13 @@ function valid(data: AllNode[], validRes: FlowType['invalidNodesMap']) {
     }
 
     const errors = [];
-
     if (!node.name) {
       errors.push('未输入节点名称');
+    } else {
+      const error = validName(node.name);
+      if (error) {
+        errors.push(error);
+      }
     }
 
     if (node.type === NodeType.StartNode) {
