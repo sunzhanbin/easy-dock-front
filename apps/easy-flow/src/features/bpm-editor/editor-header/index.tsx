@@ -52,6 +52,7 @@ const EditorHeader: FC = () => {
     const formResponse = await dispatch(saveForm({ subAppId: bpmId, isShowTip: false, isShowErrorTip: true }));
 
     if (formResponse.meta.requestStatus === 'rejected') {
+      console.info(111);
       return;
     }
 

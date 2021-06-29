@@ -107,7 +107,7 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
   'form/save',
   async ({ subAppId, isShowTip, isShowErrorTip }, { getState, dispatch }) => {
     const { formDesign } = getState();
-    const { layout, schema, isDirty, byId = {} } = formDesign;
+    const { layout = [], schema = {}, isDirty = false, byId = {} } = formDesign;
     const formMeta: FormMeta = {
       components: [],
       layout: layout,
