@@ -7,7 +7,7 @@ import { Popconfirm, Icon } from '@components';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 import { FlowMicroApp } from '@/consts';
-import { message } from 'antd';
+import { message, Tooltip } from 'antd';
 import AppModel from '../app-model';
 import { stopPropagation } from '@consts';
 
@@ -243,7 +243,15 @@ const Card: FC<{
       </div>
       <div className="content">
         <div className="header">
-          <div className="name">{getShorterText(name)}</div>
+          <div className="name">
+            {name.length > 8 ? (
+              <Tooltip title={name}>
+                <div>{getShorterText(name)}</div>
+              </Tooltip>
+            ) : (
+              <div>{name}</div>
+            )}
+          </div>
           <div className="icon_wrapper" onClick={handleShowOperation}>
             <Icon type="gengduo" className="more" />
           </div>

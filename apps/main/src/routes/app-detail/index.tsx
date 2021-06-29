@@ -7,7 +7,7 @@ import { axios, getShorterText } from '@/utils';
 import { SceneShape, SubAppInfo } from '../scenes/types';
 import Empty from './empty/index';
 import { Icon } from '@/components';
-import { Button, Input } from 'antd';
+import { Button, Input, Tooltip } from 'antd';
 import Card from './subapp-card';
 import AppModel from './app-model';
 import { FlowMicroApp, MAIN_CONTENT_CLASSNAME } from '@/consts';
@@ -66,7 +66,16 @@ const AppDetail: FC = () => {
     <div className={classNames(styles.container, MAIN_CONTENT_CLASSNAME)}>
       <div className={styles.header}>
         <Icon className={styles.back} type="fanhui" onClick={history.goBack} />
-        <div className={styles.app_name}>{appInfo?.name && getShorterText(appInfo.name)}</div>
+        <div className={styles.app_name}>
+          {appInfo?.name &&
+            (appInfo.name.length > 8 ? (
+              <Tooltip title={appInfo.name}>
+                <div>{getShorterText(appInfo.name)}</div>
+              </Tooltip>
+            ) : (
+              <div>{appInfo.name}</div>
+            ))}
+        </div>
         {subAppList.length > 0 && (
           <div className={styles.more_info}>
             <div className={styles.number}>({subAppList.length})</div>

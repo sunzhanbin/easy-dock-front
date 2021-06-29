@@ -10,5 +10,5 @@ export function getSceneImageUrl(type: keyof typeof SCENE_IAMGES) {
 
 // 文字超出9个显示...
 export function getShorterText(text: string) {
-  return text.length > 9 ? text.slice(0, 9) + '...' : text;
+  return text.length > 8 ? text.slice(0, 8) + '...' : text;
 }
