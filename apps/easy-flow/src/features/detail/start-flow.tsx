@@ -81,7 +81,6 @@ function StartFlow() {
 
   const handleSubmit = useMemoCallback(async () => {
     if (!formRef.current || !subApp) return;
-
     const values = await formRef.current.validateFields();
 
     await runtimeAxios.post(`/process_instance/start`, {
@@ -92,8 +91,8 @@ function StartFlow() {
     message.success('提交成功');
 
     setTimeout(() => {
-      // 回任务中心
-      history.replace(dynamicRoutes.toTaskCenter(subApp.app.id));
+      // 回任务中心我的发起
+      history.replace(`${dynamicRoutes.toTaskCenter(subApp.app.id)}/start`);
     }, 1500);
   });
 
