@@ -65,7 +65,13 @@ const AppDetail: FC = () => {
   return (
     <div className={classNames(styles.container, MAIN_CONTENT_CLASSNAME)}>
       <div className={styles.header}>
-        <Icon className={styles.back} type="fanhui" onClick={history.goBack} />
+        <Icon
+          className={styles.back}
+          type="fanhui"
+          onClick={() => {
+            history.replace('/builder');
+          }}
+        />
         <div className={styles.app_name}>
           {appInfo?.name &&
             (appInfo.name.length > 8 ? (
