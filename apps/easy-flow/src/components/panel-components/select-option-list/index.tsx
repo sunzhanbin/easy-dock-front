@@ -31,12 +31,14 @@ const SelectOptionList = (props: editProps) => {
     const name = `未命名${new Date().getTime()}`;
     list.push({ key: name, value: name });
     setContent(list);
+    setCanChange(true);
   }, [content]);
   const deleteItem = useCallback(
     (index) => {
       const list: OptionItem[] = [...content];
       list.splice(index, 1);
       setContent(list);
+      setCanChange(true);
     },
     [content],
   );
@@ -61,6 +63,7 @@ const SelectOptionList = (props: editProps) => {
         list.splice(targetIndex, 0, target);
       }
       setContent(list);
+      setCanChange(true);
     },
     [content],
   );
@@ -77,6 +80,7 @@ const SelectOptionList = (props: editProps) => {
         value: text,
       };
       setContent(list);
+      setCanChange(true);
     },
     [content],
   );
@@ -138,6 +142,7 @@ const SelectOptionList = (props: editProps) => {
   }, [appId, subAppId, type, subAppKey, fetchFieldNames]);
   useEffect(() => {
     if (canChange) {
+      console.info(1111);
       if (type === 'custom') {
         onChange && onChange({ type, data: content });
       } else if (type === 'subapp') {
