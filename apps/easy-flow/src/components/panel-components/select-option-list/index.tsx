@@ -18,6 +18,7 @@ const SelectOptionList = (props: editProps) => {
   const { value, onChange } = props;
   const { appId, id: subAppId } = useAppSelector(subAppSelector);
   const [type, setType] = useState<OptionMode>(value?.type || 'custom');
+  const [canChange, setCanChange] = useState<boolean>(false);
   const [content, setContent] = useState<OptionItem[]>(value?.data || []);
   const [canDrag, setCanDrag] = useState<boolean>(false);
   const [subAppKey, setSubAppKey] = useState<string>(value?.subappId || '');
@@ -30,12 +31,14 @@ const SelectOptionList = (props: editProps) => {
     const name = `未命名${new Date().getTime()}`;
     list.push({ key: name, value: name });
     setContent(list);
+    setCanChange(true);
   }, [content]);
   const deleteItem = useCallback(
     (index) => {
       const list: OptionItem[] = [...content];
       list.splice(index, 1);
       setContent(list);
+      setCanChange(true);
     },
     [content],
   );
@@ -60,6 +63,7 @@ const SelectOptionList = (props: editProps) => {
         list.splice(targetIndex, 0, target);
       }
       setContent(list);
+      setCanChange(true);
     },
     [content],
   );
@@ -76,6 +80,7 @@ const SelectOptionList = (props: editProps) => {
         value: text,
       };
       setContent(list);
+      setCanChange(true);
     },
     [content],
   );
@@ -136,12 +141,14 @@ const SelectOptionList = (props: editProps) => {
     }
   }, [appId, subAppId, type, subAppKey, fetchFieldNames]);
   useEffect(() => {
-    if (type === 'custom') {
-      onChange && onChange({ type, data: content });
-    } else if (type === 'subapp') {
-      onChange && onChange({ type, subappId: subAppKey, fieldName: componentKey });
+    if (canChange) {
+      if (type === 'custom') {
+        onChange && onChange({ type, data: content });
+      } else if (type === 'subapp') {
+        onChange && onChange({ type, subappId: subAppKey, fieldName: componentKey });
+      }
     }
-  }, [type, content, subAppKey, componentKey]);
+  }, [type, content, subAppKey, componentKey, canChange]);
   const customContent = useMemo(() => {
     if (Array.isArray(content) && type === 'custom') {
       return (
@@ -258,6 +265,7 @@ const SelectOptionList = (props: editProps) => {
           className={classNames(styles.right, type === 'subapp' ? styles.active : '')}
           onClick={() => {
             setType('subapp');
+            setCanChange(true);
           }}
         >
           其他表单数据
