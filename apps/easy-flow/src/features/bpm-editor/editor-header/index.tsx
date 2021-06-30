@@ -25,19 +25,23 @@ const EditorHeader: FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const match = useRouteMatch();
   const { pathname: pathName } = useLocation<{ pathname: string }>();
-  const showConfirm = useMemoCallback((cancelCallback) => {
+  const showConfirm = useMemoCallback((go) => {
     confirm({
       okText: '保存更改',
       cancelText: '放弃保存',
       width: 352,
       text: '当前有未保存的更改，您在离开当前页面是否要保存这些更改?',
       async onEnsure() {
-        await handleSave();
+        const saveRes = await handleSave();
+
+        if (saveRes && saveRes.meta.requestStatus === 'rejected') return;
+
+        go();
       },
       onCancel() {
         dispatch(setFormDirty({ isDirty: false }));
         dispatch(setFlowDirty(false));
-        cancelCallback();
+        go();
       },
     });
   });
@@ -58,11 +62,11 @@ const EditorHeader: FC = () => {
   }, [pathName, history, formDesignPath, flowDesignPath]);
   const handleSave = useCallback(async () => {
     if (pathName === formDesignPath) {
-      await dispatch(saveForm({ subAppId: bpmId, isShowTip: true, isShowErrorTip: true }));
+      return await dispatch(saveForm({ subAppId: bpmId, isShowTip: true, isShowErrorTip: true }));
     }
 
     if (pathName === flowDesignPath) {
-      await dispatch(save(bpmId));
+      return await dispatch(save(bpmId));
     }
   }, [pathName, dispatch, formDesignPath, flowDesignPath, bpmId]);
   const handleNext = useCallback(() => {

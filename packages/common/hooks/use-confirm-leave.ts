@@ -29,13 +29,15 @@ export default function useConfirmLeave(shouldBlock: boolean, onConfirm: (onCanc
           onConfirm(() => {
             unBlock();
 
-            if (action === 'POP') {
-              history.goBack();
-            } else if (action === 'PUSH') {
-              history.push(location.pathname + location.search);
-            } else if (action === 'REPLACE') {
-              history.replace(location.pathname + location.search);
-            }
+            setTimeout(() => {
+              if (action === 'POP') {
+                history.goBack();
+              } else if (action === 'PUSH') {
+                history.push(location.pathname + location.search);
+              } else if (action === 'REPLACE') {
+                history.replace(location.pathname + location.search);
+              }
+            }, 100);
           });
         }, 100);
         return false;
