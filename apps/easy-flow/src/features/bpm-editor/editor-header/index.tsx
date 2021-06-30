@@ -1,26 +1,53 @@
-import { FC, memo, useCallback, useMemo, useState } from 'react';
+import { FC, memo, useCallback, useMemo, useState, useEffect, useRef } from 'react';
 import { Button, Tooltip, message } from 'antd';
 import PreviewModal from '@components/preview-model';
-import { useHistory, useRouteMatch, NavLink, useLocation, useParams } from 'react-router-dom';
-import { save, saveWithForm } from '../flow-design/flow-slice';
+import useMemoCallback from '@common/hooks/use-memo-callback';
+import useConfirmLeave from '@common/hooks/use-confirm-leave';
+import { useHistory, useRouteMatch, NavLink, useLocation, useParams, Prompt } from 'react-router-dom';
+import { save, saveWithForm, setDirty as setFlowDirty } from '../flow-design/flow-slice';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { AsyncButton } from '@common/components';
+import { AsyncButton, confirm, Icon } from '@common/components';
 import { axios } from '@utils';
 import Header from '../../../components/header';
-import { Icon } from '@common/components';
 import { layoutSelector, subAppSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
-import { saveForm } from '@/features/bpm-editor/form-design/formdesign-slice';
+import { saveForm, setIsDirty as setFormDirty } from '@/features/bpm-editor/form-design/formdesign-slice';
+import dirtySelector from '../use-dirty-selector';
 import styles from './index.module.scss';
 
 const EditorHeader: FC = () => {
   const dispatch = useAppDispatch();
   const [showModel, setShowModel] = useState<boolean>(false);
   const { name: appName, appId } = useAppSelector(subAppSelector);
+  const dirty = useAppSelector(dirtySelector);
   const layout = useAppSelector(layoutSelector);
   const history = useHistory();
   const { bpmId } = useParams<{ bpmId: string }>();
+  const containerRef = useRef<HTMLDivElement>(null);
   const match = useRouteMatch();
   const { pathname: pathName } = useLocation<{ pathname: string }>();
+  const showConfirm = useMemoCallback((go) => {
+    confirm({
+      okText: '保存更改',
+      cancelText: '放弃保存',
+      width: 352,
+      text: '当前有未保存的更改，您在离开当前页面是否要保存这些更改?',
+      async onEnsure() {
+        const saveRes = await handleSave();
+
+        if (saveRes && saveRes.meta.requestStatus === 'rejected') return;
+
+        go();
+      },
+      onCancel() {
+        dispatch(setFormDirty({ isDirty: false }));
+        dispatch(setFlowDirty(false));
+        go();
+      },
+    });
+  });
+
+  useConfirmLeave(dirty, showConfirm);
+
   const flowDesignPath = `${match.url}/flow-design`;
   const formDesignPath = useMemo(() => {
     return `${match.url}/form-design`;
@@ -33,13 +60,13 @@ const EditorHeader: FC = () => {
       history.replace(formDesignPath);
     }
   }, [pathName, history, formDesignPath, flowDesignPath]);
-  const handleSave = useCallback(() => {
+  const handleSave = useCallback(async () => {
     if (pathName === formDesignPath) {
-      dispatch(saveForm({ subAppId: bpmId, isShowTip: true, isShowErrorTip: true }));
+      return await dispatch(saveForm({ subAppId: bpmId, isShowTip: true, isShowErrorTip: true }));
     }
 
     if (pathName === flowDesignPath) {
-      dispatch(save(bpmId));
+      return await dispatch(save(bpmId));
     }
   }, [pathName, dispatch, formDesignPath, flowDesignPath, bpmId]);
   const handleNext = useCallback(() => {
@@ -75,9 +102,35 @@ const EditorHeader: FC = () => {
     }, 1500);
   }, [bpmId, dispatch, appId]);
 
+  useEffect(() => {
+    if (!dirty) return;
+
+    const beforeLeave = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = '编辑的内容尚未保存，请确认是否离开？';
+    };
+
+    window.addEventListener('beforeunload', beforeLeave);
+    return () => {
+      window.removeEventListener('beforeunload', beforeLeave);
+    };
+  }, [dirty]);
+
+  const handleGoBack = useCallback(() => {
+    if (dirty) {
+      showConfirm(() => {
+        setTimeout(() => {
+          history.goBack();
+        }, 100);
+      });
+    } else {
+      history.goBack();
+    }
+  }, [dirty]);
+
   return (
-    <div className={styles.header_container}>
-      <Header backText={appName} className={styles.edit_header}>
+    <div className={styles.header_container} ref={containerRef}>
+      <Header backText={appName} className={styles.edit_header} goBack={handleGoBack}>
         <div className={styles.steps}>
           <NavLink
             className={styles.step}

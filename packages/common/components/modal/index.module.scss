@@ -1,0 +1,25 @@
+@import '../../styles/var.scss';
+
+.close {
+  font-size: 20px;
+
+  &:hover {
+    color: $primary-text-color;
+  }
+}
+
+.confirm {
+  margin-top: -1px;
+  margin-right: 8px;
+  color: #ff9900;
+  font-size: 20px;
+}
+
+.cancel {
+  &:hover,
+  &:focus,
+  &:active {
+    border-color: transparent;
+    background-color: transparent;
+  }
+}
