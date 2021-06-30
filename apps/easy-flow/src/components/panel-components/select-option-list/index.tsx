@@ -142,7 +142,6 @@ const SelectOptionList = (props: editProps) => {
   }, [appId, subAppId, type, subAppKey, fetchFieldNames]);
   useEffect(() => {
     if (canChange) {
-      console.info(1111);
       if (type === 'custom') {
         onChange && onChange({ type, data: content });
       } else if (type === 'subapp') {
