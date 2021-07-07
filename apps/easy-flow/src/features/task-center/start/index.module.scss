@@ -85,21 +85,24 @@
       border-radius: 3px;
       font-size: 12px;
       &.doing {
-        border: 1px solid rgba(76, 92, 219, 0.3);
-        color: #4c5cdb;
+        background: rgba(76, 92, 219, 0.12);
+        color: #3546c8;
       }
       &.stop {
-        border: 1px solid rgba(255, 85, 104, 0.3);
-        color: #ff5568;
+        background: rgba(255, 85, 104, 0.12);
+        color: #eb2e43;
       }
       &.reject {
-        border: 1px solid rgba(255, 153, 0, 0.3);
-        color: #ff9900;
+        background: rgba(255, 153, 0, 0.12);
+        color: #f67a00;
       }
-      &.done,
+      &.done {
+        background: rgba(6, 196, 152, 0.12);
+        color: #03a882;
+      }
       &.recall {
-        border: 1px solid rgba(24, 31, 67, 0.12);
-        color: rgba(24, 31, 67, 0.5);
+        background: #ededf0;
+        color: #181f43;
       }
     }
   }

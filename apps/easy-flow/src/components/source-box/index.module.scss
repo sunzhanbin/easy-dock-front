@@ -55,13 +55,14 @@
     cursor: pointer;
     .iconfont {
       position: absolute;
-      top: 4px;
-      left: 2px;
+      top: 50%;
+      left: 50%;
       width: 10px;
       height: 10px;
       line-height: 10px;
       font-size: 10px;
       color: #4c5cdb;
+      transform: translate(-50%, -50%);
     }
   }
   .moveUp {

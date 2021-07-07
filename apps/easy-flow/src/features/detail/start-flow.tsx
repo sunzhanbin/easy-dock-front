@@ -117,7 +117,10 @@ function StartFlow() {
           )}
         </div>
       </Header>
-
+      <div className={styles.background}>
+        <div className={styles.left}></div>
+        <div className={styles.right}></div>
+      </div>
       {subApp && (
         <div className={styles['start-form-wrapper']}>
           <div className={classnames(styles.form)}>

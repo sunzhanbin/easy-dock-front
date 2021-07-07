@@ -28,7 +28,13 @@ const SelectOptionList = (props: editProps) => {
 
   const addItem = useCallback(() => {
     const list: OptionItem[] = [...content];
-    const name = `未命名${new Date().getTime()}`;
+    const filterList = list.filter((item: OptionItem) => item.key.startsWith('未命名'));
+    let maxIndex = 1;
+    if (filterList.length > 0) {
+      const indexList = filterList.map((item) => +item.key.slice(3));
+      maxIndex = Math.max(...indexList) + 1;
+    }
+    const name = `未命名${maxIndex}`;
     list.push({ key: name, value: name });
     setContent(list);
     setCanChange(true);

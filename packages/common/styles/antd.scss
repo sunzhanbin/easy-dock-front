@@ -97,7 +97,7 @@
 }
 
 .ant-switch-checked {
-  background-color: #06c498;
+  background-color: #4c5cdb;
 
   .ant-switch-handle {
     left: calc(100% - 20px - 2px);
@@ -251,7 +251,7 @@
     }
   }
   .ant-form-item-explain {
-    line-height: 20px;
+    line-height: 32px;
     font-size: 12px;
     font-weight: 400;
     &.ant-form-item-explain-error {
@@ -259,7 +259,19 @@
     }
   }
 }
-
+// 定制checkbox
+.ant-checkbox {
+  &.ant-checkbox-disabled {
+    & + span {
+      color: #181f43;
+    }
+  }
+}
+.ant-checkbox-group {
+  .ant-checkbox-wrapper {
+    margin-bottom: 12px;
+  }
+}
 .ant-checkbox-checked .ant-checkbox-inner {
   background-color: $primary-color;
   border-color: $primary-color;
@@ -283,7 +295,7 @@
     border-color: #aeb1bd;
   }
 }
-
+// 定制tooltip
 .ant-tooltip-inner {
   line-height: 22px;
   border-radius: 3px;
@@ -380,14 +392,29 @@
     background-color: rgba(24, 31, 67, 0.04);
   }
 }
+// 定制radio
+.ant-radio {
+  // 选中样式
+  &.ant-radio-checked {
+    .ant-radio-inner {
+      border-color: $primary-color;
 
-.ant-radio-checked {
-  .ant-radio-inner {
-    border-color: $primary-color;
-
-    &::after {
-      background-color: $primary-color;
+      &::after {
+        background-color: $primary-color;
+      }
     }
+  }
+  //禁用样式
+  &.ant-radio-disabled {
+    & + span {
+      color: #181f43;
+    }
+  }
+}
+
+.ant-radio-group {
+  .ant-radio-wrapper {
+    margin-bottom: 12px;
   }
 }
 
@@ -426,22 +453,44 @@
 }
 
 // 定制下拉框
-.ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
-  background: rgba(24, 39, 67, 0.04);
-  border-radius: 3px;
-  border: none;
-}
-
-.ant-select-multiple.ant-select {
-  .ant-select-selector {
-    background: rgba(24, 39, 67, 0.04);
-    border-radius: 3px;
-    border: none;
+.ant-select {
+  // 单选下拉框
+  &.ant-select-single {
+    &:not(.ant-select-customize-input) {
+      .ant-select-selector {
+        background: rgba(24, 39, 67, 0.04);
+        border-radius: 3px;
+        border: none;
+      }
+    }
+    &.ant-select-disabled {
+      &:not(.ant-select-customize-input) {
+        .ant-select-selector {
+          background: rgba(24, 39, 67, 0.04);
+        }
+      }
+    }
+  }
+  // 复选下拉框
+  &.ant-select-multiple {
+    .ant-select-selector {
+      background: rgba(24, 39, 67, 0.04);
+      border-radius: 3px;
+      border: none;
+    }
+    &.ant-select-disabled {
+      &:not(.ant-select-customize-input) {
+        .ant-select-selector {
+          background: rgba(24, 39, 67, 0.04);
+        }
+      }
+    }
   }
 }
 
 // 定制表格
 .ant-table {
+  // 表头
   .ant-table-thead {
     & > tr {
       & > th {
@@ -454,6 +503,7 @@
       }
     }
   }
+  // 表格本身
   .ant-table-tbody {
     & > tr.ant-table-row:hover {
       & > td {
@@ -463,5 +513,14 @@
   }
   td.ant-table-column-sort {
     background-color: #fff;
+  }
+}
+
+// 定制局部区域空状态
+.ant-empty {
+  &.ant-empty-normal {
+    .ant-empty-image {
+      height: 96px;
+    }
   }
 }
