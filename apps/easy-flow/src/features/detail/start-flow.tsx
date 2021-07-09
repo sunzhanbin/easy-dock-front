@@ -13,6 +13,7 @@ import Form from '@components/form-engine';
 import Header from '@components/header';
 import useSubapp from '@/hooks/use-subapp';
 import styles from './index.module.scss';
+import titleImage from '@/assets/title.png';
 
 type DataType = {
   processMeta: FillNode;
@@ -105,13 +106,7 @@ function StartFlow() {
       <Header className={styles.header} backText="发起流程">
         <div className={styles.btns}>
           {btns?.submit?.enable && (
-            <AsyncButton
-              disabled={!data}
-              onClick={handleSubmit}
-              type="primary"
-              size="large"
-              icon={<Icon type="fabu" />}
-            >
+            <AsyncButton disabled={!data} className={styles.submit} onClick={handleSubmit} type="primary" size="large">
               {btns.submit.text || '提交'}
             </AsyncButton>
           )}
@@ -123,8 +118,11 @@ function StartFlow() {
       </div>
       {subApp && (
         <div className={styles['start-form-wrapper']}>
-          <div className={classnames(styles.form)}>
-            <div className={styles.title}>{subApp.name}</div>
+          <div className={classnames(styles.form)} style={{ height: `${document.body.clientHeight - 124}px` }}>
+            <div className={styles.title}>
+              <img src={titleImage} alt="title" className={styles.image} />
+              <span>{subApp.name}</span>
+            </div>
             {formVnode}
           </div>
         </div>

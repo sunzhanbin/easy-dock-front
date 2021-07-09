@@ -6,12 +6,31 @@
   flex-direction: column;
   height: 100%;
   position: relative;
+  overflow: hidden;
 
   .header {
     flex-shrink: 0;
-    border-bottom: 1px solid rgba(#181f43, 0.12);
     position: relative;
-    z-index: 19;
+    z-index: 9;
+    svg {
+      color: #fff;
+    }
+    & > div {
+      color: #fff;
+    }
+    .submit {
+      background: #ffffff;
+      color: #4c5cdb;
+      &:hover {
+        color: rgba(76, 92, 219, 0.8);
+      }
+      &:active {
+        box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.12);
+      }
+      &:disabled {
+        color: rgba(76, 92, 219, 0.5);
+      }
+    }
   }
 
   .main {
@@ -26,8 +45,8 @@
     z-index: 8;
     display: flex;
     width: 100%;
-    height: 490px;
-    // background: linear-gradient(135deg, rgba(90, 105, 227, 0.63) 0%, rgba(255, 255, 255, 1) 100%);
+    height: 380px;
+    background: linear-gradient(319deg, #5a69e0 0%, #7389f8 100%);
     .left {
       position: absolute;
       top: 0;
@@ -53,35 +72,35 @@
 
 .start-form-wrapper {
   flex: 1 1 0;
-  padding: 25px;
-  overflow-y: auto;
-  position: relative;
   background-color: #fff;
-  // z-index: 9;
-
+  margin-top: 36px;
   .form {
-    width: 705px;
-    margin: 0 auto;
-    padding-top: 30px;
+    position: relative;
+    z-index: 9;
+    width: 68%;
+    margin: 0 16% 24px 16%;
+    padding: 32px;
+    background-color: #fff;
+    box-shadow: 0px 0px 32px 0px rgba(24, 31, 67, 0.12);
+    border-radius: 2px;
+    border-top: 5px solid #06c498;
+    overflow-y: auto;
     .title {
       margin-bottom: 24px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid rgba(24, 31, 67, 0.12);
       line-height: 34px;
       color: rgba(#000, 0.85);
       font-size: 24px;
       font-weight: bold;
+      .image {
+        width: 46px;
+        margin-right: 12px;
+      }
     }
   }
 }
 
 .empty {
   padding-top: 100px;
-}
-
-@media screen and (min-width: 1366px) {
-  .start-form-wrapper {
-    .form {
-      width: 68%;
-      margin: 0 16%;
-    }
-  }
 }
