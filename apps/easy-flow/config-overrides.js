@@ -30,15 +30,6 @@ module.exports = {
       '@config': path.resolve(__dirname, './src/config'),
       '@common': path.resolve(__dirname, '../../packages/common'),
     }),
-    function overridePublicPath(config) {
-      if (process.env.REACT_APP_TARGET_ENV === 'staging') {
-        config.output.publicPath = `http://10.19.151.144:28301/`;
-      } else if (process.env.REACT_APP_TARGET_ENV === 'production') {
-        config.output.publicPath = `http://10.19.146.100:28301/`;
-      }
-
-      return config;
-    },
     function overrideWebpackOutput(config) {
       config.output = {
         ...config.output,
