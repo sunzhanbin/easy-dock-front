@@ -46,7 +46,7 @@ const EditorHeader: FC = () => {
     });
   });
 
-  useConfirmLeave(dirty, showConfirm);
+  useConfirmLeave(process.env.NODE_ENV === 'development' ? false : dirty, showConfirm);
 
   const flowDesignPath = `${match.url}/flow-design`;
   const formDesignPath = useMemo(() => {
@@ -103,7 +103,7 @@ const EditorHeader: FC = () => {
   }, [bpmId, dispatch, appId]);
 
   useEffect(() => {
-    if (!dirty) return;
+    if (!dirty || process.env.NODE_ENV === 'development') return;
 
     const beforeLeave = (e: BeforeUnloadEvent) => {
       e.preventDefault();
