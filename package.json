@@ -4,7 +4,7 @@
   "scripts": {
     "start": "lerna run start",
     "start:bpm": "lerna run start --scope=easy-flow-front",
-    "build": "lerna bootstrap -ci && lerna run build",
+    "build": "lerna bootstrap --ci && lerna run build",
     "precommit": "lint-staged",
     "bootstrap": "lerna bootstrap",
     "publish": "lerna publish",
