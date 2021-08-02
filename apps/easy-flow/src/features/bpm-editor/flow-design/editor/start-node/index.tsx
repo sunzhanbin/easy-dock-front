@@ -76,7 +76,6 @@ function StartNodeEditor(props: StartNodeEditorProps) {
   const [form] = Form.useForm<FormValuesType>();
   const dispatch = useAppDispatch();
   const [triggerType, setTriggerType] = useState(node.trigger.type);
-  const [cycle, setCycle] = useState<[number, number]>([0, 0]);
 
   // 触发保存时校验form
   useValidateForm<FormValuesType>(form);

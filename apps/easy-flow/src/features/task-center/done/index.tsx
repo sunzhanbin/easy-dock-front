@@ -151,13 +151,16 @@ const Done: FC<{}> = () => {
     },
     [fetchData],
   );
-  const handleTableChange = useCallback((newPagination, filters, sorter) => {
-    sorter.order === 'ascend' ? setSortDirection('ASC') : setSortDirection('DESC');
-    setPagination((pagination) => {
-      fetchData(newPagination);
-      return { ...pagination, ...newPagination };
-    });
-  }, []);
+  const handleTableChange = useCallback(
+    (newPagination, filters, sorter) => {
+      sorter.order === 'ascend' ? setSortDirection('ASC') : setSortDirection('DESC');
+      setPagination((pagination) => {
+        fetchData(newPagination);
+        return { ...pagination, ...newPagination };
+      });
+    },
+    [fetchData],
+  );
   const handleReset = useCallback(() => {
     form.resetFields();
     fetchData();

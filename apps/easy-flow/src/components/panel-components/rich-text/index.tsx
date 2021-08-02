@@ -1,4 +1,4 @@
-import { memo, useState, useCallback, useMemo, useEffect } from 'react';
+import { memo, useState, useCallback, useMemo } from 'react';
 import BraftEditor, { ControlType, EditorState } from 'braft-editor';
 import styles from './index.module.scss';
 import 'braft-editor/dist/index.css';

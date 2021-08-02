@@ -21,13 +21,13 @@ const spaceMap = {
   4: 24,
 };
 
-const style = {
-  border: '1px dashed gray',
-  padding: '0.5rem 1rem',
-  marginBottom: '.5rem',
-  backgroundColor: 'white',
-  cursor: 'move',
-};
+// const style = {
+//   border: '1px dashed gray',
+//   padding: '0.5rem 1rem',
+//   marginBottom: '.5rem',
+//   backgroundColor: 'white',
+//   cursor: 'move',
+// };
 
 export interface CardProps {
   rowIndex: number;

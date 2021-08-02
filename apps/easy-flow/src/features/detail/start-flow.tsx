@@ -3,7 +3,7 @@ import { useParams, useHistory } from 'react-router';
 import classnames from 'classnames';
 import { FormInstance, message } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import { AsyncButton, Icon, Loading } from '@common/components';
+import { AsyncButton, Loading } from '@common/components';
 import { runtimeAxios } from '@utils';
 import { dynamicRoutes } from '@consts';
 import { loadDatasource } from '@apis/detail';

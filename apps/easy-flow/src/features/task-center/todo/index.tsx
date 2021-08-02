@@ -170,13 +170,16 @@ const ToDo: FC<{}> = () => {
     form.resetFields();
     fetchData();
   }, [form, fetchData]);
-  const handleTableChange = useCallback((newPagination, filters, sorter) => {
-    sorter.order === 'ascend' ? setSortDirection('ASC') : setSortDirection('DESC');
-    setPagination((pagination) => {
-      fetchData(newPagination);
-      return { ...pagination, ...newPagination };
-    });
-  }, []);
+  const handleTableChange = useCallback(
+    (newPagination, filters, sorter) => {
+      sorter.order === 'ascend' ? setSortDirection('ASC') : setSortDirection('DESC');
+      setPagination((pagination) => {
+        fetchData(newPagination);
+        return { ...pagination, ...newPagination };
+      });
+    },
+    [fetchData],
+  );
   useEffect(() => {
     appId && fetchData();
   }, [fetchData, appId]);

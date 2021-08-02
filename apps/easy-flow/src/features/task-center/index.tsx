@@ -2,7 +2,6 @@ import { memo, useCallback, FC, useState, useEffect, useMemo } from 'react';
 import { NavLink, Route, Switch, useLocation, useRouteMatch } from 'react-router-dom';
 import { Input, Button } from 'antd';
 import { Icon } from '@common/components';
-import appConfig from '@/init';
 import styles from './index.module.scss';
 import Todo from './todo';
 import Start from './start';
