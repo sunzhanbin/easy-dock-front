@@ -43,6 +43,36 @@ function MicroApp(props: MicroAppProps) {
       };
     }
   }, [name, entry, basename, matchedRoute, extra]);
+  // 暂时解决富文本编辑器图片上传弹窗问题
+  useEffect(() => {
+    const targetNode = document.body;
+    const config = { attributes: false, childList: true, subtree: false };
+    const callback = (mutationsList: MutationRecord[]) => {
+      mutationsList.forEach((item) => {
+        if (item.addedNodes.length > 0 && (item.addedNodes[0] as HTMLDivElement).className === 'bf-modal-root') {
+          const modal = item.addedNodes[0];
+          modal.addEventListener('click', (e) => {
+            const classList = (e.target as HTMLElement).classList;
+            if (
+              classList.contains('bfi-close') ||
+              classList.contains('button-cancel') ||
+              classList.contains('button-insert')
+            ) {
+              // 关闭弹窗
+              targetNode.removeChild(modal);
+            }
+          });
+        }
+      });
+    };
+    const observer = new MutationObserver(callback);
+    // 监听弹窗进入dom
+    observer.observe(targetNode, config);
+    return () => {
+      // 取消监听
+      observer.disconnect();
+    };
+  }, []);
 
   return (
     <div className={classnames(styles.container, className)}>

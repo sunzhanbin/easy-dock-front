@@ -3,7 +3,7 @@ import { Form, Select, Input, Switch, Radio, Checkbox, InputNumber } from 'antd'
 import SelectOptionList from '../select-option-list';
 import SelectDefaultOption from '../select-default-option';
 import DefaultDate from '../default-date';
-import Editor from '../editor';
+import Editor from '../rich-text';
 import { FormField, SchemaConfigItem } from '@/type';
 import { Store } from 'antd/lib/form/interface';
 import styles from './index.module.scss';
