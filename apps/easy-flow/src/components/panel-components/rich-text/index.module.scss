@@ -69,5 +69,12 @@
     overflow-y: auto;
     border: 1px solid #f1f1f1;
     margin-top: 12px;
+    :global {
+      .bf-media {
+        .bf-media-toolbar {
+          display: none;
+        }
+      }
+    }
   }
 }
