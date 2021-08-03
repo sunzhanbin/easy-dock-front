@@ -7,3 +7,6 @@ node_modules/
 /node_modules
 **/build
 *-SNAPSHOT.tar.gz
+.vs/
+
+*.log
