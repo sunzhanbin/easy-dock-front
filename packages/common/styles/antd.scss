@@ -250,6 +250,7 @@
       }
     }
   }
+
   .ant-form-item-explain {
     line-height: 32px;
     font-size: 12px;
@@ -257,6 +258,10 @@
     &.ant-form-item-explain-error {
       color: #ff5568;
     }
+  }
+
+  .ant-form-item-explain {
+    line-height: 24px;
   }
 }
 // 定制checkbox

@@ -107,18 +107,23 @@ export enum FillRange {
   ALL = 3,
 }
 
+export type TimingTrigger = {
+  type: TriggerType.TIMING;
+  startTime: number;
+  cycleRange: [number | null, number | null];
+  frequency: {
+    value: number;
+    unit: string;
+  };
+};
 // 流程类型，起点是申请人节点，一个流程只能有一个
-export interface StartNode<TimeType = number> extends BaseNode {
+export interface StartNode extends BaseNode {
   type: NodeType.StartNode;
   trigger:
     | {
         type: TriggerType.MANUAL;
       }
-    | {
-        type: TriggerType.TIMING;
-        startTime: TimeType;
-        cycle: [TimeType, TimeType];
-      }
+    | TimingTrigger
     | {
         type: TriggerType.SIGNAL;
         match: string;
