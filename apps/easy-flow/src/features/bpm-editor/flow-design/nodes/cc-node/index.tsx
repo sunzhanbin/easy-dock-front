@@ -1,23 +1,23 @@
 import { memo } from 'react';
 import { Icon } from '@common/components';
+import { CCNode as CCNodeType } from '@type/flow';
 import { MemberList } from '@components/member-selector';
-import { FillNode as FillNodeType } from '@type/flow';
-import useShowMembers from '../../hooks/use-show-members';
 import BaseNode from '../base-node';
+import useShowMembers from '../../hooks/use-show-members';
 
-export interface FillNodeProps {
-  node: FillNodeType;
+interface CCNodeProps {
+  node: CCNodeType;
 }
 
-function FillNode(props: FillNodeProps) {
+function CCNode(props: CCNodeProps) {
   const { node } = props;
   const showMembers = useShowMembers(node.correlationMemberConfig.members);
 
   return (
-    <BaseNode icon={<Icon type="tianxiejiedian" />} node={node}>
+    <BaseNode icon={<Icon type="yonghujiedian" />} node={node}>
       {showMembers.length ? <MemberList members={showMembers} /> : '设置此节点'}
     </BaseNode>
   );
 }
 
-export default memo(FillNode);
+export default memo(CCNode);

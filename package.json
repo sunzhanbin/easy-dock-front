@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "start": "lerna run start",
-    "start:bpm": "lerna run start --scope=easy-flow-front",
+    "start:flow": "lerna run start --scope=easy-flow-front --stream",
     "start:chart": "lerna run start --scope=easy-chart",
     "build": "lerna bootstrap && lerna run build",
     "precommit": "lint-staged",

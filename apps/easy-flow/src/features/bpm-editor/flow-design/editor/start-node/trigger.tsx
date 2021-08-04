@@ -25,6 +25,7 @@ function Trigger({ value, onChange }: { value?: TriggerType; onChange?(value: Tr
       </Button>
       <Button
         size="large"
+        disabled
         className={classnames(styles.timing, styles.button, {
           [styles.active]: value === TriggerType.TIMING,
         })}
@@ -34,6 +35,7 @@ function Trigger({ value, onChange }: { value?: TriggerType; onChange?(value: Tr
       </Button>
       <Button
         size="large"
+        disabled
         className={classnames(styles.signal, styles.button, {
           [styles.active]: value === TriggerType.SIGNAL,
         })}

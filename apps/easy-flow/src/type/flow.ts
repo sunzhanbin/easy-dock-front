@@ -9,6 +9,8 @@ export enum NodeType {
   BranchNode = 4,
   // 结束节点
   FinishNode = 5,
+  // 抄送节点
+  CCNode = 6,
 }
 
 export enum AuthType {
@@ -23,8 +25,6 @@ export interface BaseNode {
   type: NodeType;
   name: string;
 }
-
-export type AllNode = StartNode | AuditNode | FillNode | BranchNode | FinishNode;
 
 export type ButtonAuth = {
   enable?: boolean;
@@ -41,11 +41,12 @@ export type FieldAuthsMap = {
   [fieldId: string]: AuthType;
 };
 
+export type CorrelationMemberConfig = {
+  members: string[];
+};
 // 审批节点
 export interface UserNode extends BaseNode {
-  correlationMemberConfig: {
-    members: string[];
-  };
+  correlationMemberConfig: CorrelationMemberConfig;
   fieldsAuths: FieldAuthsMap;
 }
 
@@ -77,11 +78,9 @@ type JudgeType = 0 | 1 | 2 | 3;
 type DataType = 0 | 1 | 2;
 
 type BranchCondition = {
-  title: string;
   dataType: DataType;
   judgeType: JudgeType;
-  values: string[];
-  details: [];
+  value: string;
 };
 // 分支节点
 export interface BranchNode {
@@ -130,6 +129,16 @@ export interface StartNode extends BaseNode {
       };
 }
 
+export interface CCNode extends BaseNode {
+  type: NodeType.CCNode;
+  correlationMemberConfig: CorrelationMemberConfig;
+  fieldsAuths: FieldAuthsMap;
+}
+
+export type AllNode = StartNode | AuditNode | FillNode | BranchNode | FinishNode | CCNode;
+
 export type Flow = AllNode[];
 
 export type FieldTemplate = { id: string; name: string };
+
+export type AddableNode = AuditNode | FillNode | BranchNode | CCNode | BranchNode;

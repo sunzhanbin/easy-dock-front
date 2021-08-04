@@ -2,12 +2,11 @@ import { memo } from 'react';
 import { Button } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import ButtonEditor from '../../components/button-editor';
-import { FillNode, AllNode, ButtonAuth } from '@type/flow';
+import { FillNode, ButtonAuth } from '@type/flow';
 import styles from './index.module.scss';
 
 interface ButtonConfigsProps {
   value?: FillNode['btnText'];
-  prevNodes: AllNode[];
   onChange?(value: this['value']): void;
 }
 

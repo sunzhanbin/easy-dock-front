@@ -5,10 +5,10 @@ import { builderAxios, runtimeAxios } from '@utils';
 import { User } from '@type';
 import {
   AllNode,
+  AddableNode,
   NodeType,
   StartNode,
   FinishNode,
-  AuditNode,
   FillNode,
   TriggerType,
   Flow,
@@ -36,6 +36,7 @@ export type FlowType = {
     [loginName: string]: User;
   };
   fieldsTemplate: FieldTemplate[];
+  choosedNode: AllNode | null;
 };
 
 const flowInitial: FlowType = {
@@ -46,6 +47,7 @@ const flowInitial: FlowType = {
   invalidNodesMap: {},
   cacheMembers: {},
   fieldsTemplate: [],
+  choosedNode: null,
 };
 
 function flowUpdate(data: AllNode[], targetId: string, newNode: AllNode | null): AllNode[] {
@@ -172,7 +174,10 @@ const flow = createSlice({
     setInitialFlow(state, { payload: data }: PayloadAction<Flow>) {
       state.data = data;
     },
-    addNode(state, { payload }: PayloadAction<{ prevId: string; node: AuditNode | FillNode }>) {
+    setChoosedNode(state, { payload: data }: PayloadAction<AllNode | null>) {
+      state.choosedNode = data;
+    },
+    addNode(state, { payload }: PayloadAction<{ prevId: string; node: AddableNode }>) {
       const { prevId, node } = payload;
 
       state.data = flowUpdate(state.data, prevId, node);
@@ -199,7 +204,7 @@ const flow = createSlice({
 });
 
 const flowActions = flow.actions;
-export const { setLoading, updateNode, delNode, setCacheMembers, setDirty, setSaving } = flow.actions;
+export const { setLoading, updateNode, delNode, setCacheMembers, setDirty, setSaving, setChoosedNode } = flow.actions;
 
 function getFieldsTemplate(fieldsTemplate: FlowType['fieldsTemplate']) {
   return fieldsTemplate.reduce((fieldsAuths, item) => {
@@ -252,7 +257,7 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
       const loginNames: Set<string> = new Set();
 
       flowRecursion(flowData, (node) => {
-        if (node.type === NodeType.FillNode || node.type === NodeType.AuditNode) {
+        if (node.type === NodeType.FillNode || node.type === NodeType.AuditNode || node.type === NodeType.CCNode) {
           (node.correlationMemberConfig.members || []).forEach((member) => {
             loginNames.add(member);
 
@@ -412,33 +417,84 @@ export const saveWithForm = createAsyncThunk<void, string, { state: RootState }>
   },
 );
 
-export const addNode = createAsyncThunk<
-  void,
-  { prevId: string; type: NodeType.AuditNode | NodeType.FillNode },
-  { state: RootState }
->('flow/create-node', ({ prevId, type }, { getState, dispatch }) => {
-  let tmpNode;
+export const addNode = createAsyncThunk<void, { prevId: string; type: AddableNode['type'] }, { state: RootState }>(
+  'flow/create-node',
+  ({ prevId, type }, { getState, dispatch }) => {
+    let tmpNode;
 
-  if (type === NodeType.AuditNode) {
-    tmpNode = createNode(type, '审批节点');
-  } else if (type === NodeType.FillNode) {
-    tmpNode = createNode(type, '填写节点');
-  } else {
-    throw Error('传入类型不正确');
-  }
+    if (type === NodeType.BranchNode) {
+      tmpNode = createNode(type);
+    } else {
+      if (type === NodeType.AuditNode) {
+        tmpNode = createNode(type, '审批节点');
+      } else if (type === NodeType.FillNode) {
+        tmpNode = createNode(type, '填写节点');
+      } else if (type === NodeType.CCNode) {
+        tmpNode = createNode(type, '抄送节点');
+      } else {
+        throw Error('传入类型不正确');
+      }
 
-  // 给新节点设置初始字段权限
-  tmpNode.fieldsAuths = getFieldsTemplate(getState().flow.fieldsTemplate);
+      tmpNode.fieldsAuths = getFieldsTemplate(getState().flow.fieldsTemplate);
+    }
 
-  dispatch(
-    flowActions.addNode({
-      prevId,
-      node: tmpNode,
-    }),
-  );
-});
+    // 给新节点设置初始字段权限
+
+    dispatch(
+      flowActions.addNode({
+        prevId,
+        node: tmpNode,
+      }),
+    );
+  },
+);
 
 export default flow;
 
 // 聚合form和flow, 因为flow的字段权限需要form的字段信息
 export const flowDataSelector = createSelector([(state: RootState) => state.flow], (flow) => flow);
+
+const findPrevNodes = (() => {
+  let finded = false;
+
+  return function findPrevNodes(flow: AllNode[], targetId: string, prevs: AllNode[]) {
+    flow.find((node) => {
+      if (node.id === targetId) {
+        finded = true;
+
+        return true;
+      }
+
+      prevs.push(node);
+
+      if (node.type === NodeType.BranchNode) {
+        // 进入分支节点
+        node.branches.find((branch) => {
+          // 进入子分支
+          findPrevNodes(branch.nodes, targetId, prevs);
+
+          if (!finded) {
+            // 回朔掉之前加入的节点
+            prevs = prevs.slice(0, -1 * branch.nodes.length);
+
+            return false;
+          } else {
+            return true;
+          }
+        });
+      }
+
+      return false;
+    });
+
+    return prevs;
+  };
+})();
+
+export const choosePrevNodesSelector = createSelector([(state: RootState) => state.flow], (flow) => {
+  if (flow.choosedNode) {
+    return findPrevNodes(flow.data, flow.choosedNode.id, []);
+  }
+
+  return [];
+});

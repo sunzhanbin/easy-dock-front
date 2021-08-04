@@ -23,11 +23,24 @@
     }
   }
 
+  &.limit {
+    .cell {
+      &:first-child:nth-last-child(2) {
+        flex-grow: 1;
+      }
+
+      &:nth-child(2):last-child {
+        flex: 0 0 52px;
+      }
+    }
+  }
+
   .checkbox {
     @include center('flex');
 
     position: relative;
     cursor: pointer;
+    white-space: nowrap;
 
     &::after {
       content: '';

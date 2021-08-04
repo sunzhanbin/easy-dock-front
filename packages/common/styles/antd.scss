@@ -265,7 +265,14 @@
   }
 }
 // 定制checkbox
+.ant-checkbox-wrapper.ant-checkbox-wrapper {
+  line-height: 1;
+  font-size: 0;
+}
+
 .ant-checkbox {
+  top: 0;
+
   &.ant-checkbox-disabled {
     & + span {
       color: #181f43;

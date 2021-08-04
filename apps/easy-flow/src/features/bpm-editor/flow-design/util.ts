@@ -1,6 +1,6 @@
 import React from 'react';
 import { AbstractTooltipProps } from 'antd/lib/tooltip';
-import { NodeType, AuditNode, FillNode, RevertType } from '@type/flow';
+import { NodeType, AuditNode, FillNode, CCNode, BranchNode, RevertType } from '@type/flow';
 
 function randomString() {
   return Math.random().toString(36).slice(2);
@@ -19,7 +19,27 @@ export function fielduuid(group: number = 3) {
 
 export function createNode(type: NodeType.AuditNode, name: string): AuditNode;
 export function createNode(type: NodeType.FillNode, name: string): FillNode;
-export function createNode(type: NodeType, name: string) {
+export function createNode(type: NodeType.CCNode, name: string): CCNode;
+export function createNode(type: NodeType.BranchNode): BranchNode;
+export function createNode(type: NodeType, name?: string) {
+  if (type === NodeType.BranchNode) {
+    return <BranchNode>{
+      type,
+      id: fielduuid(),
+      branches: [
+        {
+          id: fielduuid(),
+          nodes: [],
+          conditions: [],
+        },
+        {
+          id: fielduuid(),
+          nodes: [],
+          conditions: [],
+        },
+      ],
+    };
+  }
   const node = {
     id: fielduuid(),
     type,
@@ -50,6 +70,8 @@ export function createNode(type: NodeType, name: string) {
         save: { enable: true },
       },
     };
+  } else if (type === NodeType.CCNode) {
+    return <CCNode>node;
   } else {
     throw new Error('传入类型不正确');
   }

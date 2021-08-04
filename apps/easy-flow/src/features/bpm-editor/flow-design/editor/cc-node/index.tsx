@@ -5,26 +5,24 @@ import debounce from 'lodash/debounce';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import MemberSelector from '../components/member-selector';
 import { updateNode, flowDataSelector } from '../../flow-slice';
-import { FillNode } from '@type/flow';
-import ButtonConfigs from './button-configs';
+import { CCNode, AuthType } from '@type/flow';
 import FieldAuths from '../components/field-auths';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { trimInputValue } from '../../util';
 import { name } from '@common/rule';
 import useValidateForm from '../../hooks/use-validate-form';
 
-interface FillNodeEditorProps {
-  node: FillNode;
+interface CCNodeEditorProps {
+  node: CCNode;
 }
 
 type FormValuesType = {
   name: string;
-  correlationMemberConfig: FillNode['correlationMemberConfig'];
-  btnText: FillNode['btnText'];
-  fieldsAuths: FillNode['fieldsAuths'];
+  correlationMemberConfig: CCNode['correlationMemberConfig'];
+  fieldsAuths: CCNode['fieldsAuths'];
 };
 
-function FillNodeEditor(props: FillNodeEditorProps) {
+function CCNodeEditor(props: CCNodeEditorProps) {
   const dispatch = useAppDispatch();
   const { node } = props;
   const { fieldsTemplate } = useAppSelector(flowDataSelector);
@@ -36,7 +34,6 @@ function FillNodeEditor(props: FillNodeEditorProps) {
     return {
       name: node.name,
       correlationMemberConfig: node.correlationMemberConfig,
-      btnText: node.btnText,
       fieldsAuths: node.fieldsAuths,
     };
   }, [node]);
@@ -68,35 +65,6 @@ function FillNodeEditor(props: FillNodeEditorProps) {
     ];
   }, []);
 
-  const buttonRules: Rule[] = useMemo(() => {
-    return [
-      {
-        required: true,
-        validator(_, value: FormValuesType['btnText']) {
-          if (!value) {
-            return Promise.reject(new Error('按钮配置不能为空'));
-          }
-
-          let key: keyof typeof value;
-          let invalid = true;
-
-          for (key in value) {
-            if (value[key]?.enable) {
-              invalid = false;
-              break;
-            }
-          }
-
-          if (invalid) {
-            return Promise.reject(new Error('按钮配置不能为空'));
-          }
-
-          return Promise.resolve();
-        },
-      },
-    ];
-  }, []);
-
   return (
     <Form
       form={form}
@@ -106,19 +74,16 @@ function FillNodeEditor(props: FillNodeEditorProps) {
       autoComplete="off"
     >
       <Form.Item label="节点名称" name="name" rules={nameRules} getValueFromEvent={trimInputValue}>
-        <Input size="large" placeholder="请输入用户节点名称" />
+        <Input size="large" placeholder="请输入抄送节点名称" />
       </Form.Item>
       <Form.Item label="选择办理人" name="correlationMemberConfig" rules={memberRules}>
         <MemberSelector />
       </Form.Item>
-      <Form.Item label="操作权限" name="btnText" rules={buttonRules}>
-        <ButtonConfigs />
-      </Form.Item>
       <Form.Item label="字段权限" name="fieldsAuths">
-        <FieldAuths templates={fieldsTemplate} />
+        <FieldAuths max={AuthType.View} templates={fieldsTemplate} />
       </Form.Item>
     </Form>
   );
 }
 
-export default memo(FillNodeEditor);
+export default memo(CCNodeEditor);

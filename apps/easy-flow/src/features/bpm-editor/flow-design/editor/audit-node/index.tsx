@@ -5,8 +5,8 @@ import debounce from 'lodash/debounce';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { name } from '@common/rule';
 import MemberSelector from '../components/member-selector';
-import { updateNode, flowDataSelector } from '../../flow-slice';
-import { AuditNode, AllNode } from '@type/flow';
+import { updateNode, flowDataSelector, choosePrevNodesSelector } from '../../flow-slice';
+import { AuditNode } from '@type/flow';
 import ButtonConfigs from './button-configs';
 import FieldAuths from '../components/field-auths';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
@@ -15,7 +15,6 @@ import useValidateForm from '../../hooks/use-validate-form';
 
 interface AuditNodeEditorProps {
   node: AuditNode;
-  prevNodes: AllNode[];
 }
 
 type FormValuesType = {
@@ -30,8 +29,10 @@ type FormValuesType = {
 
 function AuditNodeEditor(props: AuditNodeEditorProps) {
   const dispatch = useAppDispatch();
-  const { node, prevNodes } = props;
+  const { node } = props;
   const { fieldsTemplate } = useAppSelector(flowDataSelector);
+  const prevNodes = useAppSelector(choosePrevNodesSelector);
+
   const [form] = Form.useForm<FormValuesType>();
 
   useValidateForm<FormValuesType>(form);
