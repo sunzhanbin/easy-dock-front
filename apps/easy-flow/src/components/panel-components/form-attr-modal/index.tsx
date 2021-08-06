@@ -6,6 +6,7 @@ import styles from './index.module.scss';
 import { useAppSelector } from '@/app/hooks';
 import { componentPropsSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 import { FormField } from '@/type';
+import { runtimeAxios } from '@/utils/axios';
 
 type modalProps = {
   onClose: () => void;
@@ -22,9 +23,24 @@ const FormAttrModal = ({ onClose, onOk }: modalProps) => {
     return (
       Object.values(byId)
         .filter((item: FormField) => (item.type as string) !== 'DescText')
-        .map((item: FormField) => ({ label: item.label, id: item.id! })) || []
+        .map((item: FormField) => item) || []
     );
   }, [byId]);
+
+  const loadDataSource = useCallback(
+    (fieldId) => {
+      const component = componentList.find((item) => item.id === fieldId);
+      const { dataSource } = component as any;
+      if (dataSource.type === 'custom') {
+        return Promise.resolve(dataSource.data);
+      } else if (dataSource.type === 'subapp') {
+        const { fieldName = '', subappId = '' } = dataSource;
+        return runtimeAxios.get(`/subapp/${subappId}/form/${fieldName}/data`);
+      }
+      return Promise.resolve(null);
+    },
+    [componentList],
+  );
 
   const onChange = useCallback(() => {
     // console.info(form.getFieldsValue(), '111');
@@ -72,21 +88,24 @@ const FormAttrModal = ({ onClose, onOk }: modalProps) => {
                   </Select>
                 </Form.Item>
                 <Form.Item label="条件设置" name="ruleValue">
-                  <Condition />
+                  <Condition components={Object.values(byId)} loadDataSource={loadDataSource} />
                 </Form.Item>
                 <Form.Item
                   noStyle
-                  shouldUpdate={(prevValues, curValues) => prevValues.ruleValue !== curValues.ruleValue}
+                  shouldUpdate={(prevValues, curValues) =>
+                    prevValues.ruleValue !== curValues.ruleValue ||
+                    prevValues.hideComponents !== curValues.hideComponents
+                  }
                 >
                   {({ getFieldValue }) => {
-                    const ruleValue = getFieldValue('ruleValue');
+                    const ruleValue = getFieldValue('ruleValue') || [];
+                    const hideComponents = getFieldValue('hideComponents') || [];
                     // 规则中选中的组件id列表
-                    const ruleComponentIdList =
-                      (ruleValue && ruleValue.flat(1).map((item: { field: string }) => item.field)) || [];
-                    // 显示控件的列表要排除规则中已有的组件列表
-                    let options = [...componentList];
-                    const set = new Set(ruleComponentIdList);
+                    const ruleComponentIdList = ruleValue.flat(1).map((item: { field: string }) => item.field);
+                    const set = new Set(ruleComponentIdList.concat(hideComponents));
                     const selectIdList = Array.from(set);
+                    // 显示控件的列表要排除规则中已有的组件列表和已选择的隐藏控件
+                    let options = [...componentList];
                     selectIdList.forEach((id) => {
                       options = options.filter((option) => option.id !== id);
                     });
@@ -95,7 +114,7 @@ const FormAttrModal = ({ onClose, onOk }: modalProps) => {
                         <Form.Item label="显示控件" name="showComponents">
                           <Select suffixIcon={<Icon type="xiala" />} mode="multiple" placeholder="请选择">
                             {options.map((option) => (
-                              <Option key={option.id} value={option.id}>
+                              <Option key={option.id} value={option.id!}>
                                 {option.label}
                               </Option>
                             ))}
@@ -110,12 +129,22 @@ const FormAttrModal = ({ onClose, onOk }: modalProps) => {
                         >
                           {({ getFieldValue }) => {
                             const showComponents = getFieldValue('showComponents') || [];
-                            console.info(showComponents, '111');
+                            const ruleValue = getFieldValue('ruleValue') || [];
+                            // 规则中选中的组件id列表
+                            const ruleComponentIdList =
+                              ruleValue && ruleValue.flat(1).map((item: { field: string }) => item.field);
+                            const set = new Set(ruleComponentIdList.concat(showComponents));
+                            const selectIdList = Array.from(set);
+                            // 隐藏控件的列表要排除规则中已有的组件列表和已选择的显示控件
+                            let options = [...componentList];
+                            selectIdList.forEach((id) => {
+                              options = options.filter((option) => option.id !== id);
+                            });
                             return (
                               <Form.Item label="隐藏控件" name="hideComponents">
                                 <Select suffixIcon={<Icon type="xiala" />} mode="multiple" placeholder="请选择">
                                   {options.map((option) => (
-                                    <Option key={option.id} value={option.id}>
+                                    <Option key={option.id} value={option.id!}>
                                       {option.label}
                                     </Option>
                                   ))}

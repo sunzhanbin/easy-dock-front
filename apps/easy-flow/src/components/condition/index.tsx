@@ -7,18 +7,20 @@ import { filedRule } from '@/type';
 import styles from './index.module.scss';
 
 interface EditProps {
+  components: Array<any>; //暂时使用any类型
   className?: string;
   value?: filedRule[][];
   onChange?: (value: filedRule[][]) => void;
+  loadDataSource?: (id: string) => Promise<{ key: string; value: string }[] | { data: { data: string[] } }>;
 }
 
-const Condition = ({ className, value, onChange }: EditProps) => {
-  const [ruleList, setRuleList] = useState<filedRule[][]>(value || [[{ field: { name: '', id: '' }, symbol: '' }]]);
+const Condition = ({ className, components, value, onChange, loadDataSource }: EditProps) => {
+  const [ruleList, setRuleList] = useState<filedRule[][]>(value || [[{ field: '', symbol: '' }]]);
   const addRule = useCallback(
     (index: number) => {
       const list = [...ruleList];
       const ruleBlock = list[index];
-      ruleBlock.push({ field: { name: '', id: '' }, symbol: '' });
+      ruleBlock.push({ field: '', symbol: '' });
       setRuleList(list);
     },
     [ruleList, setRuleList],
@@ -34,7 +36,7 @@ const Condition = ({ className, value, onChange }: EditProps) => {
   );
   const addRuleBlock = useCallback(() => {
     const list = [...ruleList];
-    list.push([{ field: { name: '', id: '' }, symbol: '' }]);
+    list.push([{ field: '', symbol: '' }]);
     setRuleList(list);
   }, [ruleList, setRuleList]);
   const handleRuleChange = useCallback(
@@ -64,10 +66,12 @@ const Condition = ({ className, value, onChange }: EditProps) => {
                       <div className={styles.rule} key={ruleIndex}>
                         <RuleForm
                           rule={rule}
+                          components={components}
                           className={styles.form}
                           blockIndex={index}
                           ruleIndex={ruleIndex}
                           onChange={handleRuleChange}
+                          loadDataSource={loadDataSource}
                         />
                         <span
                           className={styles.delete}

@@ -21,14 +21,17 @@ const MultiText = ({ className, value, onChange }: EditProps) => {
     }
     e.target.value = '';
   }, []);
-  const handleEnter = useCallback((e) => {
-    if (e.keyCode === 13) {
-      handleBlur(e);
-    }
-  }, []);
+  const handleEnter = useCallback(
+    (e) => {
+      if (e.keyCode === 13) {
+        handleBlur(e);
+      }
+    },
+    [handleBlur],
+  );
   useEffect(() => {
     onChange && onChange(textList);
-  }, [textList.length, onChange]);
+  }, [textList, onChange]);
   return (
     <div className={classnames(styles.muliText, className ? className : '')}>
       <div className={styles.textContainer}>

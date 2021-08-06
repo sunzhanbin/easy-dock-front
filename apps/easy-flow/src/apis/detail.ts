@@ -53,11 +53,10 @@ export async function loadDatasource(formMeta: FormMeta, flowMeta: FlowMeta, ver
   return datasource;
 }
 
-export async function fetchDataSource(byId: { [k: string]: any }) {
+export async function fetchDataSource(components: Array<any>) {
   const allPromises: Promise<void>[] = [];
   const source: Datasource = {};
-  Object.keys(byId).forEach(async (id) => {
-    const object = byId[id];
+  components.forEach(async (object) => {
     if ((object as any)?.dataSource) {
       const { dataSource } = object as any;
       if (dataSource.type === 'custom') {

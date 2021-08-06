@@ -1,4 +1,4 @@
-import { memo, useState, useCallback, useEffect } from 'react';
+import { memo, useState, useCallback } from 'react';
 import { InputNumber } from 'antd';
 import classnames from 'classnames';
 import styles from './index.module.scss';

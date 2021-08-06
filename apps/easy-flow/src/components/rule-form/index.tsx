@@ -1,14 +1,10 @@
-import { FC, memo, useMemo, useCallback, useState, useEffect } from 'react';
+import { memo, useMemo, useCallback, useState } from 'react';
 import { Form, Select, Input, InputNumber, DatePicker } from 'antd';
 import classnames from 'classnames';
-import { useAppSelector } from '@/app/hooks';
-import { componentPropsSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 import { filedRule, FormField } from '@/type';
 import { Icon } from '@common/components';
 import MultiText from '@components/multi-text';
 import NumberRange from '@components/number-range';
-import { Datasource } from '@/type/detail';
-import { fetchDataSource } from '@/apis/detail';
 import styles from './index.module.scss';
 
 const { Option } = Select;
@@ -62,45 +58,76 @@ const symbolListMap = {
 };
 
 type RuleFormProps = {
+  components: Array<any>;
   className?: string;
   rule: filedRule;
   blockIndex: number;
   ruleIndex: number;
   onChange?: (blockIndex: number, ruleIndex: number, rule: filedRule) => void;
+  loadDataSource?: (id: string) => Promise<{ key: string; value: string }[] | { data: { data: string[] } }>;
 };
 
-const RuleForm = ({ rule, className, blockIndex, ruleIndex, onChange }: RuleFormProps) => {
-  const byId = useAppSelector(componentPropsSelector);
+const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange, loadDataSource }: RuleFormProps) => {
   const [form] = Form.useForm();
   const initValues = useMemo(() => {
     return {
-      field: rule.field.id || undefined,
+      field: rule.field || undefined,
       symbol: rule.symbol || undefined,
       value: rule.value || undefined,
     };
   }, [rule]);
   const componentList = useMemo(() => {
-    return (
-      Object.values(byId)
-        .filter((item: FormField) => (item.type as string) !== 'DescText')
-        .map((item: FormField) => ({ label: item.label, id: item.id! })) || []
-    );
-  }, [byId]);
-  const [dataSource, setDataSource] = useState<Datasource>({});
-  useEffect(() => {
-    fetchDataSource(byId).then((res) => {
-      setDataSource(res);
-    });
-  }, [byId]);
+    if (components && components?.length > 0) {
+      let list = [];
+      // 流程编排阶段从远程拉取components数据,配置中有config节点
+      if (components[0].config) {
+        list = components.map((item: any) => item.config);
+      } else {
+        // 表单编排阶段尚未保存数据,只能从redux中读取components中读取配置，没有config节点
+        list = [...components];
+      }
+      return (
+        list
+          .filter((item: { type: string }) => item.type !== 'DescText')
+          .map((item: FormField) => ({
+            label: item.label,
+            id: item.id!,
+            type: item.type,
+            format: (item as any).format,
+          })) || []
+      );
+    }
+    return [];
+  }, [components]);
+  const [optionList, setOptionList] = useState<{ key: string; value: string }[]>([]);
+  const [selectComponent, setSelectComponent] = useState<{ id: string; type: string; format: string }>();
   const changeField = useCallback(() => {
     form.setFieldsValue({ symbol: undefined, value: undefined });
-  }, [form]);
+    const fieldId = form.getFieldValue('field');
+    const field = componentList.find((item) => item.id === fieldId);
+    setSelectComponent(field);
+    const fieldType = field && (field.type as string);
+    if (loadDataSource && (fieldType === 'Select' || fieldType === 'Radio' || fieldType === 'Checkbox')) {
+      loadDataSource(fieldId).then((res) => {
+        if (res) {
+          // 自定义数据,返回的是一个key-value数组
+          if (Array.isArray(res)) {
+            setOptionList(res);
+            // 从其他表单中获取数据,返回的是一个对象
+          } else if (res.data) {
+            const list = (res.data?.data || []).map((val: string) => ({ key: val, value: val }));
+            setOptionList(list);
+          }
+        }
+      });
+    }
+  }, [form, componentList, loadDataSource]);
   const changeSymbol = useCallback(() => {
     form.setFieldsValue({ value: undefined });
   }, [form]);
   const handleFinish = useCallback(() => {
     const values = form.getFieldsValue();
-    if (rule.field.id !== values.field || rule.symbol !== values.symbol) {
+    if (rule.field !== values.field || rule.symbol !== values.symbol) {
       onChange && onChange(blockIndex, ruleIndex, values);
     }
   }, [form, blockIndex, ruleIndex, onChange]);
@@ -129,8 +156,8 @@ const RuleForm = ({ rule, className, blockIndex, ruleIndex, onChange }: RuleForm
         </Select>
       </Form.Item>
       <Form.Item noStyle shouldUpdate={(prevValues, curValues) => prevValues.field !== curValues.field}>
-        {({ getFieldValue }) => {
-          const componentType = getFieldValue('field') && byId[getFieldValue('field')].type;
+        {() => {
+          const componentType = selectComponent && selectComponent.type;
           let symbolList: { value: string; label: string }[] = [];
           if (componentType) {
             switch (componentType) {
@@ -179,7 +206,7 @@ const RuleForm = ({ rule, className, blockIndex, ruleIndex, onChange }: RuleForm
         }
       >
         {({ getFieldValue }) => {
-          const componentType = getFieldValue('field') && byId[getFieldValue('field')].type;
+          const componentType = selectComponent && selectComponent.type;
           const symbol = getFieldValue('symbol');
           if (symbol === 'null' || symbol === 'notNull') {
             return null;
@@ -231,7 +258,7 @@ const RuleForm = ({ rule, className, blockIndex, ruleIndex, onChange }: RuleForm
                 </Form.Item>
               );
             }
-            const format = (byId[getFieldValue('field')] as { format: string }).format;
+            const format = selectComponent && selectComponent.format;
             const showTime = format === 'YYYY-MM-DD HH:mm:ss' ? { showTime: true } : {};
             if (symbol === 'range') {
               return (
@@ -255,8 +282,6 @@ const RuleForm = ({ rule, className, blockIndex, ruleIndex, onChange }: RuleForm
                 </Form.Item>
               );
             }
-            const fieldName = (byId[getFieldValue('field')] as { fieldName: string }).fieldName || '';
-            const optionList: { key: string; value: string }[] = dataSource[fieldName] || [];
             if (symbol === 'equal' || symbol === 'unequal') {
               return (
                 <Form.Item name="value" className={styles.valueWrapper}>

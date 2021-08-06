@@ -22,7 +22,7 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
   const byId: { [k: string]: any } = useAppSelector(componentPropsSelector);
   const [dataSource, setDataSource] = useState<Datasource>({});
   useEffect(() => {
-    fetchDataSource(byId).then((res) => {
+    fetchDataSource(Object.values(byId)).then((res) => {
       setDataSource(res);
     });
   }, [byId]);

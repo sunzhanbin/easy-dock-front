@@ -1,4 +1,5 @@
 import { Rule } from 'antd/lib/form';
+import { String } from 'lodash';
 
 export type FieldType = 'Select' | 'Input' | 'Textarea' | 'Radio' | 'Checkbox' | 'Date' | 'InputNumber' | 'DescText';
 
@@ -161,15 +162,15 @@ export type ErrorItem = {
 };
 
 export type filedRule = {
-  field: { name: string; id: string };
+  field: string;
   symbol: string;
   value?: string | number | string[] | [number, number];
 };
 // 值改变时规则
 export type FormChangeRule = {
   filedRule: filedRule[][];
-  showComponents: { name: string; id: string }[];
-  hideComponents: { name: string; id: string }[];
+  showComponents: string[];
+  hideComponents: string[];
 };
 // 进入表单时规则
 export type FormInitRule = {
