@@ -2,8 +2,9 @@
 
 .flow {
   position: relative;
+  display: inline-block;
   height: 100%;
-  background-color: rgba(#182743, 0.04);
+  min-width: 100%;
 
   .content {
     display: flex;
@@ -12,6 +13,7 @@
     height: 100%;
     padding-top: 95px;
     padding-bottom: 24px;
+    background-color: rgba(#182743, 0.04);
     overflow-y: auto;
   }
 
@@ -57,18 +59,11 @@
   }
 }
 
-.tiptitle {
-  @include center('flex');
-
-  height: 24px;
-  line-height: 24px;
-  color: rgba(#181f43, 0.75);
-  font-size: 16px;
-  font-weight: 500;
-
-  svg {
-    margin-right: 8px;
-    color: #ff9900;
-    font-size: 20px;
-  }
+.branch-title {
+  padding: 24px;
+  padding-bottom: 0;
+  line-height: 28px;
+  color: rgba(#000, 0.85);
+  font-size: 18px;
+  font-weight: bold;
 }

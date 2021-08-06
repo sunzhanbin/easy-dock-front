@@ -17,16 +17,17 @@ interface FieldRowProps {
     };
   };
   className?: string;
+  max?: FieldAuth['auth'];
 }
 
 const FieldRow = memo(function FieldRow(props: FieldRowProps) {
-  const { value, onChange, extra, className } = props;
+  const { value, onChange, extra, className, max = AuthType.Required } = props;
   const handleAuthChange = useMemoCallback((auth: FieldAuth['auth']) => {
     onChange(Object.assign({}, value, { auth }));
   });
 
   return (
-    <div className={classnames(styles['flex-row'], className)}>
+    <div className={classnames(styles['flex-row'], max !== AuthType.Required ? styles.limit : '', className)}>
       <div className={styles.cell}>{value.name}</div>
       <div className={styles.cell}>
         <span className={styles.checkbox} onClickCapture={() => handleAuthChange(value.auth > 0 ? 0 : 1)}>
@@ -34,30 +35,36 @@ const FieldRow = memo(function FieldRow(props: FieldRowProps) {
           {extra?.view.label && <span className={styles.label}>{extra.view.label}</span>}
         </span>
       </div>
-      <div className={styles.cell}>
-        <span className={styles.checkbox} onClickCapture={() => handleAuthChange(value.auth > 1 ? 1 : 2)}>
-          <Checkbox checked={value.auth > 1} indeterminate={extra?.edit.indeterminate} />
-          {extra?.edit.label && <span className={styles.label}>{extra.edit.label}</span>}
-        </span>
-      </div>
-      <div className={styles.cell}>
-        <span className={styles.checkbox} onClickCapture={() => handleAuthChange(value.auth === 3 ? 2 : 3)}>
-          <Checkbox checked={value.auth === 3} indeterminate={extra?.required.indeterminate} />
-          {extra?.required.label && <span className={styles.label}>{extra.required.label}</span>}
-        </span>
-      </div>
+
+      {max > 1 && (
+        <div className={styles.cell}>
+          <span className={styles.checkbox} onClickCapture={() => handleAuthChange(value.auth > 1 ? 1 : 2)}>
+            <Checkbox checked={value.auth > 1} indeterminate={extra?.edit.indeterminate} />
+            {extra?.edit.label && <span className={styles.label}>{extra.edit.label}</span>}
+          </span>
+        </div>
+      )}
+      {max > 2 && (
+        <div className={styles.cell}>
+          <span className={styles.checkbox} onClickCapture={() => handleAuthChange(value.auth === 3 ? 2 : 3)}>
+            <Checkbox checked={value.auth === 3} indeterminate={extra?.required.indeterminate} />
+            {extra?.required.label && <span className={styles.label}>{extra.required.label}</span>}
+          </span>
+        </div>
+      )}
     </div>
   );
 });
 
 interface FieldAuthsProps {
+  max?: FieldAuth['auth'];
   value?: FieldAuthsMap;
   onChange?(value: this['value']): void;
   templates: FieldTemplate[];
 }
 
 function FieldAuths(props: FieldAuthsProps) {
-  const { value, onChange, templates } = props;
+  const { value, onChange, templates, max } = props;
   const memoValueInfo = useMemo(() => {
     const valueMaps: { [key: string]: FieldAuth } = {};
     const statistic: FieldRowProps['extra'] = {
@@ -157,9 +164,15 @@ function FieldAuths(props: FieldAuthsProps) {
 
   return (
     <div>
-      <FieldRow className={styles.title} value={total.value} extra={total.extra} onChange={handleTotalChange} />
+      <FieldRow
+        max={max}
+        className={styles.title}
+        value={total.value}
+        extra={total.extra}
+        onChange={handleTotalChange}
+      />
       {templates.map((field) => {
-        return <FieldRow key={field.id} value={valueMaps[field.id]} onChange={handleFieldChange} />;
+        return <FieldRow max={max} key={field.id} value={valueMaps[field.id]} onChange={handleFieldChange} />;
       })}
     </div>
   );

@@ -1,18 +1,18 @@
 import { memo, ReactNode, useCallback, useState, useMemo } from 'react';
 import classnames from 'classnames';
 import { Icon, PopoverConfirm } from '@common/components';
-import { delNode, flowDataSelector } from '../../flow-slice';
+import { delNode, flowDataSelector, setChoosedNode } from '../../flow-slice';
 import { NodeType, AllNode, BranchNode } from '@type/flow';
 import AddNodeButton from '../../editor/components/add-node-button';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import useMemoCallback from '@common/hooks/use-memo-callback';
 import styles from './index.module.scss';
 
 interface BaseProps {
-  onClick(): void;
-  children: ReactNode;
   icon: ReactNode;
   node: Exclude<AllNode, BranchNode>;
   onDelete?(): void;
+  children: ReactNode;
 }
 
 interface CardHeaderProps {
@@ -30,6 +30,8 @@ export const CardHeader = memo(function CardHeader(props: CardHeaderProps) {
       return styles['audit-node'];
     } else if (type === NodeType.FillNode) {
       return styles['fill-node'];
+    } else if (type === NodeType.CCNode) {
+      return styles['cc-node'];
     }
 
     return '';
@@ -46,15 +48,18 @@ export const CardHeader = memo(function CardHeader(props: CardHeaderProps) {
 function Base(props: BaseProps) {
   const dispatch = useAppDispatch();
   const { invalidNodesMap } = useAppSelector(flowDataSelector);
-  const { icon, node, onClick, children } = props;
+  const { icon, node, children } = props;
   const { type, name } = node;
   const [showDeletePopover, setShowDeletePopover] = useState(false);
   const handleDeleteConfirm = useCallback(() => {
     dispatch(delNode(node.id));
   }, [dispatch, node.id]);
+  const handleNodeClick = useMemoCallback(() => {
+    dispatch(setChoosedNode(node));
+  });
 
   const showDelete = useMemo(() => {
-    return type === NodeType.AuditNode || type === NodeType.FillNode;
+    return type === NodeType.AuditNode || type === NodeType.FillNode || type === NodeType.CCNode;
   }, [type]);
 
   return (
@@ -63,7 +68,7 @@ function Base(props: BaseProps) {
         className={classnames(styles.card, {
           [styles.invalid]: invalidNodesMap[node.id] && invalidNodesMap[node.id].errors.length > 0,
         })}
-        onClick={onClick}
+        onClick={handleNodeClick}
       >
         <CardHeader icon={icon} type={node.type}>
           {node.name}

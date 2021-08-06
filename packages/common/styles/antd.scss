@@ -37,25 +37,28 @@
   &.ant-btn-background-ghost {
     color: $primary-color;
     border-radius: 3px;
-    border: 1px solid rgba(76, 92, 219, 0.8);
-    &:hover {
-      border: 1px solid rgba(76, 92, 219, 0.5);
-      color: rgba(76, 92, 219, 0.8);
-    }
-    &.disabled {
-      border: 1px solid rgba(76, 92, 219, 0.5);
-      color: rgba(76, 92, 219, 0.5);
-    }
-  }
+    border-color: rgba($primary-color, 0.8);
 
-  &:hover {
-    background-color: #6774e0;
-    border-color: #6774e0;
+    &:focus {
+      border-color: $primary-color;
+      color: $primary-color;
+    }
+
+    &:hover {
+      border-color: rgba($primary-color, 0.5);
+      color: rgba($primary-color, 0.8);
+    }
+
+    &.disabled {
+      border-color: rgba(#a6ace2, 0.5);
+      color: rgba($primary-color, 0.5);
+    }
   }
 
   &.disabled {
     background-color: #a6ace2;
   }
+
   &[disabled] {
     background-color: #a6ace2;
     &:hover {
@@ -97,7 +100,7 @@
 }
 
 .ant-switch-checked {
-  background-color: #4c5cdb;
+  background-color: $primary-color;
 
   .ant-switch-handle {
     left: calc(100% - 20px - 2px);
@@ -250,6 +253,7 @@
       }
     }
   }
+
   .ant-form-item-explain {
     line-height: 32px;
     font-size: 12px;
@@ -258,9 +262,20 @@
       color: #ff5568;
     }
   }
+
+  .ant-form-item-explain {
+    line-height: 24px;
+  }
 }
 // 定制checkbox
+.ant-checkbox-wrapper.ant-checkbox-wrapper {
+  line-height: 1;
+  font-size: 0;
+}
+
 .ant-checkbox {
+  top: 0;
+
   &.ant-checkbox-disabled {
     & + span {
       color: #181f43;

@@ -5,18 +5,16 @@ import debounce from 'lodash/debounce';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import MemberSelector from '../components/member-selector';
 import { updateNode, flowDataSelector } from '../../flow-slice';
-import { FillNode, AllNode } from '@type/flow';
+import { FillNode } from '@type/flow';
 import ButtonConfigs from './button-configs';
 import FieldAuths from '../components/field-auths';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { trimInputValue } from '../../util';
 import { name } from '@common/rule';
 import useValidateForm from '../../hooks/use-validate-form';
-import styles from './index.module.scss';
 
 interface FillNodeEditorProps {
   node: FillNode;
-  prevNodes: AllNode[];
 }
 
 type FormValuesType = {
@@ -28,7 +26,7 @@ type FormValuesType = {
 
 function FillNodeEditor(props: FillNodeEditorProps) {
   const dispatch = useAppDispatch();
-  const { node, prevNodes } = props;
+  const { node } = props;
   const { fieldsTemplate } = useAppSelector(flowDataSelector);
   const [form] = Form.useForm<FormValuesType>();
 
@@ -101,7 +99,6 @@ function FillNodeEditor(props: FillNodeEditorProps) {
 
   return (
     <Form
-      className={styles.form}
       form={form}
       layout="vertical"
       initialValues={formInitialValues}
@@ -115,7 +112,7 @@ function FillNodeEditor(props: FillNodeEditorProps) {
         <MemberSelector />
       </Form.Item>
       <Form.Item label="操作权限" name="btnText" rules={buttonRules}>
-        <ButtonConfigs prevNodes={prevNodes} />
+        <ButtonConfigs />
       </Form.Item>
       <Form.Item label="字段权限" name="fieldsAuths">
         <FieldAuths templates={fieldsTemplate} />

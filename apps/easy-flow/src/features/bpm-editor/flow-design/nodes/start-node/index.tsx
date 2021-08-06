@@ -1,19 +1,14 @@
 import { memo, useMemo } from 'react';
 import { Icon } from '@common/components';
-import useMemoCallback from '@common/hooks/use-memo-callback';
 import { StartNode as StartNodeType, TriggerType } from '@type/flow';
 import Base from '../base-node';
 
 interface StartNodeProps {
   node: StartNodeType;
-  onClick(node: StartNodeType): void;
 }
 
 function StartNode(props: StartNodeProps) {
-  const { node, onClick } = props;
-  const handleClick = useMemoCallback(() => {
-    onClick(node);
-  });
+  const { node } = props;
 
   const textDescription = useMemo(() => {
     if (node.trigger.type === TriggerType.MANUAL) {
@@ -28,7 +23,7 @@ function StartNode(props: StartNodeProps) {
   }, [node.trigger.type]);
 
   return (
-    <Base node={node} onClick={handleClick} icon={<Icon type="baocunbingzhixing" />}>
+    <Base node={node} icon={<Icon type="baocunbingzhixing" />}>
       {textDescription}
     </Base>
   );

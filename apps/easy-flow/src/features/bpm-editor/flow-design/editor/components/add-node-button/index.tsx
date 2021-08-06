@@ -19,11 +19,13 @@ function AddNodeButton(props: AddNodeButtonProps) {
   const dispatch = useAppDispatch();
   const [showAddPopover, setShowAddPopover] = useState(false);
 
-  const handleAddNode = useMemoCallback((type: NodeType.AuditNode | NodeType.FillNode) => {
-    // 将业务逻辑放在redux里处理
-    dispatch(addNode({ prevId, type }));
-    setShowAddPopover(false);
-  });
+  const handleAddNode = useMemoCallback(
+    (type: NodeType.AuditNode | NodeType.FillNode | NodeType.CCNode | NodeType.BranchNode) => {
+      // 将业务逻辑放在redux里处理
+      dispatch(addNode({ prevId, type }));
+      setShowAddPopover(false);
+    },
+  );
 
   const addPopoverContent = useMemo(() => {
     return (
@@ -36,6 +38,16 @@ function AddNodeButton(props: AddNodeButtonProps) {
           <Icon type="linetianxiejiedian" />
           <span>添加填写节点</span>
         </div>
+        {/* 
+        <div onClick={() => handleAddNode(NodeType.BranchNode)}>
+          <Icon type="linetianxiejiedian" />
+          <span>添加分支节点</span>
+        </div> */}
+
+        {/* <div onClick={() => handleAddNode(NodeType.CCNode)}>
+          <Icon type="linetianxiejiedian" />
+          <span>添加抄送节点</span>
+        </div> */}
       </div>
     );
   }, [handleAddNode]);

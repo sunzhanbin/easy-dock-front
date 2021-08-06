@@ -35,11 +35,8 @@ const Project = (props: ProjectProps) => {
   // 编辑项目
   const handleEditing = useCallback(async () => {
     if (formRef.current) {
-      try {
-        await onUpdate(Object.assign({}, data, await formRef.current.validateFields()));
-      } finally {
-        setCurrentProjectIsEditing(false);
-      }
+      await onUpdate(Object.assign({}, data, await formRef.current.validateFields()));
+      setCurrentProjectIsEditing(false);
     }
   }, [onUpdate, data]);
 
