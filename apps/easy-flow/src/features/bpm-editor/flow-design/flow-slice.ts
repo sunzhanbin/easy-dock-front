@@ -413,3 +413,8 @@ export const choosePrevNodesSelector = createSelector(
     return [];
   },
 );
+
+export const fieldsTemplateSelector = createSelector(
+  (state: RootState) => state.flow.fieldsTemplate,
+  (fieldsTemplate) => fieldsTemplate,
+);

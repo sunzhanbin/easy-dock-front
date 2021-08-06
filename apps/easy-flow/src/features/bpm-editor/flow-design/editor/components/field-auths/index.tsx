@@ -5,7 +5,7 @@ import useMemoCallback from '@common/hooks/use-memo-callback';
 import { FieldAuthsMap, AuthType, FieldTemplate } from '@type/flow';
 import styles from './index.module.scss';
 
-type FieldAuth = FieldTemplate & { auth: AuthType };
+type FieldAuth = Omit<FieldTemplate, 'type'> & { auth: AuthType };
 
 interface FieldRowProps {
   value: FieldAuth;
