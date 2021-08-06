@@ -160,12 +160,38 @@ export type ErrorItem = {
   content: string;
 };
 
+export type filedRule = {
+  field: { name: string; id: string };
+  symbol: string;
+  value?: string | number | string[] | [number, number];
+};
+// 值改变时规则
+export type FormChangeRule = {
+  filedRule: filedRule[][];
+  showComponents: { name: string; id: string }[];
+  hideComponents: { name: string; id: string }[];
+};
+// 进入表单时规则
+export type FormInitRule = {
+  interfaceName: string;
+  interfaceUrl: string;
+  requestParams: { position: string; name: string; componentName: string }[];
+  responseParams: { name: string; componentName: string }[];
+};
+
+export type FormRuleItem = {
+  type: 'change' | 'init';
+  formChangeRule?: FormChangeRule;
+  formInitRule?: FormInitRule;
+};
+
 export type FormDesign = {
   formId?: string;
   selectedField: string | null;
   byId: FormFieldMap;
   layout: string[][];
   errors: ErrorItem[];
+  formRules: FormRuleItem[];
   schema: Schema;
   isDirty: boolean;
   subAppInfo: {

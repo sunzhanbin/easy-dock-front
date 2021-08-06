@@ -13,7 +13,7 @@ import { Icon } from '@common/components';
 
 const { Option } = Select;
 
-interface FormEditorProps {
+interface CompAttrEditorProps {
   config: SchemaConfigItem[];
   initValues: FormField;
   componentId: string;
@@ -26,7 +26,7 @@ const options = [
   { label: '1', value: '4' },
 ];
 
-const FormEditor = (props: FormEditorProps) => {
+const CompAttrEditor = (props: CompAttrEditorProps) => {
   const { config, initValues, componentId, onSave } = props;
   const [form] = Form.useForm();
   const errors = useAppSelector(errorSelector);
@@ -199,4 +199,4 @@ const FormEditor = (props: FormEditorProps) => {
   );
 };
 
-export default memo(FormEditor);
+export default memo(CompAttrEditor);

@@ -1,11 +1,15 @@
 import { memo, useEffect, useState, useMemo, useCallback } from 'react';
-import FormEditor from '@/components/panel-components/form-editor';
+import CompAttrEditor from '@/components/panel-components/comp-attr-editor';
+import FormAttrEditor from '@/components/panel-components/form-attr-editor';
 import { store } from '@app/store';
 import { editProps } from '../formdesign-slice';
 import { FieldType, SchemaConfigItem } from '@/type';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { componentPropsSelector, selectedFieldSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
+import { Tabs } from 'antd';
 import styles from './index.module.scss';
+
+const { TabPane } = Tabs;
 
 const EditZone = () => {
   const dispatch = useAppDispatch();
@@ -41,12 +45,24 @@ const EditZone = () => {
   const renderTitle = useMemo(() => <div className={styles.edit_title}>{title}</div>, [title]);
   return (
     <div className={styles.container}>
-      {selectedField ? (
-        <>
-          {renderTitle}
-          <FormEditor config={editList} initValues={byId[selectedField]} onSave={onSave} componentId={selectedField} />
-        </>
-      ) : null}
+      <Tabs defaultActiveKey="1">
+        <TabPane tab="控件属性" key="1">
+          {selectedField ? (
+            <>
+              {renderTitle}
+              <CompAttrEditor
+                config={editList}
+                initValues={byId[selectedField]}
+                onSave={onSave}
+                componentId={selectedField}
+              />
+            </>
+          ) : null}
+        </TabPane>
+        <TabPane tab="表单属性" key="2">
+          <FormAttrEditor />
+        </TabPane>
+      </Tabs>
     </div>
   );
 };

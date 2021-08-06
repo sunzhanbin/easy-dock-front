@@ -1,0 +1,94 @@
+.condition {
+  .title {
+    height: 32px;
+    line-height: 32px;
+  }
+  .ruleList {
+    .ruleBlock {
+      padding: 8px;
+      background-color: rgba(244, 245, 245, 1);
+      .rule {
+        display: flex;
+        position: relative;
+        .form {
+          flex: 1;
+        }
+        .delete {
+          visibility: hidden;
+          flex: 0 0 32px;
+          width: 32px;
+          margin-top: 6px;
+          text-align: center;
+          cursor: pointer;
+          svg {
+            height: 20px;
+            line-height: 20px;
+            font-size: 20px;
+            &:hover {
+              color: #4c5cdb;
+            }
+          }
+        }
+        &:hover {
+          .delete {
+            visibility: visible;
+          }
+        }
+      }
+      .and {
+        display: flex;
+        width: 70px;
+        height: 20px;
+        line-height: 20px;
+        margin-top: 8px;
+        cursor: pointer;
+        .add {
+          position: relative;
+          display: inline-block;
+          width: 20px;
+          height: 20px;
+          border-radius: 12px;
+          border: 1px solid #dcdcdc;
+          margin-right: 4px;
+          & > svg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 16px;
+            &:hover {
+              color: #4c5cdb;
+            }
+          }
+        }
+      }
+    }
+    .or {
+      margin: 8px 0;
+    }
+    .addOr {
+      display: flex;
+      width: 70px;
+      height: 20px;
+      line-height: 20px;
+      margin-top: 12px;
+      cursor: pointer;
+      .add {
+        position: relative;
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border-radius: 12px;
+        border: 1px solid #dcdcdc;
+        margin-right: 4px;
+        & > svg {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          font-size: 16px;
+        }
+      }
+    }
+  }
+}
