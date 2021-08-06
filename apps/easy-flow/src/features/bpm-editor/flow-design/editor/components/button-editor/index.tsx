@@ -27,14 +27,16 @@ function ButtonEditor(props: ButtonEditorProps) {
         }}
         size="large"
       />
-      <Checkbox
-        className={styles.choose}
-        checked={enable}
-        disabled={!checkable}
-        onChange={(event) => {
-          onChange(btnKey, { text, enable: event.target.checked });
-        }}
-      />
+      {checkable && (
+        <Checkbox
+          className={styles.choose}
+          checked={enable}
+          disabled={!checkable}
+          onChange={(event) => {
+            onChange(btnKey, { text, enable: event.target.checked });
+          }}
+        />
+      )}
     </div>
   );
 }

@@ -56,12 +56,12 @@ const flowInitial: FlowType = {
 
 function flowRecursion(flowData: Flow, callBack: (node: AllNode) => void) {
   flowData.forEach((node) => {
+    callBack(node);
+
     if (node.type === NodeType.BranchNode) {
       node.branches.forEach((sBranch) => {
         flowRecursion(sBranch.nodes, callBack);
       });
-    } else {
-      callBack(node);
     }
   });
 }
@@ -103,8 +103,13 @@ const flow = createSlice({
       state.data = flowUpdate(current(state.data), prevId, node as any);
       state.dirty = true;
     },
-    updateNode(state, { payload: node }: PayloadAction<AllNode>) {
-      state.data = flowUpdate(state.data, node.id, node);
+    updateNode(state, { payload: node }: PayloadAction<AllNode | SubBranch>) {
+      if (node.type === NodeType.SubBranch) {
+        state.data = branchUpdate(state.data, node);
+      } else {
+        state.data = flowUpdate(state.data, node.id, node);
+      }
+
       state.dirty = true;
       state.invalidNodesMap = {
         ...state.invalidNodesMap,
@@ -113,10 +118,6 @@ const flow = createSlice({
           errors: [],
         },
       };
-    },
-    updateBranch(state, { payload: branch }: PayloadAction<SubBranch>) {
-      state.data = branchUpdate(state.data, branch);
-      state.dirty = true;
     },
     delNode(state, { payload: nodeId }: PayloadAction<string>) {
       state.data = flowUpdate(state.data, nodeId, null);
@@ -128,16 +129,7 @@ const flow = createSlice({
 });
 
 const flowActions = flow.actions;
-export const {
-  setLoading,
-  updateNode,
-  delNode,
-  setCacheMembers,
-  setDirty,
-  setSaving,
-  updateBranch,
-  setChoosedNode,
-} = flow.actions;
+export const { setLoading, updateNode, delNode, setCacheMembers, setDirty, setSaving, setChoosedNode } = flow.actions;
 
 // 加载应用的流程，对于初始创建的应用是null
 export const load = createAsyncThunk('flow/load', async (appkey: string, { dispatch }) => {
@@ -149,10 +141,14 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
     // 获取流程数据和所需字段
     let [{ data: flowResponse }, { data: fields }] = await Promise.all([
       builderAxios.get<{ data: { meta: Flow | null } }>(`/process/${appkey}`),
-      builderAxios.get<{ data: { field: string; name: string }[] }>(`/form/subapp/${appkey}/components`),
+      builderAxios.get<{ data: { field: string; name: string; type: string }[] }>(`/form/subapp/${appkey}/components`),
     ]);
 
-    const fieldsTemplate: FlowType['fieldsTemplate'] = fields.map((item) => ({ name: item.name, id: item.field }));
+    const fieldsTemplate: FlowType['fieldsTemplate'] = fields.map((item) => ({
+      name: item.name,
+      id: item.field,
+      type: item.type,
+    }));
     let flowData = flowResponse.meta || [];
 
     if (!flowData.length) {
@@ -197,6 +193,11 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
             });
 
             node.fieldsAuths = fieldsAuths;
+          });
+        } else if (node.type === NodeType.BranchNode) {
+          node.branches.forEach((branch) => {
+            // TODO 删除分支条件里多余字段
+            console.log(branch.conditions);
           });
         }
       });
@@ -284,6 +285,7 @@ export const saveWithForm = createAsyncThunk<void, string, { state: RootState }>
       const components = formDesign.byId;
       const fieldsTemplate: FlowType['fieldsTemplate'] = [];
 
+      // 根据form重新计算fieldsTemplate
       (formDesign.layout || []).forEach((row) => {
         row.forEach((componentId) => {
           const key = components[componentId].fieldName;
@@ -293,6 +295,7 @@ export const saveWithForm = createAsyncThunk<void, string, { state: RootState }>
           fieldsTemplate.push({
             id: components[componentId].fieldName,
             name: components[componentId].label,
+            type: components[componentId].type,
           });
         });
       });

@@ -134,7 +134,7 @@ function ButtonConfigs(props: ButtonConfigsProps) {
         allowClear={false}
       />
 
-      {/* <ButtonEditor
+      <ButtonEditor
         className={styles.editor}
         text={btnText?.transfer?.text}
         enable={btnText?.transfer?.enable}
@@ -142,7 +142,7 @@ function ButtonConfigs(props: ButtonConfigsProps) {
         onChange={handleButtonChange}
       >
         <Button size="large">转办</Button>
-      </ButtonEditor> */}
+      </ButtonEditor>
 
       <ButtonEditor
         className={styles.editor}

@@ -148,6 +148,6 @@ export type AllNode = StartNode | AuditNode | FillNode | BranchNode | FinishNode
 
 export type Flow = AllNode[];
 
-export type FieldTemplate = { id: string; name: string };
+export type FieldTemplate = { id: string; name: string; type: string };
 
 export type AddableNode = AuditNode | FillNode | BranchNode | CCNode | BranchNode | SubBranch;
