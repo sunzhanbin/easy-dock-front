@@ -4,7 +4,14 @@ import { Drawer } from 'antd';
 import { Loading, Icon } from '@common/components';
 import { NodeType } from '@type/flow';
 import { CardHeader } from './nodes';
-import { StartNodeEditor, AuditNodeEditor, FillNodeEditor, CCNodeEditor, FinishNodeEditor } from './editor';
+import {
+  StartNodeEditor,
+  AuditNodeEditor,
+  FillNodeEditor,
+  CCNodeEditor,
+  FinishNodeEditor,
+  SubBranchEditor,
+} from './editor';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { load, flowDataSelector, save, setChoosedNode } from './flow-slice';
 import useMemoCallback from '@common/hooks/use-memo-callback';
@@ -41,41 +48,45 @@ function FlowDesign() {
   }, [dispatch, bpmId]);
 
   const drawerHeader = useMemo(() => {
-    if (choosedNode) {
-      if (choosedNode.type === NodeType.AuditNode) {
-        return (
-          <CardHeader icon={<Icon type="shenhejiedian" />} type={choosedNode.type}>
-            审批节点
-          </CardHeader>
-        );
-      } else if (choosedNode.type === NodeType.StartNode) {
-        return (
-          <CardHeader icon={<Icon type="baocunbingzhixing" />} type={choosedNode.type}>
-            开始节点
-          </CardHeader>
-        );
-      } else if (choosedNode.type === NodeType.FinishNode) {
-        return (
-          <CardHeader icon={<Icon type="jieshujiedian" />} type={choosedNode.type}>
-            结束节点
-          </CardHeader>
-        );
-      } else if (choosedNode.type === NodeType.FillNode) {
-        return (
-          <CardHeader icon={<Icon type="tianxiejiedian" />} type={choosedNode.type}>
-            填写节点
-          </CardHeader>
-        );
-      } else if (choosedNode.type === NodeType.CCNode) {
-        return (
-          <CardHeader icon={<Icon type="yonghujiedian" />} type={choosedNode.type}>
-            抄送节点
-          </CardHeader>
-        );
-      }
+    if (!choosedNode) {
+      return null;
     }
 
-    return null;
+    if (choosedNode.type === NodeType.SubBranch) {
+      return <div className={styles['branch-title']}>分支节点</div>;
+    }
+
+    if (choosedNode.type === NodeType.AuditNode) {
+      return (
+        <CardHeader icon={<Icon type="shenhejiedian" />} type={choosedNode.type}>
+          审批节点
+        </CardHeader>
+      );
+    } else if (choosedNode.type === NodeType.StartNode) {
+      return (
+        <CardHeader icon={<Icon type="baocunbingzhixing" />} type={choosedNode.type}>
+          开始节点
+        </CardHeader>
+      );
+    } else if (choosedNode.type === NodeType.FinishNode) {
+      return (
+        <CardHeader icon={<Icon type="jieshujiedian" />} type={choosedNode.type}>
+          结束节点
+        </CardHeader>
+      );
+    } else if (choosedNode.type === NodeType.FillNode) {
+      return (
+        <CardHeader icon={<Icon type="tianxiejiedian" />} type={choosedNode.type}>
+          填写节点
+        </CardHeader>
+      );
+    } else if (choosedNode.type === NodeType.CCNode) {
+      return (
+        <CardHeader icon={<Icon type="yonghujiedian" />} type={choosedNode.type}>
+          抄送节点
+        </CardHeader>
+      );
+    }
   }, [choosedNode]);
 
   return (
@@ -106,6 +117,8 @@ function FlowDesign() {
           {choosedNode && choosedNode.type === NodeType.CCNode && <CCNodeEditor node={choosedNode} />}
 
           {choosedNode && choosedNode.type === NodeType.FinishNode && <FinishNodeEditor node={choosedNode} />}
+
+          {choosedNode && choosedNode.type === NodeType.SubBranch && <SubBranchEditor branch={choosedNode} />}
         </div>
       </Drawer>
     </div>

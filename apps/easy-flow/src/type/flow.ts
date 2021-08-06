@@ -11,6 +11,8 @@ export enum NodeType {
   FinishNode = 5,
   // 抄送节点
   CCNode = 6,
+  // 分支
+  SubBranch = 7,
 }
 
 export enum AuthType {
@@ -83,10 +85,17 @@ type BranchCondition = {
   value: string;
 };
 // 分支节点
+
+export interface SubBranch {
+  type: NodeType.SubBranch;
+  id: string;
+  nodes: AllNode[];
+  conditions: BranchCondition[];
+}
 export interface BranchNode {
   id: string;
   type: NodeType.BranchNode;
-  branches: { id: string; nodes: AllNode[]; conditions: BranchCondition[] }[];
+  branches: SubBranch[];
 }
 
 export interface FinishNode extends BaseNode {
@@ -141,4 +150,4 @@ export type Flow = AllNode[];
 
 export type FieldTemplate = { id: string; name: string };
 
-export type AddableNode = AuditNode | FillNode | BranchNode | CCNode | BranchNode;
+export type AddableNode = AuditNode | FillNode | BranchNode | CCNode | BranchNode | SubBranch;

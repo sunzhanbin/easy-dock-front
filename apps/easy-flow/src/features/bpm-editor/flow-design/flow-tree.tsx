@@ -1,6 +1,6 @@
-import { Fragment, memo } from 'react';
+import { memo } from 'react';
 import { AllNode, NodeType } from '@type/flow';
-import { StartNode, AuditNode, FillNode, FinishNode, CCNode } from './nodes';
+import { StartNode, AuditNode, FillNode, FinishNode, CCNode, BranchNode, Branch } from './nodes';
 
 interface FlowTreeProps {
   data: AllNode[];
@@ -35,16 +35,13 @@ function FlowTree(props: FlowTreeProps) {
 
           case NodeType.BranchNode: {
             return (
-              <div>
-                {node.branches.map((branch) => {
-                  return (
-                    <Fragment key={branch.id}>
-                      <div>分支</div>
-                      <FlowTree data={branch.nodes} />
-                    </Fragment>
-                  );
-                })}
-              </div>
+              <BranchNode key={node.id} data={node}>
+                {node.branches.map((branch) => (
+                  <Branch key={branch.id} data={branch} parentNode={node}>
+                    {<FlowTree data={branch.nodes} />}
+                  </Branch>
+                ))}
+              </BranchNode>
             );
           }
 

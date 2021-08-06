@@ -38,11 +38,11 @@ function AddNodeButton(props: AddNodeButtonProps) {
           <Icon type="linetianxiejiedian" />
           <span>添加填写节点</span>
         </div>
-
+        {/* 
         <div onClick={() => handleAddNode(NodeType.BranchNode)}>
           <Icon type="linetianxiejiedian" />
           <span>添加分支节点</span>
-        </div>
+        </div> */}
 
         {/* <div onClick={() => handleAddNode(NodeType.CCNode)}>
           <Icon type="linetianxiejiedian" />

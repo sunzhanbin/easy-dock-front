@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction, createAsyncThunk, createSelector } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, createAsyncThunk, createSelector, current } from '@reduxjs/toolkit';
 import { message } from 'antd';
 import { cloneDeep, isEqual } from 'lodash';
 import { builderAxios, runtimeAxios } from '@utils';
@@ -6,6 +6,8 @@ import { User } from '@type';
 import {
   AllNode,
   AddableNode,
+  SubBranch,
+  BranchNode,
   NodeType,
   StartNode,
   FinishNode,
@@ -16,27 +18,29 @@ import {
   FieldAuthsMap,
   FieldTemplate,
 } from '@type/flow';
-import { RootState } from '@app/store';
-import { fielduuid, createNode } from './util';
-import { validName } from '@common/rule';
+import { store, RootState } from '@app/store';
+import {
+  fielduuid,
+  createNode,
+  flowUpdate,
+  branchUpdate,
+  valid,
+  ValidResultType,
+  findPrevNodes,
+  getFieldsTemplate,
+} from './util';
 
 export type FlowType = {
   loading: boolean;
   saving: boolean;
   data: Flow;
   dirty: boolean;
-  invalidNodesMap: {
-    [key: string]: {
-      errors: string[];
-      id: string;
-      name: string;
-    };
-  };
+  invalidNodesMap: ValidResultType;
   cacheMembers: {
     [loginName: string]: User;
   };
   fieldsTemplate: FieldTemplate[];
-  choosedNode: AllNode | null;
+  choosedNode: AllNode | null | BranchNode['branches'][number];
 };
 
 const flowInitial: FlowType = {
@@ -50,91 +54,7 @@ const flowInitial: FlowType = {
   choosedNode: null,
 };
 
-function flowUpdate(data: AllNode[], targetId: string, newNode: AllNode | null): AllNode[] {
-  let tIndex = data.findIndex((subNode) => subNode.id === targetId);
-
-  if (tIndex >= 0) {
-    if (!newNode) {
-      return data.slice(0, tIndex).concat(data.slice(tIndex + 1));
-    }
-
-    if (newNode.id === targetId) {
-      return data
-        .slice(0, tIndex)
-        .concat(newNode)
-        .concat(data.slice(tIndex + 1));
-    } else {
-      return data
-        .slice(0, tIndex + 1)
-        .concat(newNode)
-        .concat(data.slice(tIndex + 1));
-    }
-  } else {
-    return data.map((subNode) => {
-      if (subNode.type === NodeType.BranchNode) {
-        return {
-          ...subNode,
-          branches: subNode.branches.map((subBranch) => {
-            return {
-              ...subBranch,
-              nodes: flowUpdate(subBranch.nodes, targetId, newNode),
-            };
-          }),
-        };
-      } else {
-        return subNode;
-      }
-    });
-  }
-}
-
-function valid(data: AllNode[], validRes: FlowType['invalidNodesMap']) {
-  data.forEach((node) => {
-    if (node.type === NodeType.BranchNode) {
-      node.branches.forEach((branch) => {
-        valid(branch.nodes, validRes);
-      });
-      return;
-    }
-
-    const errors = [];
-    if (!node.name) {
-      errors.push('未输入节点名称');
-    } else {
-      const error = validName(node.name);
-      if (error) {
-        errors.push(error);
-      }
-    }
-
-    if (node.type === NodeType.StartNode) {
-    } else if (node.type === NodeType.AuditNode) {
-      if (!node.correlationMemberConfig.members.length) {
-        errors.push('请选择办理人');
-      }
-    } else if (node.type === NodeType.FillNode) {
-      if (!node.btnText || Object.keys(node.btnText).length === 0) {
-        errors.push('请配置按钮');
-      }
-
-      if (!node.correlationMemberConfig.members.length) {
-        errors.push('请选择办理人');
-      }
-    }
-
-    if (errors.length) {
-      validRes[node.id] = {
-        errors,
-        id: node.id,
-        name: node.name,
-      };
-    }
-  });
-
-  return validRes;
-}
-
-function flowRecursion(flowData: Flow, callBack: (node: AllNode) => any) {
+function flowRecursion(flowData: Flow, callBack: (node: AllNode) => void) {
   flowData.forEach((node) => {
     if (node.type === NodeType.BranchNode) {
       node.branches.forEach((sBranch) => {
@@ -174,13 +94,13 @@ const flow = createSlice({
     setInitialFlow(state, { payload: data }: PayloadAction<Flow>) {
       state.data = data;
     },
-    setChoosedNode(state, { payload: data }: PayloadAction<AllNode | null>) {
+    setChoosedNode(state, { payload: data }: PayloadAction<FlowType['choosedNode']>) {
       state.choosedNode = data;
     },
     addNode(state, { payload }: PayloadAction<{ prevId: string; node: AddableNode }>) {
       const { prevId, node } = payload;
 
-      state.data = flowUpdate(state.data, prevId, node);
+      state.data = flowUpdate(current(state.data), prevId, node as any);
       state.dirty = true;
     },
     updateNode(state, { payload: node }: PayloadAction<AllNode>) {
@@ -194,6 +114,10 @@ const flow = createSlice({
         },
       };
     },
+    updateBranch(state, { payload: branch }: PayloadAction<SubBranch>) {
+      state.data = branchUpdate(state.data, branch);
+      state.dirty = true;
+    },
     delNode(state, { payload: nodeId }: PayloadAction<string>) {
       state.data = flowUpdate(state.data, nodeId, null);
       state.dirty = true;
@@ -204,15 +128,16 @@ const flow = createSlice({
 });
 
 const flowActions = flow.actions;
-export const { setLoading, updateNode, delNode, setCacheMembers, setDirty, setSaving, setChoosedNode } = flow.actions;
-
-function getFieldsTemplate(fieldsTemplate: FlowType['fieldsTemplate']) {
-  return fieldsTemplate.reduce((fieldsAuths, item) => {
-    fieldsAuths[item.id] = AuthType.View;
-
-    return fieldsAuths;
-  }, <FieldAuthsMap>{});
-}
+export const {
+  setLoading,
+  updateNode,
+  delNode,
+  setCacheMembers,
+  setDirty,
+  setSaving,
+  updateBranch,
+  setChoosedNode,
+} = flow.actions;
 
 // 加载应用的流程，对于初始创建的应用是null
 export const load = createAsyncThunk('flow/load', async (appkey: string, { dispatch }) => {
@@ -417,6 +342,27 @@ export const saveWithForm = createAsyncThunk<void, string, { state: RootState }>
   },
 );
 
+export const addSubBranch = createAsyncThunk<void, BranchNode>('flow/add-subbranch', (branchNode, { dispatch }) => {
+  dispatch(
+    flowActions.updateNode({
+      ...branchNode,
+      branches: branchNode.branches.concat(createNode(NodeType.SubBranch)),
+    }),
+  );
+});
+
+export const delSubBranch = createAsyncThunk<void, { branchNode: BranchNode; targetId: string }>(
+  'flow/del-subbranch',
+  ({ branchNode, targetId }, { dispatch }) => {
+    dispatch(
+      flowActions.updateNode({
+        ...branchNode,
+        branches: branchNode.branches.filter((branch) => branch.id !== targetId),
+      }),
+    );
+  },
+);
+
 export const addNode = createAsyncThunk<void, { prevId: string; type: AddableNode['type'] }, { state: RootState }>(
   'flow/create-node',
   ({ prevId, type }, { getState, dispatch }) => {
@@ -454,47 +400,13 @@ export default flow;
 // 聚合form和flow, 因为flow的字段权限需要form的字段信息
 export const flowDataSelector = createSelector([(state: RootState) => state.flow], (flow) => flow);
 
-const findPrevNodes = (() => {
-  let finded = false;
+export const choosePrevNodesSelector = createSelector(
+  (state: RootState) => state.flow.choosedNode?.id,
+  (choosedNodeId) => {
+    if (choosedNodeId) {
+      return findPrevNodes(store.getState().flow.data, choosedNodeId, []);
+    }
 
-  return function findPrevNodes(flow: AllNode[], targetId: string, prevs: AllNode[]) {
-    flow.find((node) => {
-      if (node.id === targetId) {
-        finded = true;
-
-        return true;
-      }
-
-      prevs.push(node);
-
-      if (node.type === NodeType.BranchNode) {
-        // 进入分支节点
-        node.branches.find((branch) => {
-          // 进入子分支
-          findPrevNodes(branch.nodes, targetId, prevs);
-
-          if (!finded) {
-            // 回朔掉之前加入的节点
-            prevs = prevs.slice(0, -1 * branch.nodes.length);
-
-            return false;
-          } else {
-            return true;
-          }
-        });
-      }
-
-      return false;
-    });
-
-    return prevs;
-  };
-})();
-
-export const choosePrevNodesSelector = createSelector([(state: RootState) => state.flow], (flow) => {
-  if (flow.choosedNode) {
-    return findPrevNodes(flow.data, flow.choosedNode.id, []);
-  }
-
-  return [];
-});
+    return [];
+  },
+);
