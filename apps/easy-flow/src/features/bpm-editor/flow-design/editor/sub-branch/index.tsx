@@ -1,10 +1,11 @@
 import { memo, useEffect } from 'react';
-import { Input, Form } from 'antd';
+import { Form } from 'antd';
 import debounce from 'lodash/debounce';
 import { SubBranch as SubBranchType } from '@type/flow';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import { useAppDispatch } from '@/app/hooks';
-import { updateBranch } from '../../flow-slice';
+import Condition from '@components/condition';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { updateNode, fieldsTemplateSelector } from '../../flow-slice';
 
 type FormValuesType = {
   conditions: SubBranchType['conditions'];
@@ -18,10 +19,11 @@ function SubBranch(props: SubBranchProps) {
   const { branch } = props;
   const [form] = Form.useForm();
   const dispatch = useAppDispatch();
+  const fieldsTemplate = useAppSelector(fieldsTemplateSelector);
 
   const handleFormValuesChange = useMemoCallback(
     debounce((_, allValues: FormValuesType) => {
-      dispatch(updateBranch(Object.assign({}, branch, allValues)));
+      dispatch(updateNode(Object.assign({}, branch, allValues)));
     }, 100),
   );
 
@@ -34,7 +36,7 @@ function SubBranch(props: SubBranchProps) {
   return (
     <Form form={form} autoComplete="off" layout="vertical" onValuesChange={handleFormValuesChange}>
       <Form.Item name="conditions" label="流转条件">
-        <Input></Input>
+        <Condition components={fieldsTemplate}></Condition>
       </Form.Item>
     </Form>
   );

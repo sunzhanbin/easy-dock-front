@@ -42,9 +42,9 @@ function AddNodeButton(props: AddNodeButtonProps) {
         <div onClick={() => handleAddNode(NodeType.BranchNode)}>
           <Icon type="linetianxiejiedian" />
           <span>添加分支节点</span>
-        </div> */}
+        </div>
 
-        {/* <div onClick={() => handleAddNode(NodeType.CCNode)}>
+        <div onClick={() => handleAddNode(NodeType.CCNode)}>
           <Icon type="linetianxiejiedian" />
           <span>添加抄送节点</span>
         </div> */}
