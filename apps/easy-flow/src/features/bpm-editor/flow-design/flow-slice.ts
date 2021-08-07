@@ -18,17 +18,8 @@ import {
   FieldAuthsMap,
   FieldTemplate,
 } from '@type/flow';
-import { store, RootState } from '@app/store';
-import {
-  fielduuid,
-  createNode,
-  flowUpdate,
-  branchUpdate,
-  valid,
-  ValidResultType,
-  findPrevNodes,
-  getFieldsTemplate,
-} from './util';
+import { RootState } from '@app/store';
+import { fielduuid, createNode, flowUpdate, branchUpdate, valid, ValidResultType, getFieldsTemplate } from './util';
 
 export type FlowType = {
   loading: boolean;
@@ -402,17 +393,6 @@ export default flow;
 
 // 聚合form和flow, 因为flow的字段权限需要form的字段信息
 export const flowDataSelector = createSelector([(state: RootState) => state.flow], (flow) => flow);
-
-export const choosePrevNodesSelector = createSelector(
-  (state: RootState) => state.flow.choosedNode?.id,
-  (choosedNodeId) => {
-    if (choosedNodeId) {
-      return findPrevNodes(store.getState().flow.data, choosedNodeId, []);
-    }
-
-    return [];
-  },
-);
 
 export const fieldsTemplateSelector = createSelector(
   (state: RootState) => state.flow.fieldsTemplate,

@@ -21,17 +21,10 @@
       display: block;
       padding-right: 5px;
     }
-  }
 
-  &.limit {
-    .cell {
-      &:first-child:nth-last-child(2) {
-        flex-grow: 1;
-      }
-
-      &:nth-child(2):last-child {
-        flex: 0 0 52px;
-      }
+    &:last-child {
+      flex-grow: 0;
+      flex-basis: 52px;
     }
   }
 

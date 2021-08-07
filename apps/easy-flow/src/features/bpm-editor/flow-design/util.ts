@@ -240,42 +240,57 @@ export function valid(data: AllNode[], validRes: ValidResultType) {
   return validRes;
 }
 
-export const findPrevNodes = (() => {
-  let finded = false;
+export const findPrevNodes = (flow: AllNode[], targetId: string): AllNode[] => {
+  function findPrevNodes(flow: AllNode[], targetId: string): [AllNode[], boolean] {
+    let finded = false;
+    let prevs: AllNode[] = [];
 
-  return function findPrevNodes(flow: AllNode[], targetId: string, prevs: AllNode[]) {
-    flow.find((node) => {
+    const targetNodeIndex = flow.findIndex((node) => {
+      if (finded) return true;
+
       if (node.id === targetId) {
-        finded = true;
-
         return true;
       }
 
-      prevs.push(node);
-
       if (node.type === NodeType.BranchNode) {
         // 进入分支节点
-        node.branches.find((branch) => {
+        // 缓存遍历过的节点
+        const caches: AllNode[][] = [];
+        const targetBranchIndex = node.branches.findIndex((branch, index) => {
           // 进入子分支
-          findPrevNodes(branch.nodes, targetId, prevs);
+          const [nodes, success] = findPrevNodes(branch.nodes, targetId);
 
-          if (!finded) {
-            // 回朔掉之前加入的节点
-            prevs = prevs.slice(0, -1 * branch.nodes.length);
+          caches[index] = nodes;
 
-            return false;
-          } else {
-            return true;
-          }
+          return success;
         });
+
+        if (targetBranchIndex !== -1) {
+          // 如果在某一分支下找到了目标节点, 那么其他分支里的节点就不是目标节点上面的节点
+          prevs = prevs.concat(caches[targetBranchIndex]);
+        } else {
+          // 如果没在该分支节点下找到那么把所有遍历过的节点全部都是目标节点的上面的节点
+          caches.forEach((nodes) => {
+            prevs = prevs.concat(nodes);
+          });
+        }
+
+        return targetBranchIndex !== -1;
+      } else {
+        // 分支节点不要插入
+        prevs.push(node);
       }
 
       return false;
     });
 
-    return prevs;
-  };
-})();
+    return [prevs, targetNodeIndex !== -1];
+  }
+
+  const [nodes, success] = findPrevNodes(flow, targetId);
+
+  return success ? nodes : [];
+};
 
 export function getFieldsTemplate(fieldsTemplate: FieldTemplate[]) {
   return fieldsTemplate.reduce((fieldsAuths, item) => {
