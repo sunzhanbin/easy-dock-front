@@ -1,3 +1,4 @@
+import { filedRule } from '@/type';
 import moment from 'moment';
 
 export { default as axios, runtimeAxios, builderAxios } from './axios';
@@ -108,3 +109,32 @@ export function timeDiff(milliseconds: number) {
 
   return timeTextArr.join('');
 }
+
+type Rule = filedRule & { fieldName?: string; fieldType?: string };
+// 格式化条件
+export function formatCondition(rules: Rule[][]) {
+  return rules.map((ruleBlock) => {
+    return ruleBlock.map((rule) => {
+      const symbol = symbolMap[rule.symbol].label;
+      return Object.assign({}, rule, { symbol });
+    });
+  });
+}
+
+// 条件符号映射
+export const symbolMap: { [k in string]: { value: string; label: string } } = {
+  equal: { value: 'equal', label: '等于' },
+  unequal: { value: 'unequal', label: '不等于' },
+  greater: { value: 'greater', label: '大于' },
+  greaterOrEqual: { value: 'greaterOrEqual', label: '大于等于' },
+  less: { value: 'less', label: '小于' },
+  lessOrEqual: { value: 'lessOrEqual', label: '小于等于' },
+  range: { value: 'range', label: '选择范围' },
+  dynamic: { value: 'dynamic', label: '动态筛选' },
+  equalAnyOne: { value: 'equalAnyOne', label: '等于任意一个' },
+  unequalAnyOne: { value: 'unequalAnyOne', label: '不等于任意一个' },
+  include: { value: 'include', label: '包含' },
+  exclude: { value: 'exclude', label: '不包含' },
+  null: { value: 'null', label: '为空' },
+  notNull: { value: 'notNull', label: '不为空' },
+};

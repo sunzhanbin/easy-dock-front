@@ -1,6 +1,7 @@
 import { memo, useState, useCallback } from 'react';
 import { Button, Tooltip } from 'antd';
 // import { FormRuleItem } from '@/type';
+import { formatCondition } from '@/utils';
 import { Icon } from '@common/components';
 import FormAttrModal from '../form-attr-modal';
 import styles from './index.module.scss';
@@ -14,9 +15,14 @@ const FormAttrEditor = () => {
   const handleClose = useCallback(() => {
     setShowModal(false);
   }, [setShowModal]);
-  const handleOk = useCallback(() => {
-    setShowModal(false);
-  }, [setShowModal]);
+  const handleOk = useCallback(
+    (rules) => {
+      const condition = formatCondition(rules.ruleValue);
+      console.info(condition);
+      setShowModal(false);
+    },
+    [setShowModal],
+  );
   return (
     <div className={styles.container}>
       <div className={styles.rules}>

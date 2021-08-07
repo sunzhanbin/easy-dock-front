@@ -7,30 +7,38 @@ import { filedRule } from '@/type';
 import styles from './index.module.scss';
 
 interface EditProps {
-  components: Array<any>; //暂时使用any类型
+  data: Array<any>; //暂时使用any类型
   className?: string;
   value?: filedRule[][];
   onChange?: (value: filedRule[][]) => void;
   loadDataSource?: (id: string) => Promise<{ key: string; value: string }[] | { data: { data: string[] } }>;
 }
 
-const Condition = ({ className, components, value, onChange, loadDataSource }: EditProps) => {
+const Condition = ({ className, data, value, onChange, loadDataSource }: EditProps) => {
   const [ruleList, setRuleList] = useState<filedRule[][]>(value || [[{ field: '', symbol: '' }]]);
   const addRule = useCallback(
     (index: number) => {
-      const list = [...ruleList];
-      const ruleBlock = list[index];
-      ruleBlock.push({ field: '', symbol: '' });
-      setRuleList(list);
+      setRuleList((list) => {
+        return list.map((ruleBlock, blockIndex) => {
+          if (index === blockIndex) {
+            ruleBlock.push({ field: '', symbol: '' });
+          }
+          return ruleBlock;
+        });
+      });
     },
     [ruleList, setRuleList],
   );
   const deleteRule = useCallback(
     (blockIndex, ruleIndex) => {
-      const list = [...ruleList];
-      const ruleBlock = list[blockIndex];
-      ruleBlock.splice(ruleIndex, 1);
-      setRuleList(list);
+      setRuleList((list) => {
+        return list.map((ruleBlock, index) => {
+          if (index === blockIndex) {
+            ruleBlock.splice(ruleIndex, 1);
+          }
+          return ruleBlock;
+        });
+      });
     },
     [ruleList, setRuleList],
   );
@@ -41,10 +49,17 @@ const Condition = ({ className, components, value, onChange, loadDataSource }: E
   }, [ruleList, setRuleList]);
   const handleRuleChange = useCallback(
     (blockIndex, ruleIndex, rule) => {
-      const list = [...ruleList];
-      const ruleBlock = list[blockIndex];
-      ruleBlock[ruleIndex] = rule;
-      setRuleList(list);
+      setRuleList((list) => {
+        return list.map((ruleBlock, index) => {
+          if (index === blockIndex) {
+            return ruleBlock.map((item, i) => {
+              if (i === ruleIndex) return rule;
+              return item;
+            });
+          }
+          return ruleBlock;
+        });
+      });
     },
     [ruleList, setRuleList],
   );
@@ -66,7 +81,7 @@ const Condition = ({ className, components, value, onChange, loadDataSource }: E
                       <div className={styles.rule} key={ruleIndex}>
                         <RuleForm
                           rule={rule}
-                          components={components}
+                          components={data}
                           className={styles.form}
                           blockIndex={index}
                           ruleIndex={ruleIndex}

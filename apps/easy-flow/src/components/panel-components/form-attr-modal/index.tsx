@@ -10,7 +10,7 @@ import { runtimeAxios } from '@/utils/axios';
 
 type modalProps = {
   onClose: () => void;
-  onOk: () => void;
+  onOk: (rules: any) => void;
 };
 
 const { Option } = Select;
@@ -35,7 +35,13 @@ const FormAttrModal = ({ onClose, onOk }: modalProps) => {
         return Promise.resolve(dataSource.data);
       } else if (dataSource.type === 'subapp') {
         const { fieldName = '', subappId = '' } = dataSource;
-        return runtimeAxios.get(`/subapp/${subappId}/form/${fieldName}/data`);
+        if (fieldName && subappId) {
+          return runtimeAxios.get(`/subapp/${subappId}/form/${fieldName}/data`).then((res) => {
+            const list = (res.data?.data || []).map((val: string) => ({ key: val, value: val }));
+            return Promise.resolve(list);
+          });
+        }
+        return Promise.resolve([]);
       }
       return Promise.resolve(null);
     },
@@ -45,8 +51,12 @@ const FormAttrModal = ({ onClose, onOk }: modalProps) => {
   const onChange = useCallback(() => {
     // console.info(form.getFieldsValue(), '111');
   }, [form]);
+  const handelOk = useCallback(() => {
+    const rules = form.getFieldsValue();
+    onOk && onOk(rules);
+  }, [form, onOk]);
   return (
-    <Modal className={styles.modal} title="添加表单逻辑规则" visible={true} onCancel={onClose} onOk={onOk}>
+    <Modal className={styles.modal} title="添加表单逻辑规则" visible={true} onCancel={onClose} onOk={handelOk}>
       <Form
         form={form}
         className={styles.form}
@@ -88,7 +98,7 @@ const FormAttrModal = ({ onClose, onOk }: modalProps) => {
                   </Select>
                 </Form.Item>
                 <Form.Item label="条件设置" name="ruleValue">
-                  <Condition components={Object.values(byId)} loadDataSource={loadDataSource} />
+                  <Condition data={Object.values(byId)} loadDataSource={loadDataSource} />
                 </Form.Item>
                 <Form.Item
                   noStyle

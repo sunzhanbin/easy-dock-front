@@ -2,6 +2,7 @@ import { memo, useMemo, useCallback, useState } from 'react';
 import { Form, Select, Input, InputNumber, DatePicker } from 'antd';
 import classnames from 'classnames';
 import { filedRule, FormField } from '@/type';
+import { symbolMap } from '@/utils';
 import { Icon } from '@common/components';
 import MultiText from '@components/multi-text';
 import NumberRange from '@components/number-range';
@@ -11,50 +12,47 @@ const { Option } = Select;
 const { RangePicker } = DatePicker;
 const symbolListMap = {
   text: [
-    { value: 'equal', label: '等于' },
-    { value: 'unequal', label: '不等于' },
-    { value: 'equalAnyOne', label: '等于任意一个' },
-    { value: 'unequalAnyOne', label: '不等于任意一个' },
-    { value: 'include', label: '包含' },
-    { value: 'exclude', label: '不包含' },
-    { value: 'null', label: '为空' },
-    { value: 'notNull', label: '不为空' },
+    symbolMap.equal,
+    symbolMap.unequal,
+    symbolMap.equalAnyOne,
+    symbolMap.unequalAnyOne,
+    symbolMap.include,
+    symbolMap.exclude,
+    symbolMap.null,
+    symbolMap.notNull,
   ],
   number: [
-    { value: 'equal', label: '等于' },
-    { value: 'unequal', label: '不等于' },
-    { value: 'greater', label: '大于' },
-    { value: 'greaterOrEqual', label: '大于等于' },
-    { value: 'less', label: '小于' },
-    { value: 'lessOrEqual', label: '小于等于' },
-    { value: 'range', label: '选择范围' },
-    { value: 'null', label: '为空' },
-    { value: 'notNull', label: '不为空' },
+    symbolMap.equal,
+    symbolMap.unequal,
+    symbolMap.greater,
+    symbolMap.greaterOrEqual,
+    symbolMap.less,
+    symbolMap.lessOrEqual,
+    symbolMap.range,
+    symbolMap.null,
+    symbolMap.notNull,
   ],
   date: [
-    { value: 'equal', label: '等于' },
-    { value: 'unequal', label: '不等于' },
-    { value: 'greaterOrEqual', label: '大于等于' },
-    { value: 'lessOrEqual', label: '小于等于' },
-    { value: 'range', label: '选择范围' },
-    { value: 'dynamic', label: '动态筛选' },
-    { value: 'null', label: '为空' },
-    { value: 'notNull', label: '不为空' },
+    symbolMap.equal,
+    symbolMap.unequal,
+    symbolMap.greaterOrEqual,
+    symbolMap.lessOrEqual,
+    symbolMap.range,
+    symbolMap.dynamic,
+    symbolMap.null,
+    symbolMap.notNull,
   ],
   option: [
-    { value: 'equal', label: '等于' },
-    { value: 'unequal', label: '不等于' },
-    { value: 'equalAnyOne', label: '等于任意一个' },
-    { value: 'unequalAnyOne', label: '不等于任意一个' },
-    { value: 'include', label: '包含' },
-    { value: 'exclude', label: '不包含' },
-    { value: 'null', label: '为空' },
-    { value: 'notNull', label: '不为空' },
+    symbolMap.equal,
+    symbolMap.unequal,
+    symbolMap.equalAnyOne,
+    symbolMap.unequalAnyOne,
+    symbolMap.include,
+    symbolMap.exclude,
+    symbolMap.null,
+    symbolMap.notNull,
   ],
-  other: [
-    { value: 'null', label: '为空' },
-    { value: 'notNull', label: '不为空' },
-  ],
+  other: [symbolMap.null, symbolMap.notNull],
 };
 
 type RuleFormProps = {
@@ -63,7 +61,11 @@ type RuleFormProps = {
   rule: filedRule;
   blockIndex: number;
   ruleIndex: number;
-  onChange?: (blockIndex: number, ruleIndex: number, rule: filedRule) => void;
+  onChange?: (
+    blockIndex: number,
+    ruleIndex: number,
+    rule: filedRule & { fieldName?: string; fieldType?: string },
+  ) => void;
   loadDataSource?: (id: string) => Promise<{ key: string; value: string }[] | { data: { data: string[] } }>;
 };
 
@@ -78,14 +80,7 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
   }, [rule]);
   const componentList = useMemo(() => {
     if (components && components?.length > 0) {
-      let list = [];
-      // 流程编排阶段从远程拉取components数据,配置中有config节点
-      if (components[0].config) {
-        list = components.map((item: any) => item.config);
-      } else {
-        // 表单编排阶段尚未保存数据,只能从redux中读取components中读取配置，没有config节点
-        list = [...components];
-      }
+      const list = [...components];
       return (
         list
           .filter((item: { type: string }) => item.type !== 'DescText')
@@ -100,7 +95,7 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
     return [];
   }, [components]);
   const [optionList, setOptionList] = useState<{ key: string; value: string }[]>([]);
-  const [selectComponent, setSelectComponent] = useState<{ id: string; type: string; format: string }>();
+  const [selectComponent, setSelectComponent] = useState<{ id: string; type: string; format: string; label: string }>();
   const changeField = useCallback(() => {
     form.setFieldsValue({ symbol: undefined, value: undefined });
     const fieldId = form.getFieldValue('field');
@@ -110,10 +105,10 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
     if (loadDataSource && (fieldType === 'Select' || fieldType === 'Radio' || fieldType === 'Checkbox')) {
       loadDataSource(fieldId).then((res) => {
         if (res) {
-          // 自定义数据,返回的是一个key-value数组
+          // 如果返回的是一个key-value数组,直接赋值给下拉选项
           if (Array.isArray(res)) {
             setOptionList(res);
-            // 从其他表单中获取数据,返回的是一个对象
+            // 如果返回的直接是接口数据,需要做一个转换
           } else if (res.data) {
             const list = (res.data?.data || []).map((val: string) => ({ key: val, value: val }));
             setOptionList(list);
@@ -128,9 +123,13 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
   const handleFinish = useCallback(() => {
     const values = form.getFieldsValue();
     if (rule.field !== values.field || rule.symbol !== values.symbol) {
-      onChange && onChange(blockIndex, ruleIndex, values);
+      let rule = values;
+      if (selectComponent) {
+        rule = Object.assign({}, values, { fieldName: selectComponent!.label, fieldType: selectComponent!.type });
+      }
+      onChange && onChange(blockIndex, ruleIndex, rule);
     }
-  }, [form, blockIndex, ruleIndex, onChange]);
+  }, [form, blockIndex, ruleIndex, selectComponent, onChange]);
   return (
     <Form
       className={classnames(styles.form, className ? className : '')}
