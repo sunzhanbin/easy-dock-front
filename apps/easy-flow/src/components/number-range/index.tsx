@@ -49,6 +49,7 @@ const NumberRange = ({ className, value, onChange }: EditProps) => {
       <InputNumber
         className={styles.min}
         placeholder="最小值"
+        size="large"
         max={maxNumber || undefined}
         defaultValue={minNumber}
         onChange={changeMinNumber}
@@ -56,6 +57,7 @@ const NumberRange = ({ className, value, onChange }: EditProps) => {
       <InputNumber
         className={styles.max}
         placeholder="最大值"
+        size="large"
         min={minNumber || undefined}
         defaultValue={maxNumber}
         onChange={changeMaxNumber}

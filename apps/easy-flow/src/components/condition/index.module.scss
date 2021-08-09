@@ -5,8 +5,8 @@
   }
   .ruleList {
     .ruleBlock {
-      padding: 8px;
-      background-color: rgba(244, 245, 245, 1);
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(24, 31, 67, 0.12);
       .rule {
         display: flex;
         position: relative;
@@ -17,7 +17,8 @@
           visibility: hidden;
           flex: 0 0 32px;
           width: 32px;
-          margin-top: 6px;
+          height: 40px;
+          line-height: 40px;
           text-align: center;
           cursor: pointer;
           svg {
@@ -36,30 +37,10 @@
         }
       }
       .and {
-        display: flex;
-        width: 70px;
-        height: 20px;
-        line-height: 20px;
-        margin-top: 8px;
-        cursor: pointer;
-        .add {
-          position: relative;
-          display: inline-block;
-          width: 20px;
-          height: 20px;
-          border-radius: 12px;
-          border: 1px solid #dcdcdc;
-          margin-right: 4px;
-          & > svg {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 16px;
-            &:hover {
-              color: #4c5cdb;
-            }
-          }
+        padding: 0;
+        width: 86px;
+        & > svg {
+          font-size: 16px;
         }
       }
     }
@@ -67,27 +48,11 @@
       margin: 8px 0;
     }
     .addOr {
-      display: flex;
-      width: 70px;
-      height: 20px;
-      line-height: 20px;
-      margin-top: 12px;
-      cursor: pointer;
-      .add {
-        position: relative;
-        display: inline-block;
-        width: 20px;
-        height: 20px;
-        border-radius: 12px;
-        border: 1px solid #dcdcdc;
-        margin-right: 4px;
-        & > svg {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          font-size: 16px;
-        }
+      width: 86px;
+      margin-top: 15px;
+      padding: 0;
+      & > svg {
+        font-size: 16px;
       }
     }
   }

@@ -5,8 +5,11 @@ import { formatCondition } from '@/utils';
 import { Icon } from '@common/components';
 import FormAttrModal from '../form-attr-modal';
 import styles from './index.module.scss';
+import { useAppSelector } from '@/app/hooks';
+import { componentPropsSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 
 const FormAttrEditor = () => {
+  const byId = useAppSelector(componentPropsSelector);
   const [rules, setRules] = useState<FormRuleItem[]>([]);
   const [showModal, setShowModal] = useState<boolean>(false);
   const handleShowModal = useCallback(() => {
@@ -44,8 +47,10 @@ const FormAttrEditor = () => {
           {rules.map((item: FormRuleItem, index: number) => {
             if (item.type === 'change') {
               const condition = formatCondition(item!.formChangeRule!.filedRule);
-              const showComponents = item!.formChangeRule!.showComponents;
-              const hideComponents = item!.formChangeRule!.hideComponents;
+              const showComponentList = item!.formChangeRule!.showComponents || [];
+              const hideComponentList = item!.formChangeRule!.hideComponents || [];
+              const showComponents = showComponentList.map((id) => byId[id].label);
+              const hideComponents = hideComponentList.map((id) => byId[id].label);
               return (
                 <div className={styles.ruleItem}>
                   <div className={styles.content}>
@@ -57,7 +62,7 @@ const FormAttrEditor = () => {
                             {ruleBlock.map((rule, ruleIndex) => {
                               return (
                                 <>
-                                  <span className={styles.filedName}>{rule.fieldName}</span>
+                                  <span className={styles.fieldName}>{rule.fieldName}</span>
                                   <span>{`${rule.symbol}${rule.value}`}</span>
                                   {ruleIndex !== ruleBlock.length - 1 && <span>且</span>}
                                 </>
@@ -68,13 +73,33 @@ const FormAttrEditor = () => {
                         </>
                       );
                     })}
-                    <span>时</span>
+                    <span className={styles.mr4}>时</span>
                     {showComponents.length > 0 && (
                       <span>
                         <span>显示</span>
+                        <span className={styles.fieldName}>
+                          {showComponents.map((name, index) => (
+                            <span>
+                              {name}
+                              {index !== showComponents.length - 1 ? '、' : ''}
+                            </span>
+                          ))}
+                        </span>
                       </span>
                     )}
-                    {hideComponents.length > 0 && <span></span>}
+                    {hideComponents.length > 0 && (
+                      <span>
+                        <span>隐藏</span>
+                        <span className={styles.fieldName}>
+                          {hideComponents.map((name, index) => (
+                            <span>
+                              {name}
+                              {index !== hideComponents.length - 1 ? '、' : ''}
+                            </span>
+                          ))}
+                        </span>
+                      </span>
+                    )}
                   </div>
                   <div className={styles.operation}>
                     <Tooltip title="编辑">
@@ -92,51 +117,9 @@ const FormAttrEditor = () => {
               );
             }
           })}
-          {/* <div className={styles.ruleItem}>
-            <div className={styles.content}>
-              <span>当</span>
-              <span className={styles.filedName}>多行文本</span>
-              <span>包含6时</span>
-              <span>显示</span>
-              <span className={styles.componentsName}>日期时间</span>
-            </div>
-            <div className={styles.operation}>
-              <Tooltip title="编辑">
-                <span>
-                  <Icon type="bianji" className={styles.edit} />
-                </span>
-              </Tooltip>
-              <Tooltip title="删除">
-                <span>
-                  <Icon type="shanchu" className={styles.delete} />
-                </span>
-              </Tooltip>
-            </div>
-          </div>
-          <div className={styles.ruleItem}>
-            <div className={styles.content}>
-              <span>当</span>
-              <span className={styles.filedName}>单行文本</span>
-              <span>等于任意一个A、B时</span>
-              <span>显示</span>
-              <span className={styles.componentsName}>数字</span>
-            </div>
-            <div className={styles.operation}>
-              <Tooltip title="编辑">
-                <span>
-                  <Icon type="bianji" className={styles.edit} />
-                </span>
-              </Tooltip>
-              <Tooltip title="删除">
-                <span>
-                  <Icon type="shanchu" className={styles.delete} />
-                </span>
-              </Tooltip>
-            </div>
-          </div> */}
         </div>
         <Button className={styles.add} size="large" icon={<Icon type="xinzeng" />} onClick={handleShowModal}>
-          添加逻辑规则
+          添加
         </Button>
       </div>
       {showModal && <FormAttrModal onClose={handleClose} onOk={handleOk} />}

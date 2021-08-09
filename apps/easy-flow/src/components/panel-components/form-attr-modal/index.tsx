@@ -1,4 +1,4 @@
-import { memo, useState, useCallback, useMemo } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 import { Modal, Form, Select } from 'antd';
 import { Icon } from '@common/components';
 import Condition from '@/components/condition';
@@ -48,24 +48,15 @@ const FormAttrModal = ({ onClose, onOk }: modalProps) => {
     [componentList],
   );
 
-  const onChange = useCallback(() => {
-    // console.info(form.getFieldsValue(), '111');
-  }, [form]);
   const handelOk = useCallback(() => {
     const rules = form.getFieldsValue();
     onOk && onOk(rules);
   }, [form, onOk]);
   return (
-    <Modal className={styles.modal} title="添加表单逻辑规则" visible={true} onCancel={onClose} onOk={handelOk}>
-      <Form
-        form={form}
-        className={styles.form}
-        layout="vertical"
-        initialValues={{ mode: 1, ruleType: 1 }}
-        onValuesChange={onChange}
-      >
-        <Form.Item label="选择触发方式" name="mode">
-          <Select suffixIcon={<Icon type="xiala" />}>
+    <Modal className={styles.modal} title="表单逻辑规则设置" visible={true} onCancel={onClose} onOk={handelOk}>
+      <Form form={form} className={styles.form} layout="vertical" initialValues={{ mode: 1, ruleType: 1 }}>
+        <Form.Item label="选择触发方式" name="mode" className={styles.mode}>
+          <Select suffixIcon={<Icon type="xiala" />} size="large">
             <Option key={1} value={1}>
               值改变时
             </Option>
@@ -79,8 +70,8 @@ const FormAttrModal = ({ onClose, onOk }: modalProps) => {
             const mode = getFieldValue('mode');
             if (mode === 2) {
               return (
-                <Form.Item label="选择规则" name="ruleType">
-                  <Select suffixIcon={<Icon type="xiala" />}>
+                <Form.Item label="选择规则" name="ruleType" className={styles.ruleType}>
+                  <Select suffixIcon={<Icon type="xiala" />} size="large">
                     <Option key={1} value={1}>
                       读取数据
                     </Option>
@@ -90,14 +81,14 @@ const FormAttrModal = ({ onClose, onOk }: modalProps) => {
             }
             return (
               <>
-                <Form.Item label="选择规则" name="ruleType">
-                  <Select suffixIcon={<Icon type="xiala" />}>
+                <Form.Item label="选择规则" name="ruleType" className={styles.ruleType}>
+                  <Select suffixIcon={<Icon type="xiala" />} size="large">
                     <Option key={1} value={1}>
                       显示隐藏规则
                     </Option>
                   </Select>
                 </Form.Item>
-                <Form.Item label="条件设置" name="ruleValue">
+                <Form.Item label="流转条件" name="ruleValue" className={styles.condition}>
                   <Condition data={Object.values(byId)} loadDataSource={loadDataSource} />
                 </Form.Item>
                 <Form.Item
@@ -121,8 +112,8 @@ const FormAttrModal = ({ onClose, onOk }: modalProps) => {
                     });
                     return (
                       <>
-                        <Form.Item label="显示控件" name="showComponents">
-                          <Select suffixIcon={<Icon type="xiala" />} mode="multiple" placeholder="请选择">
+                        <Form.Item label="显示控件" name="showComponents" className={styles.showComponents}>
+                          <Select suffixIcon={<Icon type="xiala" />} mode="multiple" placeholder="请选择" size="large">
                             {options.map((option) => (
                               <Option key={option.id} value={option.id!}>
                                 {option.label}
@@ -151,8 +142,13 @@ const FormAttrModal = ({ onClose, onOk }: modalProps) => {
                               options = options.filter((option) => option.id !== id);
                             });
                             return (
-                              <Form.Item label="隐藏控件" name="hideComponents">
-                                <Select suffixIcon={<Icon type="xiala" />} mode="multiple" placeholder="请选择">
+                              <Form.Item label="隐藏控件" name="hideComponents" className={styles.hideComponents}>
+                                <Select
+                                  suffixIcon={<Icon type="xiala" />}
+                                  mode="multiple"
+                                  placeholder="请选择"
+                                  size="large"
+                                >
                                   {options.map((option) => (
                                     <Option key={option.id} value={option.id!}>
                                       {option.label}

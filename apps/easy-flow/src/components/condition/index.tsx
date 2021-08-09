@@ -1,5 +1,5 @@
 import { memo, useState, useCallback, useEffect, useMemo } from 'react';
-import { Tooltip } from 'antd';
+import { Tooltip, Button } from 'antd';
 import classnames from 'classnames';
 import RuleForm from '@components/rule-form';
 import { Icon } from '@common/components';
@@ -85,58 +85,59 @@ const Condition = ({ className, data, value, onChange, loadDataSource }: EditPro
       <div className={styles.ruleList}>
         {ruleList.length > 0 &&
           ruleList.map((ruleBlock: filedRule[], index: number) => {
-            return (
-              <div key={index}>
-                <div className={styles.ruleBlock}>
-                  {ruleBlock.map((rule: filedRule, ruleIndex: number) => {
-                    return (
-                      <div className={styles.rule} key={ruleIndex}>
-                        <RuleForm
-                          rule={rule}
-                          components={components}
-                          className={styles.form}
-                          blockIndex={index}
-                          ruleIndex={ruleIndex}
-                          onChange={handleRuleChange}
-                          loadDataSource={loadDataSource}
-                        />
-                        <span
-                          className={styles.delete}
-                          onClick={() => {
-                            deleteRule(index, ruleIndex);
-                          }}
-                        >
-                          <Tooltip title="删除">
-                            <span>
-                              <Icon type="shanchu" />
+            {
+              if (ruleBlock.length > 0) {
+                return (
+                  <div key={index}>
+                    <div className={styles.ruleBlock}>
+                      {ruleBlock.map((rule: filedRule, ruleIndex: number) => {
+                        return (
+                          <div className={styles.rule} key={ruleIndex}>
+                            <RuleForm
+                              rule={rule}
+                              components={components}
+                              className={styles.form}
+                              blockIndex={index}
+                              ruleIndex={ruleIndex}
+                              onChange={handleRuleChange}
+                              loadDataSource={loadDataSource}
+                            />
+                            <span
+                              className={styles.delete}
+                              onClick={() => {
+                                deleteRule(index, ruleIndex);
+                              }}
+                            >
+                              <Tooltip title="删除">
+                                <span>
+                                  <Icon type="shanchu" />
+                                </span>
+                              </Tooltip>
                             </span>
-                          </Tooltip>
-                        </span>
-                      </div>
-                    );
-                  })}
-                  <div
-                    className={styles.and}
-                    onClick={() => {
-                      addRule(index);
-                    }}
-                  >
-                    <span className={styles.add}>
-                      <Icon type="xinzeng" />
-                    </span>
-                    <span>且条件</span>
+                          </div>
+                        );
+                      })}
+                      <Button
+                        className={styles.and}
+                        type="default"
+                        icon={<Icon type="xinzeng" />}
+                        onClick={() => {
+                          addRule(index);
+                        }}
+                      >
+                        且条件
+                      </Button>
+                    </div>
+                    {index !== ruleList.length - 1 && <div className={styles.or}>或</div>}
                   </div>
-                </div>
-                {index !== ruleList.length - 1 && <div className={styles.or}>或</div>}
-              </div>
-            );
+                );
+              }
+              return null;
+            }
           })}
-        <div className={styles.addOr} onClick={addRuleBlock}>
-          <span className={styles.add}>
-            <Icon type="xinzeng" />
-          </span>
-          <span>或条件</span>
-        </div>
+        <Button className={styles.addOr} type="default" icon={<Icon type="xinzeng" />} onClick={addRuleBlock}>
+          或条件
+        </Button>
       </div>
     </div>
   );

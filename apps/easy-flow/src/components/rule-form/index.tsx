@@ -140,13 +140,14 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
       form={form}
       layout="inline"
       autoComplete="off"
-      style={{ marginBottom: '8px' }}
+      style={{ marginBottom: '8px', marginTop: '0' }}
       initialValues={initValues}
       onValuesChange={handleFinish}
     >
       <Form.Item name="field">
         <Select
           placeholder="关联字段"
+          size="large"
           className={styles.field}
           onChange={changeField}
           suffixIcon={<Icon type="xiala" />}
@@ -188,6 +189,7 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
             <Form.Item name="symbol">
               <Select
                 placeholder="判断符"
+                size="large"
                 className={styles.symbol}
                 suffixIcon={<Icon type="xiala" />}
                 onChange={changeSymbol}
@@ -220,7 +222,7 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
             if (symbol === 'equal' || symbol === 'unequal' || symbol === 'include' || symbol === 'exclude') {
               return (
                 <Form.Item name="value" className={styles.valueWrapper}>
-                  <Input placeholder="输入值" className={styles.value} />
+                  <Input placeholder="输入值" size="large" className={styles.value} />
                 </Form.Item>
               );
             }
@@ -244,7 +246,7 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
             }
             return (
               <Form.Item name="value" className={styles.valueWrapper}>
-                <InputNumber placeholder="输入值" className={styles.value} />
+                <InputNumber placeholder="输入值" size="large" className={styles.value} />
               </Form.Item>
             );
           }
@@ -254,7 +256,7 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
             if (symbol === 'dynamic') {
               return (
                 <Form.Item name="value" className={styles.valueWrapper}>
-                  <Select placeholder="请选择" className={styles.value}>
+                  <Select placeholder="请选择" size="large" className={styles.value}>
                     <Option value="today">今天</Option>
                     <Option value="nextYear">明年</Option>
                   </Select>
@@ -266,13 +268,13 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
             if (symbol === 'range') {
               return (
                 <Form.Item name="value" className={styles.valueWrapper}>
-                  <RangePicker {...showTime} format={format} className={styles.value} />
+                  <RangePicker {...showTime} format={format} size="large" className={styles.value} />
                 </Form.Item>
               );
             }
             return (
               <Form.Item name="value" className={styles.valueWrapper}>
-                <DatePicker {...showTime} format={format} className={styles.value} />
+                <DatePicker {...showTime} format={format} size="large" className={styles.value} />
               </Form.Item>
             );
           }
@@ -281,14 +283,14 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
             if (symbol === 'include' || symbol === 'exclude') {
               return (
                 <Form.Item name="value" className={styles.valueWrapper}>
-                  <Input placeholder="输入值" className={styles.value} />
+                  <Input placeholder="输入值" size="large" className={styles.value} />
                 </Form.Item>
               );
             }
             if (symbol === 'equal' || symbol === 'unequal') {
               return (
                 <Form.Item name="value" className={styles.valueWrapper}>
-                  <Select placeholder="请选择" className={styles.value} suffixIcon={<Icon type="xiala" />}>
+                  <Select placeholder="请选择" size="large" className={styles.value} suffixIcon={<Icon type="xiala" />}>
                     {optionList.map(({ key, value }) => (
                       <Option key={key} value={key} label={value}>
                         {value}
@@ -303,8 +305,9 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
                 <Form.Item name="value" className={styles.valueWrapper}>
                   <Select
                     placeholder="请选择"
-                    className={styles.value}
                     mode="multiple"
+                    size="large"
+                    className={styles.value}
                     suffixIcon={<Icon type="xiala" />}
                   >
                     {optionList.map(({ key, value }) => (
