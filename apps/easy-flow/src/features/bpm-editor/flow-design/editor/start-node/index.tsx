@@ -50,7 +50,7 @@ function StartNodeEditor(props: StartNodeEditorProps) {
           cycleRange: [cycle[0] || null, cycle[1] || null],
           frequency: trigger.frequency,
         };
-
+        console.info(mapTrigger, 1111);
         // 如果没有设置开始时间默认从现在开始, 下面代码功能回显开始时间
         if (!trigger.startTime) {
           form.setFieldsValue({

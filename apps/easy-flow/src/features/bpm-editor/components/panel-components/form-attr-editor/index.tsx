@@ -31,6 +31,7 @@ const FormAttrEditor = () => {
             hideComponents: rules.hideComponents,
           },
         };
+        console.info(rules.ruleValue, 111);
         setRules((rules) => {
           rules.push(rule);
           return rules;
@@ -52,25 +53,25 @@ const FormAttrEditor = () => {
               const showComponents = showComponentList.map((id) => byId[id].label);
               const hideComponents = hideComponentList.map((id) => byId[id].label);
               return (
-                <div className={styles.ruleItem}>
+                <div className={styles.ruleItem} key={index}>
                   <div className={styles.content}>
                     <span>当</span>
                     {condition.map((ruleBlock, blockIndex) => {
                       return (
-                        <>
+                        <span key={blockIndex}>
                           <span>
                             {ruleBlock.map((rule, ruleIndex) => {
                               return (
-                                <>
+                                <span key={ruleIndex}>
                                   <span className={styles.fieldName}>{rule.fieldName}</span>
                                   <span>{`${rule.symbol}${rule.value}`}</span>
                                   {ruleIndex !== ruleBlock.length - 1 && <span>且</span>}
-                                </>
+                                </span>
                               );
                             })}
                           </span>
                           {blockIndex !== condition.length - 1 && <span>或</span>}
-                        </>
+                        </span>
                       );
                     })}
                     <span className={styles.mr4}>时</span>
@@ -79,7 +80,7 @@ const FormAttrEditor = () => {
                         <span>显示</span>
                         <span className={styles.fieldName}>
                           {showComponents.map((name, index) => (
-                            <span>
+                            <span key={index}>
                               {name}
                               {index !== showComponents.length - 1 ? '、' : ''}
                             </span>
@@ -92,7 +93,7 @@ const FormAttrEditor = () => {
                         <span>隐藏</span>
                         <span className={styles.fieldName}>
                           {hideComponents.map((name, index) => (
-                            <span>
+                            <span key={index}>
                               {name}
                               {index !== hideComponents.length - 1 ? '、' : ''}
                             </span>

@@ -1,6 +1,6 @@
 import { memo, useEffect, useState, useMemo, useCallback } from 'react';
-import CompAttrEditor from '@/components/panel-components/comp-attr-editor';
-import FormAttrEditor from '@/components/panel-components/form-attr-editor';
+import CompAttrEditor from '@/features/bpm-editor/components/panel-components/comp-attr-editor';
+import FormAttrEditor from '@/features/bpm-editor/components/panel-components/form-attr-editor';
 import { store } from '@app/store';
 import { editProps } from '../formdesign-slice';
 import { FieldType, SchemaConfigItem } from '@/type';

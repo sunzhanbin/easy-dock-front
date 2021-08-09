@@ -1,7 +1,7 @@
 import { memo, useState, useCallback, useEffect, useMemo } from 'react';
 import { Tooltip, Button } from 'antd';
 import classnames from 'classnames';
-import RuleForm from '@components/rule-form';
+import RuleForm from '@/features/bpm-editor/components/rule-form';
 import { Icon } from '@common/components';
 import { filedRule, FormField } from '@/type';
 import styles from './index.module.scss';

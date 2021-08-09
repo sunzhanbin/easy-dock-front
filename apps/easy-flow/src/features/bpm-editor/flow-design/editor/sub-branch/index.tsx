@@ -3,7 +3,7 @@ import { Form } from 'antd';
 import debounce from 'lodash/debounce';
 import { SubBranch as SubBranchType } from '@type/flow';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import Condition from '@components/condition';
+import Condition from '@/features/bpm-editor/components/condition';
 import { FormField } from '@type';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { updateNode, formMetaSelector } from '../../flow-slice';

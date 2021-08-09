@@ -1,7 +1,7 @@
 import { memo, useCallback, useMemo } from 'react';
 import { Modal, Form, Select } from 'antd';
 import { Icon } from '@common/components';
-import Condition from '@/components/condition';
+import Condition from '@/features/bpm-editor/components/condition';
 import styles from './index.module.scss';
 import { useAppSelector } from '@/app/hooks';
 import { componentPropsSelector } from '@/features/bpm-editor/form-design/formzone-reducer';

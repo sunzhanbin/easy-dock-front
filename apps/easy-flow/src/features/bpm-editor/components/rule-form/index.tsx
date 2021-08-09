@@ -4,8 +4,10 @@ import classnames from 'classnames';
 import { filedRule, FormField } from '@/type';
 import { symbolMap } from '@/utils';
 import { Icon } from '@common/components';
-import MultiText from '@components/multi-text';
-import NumberRange from '@components/number-range';
+import MultiText from '@/features/bpm-editor/components/multi-text';
+import NumberRange from '@/features/bpm-editor/components/number-range';
+import TimesDatePicker from '@/features/bpm-editor/components/date-picker';
+import DateRange from '@/features/bpm-editor/components/date-range';
 import styles from './index.module.scss';
 
 const { Option } = Select;
@@ -269,6 +271,7 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
               return (
                 <Form.Item name="value" className={styles.valueWrapper}>
                   <RangePicker {...showTime} format={format} size="large" className={styles.value} />
+                  {/* <TimesDatePicker /> */}
                 </Form.Item>
               );
             }
