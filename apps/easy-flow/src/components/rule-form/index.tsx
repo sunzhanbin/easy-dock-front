@@ -122,7 +122,11 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
   }, [form]);
   const handleFinish = useCallback(() => {
     const values = form.getFieldsValue();
-    if (rule.field !== values.field || rule.symbol !== values.symbol) {
+    if (
+      rule.field !== values.field ||
+      rule.symbol !== values.symbol ||
+      (values.value !== undefined && rule.value !== values.value)
+    ) {
       let rule = values;
       if (selectComponent) {
         rule = Object.assign({}, values, { fieldName: selectComponent!.label, fieldType: selectComponent!.type });

@@ -1,13 +1,13 @@
-import { memo, useState, useCallback, useEffect } from 'react';
+import { memo, useState, useCallback, useEffect, useMemo } from 'react';
 import { Tooltip } from 'antd';
 import classnames from 'classnames';
 import RuleForm from '@components/rule-form';
 import { Icon } from '@common/components';
-import { filedRule } from '@/type';
+import { ComponentConfig, filedRule, FormField } from '@/type';
 import styles from './index.module.scss';
 
 interface EditProps {
-  data: Array<any>; //暂时使用any类型
+  data: Array<ComponentConfig | FormField>;
   className?: string;
   value?: filedRule[][];
   onChange?: (value: filedRule[][]) => void;
@@ -16,6 +16,18 @@ interface EditProps {
 
 const Condition = ({ className, data, value, onChange, loadDataSource }: EditProps) => {
   const [ruleList, setRuleList] = useState<filedRule[][]>(value || [[{ field: '', symbol: '' }]]);
+  const components = useMemo(() => {
+    if (data.length > 0) {
+      if ((data[0] as ComponentConfig).config) {
+        return data.map((item) => {
+          const { config, props } = item as ComponentConfig;
+          return [{ ...config, ...props }];
+        });
+      }
+      return data;
+    }
+    return [];
+  }, [data]);
   const addRule = useCallback(
     (index: number) => {
       setRuleList((list) => {
@@ -81,7 +93,7 @@ const Condition = ({ className, data, value, onChange, loadDataSource }: EditPro
                       <div className={styles.rule} key={ruleIndex}>
                         <RuleForm
                           rule={rule}
-                          components={data}
+                          components={components}
                           className={styles.form}
                           blockIndex={index}
                           ruleIndex={ruleIndex}
