@@ -186,8 +186,6 @@ function FieldAuths(props: FieldAuthsProps) {
     }
   });
 
-  console.log(value);
-
   return (
     <div>
       <FieldRow
