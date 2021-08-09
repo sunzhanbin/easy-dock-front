@@ -1,5 +1,4 @@
 import { Rule } from 'antd/lib/form';
-import { String } from 'lodash';
 
 export type FieldType = 'Select' | 'Input' | 'Textarea' | 'Radio' | 'Checkbox' | 'Date' | 'InputNumber' | 'DescText';
 
@@ -245,7 +244,12 @@ export type Depart = {
 
 export type AllComponentType = SingleTextField | SelectField | DateField | RadioField | CheckboxField;
 
-export type ConfigItem = { [k: string]: string | number | boolean | null | undefined | Object | Array<any> };
+export type ConfigItem = {
+  [k: string]: string | number | boolean | null | undefined | Object | Array<any>;
+  type: FieldType;
+  label?: string;
+  id: string;
+};
 export type ComponentConfig = {
   config: ConfigItem;
   props: ConfigItem;

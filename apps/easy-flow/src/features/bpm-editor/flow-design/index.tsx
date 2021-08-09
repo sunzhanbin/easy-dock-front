@@ -89,6 +89,14 @@ function FlowDesign() {
     }
   }, [choosedNode]);
 
+  const drawerWidth = useMemo(() => {
+    if (choosedNode && choosedNode.type === NodeType.SubBranch) {
+      return 440;
+    }
+
+    return 368;
+  }, [choosedNode?.type]);
+
   return (
     <div className={styles.flow}>
       {loading && <Loading />}
@@ -98,7 +106,7 @@ function FlowDesign() {
       </div>
 
       <Drawer
-        width={368}
+        width={drawerWidth}
         visible={!!choosedNode}
         getContainer={false}
         onClose={handleCloseNodeEditor}

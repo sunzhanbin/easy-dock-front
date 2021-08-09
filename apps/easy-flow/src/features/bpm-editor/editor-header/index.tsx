@@ -76,13 +76,6 @@ const EditorHeader: FC = () => {
   }, [pathName, history, formDesignPath, flowDesignPath]);
 
   const handlePublish = useCallback(async () => {
-    const formResponse = await dispatch(saveForm({ subAppId: bpmId, isShowTip: false, isShowErrorTip: true }));
-
-    if (formResponse.meta.requestStatus === 'rejected') {
-      console.info(111);
-      return;
-    }
-
     const flowResponse = await dispatch(saveWithForm(bpmId));
 
     if (flowResponse.meta.requestStatus === 'rejected') {

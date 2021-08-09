@@ -3,11 +3,11 @@ import { Tooltip } from 'antd';
 import classnames from 'classnames';
 import RuleForm from '@components/rule-form';
 import { Icon } from '@common/components';
-import { ComponentConfig, filedRule, FormField } from '@/type';
+import { filedRule, FormField } from '@/type';
 import styles from './index.module.scss';
 
 interface EditProps {
-  data: Array<ComponentConfig | FormField>;
+  data: Array<FormField>;
   className?: string;
   value?: filedRule[][];
   onChange?: (value: filedRule[][]) => void;
@@ -17,16 +17,7 @@ interface EditProps {
 const Condition = ({ className, data, value, onChange, loadDataSource }: EditProps) => {
   const [ruleList, setRuleList] = useState<filedRule[][]>(value || [[{ field: '', symbol: '' }]]);
   const components = useMemo(() => {
-    if (data.length > 0) {
-      if ((data[0] as ComponentConfig).config) {
-        return data.map((item) => {
-          const { config, props } = item as ComponentConfig;
-          return [{ ...config, ...props }];
-        });
-      }
-      return data;
-    }
-    return [];
+    return data || [];
   }, [data]);
   const addRule = useCallback(
     (index: number) => {

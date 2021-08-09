@@ -1,3 +1,5 @@
+import { filedRule as FieldRule, FieldType } from './index';
+
 export enum NodeType {
   // 开始节点
   StartNode = 1,
@@ -75,22 +77,12 @@ export interface FillNode extends UserNode {
   };
 }
 
-// 0等于 1不等于 2包含 3不包含
-type JudgeType = 0 | 1 | 2 | 3;
-type DataType = 0 | 1 | 2;
-
-type BranchCondition = {
-  dataType: DataType;
-  judgeType: JudgeType;
-  value: string;
-};
 // 分支节点
-
 export interface SubBranch {
   type: NodeType.SubBranch;
   id: string;
   nodes: AllNode[];
-  conditions: BranchCondition[];
+  conditions: FieldRule[][];
 }
 export interface BranchNode {
   id: string;
@@ -148,6 +140,6 @@ export type AllNode = StartNode | AuditNode | FillNode | BranchNode | FinishNode
 
 export type Flow = AllNode[];
 
-export type FieldTemplate = { id: string; name: string; type: string };
+export type FieldTemplate = { id: string; name: string; type: FieldType };
 
 export type AddableNode = AuditNode | FillNode | BranchNode | CCNode | BranchNode | SubBranch;

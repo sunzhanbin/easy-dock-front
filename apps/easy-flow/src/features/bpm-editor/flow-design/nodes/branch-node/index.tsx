@@ -8,6 +8,7 @@ import { useAppDispatch } from '@/app/hooks';
 import { delNode, addSubBranch, delSubBranch, setChoosedNode } from '../../flow-slice';
 import AddNodeButton from '../../editor/components/add-node-button';
 import styles from './index.module.scss';
+import { formatCondition } from '@utils';
 
 type BranchType = BranchNodeType['branches'][number];
 
@@ -46,7 +47,22 @@ export const Branch = memo(function Branch(props: BranchProps) {
       <div className={styles.main}>
         <div className={classnames(styles.content, showDeletePopover ? styles['show-del'] : '')}>
           <div className={styles.conditions} onClick={handleBranchClick}>
-            <div className={styles.detail}>{data.conditions.length}</div>
+            <div className={styles.detail}>
+              {/* {data.conditions.map((item) => {
+                return (
+                  <div>
+                    {item.map((condition) => {
+                      return (
+                        <div>
+                          <span>{condition.field}</span>
+                          <span>{condition.field}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })} */}
+            </div>
             <div className={styles.desc}>
               <span>配置筛选条件</span>
             </div>
