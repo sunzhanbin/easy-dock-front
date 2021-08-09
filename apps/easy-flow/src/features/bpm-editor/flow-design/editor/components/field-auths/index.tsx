@@ -3,6 +3,7 @@ import { Checkbox } from 'antd';
 import classnames from 'classnames';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { FieldAuthsMap, AuthType, FieldTemplate } from '@type/flow';
+import useFieldsTemplate from '../../../hooks/use-fields-template';
 import styles from './index.module.scss';
 
 type FieldAuth = Omit<FieldTemplate, 'type'> & { auth: AuthType };
@@ -64,7 +65,9 @@ interface FieldAuthsProps {
 }
 
 function FieldAuths(props: FieldAuthsProps) {
-  const { value, onChange, templates, max } = props;
+  const { value, onChange, max } = props;
+  const templates = useFieldsTemplate();
+
   const memoValueInfo = useMemo(() => {
     const valueMaps: { [key: string]: FieldAuth } = {};
     const statistic: FieldRowProps['extra'] = {
@@ -82,49 +85,66 @@ function FieldAuths(props: FieldAuthsProps) {
       },
     };
 
+    // 可见字段数量
     let viewAuthNum = 0;
+    // 可编辑字段数量
     let editAuthNum = 0;
+    // 必填字段数量
     let requiredAuthNum = 0;
+    // 统计的权限
     let totalAuth: FieldAuth['auth'] = 0;
+    // 统计只能有AuthType.View的字段总数
+    let viewTypeNum = 0;
 
     templates.forEach((field) => {
-      if (value && value[field.id] in AuthType) {
-        valueMaps[field.id] = {
-          id: field.id,
-          name: field.name,
-          auth: value[field.id],
-        };
-      } else {
-        valueMaps[field.id] = {
-          id: field.id,
-          name: field.name,
-          auth: 1,
-        };
+      let fieldname: string = field.name || '';
+      let fieldauth: AuthType;
+
+      if (field.type === 'DescText') {
+        viewTypeNum++;
+        fieldname = '描述文字';
+        console.log(field);
       }
+
+      if (value && value[field.id] in AuthType) {
+        fieldauth = value[field.id];
+      } else {
+        fieldauth = AuthType.View;
+      }
+
+      valueMaps[field.id] = {
+        id: field.id,
+        name: fieldname,
+        auth: fieldauth,
+      };
 
       const auth = valueMaps[field.id].auth;
 
-      if (auth === 1) {
+      if (auth === AuthType.View) {
         viewAuthNum++;
-      } else if (auth === 2) {
+      } else if (auth === AuthType.Edit) {
         editAuthNum++;
         viewAuthNum++;
-      } else if (auth === 3) {
+      } else if (auth === AuthType.Required) {
         editAuthNum++;
         viewAuthNum++;
         requiredAuthNum++;
       }
     });
 
-    statistic.view.indeterminate = viewAuthNum > 0 && viewAuthNum < templates.length;
-    statistic.edit.indeterminate = editAuthNum > 0 && editAuthNum < templates.length;
-    statistic.required.indeterminate = requiredAuthNum > 0 && requiredAuthNum < templates.length;
+    const totalViewNum = templates.length;
+    const totalEditableNum = templates.length - viewTypeNum;
+    const totalRequiredNum = templates.length - viewTypeNum;
 
-    if (requiredAuthNum === templates.length) {
+    statistic.view.indeterminate = viewAuthNum > 0 && viewAuthNum < totalViewNum;
+    statistic.edit.indeterminate = editAuthNum > 0 && editAuthNum < totalEditableNum;
+    statistic.required.indeterminate = requiredAuthNum > 0 && requiredAuthNum < totalRequiredNum;
+
+    if (requiredAuthNum === totalRequiredNum) {
       totalAuth = 3;
-    } else if (editAuthNum === templates.length) {
+    } else if (editAuthNum === totalEditableNum) {
       totalAuth = 2;
-    } else if (viewAuthNum === templates.length) {
+    } else if (viewAuthNum === totalViewNum) {
       totalAuth = 1;
     }
 
@@ -154,13 +174,19 @@ function FieldAuths(props: FieldAuthsProps) {
     const newValue = { ...value };
 
     templates.forEach((field) => {
-      newValue[field.id] = auth;
+      if (field.type === 'DescText') {
+        newValue[field.id] = Math.min(auth, AuthType.View);
+      } else {
+        newValue[field.id] = auth;
+      }
     });
 
     if (onChange) {
       onChange(newValue);
     }
   });
+
+  console.log(value);
 
   return (
     <div>
@@ -172,7 +198,15 @@ function FieldAuths(props: FieldAuthsProps) {
         onChange={handleTotalChange}
       />
       {templates.map((field) => {
-        return <FieldRow max={max} key={field.id} value={valueMaps[field.id]} onChange={handleFieldChange} />;
+        return (
+          <FieldRow
+            className={field.type === 'DescText' ? styles['only-view'] : ''}
+            max={field.type === 'DescText' ? 1 : max}
+            key={field.id}
+            value={valueMaps[field.id]}
+            onChange={handleFieldChange}
+          />
+        );
       })}
     </div>
   );

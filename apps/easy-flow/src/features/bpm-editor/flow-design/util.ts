@@ -14,6 +14,7 @@ import {
   FieldTemplate,
 } from '@type/flow';
 import { validName } from '@common/rule';
+import { FormMeta } from '@type';
 
 function randomString() {
   return Math.random().toString(36).slice(2);
@@ -292,10 +293,22 @@ export const findPrevNodes = (flow: AllNode[], targetId: string): AllNode[] => {
   return success ? nodes : [];
 };
 
-export function getFieldsTemplate(fieldsTemplate: FieldTemplate[]) {
+export function formatFieldsAuths(fieldsTemplate: FieldTemplate[]) {
   return fieldsTemplate.reduce((fieldsAuths, item) => {
     fieldsAuths[item.id] = AuthType.View;
 
     return fieldsAuths;
   }, <FieldAuthsMap>{});
+}
+
+export function formatFieldsTemplate(form: FormMeta | null): FieldTemplate[] {
+  if (!form || !form.components) return [];
+
+  return form.components.map((field) => {
+    return {
+      name: field.config.label as string,
+      type: field.config.type,
+      id: field.config.id as string,
+    };
+  });
 }

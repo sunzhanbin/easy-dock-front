@@ -116,7 +116,7 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
     const errors: ErrorItem[] = [];
     layout.forEach((row) => {
       row.forEach((id: string) => {
-        const type = id.split('_')[0] || '';
+        const type = <FieldType>(id.split('_')[0] || '');
         const version = schema[type as FieldType]?.baseInfo.version || '';
         const componentConfig = schema[type as FieldType]?.config;
         const config: ConfigItem = {
@@ -127,7 +127,9 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
           canSubmit: type === 'DescText' ? false : true,
           multiple: type === 'Checkbox' || (type === 'Select' && (byId[id] as any).multiple) ? true : false,
         };
-        const props: ConfigItem = {};
+
+        // TODO @王朝传
+        const props: ConfigItem = {} as any;
         componentConfig?.forEach(({ isProps, key }) => {
           if (isProps) {
             props[key] = (byId[id] as any)[key];

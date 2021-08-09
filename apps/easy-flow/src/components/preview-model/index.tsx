@@ -30,7 +30,8 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
     const components: ComponentConfig[] = [];
     Object.keys(byId).forEach((id) => {
       const object = byId[id];
-      const component: ComponentConfig = { config: {}, props: {} };
+      // TODO any @王朝传
+      const component: ComponentConfig = { config: {}, props: {} } as any;
       Object.keys(object).forEach((key) => {
         if (propsKey.includes(key)) {
           component.props[key] = (object as any)[key];

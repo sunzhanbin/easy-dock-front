@@ -18,10 +18,12 @@ import {
   FieldAuthsMap,
   FieldTemplate,
 } from '@type/flow';
+import { FormMeta } from '@type';
 import { RootState } from '@app/store';
-import { fielduuid, createNode, flowUpdate, branchUpdate, valid, ValidResultType, getFieldsTemplate } from './util';
+import { fielduuid, createNode, flowUpdate, branchUpdate, valid, ValidResultType, formatFieldsAuths } from './util';
 
 export type FlowType = {
+  form: FormMeta | null;
   loading: boolean;
   saving: boolean;
   data: Flow;
@@ -35,6 +37,7 @@ export type FlowType = {
 };
 
 const flowInitial: FlowType = {
+  form: null,
   loading: false,
   saving: false,
   data: [],
@@ -72,6 +75,9 @@ const flow = createSlice({
         ...state.cacheMembers,
         ...payload,
       };
+    },
+    setForm(state, { payload }: PayloadAction<FormMeta>) {
+      state.form = payload;
     },
     setInvalidMaps(state, { payload: validRes }: PayloadAction<FlowType['invalidNodesMap']>) {
       state.invalidNodesMap = validRes;
@@ -130,16 +136,18 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
     dispatch(flowActions.setInitialFlow(flowInitial.data));
 
     // 获取流程数据和所需字段
-    let [{ data: flowResponse }, { data: fields }] = await Promise.all([
+    let [{ data: flowResponse }, { data: form }] = await Promise.all([
       builderAxios.get<{ data: { meta: Flow | null } }>(`/process/${appkey}`),
-      builderAxios.get<{ data: { field: string; name: string; type: string }[] }>(`/form/subapp/${appkey}/components`),
+      builderAxios.get<{ data: { meta: FormMeta } }>(`/form/${appkey}`),
     ]);
 
+    const fields = form.meta.components || [];
     const fieldsTemplate: FlowType['fieldsTemplate'] = fields.map((item) => ({
-      name: item.name,
-      id: item.field,
-      type: item.type,
+      name: <string>item.config.label,
+      id: <string>item.config.id,
+      type: item.config.type,
     }));
+
     let flowData = flowResponse.meta || [];
 
     if (!flowData.length) {
@@ -162,7 +170,7 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
 
       const fillNode: FillNode = createNode(NodeType.FillNode, '填写节点');
 
-      fillNode.fieldsAuths = getFieldsTemplate(fieldsTemplate);
+      fillNode.fieldsAuths = formatFieldsAuths(fieldsTemplate);
 
       flowData = [startNode, fillNode, finishNode];
     } else {
@@ -210,6 +218,7 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
 
     dispatch(flowActions.setFieldsTemplate(fieldsTemplate));
     dispatch(flowActions.setInitialFlow(flowData));
+    dispatch(flowActions.setForm(form.meta));
   } finally {
     dispatch(setLoading(false));
   }
@@ -262,7 +271,7 @@ export const saveWithForm = createAsyncThunk<void, string, { state: RootState }>
     try {
       dispatch(setSaving(true));
 
-      const { flow, formDesign } = getState();
+      const { flow } = getState();
       const validResult: FlowType['invalidNodesMap'] = valid(flow.data, {});
 
       if (Object.keys(validResult).length) {
@@ -273,61 +282,62 @@ export const saveWithForm = createAsyncThunk<void, string, { state: RootState }>
         return Promise.reject('数据填写不完整');
       }
 
-      const components = formDesign.byId;
-      const fieldsTemplate: FlowType['fieldsTemplate'] = [];
+      // const components = formDesign.byId;
+      // const fieldsTemplate: FlowType['fieldsTemplate'] = [];
 
       // 根据form重新计算fieldsTemplate
-      (formDesign.layout || []).forEach((row) => {
-        row.forEach((componentId) => {
-          const key = components[componentId].fieldName;
+      // (formDesign.layout || []).forEach((row) => {
+      //   row.forEach((componentId) => {
+      //     const key = components[componentId].fieldName;
 
-          if (!key) return;
+      //     if (!key) return;
 
-          fieldsTemplate.push({
-            id: components[componentId].fieldName,
-            name: components[componentId].label,
-            type: components[componentId].type,
-          });
-        });
-      });
+      //     fieldsTemplate.push({
+      //       id: components[componentId].fieldName,
+      //       name: components[componentId].label,
+      //       type: components[componentId].type,
+      //     });
+      //   });
+      // });
 
-      const isNeedUpdateFieldTemplate = !isEqual(flow.fieldsTemplate, fieldsTemplate);
+      // const isNeedUpdateFieldTemplate = !isEqual(flow.fieldsTemplate, fieldsTemplate);
 
       // 如果不需要更新flow数据
-      if (!isNeedUpdateFieldTemplate && !flow.dirty) return;
+      // if (!isNeedUpdateFieldTemplate && !flow.dirty) return;
 
       dispatch(setLoading(true));
       // 需要根据表单字段更新flow
-      if (isNeedUpdateFieldTemplate) {
-        const flowData = cloneDeep(flow.data);
+      // if (isNeedUpdateFieldTemplate) {
+      //   const flowData = cloneDeep(flow.data);
 
-        flowRecursion(flowData, function calcField(node) {
-          if (node.type === NodeType.FillNode || node.type === NodeType.AuditNode) {
-            const fieldsAuths: FieldAuthsMap = {};
+      //   flowRecursion(flowData, function calcField(node) {
+      //     if (node.type === NodeType.FillNode || node.type === NodeType.AuditNode) {
+      //       const fieldsAuths: FieldAuthsMap = {};
 
-            fieldsTemplate.forEach((field) => {
-              const key = field.id;
+      //       fieldsTemplate.forEach((field) => {
+      //         const key = field.id;
 
-              if (node.fieldsAuths[key] !== undefined) {
-                fieldsAuths[key] = node.fieldsAuths[key];
-              } else {
-                fieldsAuths[key] = AuthType.View;
-              }
-            });
+      //         if (node.fieldsAuths[key] !== undefined) {
+      //           fieldsAuths[key] = node.fieldsAuths[key];
+      //         } else {
+      //           fieldsAuths[key] = AuthType.View;
+      //         }
+      //       });
 
-            node.fieldsAuths = fieldsAuths;
-          }
-        });
+      //       node.fieldsAuths = fieldsAuths;
+      //     }
+      //   });
 
-        await builderAxios.post('/process/add', { meta: flowData, subappId });
+      //   await builderAxios.post('/process/add', { meta: flowData, subappId });
 
-        dispatch(flowActions.setInitialFlow(flowData));
-        dispatch(flowActions.setFieldsTemplate(fieldsTemplate));
-      } else if (flow.dirty) {
-        // 当前flow未保存
-        await builderAxios.post('/process/add', { meta: flow.data, subappId });
-      }
+      //   dispatch(flowActions.setInitialFlow(flowData));
+      //   dispatch(flowActions.setFieldsTemplate(fieldsTemplate));
+      // } else if (flow.dirty) {
+      //   // 当前flow未保存
+      //   await builderAxios.post('/process/add', { meta: flow.data, subappId });
+      // }
 
+      await builderAxios.post('/process/add', { meta: flow.data, subappId });
       dispatch(flowActions.setDirty(false));
     } finally {
       dispatch(setSaving(false));
@@ -375,7 +385,7 @@ export const addNode = createAsyncThunk<void, { prevId: string; type: AddableNod
         throw Error('传入类型不正确');
       }
 
-      tmpNode.fieldsAuths = getFieldsTemplate(getState().flow.fieldsTemplate);
+      tmpNode.fieldsAuths = formatFieldsAuths(getState().flow.fieldsTemplate);
     }
 
     // 给新节点设置初始字段权限
@@ -397,4 +407,9 @@ export const flowDataSelector = createSelector([(state: RootState) => state.flow
 export const fieldsTemplateSelector = createSelector(
   (state: RootState) => state.flow.fieldsTemplate,
   (fieldsTemplate) => fieldsTemplate,
+);
+
+export const formMetaSelector = createSelector(
+  (state: RootState) => state.flow.form,
+  (form) => form,
 );

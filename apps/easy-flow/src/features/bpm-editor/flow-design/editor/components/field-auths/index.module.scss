@@ -10,6 +10,12 @@
   font-size: 14px;
   font-weight: 400;
 
+  &.only-view {
+    .cell:last-child {
+      flex-grow: 2;
+    }
+  }
+
   .cell {
     @include center('flex');
 

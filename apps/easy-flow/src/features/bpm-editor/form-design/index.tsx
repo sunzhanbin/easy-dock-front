@@ -27,7 +27,8 @@ const FormDesign: FC<{}> = () => {
         const selectFieldId = (layout.length > 0 && layout[0].length > 0 && layout[0][0]) || '';
         components.forEach(({ config, props }: ComponentConfig) => {
           const { id } = config;
-          const componentConfig: ConfigItem = {};
+          // TODO @王朝传
+          const componentConfig: ConfigItem = {} as any;
           const excludeKeys = ['version', 'rules', 'canSubmit'];
           Object.keys(config).forEach((key) => {
             if (!excludeKeys.includes(key)) {
