@@ -14,7 +14,7 @@ function CCNode(props: CCNodeProps) {
   const showMembers = useShowMembers(node.correlationMemberConfig.members);
 
   return (
-    <BaseNode icon={<Icon type="yonghujiedian" />} node={node}>
+    <BaseNode icon={<Icon type="chaosongdise" />} node={node}>
       {showMembers.length ? <MemberList members={showMembers} /> : '设置此节点'}
     </BaseNode>
   );

@@ -28,11 +28,13 @@ function FlowDesign() {
 
   useEffect(() => {
     dispatch(load(bpmId));
-
-    return () => {
-      handleCloseDrawer();
-    };
   }, [dispatch, bpmId]);
+
+  useEffect(() => {
+    return () => {
+      dispatch(setChoosedNode(null));
+    };
+  }, []);
 
   useEffect(() => {
     function handleSave(event: KeyboardEvent) {
@@ -85,7 +87,7 @@ function FlowDesign() {
       );
     } else if (choosedNode.type === NodeType.CCNode) {
       return (
-        <CardHeader icon={<Icon type="yonghujiedian" />} type={choosedNode.type}>
+        <CardHeader icon={<Icon type="chaosongdise" />} type={choosedNode.type}>
           抄送节点
         </CardHeader>
       );
