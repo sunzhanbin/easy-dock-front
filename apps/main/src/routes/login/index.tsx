@@ -92,7 +92,7 @@ export default function Login() {
           <div className={styles.name}>低代码平台</div>
         </div>
         <Form className={styles.form} layout="vertical" form={form} autoComplete="off">
-          <Form.Item name="id" required rules={nameRules}>
+          <Form.Item name="loginName" required rules={nameRules}>
             <Input placeholder="请输入用户名" prefix={<UserOutlined />} size="large" />
           </Form.Item>
           <Form.Item name="password" rules={passwordRules}>
