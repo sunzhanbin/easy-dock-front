@@ -32,8 +32,10 @@ const FormAttrModal = ({ onClose, onOk }: modalProps) => {
       const component = componentList.find((item) => item.id === fieldId);
       const { dataSource } = component as any;
       if (dataSource.type === 'custom') {
+        //自定义数据
         return Promise.resolve(dataSource.data);
       } else if (dataSource.type === 'subapp') {
+        //其他表单数据
         const { fieldName = '', subappId = '' } = dataSource;
         if (fieldName && subappId) {
           return runtimeAxios.get(`/subapp/${subappId}/form/${fieldName}/data`).then((res) => {
@@ -102,7 +104,7 @@ const FormAttrModal = ({ onClose, onOk }: modalProps) => {
                     const ruleValue = getFieldValue('ruleValue') || [];
                     const hideComponents = getFieldValue('hideComponents') || [];
                     // 规则中选中的组件id列表
-                    const ruleComponentIdList = ruleValue.flat(1).map((item: { field: string }) => item.field);
+                    const ruleComponentIdList = ruleValue.flat(1).map((item: { fieldId: string }) => item.fieldId);
                     const set = new Set(ruleComponentIdList.concat(hideComponents));
                     const selectIdList = Array.from(set);
                     // 显示控件的列表要排除规则中已有的组件列表和已选择的隐藏控件
@@ -133,7 +135,7 @@ const FormAttrModal = ({ onClose, onOk }: modalProps) => {
                             const ruleValue = getFieldValue('ruleValue') || [];
                             // 规则中选中的组件id列表
                             const ruleComponentIdList =
-                              ruleValue && ruleValue.flat(1).map((item: { field: string }) => item.field);
+                              ruleValue && ruleValue.flat(1).map((item: { fieldId: string }) => item.fieldId);
                             const set = new Set(ruleComponentIdList.concat(showComponents));
                             const selectIdList = Array.from(set);
                             // 隐藏控件的列表要排除规则中已有的组件列表和已选择的显示控件

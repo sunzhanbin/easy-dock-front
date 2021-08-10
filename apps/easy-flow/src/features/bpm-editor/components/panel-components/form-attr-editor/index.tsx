@@ -1,7 +1,7 @@
 import { memo, useState, useCallback } from 'react';
 import { Button, Tooltip } from 'antd';
 import { FormRuleItem } from '@/type';
-import { formatCondition } from '@/utils';
+import { formatRuleValue } from '@/utils';
 import { Icon } from '@common/components';
 import FormAttrModal from '../form-attr-modal';
 import styles from './index.module.scss';
@@ -40,6 +40,16 @@ const FormAttrEditor = () => {
     },
     [setShowModal],
   );
+  const handleDeleteRule = useCallback(
+    (index) => {
+      setRules((rules) => {
+        const list = [...rules];
+        list.splice(index, 1);
+        return list;
+      });
+    },
+    [setRules],
+  );
   return (
     <div className={styles.container}>
       <div className={styles.rules}>
@@ -47,7 +57,7 @@ const FormAttrEditor = () => {
         <div className={styles.content}>
           {rules.map((item: FormRuleItem, index: number) => {
             if (item.type === 'change') {
-              const condition = formatCondition(item!.formChangeRule!.filedRule);
+              const condition = item!.formChangeRule!.filedRule;
               const showComponentList = item!.formChangeRule!.showComponents || [];
               const hideComponentList = item!.formChangeRule!.hideComponents || [];
               const showComponents = showComponentList.map((id) => byId[id].label);
@@ -61,10 +71,14 @@ const FormAttrEditor = () => {
                         <span key={blockIndex}>
                           <span>
                             {ruleBlock.map((rule, ruleIndex) => {
+                              const component = byId[rule.fieldId] || {};
+                              const fieldName = component.label;
+                              const format = (component as any).format;
+                              const value = formatRuleValue(rule, format);
                               return (
                                 <span key={ruleIndex}>
-                                  <span className={styles.fieldName}>{rule.fieldName}</span>
-                                  <span>{`${rule.symbol}${rule.value}`}</span>
+                                  <span className={styles.fieldName}>{fieldName}</span>
+                                  <span>{value}</span>
                                   {ruleIndex !== ruleBlock.length - 1 && <span>且</span>}
                                 </span>
                               );
@@ -110,7 +124,13 @@ const FormAttrEditor = () => {
                     </Tooltip>
                     <Tooltip title="删除">
                       <span>
-                        <Icon type="shanchu" className={styles.delete} />
+                        <Icon
+                          type="shanchu"
+                          className={styles.delete}
+                          onClick={() => {
+                            handleDeleteRule(index);
+                          }}
+                        />
                       </span>
                     </Tooltip>
                   </div>

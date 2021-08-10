@@ -1,8 +1,8 @@
 import { memo, useMemo, useCallback, useState } from 'react';
-import { Form, Select, Input, InputNumber, DatePicker } from 'antd';
+import { Form, Select, Input, InputNumber } from 'antd';
 import classnames from 'classnames';
 import { filedRule, FormField } from '@/type';
-import { symbolMap } from '@/utils';
+import { symbolMap, dynamicMap } from '@/utils';
 import { Icon } from '@common/components';
 import MultiText from '@/features/bpm-editor/components/multi-text';
 import NumberRange from '@/features/bpm-editor/components/number-range';
@@ -11,7 +11,6 @@ import DateRange from '@/features/bpm-editor/components/date-range';
 import styles from './index.module.scss';
 
 const { Option } = Select;
-const { RangePicker } = DatePicker;
 const symbolListMap = {
   text: [
     symbolMap.equal,
@@ -75,7 +74,7 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
   const [form] = Form.useForm();
   const initValues = useMemo(() => {
     return {
-      field: rule.field || undefined,
+      fieldId: rule.fieldId || undefined,
       symbol: rule.symbol || undefined,
       value: rule.value || undefined,
     };
@@ -100,10 +99,10 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
   const [selectComponent, setSelectComponent] = useState<{ id: string; type: string; format: string; label: string }>();
   const changeField = useCallback(() => {
     form.setFieldsValue({ symbol: undefined, value: undefined });
-    const fieldId = form.getFieldValue('field');
-    const field = componentList.find((item) => item.id === fieldId);
-    setSelectComponent(field);
-    const fieldType = field && (field.type as string);
+    const fieldId = form.getFieldValue('fieldId');
+    const component = componentList.find((item) => item.id === fieldId);
+    setSelectComponent(component);
+    const fieldType = component && (component.type as string);
     if (loadDataSource && (fieldType === 'Select' || fieldType === 'Radio' || fieldType === 'Checkbox')) {
       loadDataSource(fieldId).then((res) => {
         if (res) {
@@ -125,13 +124,13 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
   const handleFinish = useCallback(() => {
     const values = form.getFieldsValue();
     if (
-      rule.field !== values.field ||
+      rule.fieldId !== values.fieldId ||
       rule.symbol !== values.symbol ||
       (values.value !== undefined && rule.value !== values.value)
     ) {
       let rule = values;
       if (selectComponent) {
-        rule = Object.assign({}, values, { fieldName: selectComponent!.label, fieldType: selectComponent!.type });
+        rule = Object.assign({}, values, { fieldType: selectComponent!.type });
       }
       onChange && onChange(blockIndex, ruleIndex, rule);
     }
@@ -146,11 +145,11 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
       initialValues={initValues}
       onValuesChange={handleFinish}
     >
-      <Form.Item name="field">
+      <Form.Item name="fieldId">
         <Select
           placeholder="关联字段"
           size="large"
-          className={styles.field}
+          className={styles.fieldId}
           onChange={changeField}
           suffixIcon={<Icon type="xiala" />}
         >
@@ -161,7 +160,7 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
           ))}
         </Select>
       </Form.Item>
-      <Form.Item noStyle shouldUpdate={(prevValues, curValues) => prevValues.field !== curValues.field}>
+      <Form.Item noStyle shouldUpdate={(prevValues, curValues) => prevValues.fieldId !== curValues.fieldId}>
         {() => {
           const componentType = selectComponent && selectComponent.type;
           let symbolList: { value: string; label: string }[] = [];
@@ -209,7 +208,7 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
       <Form.Item
         noStyle
         shouldUpdate={(prevValues, curValues) =>
-          prevValues.symbol !== curValues.symbol || prevValues.field !== curValues.field
+          prevValues.symbol !== curValues.symbol || prevValues.fieldId !== curValues.fieldId
         }
       >
         {({ getFieldValue }) => {
@@ -236,6 +235,7 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
                 </Form.Item>
               );
             }
+            return null;
           }
           // 数字类型
           if (componentType === 'InputNumber') {
@@ -246,11 +246,14 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
                 </Form.Item>
               );
             }
-            return (
-              <Form.Item name="value" className={styles.valueWrapper}>
-                <InputNumber placeholder="输入值" size="large" className={styles.value} />
-              </Form.Item>
-            );
+            if (symbol) {
+              return (
+                <Form.Item name="value" className={styles.valueWrapper}>
+                  <InputNumber placeholder="输入值" size="large" className={styles.value} />
+                </Form.Item>
+              );
+            }
+            return null;
           }
           // 日期类型
           if (componentType === 'Date') {
@@ -259,8 +262,11 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
               return (
                 <Form.Item name="value" className={styles.valueWrapper}>
                   <Select placeholder="请选择" size="large" className={styles.value}>
-                    <Option value="today">今天</Option>
-                    <Option value="nextYear">明年</Option>
+                    {Object.values(dynamicMap).map((item) => (
+                      <Option key={item.value} value={item.value} label={item.label}>
+                        {item.label}
+                      </Option>
+                    ))}
                   </Select>
                 </Form.Item>
               );
@@ -274,11 +280,14 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
                 </Form.Item>
               );
             }
-            return (
-              <Form.Item name="value" className={styles.valueWrapper}>
-                <TimesDatePicker className={styles.value} format={format} showTime={showTime} size="large" />
-              </Form.Item>
-            );
+            if (symbol) {
+              return (
+                <Form.Item name="value" className={styles.valueWrapper}>
+                  <TimesDatePicker className={styles.value} format={format} showTime={showTime} size="large" />
+                </Form.Item>
+              );
+            }
+            return null;
           }
           // 选项类型(下拉,单选,多选)
           if (componentType === 'Select' || componentType === 'Radio' || componentType === 'Checkbox') {
@@ -320,6 +329,9 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
                   </Select>
                 </Form.Item>
               );
+            }
+            if (!symbol) {
+              return null;
             }
           }
           return null;

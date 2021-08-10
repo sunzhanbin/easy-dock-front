@@ -110,15 +110,65 @@ export function timeDiff(milliseconds: number) {
   return timeTextArr.join('');
 }
 
-type Rule = filedRule & { fieldName?: string; fieldType?: string };
 // 格式化条件
-export function formatCondition(rules: Rule[][]) {
+export function formatCondition(rules: filedRule[][]) {
   return rules.map((ruleBlock) => {
     return ruleBlock.map((rule) => {
       const symbol = symbolMap[rule.symbol].label;
       return Object.assign({}, rule, { symbol });
     });
   });
+}
+// 格式化单个条件value
+export function formatRuleValue(rule: filedRule, format = 'YYYY-MM-DD') {
+  const { symbol, fieldType, value } = rule;
+  const label = (rule.symbol && symbolMap[rule.symbol].label) || '';
+  if (symbol === 'null' || symbol === 'notNull') {
+    return label;
+  }
+  // 文本类型
+  if (fieldType === 'Input' || fieldType === 'Textarea') {
+    if (symbol === 'equal' || symbol === 'unequal' || symbol === 'include' || symbol === 'exclude') {
+      return label + value;
+    }
+    if (symbol === 'equalAnyOne' || symbol === 'unequalAnyOne') {
+      const text = ((value as string[]) || []).join('、');
+      return label + text;
+    }
+  }
+  // 数字类型
+  if (fieldType === 'InputNumber') {
+    if (symbol === 'range') {
+      const [min, max] = value as [number, number];
+      return `大于等于${min}且小于等于${max}`;
+    }
+    return label + value;
+  }
+  // 日期类型
+  if (fieldType === 'Date') {
+    if (symbol === 'range') {
+      const [start, end] = value as [number, number];
+      const startTime = moment(start).format(format);
+      const endTime = moment(end).format(format);
+      return `在${startTime}和${endTime}之间`;
+    }
+    if (symbol === 'dynamic') {
+      const text = dynamicMap[value as string].label;
+      return `在${text}之内`;
+    }
+    const text = moment(value as number).format(format);
+    return label + text;
+  }
+  // 选项类型
+  if (fieldType === 'Select' || fieldType === 'Radio' || fieldType === 'Checkbox') {
+    if (symbol === 'equal' || symbol === 'unequal' || symbol === 'include' || symbol === 'exclude') {
+      return label + value;
+    }
+    if (symbol === 'equalAnyOne' || symbol === 'unequalAnyOne') {
+      const text = ((value as string[]) || []).join('、');
+      return label + text;
+    }
+  }
 }
 
 // 条件符号映射
@@ -137,4 +187,18 @@ export const symbolMap: { [k in string]: { value: string; label: string } } = {
   exclude: { value: 'exclude', label: '不包含' },
   null: { value: 'null', label: '为空' },
   notNull: { value: 'notNull', label: '不为空' },
+};
+
+export const dynamicMap: { [k in string]: { value: string; label: string } } = {
+  today: { value: 'today', label: '今天' },
+  yesterday: { value: 'yesterday', label: '昨天' },
+  thisWeek: { value: 'thisWeek', label: '本周' },
+  lastWeek: { value: 'lastWeek', label: '上周' },
+  thisMonth: { value: 'thisMonth', label: '本月' },
+  lastMonth: { value: 'lastMonth', label: '上月' },
+  thisYear: { value: 'thisYear', label: '今年' },
+  lastYear: { value: 'lastYear', label: '去年' },
+  last7days: { value: 'last7days', label: '最近7天' },
+  last30days: { value: 'last30days', label: '最近30天' },
+  last90days: { value: 'last90days', label: '最近90天' },
 };

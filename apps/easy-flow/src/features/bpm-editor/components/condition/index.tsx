@@ -15,7 +15,7 @@ interface EditProps {
 }
 
 const Condition = ({ className, data, value, onChange, loadDataSource }: EditProps) => {
-  const [ruleList, setRuleList] = useState<filedRule[][]>(value || [[{ field: '', symbol: '' }]]);
+  const [ruleList, setRuleList] = useState<filedRule[][]>(value || [[{ fieldId: '', symbol: '' }]]);
   const components = useMemo(() => {
     return data || [];
   }, [data]);
@@ -24,7 +24,7 @@ const Condition = ({ className, data, value, onChange, loadDataSource }: EditPro
       setRuleList((list) => {
         return list.map((ruleBlock, blockIndex) => {
           if (index === blockIndex) {
-            ruleBlock.push({ field: '', symbol: '' });
+            ruleBlock.push({ fieldId: '', symbol: '' });
           }
           return ruleBlock;
         });
@@ -47,7 +47,7 @@ const Condition = ({ className, data, value, onChange, loadDataSource }: EditPro
   );
   const addRuleBlock = useCallback(() => {
     const list = [...ruleList];
-    list.push([{ field: '', symbol: '' }]);
+    list.push([{ fieldId: '', symbol: '' }]);
     setRuleList(list);
   }, [ruleList, setRuleList]);
   const handleRuleChange = useCallback(
@@ -93,18 +93,16 @@ const Condition = ({ className, data, value, onChange, loadDataSource }: EditPro
                               onChange={handleRuleChange}
                               loadDataSource={loadDataSource}
                             />
-                            <span
-                              className={styles.delete}
-                              onClick={() => {
-                                deleteRule(index, ruleIndex);
-                              }}
-                            >
-                              <Tooltip title="删除">
-                                <span>
-                                  <Icon type="shanchu" />
-                                </span>
-                              </Tooltip>
-                            </span>
+                            <Tooltip title="删除">
+                              <span
+                                className={styles.delete}
+                                onClick={() => {
+                                  deleteRule(index, ruleIndex);
+                                }}
+                              >
+                                <Icon type="shanchu" />
+                              </span>
+                            </Tooltip>
                           </div>
                         );
                       })}

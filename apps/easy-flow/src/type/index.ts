@@ -161,8 +161,9 @@ export type ErrorItem = {
 };
 
 export type filedRule = {
-  field: string;
+  fieldId: string;
   symbol: string;
+  fieldType?: string;
   value?: string | number | string[] | [number, number];
 };
 // 值改变时规则
