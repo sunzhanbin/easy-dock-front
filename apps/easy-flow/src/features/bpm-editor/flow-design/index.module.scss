@@ -1,9 +1,51 @@
 @import '@common/styles/mixin.scss';
 
 .scroll-container {
+  position: relative;
   height: 100%;
   font-size: 0;
   overflow: auto;
+
+  .editor {
+    flex: 1 1 0;
+    padding: 24px;
+    overflow-y: auto;
+
+    :global {
+      .ant-form-item-label {
+        padding-bottom: 12px;
+
+        & > label {
+          line-height: 22px;
+          color: rgba(#181f43, 0.95);
+          font-size: 14px;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+
+  :global {
+    .ant-drawer-right {
+      height: unset;
+      top: 64px;
+      bottom: 0;
+
+      .ant-drawer-body {
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+      }
+    }
+
+    .ant-drawer-mask {
+      background-color: transparent;
+    }
+
+    .ant-cascader-menu {
+      height: unset;
+    }
+  }
 }
 
 .flow {
@@ -31,47 +73,6 @@
       width: 1px;
       top: 95px;
       bottom: 24px;
-    }
-  }
-
-  :global {
-    .ant-drawer-right {
-      height: unset;
-      top: 64px;
-      bottom: 0;
-
-      .ant-drawer-body {
-        display: flex;
-        flex-direction: column;
-        padding: 0;
-      }
-    }
-
-    .ant-drawer-mask {
-      background-color: transparent;
-    }
-
-    .ant-cascader-menu {
-      height: unset;
-    }
-  }
-
-  .editor {
-    flex: 1 1 0;
-    padding: 24px;
-    overflow-y: auto;
-
-    :global {
-      .ant-form-item-label {
-        padding-bottom: 12px;
-
-        & > label {
-          line-height: 22px;
-          color: rgba(#181f43, 0.95);
-          font-size: 14px;
-          font-weight: 500;
-        }
-      }
     }
   }
 }

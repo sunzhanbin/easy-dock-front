@@ -66,7 +66,7 @@ interface FieldAuthsProps {
 }
 
 function FieldAuths(props: FieldAuthsProps) {
-  const { value, onChange, max } = props;
+  const { value, onChange, max = AuthType.Required } = props;
   const templates = useFieldsTemplate();
 
   const memoValueInfo = useMemo(() => {
@@ -196,8 +196,12 @@ function FieldAuths(props: FieldAuthsProps) {
       {templates.map((field) => {
         return (
           <FieldRow
-            label={field.name}
-            className={field.type === 'DescText' ? styles['only-view'] : ''}
+            label={field.name || '描述文字'}
+            className={classnames({
+              // 当字段是描述文字的时候并且字段列表可配编辑和必填时让描述文字的复选框显示only-view
+              // 右侧会空出空间与其他字段对齐
+              [styles['only-view']]: field.type === 'DescText' && max === AuthType.Required,
+            })}
             max={field.type === 'DescText' ? 1 : max}
             key={field.id}
             value={valueMaps[field.id]}

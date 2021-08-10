@@ -1,4 +1,4 @@
-import { filedRule } from '@/type';
+import { filedRule, FormField } from '@/type';
 import moment from 'moment';
 
 export { default as axios, runtimeAxios, builderAxios } from './axios';
@@ -120,55 +120,61 @@ export function formatCondition(rules: filedRule[][]) {
   });
 }
 // 格式化单个条件value
-export function formatRuleValue(rule: filedRule, format = 'YYYY-MM-DD') {
+export function formatRuleValue(
+  rule: filedRule,
+  field?: FormField,
+): { name: string | undefined; symbol: string; value?: string } {
   const { symbol, fieldType, value } = rule;
+  const name = field?.label;
   const label = (rule.symbol && symbolMap[rule.symbol].label) || '';
   if (symbol === 'null' || symbol === 'notNull') {
-    return label;
+    return { name, symbol: label };
   }
   // 文本类型
   if (fieldType === 'Input' || fieldType === 'Textarea') {
     if (symbol === 'equal' || symbol === 'unequal' || symbol === 'include' || symbol === 'exclude') {
-      return label + value;
+      return { name, symbol: label, value: value as string };
     }
     if (symbol === 'equalAnyOne' || symbol === 'unequalAnyOne') {
       const text = ((value as string[]) || []).join('、');
-      return label + text;
+      return { name, symbol: label, value: text };
     }
   }
   // 数字类型
   if (fieldType === 'InputNumber') {
     if (symbol === 'range') {
       const [min, max] = value as [number, number];
-      return `大于等于${min}且小于等于${max}`;
+      return { name, symbol: label, value: `>=${min}且<=${max}` };
     }
-    return label + value;
+    return { name, symbol: label, value: value as string };
   }
   // 日期类型
   if (fieldType === 'Date') {
+    const format = (field as any).format;
     if (symbol === 'range') {
       const [start, end] = value as [number, number];
       const startTime = moment(start).format(format);
       const endTime = moment(end).format(format);
-      return `在${startTime}和${endTime}之间`;
+      return { name, symbol: label, value: `在${startTime}和${endTime}之间` };
     }
     if (symbol === 'dynamic') {
       const text = dynamicMap[value as string].label;
-      return `在${text}之内`;
+      return { name, symbol: label, value: `在${text}之内` };
     }
     const text = moment(value as number).format(format);
-    return label + text;
+    return { name, symbol: label, value: text };
   }
   // 选项类型
   if (fieldType === 'Select' || fieldType === 'Radio' || fieldType === 'Checkbox') {
     if (symbol === 'equal' || symbol === 'unequal' || symbol === 'include' || symbol === 'exclude') {
-      return label + value;
+      return { name, symbol: label, value: value as string };
     }
     if (symbol === 'equalAnyOne' || symbol === 'unequalAnyOne') {
       const text = ((value as string[]) || []).join('、');
-      return label + text;
+      return { name, symbol: label, value: text };
     }
   }
+  return { name, symbol: label };
 }
 
 // 条件符号映射

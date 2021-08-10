@@ -7512,18 +7512,6 @@ filemanager-webpack-plugin@^5.0.0:
     is-glob "^4.0.1"
     schema-utils "^3.0.0"
 
-filemanager-webpack-plugin@^6.1.4:
-  version "6.1.4"
-  resolved "https://registry.nlark.com/filemanager-webpack-plugin/download/filemanager-webpack-plugin-6.1.4.tgz#8c17aa49fa5b9cbb54416a3b00acb99eeaab1199"
-  integrity sha1-jBeqSfpbnLtUQWo7AKy5nuqrEZk=
-  dependencies:
-    archiver "^5.3.0"
-    cpy "^8.1.2"
-    del "^6.0.0"
-    fs-extra "^10.0.0"
-    is-glob "^4.0.1"
-    schema-utils "^3.0.0"
-
 filesize@3.6.1:
   version "3.6.1"
   resolved "https://registry.nlark.com/filesize/download/filesize-3.6.1.tgz#090bb3ee01b6f801a8a8be99d31710b3422bb317"

@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction, createAsyncThunk, createSelector, current } from '@reduxjs/toolkit';
 import { message } from 'antd';
-import { cloneDeep, isEqual } from 'lodash';
 import { builderAxios, runtimeAxios } from '@utils';
 import { User } from '@type';
 import {

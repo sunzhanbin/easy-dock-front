@@ -8,7 +8,6 @@ import { useAppDispatch } from '@/app/hooks';
 import { delNode, addSubBranch, delSubBranch, setChoosedNode } from '../../flow-slice';
 import AddNodeButton from '../../editor/components/add-node-button';
 import styles from './index.module.scss';
-import { formatCondition } from '@utils';
 
 type BranchType = BranchNodeType['branches'][number];
 

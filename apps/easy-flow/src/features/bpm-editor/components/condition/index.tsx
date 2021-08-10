@@ -30,7 +30,7 @@ const Condition = ({ className, data, value, onChange, loadDataSource }: EditPro
         });
       });
     },
-    [ruleList, setRuleList],
+    [setRuleList],
   );
   const deleteRule = useCallback(
     (blockIndex, ruleIndex) => {
@@ -43,7 +43,7 @@ const Condition = ({ className, data, value, onChange, loadDataSource }: EditPro
         });
       });
     },
-    [ruleList, setRuleList],
+    [setRuleList],
   );
   const addRuleBlock = useCallback(() => {
     const list = [...ruleList];
@@ -64,7 +64,7 @@ const Condition = ({ className, data, value, onChange, loadDataSource }: EditPro
         });
       });
     },
-    [ruleList, setRuleList],
+    [setRuleList],
   );
   useEffect(() => {
     if (ruleList.length > 0) {

@@ -11,19 +11,21 @@ import { componentPropsSelector } from '@/features/bpm-editor/form-design/formzo
 const FormAttrEditor = () => {
   const byId = useAppSelector(componentPropsSelector);
   const [rules, setRules] = useState<FormRuleItem[]>([]);
+  const [currentRule, setCurrentRule] = useState<FormRuleItem | null>(null);
+  const [editIndex, setEditIndex] = useState<number>(0);
+  const [type, setType] = useState<'add' | 'edit'>('add');
   const [showModal, setShowModal] = useState<boolean>(false);
-  const handleShowModal = useCallback(() => {
-    setShowModal(true);
-  }, [setShowModal]);
+
   const handleClose = useCallback(() => {
     setShowModal(false);
   }, [setShowModal]);
   const handleOk = useCallback(
-    (rules) => {
+    (rules, type, editIndex) => {
       setShowModal(false);
-      // 值改变时
+      let rule: FormRuleItem;
       if (rules.mode === 1) {
-        const rule: FormRuleItem = {
+        // 值改变时
+        rule = {
           type: 'change',
           formChangeRule: {
             filedRule: rules.ruleValue,
@@ -31,15 +33,35 @@ const FormAttrEditor = () => {
             hideComponents: rules.hideComponents,
           },
         };
-        console.info(rules.ruleValue, 111);
+      } else if (rules.mode === 2) {
+        //进入表单时
+        rule = {
+          type: 'init',
+        };
+      }
+      if (type === 'add') {
         setRules((rules) => {
           rules.push(rule);
           return rules;
+        });
+      } else {
+        setRules((rules) => {
+          return rules.map((item, index) => {
+            if (index === editIndex) {
+              return rule;
+            }
+            return item;
+          });
         });
       }
     },
     [setShowModal],
   );
+  const handleAddRule = useCallback(() => {
+    setType('add');
+    setCurrentRule(null);
+    setShowModal(true);
+  }, [setType, setCurrentRule, setShowModal]);
   const handleDeleteRule = useCallback(
     (index) => {
       setRules((rules) => {
@@ -49,6 +71,16 @@ const FormAttrEditor = () => {
       });
     },
     [setRules],
+  );
+  const handleEditRule = useCallback(
+    (index) => {
+      const rule = rules[index];
+      setType('edit');
+      setEditIndex(index);
+      setCurrentRule(rule);
+      setShowModal(true);
+    },
+    [rules, setType, setCurrentRule, setShowModal, setEditIndex],
   );
   return (
     <div className={styles.container}>
@@ -72,13 +104,12 @@ const FormAttrEditor = () => {
                           <span>
                             {ruleBlock.map((rule, ruleIndex) => {
                               const component = byId[rule.fieldId] || {};
-                              const fieldName = component.label;
-                              const format = (component as any).format;
-                              const value = formatRuleValue(rule, format);
+                              const formatRule = formatRuleValue(rule, component);
                               return (
                                 <span key={ruleIndex}>
-                                  <span className={styles.fieldName}>{fieldName}</span>
-                                  <span>{value}</span>
+                                  <span className={styles.fieldName}>{formatRule?.name || ''}</span>
+                                  <span>{formatRule?.symbol || ''}</span>
+                                  <span className={styles.fieldName}>{formatRule?.value || ''}</span>
                                   {ruleIndex !== ruleBlock.length - 1 && <span>且</span>}
                                 </span>
                               );
@@ -119,7 +150,13 @@ const FormAttrEditor = () => {
                   <div className={styles.operation}>
                     <Tooltip title="编辑">
                       <span>
-                        <Icon type="bianji" className={styles.edit} />
+                        <Icon
+                          type="bianji"
+                          className={styles.edit}
+                          onClick={() => {
+                            handleEditRule(index);
+                          }}
+                        />
                       </span>
                     </Tooltip>
                     <Tooltip title="删除">
@@ -137,13 +174,16 @@ const FormAttrEditor = () => {
                 </div>
               );
             }
+            return null;
           })}
         </div>
-        <Button className={styles.add} size="large" icon={<Icon type="xinzeng" />} onClick={handleShowModal}>
+        <Button className={styles.add} size="large" icon={<Icon type="xinzeng" />} onClick={handleAddRule}>
           添加
         </Button>
       </div>
-      {showModal && <FormAttrModal onClose={handleClose} onOk={handleOk} />}
+      {showModal && (
+        <FormAttrModal type={type} rule={currentRule} editIndex={editIndex} onClose={handleClose} onOk={handleOk} />
+      )}
     </div>
   );
 };
