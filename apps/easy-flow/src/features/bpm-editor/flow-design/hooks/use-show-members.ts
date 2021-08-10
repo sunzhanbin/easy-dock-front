@@ -2,12 +2,12 @@ import { useAppSelector } from '@/app/hooks';
 import { flowDataSelector } from '../flow-slice';
 import { Member } from '@type';
 
-export default function useShowMembers(members: string[]) {
+export default function useShowMembers(memberIds: number[]) {
   const { cacheMembers } = useAppSelector(flowDataSelector);
 
-  return members
-    .map((member) => {
-      return <Member>cacheMembers[member];
+  return memberIds
+    .map((id) => {
+      return <Member>cacheMembers[id];
     })
     .filter(Boolean);
 }
