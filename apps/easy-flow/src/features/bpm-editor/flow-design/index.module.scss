@@ -1,20 +1,37 @@
 @import '@common/styles/mixin.scss';
 
-.flow {
-  position: relative;
-  display: inline-block;
+.scroll-container {
   height: 100%;
+  font-size: 0;
+  overflow: auto;
+}
+
+.flow {
+  display: inline-block;
   min-width: 100%;
+  min-height: 100%;
+  font-size: 14px;
+  background-color: #f6f7f8;
 
   .content {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 100%;
     padding-top: 95px;
     padding-bottom: 24px;
-    background-color: rgba(#182743, 0.04);
-    overflow-y: auto;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      transform: translate3d(-50%, 0, 0);
+      background-color: #e3e4e8;
+      width: 1px;
+      top: 95px;
+      bottom: 24px;
+    }
   }
 
   :global {

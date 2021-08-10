@@ -78,7 +78,6 @@ function Base(props: BaseProps) {
 
       {type !== NodeType.FinishNode && (
         <div className={styles.footer}>
-          <div className={styles.line} />
           <AddNodeButton prevId={node.id} />
         </div>
       )}

@@ -22,14 +22,17 @@ function FlowDesign() {
   const dispatch = useAppDispatch();
   const { bpmId } = useParams<{ bpmId: string }>();
   const { loading, data: flow, choosedNode } = useAppSelector(flowDataSelector);
+  const handleCloseDrawer = useMemoCallback(() => {
+    dispatch(setChoosedNode(null));
+  });
 
   useEffect(() => {
     dispatch(load(bpmId));
-  }, [dispatch, bpmId]);
 
-  const handleCloseNodeEditor = useMemoCallback(() => {
-    dispatch(setChoosedNode(null));
-  });
+    return () => {
+      handleCloseDrawer();
+    };
+  }, [dispatch, bpmId]);
 
   useEffect(() => {
     function handleSave(event: KeyboardEvent) {
@@ -91,25 +94,26 @@ function FlowDesign() {
 
   const drawerWidth = useMemo(() => {
     if (choosedNode && choosedNode.type === NodeType.SubBranch) {
-      return 440;
+      return 600;
     }
 
     return 368;
   }, [choosedNode?.type]);
 
   return (
-    <div className={styles.flow}>
-      {loading && <Loading />}
+    <div className={styles['scroll-container']}>
+      <div className={styles.flow}>
+        {loading && <Loading />}
 
-      <div className={styles.content}>
-        <FlowTree data={flow} />
+        <div className={styles.content} id="flow-design-container">
+          <FlowTree data={flow} />
+        </div>
       </div>
-
       <Drawer
         width={drawerWidth}
         visible={!!choosedNode}
         getContainer={false}
-        onClose={handleCloseNodeEditor}
+        onClose={handleCloseDrawer}
         destroyOnClose
         closable={false}
       >

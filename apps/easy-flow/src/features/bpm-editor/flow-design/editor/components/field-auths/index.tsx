@@ -6,9 +6,10 @@ import { FieldAuthsMap, AuthType, FieldTemplate } from '@type/flow';
 import useFieldsTemplate from '../../../hooks/use-fields-template';
 import styles from './index.module.scss';
 
-type FieldAuth = Omit<FieldTemplate, 'type'> & { auth: AuthType };
+type FieldAuth = Pick<FieldTemplate, 'id'> & { auth: AuthType };
 
 interface FieldRowProps {
+  label: string;
   value: FieldAuth;
   onChange(field: FieldAuth): void;
   extra?: {
@@ -22,14 +23,14 @@ interface FieldRowProps {
 }
 
 const FieldRow = memo(function FieldRow(props: FieldRowProps) {
-  const { value, onChange, extra, className, max = AuthType.Required } = props;
+  const { value, onChange, extra, label, className, max = AuthType.Required } = props;
   const handleAuthChange = useMemoCallback((auth: FieldAuth['auth']) => {
     onChange(Object.assign({}, value, { auth }));
   });
 
   return (
     <div className={classnames(styles['flex-row'], max !== AuthType.Required ? styles.limit : '', className)}>
-      <div className={styles.cell}>{value.name}</div>
+      <div className={styles.cell}>{label}</div>
       <div className={styles.cell}>
         <span className={styles.checkbox} onClickCapture={() => handleAuthChange(value.auth > 0 ? 0 : 1)}>
           <Checkbox checked={value.auth > 0} indeterminate={extra?.view.indeterminate} />
@@ -97,13 +98,10 @@ function FieldAuths(props: FieldAuthsProps) {
     let viewTypeNum = 0;
 
     templates.forEach((field) => {
-      let fieldname: string = field.name || '';
       let fieldauth: AuthType;
 
       if (field.type === 'DescText') {
         viewTypeNum++;
-        fieldname = '描述文字';
-        console.log(field);
       }
 
       if (value && value[field.id] in AuthType) {
@@ -114,7 +112,6 @@ function FieldAuths(props: FieldAuthsProps) {
 
       valueMaps[field.id] = {
         id: field.id,
-        name: fieldname,
         auth: fieldauth,
       };
 
@@ -152,7 +149,6 @@ function FieldAuths(props: FieldAuthsProps) {
       valueMaps,
       total: {
         value: {
-          name: '字段名称',
           id: '',
           auth: totalAuth,
         },
@@ -189,15 +185,18 @@ function FieldAuths(props: FieldAuthsProps) {
   return (
     <div>
       <FieldRow
+        label="字段名称"
         max={max}
         className={styles.title}
         value={total.value}
         extra={total.extra}
         onChange={handleTotalChange}
       />
+
       {templates.map((field) => {
         return (
           <FieldRow
+            label={field.name}
             className={field.type === 'DescText' ? styles['only-view'] : ''}
             max={field.type === 'DescText' ? 1 : max}
             key={field.id}

@@ -44,6 +44,8 @@ export const Branch = memo(function Branch(props: BranchProps) {
 
   return (
     <div className={classnames(styles.branch)}>
+      <span className={styles.line}></span>
+
       <div className={styles.main}>
         <div className={classnames(styles.content, showDeletePopover ? styles['show-del'] : '')}>
           <div className={styles.conditions} onClick={handleBranchClick}>
@@ -84,11 +86,9 @@ export const Branch = memo(function Branch(props: BranchProps) {
         <div className={styles.footer}>
           <AddNodeButton prevId={data.id}></AddNodeButton>
         </div>
-        <span className={styles.line}></span>
       </div>
 
       {children}
-      <div className={styles.stretch}></div>
     </div>
   );
 });
