@@ -38,7 +38,7 @@ export type DoneItem = {
 };
 
 export type UserItem = {
-  loginName: string;
+  id: number;
   userName: string;
 };
 

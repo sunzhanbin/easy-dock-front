@@ -30,7 +30,7 @@ export type FlowType = {
   dirty: boolean;
   invalidNodesMap: ValidResultType;
   cacheMembers: {
-    [loginName: string]: User;
+    [id: number]: User;
   };
   fieldsTemplate: FieldTemplate[];
   choosedNode: AllNode | null | BranchNode['branches'][number];
@@ -174,12 +174,12 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
 
       flowData = [startNode, fillNode, finishNode];
     } else {
-      const loginNames: Set<string> = new Set();
+      const ids: Set<number> = new Set();
 
       flowRecursion(flowData, (node) => {
         if (node.type === NodeType.FillNode || node.type === NodeType.AuditNode || node.type === NodeType.CCNode) {
           (node.correlationMemberConfig.members || []).forEach((member) => {
-            loginNames.add(member);
+            ids.add(member);
 
             const fieldsAuths: FieldAuthsMap = {};
 
@@ -201,15 +201,15 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
         }
       });
 
-      // loginNames 为一组成员登录名，这样设计为了避免用户更新完头像或者名称后不在节点中更新的问题
-      const userResponse = await runtimeAxios.post('/user/query/loginNames', Array.from(loginNames));
+      // ids 为一组成员登录名，这样设计为了避免用户更新完头像或者名称后不在节点中更新的问题
+      const userResponse = await runtimeAxios.post('/user/list/ids', Array.from(ids));
       const cacheMembers: FlowType['cacheMembers'] = {};
 
       userResponse.data.forEach((member: any) => {
-        cacheMembers[member.loginName] = {
+        cacheMembers[member.id] = {
           name: member.userName,
           avatar: member.avatar,
-          loginName: member.loginName,
+          id: member.id,
         };
       });
 

@@ -214,8 +214,8 @@ const ToDo: FC<{}> = () => {
                 placeholder="请选择"
                 allowClear
               >
-                {optionList.map(({ loginName, userName }) => (
-                  <Option key={loginName} value={loginName}>
+                {optionList.map(({ id, userName }) => (
+                  <Option key={id} value={id}>
                     {userName}
                   </Option>
                 ))}

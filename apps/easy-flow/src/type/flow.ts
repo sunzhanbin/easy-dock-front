@@ -46,7 +46,7 @@ export type FieldAuthsMap = {
 };
 
 export type CorrelationMemberConfig = {
-  members: string[];
+  members: number[];
 };
 // 审批节点
 export interface UserNode extends BaseNode {

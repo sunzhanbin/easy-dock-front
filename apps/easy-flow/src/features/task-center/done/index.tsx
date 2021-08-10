@@ -199,8 +199,8 @@ const Done: FC<{}> = () => {
                   fetchData();
                 }}
               >
-                {optionList.map(({ loginName, userName }) => (
-                  <Option key={loginName} value={loginName}>
+                {optionList.map(({ id, userName }) => (
+                  <Option key={id} value={id}>
                     {userName}
                   </Option>
                 ))}

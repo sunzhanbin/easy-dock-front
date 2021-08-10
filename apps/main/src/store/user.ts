@@ -33,7 +33,7 @@ export const getUserInfo = createAsyncThunk('main-app-user/get-user', (_, { disp
       setUser({
         avatar: data.user.avatar,
         username: data.user.userName,
-        loginName: data.user.loginName,
+        id: data.user.id,
       }),
     );
   });

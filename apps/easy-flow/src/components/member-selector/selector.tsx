@@ -21,10 +21,10 @@ const fetchUser = async (data: { name: string; page: number }) => {
   return {
     total: memberResponse.data.recordTotal,
     index: memberResponse.data.pageIndex,
-    members: memberResponse.data.data.map((item: { userName: string; loginName: string; avatar: string }) => {
+    members: memberResponse.data.data.map((item: { userName: string; id: number; avatar: string }) => {
       return {
         name: item.userName,
-        loginName: item.loginName,
+        id: item.id,
         avatar: item.avatar,
       };
     }),
@@ -91,7 +91,7 @@ function Selector(props: SelectorProps) {
     }
 
     value.members.forEach((member) => {
-      maps[member.loginName] = true;
+      maps[member.id] = true;
     });
 
     return maps;
@@ -103,7 +103,7 @@ function Selector(props: SelectorProps) {
     if (checked) {
       newMembers.push(member);
     } else {
-      newMembers = newMembers.filter((item) => item.loginName !== member.loginName);
+      newMembers = newMembers.filter((item) => item.id !== member.id);
     }
 
     if (onMembersChange) {
@@ -148,11 +148,11 @@ function Selector(props: SelectorProps) {
             {!memberSearchText && <div className={styles.total}>全部成员({memberTotal})</div>}
 
             {members.map((member) => {
-              const selected = valueMaps[member.loginName];
+              const selected = valueMaps[member.id];
 
               return (
                 <div
-                  key={member.loginName}
+                  key={member.id}
                   className={styles.item}
                   onClick={() => handleChangeMembers(member, !selected)}
                 >

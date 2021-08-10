@@ -17,8 +17,8 @@ function MemberSelector(props: MemberSelectorProps) {
     const { members } = value!;
 
     return {
-      members: members.map((loginName) => {
-        return cacheMembers[loginName];
+      members: members.map((id) => {
+        return cacheMembers[id];
       }),
     };
   }, [value, cacheMembers]);
@@ -27,7 +27,7 @@ function MemberSelector(props: MemberSelectorProps) {
     dispatch(
       setCacheMembers(
         value.members.reduce((curr, next) => {
-          curr[next.loginName] = {
+          curr[next.id] = {
             ...next,
             avatar: next.avatar,
           };
@@ -39,7 +39,7 @@ function MemberSelector(props: MemberSelectorProps) {
 
     if (onChange) {
       onChange({
-        members: value.members.map((member) => member.loginName),
+        members: value.members.map((member) => member.id),
       });
     }
   };

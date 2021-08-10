@@ -10,7 +10,7 @@ import styles from './index.module.scss';
 
 interface MemberProps {
   data: ValueType['members'][number];
-  onDelete?(id: string): void;
+  onDelete?(id: number): void;
   editable?: boolean;
 }
 
@@ -18,7 +18,7 @@ const Member = memo(function Member(props: MemberProps) {
   const { data, editable, onDelete } = props;
   const handleDelete = useMemoCallback(() => {
     if (onDelete) {
-      onDelete(data.loginName);
+      onDelete(data.id);
     }
   });
 
@@ -34,7 +34,7 @@ const Member = memo(function Member(props: MemberProps) {
 interface MemberListProps {
   members: ValueType['members'];
   editable?: boolean;
-  onDelete?(id: string): void;
+  onDelete?(id: number): void;
   children?: ReactNode;
 }
 
@@ -44,7 +44,7 @@ export const MemberList = memo(function MemberList(props: MemberListProps) {
   return (
     <div className={styles.members}>
       {members.map((member) => {
-        return <Member editable={editable} key={member.loginName} data={member} onDelete={onDelete} />;
+        return <Member editable={editable} key={member.id} data={member} onDelete={onDelete} />;
       })}
       {children}
     </div>
@@ -81,11 +81,11 @@ function MemberSelector(props: MemberSelectorProps) {
     }
   });
 
-  const handleDeleteMember = useMemoCallback((loginName: string) => {
+  const handleDeleteMember = useMemoCallback((id: number) => {
     if (onChange) {
       onChange({
         ...showValue,
-        members: showValue.members.filter((member) => member.loginName !== loginName),
+        members: showValue.members.filter((member) => member.id !== id),
       });
     }
   });

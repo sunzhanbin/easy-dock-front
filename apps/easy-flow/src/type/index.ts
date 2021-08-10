@@ -218,7 +218,7 @@ export type MoveConfig = {
 
 export type Member = {
   name: string;
-  loginName: string;
+  id: number;
   avatar: string;
 };
 
@@ -233,7 +233,7 @@ export type MemberConfig = {
 
 export type User = {
   name: string;
-  loginName: string;
+  id: number;
   avatar: string;
 };
 
