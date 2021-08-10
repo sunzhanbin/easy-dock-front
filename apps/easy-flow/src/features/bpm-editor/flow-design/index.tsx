@@ -95,7 +95,7 @@ function FlowDesign() {
     }
 
     return 368;
-  }, [choosedNode?.type]);
+  }, [choosedNode]);
 
   return (
     <div className={styles.flow}>

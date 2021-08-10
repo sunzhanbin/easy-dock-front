@@ -5,17 +5,20 @@ import Condition from '@/features/bpm-editor/components/condition';
 import styles from './index.module.scss';
 import { useAppSelector } from '@/app/hooks';
 import { componentPropsSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
-import { FormField } from '@/type';
+import { FormField, FormRuleItem } from '@/type';
 import { runtimeAxios } from '@/utils/axios';
 
 type modalProps = {
+  editIndex?: number;
+  rule: FormRuleItem | null;
+  type: 'add' | 'edit';
   onClose: () => void;
-  onOk: (rules: any) => void;
+  onOk: (rules: any, type: 'add' | 'edit', editIndex?: number) => void;
 };
 
 const { Option } = Select;
 
-const FormAttrModal = ({ onClose, onOk }: modalProps) => {
+const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => {
   const byId = useAppSelector(componentPropsSelector);
   const [form] = Form.useForm();
   // 表单中所有控件列表
@@ -26,7 +29,24 @@ const FormAttrModal = ({ onClose, onOk }: modalProps) => {
         .map((item: FormField) => item) || []
     );
   }, [byId]);
-
+  const initFormValues = useMemo(() => {
+    // 添加规则
+    if (!rule) {
+      return { mode: 1, ruleType: 1 };
+    }
+    // 编辑值改变时规则
+    if (rule.type === 'change') {
+      return {
+        mode: 1,
+        ruleType: 1,
+        ruleValue: rule.formChangeRule?.filedRule,
+        showComponents: rule.formChangeRule?.showComponents,
+        hideComponents: rule.formChangeRule?.hideComponents,
+      };
+    }
+    // TODO 编辑进入表单时规则
+  }, [rule]);
+  // 加载选项数据源
   const loadDataSource = useCallback(
     (fieldId) => {
       const component = componentList.find((item) => item.id === fieldId);
@@ -52,11 +72,11 @@ const FormAttrModal = ({ onClose, onOk }: modalProps) => {
 
   const handelOk = useCallback(() => {
     const rules = form.getFieldsValue();
-    onOk && onOk(rules);
-  }, [form, onOk]);
+    onOk && onOk(rules, type, editIndex);
+  }, [form, type, editIndex, onOk]);
   return (
     <Modal className={styles.modal} title="表单逻辑规则设置" visible={true} onCancel={onClose} onOk={handelOk}>
-      <Form form={form} className={styles.form} layout="vertical" initialValues={{ mode: 1, ruleType: 1 }}>
+      <Form form={form} className={styles.form} layout="vertical" initialValues={initFormValues}>
         <Form.Item label="选择触发方式" name="mode" className={styles.mode}>
           <Select suffixIcon={<Icon type="xiala" />} size="large">
             <Option key={1} value={1}>

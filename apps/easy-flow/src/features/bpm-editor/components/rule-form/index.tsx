@@ -134,7 +134,179 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
       }
       onChange && onChange(blockIndex, ruleIndex, rule);
     }
-  }, [form, blockIndex, ruleIndex, selectComponent, onChange]);
+  }, [form, blockIndex, ruleIndex, rule, selectComponent, onChange]);
+  const renderSymbol = useCallback(() => {
+    const fieldId = form.getFieldValue('fieldId') || initValues.fieldId;
+    const component = componentList.find((item) => item.id === fieldId);
+    const componentType = component && component.type;
+    let symbolList: { value: string; label: string }[] = [];
+    if (componentType) {
+      switch (componentType as string) {
+        case 'Input':
+        case 'Textarea':
+          symbolList = symbolListMap.text;
+          break;
+        case 'InputNumber':
+          symbolList = symbolListMap.number;
+          break;
+        case 'Date':
+          symbolList = symbolListMap.date;
+          break;
+        case 'Select':
+        case 'Radio':
+        case 'Checkbox':
+          symbolList = symbolListMap.option;
+          break;
+        default:
+          symbolList = symbolListMap.other;
+          break;
+      }
+    }
+    return (
+      <Form.Item name="symbol">
+        <Select
+          placeholder="判断符"
+          size="large"
+          className={styles.symbol}
+          suffixIcon={<Icon type="xiala" />}
+          onChange={changeSymbol}
+        >
+          {symbolList.map(({ value, label }) => (
+            <Option key={value} value={value} label={label}>
+              {label}
+            </Option>
+          ))}
+        </Select>
+      </Form.Item>
+    );
+  }, [form, initValues, componentList, changeSymbol]);
+  const renderValue = useCallback(() => {
+    const fieldId = form.getFieldValue('fieldId') || initValues.fieldId;
+    const symbol = form.getFieldValue('symbol') || initValues.symbol;
+    const component = componentList.find((item) => item.id === fieldId);
+    const componentType = component && (component.type as string);
+    if (symbol === 'null' || symbol === 'notNull') {
+      return null;
+    }
+    // 文本类型
+    if (componentType === 'Input' || componentType === 'Textarea') {
+      // 输入单个值
+      if (symbol === 'equal' || symbol === 'unequal' || symbol === 'include' || symbol === 'exclude') {
+        return (
+          <Form.Item name="value" className={styles.valueWrapper}>
+            <Input placeholder="输入值" size="large" className={styles.value} />
+          </Form.Item>
+        );
+      }
+      // 输入多个值
+      if (symbol === 'equalAnyOne' || symbol === 'unequalAnyOne') {
+        return (
+          <Form.Item name="value" className={styles.valueWrapper}>
+            <MultiText className={styles.value} />
+          </Form.Item>
+        );
+      }
+      return null;
+    }
+    // 数字类型
+    if (componentType === 'InputNumber') {
+      if (symbol === 'range') {
+        return (
+          <Form.Item name="value" className={styles.valueWrapper}>
+            <NumberRange className={styles.value} />
+          </Form.Item>
+        );
+      }
+      if (symbol) {
+        return (
+          <Form.Item name="value" className={styles.valueWrapper}>
+            <InputNumber placeholder="输入值" size="large" className={styles.value} />
+          </Form.Item>
+        );
+      }
+      return null;
+    }
+    // 日期类型
+    if (componentType === 'Date') {
+      // 动态筛选
+      if (symbol === 'dynamic') {
+        return (
+          <Form.Item name="value" className={styles.valueWrapper}>
+            <Select placeholder="请选择" size="large" className={styles.value}>
+              {Object.values(dynamicMap).map((item) => (
+                <Option key={item.value} value={item.value} label={item.label}>
+                  {item.label}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+        );
+      }
+      const format = component && component.format;
+      const showTime = format === 'YYYY-MM-DD HH:mm:ss' ? true : false;
+      if (symbol === 'range') {
+        return (
+          <Form.Item name="value" className={styles.valueWrapper}>
+            <DateRange format={format} showTime={showTime} className={styles.value} />
+          </Form.Item>
+        );
+      }
+      if (symbol) {
+        return (
+          <Form.Item name="value" className={styles.valueWrapper}>
+            <TimesDatePicker className={styles.value} format={format} showTime={showTime} size="large" />
+          </Form.Item>
+        );
+      }
+      return null;
+    }
+    // 选项类型(下拉,单选,多选)
+    if (componentType === 'Select' || componentType === 'Radio' || componentType === 'Checkbox') {
+      if (symbol === 'include' || symbol === 'exclude') {
+        return (
+          <Form.Item name="value" className={styles.valueWrapper}>
+            <Input placeholder="输入值" size="large" className={styles.value} />
+          </Form.Item>
+        );
+      }
+      if (symbol === 'equal' || symbol === 'unequal') {
+        return (
+          <Form.Item name="value" className={styles.valueWrapper}>
+            <Select placeholder="请选择" size="large" className={styles.value} suffixIcon={<Icon type="xiala" />}>
+              {optionList.map(({ key, value }) => (
+                <Option key={key} value={key} label={value}>
+                  {value}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+        );
+      }
+      if (symbol === 'equalAnyOne' || symbol === 'unequalAnyOne') {
+        return (
+          <Form.Item name="value" className={styles.valueWrapper}>
+            <Select
+              placeholder="请选择"
+              mode="multiple"
+              size="large"
+              className={styles.value}
+              suffixIcon={<Icon type="xiala" />}
+            >
+              {optionList.map(({ key, value }) => (
+                <Option key={key} value={key} label={value}>
+                  {value}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+        );
+      }
+      if (!symbol) {
+        return null;
+      }
+    }
+    return null;
+  }, [form, initValues, componentList, optionList]);
   return (
     <Form
       className={classnames(styles.form, className ? className : '')}
@@ -160,183 +332,8 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
           ))}
         </Select>
       </Form.Item>
-      <Form.Item noStyle shouldUpdate={(prevValues, curValues) => prevValues.fieldId !== curValues.fieldId}>
-        {() => {
-          const componentType = selectComponent && selectComponent.type;
-          let symbolList: { value: string; label: string }[] = [];
-          if (componentType) {
-            switch (componentType) {
-              case 'Input':
-              case 'Textarea':
-                symbolList = symbolListMap.text;
-                break;
-              case 'InputNumber':
-                symbolList = symbolListMap.number;
-                break;
-              case 'Date':
-                symbolList = symbolListMap.date;
-                break;
-              case 'Select':
-              case 'Radio':
-              case 'Checkbox':
-                symbolList = symbolListMap.option;
-                break;
-              default:
-                symbolList = symbolListMap.other;
-                break;
-            }
-          }
-          return (
-            <Form.Item name="symbol">
-              <Select
-                placeholder="判断符"
-                size="large"
-                className={styles.symbol}
-                suffixIcon={<Icon type="xiala" />}
-                onChange={changeSymbol}
-              >
-                {symbolList.map(({ value, label }) => (
-                  <Option key={value} value={value} label={label}>
-                    {label}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-          );
-        }}
-      </Form.Item>
-      <Form.Item
-        noStyle
-        shouldUpdate={(prevValues, curValues) =>
-          prevValues.symbol !== curValues.symbol || prevValues.fieldId !== curValues.fieldId
-        }
-      >
-        {({ getFieldValue }) => {
-          const componentType = selectComponent && selectComponent.type;
-          const symbol = getFieldValue('symbol');
-          if (symbol === 'null' || symbol === 'notNull') {
-            return null;
-          }
-          // 文本类型
-          if (componentType === 'Input' || componentType === 'Textarea') {
-            // 输入单个值
-            if (symbol === 'equal' || symbol === 'unequal' || symbol === 'include' || symbol === 'exclude') {
-              return (
-                <Form.Item name="value" className={styles.valueWrapper}>
-                  <Input placeholder="输入值" size="large" className={styles.value} />
-                </Form.Item>
-              );
-            }
-            // 输入多个值
-            if (symbol === 'equalAnyOne' || symbol === 'unequalAnyOne') {
-              return (
-                <Form.Item name="value" className={styles.valueWrapper}>
-                  <MultiText className={styles.value} />
-                </Form.Item>
-              );
-            }
-            return null;
-          }
-          // 数字类型
-          if (componentType === 'InputNumber') {
-            if (symbol === 'range') {
-              return (
-                <Form.Item name="value" className={styles.valueWrapper}>
-                  <NumberRange className={styles.value} />
-                </Form.Item>
-              );
-            }
-            if (symbol) {
-              return (
-                <Form.Item name="value" className={styles.valueWrapper}>
-                  <InputNumber placeholder="输入值" size="large" className={styles.value} />
-                </Form.Item>
-              );
-            }
-            return null;
-          }
-          // 日期类型
-          if (componentType === 'Date') {
-            // 动态筛选
-            if (symbol === 'dynamic') {
-              return (
-                <Form.Item name="value" className={styles.valueWrapper}>
-                  <Select placeholder="请选择" size="large" className={styles.value}>
-                    {Object.values(dynamicMap).map((item) => (
-                      <Option key={item.value} value={item.value} label={item.label}>
-                        {item.label}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              );
-            }
-            const format = selectComponent && selectComponent.format;
-            const showTime = format === 'YYYY-MM-DD HH:mm:ss' ? true : false;
-            if (symbol === 'range') {
-              return (
-                <Form.Item name="value" className={styles.valueWrapper}>
-                  <DateRange format={format} showTime={showTime} className={styles.value} />
-                </Form.Item>
-              );
-            }
-            if (symbol) {
-              return (
-                <Form.Item name="value" className={styles.valueWrapper}>
-                  <TimesDatePicker className={styles.value} format={format} showTime={showTime} size="large" />
-                </Form.Item>
-              );
-            }
-            return null;
-          }
-          // 选项类型(下拉,单选,多选)
-          if (componentType === 'Select' || componentType === 'Radio' || componentType === 'Checkbox') {
-            if (symbol === 'include' || symbol === 'exclude') {
-              return (
-                <Form.Item name="value" className={styles.valueWrapper}>
-                  <Input placeholder="输入值" size="large" className={styles.value} />
-                </Form.Item>
-              );
-            }
-            if (symbol === 'equal' || symbol === 'unequal') {
-              return (
-                <Form.Item name="value" className={styles.valueWrapper}>
-                  <Select placeholder="请选择" size="large" className={styles.value} suffixIcon={<Icon type="xiala" />}>
-                    {optionList.map(({ key, value }) => (
-                      <Option key={key} value={key} label={value}>
-                        {value}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              );
-            }
-            if (symbol === 'equalAnyOne' || symbol === 'unequalAnyOne') {
-              return (
-                <Form.Item name="value" className={styles.valueWrapper}>
-                  <Select
-                    placeholder="请选择"
-                    mode="multiple"
-                    size="large"
-                    className={styles.value}
-                    suffixIcon={<Icon type="xiala" />}
-                  >
-                    {optionList.map(({ key, value }) => (
-                      <Option key={key} value={key} label={value}>
-                        {value}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              );
-            }
-            if (!symbol) {
-              return null;
-            }
-          }
-          return null;
-        }}
-      </Form.Item>
+      {renderSymbol()}
+      {renderValue()}
     </Form>
   );
 };
