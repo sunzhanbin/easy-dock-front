@@ -266,18 +266,17 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
               );
             }
             const format = selectComponent && selectComponent.format;
-            const showTime = format === 'YYYY-MM-DD HH:mm:ss' ? { showTime: true } : {};
+            const showTime = format === 'YYYY-MM-DD HH:mm:ss' ? true : false;
             if (symbol === 'range') {
               return (
                 <Form.Item name="value" className={styles.valueWrapper}>
-                  <RangePicker {...showTime} format={format} size="large" className={styles.value} />
-                  {/* <TimesDatePicker /> */}
+                  <DateRange format={format} showTime={showTime} className={styles.value} />
                 </Form.Item>
               );
             }
             return (
               <Form.Item name="value" className={styles.valueWrapper}>
-                <DatePicker {...showTime} format={format} size="large" className={styles.value} />
+                <TimesDatePicker className={styles.value} format={format} showTime={showTime} size="large" />
               </Form.Item>
             );
           }

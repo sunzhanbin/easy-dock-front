@@ -25,7 +25,7 @@ function Trigger({ value, onChange }: { value?: TriggerType; onChange?(value: Tr
       </Button>
       <Button
         size="large"
-        // disabled
+        disabled
         className={classnames(styles.timing, styles.button, {
           [styles.active]: value === TriggerType.TIMING,
         })}
