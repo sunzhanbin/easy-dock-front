@@ -1,6 +1,15 @@
 import { createSelector, PayloadAction } from '@reduxjs/toolkit';
 import { uniqueId } from 'lodash';
-import { ErrorItem, FieldType, FormDesign, FormField, FormFieldMap, TConfigItem, TConfigMap } from '@type';
+import {
+  ErrorItem,
+  FieldType,
+  FormDesign,
+  FormField,
+  FormFieldMap,
+  FormRuleItem,
+  TConfigItem,
+  TConfigMap,
+} from '@type';
 import { RootState } from '@/app/store';
 
 function locateById(target: string, layout: Array<string[]>): [number, number] {
@@ -226,6 +235,11 @@ const reducers = {
     state.errors = errors;
     return state;
   },
+  setFormRules(state: FormDesign, action: PayloadAction<{ formRules: FormRuleItem[] }>) {
+    const { formRules } = action.payload;
+    state.formRules = formRules;
+    return state;
+  },
 };
 
 export const configSelector = createSelector(
@@ -291,6 +305,9 @@ export const dirtySelector = createSelector([(state: RootState) => state.formDes
 export const errorSelector = createSelector([(state: RootState) => state.formDesign], (formDesign) => {
   return formDesign.errors;
 });
+export const formRulesSelector = createSelector([(state: RootState) => state.formDesign], (formDesign) => {
+  return formDesign.formRules;
+});
 
 export const {
   comAdded,
@@ -308,4 +325,5 @@ export const {
   setById,
   setIsDirty,
   setErrors,
+  setFormRules,
 } = reducers;

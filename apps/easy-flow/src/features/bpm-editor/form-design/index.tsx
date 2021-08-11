@@ -3,7 +3,7 @@ import { useParams } from 'react-router';
 import DesignZone from './design-zone';
 import ToolBox from './toolbox';
 import EditZone from './edit-zone';
-import { setLayout, setById, selectField, setIsDirty, setErrors } from './formdesign-slice';
+import { setLayout, setById, selectField, setIsDirty, setErrors, setFormRules } from './formdesign-slice';
 import { ComponentConfig, ConfigItem, FormFieldMap } from '@/type';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { selectedFieldSelector } from './formzone-reducer';
@@ -22,9 +22,10 @@ const FormDesign: FC<{}> = () => {
     axios.get(`/form/${subAppId}`).then((res) => {
       const { meta } = res.data;
       if (meta) {
-        const { layout, components } = meta;
+        const { layout, components, formRules } = meta;
         const byId: { [k: string]: ConfigItem } = {};
         const selectFieldId = (layout.length > 0 && layout[0].length > 0 && layout[0][0]) || '';
+        // 解析控件属性配置
         components.forEach(({ config, props }: ComponentConfig) => {
           const { id } = config;
           // TODO @王朝传
@@ -40,19 +41,18 @@ const FormDesign: FC<{}> = () => {
           });
           byId[id as string] = componentConfig;
         });
+        dispatch(setFormRules({ formRules: formRules }));
         dispatch(setById({ byId: byId as FormFieldMap }));
         dispatch(setLayout({ layout }));
         selectFieldId && dispatch(selectField({ id: selectFieldId }));
       } else {
+        dispatch(setFormRules({ formRules: [] }));
         dispatch(setById({ byId: {} }));
         dispatch(setLayout({ layout: [] }));
         dispatch(selectField({ id: '' }));
       }
       dispatch(setErrors({ errors: [] }));
-      // 临时规避dispatch时序的问题
-      setTimeout(() => {
-        dispatch(setIsDirty({ isDirty: false }));
-      }, 10);
+      dispatch(setIsDirty({ isDirty: false }));
     });
   }, [subAppId, dispatch]);
 

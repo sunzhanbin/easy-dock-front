@@ -22,7 +22,7 @@ const EditZone = () => {
     setTimeout(() => {
       const formDesign = store.getState().formDesign;
       const filedType = formDesign.selectedField?.split('_')[0] || '';
-      if (filedType) {
+      if (filedType && formDesign.schema) {
         const editConfig = formDesign.schema[filedType as FieldType]?.config;
         const baseInfo = formDesign.schema[filedType as FieldType]?.baseInfo;
         setEditList(editConfig as SchemaConfigItem[]);

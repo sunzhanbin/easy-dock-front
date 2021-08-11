@@ -1,16 +1,19 @@
-import { memo, useState, useCallback } from 'react';
+import { memo, useState, useCallback, useEffect } from 'react';
 import { Button, Tooltip } from 'antd';
 import { FormRuleItem } from '@/type';
 import { formatRuleValue } from '@/utils';
 import { Icon } from '@common/components';
 import FormAttrModal from '../form-attr-modal';
 import styles from './index.module.scss';
-import { useAppSelector } from '@/app/hooks';
-import { componentPropsSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
+import { useAppSelector, useAppDispatch } from '@/app/hooks';
+import { componentPropsSelector, formRulesSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
+import { setFormRules } from '@/features/bpm-editor/form-design/formdesign-slice';
 
 const FormAttrEditor = () => {
   const byId = useAppSelector(componentPropsSelector);
-  const [rules, setRules] = useState<FormRuleItem[]>([]);
+  const formRules = useAppSelector(formRulesSelector);
+  const dispatch = useAppDispatch();
+  const [rules, setRules] = useState<FormRuleItem[]>(formRules || []);
   const [currentRule, setCurrentRule] = useState<FormRuleItem | null>(null);
   const [editIndex, setEditIndex] = useState<number>(0);
   const [type, setType] = useState<'add' | 'edit'>('add');
@@ -41,8 +44,9 @@ const FormAttrEditor = () => {
       }
       if (type === 'add') {
         setRules((rules) => {
-          rules.push(rule);
-          return rules;
+          const list = [...rules];
+          list.push(rule);
+          return list;
         });
       } else {
         setRules((rules) => {
@@ -82,6 +86,14 @@ const FormAttrEditor = () => {
     },
     [rules, setType, setCurrentRule, setShowModal, setEditIndex],
   );
+  useEffect(() => {
+    dispatch(setFormRules({ formRules: rules }));
+  }, [rules]);
+  useEffect(() => {
+    if (formRules && formRules.length > 0) {
+      setRules(formRules);
+    }
+  }, [formRules, formRules]);
   return (
     <div className={styles.container}>
       <div className={styles.rules}>

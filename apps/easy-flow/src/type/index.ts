@@ -279,6 +279,7 @@ export type FormMeta = {
   layout: string[][];
   events?: Events;
   schema: { [k: string]: SchemaItem };
+  formRules: FormRuleItem[];
   rules?: FormRule[];
   themes?: Theme[];
 };

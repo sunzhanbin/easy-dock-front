@@ -15,6 +15,7 @@ import {
   setById as setByIdReducer,
   setIsDirty as setIsDirtyReducer,
   setErrors as setErrorsReducer,
+  setFormRules as setFormRulesReducer,
 } from './formzone-reducer';
 import { ConfigItem, ErrorItem, FieldType, FormDesign, FormMeta } from '@/type';
 import { loadComponents } from './toolbox/toolbox-reducer';
@@ -43,6 +44,7 @@ const formDesign = createSlice({
     setById: setByIdReducer,
     setIsDirty: setIsDirtyReducer,
     setErrors: setErrorsReducer,
+    setFormRules: setFormRulesReducer,
   },
   extraReducers: (builder) => {
     builder.addCase(loadComponents.fulfilled, (state, action) => {
@@ -68,6 +70,7 @@ export const {
   setById,
   setIsDirty,
   setErrors,
+  setFormRules,
 } = formDesign.actions;
 
 export default formDesign.reducer;
@@ -107,13 +110,15 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
   'form/save',
   async ({ subAppId, isShowTip, isShowErrorTip }, { getState, dispatch }) => {
     const { formDesign } = getState();
-    const { layout = [], schema = {}, isDirty = false, byId = {} } = formDesign;
+    const { layout = [], schema = {}, isDirty = false, byId = {}, formRules } = formDesign;
     const formMeta: FormMeta = {
       components: [],
       layout: layout,
       schema: schema,
+      formRules,
     };
     const errors: ErrorItem[] = [];
+    // 组装控件属性
     layout.forEach((row) => {
       row.forEach((id: string) => {
         const type = <FieldType>(id.split('_')[0] || '');
@@ -127,8 +132,6 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
           canSubmit: type === 'DescText' ? false : true,
           multiple: type === 'Checkbox' || (type === 'Select' && (byId[id] as any).multiple) ? true : false,
         };
-
-        // TODO @王朝传
         const props: ConfigItem = {} as any;
         componentConfig?.forEach(({ isProps, key }) => {
           if (isProps) {
@@ -137,6 +140,7 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
             config[key] = (byId[id] as any)[key];
           }
         });
+        // 校验编辑的控件属性
         const errorItem = validComponentConfig(config);
         if (errorItem) {
           errors.push(errorItem);
@@ -144,6 +148,8 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
         formMeta.components.push({ config, props });
       });
     });
+    // TODO 校验表单规则
+
     if (errors.length > 0) {
       const id = errors[0].id || '';
       id && dispatch(selectField({ id }));
