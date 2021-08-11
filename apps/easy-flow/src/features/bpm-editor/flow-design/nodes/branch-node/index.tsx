@@ -1,12 +1,14 @@
-import { memo, ReactNode, useState } from 'react';
+import { memo, ReactNode, useState, useMemo } from 'react';
 import { Button } from 'antd';
 import classnames from 'classnames';
+import { FormField } from '@type';
 import { BranchNode as BranchNodeType } from '@type/flow';
 import { Icon, PopoverConfirm } from '@common/components';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import { useAppDispatch } from '@/app/hooks';
-import { delNode, addSubBranch, delSubBranch, setChoosedNode } from '../../flow-slice';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { delNode, addSubBranch, delSubBranch, setChoosedNode, formMetaSelector } from '../../flow-slice';
 import AddNodeButton from '../../editor/components/add-node-button';
+import { formatRuleValue } from '@utils';
 import styles from './index.module.scss';
 
 type BranchType = BranchNodeType['branches'][number];
@@ -22,10 +24,23 @@ interface BranchProps {
   parentNode: BranchNodeType;
 }
 
+type FormFieldMapType = { [key: string]: FormField };
+
 export const Branch = memo(function Branch(props: BranchProps) {
   const dispatch = useAppDispatch();
   const { data, parentNode, children } = props;
   const [showDeletePopover, setShowDeletePopover] = useState(false);
+  const formMeta = useAppSelector(formMetaSelector);
+
+  const formFieldsMap: FormFieldMapType = useMemo(() => {
+    if (!formMeta) return {};
+
+    return formMeta.components.reduce((map, next) => {
+      map[next.config.id] = Object.assign({}, next.config, next.props) as FormField;
+
+      return map;
+    }, {} as FormFieldMapType);
+  }, [formMeta?.components]);
 
   // 删除子分支时判断下是否只有两个子分支
   const handleDeleteBranch = useMemoCallback(() => {
@@ -48,23 +63,31 @@ export const Branch = memo(function Branch(props: BranchProps) {
       <div className={styles.main}>
         <div className={classnames(styles.content, showDeletePopover ? styles['show-del'] : '')}>
           <div className={styles.conditions} onClick={handleBranchClick}>
-            <div className={styles.detail}>
-              {/* {data.conditions.map((item) => {
+            {data.conditions.length === 0 ? (
+              <div className={styles.or}>
+                <div className={styles.and}>所有数据都可进入该分支</div>
+              </div>
+            ) : (
+              data.conditions.map((condition, cIndex) => {
                 return (
-                  <div>
-                    {item.map((condition) => {
+                  <div key={cIndex} className={styles.or}>
+                    {condition.map((and, index) => {
+                      const { value, symbol, name } = formatRuleValue(and, formFieldsMap[and.fieldId]);
+
                       return (
-                        <div>
-                          <span>{condition.field}</span>
-                          <span>{condition.field}</span>
+                        <div key={index} className={styles.and}>
+                          <span>{name}</span>
+                          <span className={styles.symbol}>{symbol}</span>
+                          <span>{value}</span>
                         </div>
                       );
                     })}
                   </div>
                 );
-              })} */}
-            </div>
+              })
+            )}
             <div className={styles.desc}>
+              <Icon type="peizhi" />
               <span>配置筛选条件</span>
             </div>
           </div>

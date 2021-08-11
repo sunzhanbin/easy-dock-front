@@ -11,7 +11,7 @@
     height: 18px;
     border-radius: 3px;
     background-color: #fff;
-    border-color: rgba($color: #181f43, $alpha: 0.12);
+    border-color: rgba(#181f43, 0.12);
 
     &.active {
       border-color: $primary-color;
@@ -37,6 +37,10 @@
       font-weight: 400;
       white-space: nowrap;
       cursor: pointer;
+
+      &:hover {
+        background-color: rgba(#181f43, 0.04);
+      }
 
       &:last-child {
         margin-bottom: 0;

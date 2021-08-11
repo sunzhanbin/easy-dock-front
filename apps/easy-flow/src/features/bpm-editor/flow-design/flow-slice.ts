@@ -13,8 +13,6 @@ import {
   FillNode,
   TriggerType,
   Flow,
-  AuthType,
-  FieldAuthsMap,
   FieldTemplate,
 } from '@type/flow';
 import { FormMeta } from '@type';
@@ -173,35 +171,19 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
 
       flowData = [startNode, fillNode, finishNode];
     } else {
-      const ids: Set<number> = new Set();
+      // 收集流程中所用到的人员
+      const memberIds: Set<number> = new Set();
 
       flowRecursion(flowData, (node) => {
         if (node.type === NodeType.FillNode || node.type === NodeType.AuditNode || node.type === NodeType.CCNode) {
           (node.correlationMemberConfig.members || []).forEach((member) => {
-            ids.add(member);
-
-            const fieldsAuths: FieldAuthsMap = {};
-
-            fieldsTemplate.forEach((item) => {
-              if (node.fieldsAuths[item.id] !== undefined) {
-                fieldsAuths[item.id] = node.fieldsAuths[item.id];
-              } else {
-                fieldsAuths[item.id] = AuthType.View;
-              }
-            });
-
-            node.fieldsAuths = fieldsAuths;
-          });
-        } else if (node.type === NodeType.BranchNode) {
-          node.branches.forEach((branch) => {
-            // TODO 删除分支条件里多余字段
-            console.log(branch.conditions);
+            memberIds.add(member);
           });
         }
       });
 
-      // ids 为一组成员登录名，这样设计为了避免用户更新完头像或者名称后不在节点中更新的问题
-      const userResponse = await runtimeAxios.post('/user/list/ids', Array.from(ids));
+      // 这样设计为了避免用户更新完头像或者名称后不在节点中更新的问题
+      const userResponse = await runtimeAxios.post('/user/list/ids', Array.from(memberIds));
       const cacheMembers: FlowType['cacheMembers'] = {};
 
       userResponse.data.forEach((member: any) => {
@@ -223,9 +205,9 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
   }
 });
 
-export const save = createAsyncThunk<void, string, { state: RootState }>(
+export const save = createAsyncThunk<void, { subappId: string; showTip?: boolean }, { state: RootState }>(
   'flow/save',
-  async (subappId, { getState, dispatch }) => {
+  async ({ subappId, showTip }, { getState, dispatch }) => {
     dispatch(setSaving(true));
 
     const flow = getState().flow;
@@ -245,7 +227,7 @@ export const save = createAsyncThunk<void, string, { state: RootState }>(
         }
       });
 
-      if (!flow.dirty) {
+      if (!flow.dirty && showTip) {
         message.success('保存成功');
 
         return;
@@ -255,92 +237,14 @@ export const save = createAsyncThunk<void, string, { state: RootState }>(
 
       await builderAxios.post('/process/add', { meta: flowData, subappId });
 
-      dispatch(flowActions.setDirty(false));
-      message.success('保存成功');
-    } finally {
-      dispatch(setLoading(false));
-      dispatch(setSaving(false));
-    }
-  },
-);
-
-export const saveWithForm = createAsyncThunk<void, string, { state: RootState }>(
-  'flow/save-with-form',
-  async (subappId, { getState, dispatch }) => {
-    try {
-      dispatch(setSaving(true));
-
-      const { flow } = getState();
-      const validResult: FlowType['invalidNodesMap'] = valid(flow.data, {});
-
-      if (Object.keys(validResult).length) {
-        dispatch(flowActions.setInvalidMaps(validResult));
-
-        message.error('数据填写不完整');
-
-        return Promise.reject('数据填写不完整');
+      if (showTip) {
+        message.success('保存成功');
       }
 
-      // const components = formDesign.byId;
-      // const fieldsTemplate: FlowType['fieldsTemplate'] = [];
-
-      // 根据form重新计算fieldsTemplate
-      // (formDesign.layout || []).forEach((row) => {
-      //   row.forEach((componentId) => {
-      //     const key = components[componentId].fieldName;
-
-      //     if (!key) return;
-
-      //     fieldsTemplate.push({
-      //       id: components[componentId].fieldName,
-      //       name: components[componentId].label,
-      //       type: components[componentId].type,
-      //     });
-      //   });
-      // });
-
-      // const isNeedUpdateFieldTemplate = !isEqual(flow.fieldsTemplate, fieldsTemplate);
-
-      // 如果不需要更新flow数据
-      // if (!isNeedUpdateFieldTemplate && !flow.dirty) return;
-
-      dispatch(setLoading(true));
-      // 需要根据表单字段更新flow
-      // if (isNeedUpdateFieldTemplate) {
-      //   const flowData = cloneDeep(flow.data);
-
-      //   flowRecursion(flowData, function calcField(node) {
-      //     if (node.type === NodeType.FillNode || node.type === NodeType.AuditNode) {
-      //       const fieldsAuths: FieldAuthsMap = {};
-
-      //       fieldsTemplate.forEach((field) => {
-      //         const key = field.id;
-
-      //         if (node.fieldsAuths[key] !== undefined) {
-      //           fieldsAuths[key] = node.fieldsAuths[key];
-      //         } else {
-      //           fieldsAuths[key] = AuthType.View;
-      //         }
-      //       });
-
-      //       node.fieldsAuths = fieldsAuths;
-      //     }
-      //   });
-
-      //   await builderAxios.post('/process/add', { meta: flowData, subappId });
-
-      //   dispatch(flowActions.setInitialFlow(flowData));
-      //   dispatch(flowActions.setFieldsTemplate(fieldsTemplate));
-      // } else if (flow.dirty) {
-      //   // 当前flow未保存
-      //   await builderAxios.post('/process/add', { meta: flow.data, subappId });
-      // }
-
-      await builderAxios.post('/process/add', { meta: flow.data, subappId });
       dispatch(flowActions.setDirty(false));
     } finally {
-      dispatch(setSaving(false));
       dispatch(setLoading(false));
+      dispatch(setSaving(false));
     }
   },
 );

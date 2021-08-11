@@ -34,14 +34,14 @@ function FlowDesign() {
     return () => {
       dispatch(setChoosedNode(null));
     };
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     function handleSave(event: KeyboardEvent) {
       if (event.key === 's' && (navigator.platform.match('Mac') ? event.metaKey : event.ctrlKey)) {
         event.preventDefault();
 
-        dispatch(save(bpmId));
+        dispatch(save({ subappId: bpmId, showTip: true }));
       }
     }
 

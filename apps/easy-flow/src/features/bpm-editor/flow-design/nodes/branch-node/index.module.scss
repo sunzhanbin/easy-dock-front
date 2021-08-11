@@ -109,6 +109,7 @@ $line-color: #e3e4e8;
         width: 248px;
         background-color: #fff;
         border-radius: 3px;
+        color: #181f43;
         z-index: 1;
 
         &:hover,
@@ -130,19 +131,58 @@ $line-color: #e3e4e8;
           padding: 12px;
           border-radius: 3px;
 
-          .detail {
-            min-height: 50px;
+          .or {
             background-color: rgba(#182743, 0.04);
+
+            &::after {
+              content: '或';
+              display: block;
+              padding-top: 4px;
+              margin-bottom: 4px;
+              background-color: #fff;
+              font-weight: bold;
+            }
+
+            &:nth-last-child(2) {
+              margin-bottom: 16px;
+
+              &::after {
+                content: '';
+                display: none;
+              }
+            }
+
+            .and {
+              display: flex;
+              align-items: center;
+              padding: 8px;
+              line-height: 22px;
+              color: #181f43;
+
+              & + .and {
+                margin-top: 12px;
+              }
+
+              .symbol {
+                margin-left: 4px;
+                margin-right: 4px;
+                color: rgba(#181f43, 0.5);
+              }
+            }
           }
         }
 
         .desc {
           @include center('flex');
 
-          padding-top: 16px;
           line-height: 20px;
-          color: #181f43;
           font-size: 12px;
+
+          svg {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+          }
         }
 
         .action {
