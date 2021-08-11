@@ -62,7 +62,7 @@ const FormDesign: FC<{}> = () => {
         <div className={styles.container}>
           <ToolBox></ToolBox>
           <DesignZone></DesignZone>
-          {selectedField ? <EditZone></EditZone> : null}
+          <EditZone></EditZone>
         </div>
       </DndProvider>
     </>

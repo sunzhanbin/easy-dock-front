@@ -17,6 +17,7 @@ const EditZone = () => {
   const byId = useAppSelector(componentPropsSelector);
   const [title, setTitle] = useState<string>('');
   const [editList, setEditList] = useState<SchemaConfigItem[]>([]);
+  const [activeKey, setActiveKey] = useState<string>('1');
   useEffect(() => {
     setTimeout(() => {
       const formDesign = store.getState().formDesign;
@@ -28,7 +29,8 @@ const EditZone = () => {
         setTitle(baseInfo?.name as string);
       }
     }, 0);
-  }, [selectedField, byId]);
+    selectedField ? setActiveKey('1') : setActiveKey('2');
+  }, [selectedField, byId, setActiveKey]);
   const onSave = useCallback(
     (values, isValidate) => {
       dispatch(
@@ -42,22 +44,30 @@ const EditZone = () => {
     },
     [selectedField, dispatch],
   );
+  const changeTabKey = useCallback(
+    (key) => {
+      setActiveKey(key);
+    },
+    [setActiveKey],
+  );
   const renderTitle = useMemo(() => <div className={styles.edit_title}>{title}</div>, [title]);
+  const tabPanelProps = useMemo(() => {
+    if (!selectedField) {
+      return { disabled: true };
+    }
+    return null;
+  }, [selectedField]);
   return (
     <div className={styles.container}>
-      <Tabs defaultActiveKey="1">
-        <TabPane tab="控件属性" key="1">
-          {selectedField ? (
-            <>
-              {renderTitle}
-              <CompAttrEditor
-                config={editList}
-                initValues={byId[selectedField]}
-                onSave={onSave}
-                componentId={selectedField}
-              />
-            </>
-          ) : null}
+      <Tabs activeKey={activeKey} onChange={changeTabKey}>
+        <TabPane tab="控件属性" key="1" {...tabPanelProps}>
+          {renderTitle}
+          <CompAttrEditor
+            config={editList}
+            initValues={byId[selectedField]}
+            onSave={onSave}
+            componentId={selectedField}
+          />
         </TabPane>
         <TabPane tab="表单属性" key="2">
           <FormAttrEditor />

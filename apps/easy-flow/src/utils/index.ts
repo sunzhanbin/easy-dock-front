@@ -150,12 +150,12 @@ export function formatRuleValue(
   }
   // 日期类型
   if (fieldType === 'Date') {
-    const format = (field as any).format;
+    const format = (field as any)?.format || 'YYYY-MM-DD';
     if (symbol === 'range') {
       const [start, end] = (value as [number, number]) || [0, 0];
-      const startTime = moment(start).format(format);
-      const endTime = moment(end).format(format);
-      return { name, symbol: label, value: start ? `在${startTime}和${endTime}之间` : '' };
+      const startTime = start ? moment(start).format(format) : '';
+      const endTime = end ? moment(end).format(format) : '';
+      return { name, symbol: label, value: startTime ? `在${startTime}和${endTime}之间` : '' };
     }
     if (symbol === 'dynamic') {
       const text = dynamicMap[value as string]?.label || '';
