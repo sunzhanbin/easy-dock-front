@@ -152,17 +152,17 @@ export function formatRuleValue(
   if (fieldType === 'Date') {
     const format = (field as any).format;
     if (symbol === 'range') {
-      const [start, end] = value as [number, number];
+      const [start, end] = (value as [number, number]) || [0, 0];
       const startTime = moment(start).format(format);
       const endTime = moment(end).format(format);
-      return { name, symbol: label, value: `在${startTime}和${endTime}之间` };
+      return { name, symbol: label, value: start ? `在${startTime}和${endTime}之间` : '' };
     }
     if (symbol === 'dynamic') {
-      const text = dynamicMap[value as string].label;
-      return { name, symbol: label, value: `在${text}之内` };
+      const text = dynamicMap[value as string]?.label || '';
+      return { name, symbol: label, value: text ? `在${text}之内` : '' };
     }
     const text = moment(value as number).format(format);
-    return { name, symbol: label, value: text };
+    return { name, symbol: label, value: value ? text : '' };
   }
   // 选项类型
   if (fieldType === 'Select' || fieldType === 'Radio' || fieldType === 'Checkbox') {

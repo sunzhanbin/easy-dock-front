@@ -15,7 +15,12 @@ interface EditProps {
 }
 
 const Condition = ({ className, data, value, onChange, loadDataSource }: EditProps) => {
-  const [ruleList, setRuleList] = useState<filedRule[][]>(value || [[{ fieldId: '', symbol: '' }]]);
+  const [ruleList, setRuleList] = useState<filedRule[][]>(() => {
+    if (value && value.length > 0) {
+      return value;
+    }
+    return [[{ fieldId: '', symbol: '' }]];
+  });
   const components = useMemo(() => {
     return data || [];
   }, [data]);
@@ -24,7 +29,9 @@ const Condition = ({ className, data, value, onChange, loadDataSource }: EditPro
       setRuleList((list) => {
         return list.map((ruleBlock, blockIndex) => {
           if (index === blockIndex) {
-            ruleBlock.push({ fieldId: '', symbol: '' });
+            const block = [...ruleBlock];
+            block.push({ fieldId: '', symbol: '' });
+            return block;
           }
           return ruleBlock;
         });
@@ -37,7 +44,9 @@ const Condition = ({ className, data, value, onChange, loadDataSource }: EditPro
       setRuleList((list) => {
         return list.map((ruleBlock, index) => {
           if (index === blockIndex) {
-            ruleBlock.splice(ruleIndex, 1);
+            const block = [...ruleBlock];
+            block.splice(ruleIndex, 1);
+            return block;
           }
           return ruleBlock;
         });
