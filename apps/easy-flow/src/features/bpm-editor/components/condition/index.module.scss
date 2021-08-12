@@ -12,6 +12,7 @@
         position: relative;
         .form {
           flex: 1;
+          max-width: calc(100% - 32px);
         }
         .delete {
           visibility: hidden;
