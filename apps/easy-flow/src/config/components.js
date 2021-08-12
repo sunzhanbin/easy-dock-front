@@ -546,6 +546,17 @@ const componentSchema = {
     },
     config: [
       {
+        key: 'label',
+        defaultValue: '描述文字',
+        label: '控件名称',
+        placeholder: '请输入',
+        type: 'Input',
+        direction: 'vertical',
+        required: true,
+        requiredMessage: '请输入控件名称',
+        isProps: false,
+      },
+      {
         key: 'value',
         defaultValue: '',
         label: '内容',

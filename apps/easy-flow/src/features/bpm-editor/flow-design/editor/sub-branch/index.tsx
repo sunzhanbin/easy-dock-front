@@ -42,13 +42,7 @@ function SubBranch(props: SubBranchProps) {
   }, [form, branch]);
 
   return (
-    <Form
-      form={form}
-      autoComplete="off"
-      layout="vertical"
-      onValuesChange={handleFormValuesChange}
-      initialValues={{ conditions: branch.conditions }}
-    >
+    <Form form={form} autoComplete="off" layout="vertical" onValuesChange={handleFormValuesChange}>
       <Form.Item name="conditions" label="流转条件">
         <Condition data={fields}></Condition>
       </Form.Item>

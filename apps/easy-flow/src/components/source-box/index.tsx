@@ -94,7 +94,7 @@ const SourceBox: FC<{
       return (
         <div className={styles.container}>
           <div className={styles.component_container}>
-            <LabelContent label={propList.label} desc={propList.desc} />
+            {type !== 'DescText' && <LabelContent label={propList.label} desc={propList.desc} />}
             {(type === 'Radio' || type === 'Checkbox' || type === 'Select') && options ? (
               <Component {...(propList as TConfigItem)} options={options} />
             ) : (

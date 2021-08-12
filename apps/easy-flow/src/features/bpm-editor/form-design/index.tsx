@@ -5,8 +5,7 @@ import ToolBox from './toolbox';
 import EditZone from './edit-zone';
 import { setLayout, setById, selectField, setIsDirty, setErrors, setFormRules } from './formdesign-slice';
 import { ComponentConfig, ConfigItem, FormFieldMap } from '@/type';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { selectedFieldSelector } from './formzone-reducer';
+import { useAppDispatch } from '@/app/hooks';
 import { axios } from '@/utils';
 import styles from './index.module.scss';
 import { DndProvider } from 'react-dnd';
@@ -14,7 +13,6 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 
 const FormDesign: FC<{}> = () => {
   const dispatch = useAppDispatch();
-  const selectedField = useAppSelector(selectedFieldSelector);
   const { bpmId: subAppId } = useParams<{ bpmId: string }>();
 
   useEffect(() => {

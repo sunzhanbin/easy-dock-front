@@ -1,4 +1,4 @@
-import { memo, useState, useCallback, useEffect, useMemo } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 import { Tooltip, Button } from 'antd';
 import classnames from 'classnames';
 import RuleForm from '@/features/bpm-editor/components/rule-form';
@@ -15,124 +15,111 @@ interface EditProps {
 }
 
 const Condition = ({ className, data, value, onChange, loadDataSource }: EditProps) => {
-  const [ruleList, setRuleList] = useState<filedRule[][]>(() => {
+  const ruleList = useMemo(() => {
     if (value && value.length > 0) {
       return value;
     }
     return [[{ fieldId: '', symbol: '' }]];
-  });
+  }, [value]);
   const components = useMemo(() => {
     return data || [];
   }, [data]);
   const addRule = useCallback(
     (index: number) => {
-      setRuleList((list) => {
-        return list.map((ruleBlock, blockIndex) => {
-          if (index === blockIndex) {
-            const block = [...ruleBlock];
-            block.push({ fieldId: '', symbol: '' });
-            return block;
-          }
-          return ruleBlock;
-        });
+      const list = [...ruleList];
+      const result = list.map((ruleBlock, blockIndex) => {
+        if (index === blockIndex) {
+          const block = [...ruleBlock];
+          block.push({ fieldId: '', symbol: '' });
+          return block;
+        }
+        return ruleBlock;
       });
+      onChange && onChange(result);
     },
-    [setRuleList],
+    [ruleList, onChange],
   );
   const deleteRule = useCallback(
     (blockIndex, ruleIndex) => {
-      setRuleList((list) => {
-        return list.map((ruleBlock, index) => {
-          if (index === blockIndex) {
-            const block = [...ruleBlock];
-            block.splice(ruleIndex, 1);
-            return block;
-          }
-          return ruleBlock;
-        });
+      const list = [...ruleList];
+      const result = list.map((ruleBlock, index) => {
+        if (index === blockIndex) {
+          const block = [...ruleBlock];
+          block.splice(ruleIndex, 1);
+          return block;
+        }
+        return ruleBlock;
       });
+      onChange && onChange(result);
     },
-    [setRuleList],
+    [ruleList, onChange],
   );
   const addRuleBlock = useCallback(() => {
     const list = [...ruleList];
     list.push([{ fieldId: '', symbol: '' }]);
-    setRuleList(list);
-  }, [ruleList, setRuleList]);
+    onChange && onChange(list);
+  }, [ruleList, onChange]);
   const handleRuleChange = useCallback(
     (blockIndex, ruleIndex, rule) => {
-      setRuleList((list) => {
-        return list.map((ruleBlock, index) => {
-          if (index === blockIndex) {
-            return ruleBlock.map((item, i) => {
-              if (i === ruleIndex) return rule;
-              return item;
-            });
-          }
-          return ruleBlock;
-        });
+      const list = [...ruleList];
+      const result = list.map((ruleBlock, index) => {
+        if (index === blockIndex) {
+          return ruleBlock.map((item, i) => {
+            if (i === ruleIndex) return rule;
+            return item;
+          });
+        }
+        return ruleBlock;
       });
+      onChange && onChange(result);
     },
-    [setRuleList],
+    [ruleList, onChange],
   );
-  useEffect(() => {
-    if (ruleList.length > 0) {
-      onChange && onChange(ruleList);
-    }
-  }, [ruleList, onChange]);
   return (
     <div className={classnames(styles.condition, className ? className : '')}>
       <div className={styles.ruleList}>
-        {ruleList.length > 0 &&
-          ruleList.map((ruleBlock: filedRule[], index: number) => {
-            {
-              if (ruleBlock.length > 0) {
+        {ruleList.map((ruleBlock: filedRule[], index: number) => (
+          <div key={index}>
+            <div className={styles.ruleBlock}>
+              {ruleBlock.map((rule: filedRule, ruleIndex: number) => {
                 return (
-                  <div key={index}>
-                    <div className={styles.ruleBlock}>
-                      {ruleBlock.map((rule: filedRule, ruleIndex: number) => {
-                        return (
-                          <div className={styles.rule} key={ruleIndex}>
-                            <RuleForm
-                              rule={rule}
-                              components={components}
-                              className={styles.form}
-                              blockIndex={index}
-                              ruleIndex={ruleIndex}
-                              onChange={handleRuleChange}
-                              loadDataSource={loadDataSource}
-                            />
-                            <Tooltip title="删除">
-                              <span
-                                className={styles.delete}
-                                onClick={() => {
-                                  deleteRule(index, ruleIndex);
-                                }}
-                              >
-                                <Icon type="shanchu" />
-                              </span>
-                            </Tooltip>
-                          </div>
-                        );
-                      })}
-                      <Button
-                        className={styles.and}
-                        type="default"
-                        icon={<Icon type="xinzeng" />}
+                  <div className={styles.rule} key={ruleIndex}>
+                    <RuleForm
+                      rule={rule}
+                      components={components}
+                      className={styles.form}
+                      blockIndex={index}
+                      ruleIndex={ruleIndex}
+                      onChange={handleRuleChange}
+                      loadDataSource={loadDataSource}
+                    />
+                    <Tooltip title="删除">
+                      <span
+                        className={styles.delete}
                         onClick={() => {
-                          addRule(index);
+                          deleteRule(index, ruleIndex);
                         }}
                       >
-                        且条件
-                      </Button>
-                    </div>
-                    {index !== ruleList.length - 1 && <div className={styles.or}>或</div>}
+                        <Icon type="shanchu" />
+                      </span>
+                    </Tooltip>
                   </div>
                 );
-              }
-              return null;
-            }
-          })}
+              })}
+              <Button
+                className={styles.and}
+                type="default"
+                icon={<Icon type="xinzeng" />}
+                onClick={() => {
+                  addRule(index);
+                }}
+              >
+                且条件
+              </Button>
+            </div>
+            {index !== ruleList.length - 1 && <div className={styles.or}>或</div>}
+          </div>
+        ))}
         <Button className={styles.addOr} type="default" icon={<Icon type="xinzeng" />} onClick={addRuleBlock}>
           或条件
         </Button>

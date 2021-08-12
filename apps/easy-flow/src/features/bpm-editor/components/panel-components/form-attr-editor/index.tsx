@@ -88,12 +88,12 @@ const FormAttrEditor = () => {
   );
   useEffect(() => {
     dispatch(setFormRules({ formRules: rules }));
-  }, [rules]);
+  }, [rules, dispatch]);
   useEffect(() => {
     if (formRules && formRules.length > 0) {
       setRules(formRules);
     }
-  }, [formRules, formRules]);
+  }, [formRules]);
   return (
     <div className={styles.container}>
       <div className={styles.rules}>

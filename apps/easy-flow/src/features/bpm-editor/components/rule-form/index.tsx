@@ -1,4 +1,4 @@
-import { memo, useMemo, useCallback, useState } from 'react';
+import { memo, useMemo, useCallback, useState, useEffect } from 'react';
 import { Form, Select, Input, InputNumber } from 'antd';
 import classnames from 'classnames';
 import { filedRule, FormField } from '@/type';
@@ -79,6 +79,7 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
       value: rule.value || undefined,
     };
   }, [rule]);
+
   const componentList = useMemo(() => {
     if (components && components?.length > 0) {
       const list = [...components];
@@ -97,44 +98,76 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
   }, [components]);
   const [optionList, setOptionList] = useState<{ key: string; value: string }[]>([]);
   const [selectComponent, setSelectComponent] = useState<{ id: string; type: string; format: string; label: string }>();
-  const changeField = useCallback(() => {
-    form.setFieldsValue({ symbol: undefined, value: undefined });
-    const fieldId = form.getFieldValue('fieldId');
-    const component = componentList.find((item) => item.id === fieldId);
-    setSelectComponent(component);
-    const fieldType = component && (component.type as string);
-    if (loadDataSource && (fieldType === 'Select' || fieldType === 'Radio' || fieldType === 'Checkbox')) {
-      loadDataSource(fieldId).then((res) => {
-        if (res) {
-          // 如果返回的是一个key-value数组,直接赋值给下拉选项
-          if (Array.isArray(res)) {
-            setOptionList(res);
-            // 如果返回的直接是接口数据,需要做一个转换
-          } else if (res.data) {
-            const list = (res.data?.data || []).map((val: string) => ({ key: val, value: val }));
-            setOptionList(list);
+  const changeField = useCallback(
+    (id) => {
+      setTimeout(() => {
+        form.setFieldsValue({ fieldId: id, symbol: undefined, value: undefined });
+      }, 0);
+      const fieldId = form.getFieldValue('fieldId');
+      const component = componentList.find((item) => item.id === fieldId);
+      setSelectComponent(component);
+      const fieldType = component && (component.type as string);
+      if (loadDataSource && (fieldType === 'Select' || fieldType === 'Radio' || fieldType === 'Checkbox')) {
+        loadDataSource(fieldId).then((res) => {
+          if (res) {
+            // 如果返回的是一个key-value数组,直接赋值给下拉选项
+            if (Array.isArray(res)) {
+              setOptionList(res);
+              // 如果返回的直接是接口数据,需要做一个转换
+            } else if (res.data) {
+              const list = (res.data?.data || []).map((val: string) => ({ key: val, value: val }));
+              setOptionList(list);
+            }
           }
-        }
-      });
-    }
-  }, [form, componentList, loadDataSource]);
-  const changeSymbol = useCallback(() => {
-    form.setFieldsValue({ value: undefined });
-  }, [form]);
+        });
+      }
+    },
+    [form, componentList, loadDataSource],
+  );
+  const changeSymbol = useCallback(
+    (symbol) => {
+      const fieldId = form.getFieldValue('fieldId');
+      setTimeout(() => {
+        form.setFieldsValue({ fieldId, symbol, value: undefined });
+      }, 0);
+    },
+    [form],
+  );
   const handleFinish = useCallback(() => {
     const values = form.getFieldsValue();
-    if (
-      rule.fieldId !== values.fieldId ||
-      rule.symbol !== values.symbol ||
-      (values.value !== undefined && rule.value !== values.value)
-    ) {
-      let rule = values;
+    if (rule.fieldId !== values.fieldId) {
+      let newRule = Object.assign({}, values, { symbol: undefined, value: undefined });
       if (selectComponent) {
-        rule = Object.assign({}, values, { fieldType: selectComponent!.type });
+        newRule = Object.assign({}, newRule, { fieldType: selectComponent!.type });
       }
-      onChange && onChange(blockIndex, ruleIndex, rule);
+      onChange && onChange(blockIndex, ruleIndex, newRule);
+      return;
+    }
+    if (rule.symbol !== values.symbol) {
+      let newRule = Object.assign({}, values, { value: undefined });
+      if (selectComponent) {
+        newRule = Object.assign({}, newRule, { fieldType: selectComponent!.type });
+      }
+      onChange && onChange(blockIndex, ruleIndex, newRule);
+      return;
+    }
+    if (values.value !== undefined && rule.value !== values.value) {
+      let newRule = Object.assign({}, values);
+      if (selectComponent) {
+        newRule = Object.assign({}, newRule, { fieldType: selectComponent!.type });
+      }
+      onChange && onChange(blockIndex, ruleIndex, newRule);
     }
   }, [form, blockIndex, ruleIndex, rule, selectComponent, onChange]);
+  useEffect(() => {
+    if (rule) {
+      form.setFieldsValue({
+        fieldId: rule.fieldId || undefined,
+        symbol: rule.symbol || undefined,
+        value: rule.value || undefined,
+      });
+    }
+  }, [rule, form]);
   const renderSymbol = useCallback(() => {
     const fieldId = form.getFieldValue('fieldId') || initValues.fieldId;
     const component = componentList.find((item) => item.id === fieldId);

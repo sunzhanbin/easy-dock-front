@@ -34,7 +34,11 @@ const reducers = {
         state.layout = [];
       }
       if (state.byId[com.id!]) return state;
-      state.byId[com.id!] = Object.assign({}, com, { fieldName: com.id });
+      let config = Object.assign({}, com, { fieldName: com.id });
+      if ((com.type as string) === 'DescText') {
+        config = Object.assign({}, config, { label: config.label + com.id?.split('_')[1] });
+      }
+      state.byId[com.id!] = Object.assign({}, com, config);
       // 如果当前选中了某一行，则在当前行之后插入；否则在末尾插入
       if (state.selectedField) {
         const rowNumber = locateById(state.selectedField, state.layout)[0];
@@ -66,7 +70,11 @@ const reducers = {
         state.layout = [];
       }
       if (state.byId[com.id!]) return state;
-      state.byId[com.id!] = Object.assign({}, com, { fieldName: com.id });
+      let config = Object.assign({}, com, { fieldName: com.id });
+      if ((com.type as string) === 'DescText') {
+        config = Object.assign({}, config, { label: config.label + com.id?.split('_')[1] });
+      }
+      state.byId[com.id!] = Object.assign({}, com, config);
       const index = rowIndex !== undefined ? rowIndex : state.layout.length - 1;
       // 如果当前选中了某一行，则在当前行之后插入；否则在末尾插入
       state.layout.splice(index + 1, 0, [com.id!]);
@@ -238,6 +246,7 @@ const reducers = {
   setFormRules(state: FormDesign, action: PayloadAction<{ formRules: FormRuleItem[] }>) {
     const { formRules } = action.payload;
     state.formRules = formRules;
+    state.isDirty = true;
     return state;
   },
 };

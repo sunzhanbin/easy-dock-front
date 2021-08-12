@@ -110,22 +110,14 @@ export function timeDiff(milliseconds: number) {
   return timeTextArr.join('');
 }
 
-// 格式化条件
-export function formatCondition(rules: filedRule[][]) {
-  return rules.map((ruleBlock) => {
-    return ruleBlock.map((rule) => {
-      const symbol = symbolMap[rule.symbol].label;
-      return Object.assign({}, rule, { symbol });
-    });
-  });
-}
 // 格式化单个条件value
 export function formatRuleValue(
   rule: filedRule,
-  field?: FormField,
+  field: FormField,
 ): { name: string | undefined; symbol: string; value?: string } {
-  const { symbol, fieldType, value } = rule;
-  const name = field?.label;
+  const { symbol, value } = rule;
+  const name = field.label;
+  const fieldType = field.type as string;
   const label = (rule.symbol && symbolMap[rule.symbol].label) || '';
   if (symbol === 'null' || symbol === 'notNull') {
     return { name, symbol: label };

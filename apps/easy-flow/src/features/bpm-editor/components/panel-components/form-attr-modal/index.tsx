@@ -23,11 +23,7 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
   const [form] = Form.useForm();
   // 表单中所有控件列表
   const componentList = useMemo(() => {
-    return (
-      Object.values(byId)
-        .filter((item: FormField) => (item.type as string) !== 'DescText')
-        .map((item: FormField) => item) || []
-    );
+    return Object.values(byId).map((item: FormField) => item) || [];
   }, [byId]);
   const initFormValues = useMemo(() => {
     // 添加规则
