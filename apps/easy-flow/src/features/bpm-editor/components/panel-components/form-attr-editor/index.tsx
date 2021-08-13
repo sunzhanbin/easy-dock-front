@@ -18,55 +18,55 @@ const FormAttrEditor = () => {
   const [editIndex, setEditIndex] = useState<number>(0);
   const [type, setType] = useState<'add' | 'edit'>('add');
   const [showModal, setShowModal] = useState<boolean>(false);
-  // 组装tooltip文字内容
-  const getText = useCallback(
-    (rule: FormRuleItem) => {
-      let text = '';
-      if (rule.type === 'change') {
-        const condition = rule!.formChangeRule!.filedRule;
-        const showComponentList = rule!.formChangeRule!.showComponents || [];
-        const hideComponentList = rule!.formChangeRule!.hideComponents || [];
-        const showComponents = showComponentList.map((id) => byId[id].label);
-        const hideComponents = hideComponentList.map((id) => byId[id].label);
-        text += '当';
-        condition.forEach((ruleBlock, blockIndex) => {
-          ruleBlock.forEach((item, index) => {
-            const component = byId[item.fieldId] || {};
-            const formatRule = formatRuleValue(item, component);
-            text += `${formatRule?.name || ''}${formatRule?.symbol || ''}${formatRule?.value || ''}`;
-            if (index !== ruleBlock.length - 1) {
-              text += ' 且';
-            }
-          });
-          if (blockIndex !== condition.length - 1) {
-            text += ' 或';
-          }
-        });
-        text += '时 ';
-        if (showComponents.length > 0) {
-          text += ' 显示';
-          showComponents.forEach((name, index) => {
-            text += name;
-            if (index !== showComponents.length - 1) {
-              text += '、';
-            }
-          });
-        }
-        if (hideComponents.length > 0) {
-          text += ' 隐藏';
-          hideComponents.forEach((name, index) => {
-            text += name;
-            if (index !== hideComponents.length - 1) {
-              text += '、';
-            }
-          });
-        }
-        return text;
-      }
-      return text;
-    },
-    [byId],
-  );
+  // 组装tooltip文字内容(产品确认暂时不需要 2021-08-11)
+  // const getText = useCallback(
+  //   (rule: FormRuleItem) => {
+  //     let text = '';
+  //     if (rule.type === 'change') {
+  //       const condition = rule!.formChangeRule!.filedRule;
+  //       const showComponentList = rule!.formChangeRule!.showComponents || [];
+  //       const hideComponentList = rule!.formChangeRule!.hideComponents || [];
+  //       const showComponents = showComponentList.map((id) => byId[id].label);
+  //       const hideComponents = hideComponentList.map((id) => byId[id].label);
+  //       text += '当';
+  //       condition.forEach((ruleBlock, blockIndex) => {
+  //         ruleBlock.forEach((item, index) => {
+  //           const component = byId[item.fieldId] || {};
+  //           const formatRule = formatRuleValue(item, component);
+  //           text += `${formatRule?.name || ''}${formatRule?.symbol || ''}${formatRule?.value || ''}`;
+  //           if (index !== ruleBlock.length - 1) {
+  //             text += ' 且';
+  //           }
+  //         });
+  //         if (blockIndex !== condition.length - 1) {
+  //           text += ' 或';
+  //         }
+  //       });
+  //       text += '时 ';
+  //       if (showComponents.length > 0) {
+  //         text += ' 显示';
+  //         showComponents.forEach((name, index) => {
+  //           text += name;
+  //           if (index !== showComponents.length - 1) {
+  //             text += '、';
+  //           }
+  //         });
+  //       }
+  //       if (hideComponents.length > 0) {
+  //         text += ' 隐藏';
+  //         hideComponents.forEach((name, index) => {
+  //           text += name;
+  //           if (index !== hideComponents.length - 1) {
+  //             text += '、';
+  //           }
+  //         });
+  //       }
+  //       return text;
+  //     }
+  //     return text;
+  //   },
+  //   [byId],
+  // );
   const handleClose = useCallback(() => {
     setShowModal(false);
   }, [setShowModal]);
@@ -156,59 +156,59 @@ const FormAttrEditor = () => {
               const hideComponents = hideComponentList.map((id) => byId[id].label);
               return (
                 <div className={styles.ruleItem} key={index}>
-                  <Tooltip placement="top" title={getText(item)}>
-                    <div className={styles.content}>
-                      <span>当</span>
-                      {condition.map((ruleBlock, blockIndex) => {
-                        return (
-                          <span key={blockIndex}>
-                            <span>
-                              {ruleBlock.map((rule, ruleIndex) => {
-                                const component = byId[rule.fieldId] || {};
-                                const formatRule = formatRuleValue(rule, component);
-                                return (
-                                  <span key={ruleIndex}>
-                                    <span className={styles.fieldName}>{formatRule?.name || ''}</span>
-                                    <span>{formatRule?.symbol || ''}</span>
-                                    <span className={styles.fieldName}>{formatRule?.value || ''}</span>
-                                    {ruleIndex !== ruleBlock.length - 1 && <span>且</span>}
-                                  </span>
-                                );
-                              })}
+                  {/* <Tooltip placement="top" title={getText(item)}> */}
+                  <div className={styles.content}>
+                    <span>当</span>
+                    {condition.map((ruleBlock, blockIndex) => {
+                      return (
+                        <span key={blockIndex}>
+                          <span>
+                            {ruleBlock.map((rule, ruleIndex) => {
+                              const component = byId[rule.fieldId] || {};
+                              const formatRule = formatRuleValue(rule, component);
+                              return (
+                                <span key={ruleIndex}>
+                                  <span className={styles.fieldName}>{formatRule?.name || ''}</span>
+                                  <span>{formatRule?.symbol || ''}</span>
+                                  <span className={styles.fieldName}>{formatRule?.value || ''}</span>
+                                  {ruleIndex !== ruleBlock.length - 1 && <span>且</span>}
+                                </span>
+                              );
+                            })}
+                          </span>
+                          {blockIndex !== condition.length - 1 && <span>或</span>}
+                        </span>
+                      );
+                    })}
+                    <span className={styles.mr4}>时</span>
+                    {showComponents.length > 0 && (
+                      <span>
+                        <span>显示</span>
+                        <span className={styles.fieldName}>
+                          {showComponents.map((name, index) => (
+                            <span key={index}>
+                              {name}
+                              {index !== showComponents.length - 1 ? '、' : ''}
                             </span>
-                            {blockIndex !== condition.length - 1 && <span>或</span>}
-                          </span>
-                        );
-                      })}
-                      <span className={styles.mr4}>时</span>
-                      {showComponents.length > 0 && (
-                        <span>
-                          <span>显示</span>
-                          <span className={styles.fieldName}>
-                            {showComponents.map((name, index) => (
-                              <span key={index}>
-                                {name}
-                                {index !== showComponents.length - 1 ? '、' : ''}
-                              </span>
-                            ))}
-                          </span>
+                          ))}
                         </span>
-                      )}
-                      {hideComponents.length > 0 && (
-                        <span>
-                          <span>隐藏</span>
-                          <span className={styles.fieldName}>
-                            {hideComponents.map((name, index) => (
-                              <span key={index}>
-                                {name}
-                                {index !== hideComponents.length - 1 ? '、' : ''}
-                              </span>
-                            ))}
-                          </span>
+                      </span>
+                    )}
+                    {hideComponents.length > 0 && (
+                      <span>
+                        <span>隐藏</span>
+                        <span className={styles.fieldName}>
+                          {hideComponents.map((name, index) => (
+                            <span key={index}>
+                              {name}
+                              {index !== hideComponents.length - 1 ? '、' : ''}
+                            </span>
+                          ))}
                         </span>
-                      )}
-                    </div>
-                  </Tooltip>
+                      </span>
+                    )}
+                  </div>
+                  {/* </Tooltip> */}
                   <div className={styles.operation}>
                     <Tooltip title="编辑">
                       <span>

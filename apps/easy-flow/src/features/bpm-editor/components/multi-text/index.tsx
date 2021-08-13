@@ -1,7 +1,7 @@
-import { memo, useState, useCallback, useEffect, useRef } from 'react';
-import { Tooltip } from 'antd';
+import { memo, useState, useCallback, useEffect } from 'react';
+import { Input } from 'antd';
 import classnames from 'classnames';
-import { Icon } from '@common/components';
+import { Icon, Text } from '@common/components';
 import styles from './index.module.scss';
 
 interface EditProps {
@@ -11,12 +11,9 @@ interface EditProps {
 }
 
 const MultiText = ({ className, value, onChange }: EditProps) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const listRef = useRef<HTMLDivElement>(null);
   const [textList, setTextList] = useState<string[]>(value || []);
-  const [left, setLeft] = useState<number>(0);
-  const handleBlur = useCallback((e) => {
-    const text = e.target.value;
+  const [text, setText] = useState<string>('');
+  const handleAddText = useCallback(() => {
     if (text.trim()) {
       setTextList((list) => {
         const textList = [...list];
@@ -24,16 +21,9 @@ const MultiText = ({ className, value, onChange }: EditProps) => {
         return textList;
       });
     }
-    e.target.value = '';
-  }, []);
-  const handleEnter = useCallback(
-    (e) => {
-      if (e.keyCode === 13) {
-        handleBlur(e);
-      }
-    },
-    [handleBlur],
-  );
+    setText('');
+  }, [text, setText]);
+
   const handleDelete = useCallback(
     (index) => {
       const list = [...textList];
@@ -44,24 +34,19 @@ const MultiText = ({ className, value, onChange }: EditProps) => {
   );
   useEffect(() => {
     onChange && onChange(textList);
-    if (containerRef.current && listRef.current) {
-      const containerWidth = parseInt(window.getComputedStyle(containerRef.current).width);
-      const listWidth = parseInt(window.getComputedStyle(listRef.current).width);
-      if (containerWidth >= listWidth) {
-        setLeft(0);
-      } else {
-        setLeft(containerWidth - listWidth);
-      }
-    }
-  }, [textList, containerRef, listRef, onChange, setLeft]);
+  }, [textList, onChange]);
   return (
     <div className={classnames(styles.muliText, className ? className : '')}>
-      <div className={styles.textContainer} ref={containerRef}>
-        <Tooltip placement="topRight" title={textList.join('、')}>
-          <div className={styles.textList} ref={listRef} style={{ left: `${left}px` }}>
+      {textList.length > 0 && (
+        <div className={styles.textContainer}>
+          <div className={styles.textList}>
             {textList.map((text: string, index: number) => (
               <span className={styles.textWrapper} key={index}>
-                <span className={styles.text}>{text}</span>
+                <Text text={text} getContainer={false}>
+                  <span tabIndex={index} className={classnames(styles.text)}>
+                    {text}
+                  </span>
+                </Text>
                 <span
                   className={styles.delete}
                   onClick={() => {
@@ -73,9 +58,24 @@ const MultiText = ({ className, value, onChange }: EditProps) => {
               </span>
             ))}
           </div>
-        </Tooltip>
-      </div>
-      <input type="text" placeholder="添加筛选值" className={styles.input} onBlur={handleBlur} onKeyUp={handleEnter} />
+        </div>
+      )}
+      <Input
+        placeholder="添加筛选值"
+        bordered={false}
+        size="large"
+        className={styles.input}
+        value={text}
+        suffix={
+          <div className={styles.ok} onClick={handleAddText}>
+            <Icon type="gou" />
+          </div>
+        }
+        onChange={(e) => {
+          setText(e.target.value);
+        }}
+        onPressEnter={handleAddText}
+      />
     </div>
   );
 };

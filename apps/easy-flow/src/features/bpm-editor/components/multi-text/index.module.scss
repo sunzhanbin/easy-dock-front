@@ -1,62 +1,66 @@
 .muliText {
   position: relative;
   display: flex;
-  height: 40px;
-  line-height: 40px;
-  padding: 0 6px;
-  align-items: center;
-  border: 1px solid #d9d9d9;
+  flex-direction: column;
+  background: rgba(24, 39, 67, 0.04);
+  border-radius: 3px;
   overflow: hidden;
   .textContainer {
-    white-space: nowrap;
-    overflow: hidden;
-    max-width: calc(100% - 100px);
-    text-align: right;
     .textList {
-      position: relative;
-      display: inline-block;
+      display: flex;
+      flex-wrap: wrap;
+      padding: 4px;
       .textWrapper {
-        display: inline-block;
-        position: relative;
-        margin-right: 5px;
-        padding: 0 2px;
-        border-radius: 3px;
-        min-width: 20px;
-        height: 22px;
+        display: flex;
+        min-width: 32px;
+        height: 24px;
+        line-height: 24px;
+        margin: 4px;
+        margin-bottom: 0;
+        padding: 0 6px;
         text-align: center;
-        line-height: 22px;
-        background: #e5f2fb;
-        .delete {
-          display: none;
-          position: absolute;
-          top: -4px;
-          right: 0;
-          z-index: 6;
-          background: #fff;
-          font-size: 12px;
-          cursor: pointer;
+        background: rgba(24, 39, 67, 0.04);
+        border-radius: 3px;
+        border: 1px solid rgba(24, 31, 67, 0.12);
+        .text {
+          border-radius: 4px;
+          color: rgba(0, 0, 0, 0.85);
+          margin-right: 4px;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
         }
-        &:hover {
-          .delete {
-            display: block;
+        .delete {
+          vertical-align: middle;
+          font-size: 10px;
+          cursor: pointer;
+          &:hover {
+            & > svg {
+              color: #4c5cdb;
+            }
           }
         }
       }
     }
   }
   .input {
-    flex: none;
-    width: 90px;
-    display: inline-block;
-    height: 22px;
-    line-height: 20px;
-    vertical-align: middle;
-    padding: 0 8px;
-    outline: 0;
-    margin-left: 5px;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
-    border: 1px dashed #91a1b7;
+    background: transparent;
+    box-shadow: none;
+    .ok {
+      width: 20px;
+      height: 20px;
+      line-height: 20px;
+      text-align: center;
+      background: rgba(6, 196, 152, 1);
+      cursor: pointer;
+      margin-right: 12px;
+      & > svg {
+        font-size: 12px;
+        color: #fff;
+      }
+      &:hover {
+        background: rgba(6, 196, 152, 0.8);
+      }
+    }
   }
 }
