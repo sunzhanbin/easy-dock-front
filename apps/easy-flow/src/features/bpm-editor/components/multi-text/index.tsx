@@ -11,7 +11,7 @@ interface EditProps {
 }
 
 const MultiText = ({ className, value, onChange }: EditProps) => {
-  const [textList, setTextList] = useState<string[]>(value || []);
+  const [textList, setTextList] = useState<string[]>(Array.isArray(value) ? value : []);
   const [text, setText] = useState<string>('');
   const handleAddText = useCallback(() => {
     if (text.trim()) {

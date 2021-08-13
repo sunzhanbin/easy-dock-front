@@ -4,6 +4,7 @@ import { Icon } from '@common/components';
 import { useAppSelector } from '@/app/hooks';
 import {
   componentPropsSelector,
+  formRulesSelector,
   layoutSelector,
   subAppSelector,
 } from '@/features/bpm-editor/form-design/formzone-reducer';
@@ -20,6 +21,7 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
   const { name: appName } = useAppSelector(subAppSelector);
   const layout = useAppSelector(layoutSelector);
   const byId: { [k: string]: any } = useAppSelector(componentPropsSelector);
+  const formRules = useAppSelector(formRulesSelector);
   const [dataSource, setDataSource] = useState<Datasource>({});
   useEffect(() => {
     fetchDataSource(Object.values(byId)).then((res) => {
@@ -47,12 +49,13 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
         onchange: [],
       },
       rules: [],
+      formRules,
       themes: [{}],
       components: components,
       selectedTheme: '',
     };
     return formMeta;
-  }, [layout, byId]);
+  }, [layout, byId, formRules]);
   const auths = useMemo(() => {
     const res: FieldAuthsMap = {};
     Object.keys(byId).forEach((id) => {

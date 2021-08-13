@@ -200,3 +200,249 @@ export const dynamicMap: { [k in string]: { value: string; label: string } } = {
   last30days: { value: 'last30days', label: '最近30天' },
   last90days: { value: 'last90days', label: '最近90天' },
 };
+// 解析文本类型规则
+function analysisTextRule(symbol: string, value: string | string[], formValue: string): boolean {
+  let result = false;
+  switch (symbol) {
+    case 'equal':
+      result = formValue === (value as string);
+      break;
+    case 'unequal':
+      result = formValue !== (value as string);
+      break;
+    case 'equalAnyOne':
+      result = (value as string[]).includes(formValue);
+      break;
+    case 'unequalAnyOne':
+      result = !(value as string[]).includes(formValue);
+      break;
+    case 'include':
+      result = formValue.indexOf(value as string) > -1;
+      break;
+    case 'exclude':
+      result = formValue.indexOf(value as string) === -1;
+      break;
+    case 'null':
+      result = formValue === undefined || formValue.trim() === '';
+      break;
+    case 'notNull':
+      result = formValue !== undefined && formValue.trim() !== '';
+      break;
+    default:
+      result = true;
+      break;
+  }
+  return result;
+}
+// 解析数字类型规则
+function analysisNumberRule(symbol: string, value: number | [number, number], formValue: number): boolean {
+  let result = false;
+  switch (symbol) {
+    case 'equal':
+      result = formValue === (value as number);
+      break;
+    case 'unequal':
+      result = formValue !== (value as number);
+      break;
+    case 'greater':
+      result = formValue > (value as number);
+      break;
+    case 'greaterOrEqual':
+      result = formValue >= (value as number);
+      break;
+    case 'less':
+      result = formValue < (value as number);
+      break;
+    case 'lessOrEqual':
+      result = formValue <= (value as number);
+      break;
+    case 'range':
+      const [min, max] = value as [number, number];
+      result = formValue >= min && formValue <= max;
+      break;
+    case 'null':
+      result = formValue === undefined || formValue === null;
+      break;
+    case 'notNull':
+      result = formValue !== undefined && formValue !== null;
+      break;
+    default:
+      result = true;
+      break;
+  }
+  return result;
+}
+// 解析时间类型规则
+function analysisDateRule(symbol: string, value: number | [number, number] | string, formValue: number): boolean {
+  let result = false;
+  switch (symbol) {
+    case 'equal':
+      result = formValue === (value as number);
+      break;
+    case 'unequal':
+      result = formValue !== (value as number);
+      break;
+    case 'greaterOrEqual':
+      result = formValue >= (value as number);
+      break;
+    case 'lessOrEqual':
+      result = formValue <= (value as number);
+      break;
+    case 'range':
+      const [startTime, endTime] = value as [number, number];
+      result = formValue >= startTime && formValue <= endTime;
+      break;
+    case 'dynamic':
+      const [start, end] = getDynamicTimeRange(value as string);
+      result = formValue >= start && formValue <= end;
+      break;
+    case 'null':
+      result = formValue === undefined;
+      break;
+    case 'notNull':
+      result = formValue !== undefined;
+      break;
+    default:
+      result = true;
+  }
+  return result;
+}
+// 获取动态范围的起止时间
+function getDynamicTimeRange(dynamic: string): [number, number] {
+  let startTime = '0',
+    endTime = '0',
+    daysRange = '1';
+
+  switch (dynamic) {
+    case 'today':
+      startTime = moment().startOf('day').format('x');
+      endTime = moment().endOf('day').format('x');
+      break;
+    case 'yesterday':
+      daysRange = moment().subtract(1, 'day').format('YYYY-MM-DD');
+      startTime = moment(daysRange).startOf('day').format('x');
+      endTime = moment(daysRange).endOf('day').format('x');
+      break;
+    case 'thisWeek':
+      startTime = moment().startOf('week').format('x');
+      endTime = moment().endOf('week').format('x');
+      break;
+    case 'lastWeek':
+      const lastWeekDay = moment().subtract(1, 'week').format('YYYY-MM-DD');
+      startTime = moment(lastWeekDay).startOf('day').format('x');
+      endTime = moment(lastWeekDay).endOf('day').format('x');
+      break;
+    case 'thisMonth':
+      startTime = moment().startOf('month').format('x');
+      endTime = moment().endOf('month').format('x');
+      break;
+    case 'lastMonth':
+      const lastMonth = moment().subtract(1, 'month').format('YYYY-MM-DD');
+      startTime = moment(lastMonth).startOf('day').format('x');
+      endTime = moment(lastMonth).endOf('day').format('x');
+      break;
+    case 'thisYear':
+      startTime = moment().startOf('year').format('x');
+      endTime = moment().endOf('year').format('x');
+      break;
+    case 'lastYear':
+      const lastYear = moment().subtract(1, 'year').format('YYYY-MM-DD');
+      startTime = moment(lastYear).startOf('day').format('x');
+      endTime = moment(lastYear).endOf('day').format('x');
+      break;
+    case 'last7days':
+      daysRange = moment().subtract(7, 'day').format('YYYY-MM-DD');
+      startTime = moment(daysRange).startOf('day').format('x');
+      endTime = moment(daysRange).endOf('day').format('x');
+      break;
+    case 'last30days':
+      daysRange = moment().subtract(30, 'day').format('YYYY-MM-DD');
+      startTime = moment(daysRange).startOf('day').format('x');
+      endTime = moment(daysRange).endOf('day').format('x');
+      break;
+    case 'last90days':
+      daysRange = moment().subtract(90, 'day').format('YYYY-MM-DD');
+      startTime = moment(daysRange).startOf('day').format('x');
+      endTime = moment(daysRange).endOf('day').format('x');
+      break;
+    default:
+      startTime = moment('1970-01-01').startOf('day').format('x');
+      endTime = moment('2200-12-31').startOf('day').format('x');
+      break;
+  }
+  return [+startTime, +endTime];
+}
+// 解析选项类型规则
+function analysisOptionRule(symbol: string, value: string | string[], formValue: string): boolean {
+  let result = false;
+  switch (symbol) {
+    case 'equal':
+      result = formValue === (value as string);
+      break;
+    case 'unequal':
+      result = formValue !== (value as string);
+      break;
+    case 'equalAnyOne':
+      result = (value as string[]).includes(formValue);
+      break;
+    case 'unequalAnyOne':
+      result = !(value as string[]).includes(formValue);
+      break;
+    case 'include':
+      result = formValue.indexOf(value as string) > -1;
+      break;
+    case 'exclude':
+      result = formValue.indexOf(value as string) === -1;
+      break;
+    case 'null':
+      result = formValue === undefined;
+      break;
+    case 'notNull':
+      result = formValue !== undefined;
+      break;
+    default:
+      result = true;
+      break;
+  }
+  return result;
+}
+// 解析单个条件是否匹配
+export function analysisRule(rule: filedRule, formValues: { [k in string]: any }): boolean {
+  const { fieldId, fieldType = '', symbol, value } = rule;
+  const formValue = formValues[fieldId];
+  // 文本类型
+  if (fieldType === 'Input' || fieldType === 'Textarea') {
+    return analysisTextRule(symbol, value as string | string[], formValue as string);
+  }
+  // 数字类型
+  if (fieldType === 'InputNumber') {
+    return analysisNumberRule(symbol, value as number | [number, number], formValue as number);
+  }
+  // 日期类型
+  if (fieldType === 'Date') {
+    return analysisDateRule(symbol, value as number | [number, number] | string, formValue as number);
+  }
+  // 选项类型
+  if (fieldType === 'Select' || fieldType === 'Radio' || fieldType === 'Checkbox') {
+    return analysisOptionRule(symbol, value as string | string[], formValue as string);
+  }
+  // 其他类型
+  if (symbol === 'null') {
+    return formValue === undefined || formValue.trim() === '';
+  }
+  if (symbol === 'notNull') {
+    return formValue !== undefined && formValue.trim() !== '';
+  }
+  return true;
+}
+// 解析单个条件块是否匹配
+export function analysisRuleBlock(ruleBlock: filedRule[], formValues: { [k in string]: any }): boolean {
+  // 且条件,所有单个条件都符合才返回true
+  return ruleBlock.every((rule) => analysisRule(rule, formValues));
+}
+
+// 解析表单值改变时规则
+export function analysisFormChangeRule(fieldRuleList: filedRule[][], formValues: { [k in string]: any }): boolean {
+  // 或条件,只要有一个条件块符合即返回true
+  return fieldRuleList.some((ruleBlock) => analysisRuleBlock(ruleBlock, formValues));
+}

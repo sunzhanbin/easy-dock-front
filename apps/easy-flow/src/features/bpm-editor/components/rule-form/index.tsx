@@ -136,7 +136,11 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
   const handleFinish = useCallback(() => {
     const values = form.getFieldsValue();
     if (rule.fieldId !== values.fieldId) {
-      let newRule = Object.assign({}, values, { symbol: undefined, value: undefined });
+      let newRule = Object.assign({}, values, {
+        symbol: undefined,
+        value: undefined,
+        fieldType: values.fieldId.split('_')[0],
+      });
       if (selectComponent) {
         newRule = Object.assign({}, newRule, { fieldType: selectComponent!.type });
       }
@@ -144,7 +148,7 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
       return;
     }
     if (rule.symbol !== values.symbol) {
-      let newRule = Object.assign({}, values, { value: undefined });
+      let newRule = Object.assign({}, values, { value: undefined, fieldType: values.fieldId.split('_')[0] });
       if (selectComponent) {
         newRule = Object.assign({}, newRule, { fieldType: selectComponent!.type });
       }
@@ -152,7 +156,7 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
       return;
     }
     if (values.value !== undefined && rule.value !== values.value) {
-      let newRule = Object.assign({}, values);
+      let newRule = Object.assign({}, values, { fieldType: values.fieldId.split('_')[0] });
       if (selectComponent) {
         newRule = Object.assign({}, newRule, { fieldType: selectComponent!.type });
       }

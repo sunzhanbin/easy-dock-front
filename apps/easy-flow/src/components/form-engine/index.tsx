@@ -6,6 +6,7 @@ import useLoadComponents from '@/hooks/use-load-components';
 import { AllComponentType, Datasource } from '@type';
 import { FieldAuthsMap, AuthType } from '@type/flow';
 import { FormMeta, FormValue } from '@type/detail';
+import { analysisFormChangeRule } from '@/utils';
 import LabelContent from '../label-content';
 import styles from './index.module.scss';
 
@@ -30,6 +31,7 @@ const FormDetail = React.forwardRef(function FormDetail(
   const { data, fieldsAuths, datasource, initialValue, readonly } = props;
   const [form] = Form.useForm<FormValue>();
   const [fieldsVisible, setFieldsVisible] = useState<FieldsVisible>({});
+  const [cacheFieldsVisible, setCacheFieldsVisible] = useState<FieldsVisible>({}); //缓存之前的表单可见控件状态
   const [compMaps, setCompMaps] = useState<CompMaps>({});
   const [showForm, setShowForm] = useState(false);
 
@@ -41,37 +43,70 @@ const FormDetail = React.forwardRef(function FormDetail(
   // 获取组件源码
   const compSources = useLoadComponents(componentTypes);
   const formValuesChange = useMemoCallback((changedValues: FormValue) => {
-    if (!data.events || !data.events.onchange) return;
+    // 处理单个控件绑定的事件
+    if (data.events && data.events.onchange) {
+      // 处理响应表单事件，响应绑定的visible和reset
+      data.events.onchange.forEach((event) => {
+        const { fieldId, listeners, value } = event;
+        const { visible, reset } = listeners;
 
-    // 处理响应表单事件，响应绑定的visible和reset
-    data.events.onchange.forEach((event) => {
-      const { fieldId, listeners, value } = event;
-      const { visible, reset } = listeners;
+        // 处理visible
+        if (fieldId in changedValues && visible && visible.length) {
+          const fieldsVisible: FieldsVisible = {};
 
-      // 处理visible
-      if (fieldId in changedValues && visible && visible.length) {
-        const fieldsVisible: FieldsVisible = {};
-
-        visible.forEach((id) => {
-          fieldsVisible[id] = changedValues[fieldId] === value;
-        });
-
-        setFieldsVisible((oldVisible) => Object.assign({}, oldVisible, fieldsVisible));
-      }
-
-      // 处理reset
-      if (changedValues[fieldId] === value) {
-        if (reset && reset.length) {
-          const fiieldsResetValues: { [key: string]: undefined } = {};
-
-          reset.forEach((id) => {
-            fiieldsResetValues[id] = undefined;
+          visible.forEach((id) => {
+            fieldsVisible[id] = changedValues[fieldId] === value;
           });
 
-          form.setFieldsValue(fiieldsResetValues);
+          setFieldsVisible((oldVisible) => Object.assign({}, oldVisible, fieldsVisible));
         }
-      }
-    });
+
+        // 处理reset
+        if (changedValues[fieldId] === value) {
+          if (reset && reset.length) {
+            const fiieldsResetValues: { [key: string]: undefined } = {};
+
+            reset.forEach((id) => {
+              fiieldsResetValues[id] = undefined;
+            });
+
+            form.setFieldsValue(fiieldsResetValues);
+          }
+        }
+      });
+    }
+    const formValues = form.getFieldsValue();
+    // 处理表单属性值改变时事件
+    if (
+      data.formRules &&
+      data.formRules.length > 0 &&
+      data.formRules.some((rule) => rule.type === 'change') &&
+      Object.keys(formValues).length > 0
+    ) {
+      const ruleList = data.formRules.filter((rule) => rule.type === 'change').map((rule) => rule.formChangeRule);
+      ruleList.forEach((rule) => {
+        const result = analysisFormChangeRule(rule!.filedRule, formValues);
+        const showComponents = rule?.showComponents || [];
+        const hideComponents = rule?.hideComponents || [];
+        if (result) {
+          const fieldVisible: FieldsVisible = {};
+          showComponents.forEach((id) => {
+            fieldVisible[id] = true;
+          });
+          hideComponents.forEach((id) => {
+            fieldVisible[id] = false;
+          });
+          setFieldsVisible((oldVisible) => {
+            // setCacheFieldsVisible(oldVisible);
+            const result = Object.assign({}, oldVisible, fieldVisible);
+            console.info(result);
+            return result;
+          });
+        } else {
+          setFieldsVisible((oldVisible) => Object.assign({}, oldVisible, cacheFieldsVisible));
+        }
+      });
+    }
   });
 
   useEffect(() => {
@@ -98,6 +133,7 @@ const FormDetail = React.forwardRef(function FormDetail(
 
     // 设置字段可见性, 不能和下面代码交互执行顺序
     setFieldsVisible(visbles);
+    setCacheFieldsVisible(visbles);
 
     setCompMaps(comMaps);
     // 设置完初始值后设置当前字段可见状态
@@ -123,7 +159,7 @@ const FormDetail = React.forwardRef(function FormDetail(
           <Row key={index} className={styles.row}>
             {formRow.map((fieldId) => {
               const { config = {}, props = {} } = compMaps[fieldId];
-              const { fieldName = '', colSpace = '', label = '', desc = '' } = config;
+              const { fieldName = '', colSpace = '', label = '', desc = '', type = '' } = config;
               const isRequired = fieldsAuths[fieldName] === AuthType.Required;
               const compProps = { ...props };
               const Component = compSources[config?.type as AllComponentType['type']];
@@ -147,7 +183,7 @@ const FormDetail = React.forwardRef(function FormDetail(
                   <Form.Item
                     key={fieldId}
                     name={fieldName || fieldId}
-                    label={<LabelContent label={label} desc={desc} />}
+                    label={type !== 'DescText' ? <LabelContent label={label} desc={desc} /> : null}
                     required={isRequired}
                     rules={rules}
                   >

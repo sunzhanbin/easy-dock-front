@@ -1,3 +1,4 @@
+import { FormRuleItem } from '.';
 import type { FillNode, AuditNode } from './flow';
 import { SubApp } from './subapp';
 
@@ -22,6 +23,7 @@ export interface FormMeta {
     message?: string;
     children?: Omit<NonNullable<FormMeta['rules']>[number], 'children'>[];
   }[];
+  formRules?: FormRuleItem[];
 }
 
 export type FormValue = { [key: string]: any };
