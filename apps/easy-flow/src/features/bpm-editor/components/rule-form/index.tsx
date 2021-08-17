@@ -98,15 +98,8 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
   }, [components]);
   const [optionList, setOptionList] = useState<{ key: string; value: string }[]>([]);
   const [selectComponent, setSelectComponent] = useState<{ id: string; type: string; format: string; label: string }>();
-  const changeField = useCallback(
-    (id) => {
-      setTimeout(() => {
-        form.setFieldsValue({ fieldId: id, symbol: undefined, value: undefined });
-      }, 0);
-      const fieldId = form.getFieldValue('fieldId');
-      const component = componentList.find((item) => item.id === fieldId);
-      setSelectComponent(component);
-      const fieldType = component && (component.type as string);
+  const setDataSource = useCallback(
+    (fieldId, fieldType) => {
       if (loadDataSource && (fieldType === 'Select' || fieldType === 'Radio' || fieldType === 'Checkbox')) {
         loadDataSource(fieldId).then((res) => {
           if (res) {
@@ -122,7 +115,20 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
         });
       }
     },
-    [form, componentList, loadDataSource],
+    [loadDataSource, setOptionList],
+  );
+  const changeField = useCallback(
+    (id) => {
+      setTimeout(() => {
+        form.setFieldsValue({ fieldId: id, symbol: undefined, value: undefined });
+      }, 0);
+      const fieldId = form.getFieldValue('fieldId');
+      const component = componentList.find((item) => item.id === fieldId);
+      setSelectComponent(component);
+      const fieldType = component && (component.type as string);
+      setDataSource(fieldId, fieldType);
+    },
+    [form, componentList, setDataSource],
   );
   const changeSymbol = useCallback(
     (symbol) => {
@@ -170,8 +176,12 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
         symbol: rule.symbol || undefined,
         value: rule.value || undefined,
       });
+      if (rule.fieldId) {
+        const fieldType = rule.fieldType;
+        setDataSource(rule.fieldId, fieldType);
+      }
     }
-  }, [rule, form]);
+  }, [rule, form, setDataSource]);
   const renderSymbol = useCallback(() => {
     const fieldId = form.getFieldValue('fieldId') || initValues.fieldId;
     const component = componentList.find((item) => item.id === fieldId);
@@ -307,9 +317,16 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
         );
       }
       if (symbol === 'equal' || symbol === 'unequal') {
+        const mode: { mode: 'multiple' } | null = componentType === 'Checkbox' ? { mode: 'multiple' } : null;
         return (
           <Form.Item name="value" className={styles.valueWrapper}>
-            <Select placeholder="请选择" size="large" className={styles.value} suffixIcon={<Icon type="xiala" />}>
+            <Select
+              placeholder="请选择"
+              size="large"
+              className={styles.value}
+              suffixIcon={<Icon type="xiala" />}
+              {...mode}
+            >
               {optionList.map(({ key, value }) => (
                 <Option key={key} value={key} label={value}>
                   {value}

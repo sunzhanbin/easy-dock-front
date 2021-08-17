@@ -311,7 +311,8 @@ function analysisDateRule(symbol: string, value: number | [number, number] | str
 function getDynamicTimeRange(dynamic: string): [number, number] {
   let startTime = '0',
     endTime = '0',
-    daysRange = '1';
+    startDay = '1',
+    endDay = '1';
 
   switch (dynamic) {
     case 'today':
@@ -319,9 +320,10 @@ function getDynamicTimeRange(dynamic: string): [number, number] {
       endTime = moment().endOf('day').format('x');
       break;
     case 'yesterday':
-      daysRange = moment().subtract(1, 'day').format('YYYY-MM-DD');
-      startTime = moment(daysRange).startOf('day').format('x');
-      endTime = moment(daysRange).endOf('day').format('x');
+      startDay = moment().subtract(1, 'day').format('YYYY-MM-DD');
+      endDay = moment().subtract(1, 'day').format('YYYY-MM-DD');
+      startTime = moment(startDay).startOf('day').format('x');
+      endTime = moment(endDay).endOf('day').format('x');
       break;
     case 'thisWeek':
       startTime = moment().startOf('week').format('x');
@@ -351,19 +353,22 @@ function getDynamicTimeRange(dynamic: string): [number, number] {
       endTime = moment(lastYear).endOf('day').format('x');
       break;
     case 'last7days':
-      daysRange = moment().subtract(7, 'day').format('YYYY-MM-DD');
-      startTime = moment(daysRange).startOf('day').format('x');
-      endTime = moment(daysRange).endOf('day').format('x');
+      startDay = moment().subtract(7, 'day').format('YYYY-MM-DD');
+      endDay = moment().subtract(1, 'day').format('YYYY-MM-DD');
+      startTime = moment(startDay).startOf('day').format('x');
+      endTime = moment(endDay).endOf('day').format('x');
       break;
     case 'last30days':
-      daysRange = moment().subtract(30, 'day').format('YYYY-MM-DD');
-      startTime = moment(daysRange).startOf('day').format('x');
-      endTime = moment(daysRange).endOf('day').format('x');
+      startDay = moment().subtract(30, 'day').format('YYYY-MM-DD');
+      endDay = moment().subtract(1, 'day').format('YYYY-MM-DD');
+      startTime = moment(startDay).startOf('day').format('x');
+      endTime = moment(endDay).endOf('day').format('x');
       break;
     case 'last90days':
-      daysRange = moment().subtract(90, 'day').format('YYYY-MM-DD');
-      startTime = moment(daysRange).startOf('day').format('x');
-      endTime = moment(daysRange).endOf('day').format('x');
+      startDay = moment().subtract(90, 'day').format('YYYY-MM-DD');
+      endDay = moment().subtract(1, 'day').format('YYYY-MM-DD');
+      startTime = moment(startDay).startOf('day').format('x');
+      endTime = moment(endDay).endOf('day').format('x');
       break;
     default:
       startTime = moment('1970-01-01').startOf('day').format('x');
@@ -373,26 +378,52 @@ function getDynamicTimeRange(dynamic: string): [number, number] {
   return [+startTime, +endTime];
 }
 // 解析选项类型规则
-function analysisOptionRule(symbol: string, value: string | string[], formValue: string): boolean {
+function analysisOptionRule(symbol: string, value: string | string[], formValue: string | string[]): boolean {
   let result = false;
   switch (symbol) {
     case 'equal':
-      result = formValue === (value as string);
+      if (Array.isArray(formValue)) {
+        // 复选框或者下拉框多选
+        result = formValue.join() === (value as string[]).join();
+      } else {
+        // 单选按钮或者下拉框单选
+        result = formValue === (value as string);
+      }
       break;
     case 'unequal':
-      result = formValue !== (value as string);
+      if (Array.isArray(formValue)) {
+        result = formValue.join() !== (value as string[]).join();
+      } else {
+        result = formValue !== (value as string);
+      }
       break;
     case 'equalAnyOne':
-      result = (value as string[]).includes(formValue);
+      if (Array.isArray(formValue)) {
+        result = formValue.some((val) => (value as string[]).includes(val));
+      } else {
+        result = (value as string[]).includes(formValue);
+      }
       break;
     case 'unequalAnyOne':
-      result = !(value as string[]).includes(formValue);
+      if (Array.isArray(formValue)) {
+        result = formValue.every((val) => !(value as string).includes(val));
+      } else {
+        result = !(value as string[]).includes(formValue);
+      }
       break;
     case 'include':
-      result = formValue.indexOf(value as string) > -1;
+      if (Array.isArray(formValue)) {
+        result = formValue.some((val) => val.indexOf(value as string) > -1);
+      } else {
+        result = formValue && formValue.indexOf(value as string) > -1 ? true : false;
+      }
       break;
     case 'exclude':
-      result = formValue.indexOf(value as string) === -1;
+      if (Array.isArray(formValue)) {
+        result = formValue.every((val) => val.indexOf(value as string) === -1);
+      } else {
+        result = formValue && formValue.indexOf(value as string) === -1 ? true : false;
+      }
       break;
     case 'null':
       result = formValue === undefined;

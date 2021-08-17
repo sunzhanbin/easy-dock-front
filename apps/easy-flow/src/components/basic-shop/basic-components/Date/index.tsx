@@ -4,14 +4,15 @@ import { Icon } from '@common/components';
 import { DatePickerProps } from 'antd/lib/date-picker';
 import moment, { Moment } from 'moment';
 
-const Date = (props: DatePickerProps & { notSelectPassed: boolean; onChange: (value: number) => void }) => {
+const Date = (props: DatePickerProps & { notSelectPassed: boolean; onChange: (value?: number) => void }) => {
   const { format, notSelectPassed, defaultValue, value, onChange } = props;
   const propList = useMemo(() => {
     const prop: { [k: string]: string | boolean | Function | Moment | ReactNode } = {
       size: 'large',
       suffixIcon: <Icon type="riqi" />,
       onChange(val: moment.Moment) {
-        onChange && onChange(moment(val).valueOf());
+        const time = moment(val).format(format as string);
+        onChange && onChange(val ? moment(time).valueOf() : undefined);
       },
     };
     let formatStr: string = '';

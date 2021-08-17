@@ -15,7 +15,8 @@ function TimesDatePicker(
   const { value, format, size = 'large', showTime = true, className, onChange, disabledDate } = props;
   const handleChange = useMemoCallback((value: Moment | null) => {
     if (onChange) {
-      onChange((value && value.valueOf()) || 0);
+      const time = moment(value).format(format as string);
+      onChange((value && moment(time).valueOf()) || 0);
     }
   });
 

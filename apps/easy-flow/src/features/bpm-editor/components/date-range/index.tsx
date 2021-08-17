@@ -17,7 +17,7 @@ function DateRange(props: DateRangeProps) {
   const { showTime, format, className, value, onChange } = props;
 
   const mValue = useMemo((): [Moment | null, Moment | null] | undefined => {
-    if (!value) return undefined;
+    if (!Array.isArray(value)) return undefined;
 
     const [start, end] = value;
 
@@ -27,10 +27,19 @@ function DateRange(props: DateRangeProps) {
   const handleChange: RangePickerProps['onChange'] = useMemoCallback((values) => {
     if (!onChange) return;
 
-    if (!values) {
+    if (!Array.isArray(values)) {
       onChange(undefined);
     } else {
       const [start, end] = values;
+      // 如果格日期式是到天的话,起始时间是开始日期的00:00:00到结束日期的23:59:59
+      if (format === 'YYYY-MM-DD') {
+        const startDay = moment(start).format(format);
+        const endDay = moment(end).format(format);
+        const startTime = startDay ? +moment(startDay).startOf('day').format('x') : null;
+        const endTime = endDay ? +moment(endDay).endOf('day').format('x') : null;
+        onChange && onChange([startTime, endTime]);
+        return;
+      }
       onChange([start ? start.valueOf() : null, end ? end.valueOf() : null]);
     }
   });

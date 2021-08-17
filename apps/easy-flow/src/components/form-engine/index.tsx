@@ -97,13 +97,15 @@ const FormDetail = React.forwardRef(function FormDetail(
             fieldVisible[id] = false;
           });
           setFieldsVisible((oldVisible) => {
-            // setCacheFieldsVisible(oldVisible);
+            setCacheFieldsVisible(oldVisible);
             const result = Object.assign({}, oldVisible, fieldVisible);
-            console.info(result);
             return result;
           });
         } else {
-          setFieldsVisible((oldVisible) => Object.assign({}, oldVisible, cacheFieldsVisible));
+          setFieldsVisible((oldVisible) => {
+            const result = Object.assign({}, oldVisible, cacheFieldsVisible);
+            return result;
+          });
         }
       });
     }
