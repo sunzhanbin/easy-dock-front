@@ -37,7 +37,7 @@ function AutoNodeEditor(props: AutoNodeEditorProps) {
   const handleFormValuesChange = useMemoCallback(
     debounce((_, allValues: FormValuesType) => {
       dispatch(updateNode(Object.assign({}, node, allValues)));
-    }, 100),
+    }, 300),
   );
 
   const nameRules: Rule[] = useMemo(() => {

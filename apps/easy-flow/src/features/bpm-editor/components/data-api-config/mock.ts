@@ -23,7 +23,7 @@ function randomData(level: number) {
         properties: () => {
           return randomData(Math.max(level, 0));
         },
-        'required|1-5': true,
+        'hasRequired|1': [0, 1],
       },
     ],
   }).data;
@@ -35,10 +35,9 @@ const body = JSON.stringify([
     hasRequired: 0,
     name: 'requestDTO',
     paramMode: 2,
-    properties: randomData(4),
+    properties: randomData(2),
   },
 ]);
-
 const resposne = JSON.stringify(randomData(2));
 
 mock(

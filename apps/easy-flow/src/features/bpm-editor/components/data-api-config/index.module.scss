@@ -12,14 +12,6 @@
     .apis {
       margin-bottom: 12px;
     }
-
-    :global {
-      .ant-form-item-explain-error {
-        position: absolute;
-        top: 36px;
-        left: 0;
-      }
-    }
   }
 
   .subtitle {
@@ -46,7 +38,6 @@
 
       .location {
         margin-right: 0;
-        margin-bottom: 6px !important;
 
         :global {
           .ant-form-item-control-input {
@@ -91,7 +82,6 @@
 
         .ant-row {
           flex: 1 1 0;
-          overflow: hidden;
         }
       }
     }
@@ -116,13 +106,22 @@
       }
 
       .ant-form-item {
-        margin-bottom: 12px;
-      }
+        margin-bottom: 0;
 
-      .ant-form-item-explain-error {
-        // position: absolute;
-        // top: 36px;
-        // left: 0;
+        .ant-form-item-explain {
+          display: none;
+        }
+
+        &.ant-form-item-has-error {
+          padding-bottom: 24px !important;
+
+          .ant-form-item-explain {
+            display: block;
+            position: absolute;
+            bottom: -24px;
+            left: 0;
+          }
+        }
       }
     }
   }

@@ -61,7 +61,12 @@ function Base(props: BaseProps) {
   });
 
   const showDelete = useMemo(() => {
-    return type === NodeType.AuditNode || type === NodeType.FillNode || type === NodeType.CCNode;
+    return (
+      type === NodeType.AuditNode ||
+      type === NodeType.FillNode ||
+      type === NodeType.CCNode ||
+      type === NodeType.AutoNode
+    );
   }, [type]);
 
   return (

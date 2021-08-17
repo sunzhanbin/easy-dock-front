@@ -13,6 +13,8 @@ function FieldMap(props: FieldMapProps) {
   return (
     <Form.Item
       name={name}
+      isListField
+      style={{ paddingBottom: 12 }}
       rules={[
         {
           validator(_, val: string) {

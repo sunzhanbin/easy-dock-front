@@ -24,6 +24,7 @@ function DataApiConfig(props: DataApiConfigProps) {
   const [apis, setApis] = useState<Api[]>([]);
   const [loading, setLoading] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const shouldResetValueRef = useRef(false);
   const [apiDetail, setApiDetail] = useState<{
     requireds: ParamReturn[];
     optionals: ParamReturn[];
@@ -34,30 +35,53 @@ function DataApiConfig(props: DataApiConfigProps) {
     queryApis().then((apis) => setApis(apis));
   }, []);
 
-  const handleApiChange = useMemoCallback(async (val: number) => {
-    try {
-      setLoading(true);
+  useEffect(() => {
+    (async () => {
+      if (!value?.api) return;
+      try {
+        setLoading(true);
 
-      const [requireds, optionals, responses] = await queryApiDetail(val, true);
+        const [requireds, optionals, responses] = await queryApiDetail(value.api, true);
 
-      setApiDetail({ requireds, optionals, responses });
-
-      if (onChange) {
-        onChange({
-          api: val,
-          request: {
-            required: requireds.map((item) => ({
-              name: item.name,
-              type: ParamType.Required,
-              location: item.from,
-            })),
-            customize: [],
-          },
-          response: [],
-        });
+        setApiDetail({ requireds, optionals, responses });
+      } finally {
+        setLoading(false);
       }
-    } finally {
-      setLoading(false);
+    })();
+  }, [value?.api]);
+
+  useEffect(() => {
+    // 此时由于api发生了变化需要重置value
+    if (apiDetail?.requireds && value?.api && onChange && shouldResetValueRef.current) {
+      shouldResetValueRef.current = false;
+
+      onChange({
+        api: value.api,
+        request: {
+          required: apiDetail.requireds.map((item) => ({
+            name: item.name,
+            type: ParamType.Required,
+            location: item.from,
+          })),
+          customize: [],
+        },
+        response: [],
+      });
+    }
+  }, [apiDetail?.requireds, value?.api, onChange]);
+
+  const handleApiChange = useMemoCallback((api: number) => {
+    shouldResetValueRef.current = true;
+
+    if (onChange) {
+      onChange({
+        api,
+        request: {
+          required: [],
+          customize: [],
+        },
+        response: [],
+      });
     }
   });
 

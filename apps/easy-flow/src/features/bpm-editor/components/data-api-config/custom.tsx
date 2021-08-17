@@ -27,12 +27,9 @@ function Custom(props: CustomProps) {
               >
                 <Location name={[field.name, 'location']} />
                 <div className={styles.detail}>
-                  <Form.Item shouldUpdate={() => true} style={{ margin: 0 }}>
+                  <Form.Item shouldUpdate={() => false} style={{ margin: 0 }}>
                     {(form) => {
                       const customize = form.getFieldValue(name);
-
-                      if (!customize[index]) return null;
-
                       const { type } = customize[index];
 
                       if (type === ParamType.Optional) {
@@ -69,7 +66,7 @@ function Custom(props: CustomProps) {
                   <span className={styles.map}>对应</span>
                   <FieldMap name={[field.name, 'map']} />
                 </div>
-                <Button onClick={() => remove(index)} className={styles.del} icon={<Icon type="shanchu" />} />
+                <Button onClick={() => remove(field.name)} className={styles.del} icon={<Icon type="shanchu" />} />
               </div>
             );
           })}

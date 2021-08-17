@@ -12,6 +12,8 @@ function ParamName(props: ParamNameProps) {
   return (
     <Form.Item
       name={name}
+      isListField
+      style={{ paddingBottom: 12 }}
       rules={[
         {
           validator(_, val: string) {

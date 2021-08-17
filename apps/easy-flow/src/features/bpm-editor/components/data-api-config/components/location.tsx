@@ -16,7 +16,9 @@ function Location(props: LocationProps) {
   return (
     <Form.Item
       name={name}
+      isListField
       className={styles.location}
+      style={{ paddingBottom: layout === 'vertical' ? 6 : 12 }}
       rules={[
         {
           validator(_, val) {
