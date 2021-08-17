@@ -62,11 +62,7 @@ type RuleFormProps = {
   rule: filedRule;
   blockIndex: number;
   ruleIndex: number;
-  onChange?: (
-    blockIndex: number,
-    ruleIndex: number,
-    rule: filedRule & { fieldName?: string; fieldType?: string },
-  ) => void;
+  onChange?: (blockIndex: number, ruleIndex: number, rule: filedRule) => void;
   loadDataSource?: (id: string) => Promise<{ key: string; value: string }[] | { data: { data: string[] } }>;
 };
 
@@ -142,7 +138,7 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
   const handleFinish = useCallback(() => {
     const values = form.getFieldsValue();
     if (rule.fieldId !== values.fieldId) {
-      let newRule = Object.assign({}, values, {
+      let newRule: filedRule = Object.assign({}, values, {
         symbol: undefined,
         value: undefined,
         fieldType: values.fieldId.split('_')[0],
@@ -154,7 +150,7 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
       return;
     }
     if (rule.symbol !== values.symbol) {
-      let newRule = Object.assign({}, values, { value: undefined, fieldType: values.fieldId.split('_')[0] });
+      let newRule: filedRule = Object.assign({}, values, { value: undefined, fieldType: values.fieldId.split('_')[0] });
       if (selectComponent) {
         newRule = Object.assign({}, newRule, { fieldType: selectComponent!.type });
       }
@@ -162,7 +158,7 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
       return;
     }
     if (values.value !== undefined && rule.value !== values.value) {
-      let newRule = Object.assign({}, values, { fieldType: values.fieldId.split('_')[0] });
+      let newRule: filedRule = Object.assign({}, values, { fieldType: values.fieldId.split('_')[0] });
       if (selectComponent) {
         newRule = Object.assign({}, newRule, { fieldType: selectComponent!.type });
       }
@@ -371,7 +367,7 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
       initialValues={initValues}
       onValuesChange={handleFinish}
     >
-      <Form.Item name="fieldId">
+      <Form.Item name="fieldId" rules={[{ required: true, message: 'Please input your username!' }]}>
         <Select
           placeholder="关联字段"
           size="large"

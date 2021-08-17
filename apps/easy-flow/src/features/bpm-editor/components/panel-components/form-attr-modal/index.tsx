@@ -47,6 +47,9 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
     (fieldId) => {
       const component = componentList.find((item) => item.id === fieldId);
       const { dataSource } = component as any;
+      if (!dataSource) {
+        return Promise.resolve(null);
+      }
       if (dataSource.type === 'custom') {
         //自定义数据
         return Promise.resolve(dataSource.data);
@@ -67,8 +70,9 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
   );
 
   const handelOk = useCallback(() => {
-    const rules = form.getFieldsValue();
-    onOk && onOk(rules, type, editIndex);
+    form.validateFields().then((rules) => {
+      onOk && onOk(rules, type, editIndex);
+    });
   }, [form, type, editIndex, onOk]);
   return (
     <Modal className={styles.modal} title="表单逻辑规则设置" visible={true} onCancel={onClose} onOk={handelOk}>

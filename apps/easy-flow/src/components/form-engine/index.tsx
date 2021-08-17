@@ -31,6 +31,7 @@ const FormDetail = React.forwardRef(function FormDetail(
   const { data, fieldsAuths, datasource, initialValue, readonly } = props;
   const [form] = Form.useForm<FormValue>();
   const [fieldsVisible, setFieldsVisible] = useState<FieldsVisible>({});
+  const [hiddenFields, setHiddenFields] = useState<FieldsVisible>({});
   const [compMaps, setCompMaps] = useState<CompMaps>({});
   const [showForm, setShowForm] = useState(false);
 
@@ -136,10 +137,10 @@ const FormDetail = React.forwardRef(function FormDetail(
         if (result) {
           const fieldVisible: FieldsVisible = {};
           showComponents.forEach((id) => {
-            fieldVisible[componentIdMap[id]] = true;
+            id.startsWith('DescText') ? (fieldVisible[id] = true) : (fieldVisible[componentIdMap[id]] = true);
           });
           hideComponents.forEach((id) => {
-            fieldVisible[componentIdMap[id]] = false;
+            id.startsWith('DescText') ? (fieldVisible[id] = false) : (fieldVisible[componentIdMap[id]] = false);
           });
           setFieldsVisible((oldVisible) => {
             const visible: FieldsVisible = {};
@@ -147,7 +148,7 @@ const FormDetail = React.forwardRef(function FormDetail(
               visible[key] = !fieldVisible[key];
             });
             cacheFieldsVisibleMap[index] = { ...visible };
-            const result = Object.assign({}, oldVisible, fieldVisible);
+            const result = Object.assign({}, oldVisible, fieldVisible, hiddenFields);
             return result;
           });
           rule.hasChanged = true;
@@ -155,7 +156,7 @@ const FormDetail = React.forwardRef(function FormDetail(
           if (rule.hasChanged) {
             setFieldsVisible((oldVisible) => {
               const cacheFieldVisible = cacheFieldsVisibleMap[index];
-              const result = Object.assign({}, oldVisible, cacheFieldVisible);
+              const result = Object.assign({}, oldVisible, cacheFieldVisible, hiddenFields);
               return result;
             });
             rule.hasChanged = false;
@@ -186,7 +187,13 @@ const FormDetail = React.forwardRef(function FormDetail(
 
     // 设置表单初始值
     form.setFieldsValue(formValues);
-
+    const hiddenFieldMap: FieldsVisible = {};
+    Object.keys(visbles).forEach((key) => {
+      if (visbles[key] === false) {
+        hiddenFieldMap[key] = false;
+      }
+    });
+    setHiddenFields(hiddenFieldMap);
     // 设置字段可见性, 不能和下面代码交互执行顺序
     setFieldsVisible(visbles);
 
@@ -195,7 +202,7 @@ const FormDetail = React.forwardRef(function FormDetail(
     formValuesChange(formValues);
 
     setShowForm(true);
-  }, [data, fieldsAuths, initialValue, form, formValuesChange]);
+  }, [data, fieldsAuths, initialValue, form, formValuesChange, setHiddenFields]);
 
   return (
     <Form

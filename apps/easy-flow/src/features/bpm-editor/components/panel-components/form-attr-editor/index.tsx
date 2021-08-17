@@ -154,6 +154,9 @@ const FormAttrEditor = () => {
               const hideComponentList = item!.formChangeRule!.hideComponents || [];
               const showComponents = showComponentList.map((id) => byId[id].label);
               const hideComponents = hideComponentList.map((id) => byId[id].label);
+              if (!condition) {
+                return null;
+              }
               return (
                 <div className={styles.ruleItem} key={index}>
                   {/* <Tooltip placement="top" title={getText(item)}> */}

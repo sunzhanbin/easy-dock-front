@@ -60,7 +60,7 @@ const Condition = ({ className, data, value, onChange, loadDataSource }: EditPro
     onChange && onChange(list);
   }, [ruleList, onChange]);
   const handleRuleChange = useCallback(
-    (blockIndex, ruleIndex, rule) => {
+    (blockIndex: number, ruleIndex: number, rule: filedRule) => {
       const list = [...ruleList];
       const result = list.map((ruleBlock, index) => {
         if (index === blockIndex) {
@@ -78,48 +78,53 @@ const Condition = ({ className, data, value, onChange, loadDataSource }: EditPro
   return (
     <div className={classnames(styles.condition, className ? className : '')}>
       <div className={styles.ruleList}>
-        {ruleList.map((ruleBlock: filedRule[], index: number) => (
-          <div key={index}>
-            <div className={styles.ruleBlock}>
-              {ruleBlock.map((rule: filedRule, ruleIndex: number) => {
-                return (
-                  <div className={styles.rule} key={ruleIndex}>
-                    <RuleForm
-                      rule={rule}
-                      components={components}
-                      className={styles.form}
-                      blockIndex={index}
-                      ruleIndex={ruleIndex}
-                      onChange={handleRuleChange}
-                      loadDataSource={loadDataSource}
-                    />
-                    <Tooltip title="删除">
-                      <span
-                        className={styles.delete}
-                        onClick={() => {
-                          deleteRule(index, ruleIndex);
-                        }}
-                      >
-                        <Icon type="shanchu" />
-                      </span>
-                    </Tooltip>
-                  </div>
-                );
-              })}
-              <Button
-                className={styles.and}
-                type="default"
-                icon={<Icon type="xinzeng" />}
-                onClick={() => {
-                  addRule(index);
-                }}
-              >
-                且条件
-              </Button>
+        {ruleList.map((ruleBlock: filedRule[], index: number) => {
+          if (ruleBlock.length === 0) {
+            return null;
+          }
+          return (
+            <div key={index}>
+              {index !== 0 && <div className={styles.or}>或</div>}
+              <div className={styles.ruleBlock}>
+                {ruleBlock.map((rule: filedRule, ruleIndex: number) => {
+                  return (
+                    <div className={styles.rule} key={ruleIndex}>
+                      <RuleForm
+                        rule={rule}
+                        components={components}
+                        className={styles.form}
+                        blockIndex={index}
+                        ruleIndex={ruleIndex}
+                        onChange={handleRuleChange}
+                        loadDataSource={loadDataSource}
+                      />
+                      <Tooltip title="删除">
+                        <span
+                          className={styles.delete}
+                          onClick={() => {
+                            deleteRule(index, ruleIndex);
+                          }}
+                        >
+                          <Icon type="shanchu" />
+                        </span>
+                      </Tooltip>
+                    </div>
+                  );
+                })}
+                <Button
+                  className={styles.and}
+                  type="default"
+                  icon={<Icon type="xinzeng" />}
+                  onClick={() => {
+                    addRule(index);
+                  }}
+                >
+                  且条件
+                </Button>
+              </div>
             </div>
-            {index !== ruleList.length - 1 && <div className={styles.or}>或</div>}
-          </div>
-        ))}
+          );
+        })}
         <Button className={styles.addOr} type="default" icon={<Icon type="xinzeng" />} onClick={addRuleBlock}>
           或条件
         </Button>
