@@ -68,7 +68,6 @@ export async function queryApiDetail(
 
       if (data.headerContent) {
         head = formatPrams(JSON.parse(data.headerContent));
-        console.log(head);
       }
 
       if (data.requestParamContent) {

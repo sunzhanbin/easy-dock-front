@@ -75,7 +75,7 @@ function DataApiConfig(props: DataApiConfigProps) {
         {loading && <Loading className={styles.loading} />}
 
         <Form.Item
-          name="api"
+          name={[...thisFormItemName, 'api']}
           className={styles['api-form-item']}
           rules={[
             {
@@ -92,10 +92,10 @@ function DataApiConfig(props: DataApiConfigProps) {
           <Select
             onChange={handleApiChange}
             showSearch
+            value={value?.api}
             size="large"
             className={styles.apis}
             filterOption={(ipt, option) => option!.title.indexOf(ipt) > -1}
-            value={value?.api}
             placeholder="请选择"
             getPopupContainer={getPopupContainer}
           >
@@ -116,7 +116,6 @@ function DataApiConfig(props: DataApiConfigProps) {
         <Custom name={[...thisFormItemName, 'request', 'customize']} />
 
         {/* 响应参数 */}
-
         {children}
       </div>
     </DataContext.Provider>

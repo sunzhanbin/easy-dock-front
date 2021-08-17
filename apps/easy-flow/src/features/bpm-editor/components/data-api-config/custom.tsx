@@ -27,14 +27,17 @@ function Custom(props: CustomProps) {
               >
                 <Location name={[field.name, 'location']} />
                 <div className={styles.detail}>
-                  <ParamName name={[field.name, 'name']}>
-                    <Form.Item shouldUpdate={() => true} style={{ margin: 0 }}>
-                      {(form) => {
-                        const customize = form.getFieldValue(name);
-                        const { type } = customize[index];
+                  <Form.Item shouldUpdate={() => true} style={{ margin: 0 }}>
+                    {(form) => {
+                      const customize = form.getFieldValue(name);
 
-                        if (type === ParamType.Optional) {
-                          return (
+                      if (!customize[index]) return null;
+
+                      const { type } = customize[index];
+
+                      if (type === ParamType.Optional) {
+                        return (
+                          <ParamName name={[field.name, 'name']}>
                             <Select
                               size="large"
                               placeholder="请选择"
@@ -51,13 +54,18 @@ function Custom(props: CustomProps) {
                                 );
                               })}
                             </Select>
-                          );
-                        }
+                          </ParamName>
+                        );
+                      }
 
-                        return <Input placeholder="请输入" size="large" />;
-                      }}
-                    </Form.Item>
-                  </ParamName>
+                      return (
+                        <ParamName name={[field.name, 'name']}>
+                          <Input placeholder="请输入" size="large" />
+                        </ParamName>
+                      );
+                    }}
+                  </Form.Item>
+
                   <span className={styles.map}>对应</span>
                   <FieldMap name={[field.name, 'map']} />
                 </div>

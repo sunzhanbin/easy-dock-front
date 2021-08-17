@@ -29,6 +29,18 @@ function randomData(level: number) {
   }).data;
 }
 
+const head = JSON.stringify(randomData(2));
+const body = JSON.stringify([
+  {
+    hasRequired: 0,
+    name: 'requestDTO',
+    paramMode: 2,
+    properties: randomData(4),
+  },
+]);
+
+const resposne = JSON.stringify(randomData(2));
+
 mock(
   /\/api\/api-orchestration-service-main\/interfaceManage\/v1\/queryInterfaceInfo/,
   'get',
@@ -40,16 +52,9 @@ mock(
         name: '参数测试',
         requestMode: 'GET',
         responseType: null,
-        headerContent: JSON.stringify(randomData(2)),
-        requestParamContent: JSON.stringify([
-          {
-            hasRequired: 0,
-            name: 'requestDTO',
-            paramMode: 2,
-            properties: randomData(4),
-          },
-        ]),
-        responseParamContent: JSON.stringify(randomData(2)),
+        headerContent: head,
+        requestParamContent: body,
+        responseParamContent: resposne,
         requestExample: null,
         responseExampleSuccess: null,
         responseExampleFail: null,
@@ -59,14 +64,18 @@ mock(
   },
 );
 
+const data = mock({
+  'data|5-10': [
+    {
+      name: '@cword(3,10)',
+      id: '@integer',
+    },
+  ],
+});
+
 mock(/\/api\/api-orchestration-service-main\/interfaceManage\/v1\/listInfoForAll/, 'get', function (options: Options) {
   return mock({
     resultCode: 0,
-    'data|5-10': [
-      {
-        name: '@cword(3,10)',
-        id: '@integer',
-      },
-    ],
+    data: data.data,
   });
 });
