@@ -70,6 +70,22 @@ const FormDetail = React.forwardRef(function FormDetail(
     return data.components.map((comp) => (comp as any).config.type);
   }, [data]);
 
+  // 数据库字段名和控件id映射
+  const fieldNameMap = useMemo(() => {
+    const map: { [k in string]: string } = {};
+    data.components.map((comp) => {
+      map[comp.config.fieldName] = comp.config.id;
+    });
+    return map;
+  }, [data]);
+  const componentIdMap = useMemo(() => {
+    const map: { [k in string]: string } = {};
+    data.components.map((comp) => {
+      map[comp.config.id] = comp.config.fieldName;
+    });
+    return map;
+  }, [data]);
+
   // 获取组件源码
   const compSources = useLoadComponents(componentTypes);
   const formValuesChange = useMemoCallback((changedValues: FormValue) => {
@@ -108,18 +124,22 @@ const FormDetail = React.forwardRef(function FormDetail(
     const formValues = form.getFieldsValue();
     const changedFieldId = Object.keys(changedValues).length > 0 ? Object.keys(changedValues)[0] : '';
     // 处理表单属性值改变时事件
-    if (changeRuleList.length > 0 && Object.keys(formValues).length > 0 && changeFieldList.includes(changedFieldId)) {
+    if (
+      changeRuleList.length > 0 &&
+      Object.keys(formValues).length > 0 &&
+      changeFieldList.includes(fieldNameMap[changedFieldId])
+    ) {
       changeRuleList.forEach((rule, index) => {
-        const result = analysisFormChangeRule(rule!.filedRule, formValues);
+        const result = analysisFormChangeRule(rule!.filedRule, formValues, componentIdMap);
         const showComponents = rule?.showComponents || [];
         const hideComponents = rule?.hideComponents || [];
         if (result) {
           const fieldVisible: FieldsVisible = {};
           showComponents.forEach((id) => {
-            fieldVisible[id] = true;
+            fieldVisible[componentIdMap[id]] = true;
           });
           hideComponents.forEach((id) => {
-            fieldVisible[id] = false;
+            fieldVisible[componentIdMap[id]] = false;
           });
           setFieldsVisible((oldVisible) => {
             const visible: FieldsVisible = {};
