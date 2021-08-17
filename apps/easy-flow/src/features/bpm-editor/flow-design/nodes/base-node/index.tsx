@@ -32,6 +32,8 @@ export const CardHeader = memo(function CardHeader(props: CardHeaderProps) {
       return styles['fill-node'];
     } else if (type === NodeType.CCNode) {
       return styles['cc-node'];
+    } else if (type === NodeType.AutoNode) {
+      return styles['auto-node'];
     }
 
     return '';

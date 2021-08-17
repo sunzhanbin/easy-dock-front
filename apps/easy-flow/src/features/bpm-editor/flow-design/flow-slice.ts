@@ -277,6 +277,8 @@ export const addNode = createAsyncThunk<void, { prevId: string; type: AddableNod
 
     if (type === NodeType.BranchNode) {
       tmpNode = createNode(type);
+    } else if (type === NodeType.AutoNode) {
+      tmpNode = createNode(type, '自动节点');
     } else {
       if (type === NodeType.AuditNode) {
         tmpNode = createNode(type, '审批节点');

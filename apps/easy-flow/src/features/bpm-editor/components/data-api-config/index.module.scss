@@ -1,0 +1,146 @@
+.container {
+  position: relative;
+
+  .loading {
+    top: 50px;
+    z-index: 9999;
+  }
+
+  .api-form-item {
+    margin-bottom: 0;
+
+    .apis {
+      margin-bottom: 12px;
+    }
+
+    :global {
+      .ant-form-item-explain-error {
+        position: absolute;
+        top: 36px;
+        left: 0;
+      }
+    }
+  }
+
+  .subtitle {
+    margin-bottom: 4px;
+    line-height: 20px;
+    color: rgba(#181f43, 0.75);
+    font-size: 12px;
+  }
+
+  .row {
+    display: flex;
+    align-items: flex-start;
+    font-size: 14px;
+
+    &.vertical {
+      display: block;
+      position: relative;
+
+      .del {
+        position: absolute;
+        right: 0;
+        top: -8px;
+      }
+
+      .location {
+        margin-right: 0;
+        margin-bottom: 6px !important;
+
+        :global {
+          .ant-form-item-control-input {
+            min-height: auto;
+          }
+
+          .ant-select {
+            display: inline-block;
+            width: auto !important;
+
+            .ant-select-selector {
+              padding-left: 0;
+              border: none !important;
+              box-shadow: none;
+              background-color: transparent !important;
+            }
+          }
+        }
+      }
+    }
+
+    .location {
+      margin-right: 8px;
+    }
+
+    .map {
+      margin: 0 8px;
+      line-height: 40px;
+      color: rgba(#181f43, 0.75);
+      white-space: nowrap;
+    }
+
+    .detail {
+      display: flex;
+      align-items: flex-start;
+      flex-grow: 1;
+
+      :global {
+        .ant-select {
+          width: auto !important;
+        }
+
+        .ant-row {
+          flex: 1 1 0;
+          overflow: hidden;
+        }
+      }
+    }
+
+    .del {
+      width: 16px;
+      height: 16px;
+      margin-top: 12px;
+      margin-left: 8px;
+      padding: 0;
+      border: none;
+      background-color: transparent !important;
+
+      &[disabled] > svg {
+        color: inherit;
+      }
+    }
+
+    :global {
+      .ant-select {
+        width: 118px;
+      }
+
+      .ant-form-item {
+        margin-bottom: 12px;
+      }
+
+      .ant-form-item-explain-error {
+        position: absolute;
+        top: 36px;
+        left: 0;
+      }
+    }
+  }
+
+  .btns {
+    margin-top: 6px;
+    margin-bottom: 12px;
+
+    :global {
+      .ant-btn {
+        margin-right: 8px;
+      }
+    }
+  }
+
+  :global {
+    .ant-select {
+      display: block;
+    }
+  }
+}

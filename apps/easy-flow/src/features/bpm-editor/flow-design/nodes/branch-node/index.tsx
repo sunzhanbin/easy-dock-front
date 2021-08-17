@@ -40,7 +40,7 @@ export const Branch = memo(function Branch(props: BranchProps) {
 
       return map;
     }, {} as FormFieldMapType);
-  }, [formMeta?.components]);
+  }, [formMeta]);
 
   // 删除子分支时判断下是否只有两个子分支
   const handleDeleteBranch = useMemoCallback(() => {

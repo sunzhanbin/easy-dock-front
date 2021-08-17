@@ -1,4 +1,5 @@
 import { filedRule as FieldRule, FieldType } from './index';
+import { DataConfig } from '@type/api';
 
 export enum NodeType {
   // 开始节点
@@ -15,6 +16,8 @@ export enum NodeType {
   CCNode = 6,
   // 分支
   SubBranch = 7,
+  // 自动节点
+  AutoNode = 8,
 }
 
 export enum AuthType {
@@ -136,10 +139,15 @@ export interface CCNode extends BaseNode {
   fieldsAuths: FieldAuthsMap;
 }
 
-export type AllNode = StartNode | AuditNode | FillNode | BranchNode | FinishNode | CCNode;
+export interface AutoNode extends BaseNode {
+  type: NodeType.AutoNode;
+  dataConfig: DataConfig;
+}
+
+export type AllNode = StartNode | AuditNode | FillNode | BranchNode | FinishNode | CCNode | AutoNode;
 
 export type Flow = AllNode[];
 
 export type FieldTemplate = { id: string; name: string; type: FieldType };
 
-export type AddableNode = AuditNode | FillNode | BranchNode | CCNode | BranchNode | SubBranch;
+export type AddableNode = AuditNode | FillNode | BranchNode | CCNode | BranchNode | SubBranch | AutoNode;
