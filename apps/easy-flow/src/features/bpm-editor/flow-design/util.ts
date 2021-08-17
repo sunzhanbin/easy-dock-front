@@ -8,6 +8,7 @@ import {
   CCNode,
   BranchNode,
   SubBranch,
+  AutoNode,
   RevertType,
   AuthType,
   FieldAuthsMap,
@@ -39,6 +40,7 @@ export function branchuuid(group: number = 3) {
 export function createNode(type: NodeType.AuditNode, name: string): AuditNode;
 export function createNode(type: NodeType.FillNode, name: string): FillNode;
 export function createNode(type: NodeType.CCNode, name: string): CCNode;
+export function createNode(type: NodeType.AutoNode, name: string): AutoNode;
 export function createNode(type: NodeType.BranchNode): BranchNode;
 export function createNode(type: NodeType.SubBranch): SubBranch;
 export function createNode(type: NodeType, name?: string) {
@@ -68,6 +70,12 @@ export function createNode(type: NodeType, name?: string) {
           type: NodeType.SubBranch,
         },
       ],
+    };
+  } else if (type === NodeType.AutoNode) {
+    return <AutoNode>{
+      id: fielduuid(),
+      name,
+      type,
     };
   }
   const node = {
@@ -241,10 +249,12 @@ export function valid(data: AllNode[], validRes: ValidResultType) {
   return validRes;
 }
 
-export const findPrevNodes = (flow: AllNode[], targetId: string): AllNode[] => {
-  function findPrevNodes(flow: AllNode[], targetId: string): [AllNode[], boolean] {
+type PrevNodeType = Exclude<AllNode, BranchNode>;
+
+export const findPrevNodes = (flow: AllNode[], targetId: string): PrevNodeType[] => {
+  function findPrevNodes(flow: AllNode[], targetId: string): [PrevNodeType[], boolean] {
     let finded = false;
-    let prevs: AllNode[] = [];
+    let prevs: PrevNodeType[] = [];
 
     const targetNodeIndex = flow.findIndex((node) => {
       if (finded) return true;
@@ -256,7 +266,7 @@ export const findPrevNodes = (flow: AllNode[], targetId: string): AllNode[] => {
       if (node.type === NodeType.BranchNode) {
         // 进入分支节点
         // 缓存遍历过的节点
-        const caches: AllNode[][] = [];
+        const caches: PrevNodeType[][] = [];
         const targetBranchIndex = node.branches.findIndex((branch, index) => {
           // 进入子分支
           const [nodes, success] = findPrevNodes(branch.nodes, targetId);

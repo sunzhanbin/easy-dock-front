@@ -11,6 +11,7 @@ import {
   CCNodeEditor,
   FinishNodeEditor,
   SubBranchEditor,
+  AutoNodeEditor,
 } from './editor';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { load, flowDataSelector, save, setChoosedNode } from './flow-slice';
@@ -91,6 +92,12 @@ function FlowDesign() {
           抄送节点
         </CardHeader>
       );
+    } else if (choosedNode.type === NodeType.AutoNode) {
+      return (
+        <CardHeader icon={<Icon type="zidongjiediandise" />} type={choosedNode.type}>
+          自动节点
+        </CardHeader>
+      );
     }
   }, [choosedNode]);
 
@@ -133,6 +140,8 @@ function FlowDesign() {
           {choosedNode && choosedNode.type === NodeType.FinishNode && <FinishNodeEditor node={choosedNode} />}
 
           {choosedNode && choosedNode.type === NodeType.SubBranch && <SubBranchEditor branch={choosedNode} />}
+
+          {choosedNode && choosedNode.type === NodeType.AutoNode && <AutoNodeEditor node={choosedNode} />}
         </div>
       </Drawer>
     </div>

@@ -252,6 +252,10 @@
         border-color: #ff5568;
       }
     }
+
+    .ant-select-selector {
+      border: 1px solid #ff5568 !important;
+    }
   }
 
   .ant-form-item-explain {
@@ -494,6 +498,11 @@
       }
     }
   }
+
+  &.ant-select-lg {
+    font-size: 14px;
+  }
+
   // 复选下拉框
   &.ant-select-multiple {
     .ant-select-selector {

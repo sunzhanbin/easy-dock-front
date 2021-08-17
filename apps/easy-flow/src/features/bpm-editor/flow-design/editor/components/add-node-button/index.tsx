@@ -5,7 +5,7 @@ import useMemoCallback from '@common/hooks/use-memo-callback';
 import { Icon } from '@common/components';
 import { addNode } from '../../../flow-slice';
 import { getPopupContainer } from '../../../util';
-import { NodeType } from '@type/flow';
+import { NodeType, AddableNode } from '@type/flow';
 import styles from './index.module.scss';
 import { useAppDispatch } from '@/app/hooks';
 
@@ -19,13 +19,11 @@ function AddNodeButton(props: AddNodeButtonProps) {
   const dispatch = useAppDispatch();
   const [showAddPopover, setShowAddPopover] = useState(false);
 
-  const handleAddNode = useMemoCallback(
-    (type: NodeType.AuditNode | NodeType.FillNode | NodeType.CCNode | NodeType.BranchNode) => {
-      // 将业务逻辑放在redux里处理
-      dispatch(addNode({ prevId, type }));
-      setShowAddPopover(false);
-    },
-  );
+  const handleAddNode = useMemoCallback((type: AddableNode['type']) => {
+    // 将业务逻辑放在redux里处理
+    dispatch(addNode({ prevId, type }));
+    setShowAddPopover(false);
+  });
 
   const addPopoverContent = useMemo(() => {
     return (
@@ -47,6 +45,11 @@ function AddNodeButton(props: AddNodeButtonProps) {
         <div onClick={() => handleAddNode(NodeType.CCNode)}>
           <Icon type="chaosongjiedian" />
           <span>添加抄送节点</span>
+        </div>
+
+        <div onClick={() => handleAddNode(NodeType.AutoNode)}>
+          <Icon type="zidongjiedian" />
+          <span>添加自动节点</span>
         </div>
       </div>
     );

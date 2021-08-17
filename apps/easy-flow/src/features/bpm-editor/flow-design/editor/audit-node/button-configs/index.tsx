@@ -3,7 +3,7 @@ import { Button, Cascader } from 'antd';
 import { CascaderValueType } from 'antd/lib/cascader';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import ButtonEditor from '../../components/button-editor';
-import { AuditNode, AllNode, BranchNode, NodeType, RevertType, ButtonAuth } from '@type/flow';
+import { AuditNode, AllNode, BranchNode, RevertType, ButtonAuth } from '@type/flow';
 import styles from './index.module.scss';
 
 interface ButtonConfigsProps {
@@ -11,7 +11,7 @@ interface ButtonConfigsProps {
     btnText: NonNullable<AuditNode['btnText']>;
     revert: AuditNode['revert'];
   };
-  prevNodes: AllNode[];
+  prevNodes: Exclude<AllNode, BranchNode>[];
   onChange?(value: this['value']): void;
 }
 
@@ -25,8 +25,6 @@ function ButtonConfigs(props: ButtonConfigsProps) {
   const { value, onChange, prevNodes } = props;
   const { btnText, revert } = value!;
   const options = useMemo(() => {
-    const nodes = prevNodes.filter((subNode) => subNode.type !== NodeType.BranchNode) as Exclude<AllNode, BranchNode>[];
-
     const opts: RevertOptionsType[] = [
       {
         value: RevertType.Start,
@@ -41,7 +39,7 @@ function ButtonConfigs(props: ButtonConfigsProps) {
     opts.push({
       value: RevertType.Specify,
       label: '驳回到指定节点',
-      children: nodes.map((n) => ({ value: n.id, label: n.name })),
+      children: prevNodes.map((n) => ({ value: n.id, label: n.name })),
     });
 
     return opts;

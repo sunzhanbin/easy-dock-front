@@ -21,6 +21,8 @@ function FinishNodeEditor(props: FinishNodeEditorProps) {
   const dispatch = useAppDispatch();
   const handleFormValuesChange = useMemoCallback(
     debounce((_, allValues: { name: string }) => {
+      console.log(allValues);
+
       dispatch(
         updateNode({
           ...node,
