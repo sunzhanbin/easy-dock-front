@@ -14,6 +14,8 @@ import { FieldAuthsMap, AuthType } from '@type/flow';
 import { ComponentConfig } from '@/type';
 import { fetchDataSource } from '@/apis/detail';
 import styles from './index.module.scss';
+import classnames from 'classnames';
+import titleImage from '@/assets/title.png';
 
 const propsKey = ['defaultValue', 'showSearch', 'multiple', 'format', 'notSelectPassed'];
 
@@ -67,7 +69,6 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
   const title = useMemo(() => {
     return (
       <div className="header">
-        <div className="title">预览表单</div>
         <div className="close" onClick={onClose}>
           <Icon className="iconfont" type="guanbi" />
         </div>
@@ -84,14 +85,23 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
       destroyOnClose={true}
     >
       <div className="content">
-        <div className="title">{appName}</div>
-        <div className="form_content">
-          <FormEngine
-            datasource={dataSource}
-            initialValue={{}}
-            data={(formDesign as unknown) as FormMeta}
-            fieldsAuths={auths}
-          ></FormEngine>
+        <div className={styles.background}>
+          <div className={styles.left}></div>
+          <div className={styles.right}></div>
+        </div>
+        <div className={styles['start-form-wrapper']}>
+          <div className={classnames(styles.form)} style={{ height: `${document.body.clientHeight - 124}px` }}>
+            <div className={styles.title}>
+              <img src={titleImage} alt="title" className={styles.image} />
+              <span>{appName}</span>
+            </div>
+            <FormEngine
+              datasource={dataSource}
+              initialValue={{}}
+              data={(formDesign as unknown) as FormMeta}
+              fieldsAuths={auths}
+            ></FormEngine>
+          </div>
         </div>
       </div>
     </Modal>
