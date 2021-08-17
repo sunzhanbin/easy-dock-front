@@ -25,11 +25,6 @@ export type ParamSchem = {
   type: ParamType;
 };
 
-export type Field = {
-  name: string;
-  id: string;
-};
-
 export type DataConfig = {
   api: number;
   request: {
@@ -37,4 +32,9 @@ export type DataConfig = {
     customize: ParamSchem[];
   };
   response?: Pick<ParamSchem, 'name'>[];
+};
+
+export type Field = {
+  name: string;
+  id: string;
 };

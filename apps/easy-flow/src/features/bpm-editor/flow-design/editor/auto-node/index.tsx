@@ -30,12 +30,7 @@ function AutoNodeEditor(props: AutoNodeEditorProps) {
   const formInitialValues = useMemo(() => {
     return {
       name: node.name,
-      fff: {
-        request: {
-          required: [],
-          customize: [],
-        },
-      },
+      dataConfig: node.dataConfig,
     };
   }, [node]);
 
