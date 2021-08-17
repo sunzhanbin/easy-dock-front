@@ -3,7 +3,7 @@ import { Form, Row, Col, FormInstance } from 'antd';
 import { Rule } from 'antd/lib/form';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import useLoadComponents from '@/hooks/use-load-components';
-import { AllComponentType, Datasource } from '@type';
+import { AllComponentType, Datasource, filedRule, FormChangeRule } from '@type';
 import { FieldAuthsMap, AuthType } from '@type/flow';
 import { FormMeta, FormValue } from '@type/detail';
 import { analysisFormChangeRule } from '@/utils';
@@ -31,9 +31,39 @@ const FormDetail = React.forwardRef(function FormDetail(
   const { data, fieldsAuths, datasource, initialValue, readonly } = props;
   const [form] = Form.useForm<FormValue>();
   const [fieldsVisible, setFieldsVisible] = useState<FieldsVisible>({});
-  const [cacheFieldsVisible, setCacheFieldsVisible] = useState<FieldsVisible>({}); //缓存之前的表单可见控件状态
   const [compMaps, setCompMaps] = useState<CompMaps>({});
   const [showForm, setShowForm] = useState(false);
+
+  const changeRuleList = useMemo<(FormChangeRule & { hasChanged: boolean })[]>(() => {
+    if (!data.formRules) {
+      return [];
+    }
+    return data.formRules
+      .filter((rule) => rule.type === 'change')
+      .map((rule) => rule.formChangeRule)
+      .map((rule) => Object.assign({}, rule, { hasChanged: false }));
+  }, [data.formRules]);
+  // 值改变规则依赖的字段列表,若表单change的字段不在依赖列表中则不需要进行校验
+  const changeFieldList = useMemo<string[]>(() => {
+    if (changeRuleList.length === 0) {
+      return [];
+    }
+    const fieldRuleList: filedRule[][][] = [];
+    changeRuleList.forEach((rule) => {
+      fieldRuleList.push(rule.filedRule);
+    });
+    const list = fieldRuleList.flat(3).map((rule) => rule.fieldId);
+    const set = new Set(list);
+    return Array.from(set);
+  }, [changeRuleList]);
+  // 缓存之前的表单控件显隐状态
+  const cacheFieldsVisibleMap = useMemo(() => {
+    const map: { [k in number]: FieldsVisible } = {};
+    changeRuleList.forEach((rule, index) => {
+      map[index] = {};
+    });
+    return map;
+  }, [changeRuleList]);
 
   // 提取所有组件类型
   const componentTypes = useMemo(() => {
@@ -76,15 +106,10 @@ const FormDetail = React.forwardRef(function FormDetail(
       });
     }
     const formValues = form.getFieldsValue();
+    const changedFieldId = Object.keys(changedValues).length > 0 ? Object.keys(changedValues)[0] : '';
     // 处理表单属性值改变时事件
-    if (
-      data.formRules &&
-      data.formRules.length > 0 &&
-      data.formRules.some((rule) => rule.type === 'change') &&
-      Object.keys(formValues).length > 0
-    ) {
-      const ruleList = data.formRules.filter((rule) => rule.type === 'change').map((rule) => rule.formChangeRule);
-      ruleList.forEach((rule) => {
+    if (changeRuleList.length > 0 && Object.keys(formValues).length > 0 && changeFieldList.includes(changedFieldId)) {
+      changeRuleList.forEach((rule, index) => {
         const result = analysisFormChangeRule(rule!.filedRule, formValues);
         const showComponents = rule?.showComponents || [];
         const hideComponents = rule?.hideComponents || [];
@@ -97,15 +122,24 @@ const FormDetail = React.forwardRef(function FormDetail(
             fieldVisible[id] = false;
           });
           setFieldsVisible((oldVisible) => {
-            setCacheFieldsVisible(oldVisible);
+            const visible: FieldsVisible = {};
+            Object.keys(fieldVisible).forEach((key) => {
+              visible[key] = !fieldVisible[key];
+            });
+            cacheFieldsVisibleMap[index] = { ...visible };
             const result = Object.assign({}, oldVisible, fieldVisible);
             return result;
           });
+          rule.hasChanged = true;
         } else {
-          setFieldsVisible((oldVisible) => {
-            const result = Object.assign({}, oldVisible, cacheFieldsVisible);
-            return result;
-          });
+          if (rule.hasChanged) {
+            setFieldsVisible((oldVisible) => {
+              const cacheFieldVisible = cacheFieldsVisibleMap[index];
+              const result = Object.assign({}, oldVisible, cacheFieldVisible);
+              return result;
+            });
+            rule.hasChanged = false;
+          }
         }
       });
     }
@@ -135,7 +169,6 @@ const FormDetail = React.forwardRef(function FormDetail(
 
     // 设置字段可见性, 不能和下面代码交互执行顺序
     setFieldsVisible(visbles);
-    setCacheFieldsVisible(visbles);
 
     setCompMaps(comMaps);
     // 设置完初始值后设置当前字段可见状态
