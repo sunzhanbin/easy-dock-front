@@ -48,7 +48,7 @@ function AddNodeButton(props: AddNodeButtonProps) {
         </div>
 
         <div onClick={() => handleAddNode(NodeType.AutoNode)}>
-          <Icon type="zidongjiedian" />
+          <Icon type="geshiyouhua" />
           <span>添加自动节点</span>
         </div>
       </div>

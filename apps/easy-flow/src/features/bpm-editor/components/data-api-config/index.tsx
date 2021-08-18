@@ -38,6 +38,7 @@ function DataApiConfig(props: DataApiConfigProps) {
   useEffect(() => {
     (async () => {
       if (!value?.api) return;
+
       try {
         setLoading(true);
 
