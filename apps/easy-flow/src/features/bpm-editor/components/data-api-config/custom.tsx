@@ -27,7 +27,7 @@ function Custom(props: CustomProps) {
               >
                 <Location name={[field.name, 'location']} />
                 <div className={styles.detail}>
-                  <Form.Item shouldUpdate={() => false} style={{ margin: 0 }}>
+                  <Form.Item noStyle shouldUpdate={() => false} style={{ margin: 0 }}>
                     {(form) => {
                       const customize = form.getFieldValue(name);
                       const { type } = customize[index];

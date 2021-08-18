@@ -75,13 +75,14 @@
       align-items: flex-start;
       flex-grow: 1;
 
+      & > :global(.ant-row) {
+        width: calc(50% - 22px);
+        flex-shrink: 0;
+      }
+
       :global {
         .ant-select {
           width: auto !important;
-        }
-
-        .ant-row {
-          flex: 1 1 0;
         }
       }
     }

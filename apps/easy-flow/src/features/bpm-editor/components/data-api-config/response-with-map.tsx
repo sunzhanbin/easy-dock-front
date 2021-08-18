@@ -38,7 +38,12 @@ function ResponseWithMap(props: ResponseWithMapProps) {
 
                           if (type === ParamType.Optional && optionals.length > 0) {
                             return (
-                              <Select size="large" placeholder="请选择" getPopupContainer={getPopupContainer}>
+                              <Select
+                                size="large"
+                                placeholder="请选择"
+                                getPopupContainer={getPopupContainer}
+                                dropdownMatchSelectWidth={false}
+                              >
                                 {optionals.map((param) => {
                                   const name = param.name;
 
