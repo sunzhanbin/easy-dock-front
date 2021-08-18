@@ -24,6 +24,8 @@ const staticRoutes = {
   INTEGRATION_MODEL_MANAGE: '/builder/integration/model-manage',
   TMPLATE_CENTER: '/builder/tmpl',
   SYSTEM_MANAGE: '/builder/system',
+  USER_MANAGER: '/builder/user',
+  USER_MANAGER_AUTH: '/builder/user/auth',
 };
 
 export default staticRoutes;

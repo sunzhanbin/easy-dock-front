@@ -11,6 +11,7 @@ const AppListPage = React.lazy(() => import(/* webpackChunkName: "scenes-list" *
 
 const AppPage = React.lazy(() => import(/* webpackChunkName: "app-detail" */ '@/routes/app-detail'));
 const IntegrationPage = React.lazy(() => import(/* webpackChunkName: "integration" */ '@/routes/integration'));
+const UserManager = React.lazy(() => import(/* webpackChunkName: "user-manager" */ '@/routes/user-manager'));
 
 const MicroPage = React.lazy(() => import(/* webpackChunkName: "micro" */ '@/routes/micro-page'));
 
@@ -72,6 +73,7 @@ function BuilderLayout() {
         <Route path={[ROUTES.BUILDER, ROUTES.BUILDER_INDEX]} exact component={AppListPage}></Route>
         <Route path={ROUTES.BUILDER_APP} component={AppPage}></Route>
         <Route path={ROUTES.INTEGRATION} component={IntegrationPage}></Route>
+        <Route path={ROUTES.USER_MANAGER} component={UserManager}></Route>
         <Route path={microsUrls}>
           <MicroPage hasHeader={showHeader}></MicroPage>
         </Route>

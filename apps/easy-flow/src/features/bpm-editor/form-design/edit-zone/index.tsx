@@ -29,7 +29,8 @@ const EditZone = () => {
         setTitle(baseInfo?.name as string);
       }
     }, 0);
-    selectedField ? setActiveKey('1') : setActiveKey('2');
+    // 0915临时版本
+    selectedField ? setActiveKey('1') : setActiveKey('1');
   }, [selectedField, byId, setActiveKey]);
   const onSave = useCallback(
     (values, isValidate) => {
@@ -69,9 +70,10 @@ const EditZone = () => {
             componentId={selectedField}
           />
         </TabPane>
-        <TabPane tab="表单属性" key="2">
+        {/* 0915版本暂时隐藏 */}
+        {/* <TabPane tab="表单属性" key="2">
           <FormAttrEditor />
-        </TabPane>
+        </TabPane> */}
       </Tabs>
     </div>
   );
