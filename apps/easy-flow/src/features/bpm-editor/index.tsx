@@ -7,6 +7,7 @@ import { useAppDispatch } from '@app/hooks';
 import { loadComponents } from './form-design/toolbox/toolbox-reducer';
 import { axios } from '@/utils';
 import { setAppInfo } from './form-design/formdesign-slice';
+import { loadApp } from '@app/app';
 import styles from './index.module.scss';
 
 const BpmEditor: FC = () => {
@@ -19,6 +20,12 @@ const BpmEditor: FC = () => {
         const { name, id, app } = res.data;
         dispatch(setAppInfo({ id, name, appId: app.id }));
       });
+  }, [bpmId, dispatch]);
+
+  useEffect(() => {
+    if (bpmId) {
+      dispatch(loadApp(bpmId));
+    }
   }, [bpmId, dispatch]);
 
   useEffect(() => {

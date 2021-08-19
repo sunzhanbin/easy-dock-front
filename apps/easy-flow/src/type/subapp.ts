@@ -26,5 +26,9 @@ export type SubApp = {
     remark: string;
     status: AppStatus;
     createTime: number;
+    project: {
+      id: number;
+      name: string;
+    };
   };
 };

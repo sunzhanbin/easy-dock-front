@@ -1,8 +1,9 @@
 import { memo, useMemo } from 'react';
 import Selector, { MemberSelectorProps as SelectorProps } from '@components/member-selector';
-import { flowDataSelector, setCacheMembers } from '../../../flow-slice';
 import { UserNode } from '@type/flow';
+import { useSubAppDetail } from '@app/app';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { flowDataSelector, setCacheMembers } from '../../../flow-slice';
 
 interface MemberSelectorProps {
   value?: UserNode['correlationMemberConfig'];
@@ -13,6 +14,7 @@ function MemberSelector(props: MemberSelectorProps) {
   const { cacheMembers } = useAppSelector(flowDataSelector);
   const { value, onChange } = props;
   const dispatch = useAppDispatch();
+  const { data: subAppDetail } = useSubAppDetail();
   const showValue: NonNullable<SelectorProps['value']> = useMemo(() => {
     const { members } = value!;
 
@@ -44,7 +46,7 @@ function MemberSelector(props: MemberSelectorProps) {
     }
   };
 
-  return <Selector value={showValue} onChange={handleChange} />;
+  return <Selector projectId={subAppDetail?.app.project.id} value={showValue} onChange={handleChange} />;
 }
 
 export default memo(MemberSelector);
