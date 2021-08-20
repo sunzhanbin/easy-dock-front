@@ -11,7 +11,7 @@ import { useAppSelector } from '@/app/hooks';
 import { todoNumSelector } from './taskcenter-reducer';
 import useAppId from '@/hooks/use-app-id';
 import { SubAppItem } from './type';
-import { axios } from '@/utils';
+import { runtimeAxios } from '@/utils';
 
 // import Copy from './copy';
 
@@ -34,7 +34,7 @@ const TaskCenter: FC<{}> = () => {
 
   useEffect(() => {
     if (isShowDrawer && appId) {
-      axios.get(`/subapp/${appId}/list/all/deployed`).then((res) => {
+      runtimeAxios.get(`/subapp/${appId}/list/all`).then((res) => {
         const list = res.data || [];
         setSubAppList(list);
       });

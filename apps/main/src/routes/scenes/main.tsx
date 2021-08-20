@@ -1,5 +1,7 @@
-import { memo, useCallback, useEffect, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useRef, useState, useMemo } from 'react';
 import { Link, useHistory } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { userSelector } from '@/store/user';
 import { Button, message } from 'antd';
 import { FormInstance } from 'antd/lib/form';
 import throttle from 'lodash/throttle';
@@ -9,6 +11,7 @@ import Project from './project';
 import Form from './project/form';
 import emptyImage from '@assets/empty.png';
 import { axios } from '@utils';
+import { RoleEnum } from '@/schema/app';
 import { MAIN_CONTENT_CLASSNAME, dynamicRoutes, ROUTES } from '@consts';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import Scene, { SceneProps } from './scene';
@@ -18,6 +21,7 @@ import styles from './index.module.scss';
 
 export default memo(function Main() {
   const history = useHistory();
+  const user = useSelector(userSelector);
   const [fetching, setFetching] = useState(false);
   const [projects, setProjects] = useState<ProjectShape[]>([]);
   const [activeProjectId, setActiveProjectId] = useState<number>();
@@ -27,6 +31,11 @@ export default memo(function Main() {
   const hasProjects = projects.length > 0;
   const formRef = useRef<FormInstance<{ name: string }>>();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  // 当前角色是否是超管
+  const isAdmin = useMemo(() => {
+    const power = user.info?.power || 0;
+    return (power & RoleEnum.ADMIN) === RoleEnum.ADMIN;
+  }, [user, RoleEnum]);
   const fetchProjectList = useMemoCallback(async () => {
     setFetching(true);
 
@@ -238,18 +247,23 @@ export default memo(function Main() {
           </div>
           <div className={styles['actions-group']}>
             <div className={styles.mask}></div>
-            <Popover
-              placement="bottom"
-              content={<Form formRef={formRef} />}
-              title="新增项目"
-              onOk={handleAddProjectSubmit}
-            >
-              <div className={styles.action}>
-                <Icon type="xinzengjiacu" className={styles.icon} />
-                <span>新增</span>
-              </div>
-            </Popover>
-            <span className={styles.line}></span>
+            {/* 超管才有权限新增项目 */}
+            {isAdmin && (
+              <>
+                <Popover
+                  placement="bottom"
+                  content={<Form formRef={formRef} />}
+                  title="新增项目"
+                  onOk={handleAddProjectSubmit}
+                >
+                  <div className={styles.action}>
+                    <Icon type="xinzengjiacu" className={styles.icon} />
+                    <span>新增</span>
+                  </div>
+                </Popover>
+                <span className={styles.line}></span>
+              </>
+            )}
             <Link to={ROUTES.INTEGRATION_ORCH_INTERFACE_LIST} className={styles.action}>
               <Icon type="jicheng" className={styles.icon} />
               <span>集成管理</span>
