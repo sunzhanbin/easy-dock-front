@@ -1,22 +1,32 @@
-import { memo, FC, useMemo } from 'react';
+import { memo, FC, useMemo, useState, useEffect } from 'react';
 import { Modal } from 'antd';
 import { Icon } from '@common/components';
-import { SubAppInfo } from '@/routes/scenes/types';
-import { SubAppTypeEnum } from '@/schema/app';
+import useMemoCallback from '@common/hooks/use-memo-callback';
+import { SubAppTypeEnum, SubAppPower } from '@/schema/app';
+import { fetchSubAppPowers } from '@/api/auth';
 import styles from './index.module.scss';
 
-const AuthModal: FC<{ appName: string; subAppList: SubAppInfo[]; onClose: () => void; onOk: () => void }> = ({
+const AuthModal: FC<{ appName: string; appId: string; onClose: () => void; onOk: () => void }> = ({
+  appId,
   appName,
-  subAppList,
   onClose,
   onOk,
 }) => {
+  const [subAppList, setSubAppList] = useState<SubAppPower[]>([]);
+  const fetchAppList = useMemoCallback(() => {
+    fetchSubAppPowers(appId).then((res) => {
+      setSubAppList(res.data.subappPowers);
+    });
+  });
   const flowSubAppList = useMemo(() => {
     return subAppList.filter((subApp) => subApp.type === SubAppTypeEnum.FLOW) || [];
   }, [subAppList]);
   const screenSubAppList = useMemo(() => {
     return subAppList.filter((subApp) => subApp.type === SubAppTypeEnum.SCREEN) || [];
   }, [subAppList]);
+  useEffect(() => {
+    fetchAppList();
+  }, []);
   return (
     <Modal
       className={styles['auth-modal']}

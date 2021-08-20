@@ -1,8 +1,8 @@
 /* 权限相关接口 */
 import { builderAxios, runtimeAxios } from '@utils';
 
-// 获取全部项目权限
-export function fetchProjectList() {
+// 获取项目的访问权限
+export function fetchProjectPowers() {
   return builderAxios.get('/project/list/all/powers');
 }
 export type AssignAuthParams = {
@@ -24,4 +24,8 @@ export type RevokeAuthParams = {
 // 回收资源权限
 export function revokeAuth(params: RevokeAuthParams) {
   return runtimeAxios.delete('/privilege/revoke', { data: params });
+}
+// 获取应用的访问权限
+export function fetchSubAppPowers(id: string) {
+  return runtimeAxios.get(`/app/${id}/list/all/powers`);
 }

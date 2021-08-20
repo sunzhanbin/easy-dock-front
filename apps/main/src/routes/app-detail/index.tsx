@@ -158,7 +158,7 @@ const AppDetail: FC = () => {
       {showAuthModal && (
         <AuthModal
           appName={appInfo!.name}
-          subAppList={subAppList}
+          appId={appId}
           onClose={() => {
             setShowAuthModal(false);
           }}

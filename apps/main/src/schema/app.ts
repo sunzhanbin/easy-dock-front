@@ -44,10 +44,19 @@ export type Power = {
   resourceType: number;
 };
 
-export type ProjectAuth = {
+export type ProjectPower = {
   createTime: number;
   id: number;
   name: string;
-  powers: Power[]; //项目管理员
+  powers: Power[]; //被授权的对象
   status: number;
+};
+
+export type SubAppPower = {
+  createTime: number;
+  id: number;
+  name: string;
+  powers: Power[]; //被授权的对象
+  status: -1 | 1; //-1:停用 1:启用
+  type: 1 | 2; //1:大屏类子应用 2:流程类子应用
 };

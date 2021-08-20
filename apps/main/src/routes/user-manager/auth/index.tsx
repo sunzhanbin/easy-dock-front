@@ -3,16 +3,16 @@ import { Popover } from 'antd';
 import projectImage from '@assets/project.png';
 import { Icon, MemberList, Text, Loading } from '@common/components';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import { fetchProjectList, revokeAuth, assignAuth, AssignAuthParams } from '@/api/auth';
+import { fetchProjectPowers, revokeAuth, assignAuth, AssignAuthParams } from '@/api/auth';
 import MemberSelector from '@components/member-selector';
-import { AuthEnum, ResourceTypeEnum, OwnerTypeEnum, ProjectAuth } from '@/schema/app';
+import { AuthEnum, ResourceTypeEnum, OwnerTypeEnum, ProjectPower } from '@/schema/app';
 import styles from './index.module.scss';
 
 const Auth = () => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [projectList, setProjectList] = useState<ProjectAuth[]>([]);
+  const [projectList, setProjectList] = useState<ProjectPower[]>([]);
   const getProjectList = useMemoCallback(() => {
-    fetchProjectList()
+    fetchProjectPowers()
       .then((res) => {
         setProjectList(res.data || []);
       })
