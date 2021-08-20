@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction, createAsyncThunk, createSelector, current } from '@reduxjs/toolkit';
 import { message } from 'antd';
 import { builderAxios, runtimeAxios } from '@utils';
-import { User } from '@type';
 import {
   AllNode,
   AddableNode,
@@ -27,7 +26,7 @@ export type FlowType = {
   dirty: boolean;
   invalidNodesMap: ValidResultType;
   cacheMembers: {
-    [id: number]: User;
+    [id: string]: { name: string; avatar?: string };
   };
   fieldsTemplate: FieldTemplate[];
   choosedNode: AllNode | null | BranchNode['branches'][number];
@@ -190,7 +189,6 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
         cacheMembers[member.id] = {
           name: member.userName,
           avatar: member.avatar,
-          id: member.id,
         };
       });
 

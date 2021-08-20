@@ -1,186 +1,48 @@
-import React, { memo, useState, useEffect, useMemo, useRef } from 'react';
-import { Tabs, Input, Checkbox } from 'antd';
-import { throttle } from 'lodash';
-import classnames from 'classnames';
+import { memo } from 'react';
+import { Tabs } from 'antd';
 import { ValueType } from './type';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import { Loading } from '@common/components';
-import memberDefaultAvatar from '@assets/members/member-default-avatar.png';
-import { Image } from '@common/components';
-import { runtimeAxios } from '@utils';
+import { DepartSelector, MemberSelector } from './selectors';
+import SelectorContext from './context';
 import styles from './index.module.scss';
 
 const { TabPane } = Tabs;
 
-const fetchUser = async (data: { name: string; page: number; projectId: number }) => {
-  const memberResponse = await runtimeAxios.post('/user/search', {
-    index: data.page,
-    size: 20,
-    keyword: data.name,
-    projectId: data.projectId,
-  });
-
-  return {
-    total: memberResponse.data.recordTotal,
-    index: memberResponse.data.pageIndex,
-    members: memberResponse.data.data.map((item: { userName: string; id: number; avatar: string }) => {
-      return {
-        name: item.userName,
-        id: item.id,
-        avatar: item.avatar,
-      };
-    }),
-  };
-};
-
 interface SelectorProps {
   value: ValueType;
-  onMembersChange?(value: ValueType['members']): void;
+  onChange?(value: NonNullable<this['value']>): void;
   projectId?: number;
   className?: string;
+  strictDepart?: boolean;
 }
 
 function Selector(props: SelectorProps) {
-  const { value, onMembersChange, projectId, className } = props;
-  const [members, setMembers] = useState<ValueType['members']>([]);
-  const [loading, setLoading] = useState(false);
-  const [memberTotal, setMemberTotal] = useState(0);
-  const [memberSearchText, setMemberSearchText] = useState('');
-  const memberPageNumberRef = useRef(1);
-  const timerRef = useRef<NodeJS.Timeout>();
-  const searchMembers = useMemoCallback(async (payload: { name: string; page: number }) => {
-    if (loading || !projectId) return;
+  const { value, onChange, projectId, className, strictDepart = false } = props;
+  const handleMembersChange = useMemoCallback((members: ValueType['members']) => {
+    if (!onChange) return;
 
-    setLoading(true);
-
-    try {
-      const { members, total, index } = await fetchUser(Object.assign({}, payload, { projectId }));
-
-      setMembers((oldValue) => {
-        // 从第一页搜索时覆盖原数组
-        if (payload.page === 1) {
-          return members;
-        } else {
-          return oldValue.concat(members);
-        }
-      });
-      // 更新当前页数
-      memberPageNumberRef.current = index;
-      setMemberTotal(total);
-    } finally {
-      setLoading(false);
-    }
+    onChange(Object.assign({}, value, { members }));
   });
 
-  const handleMemberSearchTextChange: React.ChangeEventHandler<HTMLInputElement> = useMemoCallback(async (event) => {
-    const name = (event.target.value || '').trim();
+  const handleDepartsChange = useMemoCallback((departs: ValueType['departs']) => {
+    if (!onChange) return;
 
-    setMemberSearchText(name);
-    memberPageNumberRef.current = 1;
-
-    if (timerRef.current !== undefined) {
-      clearTimeout(timerRef.current);
-    }
-
-    timerRef.current = setTimeout(() => {
-      searchMembers({ page: 1, name });
-    }, 300);
+    onChange(Object.assign({}, value, { departs }));
   });
-
-  const valueMaps = useMemo(() => {
-    const maps: { [key: string]: boolean } = {};
-
-    if (!value) {
-      return maps;
-    }
-
-    value.members.forEach((member) => {
-      maps[member.id] = true;
-    });
-
-    return maps;
-  }, [value]);
-
-  const handleChangeMembers = useMemoCallback((member: ValueType['members'][number], checked: boolean) => {
-    let newMembers = value ? [...value.members] : [];
-
-    if (checked) {
-      newMembers.push(member);
-    } else {
-      newMembers = newMembers.filter((item) => item.id !== member.id);
-    }
-
-    if (onMembersChange) {
-      onMembersChange(newMembers);
-    }
-  });
-
-  useEffect(() => {
-    if (projectId) {
-      searchMembers({ name: '', page: 1 });
-    }
-  }, [searchMembers, projectId]);
-
-  const handleMemberListScroll = useMemoCallback(
-    throttle((event: React.UIEvent<HTMLDivElement, UIEvent>) => {
-      // 全部加载完了就不加载了
-      if (members.length === memberTotal) return;
-
-      const container = event.target as HTMLDivElement;
-
-      if (container.scrollHeight - container.offsetHeight - container.scrollTop < 20) {
-        if (loading) return;
-
-        searchMembers({
-          page: memberPageNumberRef.current + 1,
-          name: memberSearchText,
-        });
-      }
-    }, 300),
-  );
 
   return (
-    <div className={styles.content}>
-      <Tabs defaultActiveKey="member">
-        <TabPane tab="成员" key="member">
-          <Input
-            placeholder="搜索成员"
-            className={styles.search}
-            onChange={handleMemberSearchTextChange}
-            size="large"
-            value={memberSearchText}
-          />
-          <div className={classnames(styles.list, className)} onScroll={handleMemberListScroll}>
-            {!memberSearchText && <div className={styles.total}>全部成员({memberTotal})</div>}
-
-            {members.map((member) => {
-              const selected = valueMaps[member.id];
-
-              return (
-                <div key={member.id} className={styles.item} onClick={() => handleChangeMembers(member, !selected)}>
-                  <Image
-                    src={member.avatar}
-                    placeholder={memberDefaultAvatar}
-                    className={styles.avatar}
-                    size={24}
-                    round
-                  />
-                  <span className={styles.name}>{member.name}</span>
-                  <Checkbox checked={selected} />
-                </div>
-              );
-            })}
-
-            {members.length === 0 && <div>未搜索到用户</div>}
-          </div>
-        </TabPane>
-        <TabPane tab="角色" key="role">
-          功能暂未开放
-        </TabPane>
-      </Tabs>
-
-      {loading && <Loading className={styles.loading} />}
-    </div>
+    <SelectorContext.Provider value={{ projectId, wrapperClass: className }}>
+      <div className={styles.content}>
+        <Tabs defaultActiveKey="depart">
+          <TabPane tab="成员" key="member">
+            <MemberSelector value={value.members} onChange={handleMembersChange} />
+          </TabPane>
+          <TabPane tab="部门" key="depart">
+            <DepartSelector value={value.departs} onChange={handleDepartsChange} strict={strictDepart} />
+          </TabPane>
+        </Tabs>
+      </div>
+    </SelectorContext.Provider>
   );
 }
 

@@ -79,24 +79,13 @@
 .content {
   position: relative;
   width: 232px;
-
-  & > .loading {
-    top: unset;
-    bottom: 0;
-    transform: translateX(-50%);
-  }
+  user-select: none;
 
   .search {
     margin-bottom: 12px;
   }
 
   .list {
-    max-height: 200px;
-    color: rgba(#181f43, 0.95);
-    font-size: 14px;
-    font-weight: 400;
-    overflow-y: auto;
-
     .total {
       margin-bottom: 12px;
     }
@@ -131,6 +120,16 @@
   :global {
     .ant-popover {
       padding-top: 2px;
+    }
+
+    .ant-tree-checkbox {
+      order: 1;
+      margin-left: 7px;
+      margin-right: 7px;
+    }
+
+    .ant-tree-node-selected {
+      background-color: transparent !important;
     }
 
     .ant-input {
@@ -186,5 +185,28 @@
       height: 5px !important;
       background-color: $primary-color;
     }
+  }
+}
+
+.selector {
+  position: relative;
+  max-height: 300px;
+  display: flex;
+  flex-direction: column;
+  color: rgba(#181f43, 0.95);
+  font-size: 14px;
+  font-weight: 400;
+
+  .list {
+    flex: 1 1 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .loading {
+    left: 50%;
+    top: 50%;
+    transform: translate3D(-50%, -50%, 0);
+    z-index: 9;
   }
 }

@@ -299,9 +299,15 @@
     margin-bottom: 12px;
   }
 }
-.ant-checkbox-checked .ant-checkbox-inner {
+.ant-checkbox-checked .ant-checkbox-inner,
+.ant-tree-checkbox-checked .ant-tree-checkbox-inner {
   background-color: $primary-color;
   border-color: $primary-color;
+}
+
+// 树形控件半选状态
+.ant-tree-checkbox-indeterminate .ant-tree-checkbox-inner::after {
+  background-color: $primary-color;
 }
 
 .ant-checkbox-indeterminate .ant-checkbox-inner::after {
