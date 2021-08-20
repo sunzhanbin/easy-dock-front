@@ -8,3 +8,5 @@ export { default as Image } from './image';
 export { default as Avatar } from './avatar';
 export { default as Modal, ModalConfirm, confirm } from './modal';
 export { default as DatePicker } from './date-picker';
+export { default as Member } from './member';
+export { default as MemberList } from './member-list';

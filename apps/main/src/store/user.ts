@@ -34,6 +34,7 @@ export const getUserInfo = createAsyncThunk('main-app-user/get-user', (_, { disp
         avatar: data.user.avatar,
         username: data.user.userName,
         id: data.user.id,
+        power: data.power,
       }),
     );
   });

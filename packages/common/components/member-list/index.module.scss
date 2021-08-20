@@ -1,0 +1,34 @@
+@import '@common/styles/var.scss';
+@import '@common/styles/mixin.scss';
+
+.members {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  margin-top: -14px;
+
+  .member {
+    margin-top: 14px;
+    margin-right: 16px;
+  }
+
+  .action {
+    @include center('flex');
+
+    position: relative;
+    cursor: pointer;
+
+    .add {
+      width: 20px;
+      height: 20px;
+      padding: 4px;
+      margin-top: 14px;
+      border-radius: 50%;
+      color: #fff;
+      background-color: $primary-color;
+      font-size: 12px;
+    }
+  }
+}

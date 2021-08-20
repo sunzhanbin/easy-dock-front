@@ -1,7 +1,8 @@
 declare type User = {
   avatar: string; // 头像
   username: string; // 中文名
-  id: string; //登录名
+  id: number; //登录名
+  power?: number; //权限值
 };
 
 interface Window {

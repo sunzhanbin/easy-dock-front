@@ -7,6 +7,7 @@ import { Avatar } from '@common/components';
 import { Icon } from '@common/components';
 import { userSelector, logout } from '@/store/user';
 import { ROUTES } from '@consts';
+import { RoleEnum } from '@/schema/app';
 import styles from './index.module.scss';
 
 function HeaderUser() {
@@ -26,18 +27,25 @@ function HeaderUser() {
   const handleGoAuth = useCallback(() => {
     history.push(ROUTES.USER_MANAGER_AUTH);
   }, [history]);
+  // 当前角色是否是超管
+  const isAdmin = useMemo(() => {
+    const power = user.info?.power || 0;
+    return (power & RoleEnum.ADMIN) === RoleEnum.ADMIN;
+  }, [user, RoleEnum]);
   const dropownOverlay = useMemo(() => {
     return (
       <Menu>
-        <Menu.Item key="auth" onClick={handleGoAuth} className={styles.menuItem}>
-          <span>
-            <Icon type="quanxianshezhi" className={styles.icon} />
-            权限设置
-          </span>
-        </Menu.Item>
-        <Menu.Item key="line" className={classNames(styles.menuItem, styles.line)}>
-          <span></span>
-        </Menu.Item>
+        {isAdmin && (
+          <>
+            <Menu.Item key="auth" onClick={handleGoAuth} className={styles.menuItem}>
+              <span>
+                <Icon type="quanxianshezhi" className={styles.icon} />
+                权限设置
+              </span>
+            </Menu.Item>
+            <Menu.Item key="line" className={classNames(styles.menuItem, styles.line)}></Menu.Item>
+          </>
+        )}
         <Menu.Item key="logout" onClick={handleLogout} className={styles.menuItem}>
           <span>
             <Icon type="tuichudenglu" className={styles.icon} />
@@ -46,7 +54,7 @@ function HeaderUser() {
         </Menu.Item>
       </Menu>
     );
-  }, [handleLogout]);
+  }, [isAdmin, handleGoAuth, handleLogout]);
 
   return (
     <>
