@@ -234,13 +234,13 @@ export type MemberConfig = {
 export type User = {
   name: string;
   id: number;
-  avatar: string;
+  avatar?: string;
 };
 
 export type Depart = {
   name: string;
-  id: number;
-  avatar: string;
+  id: number | string;
+  avatar?: string;
 };
 
 export type AllComponentType = SingleTextField | SelectField | DateField | RadioField | CheckboxField;
