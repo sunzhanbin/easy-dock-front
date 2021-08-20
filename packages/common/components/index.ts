@@ -10,3 +10,5 @@ export { default as Modal, ModalConfirm, confirm } from './modal';
 export { default as DatePicker } from './date-picker';
 export { default as Member } from './member';
 export { default as MemberList } from './member-list';
+export { default as MemberSelector } from './member-selector';
+export type { MemberSelectorProps } from './member-selector';

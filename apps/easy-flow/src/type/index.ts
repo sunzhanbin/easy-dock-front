@@ -1,5 +1,7 @@
 import { Rule } from 'antd/lib/form';
 
+export type { User, Depart } from '@common/type';
+
 export type FieldType = 'Select' | 'Input' | 'Textarea' | 'Radio' | 'Checkbox' | 'Date' | 'InputNumber' | 'DescText';
 
 export type BaseField = {
@@ -229,18 +231,6 @@ export type MemberConfig = {
   includeSubDeparts: boolean;
   // 节点成员
   members: string[];
-};
-
-export type User = {
-  name: string;
-  id: number;
-  avatar?: string;
-};
-
-export type Depart = {
-  name: string;
-  id: number | string;
-  avatar?: string;
 };
 
 export type AllComponentType = SingleTextField | SelectField | DateField | RadioField | CheckboxField;

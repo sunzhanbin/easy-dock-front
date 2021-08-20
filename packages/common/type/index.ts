@@ -1,5 +1,11 @@
 export type User = {
-  avatar: string; // 头像
-  username: string; // 中文名
-  id: number; //登录名
+  name: string;
+  id: number;
+  avatar?: string;
+};
+
+export type Depart = {
+  name: string;
+  id: number | string;
+  avatar?: string;
 };

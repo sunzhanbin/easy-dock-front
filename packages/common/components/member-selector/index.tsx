@@ -1,10 +1,9 @@
 import { memo, ReactNode, useMemo, useRef, useState, useEffect } from 'react';
 import { Popover } from 'antd';
-import { Icon } from '@common/components';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import memberDefaultAvatar from '@assets/members/member-default-avatar.png';
-import departDefaultAvatar from '@assets/members/depart-default-avatar.png';
-import { Image } from '@common/components';
+import { Icon, Image } from '../../components';
+import useMemoCallback from '../../hooks/use-memo-callback';
+import memberDefaultAvatar from './avatars/member-default-avatar.png';
+import departDefaultAvatar from './avatars/depart-default-avatar.png';
 import { ValueType } from './type';
 import Selector from './selector';
 import styles from './index.module.scss';

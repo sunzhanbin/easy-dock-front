@@ -1,11 +1,11 @@
 import { memo, useState, useMemo, useEffect, useContext } from 'react';
 import classnames from 'classnames';
 import { Tree, Input } from 'antd';
-import { runtimeAxios } from '@utils';
 import { filterOptions } from 'rc-tree-select/es/utils/valueUtil';
-import { Loading } from '@common/components';
-import useMemoCallback from '@common/hooks/use-memo-callback';
+import { Loading } from '../../../components';
+import useMemoCallback from '../../../hooks/use-memo-callback';
 import SelectorContext from '../context';
+import { axios } from '../util';
 import { ValueType } from '../type';
 import styles from '../index.module.scss';
 
@@ -42,7 +42,7 @@ type DepartsResponse = {
 }[];
 
 async function fetchDeparts(projectId: number | string): Promise<TreeData> {
-  const { data } = await runtimeAxios.get<{ data: DepartsResponse }>(`/dept/list/all/${projectId}`);
+  const { data } = await axios.get<{ data: DepartsResponse }>(`/dept/list/all/${projectId}`);
 
   function formatTreeData(data?: DepartsResponse): TreeData {
     if (!data) return [];
