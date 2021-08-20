@@ -14,42 +14,67 @@
       margin-right: 16px;
       cursor: pointer;
     }
-
-    .app_name {
-      font-size: 14px;
+    .status {
+      width: 48px;
+      height: 22px;
+      line-height: 22px;
+      text-align: center;
+      border-radius: 3px;
+      font-size: 12px;
       font-weight: 400;
-      color: rgba(24, 31, 67, 0.95);
-    }
+      margin-right: 8px;
 
-    .more_info {
-      position: relative;
-      display: flex;
-      align-items: center;
-
-      .number {
-        margin: 0 8px 0 4px;
-        font-size: 14px;
-        font-weight: 400;
-        color: rgba(24, 31, 67, 0.5);
+      &.active {
+        color: #03a882;
+        background: rgba(6, 196, 152, 0.12);
       }
 
-      .status {
-        width: 48px;
-        height: 22px;
-        line-height: 22px;
-        text-align: center;
-        border-radius: 3px;
-        font-size: 12px;
-        font-weight: 400;
-
-        &.active {
-          color: #03a882;
-          background: rgba(6, 196, 152, 0.12);
+      &.negative {
+        color: #fff;
+        background: #b9bcc6;
+      }
+    }
+    .app_info {
+      display: flex;
+      align-items: center;
+      .name {
+        @include ellipsis;
+        max-width: 150px;
+        font-size: 18px;
+        font-weight: 600;
+        color: rgba(0, 0, 0, 0.85);
+      }
+      .number {
+        margin: 0 8px 0 4px;
+        font-size: 18px;
+        font-weight: 500;
+        color: rgba(24, 31, 67, 0.3);
+      }
+      .line {
+        margin-right: 8px;
+        width: 1px;
+        height: 16px;
+        background-color: rgba(24, 31, 67, 0.12);
+      }
+      .auth {
+        display: flex;
+        align-items: center;
+        height: 28px;
+        cursor: pointer;
+        color: #181f43;
+        .icon {
+          font-size: 16px;
+          margin-right: 4px;
         }
-
-        &.negative {
-          color: #fff;
-          background: #b9bcc6;
+        .text {
+          font-size: 14px;
+          font-weight: 400;
+        }
+        &:hover {
+          color: #4c5cdb;
+          .icon {
+            color: #4c5cdb;
+          }
         }
       }
     }

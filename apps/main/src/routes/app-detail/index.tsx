@@ -3,13 +3,15 @@ import { useParams } from 'react-router';
 import { useHistory } from 'react-router-dom';
 import classNames from 'classnames';
 import styles from './index.module.scss';
-import { axios, getShorterText } from '@/utils';
+import { axios } from '@/utils';
 import { SceneShape, SubAppInfo } from '../scenes/types';
 import Empty from './empty/index';
-import { Icon } from '@/components';
-import { Button, Input, Tooltip } from 'antd';
+import { Text, Icon } from '@common/components';
+import useMemoCallback from '@common/hooks/use-memo-callback';
+import { Button, Input } from 'antd';
 import Card from './subapp-card';
 import AppModel from './app-model';
+import AuthModal from './auth-modal';
 import { FlowMicroApp, MAIN_CONTENT_CLASSNAME } from '@/consts';
 
 const AppDetail: FC = () => {
@@ -17,7 +19,8 @@ const AppDetail: FC = () => {
   const { appId } = useParams<{ appId: string }>();
   const [appInfo, setAppInfo] = useState<SceneShape>();
   const [subAppList, setSubAppList] = useState<SubAppInfo[]>([]);
-  const [isShowModel, setIsShowModel] = useState<boolean>(false);
+  const [showAppModal, setShowAppModal] = useState<boolean>(false);
+  const [showAuthModal, setShowAuthModal] = useState<boolean>(false);
   const [keyWord, setKeyWord] = useState<string>('');
   const filterAppList = useMemo(() => {
     if (keyWord) {
@@ -31,15 +34,18 @@ const AppDetail: FC = () => {
   const handleOK = useCallback(
     (name, type) => {
       axios.post('/subapp', { appId, name, type }).then((res) => {
-        setIsShowModel(false);
+        setShowAppModal(false);
         history.push(`${FlowMicroApp.route}/bpm-editor/${res.data.id}/form-design`);
       });
     },
     [appId, history],
   );
   const handleCrateSubApp = useCallback(() => {
-    setIsShowModel(true);
-  }, [setIsShowModel]);
+    setShowAppModal(true);
+  }, [setShowAppModal]);
+  const handleShowAuthModal = useMemoCallback(() => {
+    setShowAuthModal(true);
+  });
   const handleChange = useCallback(() => {
     axios.get(`/subapp/${appId}/list/all`).then((res) => {
       setSubAppList(res.data);
@@ -72,35 +78,35 @@ const AppDetail: FC = () => {
             history.replace('/builder');
           }}
         />
-        <div className={styles.app_name}>
-          {appInfo?.name &&
-            (appInfo.name.length > 8 ? (
-              <Tooltip title={appInfo.name}>
-                <div>{getShorterText(appInfo.name)}</div>
-              </Tooltip>
-            ) : (
-              <div>{appInfo.name}</div>
-            ))}
+        <div className={classNames(styles.status, appInfo?.status === 1 ? styles.active : styles.negative)}>
+          {appInfo?.status === 1 ? '已启用' : '已停用'}
+        </div>
+        <div className={styles.app_info}>
+          <div className={styles.name}>
+            <Text text={appInfo?.name || ''} getContainer={false} />
+          </div>
+          {subAppList.length > 0 && (
+            <>
+              <div className={styles.number}>({subAppList.length})</div>
+              <div className={styles.line}></div>
+              <div className={styles.auth} onClick={handleShowAuthModal}>
+                <Icon type="quanxianshezhi" className={styles.icon} />
+                <span className={styles.text}>应用端访问权限</span>
+              </div>
+            </>
+          )}
         </div>
         {subAppList.length > 0 && (
-          <>
-            <div className={styles.more_info}>
-              <div className={styles.number}>({subAppList.length})</div>
-              <div className={classNames(styles.status, appInfo?.status === 1 ? styles.active : styles.negative)}>
-                {appInfo?.status === 1 ? '已启用' : '已停用'}
-              </div>
-            </div>
-            <div className={styles.search_container}>
-              <Input
-                className={styles.search}
-                prefix={<Icon type="sousuo" />}
-                size="large"
-                placeholder="搜索子应用名称"
-                onChange={handleSearch}
-                onKeyUp={handleKeyUp}
-              />
-            </div>
-          </>
+          <div className={styles.search_container}>
+            <Input
+              className={styles.search}
+              prefix={<Icon type="sousuo" />}
+              size="large"
+              placeholder="搜索子应用名称"
+              onChange={handleSearch}
+              onKeyUp={handleKeyUp}
+            />
+          </div>
         )}
       </div>
       <div className={styles.content}>
@@ -119,13 +125,13 @@ const AppDetail: FC = () => {
                 onClick={handleCrateSubApp}
               />
               <div>新建子应用</div>
-              {isShowModel && (
+              {showAppModal && (
                 <AppModel
                   type="create"
                   position="left"
                   className={styles.createModel}
                   onClose={() => {
-                    setIsShowModel(false);
+                    setShowAppModal(false);
                   }}
                   onOk={handleOK}
                 />
@@ -149,6 +155,18 @@ const AppDetail: FC = () => {
           <Empty appId={appId} />
         )}
       </div>
+      {showAuthModal && (
+        <AuthModal
+          appName={appInfo!.name}
+          subAppList={subAppList}
+          onClose={() => {
+            setShowAuthModal(false);
+          }}
+          onOk={() => {
+            setShowAuthModal(false);
+          }}
+        />
+      )}
     </div>
   );
 };

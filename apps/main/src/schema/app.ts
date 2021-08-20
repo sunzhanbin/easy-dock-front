@@ -31,6 +31,10 @@ export enum OwnerTypeEnum {
   ROLE = 2, //角色
   DEPARTMENT = 3, //部门
 }
+export enum SubAppTypeEnum {
+  SCREEN = 1, //大屏类子应用
+  FLOW = 2, //流程类子应用
+}
 
 export type Power = {
   id: number;
