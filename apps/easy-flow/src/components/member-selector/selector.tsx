@@ -1,8 +1,9 @@
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import { Tabs } from 'antd';
-import { ValueType } from './type';
 import useMemoCallback from '@common/hooks/use-memo-callback';
+import { runtimeAxios } from '@utils';
 import { DepartSelector, MemberSelector } from './selectors';
+import { ValueType } from './type';
 import SelectorContext from './context';
 import styles from './index.module.scss';
 
@@ -30,12 +31,40 @@ function Selector(props: SelectorProps) {
     onChange(Object.assign({}, value, { departs }));
   });
 
+  const fetchUser = useMemoCallback(async (data: { name: string; page: number }) => {
+    const memberResponse = await runtimeAxios.post('/user/search', {
+      index: data.page,
+      size: 20,
+      keyword: data.name,
+      projectId: projectId,
+    });
+
+    return {
+      total: memberResponse.data.recordTotal,
+      index: memberResponse.data.pageIndex,
+      members: memberResponse.data.data.map((item: { userName: string; id: number; avatar: string }) => {
+        return {
+          name: item.userName,
+          id: item.id,
+          avatar: item.avatar,
+        };
+      }),
+    };
+  });
+
+  const defaultActiveKey = useMemo(() => {
+    if (value.members.length) return 'member';
+    if (value.departs.length) return 'depart';
+
+    return 'member';
+  }, [value]);
+
   return (
     <SelectorContext.Provider value={{ projectId, wrapperClass: className }}>
       <div className={styles.content}>
-        <Tabs defaultActiveKey="depart">
+        <Tabs defaultActiveKey={defaultActiveKey}>
           <TabPane tab="成员" key="member">
-            <MemberSelector value={value.members} onChange={handleMembersChange} />
+            <MemberSelector value={value.members} onChange={handleMembersChange} fetchUser={fetchUser} />
           </TabPane>
           <TabPane tab="部门" key="depart">
             <DepartSelector value={value.departs} onChange={handleDepartsChange} strict={strictDepart} />

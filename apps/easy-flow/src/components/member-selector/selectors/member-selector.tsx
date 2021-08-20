@@ -10,34 +10,38 @@ import { ValueType } from '../type';
 import SelectorContext from '../context';
 import styles from '../index.module.scss';
 
-const fetchUser = async (data: { name: string; page: number; projectId: number }) => {
-  const memberResponse = await runtimeAxios.post('/user/search', {
-    index: data.page,
-    size: 20,
-    keyword: data.name,
-    projectId: data.projectId,
-  });
+// const fetchUser = async (data: { name: string; page: number; projectId: number }) => {
+//   const memberResponse = await runtimeAxios.post('/user/search', {
+//     index: data.page,
+//     size: 20,
+//     keyword: data.name,
+//     projectId: data.projectId,
+//   });
 
-  return {
-    total: memberResponse.data.recordTotal,
-    index: memberResponse.data.pageIndex,
-    members: memberResponse.data.data.map((item: { userName: string; id: number; avatar: string }) => {
-      return {
-        name: item.userName,
-        id: item.id,
-        avatar: item.avatar,
-      };
-    }),
-  };
-};
+//   return {
+//     total: memberResponse.data.recordTotal,
+//     index: memberResponse.data.pageIndex,
+//     members: memberResponse.data.data.map((item: { userName: string; id: number; avatar: string }) => {
+//       return {
+//         name: item.userName,
+//         id: item.id,
+//         avatar: item.avatar,
+//       };
+//     }),
+//   };
+// };
 
 interface MemberSelectorProps {
+  fetchUser(data: {
+    name: string;
+    page: number;
+  }): Promise<{ total: number; index: number; members: ValueType['members'] }>;
   value?: ValueType['members'];
   onChange?(value: NonNullable<this['value']>): void;
 }
 
 function MemberSelector(props: MemberSelectorProps) {
-  const { value, onChange } = props;
+  const { value, onChange, fetchUser } = props;
   const { wrapperClass, projectId } = useContext(SelectorContext)!;
   const [members, setMembers] = useState<ValueType['members']>([]);
   const [loading, setLoading] = useState(false);
@@ -51,7 +55,7 @@ function MemberSelector(props: MemberSelectorProps) {
     setLoading(true);
 
     try {
-      const { members, total, index } = await fetchUser(Object.assign({}, payload, { projectId }));
+      const { members, total, index } = await fetchUser(payload);
 
       setMembers((oldValue) => {
         // 从第一页搜索时覆盖原数组
