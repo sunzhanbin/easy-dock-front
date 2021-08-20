@@ -140,7 +140,7 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
     const fields = form.meta.components || [];
     const fieldsTemplate: FlowType['fieldsTemplate'] = fields.map((item) => ({
       name: <string>item.config.label,
-      id: <string>item.config.id,
+      id: <string>item.config.fieldName,
       type: item.config.type,
     }));
 
