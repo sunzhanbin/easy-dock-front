@@ -56,6 +56,7 @@ export const MemberList = memo(function MemberList(props: MemberListProps) {
           <Image className={styles.avatar} src={depart.avatar} placeholder={departDefaultAvatar} size={24} round />
         </Member>
       ))}
+
       {members.map((member) => {
         return (
           <Member
@@ -125,19 +126,19 @@ function MemberSelector(props: MemberSelectorProps) {
     });
   });
 
-  const content = useMemo(() => {
-    return (
-      <div ref={selectorContainerRef}>
-        <Selector
-          className={selectorWrapperClass}
-          value={showValue}
-          onChange={handleChange}
-          projectId={projectId}
-          strictDepart={strictDepart}
-        />
-      </div>
-    );
-  }, [showValue, handleChange, projectId, selectorWrapperClass, strictDepart]);
+  // const content = useMemo(() => {
+  //   return (
+  //     <div ref={selectorContainerRef}>
+  //       <Selector
+  //         className={selectorWrapperClass}
+  //         value={showValue}
+  //         onChange={handleChange}
+  //         projectId={projectId}
+  //         strictDepart={strictDepart}
+  //       />
+  //     </div>
+  //   );
+  // }, [showValue, handleChange, projectId, selectorWrapperClass, strictDepart]);
 
   useEffect(() => {
     return () => {
@@ -152,7 +153,17 @@ function MemberSelector(props: MemberSelectorProps) {
     <div className={styles.container} ref={popoverContentContainerRef}>
       <MemberList members={showValue.members} onDelete={handleDeleteMember} departs={value?.departs} editable>
         <Popover
-          content={content}
+          content={
+            <div ref={selectorContainerRef}>
+              <Selector
+                className={selectorWrapperClass}
+                value={showValue}
+                onChange={handleChange}
+                projectId={projectId}
+                strictDepart={strictDepart}
+              />
+            </div>
+          }
           getPopupContainer={getPopupContainer}
           trigger="click"
           visible={showPopover}

@@ -26,7 +26,7 @@ export type FlowType = {
   dirty: boolean;
   invalidNodesMap: ValidResultType;
   cacheMembers: {
-    [id: string]: { name: string; avatar?: string };
+    [id: string]: { name: string; avatar?: string; id: number | string };
   };
   fieldsTemplate: FieldTemplate[];
   choosedNode: AllNode | null | BranchNode['branches'][number];
@@ -171,7 +171,7 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
       flowData = [startNode, fillNode, finishNode];
     } else {
       // 收集流程中所用到的人员
-      const memberIds: Set<number> = new Set();
+      const memberIds: Set<number | string> = new Set();
 
       flowRecursion(flowData, (node) => {
         if (node.type === NodeType.FillNode || node.type === NodeType.AuditNode || node.type === NodeType.CCNode) {
@@ -189,6 +189,7 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
         cacheMembers[member.id] = {
           name: member.userName,
           avatar: member.avatar,
+          id: member.id,
         };
       });
 

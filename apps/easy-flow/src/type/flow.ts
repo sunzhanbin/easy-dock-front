@@ -49,7 +49,7 @@ export type FieldAuthsMap = {
 };
 
 export type CorrelationMemberConfig = {
-  members: number[];
+  members: (string | number)[];
   departs?: (number | string)[];
 };
 // 审批节点

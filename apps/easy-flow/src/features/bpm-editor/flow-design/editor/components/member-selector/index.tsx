@@ -19,10 +19,9 @@ function MemberSelector(props: MemberSelectorProps) {
     const { members = [], departs = [] } = value!;
 
     return {
-      departs: departs.map((id) => ({ id, ...cacheMembers[id] })),
+      departs: departs.map((id) => ({ ...cacheMembers[id] })),
       members: members.map((id) => {
         return {
-          id,
           ...cacheMembers[id],
         };
       }),

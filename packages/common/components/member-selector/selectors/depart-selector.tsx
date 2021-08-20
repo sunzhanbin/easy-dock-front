@@ -166,19 +166,22 @@ function DepartSelector(props: DepartSelectorProps) {
         size="large"
         placeholder="搜索部门"
       />
-      <Tree
-        className={styles.list}
-        checkable
-        treeData={showTreeData as any}
-        blockNode
-        virtual={false}
-        checkStrictly={strict}
-        onExpand={handleExpand}
-        expandedKeys={keyword ? searchExpandedKeys : treeExpandedKeys}
-        onCheck={handleNodeCheck}
-        onSelect={handleNodeSelect}
-        checkedKeys={checkedKeys}
-      />
+
+      {treeData.length ? (
+        <Tree
+          className={styles.list}
+          checkable
+          treeData={showTreeData}
+          blockNode
+          virtual={false}
+          checkStrictly={strict}
+          onExpand={handleExpand}
+          expandedKeys={keyword ? searchExpandedKeys : treeExpandedKeys}
+          onCheck={handleNodeCheck}
+          onSelect={handleNodeSelect}
+          checkedKeys={checkedKeys}
+        />
+      ) : null}
 
       {loading && <Loading className={styles.loading} />}
     </div>
