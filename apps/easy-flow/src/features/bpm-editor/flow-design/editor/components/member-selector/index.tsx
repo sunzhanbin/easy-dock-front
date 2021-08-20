@@ -1,5 +1,5 @@
 import { memo, useMemo } from 'react';
-import Selector, { MemberSelectorProps as SelectorProps } from '@components/member-selector';
+import { MemberSelector as Selector, MemberSelectorProps as SelectorProps } from '@common/components';
 import { UserNode } from '@type/flow';
 import { useSubAppDetail } from '@app/app';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
@@ -51,7 +51,7 @@ function MemberSelector(props: MemberSelectorProps) {
     }
   };
 
-  return <Selector projectId={subAppDetail?.app.project.id} value={showValue} onChange={handleChange} />;
+  return <Selector projectId={subAppDetail?.app.project.id} value={showValue} onChange={handleChange} strictDepart />;
 }
 
 export default memo(MemberSelector);

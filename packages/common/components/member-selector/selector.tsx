@@ -1,10 +1,10 @@
 import { memo, useMemo } from 'react';
 import { Tabs } from 'antd';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import { runtimeAxios } from '@utils';
+import useMemoCallback from '../../hooks/use-memo-callback';
 import { DepartSelector, MemberSelector } from './selectors';
-import { ValueType } from './type';
 import SelectorContext from './context';
+import { axios } from './util';
+import { ValueType } from './type';
 import styles from './index.module.scss';
 
 const { TabPane } = Tabs;
@@ -32,7 +32,7 @@ function Selector(props: SelectorProps) {
   });
 
   const fetchUser = useMemoCallback(async (data: { name: string; page: number }) => {
-    const memberResponse = await runtimeAxios.post('/user/search', {
+    const memberResponse = await axios.post('/user/search', {
       index: data.page,
       size: 20,
       keyword: data.name,

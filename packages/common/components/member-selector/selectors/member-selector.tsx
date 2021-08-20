@@ -2,34 +2,12 @@ import React, { memo, useState, useEffect, useMemo, useRef, useContext } from 'r
 import { Input, Checkbox } from 'antd';
 import { throttle } from 'lodash';
 import classnames from 'classnames';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import memberDefaultAvatar from '@assets/members/member-default-avatar.png';
-import { Image, Loading } from '@common/components';
-import { runtimeAxios } from '@utils';
+import useMemoCallback from '../../../hooks/use-memo-callback';
+import memberDefaultAvatar from '../avatars/member-default-avatar.png';
+import { Image, Loading } from '../../../components';
 import { ValueType } from '../type';
 import SelectorContext from '../context';
 import styles from '../index.module.scss';
-
-// const fetchUser = async (data: { name: string; page: number; projectId: number }) => {
-//   const memberResponse = await runtimeAxios.post('/user/search', {
-//     index: data.page,
-//     size: 20,
-//     keyword: data.name,
-//     projectId: data.projectId,
-//   });
-
-//   return {
-//     total: memberResponse.data.recordTotal,
-//     index: memberResponse.data.pageIndex,
-//     members: memberResponse.data.data.map((item: { userName: string; id: number; avatar: string }) => {
-//       return {
-//         name: item.userName,
-//         id: item.id,
-//         avatar: item.avatar,
-//       };
-//     }),
-//   };
-// };
 
 interface MemberSelectorProps {
   fetchUser(data: {

@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { Icon } from '@common/components';
 import { CCNode as CCNodeType } from '@type/flow';
-import { MemberList } from '@components/member-selector';
+import { MemberList } from '@common/components/member-selector';
 import BaseNode from '../base-node';
 import useShowMembers from '../../hooks/use-show-members';
 
