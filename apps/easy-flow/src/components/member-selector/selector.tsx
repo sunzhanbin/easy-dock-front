@@ -1,6 +1,7 @@
 import React, { memo, useState, useEffect, useMemo, useRef } from 'react';
 import { Tabs, Input, Checkbox } from 'antd';
 import { throttle } from 'lodash';
+import classnames from 'classnames';
 import { ValueType } from './type';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { Loading } from '@common/components';
@@ -11,11 +12,12 @@ import styles from './index.module.scss';
 
 const { TabPane } = Tabs;
 
-const fetchUser = async (data: { name: string; page: number }) => {
+const fetchUser = async (data: { name: string; page: number; projectId: number }) => {
   const memberResponse = await runtimeAxios.post('/user/search', {
     index: data.page,
     size: 20,
     keyword: data.name,
+    projectId: data.projectId,
   });
 
   return {
@@ -34,10 +36,12 @@ const fetchUser = async (data: { name: string; page: number }) => {
 interface SelectorProps {
   value: ValueType;
   onMembersChange?(value: ValueType['members']): void;
+  projectId?: number;
+  className?: string;
 }
 
 function Selector(props: SelectorProps) {
-  const { value, onMembersChange } = props;
+  const { value, onMembersChange, projectId, className } = props;
   const [members, setMembers] = useState<ValueType['members']>([]);
   const [loading, setLoading] = useState(false);
   const [memberTotal, setMemberTotal] = useState(0);
@@ -45,12 +49,12 @@ function Selector(props: SelectorProps) {
   const memberPageNumberRef = useRef(1);
   const timerRef = useRef<NodeJS.Timeout>();
   const searchMembers = useMemoCallback(async (payload: { name: string; page: number }) => {
-    if (loading) return;
+    if (loading || !projectId) return;
 
     setLoading(true);
 
     try {
-      const { members, total, index } = await fetchUser(payload);
+      const { members, total, index } = await fetchUser(Object.assign({}, payload, { projectId }));
 
       setMembers((oldValue) => {
         // 从第一页搜索时覆盖原数组
@@ -112,8 +116,10 @@ function Selector(props: SelectorProps) {
   });
 
   useEffect(() => {
-    searchMembers({ name: '', page: 1 });
-  }, [searchMembers]);
+    if (projectId) {
+      searchMembers({ name: '', page: 1 });
+    }
+  }, [searchMembers, projectId]);
 
   const handleMemberListScroll = useMemoCallback(
     throttle((event: React.UIEvent<HTMLDivElement, UIEvent>) => {
@@ -144,18 +150,14 @@ function Selector(props: SelectorProps) {
             size="large"
             value={memberSearchText}
           />
-          <div className={styles.list} onScroll={handleMemberListScroll}>
+          <div className={classnames(styles.list, className)} onScroll={handleMemberListScroll}>
             {!memberSearchText && <div className={styles.total}>全部成员({memberTotal})</div>}
 
             {members.map((member) => {
               const selected = valueMaps[member.id];
 
               return (
-                <div
-                  key={member.id}
-                  className={styles.item}
-                  onClick={() => handleChangeMembers(member, !selected)}
-                >
+                <div key={member.id} className={styles.item} onClick={() => handleChangeMembers(member, !selected)}>
                   <Image
                     src={member.avatar}
                     placeholder={memberDefaultAvatar}

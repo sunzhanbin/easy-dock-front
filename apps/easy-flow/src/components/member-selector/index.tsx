@@ -1,4 +1,4 @@
-import { memo, ReactNode, useMemo, useRef, useState } from 'react';
+import { memo, ReactNode, useMemo, useRef, useState, useEffect } from 'react';
 import { Popover } from 'antd';
 import { ValueType } from './type';
 import { Icon } from '@common/components';
@@ -55,6 +55,8 @@ export interface MemberSelectorProps {
   value?: ValueType;
   children?: ReactNode;
   onChange?(value: ValueType): void;
+  projectId?: number;
+  searchListClassName?: string;
 }
 
 const defaultValue: ValueType = {
@@ -62,10 +64,11 @@ const defaultValue: ValueType = {
 };
 
 function MemberSelector(props: MemberSelectorProps) {
-  const { value, onChange, children } = props;
-  const popoverContentContainerRef = useRef<HTMLDivElement>(null);
+  const { value, onChange, children, projectId, searchListClassName } = props;
   const [showPopover, setShowPopover] = useState(false);
   const [localValue, setLocalValue] = useState<ValueType>(value || defaultValue);
+  const popoverContentContainerRef = useRef<HTMLDivElement>(null);
+  const selectorContainerRef = useRef<HTMLDivElement>(null);
   const showValue = value || localValue;
   const getPopupContainer = useMemo(() => {
     return () => popoverContentContainerRef.current!;
@@ -91,11 +94,33 @@ function MemberSelector(props: MemberSelectorProps) {
   });
 
   const content = useMemo(() => {
-    return <Selector value={showValue} onMembersChange={handleMembersChange} />;
-  }, [showValue, handleMembersChange]);
+    return (
+      <div ref={selectorContainerRef}>
+        <Selector
+          className={searchListClassName}
+          value={showValue}
+          onMembersChange={handleMembersChange}
+          projectId={projectId}
+        />
+      </div>
+    );
+  }, [showValue, handleMembersChange, projectId, searchListClassName]);
+
+  useEffect(() => {
+    // HACK: 用于更新Popover弹出层的位置
+    if (selectorContainerRef.current) {
+      const padding = selectorContainerRef.current.style.paddingBottom;
+
+      if (padding) {
+        selectorContainerRef.current.style.paddingBottom = '';
+      } else {
+        selectorContainerRef.current.style.paddingBottom = '1px';
+      }
+    }
+  }, [value?.members.length]);
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} ref={popoverContentContainerRef}>
       <MemberList members={showValue.members} onDelete={handleDeleteMember} editable>
         <Popover
           content={content}
@@ -104,7 +129,7 @@ function MemberSelector(props: MemberSelectorProps) {
           visible={showPopover}
           onVisibleChange={setShowPopover}
           destroyTooltipOnHide
-          placement="bottom"
+          placement="bottomRight"
           arrowContent={null}
         >
           <div className={styles.action}>
@@ -112,8 +137,6 @@ function MemberSelector(props: MemberSelectorProps) {
           </div>
         </Popover>
       </MemberList>
-
-      <div className={styles['popover-content-container']} ref={popoverContentContainerRef} />
     </div>
   );
 }
