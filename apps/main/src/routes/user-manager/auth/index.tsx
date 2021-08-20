@@ -99,7 +99,7 @@ const Auth = () => {
             {projectList.map((project, index) => {
               const members = project.powers
                 .map((power) => power.owner)
-                .map((user) => Object.assign({}, user, { username: (user as any).userName }));
+                .map((user) => Object.assign({}, user, { name: (user as any).userName }));
               return (
                 <div className={styles.project} key={project.id}>
                   <div className={styles.name}>
