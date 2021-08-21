@@ -4,7 +4,7 @@ export type User = {
   avatar?: string;
 };
 
-export type Depart = {
+export type Dept = {
   name: string;
   id: number | string;
   avatar?: string;

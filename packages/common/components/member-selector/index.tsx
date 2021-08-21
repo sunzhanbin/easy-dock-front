@@ -35,18 +35,18 @@ const Member = memo(function Member(props: MemberProps) {
 
 interface MemberListProps {
   members: ValueType['members'];
-  departs?: ValueType['departs'];
+  depts?: ValueType['depts'];
   editable?: boolean;
   onDelete?(id: number | string, tpye: MemberType): void;
   children?: ReactNode;
 }
 
 export const MemberList = memo(function MemberList(props: MemberListProps) {
-  const { members, editable, onDelete, children, departs = [] } = props;
+  const { members, editable, onDelete, children, depts = [] } = props;
 
   return (
     <div className={styles.members}>
-      {departs.map((depart) => (
+      {depts.map((depart) => (
         <Member
           editable={editable}
           key={depart.id}
@@ -80,16 +80,16 @@ export interface MemberSelectorProps {
   onChange?(value: ValueType): void;
   projectId?: number;
   selectorWrapperClass?: string;
-  strictDepart?: boolean;
+  strictDept?: boolean;
 }
 
 const defaultValue: ValueType = {
   members: [],
-  departs: [],
+  depts: [],
 };
 
 function MemberSelector(props: MemberSelectorProps) {
-  const { value, onChange, children, projectId, strictDepart, selectorWrapperClass } = props;
+  const { value, onChange, children, projectId, strictDept, selectorWrapperClass } = props;
   const [showPopover, setShowPopover] = useState(false);
   const [localValue, setLocalValue] = useState<ValueType>(value || defaultValue);
   const popoverContentContainerRef = useRef<HTMLDivElement>(null);
@@ -113,7 +113,7 @@ function MemberSelector(props: MemberSelectorProps) {
     let key: keyof ValueType;
 
     if (type === 'depart') {
-      key = 'departs';
+      key = 'depts';
     } else if (type === 'member') {
       key = 'members';
     } else {
@@ -126,19 +126,19 @@ function MemberSelector(props: MemberSelectorProps) {
     });
   });
 
-  // const content = useMemo(() => {
-  //   return (
-  //     <div ref={selectorContainerRef}>
-  //       <Selector
-  //         className={selectorWrapperClass}
-  //         value={showValue}
-  //         onChange={handleChange}
-  //         projectId={projectId}
-  //         strictDepart={strictDepart}
-  //       />
-  //     </div>
-  //   );
-  // }, [showValue, handleChange, projectId, selectorWrapperClass, strictDepart]);
+  const content = useMemo(() => {
+    return (
+      <div ref={selectorContainerRef}>
+        <Selector
+          className={selectorWrapperClass}
+          value={showValue}
+          onChange={handleChange}
+          projectId={projectId}
+          strictDept={strictDept}
+        />
+      </div>
+    );
+  }, [showValue, handleChange, projectId, selectorWrapperClass, strictDept]);
 
   useEffect(() => {
     return () => {
@@ -147,23 +147,13 @@ function MemberSelector(props: MemberSelectorProps) {
       // HACK: 用于更新Popover弹出层的位置
       window.dispatchEvent(new Event('resize'));
     };
-  }, [value?.members.length, value?.departs.length]);
+  }, [value?.members.length, value?.depts.length]);
 
   return (
     <div className={styles.container} ref={popoverContentContainerRef}>
-      <MemberList members={showValue.members} onDelete={handleDeleteMember} departs={value?.departs} editable>
+      <MemberList members={showValue.members} onDelete={handleDeleteMember} depts={value?.depts} editable>
         <Popover
-          content={
-            <div ref={selectorContainerRef}>
-              <Selector
-                className={selectorWrapperClass}
-                value={showValue}
-                onChange={handleChange}
-                projectId={projectId}
-                strictDepart={strictDepart}
-              />
-            </div>
-          }
+          content={content}
           getPopupContainer={getPopupContainer}
           trigger="click"
           visible={showPopover}

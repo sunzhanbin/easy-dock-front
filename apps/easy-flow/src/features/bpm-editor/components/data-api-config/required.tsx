@@ -6,11 +6,11 @@ import { Location, ParamName, FieldMap } from './components';
 import DataContext from './context';
 import styles from './index.module.scss';
 
-interface RequestProps {
+interface ReqiredProps {
   name: string[];
 }
 
-function Request(props: RequestProps) {
+function Reqired(props: ReqiredProps) {
   const { name } = props;
   const { layout } = useContext(DataContext)!;
 
@@ -42,4 +42,4 @@ function Request(props: RequestProps) {
   );
 }
 
-export default memo(Request);
+export default memo(Reqired);

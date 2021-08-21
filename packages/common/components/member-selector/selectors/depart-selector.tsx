@@ -15,8 +15,8 @@ type TreeData = {
   children?: TreeData;
 }[];
 
-interface DepartSelectorProps {
-  value?: ValueType['departs'];
+interface DeptSelectorProps {
+  value?: ValueType['depts'];
   onChange?(value: NonNullable<this['value']>): void;
   strict?: boolean;
 }
@@ -35,16 +35,16 @@ function treeDataMap(data: TreeData, map: { [key: string]: TreeData[number] }) {
   return map;
 }
 
-type DepartsResponse = {
+type DeptsResponse = {
   id: number;
   name: string;
-  children?: DepartsResponse;
+  children?: DeptsResponse;
 }[];
 
-async function fetchDeparts(projectId: number | string): Promise<TreeData> {
-  const { data } = await axios.get<{ data: DepartsResponse }>(`/dept/list/all/${projectId}`);
+async function fetchDepts(projectId: number | string): Promise<TreeData> {
+  const { data } = await axios.get<{ data: DeptsResponse }>(`/dept/list/all/${projectId}`);
 
-  function formatTreeData(data?: DepartsResponse): TreeData {
+  function formatTreeData(data?: DeptsResponse): TreeData {
     if (!data) return [];
 
     const treeData: TreeData = [];
@@ -63,7 +63,7 @@ async function fetchDeparts(projectId: number | string): Promise<TreeData> {
   return formatTreeData(data);
 }
 
-function DepartSelector(props: DepartSelectorProps) {
+function DeptSelector(props: DeptSelectorProps) {
   const [treeData, setTreeData] = useState<TreeData>([]);
   const { value, onChange, strict } = props;
   const { wrapperClass, projectId } = useContext(SelectorContext)!;
@@ -92,7 +92,7 @@ function DepartSelector(props: DepartSelectorProps) {
 
     setLoading(true);
 
-    fetchDeparts(projectId)
+    fetchDepts(projectId)
       .then((data) => {
         setTreeData(data);
       })
@@ -188,4 +188,4 @@ function DepartSelector(props: DepartSelectorProps) {
   );
 }
 
-export default memo(DepartSelector);
+export default memo(DeptSelector);
