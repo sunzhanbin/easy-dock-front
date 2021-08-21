@@ -80,6 +80,7 @@ export function filterTreeData(tree: TreeData, keyword: string): Key[] {
         loop(item.children, keys);
       } else if (item.title.indexOf(keyword) > -1) {
         keys.push(...tmps);
+        tmps = [];
       }
 
       tmps = tmps.slice(0, -1);
@@ -90,48 +91,3 @@ export function filterTreeData(tree: TreeData, keyword: string): Key[] {
 
   return loop(tree, []);
 }
-
-console.log(
-  filterTreeData(
-    [
-      {
-        title: '父节点',
-        key: '1',
-        children: [
-          {
-            title: '子节点-11-1',
-            key: '1-1',
-            children: [],
-          },
-          {
-            title: '子节点-11-2',
-            key: '1-2',
-            children: [
-              {
-                title: '子节点-11-1-1',
-                key: '1-2-1',
-              },
-            ],
-          },
-        ],
-      },
-      {
-        title: '父节点2',
-        key: '2',
-        children: [
-          {
-            title: '子节点-22-1',
-            key: '2-1',
-            children: [],
-          },
-          {
-            title: '子节点-22-2',
-            key: '2-2',
-            children: [],
-          },
-        ],
-      },
-    ],
-    '11',
-  ),
-);

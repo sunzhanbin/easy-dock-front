@@ -1,12 +1,12 @@
 import { memo, useState, useMemo, useEffect, useContext } from 'react';
 import classnames from 'classnames';
 import { Tree, Input } from 'antd';
-import { filterOptions } from 'rc-tree-select/es/utils/valueUtil';
 import { Loading } from '../../../components';
+import { debounce } from 'lodash';
 import useMemoCallback from '../../../hooks/use-memo-callback';
 import SelectorContext from '../context';
 import { ValueType, TreeData, Key } from '../type';
-import { fetchDepts, treeDataMap, excludeTreeChildren } from '../util';
+import { fetchDepts, treeDataMap, excludeTreeChildren, filterTreeData } from '../util';
 import styles from '../index.module.scss';
 
 interface DeptSelectorProps {
@@ -16,30 +16,33 @@ interface DeptSelectorProps {
 }
 
 function DeptSelector(props: DeptSelectorProps) {
-  const [treeData, setTreeData] = useState<TreeData>([]);
   const { value, onChange, strict } = props;
   const { wrapperClass, projectId } = useContext(SelectorContext)!;
+  const [treeData, setTreeData] = useState<TreeData>([]);
   const [loading, setLoading] = useState(false);
   const [keyword, setKeyword] = useState<string>();
-  const [treeExpandedKeys, setTreeExpandedKeys] = useState<Key[]>([]);
-  // const showTreeData = useMemo(() => {
-  //   if (!keyword) return treeData;
-
-  //   return filterOptions(keyword, treeData, { optionFilterProp: 'title', filterOption: true }) as TreeData;
-  // }, [keyword, treeData]);
-
+  const [treeExpandedKeys, setTreeExpandedKeys] = useState<Key[]>((value || []).map((item) => item.id));
+  const [searchExpandedKeys, setSearchExpandedKeys] = useState<Key[]>([]);
   const handleExpand = useMemoCallback((expandedKeys: Key[]) => {
-    setTreeExpandedKeys(expandedKeys);
+    if (keyword) {
+      setSearchExpandedKeys(expandedKeys);
+    } else {
+      setTreeExpandedKeys(expandedKeys);
+    }
   });
 
+  // 将所有节点映射称key value方便取值
   const keyNodeMap = useMemo(() => {
     return treeDataMap(treeData, {});
   }, [treeData]);
 
-  const searchExpandedKeys = useMemo(() => {
-    return Object.keys(keyNodeMap).map(Number);
-  }, [keyNodeMap]);
+  // 计算搜索时需要展示的节点的key值
+  const showTreeKey = useMemo(() => {
+    if (!keyword) return [];
+    return filterTreeData(treeData, keyword);
+  }, [keyword, treeData]);
 
+  // 加载部门数据
   useEffect(() => {
     if (!projectId) return;
 
@@ -55,14 +58,11 @@ function DeptSelector(props: DeptSelectorProps) {
   }, [projectId]);
 
   useEffect(() => {
-    if (value) {
-      setTreeExpandedKeys((keys) => {
-        const newKeys = keys.concat(value.map((item) => item.id));
-
-        return Array.from(new Set(newKeys));
-      });
+    if (keyword) {
+      // 关键词一旦变化就重新展开所有节点
+      setSearchExpandedKeys(Object.keys(keyNodeMap).map(Number));
     }
-  }, [value]);
+  }, [keyword, keyNodeMap]);
 
   const checkedKeys = useMemo(() => {
     if (!value) return [];
@@ -70,7 +70,7 @@ function DeptSelector(props: DeptSelectorProps) {
     return value.map((item) => item.id);
   }, [value]);
 
-  const handleNodeCheck = useMemoCallback((value: { checked: Key[]; halfChecked: Key[] } | Key[], event: any) => {
+  const handleNodeCheck = useMemoCallback((value: { checked: Key[]; halfChecked: Key[] } | Key[]) => {
     let checkeds: Key[];
 
     if (Array.isArray(value)) {
@@ -95,19 +95,21 @@ function DeptSelector(props: DeptSelectorProps) {
     }
   });
 
+  const handleKeywordChange = useMemoCallback(
+    debounce((event: React.ChangeEvent<HTMLInputElement>) => {
+      const inputValue = event.target.value;
+
+      setKeyword(inputValue.trim());
+    }, 300),
+  );
+
   return (
     <div className={classnames(styles.selector, wrapperClass)}>
-      <Input
-        className={styles.search}
-        value={keyword}
-        onChange={(event) => setKeyword(event.target.value)}
-        size="large"
-        placeholder="搜索部门"
-      />
+      <Input className={styles.search} onChange={handleKeywordChange} size="large" placeholder="搜索部门" />
 
       {treeData.length ? (
         <Tree
-          className={styles.list}
+          className={classnames(styles.list, styles.tree, { [styles['in-search']]: !!keyword })}
           checkable
           treeData={treeData}
           blockNode
@@ -119,7 +121,9 @@ function DeptSelector(props: DeptSelectorProps) {
           onCheck={handleNodeCheck}
           checkedKeys={checkedKeys}
           filterTreeNode={(node) => {
-            return String(node.title).indexOf(keyword!) > -1;
+            if (!keyword) return false;
+
+            return showTreeKey.findIndex((key) => node.key === key) > -1;
           }}
         />
       ) : null}
