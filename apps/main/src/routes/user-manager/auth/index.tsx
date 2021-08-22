@@ -3,9 +3,10 @@ import { Popover } from 'antd';
 import projectImage from '@assets/project.png';
 import { Icon, MemberList, Text, Loading } from '@common/components';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import { fetchProjectPowers, revokeAuth, assignAuth, AssignAuthParams } from '@/api/auth';
-import MemberSelector from '@components/member-selector';
-import { AuthEnum, ResourceTypeEnum, OwnerTypeEnum, ProjectPower } from '@/schema/app';
+import { fetchProjectPowers, revokeAuth, assignAuth, AssignAuthParams, fetchAllUser } from '@/api/auth';
+import MemberSelector from '@common/components/member-selector/selectors/member-selector';
+import SelectorContext from '@common/components/member-selector/context';
+import { AuthEnum, ResourceTypeEnum, OwnerTypeEnum, ProjectPower, UserOwner } from '@/schema/app';
 import styles from './index.module.scss';
 
 const Auth = () => {
@@ -25,7 +26,7 @@ const Auth = () => {
   // 回收项目管理员权限
   const deleteProjectManager = useMemoCallback((id, index) => {
     const powers = projectList[index].powers || [];
-    const power = powers.find((power) => id === power.owner.id);
+    const power = powers.find((power) => id === (power.owner as any).id);
     if (power && power.id) {
       revokeAuth({ id: power.id, ownerType: OwnerTypeEnum.USER, power: AuthEnum.ADMIN }).then(() => {
         getProjectList();
@@ -37,15 +38,32 @@ const Auth = () => {
     getProjectList();
   }, []);
 
-  const handleMembersChange = useMemoCallback((member, index, projectId, checked) => {
-    // 如果是选中复选框就分配管理员权限,否则就回收管理员权限
-    if (checked) {
+  const fetchUser = useMemoCallback(async (data: { name: string; page: number }) => {
+    const memberResponse = await fetchAllUser({ index: data.page, size: 20, keyword: data.name });
+
+    return {
+      total: memberResponse.data.recordTotal,
+      index: memberResponse.data.pageIndex,
+      members: memberResponse.data.data.map((item: { userName: string; id: number; avatar: string }) => {
+        return {
+          name: item.userName,
+          id: item.id,
+          avatar: item.avatar,
+        };
+      }),
+    };
+  });
+  const handleMembersChange = useMemoCallback((members, index) => {
+    const project = projectList[index];
+    const powers = project.powers || [];
+    if (members.length > powers.length) {
+      const member = members[members.length - 1];
       if (member && member.id) {
         const params: AssignAuthParams = {
-          ownerKey: member.id,
+          ownerKey: member.id + '',
           ownerType: OwnerTypeEnum.USER,
           power: AuthEnum.ADMIN,
-          resourceKey: projectId,
+          resourceKey: project.id + '',
           resourceType: ResourceTypeEnum.PROJECT,
         };
         assignAuth(params).then(() => {
@@ -53,10 +71,14 @@ const Auth = () => {
         });
       }
     } else {
-      const powers = projectList[index].powers || [];
-      const power = powers.find((power) => member.id === power.owner.id);
+      const powerList = [...powers];
+      members.forEach((member: User) => {
+        const index = powerList.findIndex((power) => ((power.owner as unknown) as UserOwner).id === member.id);
+        powerList.splice(index, 1);
+      });
+      const power = powerList[0];
       if (power && power.id) {
-        revokeAuth({ id: power.id, ownerType: 1, power: 1 }).then(() => {
+        revokeAuth({ id: power.id, ownerType: OwnerTypeEnum.USER, power: AuthEnum.ADMIN }).then(() => {
           getProjectList();
         });
       }
@@ -67,16 +89,20 @@ const Auth = () => {
     const project = projectList[index];
     const members = project.powers
       .map((power) => power.owner)
-      .map((user) => Object.assign({}, user, { username: (user as any).userName }));
+      .map((user) => Object.assign({}, user, { name: (user as any).userName, username: (user as any).userName }));
     return (
-      <MemberSelector
-        title="添加项目管理员"
-        projectId={project.id}
-        value={{ members }}
-        onMembersChange={(member, checked) => {
-          handleMembersChange(member, index, project.id, checked);
-        }}
-      />
+      <div className={styles.selector}>
+        <div className={styles['add-manager']}>添加项目管理员</div>
+        <SelectorContext.Provider value={{ wrapperClass: styles['member-selector'] }}>
+          <MemberSelector
+            value={members as any}
+            fetchUser={fetchUser}
+            onChange={(value) => {
+              handleMembersChange(value, index);
+            }}
+          />
+        </SelectorContext.Provider>
+      </div>
     );
   });
   return (
@@ -108,7 +134,7 @@ const Auth = () => {
                   <div className={styles.administrator}>
                     <div className={styles.list}>
                       <MemberList
-                        members={members}
+                        members={members as any}
                         editable={true}
                         onDelete={(id) => {
                           deleteProjectManager(id, index);

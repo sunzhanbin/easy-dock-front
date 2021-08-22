@@ -1,5 +1,6 @@
 import { memo, ReactNode, useMemo, useRef, useState, useEffect } from 'react';
 import { Popover } from 'antd';
+import classNames from 'classnames';
 import { Icon, Image } from '../../components';
 import useMemoCallback from '../../hooks/use-memo-callback';
 import memberDefaultAvatar from './avatars/member-default-avatar.png';
@@ -39,13 +40,14 @@ interface MemberListProps {
   editable?: boolean;
   onDelete?(id: number | string, tpye: MemberType): void;
   children?: ReactNode;
+  className?: string;
 }
 
 export const MemberList = memo(function MemberList(props: MemberListProps) {
-  const { members, editable, onDelete, children, departs = [] } = props;
+  const { members, editable, onDelete, children, departs = [], className } = props;
 
   return (
-    <div className={styles.members}>
+    <div className={classNames(styles.members, className)}>
       {departs.map((depart) => (
         <Member
           editable={editable}

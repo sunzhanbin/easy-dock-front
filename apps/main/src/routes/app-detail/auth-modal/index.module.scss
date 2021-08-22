@@ -7,12 +7,13 @@
     }
   }
   .content {
+    .member-list {
+      margin-top: 0;
+    }
     .tip {
       width: 600px;
       height: 36px;
-      position: absolute;
-      left: 0;
-      z-index: 6;
+
       display: flex;
       align-items: center;
       background: rgba(24, 39, 67, 0.04);
@@ -36,48 +37,52 @@
         color: rgba(24, 31, 67, 0.75);
       }
     }
-    .flow-auth {
-      display: flex;
-      flex-direction: column;
-      padding-top: 52px;
-      .title {
-        height: 24px;
-        line-height: 24px;
-        font-size: 16px;
-        font-weight: 600;
-        color: #181f43;
-      }
-      .app-list {
+    .auth-list {
+      padding-left: 32px;
+      overflow-y: auto;
+      .flow-auth {
         display: flex;
         flex-direction: column;
-        .app {
-          margin-top: 16px;
-          padding-bottom: 16px;
-          border-bottom: 1px solid rgba(24, 31, 67, 0.08);
-          .title {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 24px;
-            .name {
-              font-size: 14px;
-              font-weight: 400;
-              color: #181f43;
-            }
-            .add {
-              flex: 0 0 24px;
+        padding-top: 16px;
+        .title {
+          height: 24px;
+          line-height: 24px;
+          font-size: 16px;
+          font-weight: 600;
+          color: #181f43;
+        }
+        .app-list {
+          display: flex;
+          flex-direction: column;
+          .app {
+            margin-top: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(24, 31, 67, 0.08);
+            .title {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
               height: 24px;
-              text-align: center;
-              border-radius: 12px;
-              border: 1px solid rgba(24, 31, 67, 0.12);
-              cursor: pointer;
-              .icon {
-                font-size: 12px;
-                color: #4c5cdb;
+              .name {
+                font-size: 14px;
+                font-weight: 400;
+                color: #181f43;
               }
-              &:hover {
+              .add {
+                flex: 0 0 24px;
+                height: 24px;
+                text-align: center;
+                border-radius: 12px;
+                border: 1px solid rgba(24, 31, 67, 0.12);
+                cursor: pointer;
                 .icon {
-                  color: rgba(#4c5cdb, 0.8);
+                  font-size: 12px;
+                  color: #4c5cdb;
+                }
+                &:hover {
+                  .icon {
+                    color: rgba(#4c5cdb, 0.8);
+                  }
                 }
               }
             }
@@ -88,19 +93,25 @@
   }
   :global {
     .ant-modal-content {
+      padding: 32px 0 0 0;
       .ant-modal-header {
         font-size: 16px;
         font-weight: 400;
         color: #181f43;
         line-height: 24px;
+        padding: 0 32px;
         border-bottom: none;
       }
       .ant-modal-body {
         height: 451px;
-        padding-top: 0;
+        margin-top: 12px;
+        padding: 0 32px 24px 0;
         max-height: 451px;
         overflow-x: hidden;
         overflow-y: auto;
+      }
+      .ant-modal-footer {
+        margin: 0;
       }
     }
   }

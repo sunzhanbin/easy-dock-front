@@ -29,3 +29,8 @@ export function revokeAuth(params: RevokeAuthParams) {
 export function fetchSubAppPowers(id: string) {
   return runtimeAxios.get(`/app/${id}/list/all/powers`);
 }
+
+// 搜索全部用户
+export function fetchAllUser(params: { index: number; size: number; keyword: string }) {
+  return runtimeAxios.post('/user/search/all', params);
+}

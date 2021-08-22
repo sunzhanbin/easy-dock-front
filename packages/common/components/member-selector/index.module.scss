@@ -21,7 +21,7 @@
   }
 
   .name {
-    color: rgab(#181f43, 0.95);
+    color: rgba(#181f43, 0.95);
     line-height: 22px;
     font-size: 14px;
     font-weight: 400;
@@ -76,7 +76,7 @@
 }
 
 // 人员选择内容样式
-.content {
+.selector {
   position: relative;
   width: 232px;
   user-select: none;

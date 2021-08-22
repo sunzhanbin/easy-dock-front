@@ -28,7 +28,7 @@ function MemberSelector(props: MemberSelectorProps) {
   const memberPageNumberRef = useRef(1);
   const timerRef = useRef<NodeJS.Timeout>();
   const searchMembers = useMemoCallback(async (payload: { name: string; page: number }) => {
-    if (loading || !projectId) return;
+    if (loading) return;
 
     setLoading(true);
 
@@ -94,9 +94,7 @@ function MemberSelector(props: MemberSelectorProps) {
   });
 
   useEffect(() => {
-    if (projectId) {
-      searchMembers({ name: '', page: 1 });
-    }
+    searchMembers({ name: '', page: 1 });
   }, [searchMembers, projectId]);
 
   const handleMemberListScroll = useMemoCallback(

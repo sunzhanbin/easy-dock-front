@@ -12,6 +12,7 @@ import { Button, Input } from 'antd';
 import Card from './subapp-card';
 import AppModel from './app-model';
 import AuthModal from './auth-modal';
+import { AppInfo } from '@/schema/app';
 import { FlowMicroApp, MAIN_CONTENT_CLASSNAME } from '@/consts';
 
 const AppDetail: FC = () => {
@@ -157,8 +158,7 @@ const AppDetail: FC = () => {
       </div>
       {showAuthModal && (
         <AuthModal
-          appName={appInfo!.name}
-          appId={appId}
+          appInfo={(appInfo as unknown) as AppInfo}
           onClose={() => {
             setShowAuthModal(false);
           }}
