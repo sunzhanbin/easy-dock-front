@@ -52,6 +52,11 @@ export type SubAppItem = {
 
 export type App = {
   id: string;
+  name: string;
+  project?: {
+    id: number;
+    name: string;
+  };
 };
 
 export type TaskCenterState = {

@@ -9,6 +9,8 @@ import moment from 'moment';
 import { dynamicRoutes } from '@/consts/route';
 import useAppId from '@/hooks/use-app-id';
 import useMemoCallback from '@common/hooks/use-memo-callback';
+import { useAppSelector } from '@/app/hooks';
+import { appSelector } from '../taskcenter-slice';
 import { Icon } from '@common/components';
 
 const { RangePicker } = DatePicker;
@@ -18,6 +20,7 @@ const Done: FC<{}> = () => {
   const [form] = Form.useForm();
   const history = useHistory();
   const appId = useAppId();
+  const app = useAppSelector(appSelector);
   const [loading, setLoading] = useState<boolean>(false);
   const [pagination, setPagination] = useState<Pagination>({
     pageSize: 10,
@@ -88,6 +91,11 @@ const Done: FC<{}> = () => {
       },
     ];
   }, [history]);
+  const projectId = useMemo(() => {
+    if (app && app.project) {
+      return app.project.id;
+    }
+  }, [app]);
   const fetchData = useMemoCallback(
     (pagination: Pagination = { pageSize: 10, current: 1, total: 0, showSizeChanger: true }) => {
       if (!appId) return;
@@ -135,11 +143,12 @@ const Done: FC<{}> = () => {
     },
   );
   const fetchOptionList = useCallback(() => {
-    runtimeAxios.post('/user/search', { index: 0, size: 100, keyword: '' }).then((res) => {
-      const list = res.data?.data || [];
-      setOptionList(list);
-    });
-  }, []);
+    projectId &&
+      runtimeAxios.post('/user/search', { index: 0, size: 100, keyword: '', projectId }).then((res) => {
+        const list = res.data?.data || [];
+        setOptionList(list);
+      });
+  }, [projectId]);
   const handleFilterOption = useCallback((inputValue, option) => {
     return option.children.indexOf(inputValue) > -1;
   }, []);

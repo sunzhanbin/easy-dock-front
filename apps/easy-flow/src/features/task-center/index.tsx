@@ -9,13 +9,16 @@ import Done from './done';
 import Card from './card';
 import { useAppSelector } from '@/app/hooks';
 import { todoNumSelector } from './taskcenter-reducer';
+import { loadApp } from './taskcenter-slice';
 import useAppId from '@/hooks/use-app-id';
+import { useAppDispatch } from '@app/hooks';
 import { SubAppItem } from './type';
 import { runtimeAxios } from '@/utils';
 
 // import Copy from './copy';
 
 const TaskCenter: FC<{}> = () => {
+  const dispatch = useAppDispatch();
   const match = useRouteMatch();
   const matchedPath = match.path.replace(/\/$/, '');
   const matchedUrl = match.url.replace(/\/$/, '');
@@ -40,6 +43,9 @@ const TaskCenter: FC<{}> = () => {
       });
     }
   }, [appId, isShowDrawer]);
+  useEffect(() => {
+    appId && dispatch(loadApp(appId));
+  }, [appId]);
   return (
     <div className={styles.container}>
       <div className={styles.header}>

@@ -7,10 +7,10 @@ import { getStayTime } from '@utils/index';
 import { runtimeAxios } from '@/utils';
 import { useHistory } from 'react-router-dom';
 import { Pagination, TodoItem, UserItem } from '../type';
-import { useAppDispatch } from '@/app/hooks';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import useAppId from '@/hooks/use-app-id';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import { setTodoNum } from '../taskcenter-slice';
+import { setTodoNum, appSelector } from '../taskcenter-slice';
 import { Icon } from '@common/components';
 
 const { RangePicker } = DatePicker;
@@ -21,6 +21,8 @@ const ToDo: FC<{}> = () => {
   const history = useHistory();
   const appId = useAppId();
   const dispatch = useAppDispatch();
+  const app = useAppSelector(appSelector);
+
   const [loading, setLoading] = useState<boolean>(false);
   const [optionList, setOptionList] = useState<UserItem[]>([]);
   const [pagination, setPagination] = useState<Pagination>({
@@ -32,6 +34,11 @@ const ToDo: FC<{}> = () => {
 
   const [data, setData] = useState<TodoItem[]>([]);
   const [sortDirection, setSortDirection] = useState<'DESC' | 'ASC'>('DESC');
+  const projectId = useMemo(() => {
+    if (app && app.project) {
+      return app.project.id;
+    }
+  }, [app]);
   const fetchData = useMemoCallback(
     (pagination: Pagination = { pageSize: 10, current: 1, total: 0, showSizeChanger: true }) => {
       if (!appId) return;
@@ -80,11 +87,12 @@ const ToDo: FC<{}> = () => {
     },
   );
   const fetchOptionList = useCallback(() => {
-    runtimeAxios.post('/user/search', { index: 0, size: 100, keyword: '' }).then((res) => {
-      const list = res.data?.data || [];
-      setOptionList(list);
-    });
-  }, []);
+    projectId &&
+      runtimeAxios.post('/user/search', { index: 0, size: 100, keyword: '', projectId }).then((res) => {
+        const list = res.data?.data || [];
+        setOptionList(list);
+      });
+  }, [projectId]);
 
   const columns = useMemo(() => {
     return [
