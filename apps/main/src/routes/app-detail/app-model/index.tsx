@@ -4,6 +4,7 @@ import { Icon } from '@/components';
 import { Input, Button, Form } from 'antd';
 import FlowImage from '@assets/flow-small.png';
 import ScreenImage from '@assets/screen-small.png';
+import { SubAppTypeEnum } from '@/schema/app';
 import classNames from 'classnames';
 
 const Container = styled.div`
@@ -110,6 +111,11 @@ const Container = styled.div`
   }
 `;
 
+const typeMap: { [k in string]: number } = {
+  flow: SubAppTypeEnum.FLOW,
+  screen: SubAppTypeEnum.SCREEN,
+};
+
 const AppModel: FC<{
   type: 'create' | 'edit';
   position: 'left' | 'right';
@@ -132,9 +138,10 @@ const AppModel: FC<{
   }, [onClose]);
   const handleOK = useCallback(() => {
     form.validateFields().then(() => {
-      onOk && onOk(appName, 2);
+      const type = selectedType ? typeMap[selectedType] : SubAppTypeEnum.FLOW;
+      onOk && onOk(appName, type);
     });
-  }, [onOk, appName, form]);
+  }, [onOk, appName, form, selectedType]);
 
   return (
     <Container

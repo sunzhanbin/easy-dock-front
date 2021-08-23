@@ -6,6 +6,7 @@ import { Form, Input, Button } from 'antd';
 import { axios } from '@/utils';
 import { useHistory } from 'react-router-dom';
 import { FlowMicroApp } from '@/consts';
+import { SubAppTypeEnum } from '@/schema/app';
 import styles from './index.module.scss';
 import classNames from 'classnames';
 
@@ -23,7 +24,7 @@ const EmptyDetail: FC<{ appId: string }> = ({ appId }) => {
   );
   const handleFinish = useCallback(() => {
     form.validateFields().then(({ subAppName }: { subAppName: string }) => {
-      axios.post('/subapp', { appId, name: subAppName, type: 2 }).then((res) => {
+      axios.post('/subapp', { appId, name: subAppName, type: SubAppTypeEnum.FLOW }).then((res) => {
         history.push(`${FlowMicroApp.route}/bpm-editor/${res.data.id}/form-design`);
       });
     });
