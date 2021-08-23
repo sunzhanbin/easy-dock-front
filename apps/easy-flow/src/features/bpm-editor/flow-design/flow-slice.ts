@@ -140,13 +140,15 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
     const fields = form.meta.components || [];
     const fieldsTemplate: FlowType['fieldsTemplate'] = fields.map((item) => ({
       name: <string>item.config.label,
-      id: <string>item.config.fieldName,
+      id: <string>item.config.fieldName || item.config.id,
       type: item.config.type,
     }));
 
     let flowData = flowResponse.meta || [];
 
     if (!flowData.length) {
+      let fieldsAuths = formatFieldsAuths(fieldsTemplate);
+
       // 如果没有流程就初始化一个
       const startNode: StartNode = {
         id: fielduuid(),
@@ -155,6 +157,7 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
         trigger: {
           type: TriggerType.MANUAL,
         },
+        fieldsAuths,
       };
 
       const finishNode: FinishNode = {
@@ -166,7 +169,7 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
 
       const fillNode: FillNode = createNode(NodeType.FillNode, '填写节点');
 
-      fillNode.fieldsAuths = formatFieldsAuths(fieldsTemplate);
+      fillNode.fieldsAuths = fieldsAuths;
 
       flowData = [startNode, fillNode, finishNode];
     } else {
@@ -326,7 +329,6 @@ export const addNode = createAsyncThunk<void, { prevId: string; type: AddableNod
     }
 
     // 给新节点设置初始字段权限
-
     dispatch(
       flowActions.addNode({
         prevId,

@@ -3,12 +3,12 @@ import { Form, Input } from 'antd';
 import { Rule } from 'antd/lib/form';
 import debounce from 'lodash/debounce';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import MemberSelector from '../components/member-selector';
-import { updateNode, flowDataSelector } from '../../flow-slice';
+import { useAppDispatch } from '@/app/hooks';
 import { FillNode } from '@type/flow';
+import MemberSelector from '../components/member-selector';
+import { updateNode } from '../../flow-slice';
 import ButtonConfigs from './button-configs';
 import FieldAuths from '../components/field-auths';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { trimInputValue } from '../../util';
 import { rules } from '../../validators';
 import useValidateForm from '../../hooks/use-validate-form';
@@ -27,7 +27,6 @@ type FormValuesType = {
 function FillNodeEditor(props: FillNodeEditorProps) {
   const dispatch = useAppDispatch();
   const { node } = props;
-  const { fieldsTemplate } = useAppSelector(flowDataSelector);
   const [form] = Form.useForm<FormValuesType>();
 
   useValidateForm<FormValuesType>(form);
@@ -73,7 +72,7 @@ function FillNodeEditor(props: FillNodeEditorProps) {
         <ButtonConfigs />
       </Form.Item>
       <Form.Item label="字段权限" name="fieldsAuths">
-        <FieldAuths templates={fieldsTemplate} />
+        <FieldAuths />
       </Form.Item>
     </Form>
   );

@@ -62,13 +62,11 @@ interface FieldAuthsProps {
   max?: FieldAuth['auth'];
   value?: FieldAuthsMap;
   onChange?(value: this['value']): void;
-  templates: FieldTemplate[];
 }
 
 function FieldAuths(props: FieldAuthsProps) {
   const { value, onChange, max = AuthType.Required } = props;
   const templates = useFieldsTemplate();
-
   const memoValueInfo = useMemo(() => {
     const valueMaps: { [key: string]: FieldAuth } = {};
     const statistic: FieldRowProps['extra'] = {

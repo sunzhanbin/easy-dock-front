@@ -2,13 +2,13 @@ import { memo, useMemo } from 'react';
 import { Form, Input } from 'antd';
 import { Rule } from 'antd/lib/form';
 import debounce from 'lodash/debounce';
+import { useAppDispatch } from '@/app/hooks';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import MemberSelector from '../components/member-selector';
-import { updateNode, flowDataSelector } from '../../flow-slice';
 import { AuditNode } from '@type/flow';
-import ButtonConfigs from './button-configs';
+import MemberSelector from '../components/member-selector';
 import FieldAuths from '../components/field-auths';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { updateNode } from '../../flow-slice';
+import ButtonConfigs from './button-configs';
 import { trimInputValue } from '../../util';
 import useValidateForm from '../../hooks/use-validate-form';
 import usePrevNodes from '../../hooks/use-prev-nodes';
@@ -31,7 +31,6 @@ type FormValuesType = {
 function AuditNodeEditor(props: AuditNodeEditorProps) {
   const dispatch = useAppDispatch();
   const { node } = props;
-  const { fieldsTemplate } = useAppSelector(flowDataSelector);
   const [form] = Form.useForm<FormValuesType>();
   const prevNodes = usePrevNodes(node.id);
 
@@ -90,7 +89,7 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
         <ButtonConfigs prevNodes={prevNodes} />
       </Form.Item>
       <Form.Item label="字段权限" name="fieldsAuths">
-        <FieldAuths templates={fieldsTemplate} />
+        <FieldAuths />
       </Form.Item>
     </Form>
   );
