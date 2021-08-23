@@ -16,7 +16,7 @@ import {
 import { fetchSubAppPowers } from '@/api/auth';
 import Selector from '@common/components/member-selector/selector';
 import styles from './index.module.scss';
-import { Depart } from '@common/type';
+import { Dept } from '@common/type';
 import { revokeAuth, assignAuth, AssignAuthParams } from '@/api/auth';
 import { ValueType } from '@common/components/member-selector/type';
 
@@ -56,7 +56,7 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: () => void }>
   });
 
   const handleChange = useMemoCallback((value: ValueType, index, memberList = [], departList = []) => {
-    const { members, departs } = value;
+    const { members, depts: departs } = value;
     const subApp = index > -1 && subAppList[index];
     const subAppId = (subApp && subApp.id) || '';
     const powers = (subApp && subApp.powers) || [];
@@ -97,7 +97,7 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: () => void }>
     }
     // 增加部门权限
     if (departs.length > departList.length) {
-      const depart: Depart = departs[departs.length - 1];
+      const depart: Dept = departs[departs.length - 1];
       if (depart && depart.id) {
         const params: AssignAuthParams = {
           ownerKey: depart.id + '',
@@ -131,7 +131,7 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: () => void }>
     return (
       <Selector
         className={styles.selector}
-        value={{ members, departs }}
+        value={{ members, depts: departs }}
         projectId={+projectId}
         onChange={(value) => {
           handleChange(value, index, members, departs);
@@ -166,7 +166,7 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: () => void }>
         </div>
         <MemberList
           members={members as any}
-          departs={(departs as unknown) as Depart[]}
+          depts={(departs as unknown) as Dept[]}
           className={styles['member-list']}
           editable
           onDelete={(id, type) => {
@@ -232,7 +232,7 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: () => void }>
                     </div>
                     <MemberList
                       members={members as any}
-                      departs={(departs as unknown) as Depart[]}
+                      depts={(departs as unknown) as Dept[]}
                       className={styles['member-list']}
                       editable
                       onDelete={(id, type) => {
@@ -277,7 +277,7 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: () => void }>
                     </div>
                     <MemberList
                       members={members as any}
-                      departs={(departs as unknown) as Depart[]}
+                      depts={(departs as unknown) as Dept[]}
                       className={styles['member-list']}
                       editable
                       onDelete={(id, type) => {
