@@ -186,23 +186,23 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: () => void }>
       );
     },
   );
-  const renderDataManage = useMemoCallback(() => {
-    const members = dataPowers
+  const renderAppItem = useMemoCallback((powers: Power[], key: string, index: number, name: string) => {
+    const powerList = [...powers];
+    const members = powerList
       .filter((power) => power.ownerType === OwnerTypeEnum.USER)
-      .map((power) => power.owner)
-      .map((owner) => (Object.assign({}, owner, { name: (owner as any).userName }) as unknown) as UserOwner);
-    const departs = dataPowers
+      .map((power) => Object.assign(power.owner, { name: (power.owner as any).userName }) as UserOwner);
+    const departs = powerList
       .filter((power) => power.ownerType === OwnerTypeEnum.DEPARTMENT)
       .map((power) => power.owner as DepartOwner);
-    const roles = dataPowers
+    const roles = powerList
       .filter((power) => power.ownerType === OwnerTypeEnum.ROLE)
       .map((power) => power.owner as RoleOwner);
     return (
-      <>
+      <div className={styles.app} key={key}>
         <div className={styles.title}>
-          <div className={styles.name}>流程数据管理</div>
+          <div className={styles.name}>{name}</div>
           <Popover
-            content={renderContent(-1, members, departs, roles)}
+            content={renderContent(index, members, departs)}
             getPopupContainer={(c) => c}
             trigger="click"
             destroyTooltipOnHide
@@ -221,10 +221,10 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: () => void }>
           className={styles['member-list']}
           editable
           onDelete={(id, type) => {
-            handleDeletePower(id, type, -1);
+            handleDeletePower(id, type, index);
           }}
         />
-      </>
+      </div>
     );
   });
 
@@ -253,50 +253,10 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: () => void }>
           <div className={styles['flow-auth']}>
             <div className={styles.title}>流程</div>
             <div className={styles['app-list']}>
-              <div className={styles.app}>{renderDataManage()}</div>
+              {renderAppItem(dataPowers, 'flow', -1, '流程数据管理')}
               {flowSubAppList.map((subApp, index) => {
-                const { powers } = subApp;
-                const members = powers
-                  .filter((power) => power.ownerType === OwnerTypeEnum.USER)
-                  .map((power) => power.owner)
-                  .map(
-                    (owner) => (Object.assign({}, owner, { name: (owner as any).userName }) as unknown) as UserOwner,
-                  );
-                const departs = powers
-                  .filter((power) => power.ownerType === OwnerTypeEnum.DEPARTMENT)
-                  .map((power) => (power.owner as unknown) as DepartOwner);
-                const roles = powers
-                  .filter((power) => power.ownerType === OwnerTypeEnum.ROLE)
-                  .map((power) => power.owner as RoleOwner);
-                return (
-                  <div className={styles.app} key={subApp.id}>
-                    <div className={styles.title}>
-                      <div className={styles.name}>{subApp.name}</div>
-                      <Popover
-                        content={renderContent(index, members, departs)}
-                        getPopupContainer={(c) => c}
-                        trigger="click"
-                        destroyTooltipOnHide
-                        placement="bottomRight"
-                        arrowContent={null}
-                      >
-                        <div className={styles.add}>
-                          <Icon type="xinzeng" className={styles.icon} />
-                        </div>
-                      </Popover>
-                    </div>
-                    <MemberList
-                      members={members as any}
-                      depts={(departs as unknown) as Dept[]}
-                      roles={roles}
-                      className={styles['member-list']}
-                      editable
-                      onDelete={(id, type) => {
-                        handleDeletePower(id, type, index);
-                      }}
-                    />
-                  </div>
-                );
+                const { id, name, powers } = subApp;
+                return renderAppItem(powers, id + '', index, name);
               })}
             </div>
           </div>
@@ -304,48 +264,8 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: () => void }>
             <div className={styles['page-auth']}>
               <div className={styles.title}>页面</div>
               {screenSubAppList.map((subApp, index) => {
-                const { powers } = subApp;
-                const members = powers
-                  .filter((power) => power.ownerType === OwnerTypeEnum.USER)
-                  .map((power) => power.owner)
-                  .map(
-                    (owner) => (Object.assign({}, owner, { name: (owner as any).userName }) as unknown) as UserOwner,
-                  );
-                const departs = powers
-                  .filter((power) => power.ownerType === OwnerTypeEnum.DEPARTMENT)
-                  .map((power) => (power.owner as unknown) as DepartOwner);
-                const roles = powers
-                  .filter((power) => power.ownerType === OwnerTypeEnum.ROLE)
-                  .map((power) => power.owner as RoleOwner);
-                return (
-                  <div className={styles.app} key={subApp.id}>
-                    <div className={styles.title}>
-                      <div className={styles.name}>{subApp.name}</div>
-                      <Popover
-                        content={renderContent(index, members, departs)}
-                        getPopupContainer={(c) => c}
-                        trigger="click"
-                        destroyTooltipOnHide
-                        placement="bottomRight"
-                        arrowContent={null}
-                      >
-                        <div className={styles.add}>
-                          <Icon type="xinzeng" className={styles.icon} />
-                        </div>
-                      </Popover>
-                    </div>
-                    <MemberList
-                      members={members as any}
-                      depts={(departs as unknown) as Dept[]}
-                      roles={roles}
-                      className={styles['member-list']}
-                      editable
-                      onDelete={(id, type) => {
-                        handleDeletePower(id, type, index);
-                      }}
-                    />
-                  </div>
-                );
+                const { id, name, powers } = subApp;
+                return renderAppItem(powers, id + '', index, name);
               })}
             </div>
           )}
