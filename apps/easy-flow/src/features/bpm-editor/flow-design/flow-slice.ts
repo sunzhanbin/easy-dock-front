@@ -26,7 +26,7 @@ export type FlowType = {
   dirty: boolean;
   invalidNodesMap: ValidResultType;
   cacheMembers: {
-    [id: string]: { name: string; avatar?: string };
+    [id: string]: { name: string; avatar?: string; id: number | string };
   };
   fieldsTemplate: FieldTemplate[];
   choosedNode: AllNode | null | BranchNode['branches'][number];
@@ -140,7 +140,7 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
     const fields = form.meta.components || [];
     const fieldsTemplate: FlowType['fieldsTemplate'] = fields.map((item) => ({
       name: <string>item.config.label,
-      id: <string>item.config.id,
+      id: <string>item.config.fieldName,
       type: item.config.type,
     }));
 
@@ -171,24 +171,42 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
       flowData = [startNode, fillNode, finishNode];
     } else {
       // 收集流程中所用到的人员
-      const memberIds: Set<number> = new Set();
+      const userIds: Set<number | string> = new Set();
+      const deptIds: Set<number | string> = new Set();
+      const roleIds: Set<number | string> = new Set();
 
       flowRecursion(flowData, (node) => {
         if (node.type === NodeType.FillNode || node.type === NodeType.AuditNode || node.type === NodeType.CCNode) {
           (node.correlationMemberConfig.members || []).forEach((member) => {
-            memberIds.add(member);
+            userIds.add(member);
+          });
+          (node.correlationMemberConfig.depts || []).forEach((dept) => {
+            deptIds.add(dept);
           });
         }
       });
 
       // 这样设计为了避免用户更新完头像或者名称后不在节点中更新的问题
-      const userResponse = await runtimeAxios.post('/user/list/ids', Array.from(memberIds));
+      const userResponse = await runtimeAxios.post('/user/query/owner', {
+        deptIds: Array.from(deptIds),
+        userIds: Array.from(userIds),
+        roleIds: Array.from(roleIds),
+      });
+
       const cacheMembers: FlowType['cacheMembers'] = {};
 
-      userResponse.data.forEach((member: any) => {
-        cacheMembers[member.id] = {
-          name: member.userName,
-          avatar: member.avatar,
+      (userResponse.data.users || []).forEach((user: { id: number; userName: string; avatar?: string }) => {
+        cacheMembers[user.id] = {
+          id: user.id,
+          name: user.userName,
+          avatar: user.avatar,
+        };
+      });
+
+      (userResponse.data.depts || []).forEach((dept: { id: number; name: string }) => {
+        cacheMembers[dept.id] = {
+          id: dept.id,
+          name: dept.name,
         };
       });
 
@@ -198,6 +216,8 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
     dispatch(flowActions.setFieldsTemplate(fieldsTemplate));
     dispatch(flowActions.setInitialFlow(flowData));
     dispatch(flowActions.setForm(form.meta));
+  } catch (e) {
+    console.error(e);
   } finally {
     dispatch(setLoading(false));
   }
@@ -240,6 +260,10 @@ export const save = createAsyncThunk<void, { subappId: string; showTip?: boolean
       }
 
       dispatch(flowActions.setDirty(false));
+    } catch (e) {
+      console.error(e);
+
+      Promise.reject(e.message || e);
     } finally {
       dispatch(setLoading(false));
       dispatch(setSaving(false));

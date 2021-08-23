@@ -210,3 +210,21 @@
     z-index: 9;
   }
 }
+
+.tree {
+  &.in-search {
+    :global {
+      .ant-tree-treenode {
+        display: none;
+      }
+
+      .filter-node {
+        display: flex;
+
+        .ant-tree-title {
+          font-weight: normal !important;
+        }
+      }
+    }
+  }
+}

@@ -16,13 +16,12 @@ function MemberSelector(props: MemberSelectorProps) {
   const dispatch = useAppDispatch();
   const { data: subAppDetail } = useSubAppDetail();
   const showValue: NonNullable<SelectorProps['value']> = useMemo(() => {
-    const { members = [], departs = [] } = value!;
+    const { members = [], depts = [] } = value!;
 
     return {
-      departs: departs.map((id) => ({ id, ...cacheMembers[id] })),
+      depts: depts.map((id) => ({ ...cacheMembers[id] })),
       members: members.map((id) => {
         return {
-          id,
           ...cacheMembers[id],
         };
       }),
@@ -32,7 +31,7 @@ function MemberSelector(props: MemberSelectorProps) {
   const handleChange = (value: NonNullable<SelectorProps['value']>) => {
     dispatch(
       setCacheMembers(
-        [...value.members, ...value.departs].reduce((curr, next) => {
+        [...value.members, ...value.depts].reduce((curr, next) => {
           curr[next.id] = {
             ...next,
             avatar: next.avatar,
@@ -46,12 +45,14 @@ function MemberSelector(props: MemberSelectorProps) {
     if (onChange) {
       onChange({
         members: value.members.map((member) => member.id),
-        departs: value.departs.map((depart) => depart.id),
+        depts: value.depts.map((depart) => depart.id),
       });
     }
   };
 
-  return <Selector projectId={subAppDetail?.app.project.id} value={showValue} onChange={handleChange} strictDepart />;
+  return (
+    <Selector projectId={subAppDetail?.app.project.id} value={showValue} onChange={handleChange} strictDept={false} />
+  );
 }
 
 export default memo(MemberSelector);

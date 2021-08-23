@@ -1,10 +1,10 @@
 export type User = {
   name: string;
-  id: number;
+  id: number | string;
   avatar?: string;
 };
 
-export type Depart = {
+export type Dept = {
   name: string;
   id: number | string;
   avatar?: string;

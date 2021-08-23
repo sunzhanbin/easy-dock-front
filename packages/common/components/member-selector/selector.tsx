@@ -1,7 +1,7 @@
 import { memo, useMemo } from 'react';
 import { Tabs } from 'antd';
 import useMemoCallback from '../../hooks/use-memo-callback';
-import { DepartSelector, MemberSelector } from './selectors';
+import { DeptSelector, MemberSelector } from './selectors';
 import SelectorContext from './context';
 import { axios } from './util';
 import { ValueType } from './type';
@@ -14,21 +14,21 @@ interface SelectorProps {
   onChange?(value: NonNullable<this['value']>): void;
   projectId?: number;
   className?: string;
-  strictDepart?: boolean;
+  strictDept?: boolean;
 }
 
 function Selector(props: SelectorProps) {
-  const { value, onChange, projectId, className, strictDepart = false } = props;
+  const { value, onChange, projectId, className, strictDept = false } = props;
   const handleMembersChange = useMemoCallback((members: ValueType['members']) => {
     if (!onChange) return;
 
     onChange(Object.assign({}, value, { members }));
   });
 
-  const handleDepartsChange = useMemoCallback((departs: ValueType['departs']) => {
+  const handleDeptsChange = useMemoCallback((depts: ValueType['depts']) => {
     if (!onChange) return;
 
-    onChange(Object.assign({}, value, { departs }));
+    onChange(Object.assign({}, value, { depts }));
   });
 
   const fetchUser = useMemoCallback(async (data: { name: string; page: number }) => {
@@ -54,7 +54,7 @@ function Selector(props: SelectorProps) {
 
   const defaultActiveKey = useMemo(() => {
     if (value.members.length) return 'member';
-    if (value.departs.length) return 'depart';
+    if (value.depts.length) return 'depart';
 
     return 'member';
   }, [value]);
@@ -67,7 +67,7 @@ function Selector(props: SelectorProps) {
             <MemberSelector value={value.members} onChange={handleMembersChange} fetchUser={fetchUser} />
           </TabPane>
           <TabPane tab="部门" key="depart">
-            <DepartSelector value={value.departs} onChange={handleDepartsChange} strict={strictDepart} />
+            <DeptSelector value={value.depts} onChange={handleDeptsChange} strict={strictDept} />
           </TabPane>
         </Tabs>
       </div>

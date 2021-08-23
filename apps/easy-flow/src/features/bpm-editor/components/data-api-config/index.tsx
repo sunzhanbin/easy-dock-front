@@ -94,8 +94,14 @@ function DataApiConfig(props: DataApiConfigProps) {
     return () => containerRef.current!;
   }, []);
 
+  const excludeDescField = useMemo(() => {
+    return fields.filter((field) => field.id);
+  }, [fields]);
+
   return (
-    <DataContext.Provider value={{ name: thisFormItemName, fields, detail: apiDetail, layout, getPopupContainer }}>
+    <DataContext.Provider
+      value={{ name: thisFormItemName, fields: excludeDescField, detail: apiDetail, layout, getPopupContainer }}
+    >
       <div className={styles.container} ref={containerRef}>
         {loading && <Loading className={styles.loading} />}
 

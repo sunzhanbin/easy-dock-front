@@ -1,98 +1,54 @@
 import { memo, useState, useMemo, useEffect, useContext } from 'react';
 import classnames from 'classnames';
 import { Tree, Input } from 'antd';
-import { filterOptions } from 'rc-tree-select/es/utils/valueUtil';
 import { Loading } from '../../../components';
+import { debounce } from 'lodash';
 import useMemoCallback from '../../../hooks/use-memo-callback';
 import SelectorContext from '../context';
-import { axios } from '../util';
-import { ValueType } from '../type';
+import { ValueType, TreeData, Key } from '../type';
+import { fetchDepts, treeDataMap, excludeTreeChildren, filterTreeData } from '../util';
 import styles from '../index.module.scss';
 
-type TreeData = {
-  title: string;
-  key: string | number;
-  children?: TreeData;
-}[];
-
-interface DepartSelectorProps {
-  value?: ValueType['departs'];
+interface DeptSelectorProps {
+  value?: ValueType['depts'];
   onChange?(value: NonNullable<this['value']>): void;
   strict?: boolean;
 }
 
-type Key = string | number;
-
-function treeDataMap(data: TreeData, map: { [key: string]: TreeData[number] }) {
-  data.forEach((node) => {
-    map[node.key] = node;
-
-    if (node.children && node.children.length) {
-      treeDataMap(node.children, map);
+function DeptSelector(props: DeptSelectorProps) {
+  const { value, onChange, strict } = props;
+  const { wrapperClass, projectId } = useContext(SelectorContext)!;
+  const [treeData, setTreeData] = useState<TreeData>([]);
+  const [loading, setLoading] = useState(false);
+  const [keyword, setKeyword] = useState<string>();
+  const [treeExpandedKeys, setTreeExpandedKeys] = useState<Key[]>((value || []).map((item) => item.id));
+  const [searchExpandedKeys, setSearchExpandedKeys] = useState<Key[]>([]);
+  const handleExpand = useMemoCallback((expandedKeys: Key[]) => {
+    if (keyword) {
+      setSearchExpandedKeys(expandedKeys);
+    } else {
+      setTreeExpandedKeys(expandedKeys);
     }
   });
 
-  return map;
-}
-
-type DepartsResponse = {
-  id: number;
-  name: string;
-  children?: DepartsResponse;
-}[];
-
-async function fetchDeparts(projectId: number | string): Promise<TreeData> {
-  const { data } = await axios.get<{ data: DepartsResponse }>(`/dept/list/all/${projectId}`);
-
-  function formatTreeData(data?: DepartsResponse): TreeData {
-    if (!data) return [];
-
-    const treeData: TreeData = [];
-
-    data.forEach((item) => {
-      treeData.push({
-        key: item.id,
-        title: item.name,
-        children: formatTreeData(item.children),
-      });
-    });
-
-    return treeData;
-  }
-
-  return formatTreeData(data);
-}
-
-function DepartSelector(props: DepartSelectorProps) {
-  const [treeData, setTreeData] = useState<TreeData>([]);
-  const { value, onChange, strict } = props;
-  const { wrapperClass, projectId } = useContext(SelectorContext)!;
-  const [loading, setLoading] = useState(false);
-  const [keyword, setKeyword] = useState<string>();
-  const [treeExpandedKeys, setTreeExpandedKeys] = useState<Key[]>([]);
-  const showTreeData = useMemo(() => {
-    if (!keyword) return treeData;
-    return filterOptions(keyword, treeData, { optionFilterProp: 'name', filterOption: true }) as TreeData;
-  }, [keyword, treeData]);
-
-  const handleExpand = useMemoCallback((expandedKeys: Key[]) => {
-    setTreeExpandedKeys(expandedKeys);
-  });
-
+  // 将所有节点映射称key value方便取值
   const keyNodeMap = useMemo(() => {
     return treeDataMap(treeData, {});
   }, [treeData]);
 
-  const searchExpandedKeys = useMemo(() => {
-    return Object.keys(keyNodeMap);
-  }, [keyNodeMap]);
+  // 计算搜索时需要展示的节点的key值
+  const showTreeKey = useMemo(() => {
+    if (!keyword) return [];
+    return filterTreeData(treeData, keyword);
+  }, [keyword, treeData]);
 
+  // 加载部门数据
   useEffect(() => {
     if (!projectId) return;
 
     setLoading(true);
 
-    fetchDeparts(projectId)
+    fetchDepts(projectId)
       .then((data) => {
         setTreeData(data);
       })
@@ -102,14 +58,11 @@ function DepartSelector(props: DepartSelectorProps) {
   }, [projectId]);
 
   useEffect(() => {
-    if (value) {
-      setTreeExpandedKeys((keys) => {
-        const newKeys = keys.concat(value.map((item) => item.id));
-
-        return Array.from(new Set(newKeys));
-      });
+    if (keyword) {
+      // 关键词一旦变化就重新展开所有节点
+      setSearchExpandedKeys(Object.keys(keyNodeMap).map(Number));
     }
-  }, [value]);
+  }, [keyword, keyNodeMap]);
 
   const checkedKeys = useMemo(() => {
     if (!value) return [];
@@ -126,6 +79,10 @@ function DepartSelector(props: DepartSelectorProps) {
       checkeds = value.checked;
     }
 
+    if (!strict) {
+      checkeds = excludeTreeChildren(treeData, checkeds);
+    }
+
     if (onChange) {
       onChange(
         checkeds.map((item) => {
@@ -138,51 +95,42 @@ function DepartSelector(props: DepartSelectorProps) {
     }
   });
 
-  const handleNodeSelect = useMemoCallback((selectedKeys: Key[]) => {
-    if (!onChange || !selectedKeys.length) return;
+  const handleKeywordChange = useMemoCallback(
+    debounce((event: React.ChangeEvent<HTMLInputElement>) => {
+      const inputValue = event.target.value;
 
-    const [key] = selectedKeys;
-    const val = value || [];
-    const keyInValueIndex = val.findIndex((item) => item.id === key);
-
-    if (keyInValueIndex === -1) {
-      onChange(
-        val.concat({
-          id: key,
-          name: keyNodeMap[key].title,
-        }),
-      );
-    } else {
-      onChange(val.slice(0, keyInValueIndex).concat(val.slice(keyInValueIndex + 1)));
-    }
-  });
+      setKeyword(inputValue.trim());
+    }, 300),
+  );
 
   return (
     <div className={classnames(styles.selector, wrapperClass)}>
-      <Input
-        className={styles.search}
-        value={keyword}
-        onChange={(event) => setKeyword(event.target.value)}
-        size="large"
-        placeholder="搜索部门"
-      />
-      <Tree
-        className={styles.list}
-        checkable
-        treeData={showTreeData as any}
-        blockNode
-        virtual={false}
-        checkStrictly={strict}
-        onExpand={handleExpand}
-        expandedKeys={keyword ? searchExpandedKeys : treeExpandedKeys}
-        onCheck={handleNodeCheck}
-        onSelect={handleNodeSelect}
-        checkedKeys={checkedKeys}
-      />
+      <Input className={styles.search} onChange={handleKeywordChange} size="large" placeholder="搜索部门" />
 
+      {treeData.length ? (
+        <Tree
+          className={classnames(styles.list, styles.tree, { [styles['in-search']]: !!keyword })}
+          checkable
+          treeData={treeData}
+          blockNode
+          selectable={false}
+          virtual={false}
+          checkStrictly={strict}
+          onExpand={handleExpand}
+          expandedKeys={keyword ? searchExpandedKeys : treeExpandedKeys}
+          onCheck={handleNodeCheck}
+          checkedKeys={checkedKeys}
+          filterTreeNode={(node) => {
+            if (!keyword) return false;
+
+            return showTreeKey.findIndex((key) => node.key === key) > -1;
+          }}
+        />
+      ) : null}
+      {treeData.length === 0 && <div>未搜索到部门</div>}
       {loading && <Loading className={styles.loading} />}
     </div>
   );
 }
 
-export default memo(DepartSelector);
+export default memo(DeptSelector);

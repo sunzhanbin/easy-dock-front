@@ -49,8 +49,8 @@ export type FieldAuthsMap = {
 };
 
 export type CorrelationMemberConfig = {
-  members: number[];
-  departs?: (number | string)[];
+  members: (string | number)[];
+  depts?: (number | string)[];
 };
 // 审批节点
 export interface UserNode extends BaseNode {

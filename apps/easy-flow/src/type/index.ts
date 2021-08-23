@@ -1,6 +1,6 @@
 import { Rule } from 'antd/lib/form';
 
-export type { User, Depart } from '@common/type';
+export type { User, Dept } from '@common/type';
 
 export type FieldType = 'Select' | 'Input' | 'Textarea' | 'Radio' | 'Checkbox' | 'Date' | 'InputNumber' | 'DescText';
 
@@ -226,9 +226,9 @@ export type Member = {
 
 export type MemberConfig = {
   // 部门数组
-  departs: number[];
+  depts: number[];
   // 是否包含子部门
-  includeSubDeparts: boolean;
+  includeSubdepts: boolean;
   // 节点成员
   members: string[];
 };
