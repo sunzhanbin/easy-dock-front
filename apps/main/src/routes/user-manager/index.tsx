@@ -1,5 +1,5 @@
 import React, { memo, useMemo, Suspense } from 'react';
-import { Route, useParams, NavLink, useRouteMatch, useLocation } from 'react-router-dom';
+import { Route, NavLink, useRouteMatch } from 'react-router-dom';
 import { Icon, Loading } from '@common/components';
 import { ROUTES } from '@consts';
 import styles from './index.module.scss';
