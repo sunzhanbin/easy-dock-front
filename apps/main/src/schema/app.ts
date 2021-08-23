@@ -48,10 +48,14 @@ export type DepartOwner = {
   name: string;
   parentId: number;
 };
+export type RoleOwner = {
+  id: number | string;
+  name: string;
+};
 
 export type Power = {
   id: number;
-  owner: UserOwner | DepartOwner;
+  owner: UserOwner | DepartOwner | RoleOwner;
   ownerType: number;
   resourceKey: string;
   resourceType: number;

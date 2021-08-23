@@ -9,6 +9,7 @@ import {
   AppInfo,
   UserOwner,
   DepartOwner,
+  RoleOwner,
   AuthEnum,
   ResourceTypeEnum,
   Power,
@@ -16,13 +17,27 @@ import {
 import { fetchSubAppPowers } from '@/api/auth';
 import Selector from '@common/components/member-selector/selector';
 import styles from './index.module.scss';
-import { Dept } from '@common/type';
+import { Dept, Role } from '@common/type';
 import { revokeAuth, assignAuth, AssignAuthParams } from '@/api/auth';
 import { ValueType } from '@common/components/member-selector/type';
 
 const ownerTypeMap: { [k in string]: number } = {
   member: OwnerTypeEnum.USER,
   depart: OwnerTypeEnum.DEPARTMENT,
+};
+type AddAuthParams = {
+  oldValue: UserOwner[] | DepartOwner[] | RoleOwner[];
+  newValue: User[] | Dept[] | Role[];
+  ownerType: OwnerTypeEnum;
+  powerType: AuthEnum;
+  resourceKey: string | number;
+  resourceType: ResourceTypeEnum;
+};
+type RemoveAuthParams = {
+  oldValue: Power[];
+  newValue: User[] | Dept[] | Role[];
+  ownerType: OwnerTypeEnum;
+  powerType: AuthEnum;
 };
 
 const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: () => void }> = ({ appInfo, onClose, onOk }) => {
@@ -55,8 +70,44 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: () => void }>
     }
   });
 
-  const handleChange = useMemoCallback((value: ValueType, index, memberList = [], departList = []) => {
-    const { members, depts: departs } = value;
+  const addAuth = useMemoCallback((data: AddAuthParams) => {
+    const { oldValue, newValue, ownerType, powerType, resourceKey, resourceType } = data;
+    const ownerList = [...newValue];
+    oldValue.forEach((val) => {
+      const index = ownerList.findIndex((owner) => owner.id === val.id);
+      ownerList.splice(index, 1);
+    });
+    const owner = ownerList[0];
+    if (owner && owner.id) {
+      const params: AssignAuthParams = {
+        ownerKey: owner.id + '',
+        ownerType,
+        power: powerType,
+        resourceKey: resourceKey + '',
+        resourceType,
+      };
+      assignAuth(params).then(() => {
+        fetchAppList();
+      });
+    }
+  });
+  const removeAuth = useMemoCallback((data: RemoveAuthParams) => {
+    const { oldValue, newValue, ownerType, powerType } = data;
+    const powerList = [...oldValue];
+    newValue.forEach((val) => {
+      const index = powerList.findIndex((power) => power.id === val.id);
+      powerList.splice(index, 1);
+    });
+    const power = powerList[0];
+    if (power && power.id) {
+      revokeAuth({ id: power.id, ownerType, power: powerType }).then(() => {
+        fetchAppList();
+      });
+    }
+  });
+
+  const handleChange = useMemoCallback((value: ValueType, index, memberList = [], departList = [], roleList = []) => {
+    const { members, depts: departs, roles } = value;
     const subApp = index > -1 && subAppList[index];
     const subAppId = (subApp && subApp.id) || '';
     const powers = (subApp && subApp.powers) || [];
@@ -65,92 +116,76 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: () => void }>
     const resourceType = index === -1 ? ResourceTypeEnum.APP : ResourceTypeEnum.SUB_APP;
     // 增加人员权限
     if (members.length > memberList.length) {
-      const ownerList = [...members];
-      memberList.forEach((member: User) => {
-        const index = ownerList.findIndex((owner) => owner.id === member.id);
-        ownerList.splice(index, 1);
+      addAuth({
+        oldValue: memberList,
+        newValue: members,
+        ownerType: OwnerTypeEnum.USER,
+        powerType,
+        resourceKey,
+        resourceType,
       });
-      const member = ownerList[0];
-      if (member && member.id) {
-        const params: AssignAuthParams = {
-          ownerKey: member.id + '',
-          ownerType: OwnerTypeEnum.USER,
-          power: powerType,
-          resourceKey: resourceKey + '',
-          resourceType,
-        };
-        assignAuth(params).then(() => {
-          fetchAppList();
-        });
-      }
       return;
     }
     // 移除人员权限
     if (members.length < memberList.length) {
       const list = index === -1 ? [...dataPowers] : [...powers];
       const powerList = list.filter((power) => power.ownerType === OwnerTypeEnum.USER);
-      members.forEach((member) => {
-        const index = powerList.findIndex((power) => ((power.owner as unknown) as UserOwner).id === member.id);
-        powerList.splice(index, 1);
-      });
-      const power = powerList[0];
-      if (power && power.id) {
-        revokeAuth({ id: power.id, ownerType: OwnerTypeEnum.USER, power: powerType }).then(() => {
-          fetchAppList();
-        });
-      }
+      removeAuth({ oldValue: powerList, newValue: members, ownerType: OwnerTypeEnum.USER, powerType });
       return;
     }
     // 增加部门权限
     if (departs.length > departList.length) {
-      const ownerList = [...departs];
-      departList.forEach((depart: Dept) => {
-        const index = ownerList.findIndex((owner) => owner.id === depart.id);
-        ownerList.splice(index, 1);
+      addAuth({
+        oldValue: departList,
+        newValue: departs,
+        ownerType: OwnerTypeEnum.DEPARTMENT,
+        powerType,
+        resourceKey,
+        resourceType,
       });
-      const depart: Dept = ownerList[0];
-      if (depart && depart.id) {
-        const params: AssignAuthParams = {
-          ownerKey: depart.id + '',
-          ownerType: OwnerTypeEnum.DEPARTMENT,
-          power: powerType,
-          resourceKey: resourceKey + '',
-          resourceType,
-        };
-        assignAuth(params).then(() => {
-          fetchAppList();
-        });
-        return;
-      }
+      return;
     }
     // 移除部门权限
     if (departs.length < departList.length) {
       const list = index === -1 ? [...dataPowers] : [...powers];
       const powerList = list.filter((power) => power.ownerType === OwnerTypeEnum.DEPARTMENT);
-      departs.forEach((depart) => {
-        const index = powerList.findIndex((power) => ((power.owner as unknown) as DepartOwner).id === depart.id);
-        powerList.splice(index, 1);
+      removeAuth({ oldValue: powerList, newValue: departs, ownerType: OwnerTypeEnum.DEPARTMENT, powerType });
+      return;
+    }
+    // 增加角色权限
+    if (roles.length > roleList.length) {
+      addAuth({
+        oldValue: roleList,
+        newValue: roles,
+        ownerType: OwnerTypeEnum.ROLE,
+        powerType,
+        resourceKey,
+        resourceType,
       });
-      const power = powerList[0];
-      if (power && power.id) {
-        revokeAuth({ id: power.id, ownerType: OwnerTypeEnum.DEPARTMENT, power: powerType }).then(() => {
-          fetchAppList();
-        });
-      }
+      return;
+    }
+    // 移除角色权限
+    if (roles.length < roleList.length) {
+      const list = index === -1 ? [...dataPowers] : [...powers];
+      const powerList = list.filter((power) => power.ownerType === OwnerTypeEnum.ROLE);
+      removeAuth({ oldValue: powerList, newValue: roles, ownerType: OwnerTypeEnum.ROLE, powerType });
+      return;
     }
   });
-  const renderContent = useMemoCallback((index: number, members: UserOwner[], departs: DepartOwner[]) => {
-    return (
-      <Selector
-        className={styles.selector}
-        value={{ members, depts: departs }}
-        projectId={+projectId}
-        onChange={(value) => {
-          handleChange(value, index, members, departs);
-        }}
-      ></Selector>
-    );
-  });
+  const renderContent = useMemoCallback(
+    (index: number, members: UserOwner[], departs: DepartOwner[], roles?: RoleOwner[]) => {
+      return (
+        <Selector
+          className={styles.selector}
+          value={{ members, depts: departs, roles: roles || [] }}
+          projectId={+projectId}
+          onChange={(value) => {
+            handleChange(value, index, members, departs, roles);
+          }}
+        ></Selector>
+      );
+    },
+  );
   const renderDataManage = useMemoCallback(() => {
     const members = dataPowers
       .filter((power) => power.ownerType === OwnerTypeEnum.USER)
@@ -159,12 +194,15 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: () => void }>
     const departs = dataPowers
       .filter((power) => power.ownerType === OwnerTypeEnum.DEPARTMENT)
       .map((power) => power.owner as DepartOwner);
+    const roles = dataPowers
+      .filter((power) => power.ownerType === OwnerTypeEnum.ROLE)
+      .map((power) => power.owner as RoleOwner);
     return (
       <>
         <div className={styles.title}>
           <div className={styles.name}>流程数据管理</div>
           <Popover
-            content={renderContent(-1, members, departs)}
+            content={renderContent(-1, members, departs, roles)}
             getPopupContainer={(c) => c}
             trigger="click"
             destroyTooltipOnHide
@@ -179,6 +217,7 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: () => void }>
         <MemberList
           members={members as any}
           depts={(departs as unknown) as Dept[]}
+          roles={roles}
           className={styles['member-list']}
           editable
           onDelete={(id, type) => {
@@ -188,6 +227,7 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: () => void }>
       </>
     );
   });
+
   useEffect(() => {
     fetchAppList();
   }, []);
@@ -225,6 +265,9 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: () => void }>
                 const departs = powers
                   .filter((power) => power.ownerType === OwnerTypeEnum.DEPARTMENT)
                   .map((power) => (power.owner as unknown) as DepartOwner);
+                const roles = powers
+                  .filter((power) => power.ownerType === OwnerTypeEnum.ROLE)
+                  .map((power) => power.owner as RoleOwner);
                 return (
                   <div className={styles.app} key={subApp.id}>
                     <div className={styles.title}>
@@ -245,6 +288,7 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: () => void }>
                     <MemberList
                       members={members as any}
                       depts={(departs as unknown) as Dept[]}
+                      roles={roles}
                       className={styles['member-list']}
                       editable
                       onDelete={(id, type) => {
@@ -270,6 +314,9 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: () => void }>
                 const departs = powers
                   .filter((power) => power.ownerType === OwnerTypeEnum.DEPARTMENT)
                   .map((power) => (power.owner as unknown) as DepartOwner);
+                const roles = powers
+                  .filter((power) => power.ownerType === OwnerTypeEnum.ROLE)
+                  .map((power) => power.owner as RoleOwner);
                 return (
                   <div className={styles.app} key={subApp.id}>
                     <div className={styles.title}>
@@ -290,6 +337,7 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: () => void }>
                     <MemberList
                       members={members as any}
                       depts={(departs as unknown) as Dept[]}
+                      roles={roles}
                       className={styles['member-list']}
                       editable
                       onDelete={(id, type) => {

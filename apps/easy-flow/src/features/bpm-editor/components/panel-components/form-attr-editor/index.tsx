@@ -152,8 +152,8 @@ const FormAttrEditor = () => {
               const condition = item!.formChangeRule!.filedRule;
               const showComponentList = item!.formChangeRule!.showComponents || [];
               const hideComponentList = item!.formChangeRule!.hideComponents || [];
-              const showComponents = showComponentList.map((id) => byId[id].label);
-              const hideComponents = hideComponentList.map((id) => byId[id].label);
+              const showComponents = showComponentList.map((id) => byId[id]?.label || id);
+              const hideComponents = hideComponentList.map((id) => byId[id]?.label || id);
               if (!condition) {
                 return null;
               }
