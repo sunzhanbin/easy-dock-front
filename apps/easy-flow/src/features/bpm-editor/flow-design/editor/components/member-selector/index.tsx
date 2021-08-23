@@ -1,6 +1,6 @@
 import { memo, useMemo } from 'react';
 import { MemberSelector as Selector, MemberSelectorProps as SelectorProps } from '@common/components';
-import { UserNode } from '@type/flow';
+import { UserNode, CorrelationMemberConfigKey } from '@type/flow';
 import { useSubAppDetail } from '@app/app';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { flowDataSelector, setCacheMembers } from '../../../flow-slice';
@@ -13,39 +13,47 @@ interface MemberSelectorProps {
 function MemberSelector(props: MemberSelectorProps) {
   const { cacheMembers } = useAppSelector(flowDataSelector);
   const { value, onChange } = props;
-  const dispatch = useAppDispatch();
   const { data: subAppDetail } = useSubAppDetail();
+  const dispatch = useAppDispatch();
   const showValue: NonNullable<SelectorProps['value']> = useMemo(() => {
-    const { members = [], depts = [] } = value!;
+    const { members = [], depts = [], roles = [] } = value!;
 
     return {
       depts: depts.map((id) => ({ ...cacheMembers[id] })),
-      members: members.map((id) => {
-        return {
-          ...cacheMembers[id],
-        };
-      }),
+      members: members.map((id) => ({ ...cacheMembers[id] })),
+      roles: roles.map((id) => ({ ...cacheMembers[id] })),
     };
   }, [value, cacheMembers]);
 
   const handleChange = (value: NonNullable<SelectorProps['value']>) => {
-    dispatch(
-      setCacheMembers(
-        [...value.members, ...value.depts].reduce((curr, next) => {
-          curr[next.id] = {
-            ...next,
-            avatar: next.avatar,
-          };
+    const caches: Parameters<typeof setCacheMembers>[number] = {};
+    const { members = [], depts = [], roles = [] } = value;
+    const memberIds: CorrelationMemberConfigKey[] = [];
+    const deptIds: CorrelationMemberConfigKey[] = [];
+    const roleIds: CorrelationMemberConfigKey[] = [];
 
-          return curr;
-        }, {} as Parameters<typeof setCacheMembers>[number]),
-      ),
-    );
+    members.forEach((user) => {
+      caches[user.id] = user;
+      memberIds.push(user.id);
+    });
+
+    depts.forEach((dept) => {
+      caches[dept.id] = dept;
+      deptIds.push(dept.id);
+    });
+
+    roles.forEach((role) => {
+      caches[role.id] = role;
+      roleIds.push(role.id);
+    });
+
+    dispatch(setCacheMembers(caches));
 
     if (onChange) {
       onChange({
-        members: value.members.map((member) => member.id),
-        depts: value.depts.map((depart) => depart.id),
+        members: memberIds,
+        depts: depts.map((depart) => depart.id),
+        roles: roles.map((role) => role.id),
       });
     }
   };

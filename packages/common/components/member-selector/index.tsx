@@ -9,7 +9,7 @@ import { ValueType } from './type';
 import Selector from './selector';
 import styles from './index.module.scss';
 
-export type MemberType = 'depart' | 'member';
+export type MemberType = 'dept' | 'member' | 'role';
 interface MemberProps {
   data: { name: string; avatar?: string; id: number | string };
   onDelete?(id: this['data']['id']): void;
@@ -35,8 +35,9 @@ const Member = memo(function Member(props: MemberProps) {
 });
 
 interface MemberListProps {
-  members: ValueType['members'];
+  members?: ValueType['members'];
   depts?: ValueType['depts'];
+  roles?: ValueType['roles'];
   editable?: boolean;
   onDelete?(id: number | string, tpye: MemberType): void;
   children?: ReactNode;
@@ -44,7 +45,7 @@ interface MemberListProps {
 }
 
 export const MemberList = memo(function MemberList(props: MemberListProps) {
-  const { members, editable, onDelete, children, depts = [], className } = props;
+  const { members = [], depts = [], roles = [], editable, onDelete, children, className } = props;
 
   return (
     <div className={classNames(styles.members, className)}>
@@ -53,10 +54,19 @@ export const MemberList = memo(function MemberList(props: MemberListProps) {
           editable={editable}
           key={depart.id}
           data={depart}
-          onDelete={(departId) => onDelete && onDelete(departId, 'depart')}
+          onDelete={(departId) => onDelete && onDelete(departId, 'dept')}
         >
           <Image className={styles.avatar} src={depart.avatar} placeholder={departDefaultAvatar} size={24} round />
         </Member>
+      ))}
+
+      {roles.map((role) => (
+        <Member
+          editable={editable}
+          key={role.id}
+          data={role}
+          onDelete={(roleId) => onDelete && onDelete(roleId, 'role')}
+        />
       ))}
 
       {members.map((member) => {
@@ -71,6 +81,7 @@ export const MemberList = memo(function MemberList(props: MemberListProps) {
           </Member>
         );
       })}
+
       {children}
     </div>
   );
@@ -88,6 +99,7 @@ export interface MemberSelectorProps {
 const defaultValue: ValueType = {
   members: [],
   depts: [],
+  roles: [],
 };
 
 function MemberSelector(props: MemberSelectorProps) {
@@ -114,10 +126,12 @@ function MemberSelector(props: MemberSelectorProps) {
 
     let key: keyof ValueType;
 
-    if (type === 'depart') {
+    if (type === 'dept') {
       key = 'depts';
     } else if (type === 'member') {
       key = 'members';
+    } else if (type === 'role') {
+      key = 'roles';
     } else {
       return null as never;
     }
@@ -144,7 +158,7 @@ function MemberSelector(props: MemberSelectorProps) {
 
   useEffect(() => {
     return () => {
-      if (!popoverContentContainerRef) return;
+      if (!popoverContentContainerRef || !popoverContentContainerRef.current) return;
 
       // HACK: 用于更新Popover弹出层的位置
       window.dispatchEvent(new Event('resize'));
@@ -153,7 +167,13 @@ function MemberSelector(props: MemberSelectorProps) {
 
   return (
     <div className={styles.container} ref={popoverContentContainerRef}>
-      <MemberList members={showValue.members} onDelete={handleDeleteMember} depts={value?.depts} editable>
+      <MemberList
+        members={showValue.members}
+        onDelete={handleDeleteMember}
+        depts={showValue.depts}
+        roles={showValue.roles}
+        editable
+      >
         <Popover
           content={content}
           getPopupContainer={getPopupContainer}

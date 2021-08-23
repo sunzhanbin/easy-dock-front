@@ -10,7 +10,7 @@ import ButtonConfigs from './button-configs';
 import FieldAuths from '../components/field-auths';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { trimInputValue } from '../../util';
-import { name } from '@common/rule';
+import { rules } from '../../validators';
 import useValidateForm from '../../hooks/use-validate-form';
 
 interface FillNodeEditorProps {
@@ -48,53 +48,11 @@ function FillNodeEditor(props: FillNodeEditorProps) {
   );
 
   const nameRules: Rule[] = useMemo(() => {
-    return [name];
+    return [rules.name];
   }, []);
 
   const memberRules: Rule[] = useMemo(() => {
-    return [
-      {
-        required: true,
-        validator(_, value: FormValuesType['correlationMemberConfig']) {
-          const { members = [] } = value;
-
-          if (!members.length) {
-            return Promise.reject(new Error('办理人不能为空'));
-          }
-
-          return Promise.resolve();
-        },
-      },
-    ];
-  }, []);
-
-  const buttonRules: Rule[] = useMemo(() => {
-    return [
-      {
-        required: true,
-        validator(_, value: FormValuesType['btnText']) {
-          if (!value) {
-            return Promise.reject(new Error('按钮配置不能为空'));
-          }
-
-          let key: keyof typeof value;
-          let invalid = true;
-
-          for (key in value) {
-            if (value[key]?.enable) {
-              invalid = false;
-              break;
-            }
-          }
-
-          if (invalid) {
-            return Promise.reject(new Error('按钮配置不能为空'));
-          }
-
-          return Promise.resolve();
-        },
-      },
-    ];
+    return [rules.member];
   }, []);
 
   return (
@@ -105,13 +63,13 @@ function FillNodeEditor(props: FillNodeEditorProps) {
       onValuesChange={handleFormValuesChange}
       autoComplete="off"
     >
-      <Form.Item label="节点名称" name="name" rules={nameRules} getValueFromEvent={trimInputValue}>
+      <Form.Item label="节点名称" name="name" rules={nameRules} getValueFromEvent={trimInputValue} required>
         <Input size="large" placeholder="请输入用户节点名称" />
       </Form.Item>
-      <Form.Item label="选择办理人" name="correlationMemberConfig" rules={memberRules}>
+      <Form.Item label="选择办理人" name="correlationMemberConfig" rules={memberRules} required>
         <MemberSelector />
       </Form.Item>
-      <Form.Item label="操作权限" name="btnText" rules={buttonRules}>
+      <Form.Item label="操作权限" name="btnText">
         <ButtonConfigs />
       </Form.Item>
       <Form.Item label="字段权限" name="fieldsAuths">

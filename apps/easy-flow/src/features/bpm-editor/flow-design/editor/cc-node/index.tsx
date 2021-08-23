@@ -9,8 +9,8 @@ import { CCNode, AuthType } from '@type/flow';
 import FieldAuths from '../components/field-auths';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { trimInputValue } from '../../util';
-import { name } from '@common/rule';
 import useValidateForm from '../../hooks/use-validate-form';
+import { rules } from '../../validators';
 
 interface CCNodeEditorProps {
   node: CCNode;
@@ -45,24 +45,11 @@ function CCNodeEditor(props: CCNodeEditorProps) {
   );
 
   const nameRules: Rule[] = useMemo(() => {
-    return [name];
+    return [rules.name];
   }, []);
 
   const memberRules: Rule[] = useMemo(() => {
-    return [
-      {
-        required: true,
-        validator(_, value: FormValuesType['correlationMemberConfig']) {
-          const { members = [] } = value;
-
-          if (!members.length) {
-            return Promise.reject(new Error('办理人不能为空'));
-          }
-
-          return Promise.resolve();
-        },
-      },
-    ];
+    return [rules.member];
   }, []);
 
   return (
@@ -73,7 +60,7 @@ function CCNodeEditor(props: CCNodeEditorProps) {
       onValuesChange={handleFormValuesChange}
       autoComplete="off"
     >
-      <Form.Item label="节点名称" name="name" rules={nameRules} getValueFromEvent={trimInputValue}>
+      <Form.Item label="节点名称" name="name" rules={nameRules} getValueFromEvent={trimInputValue} required>
         <Input size="large" placeholder="请输入抄送节点名称" />
       </Form.Item>
       <Form.Item label="选择办理人" name="correlationMemberConfig" rules={memberRules}>

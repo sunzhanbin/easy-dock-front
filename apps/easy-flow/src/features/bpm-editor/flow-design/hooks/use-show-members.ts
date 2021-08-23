@@ -1,13 +1,14 @@
 import { useAppSelector } from '@/app/hooks';
 import { flowDataSelector } from '../flow-slice';
-import { Member } from '@type';
+import { AuditNode, FillNode, CCNode } from '@type/flow';
 
-export default function useShowMembers(memberIds: (number | string)[]) {
+export default function useShowMembers(node: AuditNode | FillNode | CCNode) {
   const { cacheMembers } = useAppSelector(flowDataSelector);
+  const { members = [], depts = [], roles = [] } = node.correlationMemberConfig;
 
-  return memberIds
-    .map((id) => {
-      return <Member>cacheMembers[id];
-    })
-    .filter(Boolean);
+  return [
+    members.map((memberId) => cacheMembers[memberId]),
+    depts.map((deptId) => cacheMembers[deptId]),
+    roles.map((roleId) => cacheMembers[roleId]),
+  ];
 }

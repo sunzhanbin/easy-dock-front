@@ -1,8 +1,11 @@
-import { User, Dept } from '../../type';
+import { User, Dept, Role } from '../../type';
+
+export type { Role } from '../../type';
 
 export type ValueType = {
   members: User[];
   depts: Dept[];
+  roles: Role[];
 };
 
 export type Key = string | number;
