@@ -65,7 +65,12 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: () => void }>
     const resourceType = index === -1 ? ResourceTypeEnum.APP : ResourceTypeEnum.SUB_APP;
     // 增加人员权限
     if (members.length > memberList.length) {
-      const member = members[members.length - 1];
+      const ownerList = [...members];
+      memberList.forEach((member: User) => {
+        const index = ownerList.findIndex((owner) => owner.id === member.id);
+        ownerList.splice(index, 1);
+      });
+      const member = ownerList[0];
       if (member && member.id) {
         const params: AssignAuthParams = {
           ownerKey: member.id + '',
@@ -82,7 +87,8 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: () => void }>
     }
     // 移除人员权限
     if (members.length < memberList.length) {
-      const powerList = [...powers].filter((power) => power.ownerType === OwnerTypeEnum.USER);
+      const list = index === -1 ? [...dataPowers] : [...powers];
+      const powerList = list.filter((power) => power.ownerType === OwnerTypeEnum.USER);
       members.forEach((member) => {
         const index = powerList.findIndex((power) => ((power.owner as unknown) as UserOwner).id === member.id);
         powerList.splice(index, 1);
@@ -97,7 +103,12 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: () => void }>
     }
     // 增加部门权限
     if (departs.length > departList.length) {
-      const depart: Dept = departs[departs.length - 1];
+      const ownerList = [...departs];
+      departList.forEach((depart: Dept) => {
+        const index = ownerList.findIndex((owner) => owner.id === depart.id);
+        ownerList.splice(index, 1);
+      });
+      const depart: Dept = ownerList[0];
       if (depart && depart.id) {
         const params: AssignAuthParams = {
           ownerKey: depart.id + '',
@@ -114,7 +125,8 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: () => void }>
     }
     // 移除部门权限
     if (departs.length < departList.length) {
-      const powerList = [...powers].filter((power) => power.ownerType === OwnerTypeEnum.DEPARTMENT);
+      const list = index === -1 ? [...dataPowers] : [...powers];
+      const powerList = list.filter((power) => power.ownerType === OwnerTypeEnum.DEPARTMENT);
       departs.forEach((depart) => {
         const index = powerList.findIndex((power) => ((power.owner as unknown) as DepartOwner).id === depart.id);
         powerList.splice(index, 1);
