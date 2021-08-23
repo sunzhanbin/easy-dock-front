@@ -2,7 +2,7 @@ import { memo } from 'react';
 import { Icon } from '@common/components';
 import { CCNode as CCNodeType } from '@type/flow';
 import BaseNode from '../base-node';
-import MemberList from '../../editor/components/member-list';
+import MemberList from '../../components/member-list';
 
 interface CCNodeProps {
   node: CCNodeType;

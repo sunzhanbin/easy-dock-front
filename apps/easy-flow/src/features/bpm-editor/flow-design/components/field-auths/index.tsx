@@ -3,7 +3,7 @@ import { Checkbox } from 'antd';
 import classnames from 'classnames';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { FieldAuthsMap, AuthType, FieldTemplate } from '@type/flow';
-import useFieldsTemplate from '../../../hooks/use-fields-template';
+import useFieldsTemplate from '../../hooks/use-fields-template';
 import styles from './index.module.scss';
 
 type FieldAuth = Pick<FieldTemplate, 'id'> & { auth: AuthType };
@@ -62,13 +62,11 @@ interface FieldAuthsProps {
   max?: FieldAuth['auth'];
   value?: FieldAuthsMap;
   onChange?(value: this['value']): void;
-  templates: FieldTemplate[];
 }
 
 function FieldAuths(props: FieldAuthsProps) {
   const { value, onChange, max = AuthType.Required } = props;
   const templates = useFieldsTemplate();
-
   const memoValueInfo = useMemo(() => {
     const valueMaps: { [key: string]: FieldAuth } = {};
     const statistic: FieldRowProps['extra'] = {

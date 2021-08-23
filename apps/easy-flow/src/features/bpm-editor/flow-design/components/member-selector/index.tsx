@@ -3,7 +3,7 @@ import { MemberSelector as Selector, MemberSelectorProps as SelectorProps } from
 import { UserNode, CorrelationMemberConfigKey } from '@type/flow';
 import { useSubAppDetail } from '@app/app';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { flowDataSelector, setCacheMembers } from '../../../flow-slice';
+import { flowDataSelector, setCacheMembers } from '../../flow-slice';
 
 interface MemberSelectorProps {
   value?: UserNode['correlationMemberConfig'];

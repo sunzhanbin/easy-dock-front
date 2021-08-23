@@ -3,11 +3,11 @@ import { Form, Input } from 'antd';
 import { Rule } from 'antd/lib/form';
 import debounce from 'lodash/debounce';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import MemberSelector from '../components/member-selector';
-import { updateNode, flowDataSelector } from '../../flow-slice';
+import MemberSelector from '../../components/member-selector';
+import { updateNode } from '../../flow-slice';
 import { CCNode, AuthType } from '@type/flow';
-import FieldAuths from '../components/field-auths';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import FieldAuths from '../../components/field-auths';
+import { useAppDispatch } from '@/app/hooks';
 import { trimInputValue } from '../../util';
 import useValidateForm from '../../hooks/use-validate-form';
 import { rules } from '../../validators';
@@ -25,7 +25,6 @@ type FormValuesType = {
 function CCNodeEditor(props: CCNodeEditorProps) {
   const dispatch = useAppDispatch();
   const { node } = props;
-  const { fieldsTemplate } = useAppSelector(flowDataSelector);
   const [form] = Form.useForm<FormValuesType>();
 
   useValidateForm<FormValuesType>(form);
@@ -67,7 +66,7 @@ function CCNodeEditor(props: CCNodeEditorProps) {
         <MemberSelector />
       </Form.Item>
       <Form.Item label="字段权限" name="fieldsAuths">
-        <FieldAuths max={AuthType.View} templates={fieldsTemplate} />
+        <FieldAuths max={AuthType.View} />
       </Form.Item>
     </Form>
   );

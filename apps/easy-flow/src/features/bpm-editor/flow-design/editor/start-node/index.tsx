@@ -4,15 +4,16 @@ import { FormInstance } from 'rc-field-form';
 import moment, { Moment } from 'moment';
 import debounce from 'lodash/debounce';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import { updateNode } from '../../flow-slice';
 import { StartNode, TriggerType, TimingTrigger } from '@type/flow';
 import { useAppDispatch } from '@/app/hooks';
+import { updateNode } from '../../flow-slice';
 import { trimInputValue } from '../../util';
 import useValidateForm from '../../hooks/use-validate-form';
 import DatePicker from '@/features/bpm-editor/components/date-picker';
 import DateRange from '@/features/bpm-editor/components/date-range';
 import Frequency from './frequency';
 import Trigger from './trigger';
+import FieldAuths from '../../components/field-auths';
 import { rules } from '../../validators';
 import styles from './index.module.scss';
 
@@ -20,7 +21,7 @@ interface StartNodeEditorProps {
   node: StartNode;
 }
 
-type FormValuesType = Pick<StartNode, 'name' | 'trigger'>;
+type FormValuesType = Pick<StartNode, 'name' | 'trigger' | 'fieldsAuths'>;
 
 function StartNodeEditor(props: StartNodeEditorProps) {
   const { node } = props;
@@ -34,7 +35,7 @@ function StartNodeEditor(props: StartNodeEditorProps) {
   const handleFormValuesChange = useMemoCallback(
     debounce((_, allValues: FormValuesType) => {
       let mapTrigger: StartNode['trigger'];
-      let { name, trigger } = allValues;
+      let { trigger } = allValues;
 
       if (trigger.type === TriggerType.SIGNAL) {
         mapTrigger = {
@@ -50,7 +51,7 @@ function StartNodeEditor(props: StartNodeEditorProps) {
           cycleRange: [cycle[0] || null, cycle[1] || null],
           frequency: trigger.frequency,
         };
-        console.info(mapTrigger, 1111);
+
         // 如果没有设置开始时间默认从现在开始, 下面代码功能回显开始时间
         if (!trigger.startTime) {
           form.setFieldsValue({
@@ -68,7 +69,7 @@ function StartNodeEditor(props: StartNodeEditorProps) {
       dispatch(
         updateNode({
           ...node,
-          name,
+          ...allValues,
           trigger: mapTrigger,
         }),
       );
@@ -79,6 +80,7 @@ function StartNodeEditor(props: StartNodeEditorProps) {
     form.setFieldsValue({
       name: node.name,
       trigger: node.trigger,
+      fieldsAuths: node.fieldsAuths,
     });
   }, [node, form]);
 
@@ -139,6 +141,12 @@ function StartNodeEditor(props: StartNodeEditorProps) {
       <Form.Item label="开始方式" name={['trigger', 'type']}>
         <Trigger />
       </Form.Item>
+
+      {triggerType === TriggerType.MANUAL && (
+        <Form.Item label="操作权限" name="fieldsAuths">
+          <FieldAuths />
+        </Form.Item>
+      )}
 
       {triggerType === TriggerType.TIMING && (
         <>

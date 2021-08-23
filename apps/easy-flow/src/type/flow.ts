@@ -126,6 +126,7 @@ export type TimingTrigger = {
 // 流程类型，起点是申请人节点，一个流程只能有一个
 export interface StartNode extends BaseNode {
   type: NodeType.StartNode;
+  fieldsAuths: FieldAuthsMap;
   trigger:
     | {
         type: TriggerType.MANUAL;
