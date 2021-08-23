@@ -3,7 +3,7 @@ import classnames from 'classnames';
 import { Icon, PopoverConfirm } from '@common/components';
 import { delNode, flowDataSelector, setChoosedNode } from '../../flow-slice';
 import { NodeType, AllNode, BranchNode } from '@type/flow';
-import AddNodeButton from '../../editor/components/add-node-button';
+import AddNodeButton from '../../components/add-node-button';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import styles from './index.module.scss';

@@ -7,7 +7,7 @@ import { Icon, PopoverConfirm } from '@common/components';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { delNode, addSubBranch, delSubBranch, setChoosedNode, formMetaSelector } from '../../flow-slice';
-import AddNodeButton from '../../editor/components/add-node-button';
+import AddNodeButton from '../../components/add-node-button';
 import { formatRuleValue } from '@utils';
 import styles from './index.module.scss';
 

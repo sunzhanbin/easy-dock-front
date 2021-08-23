@@ -2,7 +2,7 @@ import { memo, useMemo } from 'react';
 import { Button, Cascader } from 'antd';
 import { CascaderValueType } from 'antd/lib/cascader';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import ButtonEditor from '../../components/button-editor';
+import ButtonEditor from '../../../components/button-editor';
 import { AuditNode, AllNode, BranchNode, RevertType, ButtonAuth } from '@type/flow';
 import styles from './index.module.scss';
 

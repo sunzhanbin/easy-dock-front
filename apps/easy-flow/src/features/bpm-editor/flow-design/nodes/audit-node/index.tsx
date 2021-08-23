@@ -2,7 +2,7 @@ import { memo } from 'react';
 import { Icon } from '@common/components';
 import { AuditNode as AuditNodeType } from '@type/flow';
 import BaseNode from '../base-node';
-import MemberList from '../../editor/components/member-list';
+import MemberList from '../../components/member-list';
 
 export interface AuditNodeProps {
   node: AuditNodeType;

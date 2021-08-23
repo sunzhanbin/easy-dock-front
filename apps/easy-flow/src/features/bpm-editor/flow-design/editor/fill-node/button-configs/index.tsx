@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { Button } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import ButtonEditor from '../../components/button-editor';
+import ButtonEditor from '../../../components/button-editor';
 import { FillNode, ButtonAuth } from '@type/flow';
 import styles from './index.module.scss';
 

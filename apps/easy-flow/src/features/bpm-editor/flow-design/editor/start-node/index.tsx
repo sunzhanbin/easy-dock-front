@@ -13,7 +13,7 @@ import DatePicker from '@/features/bpm-editor/components/date-picker';
 import DateRange from '@/features/bpm-editor/components/date-range';
 import Frequency from './frequency';
 import Trigger from './trigger';
-import FieldAuths from '../components/field-auths';
+import FieldAuths from '../../components/field-auths';
 import { rules } from '../../validators';
 import styles from './index.module.scss';
 

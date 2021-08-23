@@ -1,6 +1,6 @@
 import { memo, useMemo } from 'react';
 import { MemberList } from '@common/components/member-selector';
-import useShowMembers from '../../../hooks/use-show-members';
+import useShowMembers from '../../hooks/use-show-members';
 
 interface AllMemberListProps {
   node: Parameters<typeof useShowMembers>[0];

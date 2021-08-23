@@ -3,7 +3,7 @@ import { Checkbox } from 'antd';
 import classnames from 'classnames';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { FieldAuthsMap, AuthType, FieldTemplate } from '@type/flow';
-import useFieldsTemplate from '../../../hooks/use-fields-template';
+import useFieldsTemplate from '../../hooks/use-fields-template';
 import styles from './index.module.scss';
 
 type FieldAuth = Pick<FieldTemplate, 'id'> & { auth: AuthType };
