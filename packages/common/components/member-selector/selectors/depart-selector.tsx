@@ -1,11 +1,11 @@
 import { memo, useState, useMemo, useEffect, useContext } from 'react';
 import classnames from 'classnames';
-import { Tree, Input } from 'antd';
+import { Tree, TreeProps } from 'antd';
 import { Loading } from '../../../components';
-import { debounce } from 'lodash';
 import useMemoCallback from '../../../hooks/use-memo-callback';
 import SelectorContext from '../context';
 import { ValueType, TreeData, Key } from '../type';
+import Layout from './layout';
 import { fetchDepts, treeDataMap, excludeTreeChildren, filterTreeData } from '../util';
 import styles from '../index.module.scss';
 
@@ -38,9 +38,15 @@ function DeptSelector(props: DeptSelectorProps) {
 
   // 计算搜索时需要展示的节点的key值
   const showTreeKey = useMemo(() => {
+    // 关键字为空时就不计算展示的key值了, 后期如果需要调用filterTreeData
     if (!keyword) return [];
+
     return filterTreeData(treeData, keyword);
   }, [keyword, treeData]);
+
+  const showTreeKeyMap = useMemo(() => {
+    return showTreeKey.reduce((curr, next) => ({ ...curr, [next]: true }), {} as { [key: string]: boolean });
+  }, [showTreeKey]);
 
   // 加载部门数据
   useEffect(() => {
@@ -95,41 +101,36 @@ function DeptSelector(props: DeptSelectorProps) {
     }
   });
 
-  const handleKeywordChange = useMemoCallback(
-    debounce((event: React.ChangeEvent<HTMLInputElement>) => {
-      const inputValue = event.target.value;
+  const filterTreeNode: NonNullable<TreeProps['filterTreeNode']> = useMemoCallback((node) => {
+    if (!keyword) return false;
 
-      setKeyword(inputValue.trim());
-    }, 300),
-  );
+    return showTreeKeyMap[node.key];
+  });
 
   return (
-    <div className={classnames(styles.selector, wrapperClass)}>
-      <Input className={styles.search} onChange={handleKeywordChange} size="large" placeholder="搜索部门" />
+    <Layout className={wrapperClass} onKeywordChange={setKeyword} keywordPlaceholder="搜索部门">
+      <div className={styles.list}>
+        {treeData.length ? (
+          <Tree
+            className={classnames(styles.tree, { [styles['in-search']]: !!keyword })}
+            checkable
+            treeData={treeData}
+            blockNode
+            selectable={false}
+            virtual={false}
+            checkStrictly={strict}
+            onExpand={handleExpand}
+            expandedKeys={keyword ? searchExpandedKeys : treeExpandedKeys}
+            onCheck={handleNodeCheck}
+            checkedKeys={checkedKeys}
+            filterTreeNode={filterTreeNode}
+          />
+        ) : null}
+        {keyword && showTreeKey.length === 0 && <div>未搜索到部门</div>}
+      </div>
 
-      {treeData.length ? (
-        <Tree
-          className={classnames(styles.list, styles.tree, { [styles['in-search']]: !!keyword })}
-          checkable
-          treeData={treeData}
-          blockNode
-          selectable={false}
-          virtual={false}
-          checkStrictly={strict}
-          onExpand={handleExpand}
-          expandedKeys={keyword ? searchExpandedKeys : treeExpandedKeys}
-          onCheck={handleNodeCheck}
-          checkedKeys={checkedKeys}
-          filterTreeNode={(node) => {
-            if (!keyword) return false;
-
-            return showTreeKey.findIndex((key) => node.key === key) > -1;
-          }}
-        />
-      ) : null}
-      {treeData.length === 0 && <div>未搜索到部门</div>}
       {loading && <Loading className={styles.loading} />}
-    </div>
+    </Layout>
   );
 }
 

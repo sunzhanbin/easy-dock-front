@@ -183,6 +183,9 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
           (node.correlationMemberConfig.depts || []).forEach((dept) => {
             deptIds.add(dept);
           });
+          (node.correlationMemberConfig.roles || []).forEach((role) => {
+            roleIds.add(role);
+          });
         }
       });
 
@@ -207,6 +210,13 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
         cacheMembers[dept.id] = {
           id: dept.id,
           name: dept.name,
+        };
+      });
+
+      (userResponse.data.roles || []).forEach((role: { id: number; name: string }) => {
+        cacheMembers[role.id] = {
+          id: role.id,
+          name: role.name,
         };
       });
 

@@ -85,6 +85,8 @@ export function createNode(type: NodeType, name?: string) {
     name,
     correlationMemberConfig: {
       members: [],
+      depts: [],
+      roles: [],
     },
   };
 

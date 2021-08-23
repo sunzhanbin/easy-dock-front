@@ -1,5 +1,5 @@
 import createAxios from '../../utils/axios';
-import { TreeData, Key } from './type';
+import { TreeData, Key, Role } from './type';
 
 export const axios = createAxios({
   baseURL: `${window.EASY_DOCK_BASE_SERVICE_ENDPOINT}/enc-oss-easydock/api/runtime/v1`,
@@ -90,4 +90,10 @@ export function filterTreeData(tree: TreeData, keyword: string): Key[] {
   }
 
   return loop(tree, []);
+}
+
+export async function fetchRoles(projectId: number): Promise<Role[]> {
+  const { data } = await axios.get<{ data: Role[] }>(`/role/list/${projectId}`);
+
+  return data;
 }

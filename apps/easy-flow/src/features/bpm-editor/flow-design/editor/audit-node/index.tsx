@@ -3,7 +3,6 @@ import { Form, Input } from 'antd';
 import { Rule } from 'antd/lib/form';
 import debounce from 'lodash/debounce';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import { name } from '@common/rule';
 import MemberSelector from '../components/member-selector';
 import { updateNode, flowDataSelector } from '../../flow-slice';
 import { AuditNode } from '@type/flow';
@@ -13,6 +12,7 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { trimInputValue } from '../../util';
 import useValidateForm from '../../hooks/use-validate-form';
 import usePrevNodes from '../../hooks/use-prev-nodes';
+import { rules } from '../../validators';
 
 interface AuditNodeEditorProps {
   node: AuditNode;
@@ -65,24 +65,11 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
   );
 
   const nameRules: Rule[] = useMemo(() => {
-    return [name];
+    return [rules.name];
   }, []);
 
   const memberRules: Rule[] = useMemo(() => {
-    return [
-      {
-        required: true,
-        validator(_, value: FormValuesType['correlationMemberConfig']) {
-          const { members = [] } = value;
-
-          if (!members.length) {
-            return Promise.reject(new Error('办理人不能为空'));
-          }
-
-          return Promise.resolve();
-        },
-      },
-    ];
+    return [rules.member];
   }, []);
 
   return (
@@ -96,7 +83,7 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
       <Form.Item label="节点名称" name="name" rules={nameRules} getValueFromEvent={trimInputValue}>
         <Input size="large" placeholder="请输入用户节点名称" />
       </Form.Item>
-      <Form.Item label="选择办理人" name="correlationMemberConfig" rules={memberRules}>
+      <Form.Item label="选择办理人" name="correlationMemberConfig" rules={memberRules} required>
         <MemberSelector />
       </Form.Item>
       <Form.Item label="操作权限" name="btnConfigs" required>

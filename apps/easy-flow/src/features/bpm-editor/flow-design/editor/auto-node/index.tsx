@@ -7,7 +7,7 @@ import { AutoNode } from '@type/flow';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { updateNode, flowDataSelector } from '../../flow-slice';
 import { trimInputValue } from '../../util';
-import { name } from '@common/rule';
+import { rules } from '../../validators';
 import useValidateForm from '../../hooks/use-validate-form';
 import DataApiConfig from '../../../components/data-api-config';
 
@@ -41,7 +41,7 @@ function AutoNodeEditor(props: AutoNodeEditorProps) {
   );
 
   const nameRules: Rule[] = useMemo(() => {
-    return [name];
+    return [rules.name];
   }, []);
 
   const fields = useMemo(() => {
@@ -56,7 +56,7 @@ function AutoNodeEditor(props: AutoNodeEditorProps) {
       onValuesChange={handleFormValuesChange}
       autoComplete="off"
     >
-      <Form.Item label="节点名称" name="name" rules={nameRules} getValueFromEvent={trimInputValue}>
+      <Form.Item label="节点名称" name="name" rules={nameRules} getValueFromEvent={trimInputValue} required>
         <Input size="large" placeholder="请输入抄送节点名称" />
       </Form.Item>
       <Form.Item name="dataConfig" label="选择要推送数据的接口">

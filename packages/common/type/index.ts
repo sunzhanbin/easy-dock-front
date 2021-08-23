@@ -9,3 +9,8 @@ export type Dept = {
   id: number | string;
   avatar?: string;
 };
+
+export type Role = {
+  id: number | string;
+  name: string;
+};

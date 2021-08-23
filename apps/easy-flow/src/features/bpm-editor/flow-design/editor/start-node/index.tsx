@@ -4,7 +4,6 @@ import { FormInstance } from 'rc-field-form';
 import moment, { Moment } from 'moment';
 import debounce from 'lodash/debounce';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import { name } from '@common/rule';
 import { updateNode } from '../../flow-slice';
 import { StartNode, TriggerType, TimingTrigger } from '@type/flow';
 import { useAppDispatch } from '@/app/hooks';
@@ -14,6 +13,7 @@ import DatePicker from '@/features/bpm-editor/components/date-picker';
 import DateRange from '@/features/bpm-editor/components/date-range';
 import Frequency from './frequency';
 import Trigger from './trigger';
+import { rules } from '../../validators';
 import styles from './index.module.scss';
 
 interface StartNodeEditorProps {
@@ -133,7 +133,7 @@ function StartNodeEditor(props: StartNodeEditorProps) {
       autoComplete="off"
       onValuesChange={handleFormValuesChange}
     >
-      <Form.Item label="节点名称" name="name" getValueFromEvent={trimInputValue} rules={[name]}>
+      <Form.Item label="节点名称" name="name" getValueFromEvent={trimInputValue} rules={[rules.name]} required>
         <Input size="large" placeholder="请输入开始节点名称" />
       </Form.Item>
       <Form.Item label="开始方式" name={['trigger', 'type']}>

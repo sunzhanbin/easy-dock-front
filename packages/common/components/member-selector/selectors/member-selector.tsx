@@ -1,9 +1,9 @@
 import React, { memo, useState, useEffect, useMemo, useRef, useContext } from 'react';
-import { Input, Checkbox } from 'antd';
 import { throttle } from 'lodash';
-import classnames from 'classnames';
+import { Checkbox } from 'antd';
 import useMemoCallback from '../../../hooks/use-memo-callback';
 import memberDefaultAvatar from '../avatars/member-default-avatar.png';
+import Layout from './layout';
 import { Image, Loading } from '../../../components';
 import { ValueType } from '../type';
 import SelectorContext from '../context';
@@ -26,7 +26,6 @@ function MemberSelector(props: MemberSelectorProps) {
   const [memberTotal, setMemberTotal] = useState(0);
   const [memberSearchText, setMemberSearchText] = useState('');
   const memberPageNumberRef = useRef(1);
-  const timerRef = useRef<NodeJS.Timeout>();
   const searchMembers = useMemoCallback(async (payload: { name: string; page: number }) => {
     if (loading) return;
 
@@ -50,19 +49,12 @@ function MemberSelector(props: MemberSelectorProps) {
       setLoading(false);
     }
   });
-  const handleMemberSearchTextChange: React.ChangeEventHandler<HTMLInputElement> = useMemoCallback(async (event) => {
-    const name = (event.target.value || '').trim();
 
-    setMemberSearchText(name);
+  const handleKeywordChange = useMemoCallback((keyword: string) => {
+    setMemberSearchText(keyword);
     memberPageNumberRef.current = 1;
 
-    if (timerRef.current !== undefined) {
-      clearTimeout(timerRef.current);
-    }
-
-    timerRef.current = setTimeout(() => {
-      searchMembers({ page: 1, name });
-    }, 300);
+    searchMembers({ page: 1, name: keyword });
   });
 
   const valueMaps = useMemo(() => {
@@ -115,14 +107,7 @@ function MemberSelector(props: MemberSelectorProps) {
     }, 300),
   );
   return (
-    <div className={classnames(styles.selector, wrapperClass)}>
-      <Input
-        placeholder="搜索成员"
-        className={styles.search}
-        onChange={handleMemberSearchTextChange}
-        size="large"
-        value={memberSearchText}
-      />
+    <Layout className={wrapperClass} onKeywordChange={handleKeywordChange} keywordPlaceholder="搜索成员">
       <div className={styles.list} onScroll={handleMemberListScroll}>
         {!memberSearchText && <div className={styles.total}>全部成员({memberTotal})</div>}
 
@@ -142,7 +127,7 @@ function MemberSelector(props: MemberSelectorProps) {
 
         {loading && <Loading className={styles.loading} />}
       </div>
-    </div>
+    </Layout>
   );
 }
 

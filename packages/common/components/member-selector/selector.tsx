@@ -1,7 +1,8 @@
 import { memo, useMemo } from 'react';
 import { Tabs } from 'antd';
+import { debounce } from 'lodash';
 import useMemoCallback from '../../hooks/use-memo-callback';
-import { DeptSelector, MemberSelector } from './selectors';
+import { DeptSelector, MemberSelector, RoleSelector } from './selectors';
 import SelectorContext from './context';
 import { axios } from './util';
 import { ValueType } from './type';
@@ -19,16 +20,24 @@ interface SelectorProps {
 
 function Selector(props: SelectorProps) {
   const { value, onChange, projectId, className, strictDept = false } = props;
-  const handleMembersChange = useMemoCallback((members: ValueType['members']) => {
-    if (!onChange) return;
+  const debounceChange = useMemoCallback(
+    debounce((value: ValueType) => {
+      if (!onChange) return;
 
-    onChange(Object.assign({}, value, { members }));
+      onChange(value);
+    }, 100),
+  );
+
+  const handleMembersChange = useMemoCallback((members: ValueType['members']) => {
+    debounceChange(Object.assign({}, value, { members }));
   });
 
   const handleDeptsChange = useMemoCallback((depts: ValueType['depts']) => {
-    if (!onChange) return;
+    debounceChange(Object.assign({}, value, { depts }));
+  });
 
-    onChange(Object.assign({}, value, { depts }));
+  const handleRolesChange = useMemoCallback((roles: ValueType['roles']) => {
+    debounceChange(Object.assign({}, value, { roles }));
   });
 
   const fetchUser = useMemoCallback(async (data: { name: string; page: number }) => {
@@ -55,6 +64,7 @@ function Selector(props: SelectorProps) {
   const defaultActiveKey = useMemo(() => {
     if (value.members.length) return 'member';
     if (value.depts.length) return 'depart';
+    if (value.roles.length) return 'role';
 
     return 'member';
   }, [value]);
@@ -68,6 +78,9 @@ function Selector(props: SelectorProps) {
           </TabPane>
           <TabPane tab="部门" key="depart">
             <DeptSelector value={value.depts} onChange={handleDeptsChange} strict={strictDept} />
+          </TabPane>
+          <TabPane tab="角色" key="role">
+            <RoleSelector value={value.roles} onChange={handleRolesChange} />
           </TabPane>
         </Tabs>
       </div>

@@ -79,7 +79,6 @@
 .selector {
   position: relative;
   width: 232px;
-  user-select: none;
 
   .search {
     margin-bottom: 12px;
@@ -117,9 +116,12 @@
 }
 
 .container {
+  user-select: none;
+
   :global {
     .ant-popover {
       padding-top: 2px;
+      user-select: none;
     }
 
     .ant-tree-checkbox {
@@ -130,6 +132,12 @@
 
     .ant-tree-node-selected {
       background-color: transparent !important;
+    }
+
+    .ant-tree-treenode {
+      & > .ant-tree-switcher-noop {
+        display: none;
+      }
     }
 
     .ant-input {
@@ -204,9 +212,6 @@
   }
 
   .loading {
-    left: 50%;
-    top: 50%;
-    transform: translate3D(-50%, -50%, 0);
     z-index: 9;
   }
 }
