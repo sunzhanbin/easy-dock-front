@@ -1,6 +1,7 @@
 import React, { memo, useState, useEffect, useMemo, useRef, useContext } from 'react';
 import { throttle } from 'lodash';
 import { Checkbox } from 'antd';
+import classnames from 'classnames';
 import useMemoCallback from '../../../hooks/use-memo-callback';
 import memberDefaultAvatar from '../avatars/member-default-avatar.png';
 import Layout from './layout';
@@ -108,7 +109,7 @@ function MemberSelector(props: MemberSelectorProps) {
   );
   return (
     <Layout className={wrapperClass} onKeywordChange={handleKeywordChange} keywordPlaceholder="搜索成员">
-      <div className={styles.list} onScroll={handleMemberListScroll}>
+      <div className={classnames(styles.list, styles['member-selector'])} onScroll={handleMemberListScroll}>
         {!memberSearchText && <div className={styles.total}>全部成员({memberTotal})</div>}
 
         {members.map((member) => {
