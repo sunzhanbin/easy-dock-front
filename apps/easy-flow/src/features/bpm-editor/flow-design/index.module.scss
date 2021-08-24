@@ -10,6 +10,7 @@
     flex: 1 1 0;
     padding: 24px;
     overflow-y: auto;
+    overflow-x: hidden;
 
     :global {
       .ant-form-item-label {

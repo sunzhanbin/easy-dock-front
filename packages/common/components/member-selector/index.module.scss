@@ -1,10 +1,15 @@
 @import '@common/styles/var.scss';
 @import '@common/styles/mixin.scss';
 
+.container {
+  user-select: none;
+}
+
 .avatar {
   object-fit: cover;
 }
 
+// 成员样式
 .member {
   position: relative;
   display: inline-flex;
@@ -44,6 +49,7 @@
   }
 }
 
+// 成员列表
 .members {
   position: relative;
   display: flex;
@@ -75,19 +81,25 @@
   }
 }
 
-// 人员选择内容样式
+// 选择组件样式通用
 .selector {
   position: relative;
+  display: flex;
+  flex-direction: column;
   width: 232px;
+  max-height: 300px;
+  color: rgba(#181f43, 0.95);
+  font-size: 14px;
+  font-weight: 400;
 
   .search {
     margin-bottom: 12px;
   }
 
   .list {
-    .total {
-      margin-bottom: 12px;
-    }
+    flex: 1 1 0;
+    overflow-y: auto;
+    overflow-x: hidden;
 
     .item {
       @include center('flex');
@@ -113,8 +125,38 @@
       }
     }
   }
-  
-  :global{
+
+  .loading {
+    z-index: 9;
+  }
+}
+
+// 人员选择
+.member-selector {
+  .total {
+    margin-bottom: 12px;
+  }
+}
+
+// 部门选择
+.tree {
+  &.in-search {
+    :global {
+      .ant-tree-treenode {
+        display: none;
+      }
+
+      .filter-node {
+        display: flex;
+
+        .ant-tree-title {
+          font-weight: normal !important;
+        }
+      }
+    }
+  }
+
+  :global {
     .ant-tree-checkbox {
       order: 1;
       margin-left: 7px;
@@ -130,37 +172,17 @@
         display: none;
       }
     }
-
-    .ant-input {
-      border-color: transparent !important;
-      background-color: rgba(24, 39, 67, 0.04) !important;
-      box-shadow: unset !important;
-
-      &:hover {
-        border-color: rgba($primary-color, 0.85) !important;
-        background-color: transparent !important;
-      }
-
-      &:focus {
-        border-color: rgba($primary-color, 0.85) !important;
-        box-shadow: 0 0 0 3px rgba(76, 92, 219, 0.2) !important;
-        background-color: transparent !important;
-      }
-    }
-
   }
 }
 
-.container {
-  user-select: none;
-
+// 选择组件主体内覆盖antd样式
+.main {
   :global {
     .ant-popover {
       padding-top: 2px;
       user-select: none;
     }
 
-    
     .ant-tabs {
       overflow: visible;
 
@@ -196,44 +218,6 @@
     .ant-tabs-ink-bar {
       height: 5px !important;
       background-color: $primary-color;
-    }
-  }
-}
-
-.selector {
-  position: relative;
-  max-height: 300px;
-  display: flex;
-  flex-direction: column;
-  color: rgba(#181f43, 0.95);
-  font-size: 14px;
-  font-weight: 400;
-
-  .list {
-    flex: 1 1 0;
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
-
-  .loading {
-    z-index: 9;
-  }
-}
-
-.tree {
-  &.in-search {
-    :global {
-      .ant-tree-treenode {
-        display: none;
-      }
-
-      .filter-node {
-        display: flex;
-
-        .ant-tree-title {
-          font-weight: normal !important;
-        }
-      }
     }
   }
 }

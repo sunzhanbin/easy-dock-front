@@ -6,7 +6,7 @@ import useMemoCallback from '@common/hooks/use-memo-callback';
 function TimesDatePicker(props: {
   value?: number;
   onChange?(value?: number): void;
-  disabledDate?(tiem: Moment): boolean;
+  disabledDate?(time: Moment): boolean;
 }) {
   const { value, onChange, disabledDate } = props;
   const handleChange = useMemoCallback((value: Moment | null) => {

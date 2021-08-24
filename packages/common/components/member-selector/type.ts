@@ -1,6 +1,6 @@
 import { User, Dept, Role } from '../../type';
 
-export type { Role } from '../../type';
+export type { User, Dept, Role } from '../../type';
 
 export type ValueType = {
   members: User[];
@@ -12,6 +12,6 @@ export type Key = string | number;
 
 export type TreeData = {
   title: string;
-  key: string | number;
+  key: Key;
   children?: TreeData;
 }[];
