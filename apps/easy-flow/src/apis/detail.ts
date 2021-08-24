@@ -4,7 +4,7 @@ import type { TaskDetailType, FlowMeta, FormMeta, FormValue, FlowInstance, Datas
 
 export async function loadFlowData(
   flowIns: FlowInstance,
-  type: TaskDetailType,
+  type?: TaskDetailType,
 ): Promise<[FormMeta, FormValue, FlowMeta]> {
   return await Promise.all([
     // 表单元数据

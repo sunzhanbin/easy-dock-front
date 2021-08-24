@@ -32,7 +32,7 @@ export type DataType = {
 const loadData = async function (taskId: string): Promise<DataType> {
   const { data } = await runtimeAxios.get(`/process_instance/getInstanceDetailByTaskId?taskId=${taskId}`);
   const flowInstance: DataType['flow']['instance'] = data.processInstance;
-  const [formMeta, formValue, node] = await loadFlowData(flowInstance, data.state);
+  const [formMeta, formValue, node] = await loadFlowData(flowInstance);
 
   return {
     task: {

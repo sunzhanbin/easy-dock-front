@@ -181,7 +181,7 @@ function MemberSelector(props: MemberSelectorProps) {
           visible={showPopover}
           onVisibleChange={setShowPopover}
           destroyTooltipOnHide
-          placement="bottomRight"
+          placement="bottomLeft"
           arrowContent={null}
         >
           <div className={styles.action}>
