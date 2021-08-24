@@ -88,6 +88,7 @@ const Auth = () => {
   const renderContent = useMemoCallback((index) => {
     const project = projectList[index];
     const members = project.powers
+      .filter((power) => power.owner && power.ownerType === OwnerTypeEnum.USER)
       .map((power) => power.owner)
       .map((user) => Object.assign({}, user, { name: (user as any).userName, username: (user as any).userName }));
     return (
@@ -124,6 +125,7 @@ const Auth = () => {
           <div className={styles.projectList}>
             {projectList.map((project, index) => {
               const members = project.powers
+                .filter((power) => power.ownerType === OwnerTypeEnum.USER)
                 .map((power) => power.owner)
                 .map((user) => Object.assign({}, user, { name: (user as any).userName }));
               return (

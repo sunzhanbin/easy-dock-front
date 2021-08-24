@@ -1,3 +1,4 @@
+@import '@common/styles/var.scss';
 .auth-modal {
   height: 600px;
   .close {
@@ -40,7 +41,8 @@
     .auth-list {
       padding-left: 32px;
       overflow-y: auto;
-      .flow-auth {
+      .flow-auth,
+      .page-auth {
         display: flex;
         flex-direction: column;
         padding-top: 16px;
@@ -84,6 +86,44 @@
                     color: rgba(#4c5cdb, 0.8);
                   }
                 }
+              }
+            }
+            :global {
+              .ant-tabs {
+                overflow: visible;
+
+                .ant-tabs-tab {
+                  height: 37px;
+                  padding-top: 0;
+
+                  .ant-tabs-tab-btn {
+                    height: 25px;
+                    line-height: 25px;
+                  }
+                }
+              }
+
+              .ant-tabs-tab {
+                line-height: 20px;
+                color: rgba(#181f43, 0.75);
+                font-size: 14px;
+                font-weight: 400;
+
+                &:hover {
+                  color: rgba($primary-color, 0.75);
+                }
+              }
+
+              .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+                line-height: 25px;
+                color: rgba(#181f43, 0.95);
+                font-size: 18px;
+                font-weight: 500;
+              }
+
+              .ant-tabs-ink-bar {
+                height: 5px !important;
+                background-color: $primary-color;
               }
             }
           }

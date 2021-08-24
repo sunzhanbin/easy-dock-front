@@ -23,7 +23,8 @@ import { ValueType } from '@common/components/member-selector/type';
 
 const ownerTypeMap: { [k in string]: number } = {
   member: OwnerTypeEnum.USER,
-  depart: OwnerTypeEnum.DEPARTMENT,
+  dept: OwnerTypeEnum.DEPARTMENT,
+  role: OwnerTypeEnum.ROLE,
 };
 type AddAuthParams = {
   oldValue: UserOwner[] | DepartOwner[] | RoleOwner[];
@@ -75,7 +76,7 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: () => void }>
     const ownerList = [...newValue];
     oldValue.forEach((val) => {
       const index = ownerList.findIndex((owner) => owner.id === val.id);
-      ownerList.splice(index, 1);
+      index !== -1 && ownerList.splice(index, 1);
     });
     const owner = ownerList[0];
     if (owner && owner.id) {
@@ -95,8 +96,8 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: () => void }>
     const { oldValue, newValue, ownerType, powerType } = data;
     const powerList = [...oldValue];
     newValue.forEach((val) => {
-      const index = powerList.findIndex((power) => power.id === val.id);
-      powerList.splice(index, 1);
+      const index = powerList.findIndex((power) => power.owner.id === val.id);
+      index !== -1 && powerList.splice(index, 1);
     });
     const power = powerList[0];
     if (power && power.id) {
@@ -106,81 +107,85 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: () => void }>
     }
   });
 
-  const handleChange = useMemoCallback((value: ValueType, index, memberList = [], departList = [], roleList = []) => {
-    const { members, depts: departs, roles } = value;
-    const subApp = index > -1 && subAppList[index];
-    const subAppId = (subApp && subApp.id) || '';
-    const powers = (subApp && subApp.powers) || [];
-    const powerType = index === -1 ? AuthEnum.DATA : AuthEnum.VISIT;
-    const resourceKey = index === -1 ? appId : subAppId;
-    const resourceType = index === -1 ? ResourceTypeEnum.APP : ResourceTypeEnum.SUB_APP;
-    // 增加人员权限
-    if (members.length > memberList.length) {
-      addAuth({
-        oldValue: memberList,
-        newValue: members,
-        ownerType: OwnerTypeEnum.USER,
-        powerType,
-        resourceKey,
-        resourceType,
-      });
-      return;
-    }
-    // 移除人员权限
-    if (members.length < memberList.length) {
-      const list = index === -1 ? [...dataPowers] : [...powers];
-      const powerList = list.filter((power) => power.ownerType === OwnerTypeEnum.USER);
-      removeAuth({ oldValue: powerList, newValue: members, ownerType: OwnerTypeEnum.USER, powerType });
-      return;
-    }
-    // 增加部门权限
-    if (departs.length > departList.length) {
-      addAuth({
-        oldValue: departList,
-        newValue: departs,
-        ownerType: OwnerTypeEnum.DEPARTMENT,
-        powerType,
-        resourceKey,
-        resourceType,
-      });
-      return;
-    }
-    // 移除部门权限
-    if (departs.length < departList.length) {
-      const list = index === -1 ? [...dataPowers] : [...powers];
-      const powerList = list.filter((power) => power.ownerType === OwnerTypeEnum.DEPARTMENT);
-      removeAuth({ oldValue: powerList, newValue: departs, ownerType: OwnerTypeEnum.DEPARTMENT, powerType });
-      return;
-    }
-    // 增加角色权限
-    if (roles.length > roleList.length) {
-      addAuth({
-        oldValue: roleList,
-        newValue: roles,
-        ownerType: OwnerTypeEnum.ROLE,
-        powerType,
-        resourceKey,
-        resourceType,
-      });
-      return;
-    }
-    // 移除角色权限
-    if (roles.length < roleList.length) {
-      const list = index === -1 ? [...dataPowers] : [...powers];
-      const powerList = list.filter((power) => power.ownerType === OwnerTypeEnum.ROLE);
-      removeAuth({ oldValue: powerList, newValue: roles, ownerType: OwnerTypeEnum.ROLE, powerType });
-      return;
-    }
-  });
+  const handleChange = useMemoCallback(
+    (oldValue: { members: UserOwner[]; departs: DepartOwner[]; roles: RoleOwner[] }, newValue: ValueType, index) => {
+      const { members: memberList = [], departs: departList = [], roles: roleList = [] } = oldValue;
+      const { members, depts: departs, roles } = newValue;
+      const subApp = index > -1 && subAppList[index];
+      const subAppId = (subApp && subApp.id) || '';
+      const powers = (subApp && subApp.powers) || [];
+      const powerType = index === -1 ? AuthEnum.DATA : AuthEnum.VISIT;
+      const resourceKey = index === -1 ? appId : subAppId;
+      const resourceType = index === -1 ? ResourceTypeEnum.APP : ResourceTypeEnum.SUB_APP;
+      // 增加人员权限
+      if (members.length > memberList.length) {
+        addAuth({
+          oldValue: memberList,
+          newValue: members,
+          ownerType: OwnerTypeEnum.USER,
+          powerType,
+          resourceKey,
+          resourceType,
+        });
+        return;
+      }
+      // 移除人员权限
+      if (members.length < memberList.length) {
+        const list = index === -1 ? [...dataPowers] : [...powers];
+        const powerList = list.filter((power) => power.ownerType === OwnerTypeEnum.USER);
+        removeAuth({ oldValue: powerList, newValue: members, ownerType: OwnerTypeEnum.USER, powerType });
+        return;
+      }
+      // 增加部门权限
+      if (departs.length > departList.length) {
+        addAuth({
+          oldValue: departList,
+          newValue: departs,
+          ownerType: OwnerTypeEnum.DEPARTMENT,
+          powerType,
+          resourceKey,
+          resourceType,
+        });
+        return;
+      }
+      // 移除部门权限
+      if (departs.length < departList.length) {
+        const list = index === -1 ? [...dataPowers] : [...powers];
+        const powerList = list.filter((power) => power.ownerType === OwnerTypeEnum.DEPARTMENT);
+        removeAuth({ oldValue: powerList, newValue: departs, ownerType: OwnerTypeEnum.DEPARTMENT, powerType });
+        return;
+      }
+      // 增加角色权限
+      if (roles.length > roleList.length) {
+        addAuth({
+          oldValue: roleList,
+          newValue: roles,
+          ownerType: OwnerTypeEnum.ROLE,
+          powerType,
+          resourceKey,
+          resourceType,
+        });
+        return;
+      }
+      // 移除角色权限
+      if (roles.length < roleList.length) {
+        const list = index === -1 ? [...dataPowers] : [...powers];
+        const powerList = list.filter((power) => power.ownerType === OwnerTypeEnum.ROLE);
+        removeAuth({ oldValue: powerList, newValue: roles, ownerType: OwnerTypeEnum.ROLE, powerType });
+        return;
+      }
+    },
+  );
   const renderContent = useMemoCallback(
-    (index: number, members: UserOwner[], departs: DepartOwner[], roles?: RoleOwner[]) => {
+    (index: number, members: UserOwner[], departs: DepartOwner[], roles: RoleOwner[]) => {
       return (
         <Selector
           className={styles.selector}
           value={{ members, depts: departs, roles: roles || [] }}
           projectId={+projectId}
+          strictDept={true}
           onChange={(value) => {
-            handleChange(value, index, members, departs, roles);
+            handleChange({ members, departs, roles }, value, index);
           }}
         ></Selector>
       );
@@ -202,7 +207,7 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: () => void }>
         <div className={styles.title}>
           <div className={styles.name}>{name}</div>
           <Popover
-            content={renderContent(index, members, departs)}
+            content={renderContent(index, members, departs, roles)}
             getPopupContainer={(c) => c}
             trigger="click"
             destroyTooltipOnHide
