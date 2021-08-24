@@ -1,4 +1,4 @@
-import { filedRule as FieldRule, FieldType } from './index';
+import { fieldRule as FieldRule, FieldType } from './index';
 import { DataConfig } from '@type/api';
 
 export enum NodeType {

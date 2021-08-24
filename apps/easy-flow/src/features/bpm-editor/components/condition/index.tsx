@@ -3,14 +3,14 @@ import { Tooltip, Button } from 'antd';
 import classnames from 'classnames';
 import RuleForm from '@/features/bpm-editor/components/rule-form';
 import { Icon } from '@common/components';
-import { filedRule, FormField } from '@/type';
+import { fieldRule, FormField } from '@/type';
 import styles from './index.module.scss';
 
 interface EditProps {
   data: Array<FormField>;
   className?: string;
-  value?: filedRule[][];
-  onChange?: (value: filedRule[][]) => void;
+  value?: fieldRule[][];
+  onChange?: (value: fieldRule[][]) => void;
   loadDataSource?: (id: string) => Promise<{ key: string; value: string }[] | { data: { data: string[] } }>;
 }
 
@@ -60,7 +60,7 @@ const Condition = ({ className, data, value, onChange, loadDataSource }: EditPro
     onChange && onChange(list);
   }, [ruleList, onChange]);
   const handleRuleChange = useCallback(
-    (blockIndex: number, ruleIndex: number, rule: filedRule) => {
+    (blockIndex: number, ruleIndex: number, rule: fieldRule) => {
       const list = [...ruleList];
       const result = list.map((ruleBlock, index) => {
         if (index === blockIndex) {
@@ -78,7 +78,7 @@ const Condition = ({ className, data, value, onChange, loadDataSource }: EditPro
   return (
     <div className={classnames(styles.condition, className ? className : '')}>
       <div className={styles.ruleList}>
-        {ruleList.map((ruleBlock: filedRule[], index: number) => {
+        {ruleList.map((ruleBlock: fieldRule[], index: number) => {
           if (ruleBlock.length === 0) {
             return null;
           }
@@ -86,7 +86,7 @@ const Condition = ({ className, data, value, onChange, loadDataSource }: EditPro
             <div key={index}>
               {index !== 0 && <div className={styles.or}>或</div>}
               <div className={styles.ruleBlock}>
-                {ruleBlock.map((rule: filedRule, ruleIndex: number) => {
+                {ruleBlock.map((rule: fieldRule, ruleIndex: number) => {
                   return (
                     <div className={styles.rule} key={ruleIndex}>
                       <RuleForm

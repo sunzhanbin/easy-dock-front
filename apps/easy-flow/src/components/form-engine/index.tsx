@@ -3,7 +3,7 @@ import { Form, Row, Col, FormInstance } from 'antd';
 import { Rule } from 'antd/lib/form';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import useLoadComponents from '@/hooks/use-load-components';
-import { AllComponentType, Datasource, filedRule, FormChangeRule } from '@type';
+import { AllComponentType, Datasource, fieldRule, FormChangeRule } from '@type';
 import { FieldAuthsMap, AuthType } from '@type/flow';
 import { FormMeta, FormValue } from '@type/detail';
 import { analysisFormChangeRule } from '@/utils';
@@ -49,9 +49,9 @@ const FormDetail = React.forwardRef(function FormDetail(
     if (changeRuleList.length === 0) {
       return [];
     }
-    const fieldRuleList: filedRule[][][] = [];
+    const fieldRuleList: fieldRule[][][] = [];
     changeRuleList.forEach((rule) => {
-      fieldRuleList.push(rule.filedRule);
+      fieldRuleList.push(rule.fieldRule);
     });
     const list = fieldRuleList.flat(3).map((rule) => rule.fieldId);
     const set = new Set(list);
@@ -131,7 +131,7 @@ const FormDetail = React.forwardRef(function FormDetail(
       changeFieldList.includes(fieldNameMap[changedFieldId])
     ) {
       changeRuleList.forEach((rule, index) => {
-        const result = analysisFormChangeRule(rule!.filedRule, formValues, componentIdMap);
+        const result = analysisFormChangeRule(rule!.fieldRule, formValues, componentIdMap);
         const showComponents = rule?.showComponents || [];
         const hideComponents = rule?.hideComponents || [];
         if (result) {

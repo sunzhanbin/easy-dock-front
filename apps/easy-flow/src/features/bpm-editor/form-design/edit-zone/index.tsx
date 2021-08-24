@@ -21,10 +21,10 @@ const EditZone = () => {
   useEffect(() => {
     setTimeout(() => {
       const formDesign = store.getState().formDesign;
-      const filedType = formDesign.selectedField?.split('_')[0] || '';
-      if (filedType && formDesign.schema) {
-        const editConfig = formDesign.schema[filedType as FieldType]?.config;
-        const baseInfo = formDesign.schema[filedType as FieldType]?.baseInfo;
+      const fieldType = formDesign.selectedField?.split('_')[0] || '';
+      if (fieldType && formDesign.schema) {
+        const editConfig = formDesign.schema[fieldType as FieldType]?.config;
+        const baseInfo = formDesign.schema[fieldType as FieldType]?.baseInfo;
         setEditList(editConfig as SchemaConfigItem[]);
         setTitle(baseInfo?.name as string);
       }

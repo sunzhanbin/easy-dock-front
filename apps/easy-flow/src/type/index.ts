@@ -162,7 +162,7 @@ export type ErrorItem = {
   content: string;
 };
 
-export type filedRule = {
+export type fieldRule = {
   fieldId: string;
   symbol: string;
   fieldType?: string;
@@ -170,7 +170,7 @@ export type filedRule = {
 };
 // 值改变时规则
 export type FormChangeRule = {
-  filedRule: filedRule[][];
+  fieldRule: fieldRule[][];
   showComponents: string[];
   hideComponents: string[];
 };

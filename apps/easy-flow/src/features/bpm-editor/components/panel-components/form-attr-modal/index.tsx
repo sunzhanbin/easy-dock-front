@@ -35,7 +35,7 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
       return {
         mode: 1,
         ruleType: 1,
-        ruleValue: rule.formChangeRule?.filedRule,
+        ruleValue: rule.formChangeRule?.fieldRule,
         showComponents: rule.formChangeRule?.showComponents,
         hideComponents: rule.formChangeRule?.hideComponents,
       };

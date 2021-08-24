@@ -1,7 +1,7 @@
 import { memo, useMemo, useCallback, useState, useEffect } from 'react';
 import { Form, Select, Input, InputNumber } from 'antd';
 import classnames from 'classnames';
-import { filedRule, FormField } from '@/type';
+import { fieldRule, FormField } from '@/type';
 import { symbolMap, dynamicMap } from '@/utils';
 import { Icon } from '@common/components';
 import MultiText from '@/features/bpm-editor/components/multi-text';
@@ -59,10 +59,10 @@ const symbolListMap = {
 type RuleFormProps = {
   components: Array<any>;
   className?: string;
-  rule: filedRule;
+  rule: fieldRule;
   blockIndex: number;
   ruleIndex: number;
-  onChange?: (blockIndex: number, ruleIndex: number, rule: filedRule) => void;
+  onChange?: (blockIndex: number, ruleIndex: number, rule: fieldRule) => void;
   loadDataSource?: (id: string) => Promise<{ key: string; value: string }[] | { data: { data: string[] } }>;
 };
 
@@ -138,7 +138,7 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
   const handleFinish = useCallback(() => {
     const values = form.getFieldsValue();
     if (rule.fieldId !== values.fieldId) {
-      let newRule: filedRule = Object.assign({}, values, {
+      let newRule: fieldRule = Object.assign({}, values, {
         symbol: undefined,
         value: undefined,
         fieldType: values.fieldId.split('_')[0],
@@ -150,7 +150,7 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
       return;
     }
     if (rule.symbol !== values.symbol) {
-      let newRule: filedRule = Object.assign({}, values, { value: undefined, fieldType: values.fieldId.split('_')[0] });
+      let newRule: fieldRule = Object.assign({}, values, { value: undefined, fieldType: values.fieldId.split('_')[0] });
       if (selectComponent) {
         newRule = Object.assign({}, newRule, { fieldType: selectComponent!.type });
       }
@@ -158,7 +158,7 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
       return;
     }
     if (values.value !== undefined && rule.value !== values.value) {
-      let newRule: filedRule = Object.assign({}, values, { fieldType: values.fieldId.split('_')[0] });
+      let newRule: fieldRule = Object.assign({}, values, { fieldType: values.fieldId.split('_')[0] });
       if (selectComponent) {
         newRule = Object.assign({}, newRule, { fieldType: selectComponent!.type });
       }

@@ -1,4 +1,4 @@
-import { filedRule, FormField } from '@/type';
+import { fieldRule, FormField } from '@/type';
 import moment from 'moment';
 
 export { default as axios, runtimeAxios, builderAxios } from './axios';
@@ -112,7 +112,7 @@ export function timeDiff(milliseconds: number) {
 
 // 格式化单个条件value
 export function formatRuleValue(
-  rule: filedRule,
+  rule: fieldRule,
   field: FormField,
 ): { name: string | undefined; symbol: string; value?: string } {
   const { symbol, value } = rule;
@@ -439,7 +439,7 @@ function analysisOptionRule(symbol: string, value: string | string[], formValue:
 }
 // 解析单个条件是否匹配
 export function analysisRule(
-  rule: filedRule,
+  rule: fieldRule,
   formValues: { [k in string]: any },
   map: { [k in string]: string },
 ): boolean {
@@ -472,7 +472,7 @@ export function analysisRule(
 }
 // 解析单个条件块是否匹配
 export function analysisRuleBlock(
-  ruleBlock: filedRule[],
+  ruleBlock: fieldRule[],
   formValues: { [k in string]: any },
   map: { [k in string]: string },
 ): boolean {
@@ -482,7 +482,7 @@ export function analysisRuleBlock(
 
 // 解析表单值改变时规则
 export function analysisFormChangeRule(
-  fieldRuleList: filedRule[][],
+  fieldRuleList: fieldRule[][],
   formValues: { [k in string]: any },
   map: { [k in string]: string },
 ): boolean {

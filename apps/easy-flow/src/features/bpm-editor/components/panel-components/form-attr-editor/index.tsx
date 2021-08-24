@@ -23,7 +23,7 @@ const FormAttrEditor = () => {
   //   (rule: FormRuleItem) => {
   //     let text = '';
   //     if (rule.type === 'change') {
-  //       const condition = rule!.formChangeRule!.filedRule;
+  //       const condition = rule!.formChangeRule!.fieldRule;
   //       const showComponentList = rule!.formChangeRule!.showComponents || [];
   //       const hideComponentList = rule!.formChangeRule!.hideComponents || [];
   //       const showComponents = showComponentList.map((id) => byId[id].label);
@@ -79,7 +79,7 @@ const FormAttrEditor = () => {
         rule = {
           type: 'change',
           formChangeRule: {
-            filedRule: rules.ruleValue,
+            fieldRule: rules.ruleValue,
             showComponents: rules.showComponents,
             hideComponents: rules.hideComponents,
           },
@@ -149,7 +149,7 @@ const FormAttrEditor = () => {
         <div className={styles.content}>
           {rules.map((item: FormRuleItem, index: number) => {
             if (item.type === 'change') {
-              const condition = item!.formChangeRule!.filedRule;
+              const condition = item!.formChangeRule!.fieldRule;
               const showComponentList = item!.formChangeRule!.showComponents || [];
               const hideComponentList = item!.formChangeRule!.hideComponents || [];
               const showComponents = showComponentList.map((id) => byId[id]?.label || id);
