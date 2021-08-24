@@ -1,15 +1,19 @@
-import { memo, useEffect, useState } from 'react';
+import { memo, useEffect, useState, useRef } from 'react';
 import { Location } from 'history';
-import { Form, Switch, Checkbox, Button } from 'antd';
+import { Form, Switch, Checkbox } from 'antd';
 import classnames from 'classnames';
-import { builderAxios } from '@utils';
-import { MemberSelector, Loading } from '@common/components';
+import { MemberSelector, MemberSelectorProps, Loading, AsyncButton } from '@common/components';
+import { builderAxios, runtimeAxios } from '@utils';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { useSubAppDetail } from '@app/app';
+import { Role, Member, Dept } from '@type';
 import { TipType } from '@type/subapp';
 import styles from './index.module.scss';
 
+type MembersConfig = NonNullable<MemberSelectorProps['value']>;
+
 interface ExtendConfig {
+  members: MembersConfig;
   openVisit: boolean;
   messageConfig: {
     enableTodo: boolean;
@@ -23,27 +27,41 @@ function SubAppExtend() {
   const { data } = useSubAppDetail();
   const [loading, setLoading] = useState(true);
   const projectId = data?.app.project.id;
-  const handleSubmit = useMemoCallback((values: ExtendConfig) => {
-    // builderAxios
+  const subappId = data?.id;
+  const handleSubmit = useMemoCallback(() => {
+    console.log(form.getFieldsValue());
   });
 
   useEffect(() => {
-    console.log(form);
-  }, [form]);
+    if (!subappId) return;
 
-  useEffect(() => {
-    if (projectId) {
+    (async () => {
       setLoading(true);
-      // builderAxios
-    }
-  }, [projectId]);
+
+      try {
+        const [members] = await Promise.all([fetMembers(subappId)]);
+
+        form.setFieldsValue({
+          members,
+          openVisit: true,
+          messageConfig: {
+            enableDone: true,
+            enableTodo: true,
+            noticeChannels: [1, 3],
+          },
+        });
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [subappId, form]);
 
   if (loading) {
     return <Loading />;
   }
 
   return (
-    <Form form={form} layout="vertical" className={styles.form} onFinish={handleSubmit}>
+    <Form form={form} layout="vertical" className={styles.form}>
       <label className={classnames(styles['horizontal-item'], styles['open-visit'])}>
         <span className={styles.text}>所有人可访问</span>
         <Form.Item name="openVisit" noStyle valuePropName="checked">
@@ -51,7 +69,7 @@ function SubAppExtend() {
         </Form.Item>
       </label>
 
-      <Form.Item label={<div className={styles.label}>流程访问权限设置</div>} name="correlationMemberConfig">
+      <Form.Item label="流程访问权限设置" name="members">
         <MemberSelector projectId={projectId} />
       </Form.Item>
 
@@ -88,9 +106,9 @@ function SubAppExtend() {
         </Checkbox.Group>
       </Form.Item>
 
-      <Button className={styles.submit} htmlType="submit" type="primary">
+      <AsyncButton className={styles.submit} onClick={handleSubmit} type="primary" size="large">
         保存
-      </Button>
+      </AsyncButton>
     </Form>
   );
 }
@@ -98,3 +116,39 @@ function SubAppExtend() {
 export default memo(SubAppExtend, (prevProps: { location: Location }, nextProps: { location: Location }) => {
   return prevProps.location.pathname !== nextProps.location.pathname;
 });
+
+async function fetMembers(subappId: string | number): Promise<MembersConfig> {
+  return runtimeAxios
+    .get<{ data: { id: number; ownerType: 1 | 2 | 3; owner: any }[] }>(`/subapp/${subappId}/powers`)
+    .then(({ data }) => {
+      const members: Member[] = [];
+      const depts: Dept[] = [];
+      const roles: Role[] = [];
+
+      data.forEach((item) => {
+        if (item.ownerType === 1) {
+          members.push({
+            id: item.owner.id,
+            name: item.owner.userName,
+            avatar: item.owner.avatar,
+          });
+        } else if (item.ownerType === 2) {
+          roles.push({
+            id: item.owner.id,
+            name: item.owner.name,
+          });
+        } else if (item.ownerType === 3) {
+          depts.push({
+            id: item.owner.id,
+            name: item.owner.name,
+          });
+        }
+      });
+
+      return {
+        members,
+        depts,
+        roles,
+      };
+    });
+}

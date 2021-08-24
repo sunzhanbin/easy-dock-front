@@ -58,9 +58,7 @@ function MemberSelector(props: MemberSelectorProps) {
     }
   };
 
-  return (
-    <Selector projectId={subAppDetail?.app.project.id} value={showValue} onChange={handleChange} strictDept={false} />
-  );
+  return <Selector projectId={subAppDetail?.app.project.id} value={showValue} onChange={handleChange} strictDept />;
 }
 
 export default memo(MemberSelector);

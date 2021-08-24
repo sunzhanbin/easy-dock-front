@@ -1,6 +1,6 @@
 import { Rule } from 'antd/lib/form';
 
-export type { User, Dept } from '@common/type';
+export type { User, Dept, Role } from '@common/type';
 
 export type FieldType = 'Select' | 'Input' | 'Textarea' | 'Radio' | 'Checkbox' | 'Date' | 'InputNumber' | 'DescText';
 

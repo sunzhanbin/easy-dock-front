@@ -5,13 +5,13 @@ import { Icon, Image } from '../../components';
 import useMemoCallback from '../../hooks/use-memo-callback';
 import memberDefaultAvatar from './avatars/member-default-avatar.png';
 import departDefaultAvatar from './avatars/depart-default-avatar.png';
-import { ValueType } from './type';
+import { ValueType, Key } from './type';
 import Selector from './selector';
 import styles from './index.module.scss';
 
 export type MemberType = 'dept' | 'member' | 'role';
 interface MemberProps {
-  data: { name: string; avatar?: string; id: number | string };
+  data: { name: string; avatar?: string; id: Key };
   onDelete?(id: this['data']['id']): void;
   editable?: boolean;
   children?: ReactNode;
@@ -39,7 +39,7 @@ interface MemberListProps {
   depts?: ValueType['depts'];
   roles?: ValueType['roles'];
   editable?: boolean;
-  onDelete?(id: number | string, tpye: MemberType): void;
+  onDelete?(id: Key, tpye: MemberType): void;
   children?: ReactNode;
   className?: string;
 }
@@ -94,6 +94,8 @@ export interface MemberSelectorProps {
   projectId?: number;
   selectorWrapperClass?: string;
   strictDept?: boolean;
+  onDelete?(id: string | number, type: MemberType): void;
+  listClass?: string;
 }
 
 const defaultValue: ValueType = {
@@ -103,7 +105,7 @@ const defaultValue: ValueType = {
 };
 
 function MemberSelector(props: MemberSelectorProps) {
-  const { value, onChange, children, projectId, strictDept, selectorWrapperClass } = props;
+  const { value, onChange, children, projectId, strictDept, selectorWrapperClass, onDelete, listClass } = props;
   const [showPopover, setShowPopover] = useState(false);
   const [localValue, setLocalValue] = useState<ValueType>(value || defaultValue);
   const popoverContentContainerRef = useRef<HTMLDivElement>(null);
@@ -121,7 +123,7 @@ function MemberSelector(props: MemberSelectorProps) {
     }
   });
 
-  const handleDeleteMember = useMemoCallback((id: number, type: MemberType) => {
+  const handleDeleteMember = useMemoCallback((id: Key, type: MemberType) => {
     if (!onChange) return;
 
     let key: keyof ValueType;
@@ -134,6 +136,10 @@ function MemberSelector(props: MemberSelectorProps) {
       key = 'roles';
     } else {
       return null as never;
+    }
+
+    if (onDelete) {
+      onDelete(id, type);
     }
 
     onChange({
@@ -172,6 +178,7 @@ function MemberSelector(props: MemberSelectorProps) {
         onDelete={handleDeleteMember}
         depts={showValue.depts}
         roles={showValue.roles}
+        className={listClass}
         editable
       >
         <Popover
