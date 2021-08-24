@@ -49,6 +49,7 @@ const EditorHeader: FC = () => {
   useConfirmLeave(process.env.NODE_ENV === 'development' ? false : dirty, showConfirm);
 
   const flowDesignPath = `${match.url}/flow-design`;
+  const extendPath = `${match.url}/extend`;
   const formDesignPath = useMemo(() => {
     return `${match.url}/form-design`;
   }, [match]);
@@ -121,6 +122,14 @@ const EditorHeader: FC = () => {
     }
   }, [dirty, history, showConfirm]);
 
+  const disableFlowDesignLink = useMemo(() => {
+    if (pathName === formDesignPath && layout.length === 0) return true;
+
+    if (pathName === flowDesignPath) return true;
+
+    return false;
+  }, [pathName, layout, formDesignPath, flowDesignPath]);
+
   return (
     <div className={styles.header_container} ref={containerRef}>
       <Header backText={appName} className={styles.edit_header} goBack={handleGoBack}>
@@ -143,17 +152,24 @@ const EditorHeader: FC = () => {
             to={`${match.url}/flow-design`}
             activeClassName={styles.active}
             style={{
-              cursor: layout.length === 0 ? 'not-allowed' : 'pointer',
-              color: layout.length === 0 ? 'rgba(24, 31, 67, 0.5)' : 'rgba(24, 31, 67, 0.95)',
+              cursor: disableFlowDesignLink ? 'not-allowed' : 'pointer',
+              color: disableFlowDesignLink ? 'rgba(24, 31, 67, 0.5)' : 'rgba(24, 31, 67, 0.95)',
             }}
             onClick={(e) => {
-              if (layout.length === 0) {
+              if (disableFlowDesignLink) {
                 e.preventDefault();
               }
             }}
           >
             <span className={styles.number}>02</span>
             <span>流程设计</span>
+          </NavLink>
+          <div className={styles.separator}>
+            <Icon className={styles.iconfont} type="jinru" />
+          </div>
+          <NavLink className={styles.step} replace={true} to={extendPath} activeClassName={styles.active}>
+            <span className={styles.number}>03</span>
+            <span>扩展功能</span>
           </NavLink>
         </div>
         <div className={styles.operation}>
@@ -179,9 +195,13 @@ const EditorHeader: FC = () => {
               上一步
             </Button>
           )}
-          <Button type="primary" ghost className={styles.save} size="large" onClick={handleSave}>
-            保存
-          </Button>
+
+          {pathName !== extendPath && (
+            <Button type="primary" ghost className={styles.save} size="large" onClick={handleSave}>
+              保存
+            </Button>
+          )}
+
           {pathName === formDesignPath && (
             <Button
               type="primary"

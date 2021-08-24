@@ -1,0 +1,42 @@
+@import '@common/styles/var.scss';
+
+.form {
+  padding: 32px;
+  padding-right: 200px;
+  margin-left: calc(50% - 200px);
+
+  .open-visit {
+    margin-bottom: 24px;
+
+    .text {
+      font-weight: 500;
+    }
+  }
+
+  .horizontal-item {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+
+    .text {
+      margin-right: 10px;
+    }
+  }
+
+  .submit {
+    margin-top: 24px;
+  }
+
+  :global {
+    .ant-form-item-label {
+      font-weight: 500;
+    }
+
+    .ant-checkbox-group {
+      .ant-checkbox-wrapper {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
