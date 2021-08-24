@@ -1,11 +1,14 @@
 import { memo, useEffect, useState, useMemo, useCallback } from 'react';
 import CompAttrEditor from '@/features/bpm-editor/components/panel-components/comp-attr-editor';
 import FormAttrEditor from '@/features/bpm-editor/components/panel-components/form-attr-editor';
-import { store } from '@app/store';
 import { editProps } from '../formdesign-slice';
 import { FieldType, SchemaConfigItem } from '@/type';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { componentPropsSelector, selectedFieldSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
+import {
+  componentPropsSelector,
+  formDesignSelector,
+  selectedFieldSelector,
+} from '@/features/bpm-editor/form-design/formzone-reducer';
 import { Tabs } from 'antd';
 import styles from './index.module.scss';
 
@@ -14,13 +17,13 @@ const { TabPane } = Tabs;
 const EditZone = () => {
   const dispatch = useAppDispatch();
   const selectedField = useAppSelector(selectedFieldSelector);
+  const formDesign = useAppSelector(formDesignSelector);
   const byId = useAppSelector(componentPropsSelector);
   const [title, setTitle] = useState<string>('');
   const [editList, setEditList] = useState<SchemaConfigItem[]>([]);
   const [activeKey, setActiveKey] = useState<string>('1');
   useEffect(() => {
     setTimeout(() => {
-      const formDesign = store.getState().formDesign;
       const fieldType = formDesign.selectedField?.split('_')[0] || '';
       if (fieldType && formDesign.schema) {
         const editConfig = formDesign.schema[fieldType as FieldType]?.config;
@@ -31,7 +34,7 @@ const EditZone = () => {
     }, 0);
     // 0915临时版本
     selectedField ? setActiveKey('1') : setActiveKey('1');
-  }, [selectedField, byId, setActiveKey]);
+  }, [selectedField, byId, formDesign, setActiveKey]);
   const onSave = useCallback(
     (values, isValidate) => {
       dispatch(

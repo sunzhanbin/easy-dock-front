@@ -165,3 +165,46 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
     isShowTip && message.success('保存成功!');
   },
 );
+
+export const moveUpAction = createAsyncThunk<void, { id: string; rowIndex: number }, { state: RootState }>(
+  'component/moveUp',
+  async ({ id, rowIndex }, { getState, dispatch }) => {
+    dispatch(moveUp({ id }));
+    const { formDesign } = getState();
+    const rowList = formDesign.layout;
+    const componentMap = formDesign.byId;
+    const currentRow = rowList[rowIndex - 1];
+    const nextRow = rowList[rowIndex];
+    // 当前行重新布局
+    currentRow.forEach((id) => {
+      const config = Object.assign({}, componentMap[id], { colSpace: currentRow.length === 2 ? '2' : '1' });
+      dispatch(editProps({ id, config }));
+    });
+    // 如果有下一行，重新布局
+    nextRow &&
+      nextRow.forEach((id) => {
+        const config = Object.assign({}, componentMap[id], {
+          colSpace: nextRow.length === 1 ? '4' : nextRow.length === 2 ? '2' : '1',
+        });
+        dispatch(editProps({ id, config }));
+      });
+  },
+);
+export const moveDownAction = createAsyncThunk<void, { id: string; rowIndex: number }, { state: RootState }>(
+  'component/moveUp',
+  async ({ id, rowIndex }, { getState, dispatch }) => {
+    dispatch(moveDown({ id }));
+    const { formDesign } = getState();
+    const rowList = formDesign.layout;
+    const componentMap = formDesign.byId;
+    const componentIdList = rowList[rowIndex];
+    const length = componentIdList.length;
+    // 当前行重新布局
+    componentIdList.forEach((id) => {
+      const config = Object.assign({}, componentMap[id], { colSpace: length === 1 ? '4' : length === 2 ? '2' : '1' });
+      dispatch(editProps({ id, config }));
+    });
+    // 下移之后一定是独占一行
+    dispatch(editProps({ id, config: Object.assign({}, componentMap[id], { colSpace: '4' }) }));
+  },
+);

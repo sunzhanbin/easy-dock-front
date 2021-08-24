@@ -120,8 +120,8 @@ const reducers = {
     state.isDirty = true;
     return state;
   },
-  moveUp(state: FormDesign, action: PayloadAction<{ id: string }>) {
-    const { id } = action.payload;
+  moveUp(state: FormDesign, action: PayloadAction<{ id: string; rowIndex?: number }>) {
+    const { id, rowIndex } = action.payload;
     let [row, col] = locateById(id, state.layout);
     if (!state.byId[id] || row === 0) return state;
     let rowLayout = state.layout[row];
@@ -250,6 +250,9 @@ const reducers = {
     return state;
   },
 };
+export const formDesignSelector = createSelector([(state: RootState) => state.formDesign], (formDesign) => {
+  return formDesign;
+});
 
 export const configSelector = createSelector(
   [
@@ -336,3 +339,6 @@ export const {
   setErrors,
   setFormRules,
 } = reducers;
+function dispatch(arg0: FormDesign) {
+  throw new Error('Function not implemented.');
+}
