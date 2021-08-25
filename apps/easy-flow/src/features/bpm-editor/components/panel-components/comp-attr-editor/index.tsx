@@ -1,4 +1,4 @@
-import { memo, useEffect, Fragment, useMemo } from 'react';
+import { memo, useEffect, Fragment, useMemo, ReactNode } from 'react';
 import { Form, Select, Input, Switch, Radio, Checkbox, InputNumber } from 'antd';
 import SelectOptionList from '../select-option-list';
 import SelectDefaultOption from '../select-default-option';
@@ -9,6 +9,7 @@ import { Store } from 'antd/lib/form/interface';
 import styles from './index.module.scss';
 import { useAppSelector } from '@/app/hooks';
 import { errorSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
+import useMemoCallback from '@common/hooks/use-memo-callback';
 import { Icon } from '@common/components';
 
 const { Option } = Select;
@@ -26,6 +27,30 @@ const options = [
   { label: '1', value: '4' },
 ];
 
+const componentMap: { [k in string]: (props: { [k in string]: any }) => ReactNode } = {
+  Input: (props) => <Input {...props} size="large" />,
+};
+
+const FormItemWrap = (props: SchemaConfigItem & { children: ReactNode }) => {
+  const { key, label, direction, type, range, placeholder, required, requiredMessage, rules, children } = props;
+  return (
+    <Form.Item
+      label={label}
+      name={key}
+      labelCol={{ span: direction === 'vertical' ? 24 : 6 }}
+      labelAlign="left"
+      required={required}
+      rules={
+        rules
+          ? [...rules, { required: required, message: requiredMessage }]
+          : [{ required: required, message: requiredMessage }]
+      }
+    >
+      {children}
+    </Form.Item>
+  );
+};
+
 const CompAttrEditor = (props: CompAttrEditorProps) => {
   const { config, initValues, componentId, onSave } = props;
   const [form] = Form.useForm();
@@ -39,6 +64,26 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
     onFinish(form.getFieldsValue());
   };
 
+  const renderComponent = useMemoCallback((data: SchemaConfigItem & { children: ReactNode }) => {
+    const { key, label, direction, type, range, placeholder, required, requiredMessage, rules, children } = data;
+    return (
+      <Form.Item
+        label={label}
+        name={key}
+        labelCol={{ span: direction === 'vertical' ? 24 : 6 }}
+        labelAlign="left"
+        required={required}
+        rules={
+          rules
+            ? [...rules, { required: required, message: requiredMessage }]
+            : [{ required: required, message: requiredMessage }]
+        }
+      >
+        {children}
+      </Form.Item>
+    );
+  });
+
   useEffect(() => {
     if (errorIdList.includes(componentId)) {
       form.validateFields();
@@ -50,12 +95,17 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
   useEffect(() => {
     form.setFieldsValue(initValues);
   }, [initValues, form]);
+
   return (
     <div className={styles.container}>
       <Form form={form} name="form_editor" initialValues={initValues} onFinish={onFinish} onValuesChange={handleChange}>
         {config.map(({ key, label, direction, type, range, placeholder, required, requiredMessage, rules }) => {
+          const component = componentMap[type]
           return (
             <Fragment key={key}>
+              {
+                
+              }
               {type === 'Input' && (
                 <Form.Item
                   label={label}

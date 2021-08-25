@@ -13,6 +13,7 @@ import Card from './subapp-card';
 import AppModel from './app-model';
 import AuthModal from './auth-modal';
 import { AppInfo } from '@/schema/app';
+import { AppAuthParams, assignAppAuth } from '@/api/auth';
 import { FlowMicroApp, MAIN_CONTENT_CLASSNAME } from '@/consts';
 
 const AppDetail: FC = () => {
@@ -41,6 +42,15 @@ const AppDetail: FC = () => {
     },
     [appId, history],
   );
+  const handleAssignAppAuth = useMemoCallback((value: AppAuthParams) => {
+    assignAppAuth(value)
+      .then((res) => {
+        console.info(res);
+      })
+      .finally(() => {
+        setShowAuthModal(false);
+      });
+  });
   const handleCrateSubApp = useCallback(() => {
     setShowAppModal(true);
   }, [setShowAppModal]);
@@ -162,9 +172,7 @@ const AppDetail: FC = () => {
           onClose={() => {
             setShowAuthModal(false);
           }}
-          onOk={() => {
-            setShowAuthModal(false);
-          }}
+          onOk={handleAssignAppAuth}
         />
       )}
     </div>

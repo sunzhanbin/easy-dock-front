@@ -37,16 +37,17 @@ export enum SubAppTypeEnum {
 }
 
 export type UserOwner = {
-  id: number; //登录名
-  avatar: string; // 头像
-  username: string; // 中文名
+  id: number | string; //登录名
+  avatar?: string; // 头像
+  username?: string; // 中文名
+  userName?: string;
   name: string;
 };
 export type DepartOwner = {
-  id: number;
-  code: string;
+  id: number | string;
+  code?: string;
   name: string;
-  parentId: number;
+  parentId?: number;
 };
 export type RoleOwner = {
   id: number | string;

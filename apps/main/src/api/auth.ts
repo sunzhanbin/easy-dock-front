@@ -12,7 +12,7 @@ export type AssignAuthParams = {
   resourceKey: string;
   resourceType: number;
 };
-// 分配资源权限
+// 分配单个资源权限
 export function assignAuth(params: AssignAuthParams) {
   return runtimeAxios.post('/privilege/assign', params);
 }
@@ -21,9 +21,27 @@ export type RevokeAuthParams = {
   ownerType: number;
   power: number;
 };
-// 回收资源权限
+// 回收单个资源权限
 export function revokeAuth(params: RevokeAuthParams) {
   return runtimeAxios.delete('/privilege/revoke', { data: params });
+}
+export type Privilege = {
+  ownerKey: string;
+  ownerType: number;
+  power: number;
+};
+export type SubAppAuthParams = {
+  id: string;
+  privileges: Privilege[];
+};
+export type AppAuthParams = {
+  id: string;
+  dataPrivileges: Privilege[];
+  subapps: SubAppAuthParams[];
+};
+// 分配应用资源权限
+export function assignAppAuth(params: AppAuthParams) {
+  return runtimeAxios.post('/privilege/assign/app', params);
 }
 // 获取应用的访问权限
 export function fetchSubAppPowers(id: string) {
