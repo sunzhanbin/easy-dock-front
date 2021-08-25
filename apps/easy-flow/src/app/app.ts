@@ -96,14 +96,15 @@ export const save = createAsyncThunk<void, void>('subapp/save', async (_, { disp
 
     dispatch(setLoading(true));
 
-    message.success('保存成功');
-
     const subappId = subapp.data!.id;
     const { visits, config = {} } = subapp.extend || {};
-    Promise.all([changeVisits(visits, subappId), changeMeta(config, subappId)]);
+
+    await Promise.all([changeVisits(visits, subappId), changeMeta(config, subappId)]);
 
     dispatch(setDirty(false));
     dispatch(setApp(Object.assign({}, subapp.data, { openVisit: config.openVisit }, { meta: config.meta })));
+
+    message.success('保存成功');
   } catch (e) {
     console.error(e);
 
