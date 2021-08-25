@@ -16,7 +16,7 @@ const FormZone: FC<{}> = () => {
     },
     [dispatch],
   );
-  const [{ canDrop, isOver }, drop] = useDrop(
+  const [, drop] = useDrop(
     () => ({
       accept: 'toolItem',
       collect: (monitor) => ({

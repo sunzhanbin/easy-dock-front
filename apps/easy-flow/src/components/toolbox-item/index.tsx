@@ -1,5 +1,4 @@
 import { FC, memo, useCallback } from 'react';
-import { store } from '@app/store';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { configSelector, formDesignSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 import { comAdded, comInserted } from '../../features/bpm-editor/form-design/formdesign-slice';
@@ -18,7 +17,7 @@ const ToolBoxItem: FC<{ icon: string; displayName: string; type: FieldType }> = 
   const dispatch = useAppDispatch();
   const configMap = useAppSelector(configSelector);
   const formDesign = useAppSelector(formDesignSelector);
-  const [{ isDragging }, drag] = useDrag(
+  const [, drag] = useDrag(
     () => ({
       type: 'toolItem',
       item: { rowIndex: -1, id: type },

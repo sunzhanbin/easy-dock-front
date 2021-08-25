@@ -45,7 +45,7 @@ const TaskCenter: FC<{}> = () => {
   }, [appId, isShowDrawer]);
   useEffect(() => {
     appId && dispatch(loadApp(appId));
-  }, [appId]);
+  }, [appId, dispatch]);
   return (
     <div className={styles.container}>
       <div className={styles.header}>

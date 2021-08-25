@@ -41,7 +41,7 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: (value: AppAu
   const [subAppVisitorList, setSubAppVisitorList] = useState<SubAppVisitor[]>([]);
   const fetchAppList = useMemoCallback(() => {
     setLoading(true);
-    fetchSubAppPowers(appId + '')
+    fetchSubAppPowers(String(appId))
       .then((res) => {
         setDataPowers(res.data.dataPowers);
         setSubAppList(res.data.subappPowers);

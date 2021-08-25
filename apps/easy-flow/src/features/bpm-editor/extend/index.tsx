@@ -1,9 +1,9 @@
-import { memo, useEffect, useState, useRef } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { Location } from 'history';
 import { Form, Switch, Checkbox } from 'antd';
 import classnames from 'classnames';
 import { MemberSelector, MemberSelectorProps, Loading, AsyncButton } from '@common/components';
-import { builderAxios, runtimeAxios } from '@utils';
+import { runtimeAxios } from '@utils';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { useSubAppDetail } from '@app/app';
 import { Role, Member, Dept } from '@type';

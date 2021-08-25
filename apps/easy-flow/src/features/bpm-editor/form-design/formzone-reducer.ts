@@ -121,7 +121,7 @@ const reducers = {
     return state;
   },
   moveUp(state: FormDesign, action: PayloadAction<{ id: string; rowIndex?: number }>) {
-    const { id, rowIndex } = action.payload;
+    const { id } = action.payload;
     let [row, col] = locateById(id, state.layout);
     if (!state.byId[id] || row === 0) return state;
     let rowLayout = state.layout[row];
@@ -339,6 +339,3 @@ export const {
   setErrors,
   setFormRules,
 } = reducers;
-function dispatch(arg0: FormDesign) {
-  throw new Error('Function not implemented.');
-}

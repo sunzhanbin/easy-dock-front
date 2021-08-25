@@ -74,14 +74,14 @@ const FormDetail = React.forwardRef(function FormDetail(
   // 数据库字段名和控件id映射
   const fieldNameMap = useMemo(() => {
     const map: { [k in string]: string } = {};
-    data.components.map((comp) => {
+    data.components.forEach((comp) => {
       map[comp.config.fieldName] = comp.config.id;
     });
     return map;
   }, [data]);
   const componentIdMap = useMemo(() => {
     const map: { [k in string]: string } = {};
-    data.components.map((comp) => {
+    data.components.forEach((comp) => {
       map[comp.config.id] = comp.config.fieldName;
     });
     return map;

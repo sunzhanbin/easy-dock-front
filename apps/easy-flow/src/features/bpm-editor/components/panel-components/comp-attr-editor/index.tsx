@@ -4,13 +4,13 @@ import SelectOptionList from '../select-option-list';
 import SelectDefaultOption from '../select-default-option';
 import DefaultDate from '../default-date';
 import Editor from '../rich-text';
-import { FormField, SchemaConfigItem } from '@/type';
+import { FormField, rangeItem, SchemaConfigItem } from '@/type';
 import { Store } from 'antd/lib/form/interface';
 import styles from './index.module.scss';
 import { useAppSelector } from '@/app/hooks';
 import { errorSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
-import useMemoCallback from '@common/hooks/use-memo-callback';
 import { Icon } from '@common/components';
+import { Rule } from 'antd/lib/form';
 
 const { Option } = Select;
 
@@ -20,6 +20,16 @@ interface CompAttrEditorProps {
   componentId: string;
   onSave: Function;
 }
+interface ComponentProps {
+  id: string;
+  label: string;
+  type: string;
+  required?: boolean;
+  requiredMessage?: string;
+  rules?: Rule[];
+  children?: ReactNode;
+}
+
 const options = [
   { label: '1/4', value: '1' },
   { label: '1/2', value: '2' },
@@ -28,16 +38,36 @@ const options = [
 ];
 
 const componentMap: { [k in string]: (props: { [k in string]: any }) => ReactNode } = {
-  Input: (props) => <Input {...props} size="large" />,
+  Input: (props) => <Input placeholder={props.placeholder} size="large" />,
+  Textarea: (props) => <Input.TextArea placeholder={props.placeholder} rows={4} size="large" />,
+  Select: (props) => (
+    <Select placeholder={props.placeholder || '请选择'} size="large" suffixIcon={<Icon type="xiala" />}>
+      {props.range &&
+        (props.range as rangeItem[]).map((v) => (
+          <Option value={v.key} key={v.key}>
+            {v.value}
+          </Option>
+        ))}
+    </Select>
+  ),
+  ColSpace: () => <Radio.Group options={options} optionType="button" />,
+  Checkbox: (props) => <Checkbox>{props.label}</Checkbox>,
+  Switch: () => <Switch />,
+  SelectOptionList: () => <SelectOptionList />,
+  SelectDefaultOption: (props) => <SelectDefaultOption id={props.componentId} />,
+  InputNumber: (props) => <InputNumber size="large" className="input_number" placeholder={props.placeholder} />,
+  DefaultDate: (props) => <DefaultDate id={props.componentId} />,
+  Editor: () => <Editor />,
 };
 
-const FormItemWrap = (props: SchemaConfigItem & { children: ReactNode }) => {
-  const { key, label, direction, type, range, placeholder, required, requiredMessage, rules, children } = props;
+const FormItemWrap = (props: ComponentProps) => {
+  const { id, label, required, type, requiredMessage, rules, children } = props;
   return (
     <Form.Item
       label={label}
-      name={key}
-      labelCol={{ span: direction === 'vertical' ? 24 : 6 }}
+      name={id}
+      valuePropName={type === 'Switch' || type === 'Checkbox' ? 'checked' : 'value'}
+      labelCol={{ span: type === 'Switch' || type === 'Checkbox' ? 0 : 24 }}
       labelAlign="left"
       required={required}
       rules={
@@ -46,7 +76,7 @@ const FormItemWrap = (props: SchemaConfigItem & { children: ReactNode }) => {
           : [{ required: required, message: requiredMessage }]
       }
     >
-      {children}
+      {children ? children : null}
     </Form.Item>
   );
 };
@@ -64,26 +94,6 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
     onFinish(form.getFieldsValue());
   };
 
-  const renderComponent = useMemoCallback((data: SchemaConfigItem & { children: ReactNode }) => {
-    const { key, label, direction, type, range, placeholder, required, requiredMessage, rules, children } = data;
-    return (
-      <Form.Item
-        label={label}
-        name={key}
-        labelCol={{ span: direction === 'vertical' ? 24 : 6 }}
-        labelAlign="left"
-        required={required}
-        rules={
-          rules
-            ? [...rules, { required: required, message: requiredMessage }]
-            : [{ required: required, message: requiredMessage }]
-        }
-      >
-        {children}
-      </Form.Item>
-    );
-  });
-
   useEffect(() => {
     if (errorIdList.includes(componentId)) {
       form.validateFields();
@@ -99,148 +109,21 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
   return (
     <div className={styles.container}>
       <Form form={form} name="form_editor" initialValues={initValues} onFinish={onFinish} onValuesChange={handleChange}>
-        {config.map(({ key, label, direction, type, range, placeholder, required, requiredMessage, rules }) => {
-          const component = componentMap[type]
+        {config.map(({ key, label, type, range, placeholder, required, requiredMessage, rules }) => {
+          const props = { placeholder, range, label, componentId };
+          const component = componentMap[type](props);
           return (
             <Fragment key={key}>
-              {
-                
-              }
-              {type === 'Input' && (
-                <Form.Item
-                  label={label}
-                  name={key}
-                  labelCol={{ span: direction === 'vertical' ? 24 : 6 }}
-                  labelAlign="left"
-                  required={required}
-                  rules={
-                    rules
-                      ? [...rules, { required: required, message: requiredMessage }]
-                      : [{ required: required, message: requiredMessage }]
-                  }
-                >
-                  <Input placeholder={placeholder} size="large" />
-                </Form.Item>
-              )}
-              {type === 'Textarea' && (
-                <Form.Item
-                  label={label}
-                  name={key}
-                  labelCol={{ span: direction === 'vertical' ? 24 : 6 }}
-                  labelAlign="left"
-                  required={required}
-                  rules={[{ required: required, message: requiredMessage }]}
-                >
-                  <Input.TextArea placeholder={placeholder} rows={4} size="large" />
-                </Form.Item>
-              )}
-              {type === 'Select' && (
-                <Form.Item
-                  label={label}
-                  name={key}
-                  labelCol={{ span: direction === 'vertical' ? 24 : 6 }}
-                  labelAlign="left"
-                  required={required}
-                  rules={[{ required: required, message: requiredMessage }]}
-                >
-                  <Select placeholder={placeholder || '请选择'} size="large" suffixIcon={<Icon type="xiala" />}>
-                    {range &&
-                      range.map((v) => (
-                        <Option value={v.key} key={v.key}>
-                          {v.value}
-                        </Option>
-                      ))}
-                  </Select>
-                </Form.Item>
-              )}
-              {type === 'ColSpace' && (
-                <Form.Item
-                  label={label}
-                  name={key}
-                  labelCol={{ span: direction === 'vertical' ? 24 : 6 }}
-                  labelAlign="left"
-                >
-                  <Radio.Group options={options} optionType="button" />
-                </Form.Item>
-              )}
-              {type === 'Checkbox' && (
-                <Form.Item
-                  label=""
-                  name={key}
-                  labelCol={{ span: direction === 'vertical' ? 0 : 0 }}
-                  labelAlign="left"
-                  valuePropName="checked"
-                >
-                  <Checkbox>{label}</Checkbox>
-                </Form.Item>
-              )}
-              {type === 'Switch' && (
-                <Form.Item
-                  label={label}
-                  name={key}
-                  colon={false}
-                  labelCol={{ span: direction === 'vertical' ? 0 : 0 }}
-                  labelAlign="left"
-                  valuePropName="checked"
-                >
-                  <Switch></Switch>
-                </Form.Item>
-              )}
-              {type === 'SelectOptionList' && (
-                <Form.Item
-                  label={label}
-                  name={key}
-                  colon={false}
-                  labelCol={{ span: direction === 'vertical' ? 24 : 6 }}
-                  labelAlign="left"
-                >
-                  <SelectOptionList />
-                </Form.Item>
-              )}
-              {type === 'SelectDefaultOption' && (
-                <Form.Item
-                  label={label}
-                  name={key}
-                  colon={false}
-                  labelCol={{ span: direction === 'vertical' ? 24 : 6 }}
-                  labelAlign="left"
-                >
-                  <SelectDefaultOption id={componentId} />
-                </Form.Item>
-              )}
-              {type === 'InputNumber' && (
-                <Form.Item
-                  label={label}
-                  name={key}
-                  colon={false}
-                  labelCol={{ span: direction === 'vertical' ? 24 : 6 }}
-                  labelAlign="left"
-                >
-                  <InputNumber size="large" className="input_number" placeholder={placeholder} />
-                </Form.Item>
-              )}
-              {type === 'DefaultDate' && (
-                <Form.Item
-                  label={label}
-                  name={key}
-                  colon={false}
-                  labelCol={{ span: direction === 'vertical' ? 24 : 6 }}
-                  labelAlign="left"
-                >
-                  <DefaultDate id={componentId} />
-                </Form.Item>
-              )}
-              {type === 'Editor' && (
-                <Form.Item
-                  label={label}
-                  name={key}
-                  colon={false}
-                  labelCol={{ span: direction === 'vertical' ? 24 : 6 }}
-                  labelAlign="left"
-                >
-                  <Editor />
-                </Form.Item>
-              )}
+              <FormItemWrap
+                id={key}
+                label={label as string}
+                type={type}
+                required={required}
+                requiredMessage={requiredMessage}
+                rules={rules}
+              >
+                {component}
+              </FormItemWrap>
             </Fragment>
           );
         })}
