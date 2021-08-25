@@ -1,4 +1,4 @@
-export type User = {
+export type Member = {
   name: string;
   id: number | string;
   avatar?: string;

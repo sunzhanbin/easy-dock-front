@@ -124,6 +124,10 @@ function MemberSelector(props: MemberSelectorProps) {
   });
 
   const handleDeleteMember = useMemoCallback((id: Key, type: MemberType) => {
+    if (onDelete) {
+      onDelete(id, type);
+    }
+
     if (!onChange) return;
 
     let key: keyof ValueType;
@@ -136,10 +140,6 @@ function MemberSelector(props: MemberSelectorProps) {
       key = 'roles';
     } else {
       return null as never;
-    }
-
-    if (onDelete) {
-      onDelete(id, type);
     }
 
     onChange({

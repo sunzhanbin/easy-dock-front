@@ -1,9 +1,9 @@
-import { User, Dept, Role } from '../../type';
+import { Member, Dept, Role } from '../../type';
 
-export type { User, Dept, Role } from '../../type';
+export type { Member, Dept, Role } from '../../type';
 
 export type ValueType = {
-  members: User[];
+  members: Member[];
   depts: Dept[];
   roles: Role[];
 };
