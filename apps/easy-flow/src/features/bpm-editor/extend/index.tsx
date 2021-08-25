@@ -44,7 +44,7 @@ function SubAppExtend() {
       </label>
 
       <Form.Item label="流程访问权限设置" name="visits">
-        <MemberSelector projectId={subapp.data?.app.project.id} />
+        <MemberSelector projectId={subapp.data?.app.project.id} strictDept />
       </Form.Item>
 
       <Form.Item label="消息设置">
