@@ -4,6 +4,7 @@ import PreviewModal from '@components/preview-model';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import useConfirmLeave from '@common/hooks/use-confirm-leave';
 import { useHistory, useRouteMatch, NavLink, useLocation, useParams } from 'react-router-dom';
+import { save as saveExtend } from '@app/app';
 import { save as saveFlow, setDirty as setFlowDirty } from '../flow-design/flow-slice';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { AsyncButton, confirm, Icon } from '@common/components';
@@ -61,7 +62,8 @@ const EditorHeader: FC = () => {
       history.replace(formDesignPath);
     }
   }, [pathName, history, formDesignPath, flowDesignPath]);
-  const handleSave = useCallback(async () => {
+
+  const handleSave = useMemoCallback(async () => {
     if (pathName === formDesignPath) {
       return await dispatch(saveForm({ subAppId: bpmId, isShowTip: true, isShowErrorTip: true }));
     }
@@ -69,7 +71,12 @@ const EditorHeader: FC = () => {
     if (pathName === flowDesignPath) {
       return await dispatch(saveFlow({ subappId: bpmId, showTip: true }));
     }
-  }, [pathName, dispatch, formDesignPath, flowDesignPath, bpmId]);
+
+    if (pathName === extendPath) {
+      return await dispatch(saveExtend());
+    }
+  });
+
   const handleNext = useCallback(() => {
     if (pathName === formDesignPath) {
       history.replace(flowDesignPath);

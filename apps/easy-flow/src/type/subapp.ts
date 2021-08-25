@@ -31,6 +31,14 @@ export type SubApp = {
       name: string;
     };
   };
+  openVisit?: boolean;
+  meta?: {
+    messageConfig: {
+      enableTodo: boolean;
+      enableDone: boolean;
+      noticeChannels: TipType[];
+    };
+  };
 };
 
 export enum TipType {
