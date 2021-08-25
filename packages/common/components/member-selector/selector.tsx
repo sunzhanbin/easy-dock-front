@@ -71,7 +71,7 @@ function Selector(props: SelectorProps) {
 
   return (
     <SelectorContext.Provider value={{ projectId, wrapperClass: className }}>
-      <div className={styles.main}>
+      <div className={styles['selector-wrapper']}>
         <Tabs defaultActiveKey={defaultActiveKey}>
           <TabPane tab="成员" key="member">
             <MemberSelector value={value.members} onChange={handleMembersChange} fetchUser={fetchUser} />
