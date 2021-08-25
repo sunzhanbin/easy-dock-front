@@ -35,7 +35,7 @@ export default memo(function Main() {
   const isAdmin = useMemo(() => {
     const power = user.info?.power || 0;
     return (power & RoleEnum.ADMIN) === RoleEnum.ADMIN;
-  }, [user, RoleEnum]);
+  }, [user]);
   const fetchProjectList = useMemoCallback(async () => {
     setFetching(true);
 

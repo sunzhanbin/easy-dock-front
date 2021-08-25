@@ -205,13 +205,13 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: (value: AppAu
 
   useEffect(() => {
     fetchAppList();
-  }, []);
+  }, [fetchAppList]);
   useEffect(() => {
     if (dataPowers.length > 0) {
       const visitor = getVisitor(dataPowers);
       setDataVisitor(visitor);
     }
-  }, [dataPowers]);
+  }, [dataPowers, getVisitor]);
   useEffect(() => {
     if (subAppList.length > 0) {
       const subAppVisitorList = subAppList.map((subApp) => {
@@ -221,7 +221,7 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: (value: AppAu
       });
       setSubAppVisitorList(subAppVisitorList);
     }
-  }, [subAppList]);
+  }, [subAppList, getVisitor]);
   return (
     <Modal
       className={styles['auth-modal']}

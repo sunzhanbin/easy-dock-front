@@ -36,7 +36,7 @@ const Auth = () => {
   useEffect(() => {
     setLoading(true);
     getProjectList();
-  }, []);
+  }, [getProjectList]);
 
   const fetchUser = useMemoCallback(async (data: { name: string; page: number }) => {
     const memberResponse = await fetchAllUser({ index: data.page, size: 20, keyword: data.name });
@@ -111,7 +111,7 @@ const Auth = () => {
       {loading && <Loading className={styles.loading} />}
       <div className={styles.projectAuth}>
         <div className={styles.header}>
-          <img src={projectImage} alt="image" className={styles.image} />
+          <img src={projectImage} alt="img" className={styles.image} />
           <div className={styles.title}>
             <div className={styles.name}>项目管理员</div>
             <div className={styles.text}>为项目添加管理员，管理员可管理对应项目下的所有功能及数据权限</div>

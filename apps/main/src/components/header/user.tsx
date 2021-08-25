@@ -31,7 +31,7 @@ function HeaderUser() {
   const isAdmin = useMemo(() => {
     const power = user.info?.power || 0;
     return (power & RoleEnum.ADMIN) === RoleEnum.ADMIN;
-  }, [user, RoleEnum]);
+  }, [user]);
   const dropownOverlay = useMemo(() => {
     return (
       <Menu>
