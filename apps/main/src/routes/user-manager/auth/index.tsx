@@ -28,6 +28,7 @@ const Auth = () => {
     const powers = projectList[index].powers || [];
     const power = powers.find((power) => id === (power.owner as any).id);
     if (power && power.id) {
+      setLoading(true);
       revokeAuth({ id: power.id, ownerType: OwnerTypeEnum.USER, power: AuthEnum.ADMIN }).then(() => {
         getProjectList();
       });

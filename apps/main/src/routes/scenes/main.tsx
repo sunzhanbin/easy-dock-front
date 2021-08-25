@@ -36,6 +36,12 @@ export default memo(function Main() {
     const power = user.info?.power || 0;
     return (power & RoleEnum.ADMIN) === RoleEnum.ADMIN;
   }, [user]);
+  // 当前角色是否是项目管理员
+  const isProjectManager = useMemo(() => {
+    const power = user.info?.power || 0;
+    return (power & RoleEnum.PROJECT_MANAGER) === RoleEnum.PROJECT_MANAGER;
+  }, [user]);
+
   const fetchProjectList = useMemoCallback(async () => {
     setFetching(true);
 
@@ -273,14 +279,23 @@ export default memo(function Main() {
       ) : (
         <div className={styles.empty}>
           <img src={emptyImage} alt="empty" />
-          <div className={styles.desc}>暂无项目，来创建一个吧</div>
-          <Popover content={<Form formRef={formRef} />} placement="top" title="新增项目" onOk={handleAddProjectSubmit}>
-            <div>
-              <Button size="large" type="primary" icon={<Icon type="xinzengjiacu" />}>
-                创建项目
-              </Button>
-            </div>
-          </Popover>
+          <div className={styles.desc}>
+            {isAdmin || isProjectManager ? '暂无项目，来创建一个吧' : '您没有权限查看项目,请联系系统管理员!'}
+          </div>
+          {(isAdmin || isProjectManager) && (
+            <Popover
+              content={<Form formRef={formRef} />}
+              placement="top"
+              title="新增项目"
+              onOk={handleAddProjectSubmit}
+            >
+              <div>
+                <Button size="large" type="primary" icon={<Icon type="xinzengjiacu" />}>
+                  创建项目
+                </Button>
+              </div>
+            </Popover>
+          )}
         </div>
       )}
 
