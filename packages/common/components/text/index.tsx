@@ -1,17 +1,28 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { Tooltip } from 'antd';
+import { Tooltip, TooltipProps } from 'antd';
 import classnames from 'classnames';
 import styles from './index.module.scss';
 
-function Text(props: any) {
+interface TextProps {
+  className?: string;
+  text?: string;
+  placement?: TooltipProps['placement'];
+  children?: React.ReactNode;
+  zIndex?: number;
+  getContainer?: TooltipProps['getTooltipContainer'] | false;
+}
+
+function Text(props: TextProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { className, getContainer, text, placement = 'top', children, zIndex = 3000 } = props;
   const [showTooltip, setShowTooltip] = useState(false);
 
-  const getPopupContainer = useMemo(() => {
+  const getTooltipContainer: TooltipProps['getTooltipContainer'] = useMemo(() => {
+    // 插入body
     if (getContainer === false) return undefined;
 
-    return getContainer || (() => containerRef.current);
+    // 不传时插入父级
+    return getContainer || ((c) => c);
   }, [getContainer]);
 
   const handleMouseEnter = useCallback(() => {
@@ -46,11 +57,11 @@ function Text(props: any) {
   if (showTooltip) {
     return (
       <Tooltip
-        title={text}
+        title={children || text}
         visible
         zIndex={zIndex}
         placement={placement}
-        getPopupContainer={getPopupContainer}
+        getTooltipContainer={getTooltipContainer}
         destroyTooltipOnHide
       >
         {wraperNode}
