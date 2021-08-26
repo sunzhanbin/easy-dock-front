@@ -90,31 +90,28 @@ const SelectOptionList = (props: editProps) => {
     },
     [content],
   );
-  const fetchFieldNames = useCallback(
-    (appList, selectedKey: string) => {
-      let versionId: number = 0;
-      for (let i = 0, len = appList.length; i < len; i++) {
-        if (appList[i].key === selectedKey) {
-          versionId = appList[i].versionId;
-          break;
-        }
+  const fetchFieldNames = useCallback((appList, selectedKey: string) => {
+    let versionId: number = 0;
+    for (let i = 0, len = appList.length; i < len; i++) {
+      if (appList[i].key === selectedKey) {
+        versionId = appList[i].versionId;
+        break;
       }
-      if (versionId) {
-        axios
-          .get(`/form/version/${versionId}/components`)
-          .then((res) => {
-            const list = res.data
-              .filter((item: { unique: boolean }) => item.unique)
-              .map((item: { field: string; name: string }) => ({ key: item.field, value: item.name }));
-            setComponentList(list);
-          })
-          .catch(() => {
-            setComponentList([]);
-          });
-      }
-    },
-    [setComponentList],
-  );
+    }
+    if (versionId) {
+      axios
+        .get(`/form/version/${versionId}/components`)
+        .then((res) => {
+          const list = res.data
+            .filter((item: { unique: boolean }) => item.unique)
+            .map((item: { field: string; name: string }) => ({ key: item.field, value: item.name }));
+          setComponentList(list);
+        })
+        .catch(() => {
+          setComponentList([]);
+        });
+    }
+  }, []);
   const handleChangeApp = useCallback(
     (e) => {
       setSubAppKey(e as string);

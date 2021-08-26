@@ -69,61 +69,55 @@ const FormAttrEditor = () => {
   // );
   const handleClose = useCallback(() => {
     setShowModal(false);
-  }, [setShowModal]);
-  const handleOk = useCallback(
-    (rules, type, editIndex) => {
-      setShowModal(false);
-      let rule: FormRuleItem;
-      if (rules.mode === 1) {
-        // 值改变时
-        rule = {
-          type: 'change',
-          formChangeRule: {
-            fieldRule: rules.ruleValue,
-            showComponents: rules.showComponents,
-            hideComponents: rules.hideComponents,
-          },
-        };
-      } else if (rules.mode === 2) {
-        //进入表单时
-        rule = {
-          type: 'init',
-        };
-      }
-      if (type === 'add') {
-        setRules((rules) => {
-          const list = [...rules];
-          list.push(rule);
-          return list;
+  }, []);
+  const handleOk = useCallback((rules, type, editIndex) => {
+    setShowModal(false);
+    let rule: FormRuleItem;
+    if (rules.mode === 1) {
+      // 值改变时
+      rule = {
+        type: 'change',
+        formChangeRule: {
+          fieldRule: rules.ruleValue,
+          showComponents: rules.showComponents,
+          hideComponents: rules.hideComponents,
+        },
+      };
+    } else if (rules.mode === 2) {
+      //进入表单时
+      rule = {
+        type: 'init',
+      };
+    }
+    if (type === 'add') {
+      setRules((rules) => {
+        const list = [...rules];
+        list.push(rule);
+        return list;
+      });
+    } else {
+      setRules((rules) => {
+        return rules.map((item, index) => {
+          if (index === editIndex) {
+            return rule;
+          }
+          return item;
         });
-      } else {
-        setRules((rules) => {
-          return rules.map((item, index) => {
-            if (index === editIndex) {
-              return rule;
-            }
-            return item;
-          });
-        });
-      }
-    },
-    [setShowModal],
-  );
+      });
+    }
+  }, []);
   const handleAddRule = useCallback(() => {
     setType('add');
     setCurrentRule(null);
     setShowModal(true);
-  }, [setType, setCurrentRule, setShowModal]);
-  const handleDeleteRule = useCallback(
-    (index) => {
-      setRules((rules) => {
-        const list = [...rules];
-        list.splice(index, 1);
-        return list;
-      });
-    },
-    [setRules],
-  );
+  }, []);
+  const handleDeleteRule = useCallback((index) => {
+    setRules((rules) => {
+      const list = [...rules];
+      list.splice(index, 1);
+      return list;
+    });
+  }, []);
   const handleEditRule = useCallback(
     (index) => {
       const rule = rules[index];
@@ -132,7 +126,7 @@ const FormAttrEditor = () => {
       setCurrentRule(rule);
       setShowModal(true);
     },
-    [rules, setType, setCurrentRule, setShowModal, setEditIndex],
+    [rules],
   );
   useEffect(() => {
     dispatch(setFormRules({ formRules: rules }));

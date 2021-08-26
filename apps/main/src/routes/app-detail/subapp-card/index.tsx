@@ -191,33 +191,30 @@ const Card: FC<{
       message.success('启用成功!');
       onChange && onChange();
     });
-  }, [id, setIsShowOperation, onChange]);
+  }, [id, onChange]);
   const handleStop = useCallback(() => {
     axios.put('/subapp/status', { id, status: -1 }).then(() => {
       setIsShowOperation(false);
       message.success('停用成功!');
       onChange && onChange();
     });
-  }, [id, setIsShowOperation, onChange]);
-  const handleEdit = useCallback(
-    (e: React.MouseEvent) => {
-      e.stopPropagation();
-      setIsShowOperation(false);
-      const { x = 0 } = containerRef.current?.getBoundingClientRect() as DOMRect;
-      if (document.body.clientWidth - x < 400) {
-        setPosition('right');
-      }
-      setIsShowModel(true);
-    },
-    [setIsShowModel, setIsShowOperation, setPosition],
-  );
+  }, [id, onChange]);
+  const handleEdit = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsShowOperation(false);
+    const { x = 0 } = containerRef.current?.getBoundingClientRect() as DOMRect;
+    if (document.body.clientWidth - x < 400) {
+      setPosition('right');
+    }
+    setIsShowModel(true);
+  }, []);
   const handleDelete = useCallback(() => {
     setIsShowOperation(false);
     axios.delete(`/subapp/${id}`).then(() => {
       message.success('删除成功!');
       onChange && onChange();
     });
-  }, [id, setIsShowOperation, onChange]);
+  }, [id, onChange]);
   const handleOK = useCallback(
     (name) => {
       axios.put('/subapp', { id, name }).then(() => {
@@ -226,7 +223,7 @@ const Card: FC<{
         onChange && onChange();
       });
     },
-    [id, setIsShowModel, onChange],
+    [id, onChange],
   );
 
   return (

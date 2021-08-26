@@ -48,12 +48,9 @@ const EditZone = () => {
     },
     [selectedField, dispatch],
   );
-  const changeTabKey = useCallback(
-    (key) => {
-      setActiveKey(key);
-    },
-    [setActiveKey],
-  );
+  const changeTabKey = useCallback((key) => {
+    setActiveKey(key);
+  }, []);
   const renderTitle = useMemo(() => <div className={styles.edit_title}>{title}</div>, [title]);
   const tabPanelProps = useMemo(() => {
     if (!selectedField) {

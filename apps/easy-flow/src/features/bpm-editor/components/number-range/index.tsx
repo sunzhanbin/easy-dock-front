@@ -31,7 +31,7 @@ const NumberRange = ({ className, value, onChange }: EditProps) => {
         }
       }
     },
-    [setMinNumber, onChange, maxNumber],
+    [maxNumber, onChange],
   );
   const changeMaxNumber = useCallback(
     (e) => {
@@ -42,7 +42,7 @@ const NumberRange = ({ className, value, onChange }: EditProps) => {
         }
       }
     },
-    [minNumber, setMaxNumber, onChange],
+    [minNumber, onChange],
   );
   return (
     <div className={classnames(styles.numberRange, className ? className : '')}>

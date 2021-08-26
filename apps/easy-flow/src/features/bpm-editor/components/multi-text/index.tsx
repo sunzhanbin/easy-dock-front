@@ -22,7 +22,7 @@ const MultiText = ({ className, value, onChange }: EditProps) => {
       });
     }
     setText('');
-  }, [text, setText]);
+  }, [text]);
 
   const handleDelete = useCallback(
     (index) => {

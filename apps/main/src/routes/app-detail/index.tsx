@@ -50,7 +50,7 @@ const AppDetail: FC = () => {
   });
   const handleCrateSubApp = useCallback(() => {
     setShowAppModal(true);
-  }, [setShowAppModal]);
+  }, []);
   const handleShowAuthModal = useMemoCallback(() => {
     setShowAuthModal(true);
   });

@@ -4,6 +4,7 @@ import classnames from 'classnames';
 import { fieldRule, FormField } from '@/type';
 import { symbolMap, dynamicMap } from '@/utils';
 import { Icon } from '@common/components';
+import useMemoCallback from '@common/hooks/use-memo-callback';
 import MultiText from '@/features/bpm-editor/components/multi-text';
 import NumberRange from '@/features/bpm-editor/components/number-range';
 import TimesDatePicker from '@/features/bpm-editor/components/date-picker';
@@ -111,21 +112,18 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
         });
       }
     },
-    [loadDataSource, setOptionList],
+    [loadDataSource],
   );
-  const changeField = useCallback(
-    (id) => {
-      setTimeout(() => {
-        form.setFieldsValue({ fieldId: id, symbol: undefined, value: undefined });
-      }, 0);
-      const fieldId = form.getFieldValue('fieldId');
-      const component = componentList.find((item) => item.id === fieldId);
-      setSelectComponent(component);
-      const fieldType = component && (component.type as string);
-      setDataSource(fieldId, fieldType);
-    },
-    [form, componentList, setDataSource],
-  );
+  const changeField = useMemoCallback((id) => {
+    setTimeout(() => {
+      form.setFieldsValue({ fieldId: id, symbol: undefined, value: undefined });
+    }, 0);
+    const fieldId = form.getFieldValue('fieldId');
+    const component = componentList.find((item) => item.id === fieldId);
+    setSelectComponent(component);
+    const fieldType = component && (component.type as string);
+    setDataSource(fieldId, fieldType);
+  });
   const changeSymbol = useCallback(
     (symbol) => {
       const fieldId = form.getFieldValue('fieldId');

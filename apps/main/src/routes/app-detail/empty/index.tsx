@@ -15,13 +15,10 @@ const EmptyDetail: FC<{ appId: string }> = ({ appId }) => {
   const history = useHistory();
   const [canEdit, setCanEdit] = useState<boolean>(false);
   const [activeName, setActiveName] = useState<string>('');
-  const handleClose = useCallback(
-    (e) => {
-      e.stopPropagation();
-      setCanEdit(false);
-    },
-    [setCanEdit],
-  );
+  const handleClose = useCallback((e) => {
+    e.stopPropagation();
+    setCanEdit(false);
+  }, []);
   const handleFinish = useCallback(() => {
     form.validateFields().then(({ subAppName }: { subAppName: string }) => {
       axios.post('/subapp', { appId, name: subAppName, type: SubAppTypeEnum.FLOW }).then((res) => {
