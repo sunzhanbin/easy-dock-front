@@ -18,15 +18,19 @@
     & > div {
       color: #fff;
     }
+
     .submit {
-      background: #ffffff;
       color: #4c5cdb;
+      background: #fff;
+
       &:hover {
         color: rgba(76, 92, 219, 0.8);
       }
+
       &:active {
         box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.12);
       }
+
       &:disabled {
         color: rgba(76, 92, 219, 0.5);
       }
@@ -38,6 +42,7 @@
     height: 100%;
     overflow: auto;
   }
+
   .background {
     position: absolute;
     top: 0;
@@ -74,6 +79,7 @@
   flex: 1 1 0;
   background-color: #fff;
   margin-top: 36px;
+
   .form {
     position: relative;
     z-index: 9;
@@ -85,6 +91,7 @@
     border-radius: 2px;
     border-top: 5px solid #06c498;
     overflow-y: auto;
+
     .title {
       margin-bottom: 24px;
       padding-bottom: 24px;
@@ -93,6 +100,7 @@
       color: rgba(#000, 0.85);
       font-size: 24px;
       font-weight: bold;
+
       .image {
         width: 46px;
         margin-right: 12px;

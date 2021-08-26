@@ -1,5 +1,5 @@
-import { FormRuleItem } from '.';
-import type { FillNode, AuditNode } from './flow';
+import { FormRuleItem } from './index';
+import type { FillNode, AuditNode, StartNode } from './flow';
 import { SubApp } from './subapp';
 
 export interface FormMeta {
@@ -34,7 +34,7 @@ export enum TaskDetailType {
   MyTodo = 1,
 }
 
-export type FlowMeta = FillNode | AuditNode;
+export type FlowMeta = FillNode | AuditNode | StartNode;
 
 type User = { name: string; id: string; avatar: string };
 

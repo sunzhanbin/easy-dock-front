@@ -7,7 +7,7 @@ import { AsyncButton, Loading } from '@common/components';
 import { runtimeAxios } from '@utils';
 import { dynamicRoutes } from '@consts';
 import { loadDatasource } from '@apis/detail';
-import { FillNode } from '@type/flow';
+import { StartNode } from '@type/flow';
 import { FormMeta, FormValue, Datasource } from '@type/detail';
 import Form from '@components/form-engine';
 import Header from '@components/header';
@@ -16,7 +16,7 @@ import styles from './index.module.scss';
 import titleImage from '@/assets/title.png';
 
 type DataType = {
-  processMeta: FillNode;
+  processMeta: StartNode;
   formMeta: FormMeta;
   formData: FormValue;
 };
@@ -60,7 +60,7 @@ function StartFlow() {
   useEffect(() => {
     if (!data || !subApp) return;
 
-    loadDatasource(data.formMeta, data.processMeta, subApp.version.id).then((values) => {
+    loadDatasource(data.formMeta, data.processMeta.fieldsAuths, subApp.version.id).then((values) => {
       serDatasource(values);
     });
   }, [data, subApp]);
@@ -97,19 +97,15 @@ function StartFlow() {
     }, 1500);
   });
 
-  const btns = data?.processMeta.btnText;
-
   return (
     <div className={styles.container}>
       {loading && <Loading />}
 
       <Header className={styles.header} backText="发起流程">
         <div className={styles.btns}>
-          {btns?.submit?.enable && (
-            <AsyncButton disabled={!data} className={styles.submit} onClick={handleSubmit} type="primary" size="large">
-              {btns.submit.text || '提交'}
-            </AsyncButton>
-          )}
+          <AsyncButton disabled={!data} className={styles.submit} onClick={handleSubmit} type="primary" size="large">
+            提交
+          </AsyncButton>
         </div>
       </Header>
       <div className={styles.background}>
