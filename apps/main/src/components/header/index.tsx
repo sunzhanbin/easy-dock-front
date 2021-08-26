@@ -18,17 +18,22 @@ export default function AppHeader({ children }: AppHeaderProps) {
   const match = useRouteMatch();
   const user = useAppSelector(userSelector);
   // 是否有权限跳转到构建端,只有超管或者项目管理员、应用管理员才有权限
-  const canGoBuilder = useMemo(() => {
+  const canGoBuilder = useMemo<boolean>(() => {
     if (user && user.info && user.info.power) {
       const { power } = user.info;
-      if (
+      return (
         (power & RoleEnum.ADMIN) === RoleEnum.ADMIN ||
         (power & RoleEnum.PROJECT_MANAGER) === RoleEnum.PROJECT_MANAGER ||
         (power & RoleEnum.APP_MANAGER) === RoleEnum.APP_MANAGER
-      ) {
-        return true;
-      }
-      return false;
+      );
+    }
+    return false;
+  }, [user]);
+  // 是否有权限跳转到应用端,只有正常项目租户才有权限
+  const canGoApp = useMemo(() => {
+    if (user && user.info && user.info.power) {
+      const { power } = user.info;
+      return (power & RoleEnum.TENEMENT) === RoleEnum.TENEMENT;
     }
     return false;
   }, [user]);
@@ -49,12 +54,12 @@ export default function AppHeader({ children }: AppHeaderProps) {
                 <span className={styles.text}>构建端</span>
               </a>
             ) : null
-          ) : (
+          ) : canGoApp ? (
             <a href={ROUTES.INDEX} target="_blank" className={styles.appClient}>
               <Icon type="yingyonduandinglan" className={styles.icon} />
               <span className={styles.text}>应用端</span>
             </a>
-          )}
+          ) : null}
           <UserComponent />
         </div>
       </div>
