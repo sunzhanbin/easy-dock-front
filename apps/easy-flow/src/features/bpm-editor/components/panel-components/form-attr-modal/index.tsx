@@ -2,6 +2,8 @@ import { memo, useCallback, useMemo } from 'react';
 import { Modal, Form, Select } from 'antd';
 import { Icon } from '@common/components';
 import Condition from '@/features/bpm-editor/components/condition';
+import DataApiConfig from '@/features/bpm-editor/components/data-api-config';
+import ResponseWithMap from '@/features/bpm-editor/components/data-api-config/response-with-map';
 import styles from './index.module.scss';
 import { useAppSelector } from '@/app/hooks';
 import { componentPropsSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
@@ -25,6 +27,9 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
   const componentList = useMemo(() => {
     return Object.values(byId).map((item: FormField) => item) || [];
   }, [byId]);
+  const fields = useMemo<{ id: string; name: string }[]>(() => {
+    return componentList.map((component) => ({ id: component.id as string, name: component.label }));
+  }, [componentList]);
   const initFormValues = useMemo(() => {
     // 添加规则
     if (!rule) {
@@ -92,13 +97,20 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
             const mode = getFieldValue('mode');
             if (mode === 2) {
               return (
-                <Form.Item label="选择规则" name="ruleType" className={styles.ruleType}>
-                  <Select suffixIcon={<Icon type="xiala" />} size="large">
-                    <Option key={1} value={1}>
-                      读取数据
-                    </Option>
-                  </Select>
-                </Form.Item>
+                <>
+                  <Form.Item label="选择规则" name="ruleType" className={styles.ruleType}>
+                    <Select suffixIcon={<Icon type="xiala" />} size="large">
+                      <Option key={1} value={1}>
+                        读取数据
+                      </Option>
+                    </Select>
+                  </Form.Item>
+                  <Form.Item name="dataConfig" label="选择要读取数据的接口" className={styles.condition}>
+                    <DataApiConfig name="dataConfig" label="为表单控件匹配请求参数" layout="horizontal" fields={fields}>
+                      <ResponseWithMap label="为表单控件匹配返回参数" />
+                    </DataApiConfig>
+                  </Form.Item>
+                </>
               );
             }
             return (
