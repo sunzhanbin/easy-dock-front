@@ -129,6 +129,7 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: (value: AppAu
           className={styles.selector}
           value={{ members, depts: departs, roles: roles || [] }}
           projectId={+projectId}
+          strictDept
           onChange={(value) => {
             handleChange(value, id);
           }}
