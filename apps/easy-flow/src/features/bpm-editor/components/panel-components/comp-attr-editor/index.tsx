@@ -108,7 +108,14 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
 
   return (
     <div className={styles.container}>
-      <Form form={form} name="form_editor" initialValues={initValues} onFinish={onFinish} onValuesChange={handleChange}>
+      <Form
+        form={form}
+        name="form_editor"
+        autoComplete="off"
+        initialValues={initValues}
+        onFinish={onFinish}
+        onValuesChange={handleChange}
+      >
         {config.map(({ key, label, type, range, placeholder, required, requiredMessage, rules }) => {
           const props = { placeholder, range, label, componentId };
           const component = componentMap[type](props);

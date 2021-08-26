@@ -43,7 +43,7 @@ const EmptyDetail: FC<{ appId: string }> = ({ appId }) => {
         <div className={styles.title}>新建流程子应用</div>
         <div className={styles.tip}>可配置表单、流程、列表</div>
         {canEdit ? (
-          <Form form={form} layout="vertical" className={styles.form} onFinish={handleFinish}>
+          <Form form={form} layout="vertical" autoComplete="off" className={styles.form} onFinish={handleFinish}>
             <Form.Item
               label="子应用名称"
               name="subAppName"

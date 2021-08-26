@@ -34,7 +34,15 @@ const Copy: FC<{}> = () => {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <Form form={form} layout="inline" colon={false} name="copy_form" labelAlign="left" labelCol={{ span: 3.5 }}>
+        <Form
+          form={form}
+          layout="inline"
+          autoComplete="off"
+          colon={false}
+          name="copy_form"
+          labelAlign="left"
+          labelCol={{ span: 3.5 }}
+        >
           <Form.Item label="流程名称" name="name" className="name">
             <Input placeholder="请输入" />
           </Form.Item>

@@ -16,6 +16,7 @@ const Container = styled.div`
   box-shadow: 0px 6px 24px 0px rgba(24, 31, 67, 0.1);
   border-radius: 3px;
   padding: 16px;
+  cursor: default;
   .header {
     display: flex;
     justify-content: space-between;
@@ -145,7 +146,7 @@ const AppModel: FC<{
 
   return (
     <Container
-      className={className}
+      className={classNames(className, 'app-modal')}
       style={containerStyle}
       onClick={(e) => {
         e.stopPropagation();
@@ -158,7 +159,7 @@ const AppModel: FC<{
         </div>
       </div>
       <div className="content">
-        <Form form={form} layout="vertical">
+        <Form form={form} layout="vertical" autoComplete="off">
           <Form.Item
             label="子应用名称"
             name="subAppName"

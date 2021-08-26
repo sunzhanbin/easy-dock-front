@@ -27,7 +27,7 @@ const CardContainer = styled.div`
       width: 100%;
     }
   }
-  .content {
+  & > .content {
     flex: 1;
     padding: 16px;
     background: rgba(24, 39, 67, 0.03);
