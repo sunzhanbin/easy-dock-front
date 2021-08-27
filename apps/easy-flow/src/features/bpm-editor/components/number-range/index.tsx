@@ -1,4 +1,4 @@
-import { memo, useState, useCallback } from 'react';
+import { memo, useState, useCallback, useEffect } from 'react';
 import { InputNumber } from 'antd';
 import classnames from 'classnames';
 import styles from './index.module.scss';
@@ -44,6 +44,12 @@ const NumberRange = ({ className, value, onChange }: EditProps) => {
     },
     [minNumber, onChange],
   );
+  useEffect(() => {
+    if (value) {
+      setMinNumber(value[0]);
+      setMaxNumber(value[1]);
+    }
+  }, [value, setMinNumber, setMaxNumber]);
   return (
     <div className={classnames(styles.numberRange, className ? className : '')}>
       <InputNumber
@@ -51,7 +57,7 @@ const NumberRange = ({ className, value, onChange }: EditProps) => {
         placeholder="最小值"
         size="large"
         max={maxNumber || undefined}
-        defaultValue={minNumber}
+        value={minNumber}
         onChange={changeMinNumber}
       />
       <InputNumber
@@ -59,7 +65,7 @@ const NumberRange = ({ className, value, onChange }: EditProps) => {
         placeholder="最大值"
         size="large"
         min={minNumber || undefined}
-        defaultValue={maxNumber}
+        value={maxNumber}
         onChange={changeMaxNumber}
       />
     </div>

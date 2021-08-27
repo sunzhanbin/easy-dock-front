@@ -55,8 +55,8 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
   }, [rule]);
   // 加载选项数据源
   const loadDataSource = useCallback(
-    (fieldId) => {
-      const component = componentList.find((item) => item.id === fieldId);
+    (fieldName) => {
+      const component = componentList.find((item) => item.fieldName === fieldName);
       const { dataSource } = component as any;
       if (!dataSource) {
         return Promise.resolve(null);
