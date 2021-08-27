@@ -1,4 +1,5 @@
 import { Rule } from 'antd/lib/form';
+import { DataConfig } from './api';
 
 export type { Member, Dept, Role } from '@common/type';
 
@@ -174,18 +175,11 @@ export type FormChangeRule = {
   showComponents: string[];
   hideComponents: string[];
 };
-// 进入表单时规则
-export type FormInitRule = {
-  interfaceName: string;
-  interfaceUrl: string;
-  requestParams: { position: string; name: string; componentName: string }[];
-  responseParams: { name: string; componentName: string }[];
-};
 
 export type FormRuleItem = {
   type: 'change' | 'init';
   formChangeRule?: FormChangeRule;
-  formInitRule?: FormInitRule;
+  formInitRule?: DataConfig;
 };
 
 export type FormDesign = {

@@ -35,8 +35,8 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
     if (!rule) {
       return { mode: 1, ruleType: 1 };
     }
-    // 编辑值改变时规则
     if (rule.type === 'change') {
+      // 编辑值改变时规则
       return {
         mode: 1,
         ruleType: 1,
@@ -44,8 +44,14 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
         showComponents: rule.formChangeRule?.showComponents,
         hideComponents: rule.formChangeRule?.hideComponents,
       };
+    } else if (rule.type === 'init') {
+      // 编辑进入表单时规则
+      return {
+        mode: 2,
+        ruleType: 1,
+        dataConfig: rule.formInitRule,
+      };
     }
-    // TODO 编辑进入表单时规则
   }, [rule]);
   // 加载选项数据源
   const loadDataSource = useCallback(

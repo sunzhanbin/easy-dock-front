@@ -133,7 +133,7 @@ export function formatRuleValue(
     }
   }
   // 数字类型
-  if (fieldType === 'InputNumber') {
+  if (fieldType === 'InputNumber' && value !== undefined) {
     if (symbol === 'range') {
       const [min, max] = value as [number, number];
       return { name, symbol: label, value: `>=${min}且<=${max}` };
@@ -441,7 +441,6 @@ function analysisOptionRule(symbol: string, value: string | string[], formValue:
 export function analysisRule(rule: fieldRule, formValues: { [k in string]: any }): boolean {
   const { fieldName, fieldType = '', symbol, value } = rule;
   const formValue = formValues[fieldName];
-  console.info(formValue);
   // 文本类型
   if (fieldType === 'Input' || fieldType === 'Textarea') {
     return analysisTextRule(symbol, value as string | string[], formValue as string);

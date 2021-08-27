@@ -87,6 +87,7 @@ const FormAttrEditor = () => {
       //进入表单时
       rule = {
         type: 'init',
+        formInitRule: rules.dataConfig,
       };
     }
     if (type === 'add') {
@@ -146,8 +147,14 @@ const FormAttrEditor = () => {
               const condition = item!.formChangeRule!.fieldRule;
               const showComponentList = item!.formChangeRule!.showComponents || [];
               const hideComponentList = item!.formChangeRule!.hideComponents || [];
-              const showComponents = showComponentList.map((id) => byId[id]?.label || id);
-              const hideComponents = hideComponentList.map((id) => byId[id]?.label || id);
+              const showComponents = showComponentList.map((fieldName) => {
+                const component = Object.values(byId).find((comp) => comp.fieldName === fieldName);
+                return component?.label || fieldName;
+              });
+              const hideComponents = hideComponentList.map((fieldName) => {
+                const component = Object.values(byId).find((comp) => comp.fieldName === fieldName);
+                return component?.label || fieldName;
+              });
               if (!condition) {
                 return null;
               }
@@ -208,6 +215,42 @@ const FormAttrEditor = () => {
                     )}
                   </div>
                   {/* </Tooltip> */}
+                  <div className={styles.operation}>
+                    <Tooltip title="编辑">
+                      <span>
+                        <Icon
+                          type="bianji"
+                          className={styles.edit}
+                          onClick={() => {
+                            handleEditRule(index);
+                          }}
+                        />
+                      </span>
+                    </Tooltip>
+                    <Tooltip title="删除">
+                      <span>
+                        <Icon
+                          type="shanchu"
+                          className={styles.delete}
+                          onClick={() => {
+                            handleDeleteRule(index);
+                          }}
+                        />
+                      </span>
+                    </Tooltip>
+                  </div>
+                </div>
+              );
+            } else if (item.type === 'init') {
+              return (
+                <div className={styles.ruleItem} key={index}>
+                  <div className={styles.content}>
+                    <span>当</span>
+                    <span className={styles.fieldName}>进入表单时</span>
+                    <span>读取接口</span>
+                    <span className={styles.fieldName}>{item.formInitRule?.api}</span>
+                    <span>数据</span>
+                  </div>
                   <div className={styles.operation}>
                     <Tooltip title="编辑">
                       <span>
