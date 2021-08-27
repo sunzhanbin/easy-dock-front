@@ -438,13 +438,10 @@ function analysisOptionRule(symbol: string, value: string | string[], formValue:
   return result;
 }
 // 解析单个条件是否匹配
-export function analysisRule(
-  rule: fieldRule,
-  formValues: { [k in string]: any },
-  map: { [k in string]: string },
-): boolean {
-  const { fieldId, fieldType = '', symbol, value } = rule;
-  const formValue = formValues[map[fieldId]];
+export function analysisRule(rule: fieldRule, formValues: { [k in string]: any }): boolean {
+  const { fieldName, fieldType = '', symbol, value } = rule;
+  const formValue = formValues[fieldName];
+  console.info(formValue);
   // 文本类型
   if (fieldType === 'Input' || fieldType === 'Textarea') {
     return analysisTextRule(symbol, value as string | string[], formValue as string);
@@ -471,21 +468,13 @@ export function analysisRule(
   return true;
 }
 // 解析单个条件块是否匹配
-export function analysisRuleBlock(
-  ruleBlock: fieldRule[],
-  formValues: { [k in string]: any },
-  map: { [k in string]: string },
-): boolean {
+export function analysisRuleBlock(ruleBlock: fieldRule[], formValues: { [k in string]: any }): boolean {
   // 且条件,所有单个条件都符合才返回true
-  return ruleBlock.every((rule) => analysisRule(rule, formValues, map));
+  return ruleBlock.every((rule) => analysisRule(rule, formValues));
 }
 
 // 解析表单值改变时规则
-export function analysisFormChangeRule(
-  fieldRuleList: fieldRule[][],
-  formValues: { [k in string]: any },
-  map: { [k in string]: string },
-): boolean {
+export function analysisFormChangeRule(fieldRuleList: fieldRule[][], formValues: { [k in string]: any }): boolean {
   // 或条件,只要有一个条件块符合即返回true
-  return fieldRuleList.some((ruleBlock) => analysisRuleBlock(ruleBlock, formValues, map));
+  return fieldRuleList.some((ruleBlock) => analysisRuleBlock(ruleBlock, formValues));
 }

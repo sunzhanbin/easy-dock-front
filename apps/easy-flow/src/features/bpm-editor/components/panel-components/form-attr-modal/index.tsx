@@ -7,7 +7,7 @@ import ResponseWithMap from '@/features/bpm-editor/components/data-api-config/re
 import styles from './index.module.scss';
 import { useAppSelector } from '@/app/hooks';
 import { componentPropsSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
-import { FormField, FormRuleItem } from '@/type';
+import { fieldRule, FormField, FormRuleItem } from '@/type';
 import { runtimeAxios } from '@/utils/axios';
 
 type modalProps = {
@@ -133,23 +133,23 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
                   }
                 >
                   {({ getFieldValue }) => {
-                    const ruleValue = getFieldValue('ruleValue') || [];
+                    const ruleValue: fieldRule[] = getFieldValue('ruleValue') || [];
                     const hideComponents = getFieldValue('hideComponents') || [];
-                    // 规则中选中的组件id列表
-                    const ruleComponentIdList = ruleValue.flat(1).map((item: { fieldId: string }) => item.fieldId);
-                    const set = new Set(ruleComponentIdList.concat(hideComponents));
-                    const selectIdList = Array.from(set);
+                    // 规则中选中的组件fieldName列表
+                    const ruleComponentFieldNameList = ruleValue.flat(1).map((item) => item.fieldName);
+                    const set = new Set(ruleComponentFieldNameList.concat(hideComponents));
+                    const selectFieldNameList = Array.from(set);
                     // 显示控件的列表要排除规则中已有的组件列表和已选择的隐藏控件
                     let options = [...componentList];
-                    selectIdList.forEach((id) => {
-                      options = options.filter((option) => option.id !== id);
+                    selectFieldNameList.forEach((fieldName) => {
+                      options = options.filter((option) => option.fieldName !== fieldName);
                     });
                     return (
                       <>
                         <Form.Item label="显示控件" name="showComponents" className={styles.showComponents}>
                           <Select suffixIcon={<Icon type="xiala" />} mode="multiple" placeholder="请选择" size="large">
                             {options.map((option) => (
-                              <Option key={option.id} value={option.id!}>
+                              <Option key={option.fieldName} value={option.fieldName!}>
                                 {option.label}
                               </Option>
                             ))}
@@ -164,16 +164,16 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
                         >
                           {({ getFieldValue }) => {
                             const showComponents = getFieldValue('showComponents') || [];
-                            const ruleValue = getFieldValue('ruleValue') || [];
-                            // 规则中选中的组件id列表
-                            const ruleComponentIdList =
-                              ruleValue && ruleValue.flat(1).map((item: { fieldId: string }) => item.fieldId);
-                            const set = new Set(ruleComponentIdList.concat(showComponents));
-                            const selectIdList = Array.from(set);
+                            const ruleValue: fieldRule[] = getFieldValue('ruleValue') || [];
+                            // 规则中选中的组件fieldName列表
+                            const ruleComponentFieldNameList =
+                              ruleValue && ruleValue.flat(1).map((item) => item.fieldName);
+                            const set = new Set(ruleComponentFieldNameList.concat(showComponents));
+                            const selectFieldNameList = Array.from(set);
                             // 隐藏控件的列表要排除规则中已有的组件列表和已选择的显示控件
                             let options = [...componentList];
-                            selectIdList.forEach((id) => {
-                              options = options.filter((option) => option.id !== id);
+                            selectFieldNameList.forEach((fieldName) => {
+                              options = options.filter((option) => option.fieldName !== fieldName);
                             });
                             return (
                               <Form.Item label="隐藏控件" name="hideComponents" className={styles.hideComponents}>
@@ -184,7 +184,7 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
                                   size="large"
                                 >
                                   {options.map((option) => (
-                                    <Option key={option.id} value={option.id!}>
+                                    <Option key={option.fieldName} value={option.fieldName!}>
                                       {option.label}
                                     </Option>
                                   ))}

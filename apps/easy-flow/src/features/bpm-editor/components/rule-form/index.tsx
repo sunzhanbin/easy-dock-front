@@ -71,7 +71,7 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
   const [form] = Form.useForm();
   const initValues = useMemo(() => {
     return {
-      fieldId: rule.fieldId || undefined,
+      fieldName: rule.fieldName || undefined,
       symbol: rule.symbol || undefined,
       value: rule.value || undefined,
     };
@@ -88,17 +88,17 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
             id: item.id!,
             type: item.type,
             format: (item as any).format,
+            fieldName: item.fieldName,
           })) || []
       );
     }
     return [];
   }, [components]);
   const [optionList, setOptionList] = useState<{ key: string; value: string }[]>([]);
-  const [selectComponent, setSelectComponent] = useState<{ id: string; type: string; format: string; label: string }>();
   const setDataSource = useCallback(
-    (fieldId, fieldType) => {
+    (fieldName, fieldType) => {
       if (loadDataSource && (fieldType === 'Select' || fieldType === 'Radio' || fieldType === 'Checkbox')) {
-        loadDataSource(fieldId).then((res) => {
+        loadDataSource(fieldName).then((res) => {
           if (res) {
             // 如果返回的是一个key-value数组,直接赋值给下拉选项
             if (Array.isArray(res)) {
@@ -116,30 +116,29 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
   );
   const changeField = useMemoCallback((id) => {
     setTimeout(() => {
-      form.setFieldsValue({ fieldId: id, symbol: undefined, value: undefined });
+      form.setFieldsValue({ fieldName: id, symbol: undefined, value: undefined });
     }, 0);
-    const fieldId = form.getFieldValue('fieldId');
-    const component = componentList.find((item) => item.id === fieldId);
-    setSelectComponent(component);
+    const fieldName = form.getFieldValue('fieldName');
+    const component = componentList.find((item) => item.fieldName === fieldName);
     const fieldType = component && (component.type as string);
-    setDataSource(fieldId, fieldType);
+    setDataSource(fieldName, fieldType);
   });
   const changeSymbol = useCallback(
     (symbol) => {
-      const fieldId = form.getFieldValue('fieldId');
+      const fieldName = form.getFieldValue('fieldName');
       setTimeout(() => {
-        form.setFieldsValue({ fieldId, symbol, value: undefined });
+        form.setFieldsValue({ fieldName, symbol, value: undefined });
       }, 0);
     },
     [form],
   );
   const handleFinish = useCallback(() => {
     const values = form.getFieldsValue();
-    if (rule.fieldId !== values.fieldId) {
+    let selectComponent = componentList.find((item) => item.fieldName === values.fieldName);
+    if (rule.fieldName !== values.fieldName) {
       let newRule: fieldRule = Object.assign({}, values, {
         symbol: undefined,
         value: undefined,
-        fieldType: values.fieldId.split('_')[0],
       });
       if (selectComponent) {
         newRule = Object.assign({}, newRule, { fieldType: selectComponent!.type });
@@ -148,7 +147,9 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
       return;
     }
     if (rule.symbol !== values.symbol) {
-      let newRule: fieldRule = Object.assign({}, values, { value: undefined, fieldType: values.fieldId.split('_')[0] });
+      let newRule: fieldRule = Object.assign({}, values, {
+        value: undefined,
+      });
       if (selectComponent) {
         newRule = Object.assign({}, newRule, { fieldType: selectComponent!.type });
       }
@@ -156,29 +157,29 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
       return;
     }
     if (values.value !== undefined && rule.value !== values.value) {
-      let newRule: fieldRule = Object.assign({}, values, { fieldType: values.fieldId.split('_')[0] });
+      let newRule: fieldRule = Object.assign({}, values);
       if (selectComponent) {
         newRule = Object.assign({}, newRule, { fieldType: selectComponent!.type });
       }
       onChange && onChange(blockIndex, ruleIndex, newRule);
     }
-  }, [form, blockIndex, ruleIndex, rule, selectComponent, onChange]);
+  }, [form, blockIndex, ruleIndex, rule, componentList, onChange]);
   useEffect(() => {
     if (rule) {
       form.setFieldsValue({
-        fieldId: rule.fieldId || undefined,
+        fieldName: rule.fieldName || undefined,
         symbol: rule.symbol || undefined,
         value: rule.value || undefined,
       });
-      if (rule.fieldId) {
+      if (rule.fieldName) {
         const fieldType = rule.fieldType;
-        setDataSource(rule.fieldId, fieldType);
+        setDataSource(rule.fieldName, fieldType);
       }
     }
   }, [rule, form, setDataSource]);
   const renderSymbol = useCallback(() => {
-    const fieldId = form.getFieldValue('fieldId') || initValues.fieldId;
-    const component = componentList.find((item) => item.id === fieldId);
+    const fieldName = form.getFieldValue('fieldName') || initValues.fieldName;
+    const component = componentList.find((item) => item.fieldName === fieldName);
     const componentType = component && component.type;
     let symbolList: { value: string; label: string }[] = [];
     if (componentType) {
@@ -222,9 +223,9 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
     );
   }, [form, initValues, componentList, changeSymbol]);
   const renderValue = useCallback(() => {
-    const fieldId = form.getFieldValue('fieldId') || initValues.fieldId;
+    const fieldName = form.getFieldValue('fieldName') || initValues.fieldName;
     const symbol = form.getFieldValue('symbol') || initValues.symbol;
-    const component = componentList.find((item) => item.id === fieldId);
+    const component = componentList.find((item) => item.fieldName === fieldName);
     const componentType = component && (component.type as string);
     if (symbol === 'null' || symbol === 'notNull') {
       return null;
@@ -365,16 +366,16 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
       initialValues={initValues}
       onValuesChange={handleFinish}
     >
-      <Form.Item name="fieldId" rules={[{ required: true, message: 'Please input your username!' }]}>
+      <Form.Item name="fieldName" rules={[{ required: true, message: 'Please input your username!' }]}>
         <Select
           placeholder="关联字段"
           size="large"
-          className={styles.fieldId}
+          className={styles.fieldName}
           onChange={changeField}
           suffixIcon={<Icon type="xiala" />}
         >
-          {componentList.map(({ id, label }) => (
-            <Option key={id} value={id} label={label}>
+          {componentList.map(({ fieldName, label }) => (
+            <Option key={fieldName} value={fieldName} label={label}>
               {label}
             </Option>
           ))}

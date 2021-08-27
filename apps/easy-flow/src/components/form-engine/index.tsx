@@ -55,7 +55,7 @@ const FormDetail = React.forwardRef(function FormDetail(
     const list = fieldRuleList
       .filter((item) => item)
       .flat(3)
-      .map((rule) => rule.fieldId);
+      .map((rule) => rule.fieldName);
     const set = new Set(list);
     return Array.from(set);
   }, [changeRuleList]);
@@ -125,15 +125,11 @@ const FormDetail = React.forwardRef(function FormDetail(
       });
     }
     const formValues = form.getFieldsValue();
-    const changedFieldId = Object.keys(changedValues).length > 0 ? Object.keys(changedValues)[0] : '';
+    const changedFieldName = Object.keys(changedValues).length > 0 ? Object.keys(changedValues)[0] : '';
     // 处理表单属性值改变时事件
-    if (
-      changeRuleList.length > 0 &&
-      Object.keys(formValues).length > 0 &&
-      changeFieldList.includes(fieldNameMap[changedFieldId])
-    ) {
+    if (changeRuleList.length > 0 && Object.keys(formValues).length > 0 && changeFieldList.includes(changedFieldName)) {
       changeRuleList.forEach((rule, index) => {
-        const result = analysisFormChangeRule(rule!.fieldRule, formValues, componentIdMap);
+        const result = analysisFormChangeRule(rule!.fieldRule, formValues);
         const showComponents = rule?.showComponents || [];
         const hideComponents = rule?.hideComponents || [];
         if (result) {

@@ -1,6 +1,6 @@
 import { memo, useEffect, useState, useMemo, useCallback } from 'react';
 import CompAttrEditor from '@/features/bpm-editor/components/panel-components/comp-attr-editor';
-// import FormAttrEditor from '@/features/bpm-editor/components/panel-components/form-attr-editor';
+import FormAttrEditor from '@/features/bpm-editor/components/panel-components/form-attr-editor';
 import { editProps } from '../formdesign-slice';
 import { FieldType, SchemaConfigItem } from '@/type';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
@@ -33,7 +33,7 @@ const EditZone = () => {
       }
     }, 0);
     // 0915临时版本
-    selectedField ? setActiveKey('1') : setActiveKey('1');
+    selectedField ? setActiveKey('1') : setActiveKey('2');
   }, [selectedField, byId, formDesign, setActiveKey]);
   const onSave = useCallback(
     (values, isValidate) => {
@@ -71,9 +71,9 @@ const EditZone = () => {
           />
         </TabPane>
         {/* 0915版本暂时隐藏 */}
-        {/* <TabPane tab="表单属性" key="2">
+        <TabPane tab="表单属性" key="2">
           <FormAttrEditor />
-        </TabPane> */}
+        </TabPane>
       </Tabs>
     </div>
   );

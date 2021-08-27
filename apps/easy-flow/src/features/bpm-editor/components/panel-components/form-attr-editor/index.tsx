@@ -1,6 +1,6 @@
 import { memo, useState, useCallback, useEffect } from 'react';
 import { Button, Tooltip } from 'antd';
-import { FormRuleItem } from '@/type';
+import { FormField, FormRuleItem } from '@/type';
 import { formatRuleValue } from '@/utils';
 import { Icon } from '@common/components';
 import FormAttrModal from '../form-attr-modal';
@@ -161,7 +161,9 @@ const FormAttrEditor = () => {
                         <span key={blockIndex}>
                           <span>
                             {ruleBlock.map((rule, ruleIndex) => {
-                              const component = byId[rule.fieldId] || {};
+                              const component =
+                                Object.values(byId).find((component) => component.fieldName === rule.fieldName) ||
+                                ({} as FormField);
                               const formatRule = formatRuleValue(rule, component);
                               return (
                                 <span key={ruleIndex}>

@@ -123,7 +123,10 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
       row.forEach((id: string) => {
         const type = <FieldType>(id.split('_')[0] || '');
         const version = schema[type as FieldType]?.baseInfo.version || '';
-        const componentConfig = schema[type as FieldType]?.config;
+        const componentConfig =
+          type === 'DescText'
+            ? schema[type as FieldType]?.config.concat([{ key: 'fieldName', type: 'Input', isProps: false }]) //富文本也要保存fieldName
+            : schema[type as FieldType]?.config;
         const config: ConfigItem = {
           id,
           type,

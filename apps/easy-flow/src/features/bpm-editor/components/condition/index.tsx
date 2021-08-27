@@ -19,7 +19,7 @@ const Condition = ({ className, data, value, onChange, loadDataSource }: EditPro
     if (value && value.length > 0) {
       return value;
     }
-    return [[{ fieldId: '', symbol: '' }]];
+    return [[{ fieldName: '', symbol: '' }]];
   }, [value]);
   const components = useMemo(() => {
     return data || [];
@@ -30,7 +30,7 @@ const Condition = ({ className, data, value, onChange, loadDataSource }: EditPro
       const result = list.map((ruleBlock, blockIndex) => {
         if (index === blockIndex) {
           const block = [...ruleBlock];
-          block.push({ fieldId: '', symbol: '' });
+          block.push({ fieldName: '', symbol: '' });
           return block;
         }
         return ruleBlock;
@@ -56,7 +56,7 @@ const Condition = ({ className, data, value, onChange, loadDataSource }: EditPro
   );
   const addRuleBlock = useCallback(() => {
     const list = [...ruleList];
-    list.push([{ fieldId: '', symbol: '' }]);
+    list.push([{ fieldName: '', symbol: '' }]);
     onChange && onChange(list);
   }, [ruleList, onChange]);
   const handleRuleChange = useCallback(
