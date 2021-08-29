@@ -11,7 +11,7 @@ import {
 import FormEngine from '@components/form-engine';
 import { Datasource, FormMeta } from '@type/detail';
 import { FieldAuthsMap, AuthType } from '@type/flow';
-import { ComponentConfig, FormField, FormFieldMap, RadioField } from '@/type';
+import { ComponentConfig, FieldType, FormField, FormFieldMap, RadioField } from '@/type';
 import { fetchDataSource } from '@/apis/detail';
 import styles from './index.module.scss';
 import classnames from 'classnames';
@@ -39,7 +39,8 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
     const components: ComponentConfig[] = [];
     Object.keys(byId).forEach((id) => {
       const object = byId[id];
-      const component: ComponentConfig = { config: { type: 'Input', id: '' }, props: { type: 'Input', id: '' } };
+      const type = id.split('_')[0] as FieldType;
+      const component: ComponentConfig = { config: { type, id }, props: { type, id } };
       Object.keys(object).forEach((key) => {
         if (propsKey.includes(key)) {
           component.props[key] = object[key as Key];

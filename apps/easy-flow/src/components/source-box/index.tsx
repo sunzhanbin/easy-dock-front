@@ -107,7 +107,6 @@ const SourceBox: FC<{
     compSources,
     selectedField,
     propList,
-    options,
     handleCopy,
     handleDelete,
     handleMoveDown,

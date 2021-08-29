@@ -4,7 +4,7 @@ import DesignZone from './design-zone';
 import ToolBox from './toolbox';
 import EditZone from './edit-zone';
 import { setLayout, setById, selectField, setIsDirty, setErrors, setFormRules } from './formdesign-slice';
-import { ComponentConfig, ConfigItem, FormFieldMap } from '@/type';
+import { ComponentConfig, ConfigItem, FieldType, FormFieldMap } from '@/type';
 import { useAppDispatch } from '@/app/hooks';
 import { axios } from '@/utils';
 import styles from './index.module.scss';
@@ -26,15 +26,16 @@ const FormDesign: FC<{}> = () => {
         // 解析控件属性配置
         components.forEach(({ config, props }: ComponentConfig) => {
           const { id } = config;
-          const componentConfig: ConfigItem = { type: 'Input', id: '' };
+          const type = id.split('_')[0] as FieldType;
+          const componentConfig: ConfigItem = { type, id };
           const excludeKeys = ['version', 'rules', 'canSubmit'];
+          Object.keys(props).forEach((key) => {
+            componentConfig[key] = props[key];
+          });
           Object.keys(config).forEach((key) => {
             if (!excludeKeys.includes(key)) {
               componentConfig[key] = config[key];
             }
-          });
-          Object.keys(props).forEach((key) => {
-            componentConfig[key] = props[key];
           });
           byId[id as string] = componentConfig;
         });
