@@ -26,8 +26,7 @@ const FormDesign: FC<{}> = () => {
         // 解析控件属性配置
         components.forEach(({ config, props }: ComponentConfig) => {
           const { id } = config;
-          // TODO @王朝传
-          const componentConfig: ConfigItem = {} as any;
+          const componentConfig: ConfigItem = { type: 'Input', id: '' };
           const excludeKeys = ['version', 'rules', 'canSubmit'];
           Object.keys(config).forEach((key) => {
             if (!excludeKeys.includes(key)) {

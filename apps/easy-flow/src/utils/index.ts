@@ -1,4 +1,4 @@
-import { fieldRule, FormField } from '@/type';
+import { DateField, fieldRule, FormField } from '@/type';
 import moment from 'moment';
 
 export { default as axios, runtimeAxios, builderAxios } from './axios';
@@ -142,7 +142,7 @@ export function formatRuleValue(
   }
   // 日期类型
   if (fieldType === 'Date') {
-    const format = (field as any)?.format || 'YYYY-MM-DD';
+    const format = (field as DateField)?.format || 'YYYY-MM-DD';
     if (symbol === 'range') {
       const [start, end] = (value as [number, number]) || [0, 0];
       const startTime = start ? moment(start).format(format) : '';

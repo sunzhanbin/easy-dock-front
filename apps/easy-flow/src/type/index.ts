@@ -1,24 +1,9 @@
 import { Rule } from 'antd/lib/form';
 import { DataConfig } from './api';
+import { FormField, FieldType } from './form';
+export * from './form';
 
 export type { Member, Dept, Role } from '@common/type';
-
-export type FieldType = 'Select' | 'Input' | 'Textarea' | 'Radio' | 'Checkbox' | 'Date' | 'InputNumber' | 'DescText';
-
-export type BaseField = {
-  id: string | undefined;
-  version: string;
-  fieldName: string;
-  label: string;
-  desc: string;
-  required?: boolean;
-  colSpace: 1 | 2 | 3 | 4 | undefined;
-  defaultValue: string | number | undefined;
-  disabled?: boolean;
-  readonly?: boolean;
-  visible?: boolean;
-  value: string | number | null;
-};
 
 export type SchemaConfigItem = {
   key: string;
@@ -95,27 +80,6 @@ export type DataBaseField = {
   dataFilter?: DataFilterCondition[] | null;
 };
 
-export type InputBaseField = {
-  placeholder: string;
-  maxLength: number;
-  allowClear: boolean;
-  bordered: boolean;
-} & BaseField;
-
-export type SingleTextField = {
-  type: 'Input';
-  prefix?: string;
-  suffix?: string;
-  reg?: string;
-} & InputBaseField;
-
-export type MultipleTextField = { type: 'Input.TextArea'; showCount: boolean } & InputBaseField;
-
-export type SelectBaseField = {
-  formLogic: FormLogicBaseField;
-} & DataBaseField &
-  BaseField;
-
 export type OptionMode = 'custom' | 'subapp';
 export type OptionItem = {
   key: string;
@@ -127,33 +91,6 @@ export type SelectOptionItem = {
   subappId?: string;
   fieldName?: string;
 };
-
-export type SelectField = {
-  type: 'Select';
-  allowClear: boolean;
-  showArrow: boolean;
-  showSearch: boolean;
-  multiple: boolean;
-  selectOptionList: SelectOptionItem;
-} & SelectBaseField;
-
-export type DateField = {
-  type: 'Date';
-  format: string;
-  notSelectPassed: boolean;
-} & BaseField;
-
-export type RadioField = {
-  type: 'Radio';
-  optionList: SelectOptionItem;
-} & BaseField;
-
-export type CheckboxField = {
-  type: 'Checkbox';
-  optionList: SelectOptionItem;
-} & BaseField;
-
-export type FormField = SingleTextField | MultipleTextField | SelectField | DateField | RadioField | CheckboxField;
 
 export type FormFieldMap = {
   [k: string]: FormField;
@@ -199,7 +136,7 @@ export type FormDesign = {
 };
 
 export type TConfigItem = {
-  [k: string]: string | number | boolean | undefined | null;
+  [k: string]: any;
 };
 
 export type TConfigMap = {
@@ -221,10 +158,10 @@ export type MemberConfig = {
   members: string[];
 };
 
-export type AllComponentType = SingleTextField | SelectField | DateField | RadioField | CheckboxField;
+export type AllComponentType = FormField;
 
 export type ConfigItem = {
-  [k: string]: string | number | boolean | null | undefined | Object | Array<any>;
+  [k: string]: any;
   type: FieldType;
   label?: string;
   id: string;

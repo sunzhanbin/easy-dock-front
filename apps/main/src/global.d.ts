@@ -3,6 +3,7 @@ declare type User = {
   username: string; // 中文名
   id: number; //登录名
   power?: number; //权限值
+  name?: string;
 };
 
 interface Window {

@@ -11,22 +11,27 @@ import {
 import FormEngine from '@components/form-engine';
 import { Datasource, FormMeta } from '@type/detail';
 import { FieldAuthsMap, AuthType } from '@type/flow';
-import { ComponentConfig } from '@/type';
+import { ComponentConfig, FormField, FormFieldMap, RadioField } from '@/type';
 import { fetchDataSource } from '@/apis/detail';
 import styles from './index.module.scss';
 import classnames from 'classnames';
 import titleImage from '@/assets/title.png';
 
 const propsKey = ['defaultValue', 'showSearch', 'multiple', 'format', 'notSelectPassed'];
+type Key = keyof FormField;
 
 const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, onClose }) => {
   const { name: appName } = useAppSelector(subAppSelector);
   const layout = useAppSelector(layoutSelector);
-  const byId: { [k: string]: any } = useAppSelector(componentPropsSelector);
+  const byId: FormFieldMap = useAppSelector(componentPropsSelector);
   const formRules = useAppSelector(formRulesSelector);
   const [dataSource, setDataSource] = useState<Datasource>({});
   useEffect(() => {
-    fetchDataSource(Object.values(byId)).then((res) => {
+    const components = Object.values(byId).filter((component) => {
+      const { type } = component;
+      return type === 'Radio' || type === 'Checkbox' || type === 'Select';
+    });
+    fetchDataSource(components as RadioField[]).then((res) => {
       setDataSource(res);
     });
   }, [byId]);
@@ -34,13 +39,12 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
     const components: ComponentConfig[] = [];
     Object.keys(byId).forEach((id) => {
       const object = byId[id];
-      // TODO any @王朝传
-      const component: ComponentConfig = { config: {}, props: {} } as any;
+      const component: ComponentConfig = { config: { type: 'Input', id: '' }, props: { type: 'Input', id: '' } };
       Object.keys(object).forEach((key) => {
         if (propsKey.includes(key)) {
-          component.props[key] = (object as any)[key];
+          component.props[key] = object[key as Key];
         } else {
-          component.config[key] = (object as any)[key];
+          component.config[key] = object[key as Key];
         }
       });
       components.push(component);

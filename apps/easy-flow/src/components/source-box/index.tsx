@@ -1,4 +1,4 @@
-import { AllComponentType, FormField, MoveConfig, TConfigItem } from '@/type';
+import { AllComponentType, FormField, MoveConfig, RadioField, TConfigItem } from '@/type';
 import { Tooltip } from 'antd';
 import LabelContent from '../label-content';
 import { Icon } from '@common/components';
@@ -22,12 +22,16 @@ const SourceBox: FC<{
   const dispatch = useAppDispatch();
   const selectedField = useAppSelector(selectedFieldSelector);
   const formDesign = useAppSelector(formDesignSelector);
-  const options = useDataSource((config as any)?.dataSource);
+  const options = useDataSource((config as RadioField)?.dataSource);
   // 获取组件源码
-  const compSources: any = useLoadComponents(type as AllComponentType['type']) as Component;
+  const compSources = useLoadComponents(type as AllComponentType['type']) as Component;
   const propList = useMemo(() => {
+    const { type } = config;
+    if (type === 'Radio' || type === 'Checkbox' || type === 'InputNumber') {
+      return Object.assign({}, config, { id, options });
+    }
     return Object.assign({}, config, { id });
-  }, [config, id]);
+  }, [config, id, options]);
   const handleCopy = useCallback(() => {
     const com = Object.assign({}, formDesign.byId[id]);
     dispatch(comAdded(com, rowIndex + 1));
@@ -58,11 +62,7 @@ const SourceBox: FC<{
         <div className={styles.container}>
           <div className={styles.component_container}>
             {type !== 'DescText' && <LabelContent label={propList.label} desc={propList.desc} />}
-            {(type === 'Radio' || type === 'Checkbox' || type === 'Select') && options ? (
-              <Component {...(propList as TConfigItem)} options={options} />
-            ) : (
-              <Component {...(propList as TConfigItem)} />
-            )}
+            <Component {...(propList as TConfigItem)} />
           </div>
           <div className={styles.operation}>
             <Tooltip title="复制">
