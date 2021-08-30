@@ -69,7 +69,7 @@ module.exports = {
                   destination: `${path.resolve('build')}/config.js`,
                 },
                 {
-                  source: path.resolve('build'),
+                  source: `${path.resolve('build')}`,
                   destination: `zip/${name}/dist`,
                 },
                 {
@@ -100,6 +100,7 @@ module.exports = {
               delete: ['zip'],
             },
           },
+          runTasksInSeries: true,
         }),
       );
     } else {

@@ -76,7 +76,7 @@ module.exports = {
                   destination: `${paths.appBuild}/config.js`,
                 },
                 {
-                  source: paths.appBuild,
+                  source: `${paths.appBuild}`,
                   destination: `zip/${appPackageJson.name}/dist`,
                 },
                 {
@@ -107,6 +107,7 @@ module.exports = {
               delete: ['zip'],
             },
           },
+          runTasksInSeries: true,
         }),
       );
       return config;
