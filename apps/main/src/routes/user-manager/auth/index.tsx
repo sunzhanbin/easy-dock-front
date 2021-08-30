@@ -26,7 +26,7 @@ const Auth = () => {
   // 回收项目管理员权限
   const deleteProjectManager = useMemoCallback((id, index) => {
     const powers = projectList[index].powers || [];
-    const power = powers.find((power) => id === (power.owner as any).id);
+    const power = powers.find((power) => id === power.owner.id);
     if (power && power.id) {
       setLoading(true);
       revokeAuth({ id: power.id, ownerType: OwnerTypeEnum.USER, power: AuthEnum.ADMIN }).then(() => {
@@ -90,14 +90,14 @@ const Auth = () => {
     const project = projectList[index];
     const members = project.powers
       .filter((power) => power.owner && power.ownerType === OwnerTypeEnum.USER)
-      .map((power) => power.owner)
-      .map((user) => Object.assign({}, user, { name: (user as any).userName, username: (user as any).userName }));
+      .map((power) => power.owner as UserOwner)
+      .map((user) => Object.assign({}, user, { name: user.userName, username: user.userName }));
     return (
       <div className={styles.selector}>
         <div className={styles['add-manager']}>添加项目管理员</div>
         <SelectorContext.Provider value={{ wrapperClass: styles['member-selector'] }}>
           <MemberSelector
-            value={members as any}
+            value={members}
             fetchUser={fetchUser}
             onChange={(value) => {
               handleMembersChange(value, index);
@@ -127,8 +127,8 @@ const Auth = () => {
             {projectList.map((project, index) => {
               const members = project.powers
                 .filter((power) => power.ownerType === OwnerTypeEnum.USER)
-                .map((power) => power.owner)
-                .map((user) => Object.assign({}, user, { name: (user as any).userName }));
+                .map((power) => power.owner as UserOwner)
+                .map((user) => Object.assign({}, user, { name: user.userName }));
               return (
                 <div className={styles.project} key={project.id}>
                   <div className={styles.name}>
@@ -137,7 +137,7 @@ const Auth = () => {
                   <div className={styles.administrator}>
                     <div className={styles.list}>
                       <MemberList
-                        members={members as any}
+                        members={members}
                         editable={true}
                         onDelete={(id) => {
                           deleteProjectManager(id, index);

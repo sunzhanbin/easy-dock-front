@@ -32,9 +32,11 @@ const EditZone = () => {
         setTitle(baseInfo?.name as string);
       }
     }, 0);
+  }, [byId, formDesign, setActiveKey]);
+  useEffect(() => {
     // 0915临时版本
     selectedField ? setActiveKey('1') : setActiveKey('2');
-  }, [selectedField, byId, formDesign, setActiveKey]);
+  }, [selectedField]);
   const onSave = useCallback(
     (values, isValidate) => {
       dispatch(

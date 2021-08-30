@@ -70,17 +70,9 @@ const FormDetail = React.forwardRef(function FormDetail(
 
   // 提取所有组件类型
   const componentTypes = useMemo(() => {
-    return data.components.map((comp) => (comp as any).config.type);
+    return data.components.map((comp) => comp.config.type);
   }, [data]);
 
-  // 数据库字段名和控件id映射
-  const fieldNameMap = useMemo(() => {
-    const map: { [k in string]: string } = {};
-    data.components.forEach((comp) => {
-      map[comp.config.fieldName] = comp.config.id;
-    });
-    return map;
-  }, [data]);
   const componentIdMap = useMemo(() => {
     const map: { [k in string]: string } = {};
     data.components.forEach((comp) => {

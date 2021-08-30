@@ -7,7 +7,7 @@ import ResponseWithMap from '@/features/bpm-editor/components/data-api-config/re
 import styles from './index.module.scss';
 import { useAppSelector } from '@/app/hooks';
 import { componentPropsSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
-import { fieldRule, FormField, FormRuleItem } from '@/type';
+import { fieldRule, FormField, FormRuleItem, SelectField } from '@/type';
 import { runtimeAxios } from '@/utils/axios';
 
 type modalProps = {
@@ -57,7 +57,7 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
   const loadDataSource = useCallback(
     (fieldName) => {
       const component = componentList.find((item) => item.fieldName === fieldName);
-      const { dataSource } = component as any;
+      const { dataSource } = component as SelectField;
       if (!dataSource) {
         return Promise.resolve(null);
       }

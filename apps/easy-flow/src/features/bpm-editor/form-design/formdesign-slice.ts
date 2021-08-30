@@ -17,7 +17,7 @@ import {
   setErrors as setErrorsReducer,
   setFormRules as setFormRulesReducer,
 } from './formzone-reducer';
-import { ConfigItem, ErrorItem, FieldType, FormDesign, FormMeta } from '@/type';
+import { ConfigItem, ErrorItem, FieldType, FormDesign, FormField, FormMeta } from '@/type';
 import { loadComponents } from './toolbox/toolbox-reducer';
 import { RootState } from '@/app/store';
 import { axios } from '@/utils';
@@ -106,6 +106,7 @@ type SaveParams = {
   isShowTip?: boolean;
   isShowErrorTip?: boolean;
 };
+type Key = keyof FormField;
 export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>(
   'form/save',
   async ({ subAppId, isShowTip, isShowErrorTip }, { getState, dispatch }) => {
@@ -133,14 +134,15 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
           version,
           rules: [],
           canSubmit: type === 'DescText' ? false : true,
-          multiple: type === 'Checkbox' || (type === 'Select' && (byId[id] as any).multiple) ? true : false,
+          multiple: type === 'Checkbox' || (type === 'Select' && byId[id].multiple) ? true : false,
         };
-        const props: ConfigItem = {} as any;
+
+        const props: ConfigItem = { type, id };
         componentConfig?.forEach(({ isProps, key }) => {
           if (isProps) {
-            props[key] = (byId[id] as any)[key];
+            props[key] = byId[id][key as Key];
           } else {
-            config[key] = (byId[id] as any)[key];
+            config[key] = byId[id][key as Key];
           }
         });
         // 校验编辑的控件属性

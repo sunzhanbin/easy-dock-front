@@ -1,7 +1,7 @@
 import { memo, useMemo, useCallback, useState, useEffect } from 'react';
 import { Form, Select, Input, InputNumber } from 'antd';
 import classnames from 'classnames';
-import { fieldRule, FormField } from '@/type';
+import { DateField, fieldRule, FormField } from '@/type';
 import { symbolMap, dynamicMap } from '@/utils';
 import { Icon } from '@common/components';
 import useMemoCallback from '@common/hooks/use-memo-callback';
@@ -87,7 +87,7 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
             label: item.label,
             id: item.id!,
             type: item.type,
-            format: (item as any).format,
+            format: (item as DateField).format,
             fieldName: item.fieldName,
           })) || []
       );

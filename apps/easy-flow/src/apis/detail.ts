@@ -1,6 +1,7 @@
 import { runtimeAxios } from '@utils/axios';
 import { AuthType, FieldAuthsMap } from '@type/flow';
 import type { TaskDetailType, FlowMeta, FormMeta, FormValue, FlowInstance, Datasource } from '@type/detail';
+import { CheckboxField, RadioField, SelectField } from '@/type';
 
 export async function loadFlowData(
   flowIns: FlowInstance,
@@ -52,16 +53,19 @@ export async function loadDatasource(formMeta: FormMeta, fieldsAuths: FieldAuths
   return datasource;
 }
 
-export async function fetchDataSource(components: Array<any>) {
+export async function fetchDataSource(components: Array<RadioField | CheckboxField | SelectField>) {
   const allPromises: Promise<void>[] = [];
   const source: Datasource = {};
   components.forEach(async (object) => {
-    if ((object as any)?.dataSource) {
-      const { dataSource } = object as any;
+    if (object?.dataSource) {
+      const key = object.fieldName || object.id || '';
+      const { dataSource } = object;
       if (dataSource.type === 'custom') {
         allPromises.push(
           Promise.resolve(dataSource.data).then((data) => {
-            source[object.fieldName || object.id] = data;
+            if (data) {
+              source[key] = data;
+            }
           }),
         );
       } else if (dataSource.type === 'subapp') {
@@ -70,7 +74,7 @@ export async function fetchDataSource(components: Array<any>) {
           allPromises.push(
             runtimeAxios.get(`/subapp/${subappId}/form/${fieldName}/data`).then((res) => {
               const list = (res.data?.data || []).map((val: string) => ({ key: val, value: val }));
-              source[object.fieldName || object.id] = list;
+              source[key] = list;
             }),
           );
         }

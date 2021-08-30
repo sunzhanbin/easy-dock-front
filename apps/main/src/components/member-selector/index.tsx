@@ -152,7 +152,7 @@ function Selector(props: SelectorProps) {
           return (
             <div key={member.id} className={styles.item} onClick={() => handleChangeMembers(member, !selected)}>
               <Image src={member.avatar} placeholder={memberDefaultAvatar} className={styles.avatar} size={24} round />
-              <span className={styles.name}>{member.username || (member as any).name}</span>
+              <span className={styles.name}>{member.username || member.name}</span>
               <Checkbox checked={selected} />
             </div>
           );

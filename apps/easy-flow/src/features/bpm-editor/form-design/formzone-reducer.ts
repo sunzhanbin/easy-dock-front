@@ -176,11 +176,11 @@ const reducers = {
   },
   editProps(
     state: FormDesign,
-    action: PayloadAction<{ id: string; config: TConfigItem; isEdit?: boolean; isValidate?: boolean }>,
+    action: PayloadAction<{ id: string; config: FormField; isEdit?: boolean; isValidate?: boolean }>,
   ) {
     const { id, config, isEdit, isValidate } = action.payload;
     const componentConfig = id.startsWith('DescText') ? Object.assign({}, config, { fieldName: config.id }) : config;
-    state.byId[id] = componentConfig as FormField;
+    state.byId[id] = componentConfig;
     // 如果改变控件宽度后导致整行的宽度大于100%,则需要改变layout布局以实现换行
     if (isEdit) {
       const [rowIndex, colIndex] = locateById(id, state.layout);
