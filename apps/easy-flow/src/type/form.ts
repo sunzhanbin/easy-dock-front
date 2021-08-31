@@ -23,7 +23,7 @@ export type InputField = {
 export type InputNumberField = {
   type: 'InputNumber';
   defaultValue: number;
-  // range?: [number, number];
+  range?: [number, number];
 } & BaseField;
 
 export type TextAreaField = {
@@ -71,6 +71,11 @@ export type DescTextField = {
   value: string;
 } & BaseField;
 
+export type ImageField = {
+  type: 'Image';
+  maxNum: number;
+} & BaseField;
+
 export type FormField =
   | InputField
   | InputNumberField
@@ -79,4 +84,5 @@ export type FormField =
   | RadioField
   | CheckboxField
   | SelectField
-  | DescTextField;
+  | DescTextField
+  | ImageField;

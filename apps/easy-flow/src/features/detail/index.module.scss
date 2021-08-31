@@ -12,27 +12,32 @@
     flex-shrink: 0;
     position: relative;
     z-index: 9;
+
     svg {
       color: #fff;
     }
+
     & > div {
       color: #fff;
     }
 
+    .save {
+      margin-right: 15px;
+    }
+
     .submit {
-      color: #4c5cdb;
-      background: #fff;
+      color: $primary-color;
 
       &:hover {
-        color: rgba(76, 92, 219, 0.8);
+        color: rgba($primary-color, 0.8);
       }
 
       &:active {
-        box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.12);
+        box-shadow: 0 0 0 4px rgba(#fff, 0.12);
       }
 
       &:disabled {
-        color: rgba(76, 92, 219, 0.5);
+        color: rgba($primary-color, 0.5);
       }
     }
   }
