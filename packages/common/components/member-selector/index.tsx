@@ -8,6 +8,7 @@ import depetDefaultAvatar from './avatars/depart-default-avatar.png';
 import roleDefaultAvatar from './avatars/role-default-avatar.png';
 import { ValueType, Key } from './type';
 import Selector from './selector';
+import { getContainer } from '../../utils';
 import styles from './index.module.scss';
 
 export type MemberType = 'dept' | 'member' | 'role';
@@ -99,6 +100,7 @@ export interface MemberSelectorProps {
   strictDept?: boolean;
   onDelete?(id: string | number, type: MemberType): void;
   listClass?: string;
+  getPopupContainer?(container: HTMLElement): HTMLElement;
 }
 
 const defaultValue: ValueType = {
@@ -108,15 +110,22 @@ const defaultValue: ValueType = {
 };
 
 function MemberSelector(props: MemberSelectorProps) {
-  const { value, onChange, children, projectId, strictDept, selectorWrapperClass, onDelete, listClass } = props;
+  const {
+    value,
+    onChange,
+    children,
+    projectId,
+    strictDept,
+    selectorWrapperClass,
+    onDelete,
+    listClass,
+    getPopupContainer,
+  } = props;
   const [showPopover, setShowPopover] = useState(false);
   const [localValue, setLocalValue] = useState<ValueType>(value || defaultValue);
   const popoverContentContainerRef = useRef<HTMLDivElement>(null);
   const selectorContainerRef = useRef<HTMLDivElement>(null);
   const showValue = value || localValue;
-  const getPopupContainer = useMemo(() => {
-    return () => popoverContentContainerRef.current!;
-  }, []);
 
   const handleChange = useMemoCallback((newValue: ValueType) => {
     if (onChange) {
@@ -186,12 +195,14 @@ function MemberSelector(props: MemberSelectorProps) {
       >
         <Popover
           content={content}
-          getPopupContainer={getPopupContainer}
+          getPopupContainer={getPopupContainer || getContainer}
           trigger="click"
           visible={showPopover}
           onVisibleChange={setShowPopover}
           destroyTooltipOnHide
           placement="bottomLeft"
+          className="aaa"
+          overlayClassName={styles.popover}
           arrowContent={null}
         >
           <div className={styles.action}>
