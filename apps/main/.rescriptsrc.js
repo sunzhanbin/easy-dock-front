@@ -56,15 +56,21 @@ module.exports = {
               mkdir: [`zip/${name}/dist`, `zip/${name}/template`],
               copy: [
                 {
-                  source: path.resolve('build'),
-                  destination: `zip/${name}/dist`,
-                },
-                {
                   source: path.resolve(
                     __dirname,
-                    `conf${process.env.REACT_APP_TARGET_ENV === 'staging' ? '.staging.js' : '.production.js'}`,
+                    `conf${
+                      process.env.REACT_APP_TARGET_ENV === 'staging'
+                        ? '.staging.js'
+                        : process.env.REACT_APP_TARGET_ENV === 'cluster'
+                        ? '.cluster.js'
+                        : '.production.js'
+                    }`,
                   ),
-                  destination: `zip/${name}/dist/config.js`,
+                  destination: `${path.resolve('build')}/config.js`,
+                },
+                {
+                  source: `${path.resolve('build')}`,
+                  destination: `zip/${name}/dist`,
                 },
                 {
                   source: path.resolve('template'),
@@ -94,6 +100,7 @@ module.exports = {
               delete: ['zip'],
             },
           },
+          runTasksInSeries: true,
         }),
       );
     } else {
