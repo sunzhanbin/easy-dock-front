@@ -26,7 +26,7 @@ const SourceBox: FC<{
   // 获取组件源码
   const compSources = useLoadComponents(type as AllComponentType['type']) as Component;
   const propList = useMemo(() => {
-    const { type } = config;
+    const type = config?.type;
     if (type === 'Radio' || type === 'Checkbox' || type === 'InputNumber') {
       return Object.assign({}, config, { id, options });
     }
