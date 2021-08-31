@@ -2,8 +2,12 @@
 import { runtimeAxios } from '@/utils';
 export type batchUploadParams = {
   maxUploadNum: number;
-  files: any;
+  files: Array<File>;
 };
 export const batchUpload = ({ maxUploadNum, files }: batchUploadParams) => {
-  return runtimeAxios.post(`/file/batchUpload?maxUploadNum=${maxUploadNum}`, { files });
+  const formData = new FormData();
+  files.forEach((file) => {
+    formData.append(file.name, file);
+  });
+  return runtimeAxios.post(`/file/batchUpload?maxUploadNum=${maxUploadNum}`, formData);
 };
