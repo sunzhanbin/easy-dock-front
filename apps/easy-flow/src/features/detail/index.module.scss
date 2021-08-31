@@ -2,23 +2,23 @@
 @import '@common/styles/mixin.scss';
 
 .container {
+  position: relative;
   display: flex;
   flex-direction: column;
   height: 100%;
-  position: relative;
   overflow: hidden;
 
   .header {
-    flex-shrink: 0;
     position: relative;
+    flex-shrink: 0;
     z-index: 9;
 
-    svg {
+    & > div:first-child {
       color: #fff;
-    }
 
-    & > div {
-      color: #fff;
+      svg {
+        color: inherit;
+      }
     }
 
     .save {
