@@ -74,6 +74,7 @@ const Detail = forwardRef(function Detail(props: DetailProps, ref: React.Forward
         </div>
       </div>
       <div className={styles.flow}>
+        <div className={styles['record-title']}>审核记录</div>
         <div className={styles.detail}>
           {auditRecords.map((record, index) => (
             <AuditRecord

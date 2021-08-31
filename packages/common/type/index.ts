@@ -13,4 +13,5 @@ export type Dept = {
 export type Role = {
   id: number | string;
   name: string;
+  avatar?: string;
 };

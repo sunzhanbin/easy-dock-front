@@ -16,6 +16,14 @@
     border-left: 1px solid rgba(#181f43, 0.12);
     overflow-y: auto;
 
+    .record-title {
+      margin-bottom: 28px;
+      line-height: 28px;
+      color: rgba(#000, 0.85);
+      font-size: 18px;
+      font-weight: bold;
+    }
+
     .detail {
       position: relative;
 
@@ -28,6 +36,7 @@
         z-index: -1;
         width: 1px;
         background-color: rgba(#181f43, 0.12);
+        transform: translateX(-50%);
       }
 
       .last-record {
