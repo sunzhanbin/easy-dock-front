@@ -1,5 +1,5 @@
 import { memo, FC, useMemo, useState, useEffect } from 'react';
-import { Modal, Popover } from 'antd';
+import { Modal, Popover, Checkbox } from 'antd';
 import { Icon, MemberList, Loading } from '@common/components';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import {
@@ -17,6 +17,7 @@ import { AppAuthParams, fetchSubAppPowers, Privilege } from '@/api/auth';
 import Selector from '@common/components/member-selector/selector';
 import styles from './index.module.scss';
 import { ValueType } from '@common/components/member-selector/type';
+import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 
 type Visitor = {
   members: UserOwner[];
@@ -26,6 +27,7 @@ type Visitor = {
 type SubAppVisitor = {
   id: string;
   visitor: Visitor;
+  openVisit?: boolean;
 };
 
 const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: (value: AppAuthParams) => void }> = ({
@@ -43,8 +45,9 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: (value: AppAu
     setLoading(true);
     fetchSubAppPowers(String(appId))
       .then((res) => {
-        setDataPowers(res.data.dataPowers);
-        setSubAppList(res.data.subappPowers);
+        const { data } = res;
+        setDataPowers(data.dataPowers);
+        setSubAppList(data.subappPowers);
       })
       .finally(() => {
         setLoading(false);
@@ -137,45 +140,75 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: (value: AppAu
       );
     },
   );
+  const handleChangeOpenVisitor = useMemoCallback((e: CheckboxChangeEvent, id: string) => {
+    const { checked } = e.target;
+    setSubAppVisitorList((list) => {
+      return list.map((item) => {
+        if (item.id === id) {
+          const { visitor } = item;
+          return { id, visitor, openVisit: checked };
+        }
+        return item;
+      });
+    });
+  });
   const renderAppItem = useMemoCallback((id: string, name: string) => {
     let visitor: Visitor = {
       members: [],
       departs: [],
       roles: [],
     };
+    let openVisit = false;
     if (id === 'flow') {
       visitor = dataVisitor;
     } else {
-      visitor = subAppVisitorList.find((item) => item.id === id)?.visitor || visitor;
+      const subAppVisitorInfo = subAppVisitorList.find((item) => item.id === id);
+      visitor = subAppVisitorInfo?.visitor || visitor;
+      openVisit = subAppVisitorInfo?.openVisit || false;
     }
     const { members, departs, roles } = visitor;
     return (
       <div className={styles.app} key={id}>
         <div className={styles.title}>
           <div className={styles.name}>{name}</div>
-          <Popover
-            content={renderContent(id, members, departs, roles)}
-            getPopupContainer={(c) => c}
-            trigger="click"
-            destroyTooltipOnHide
-            placement="bottomRight"
-            arrowContent={null}
-          >
-            <div className={styles.add}>
-              <Icon type="xinzeng" className={styles.icon} />
-            </div>
-          </Popover>
+          <div className={styles.change}>
+            {id !== 'flow' && (
+              <Checkbox
+                className={styles.all}
+                checked={openVisit}
+                onChange={(e) => {
+                  handleChangeOpenVisitor(e, id);
+                }}
+              >
+                所有人
+              </Checkbox>
+            )}
+            <Popover
+              content={renderContent(id, members, departs, roles)}
+              getPopupContainer={(c) => c}
+              trigger="click"
+              destroyTooltipOnHide
+              placement="bottomRight"
+              arrowContent={null}
+            >
+              <div className={styles.add} style={{ opacity: openVisit ? '0' : '1' }}>
+                <Icon type="xinzeng" className={styles.icon} />
+              </div>
+            </Popover>
+          </div>
         </div>
-        <MemberList
-          members={members}
-          depts={departs}
-          roles={roles}
-          className={styles['member-list']}
-          editable
-          onDelete={(visitorId, type) => {
-            handleDeletePower(visitorId, type, id);
-          }}
-        />
+        {!openVisit && (
+          <MemberList
+            members={members}
+            depts={departs}
+            roles={roles}
+            className={styles['member-list']}
+            editable
+            onDelete={(visitorId, type) => {
+              handleDeletePower(visitorId, type, id);
+            }}
+          />
+        )}
       </div>
     );
   });
@@ -196,9 +229,9 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: (value: AppAu
   const handleOk = useMemoCallback(() => {
     const dataPrivileges: Privilege[] = visitorToPrivileges(dataVisitor, AuthEnum.DATA);
     const subapps = subAppVisitorList.map((subAppVisitor) => {
-      const { id, visitor } = subAppVisitor;
+      const { id, visitor, openVisit } = subAppVisitor;
       const privileges = visitorToPrivileges(visitor, AuthEnum.VISIT);
-      return { id, privileges };
+      return { id, privileges, openVisit };
     });
     const value: AppAuthParams = { id: String(appId), dataPrivileges, subapps };
     onOk(value);
@@ -216,9 +249,9 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: (value: AppAu
   useEffect(() => {
     if (subAppList.length > 0) {
       const subAppVisitorList = subAppList.map((subApp) => {
-        const { id, powers } = subApp;
+        const { id, powers, openVisit } = subApp;
         const visitor = getVisitor(powers);
-        return { id: String(id), visitor };
+        return { id: String(id), visitor, openVisit };
       });
       setSubAppVisitorList(subAppVisitorList);
     }

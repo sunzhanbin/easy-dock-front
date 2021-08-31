@@ -32,10 +32,12 @@ export type Privilege = {
 };
 export type SubAppAuthParams = {
   id: string;
+  openVisit?: boolean;
   privileges: Privilege[];
 };
 export type AppAuthParams = {
   id: string;
+  openVisit?: boolean;
   dataPrivileges: Privilege[];
   subapps: SubAppAuthParams[];
 };

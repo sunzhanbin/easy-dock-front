@@ -77,6 +77,7 @@ export type SubAppPower = {
   powers: Power[]; //被授权的对象
   status: -1 | 1; //-1:停用 1:启用
   type: 1 | 2; //1:大屏类子应用 2:流程类子应用
+  openVisit?: boolean; //所有人可访问
 };
 
 export type AppInfo = {
