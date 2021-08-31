@@ -103,6 +103,8 @@
   font-weight: 400;
 
   .search {
+    @include inputtheme($primary-color);
+
     margin-bottom: 12px;
   }
 
