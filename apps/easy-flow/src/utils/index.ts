@@ -18,7 +18,7 @@ export function getStayTime(startTime: number) {
   const minuteTime = 1000 * 60;
   let days = Math.floor(stayTime / dayTime);
   let hours = Math.floor((stayTime - days * dayTime) / hourTime);
-  let minutes = Math.round((stayTime - days * dayTime - hours * hourTime) / minuteTime);
+  let minutes = Math.floor((stayTime - days * dayTime - hours * hourTime) / minuteTime);
   let result = '';
   if (days > 0) {
     result += `${days}天`;
@@ -29,7 +29,9 @@ export function getStayTime(startTime: number) {
   if (hours > 0) {
     result += `${hours}小时`;
   }
-  result += `${minutes}分`;
+  if (minutes > 0) {
+    result += `${minutes}分`;
+  }
   return result;
 }
 
