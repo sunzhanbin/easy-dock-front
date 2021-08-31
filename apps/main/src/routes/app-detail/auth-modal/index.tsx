@@ -172,17 +172,16 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: (value: AppAu
         <div className={styles.title}>
           <div className={styles.name}>{name}</div>
           <div className={styles.change}>
-            {id !== 'flow' && (
-              <Checkbox
-                className={styles.all}
-                checked={openVisit}
-                onChange={(e) => {
-                  handleChangeOpenVisitor(e, id);
-                }}
-              >
-                所有人
-              </Checkbox>
-            )}
+            <Checkbox
+              className={styles.all}
+              checked={openVisit}
+              style={{ opacity: id === 'flow' ? '0' : '1' }}
+              onChange={(e) => {
+                handleChangeOpenVisitor(e, id);
+              }}
+            >
+              所有人
+            </Checkbox>
             <Popover
               content={renderContent(id, members, departs, roles)}
               getPopupContainer={(c) => c}
