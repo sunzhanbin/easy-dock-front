@@ -27,10 +27,10 @@ export function getStayTime(startTime: number) {
     }
   }
   if (hours > 0) {
-    result += `${hours}小时`;
+    result += `${hours < 10 ? '0' + hours : hours}小时`;
   }
   if (minutes > 0) {
-    result += `${minutes}分`;
+    result += `${minutes < 10 ? '0' + minutes : minutes}分`;
   }
   return result;
 }
