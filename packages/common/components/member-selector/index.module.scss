@@ -3,16 +3,6 @@
 
 .container {
   user-select: none;
-
-  :global {
-    .ant-popover {
-      user-select: none;
-
-      .ant-popover-arrow {
-        display: none;
-      }
-    }
-  }
 }
 
 .avatar {
@@ -61,7 +51,6 @@
 
 // 成员列表
 .members {
-  position: relative;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -75,7 +64,6 @@
   .action {
     @include center('flex');
 
-    position: relative;
     cursor: pointer;
 
     .add {
@@ -103,6 +91,8 @@
   font-weight: 400;
 
   .search {
+    @include inputtheme($primary-color);
+
     margin-bottom: 12px;
   }
 
@@ -219,6 +209,17 @@
     .ant-tabs-ink-bar {
       height: 5px !important;
       background-color: $primary-color;
+    }
+  }
+}
+
+// 覆盖antd的popover样式
+.popover {
+  user-select: none;
+
+  :global {
+    .ant-popover-arrow {
+      display: none;
     }
   }
 }

@@ -25,7 +25,13 @@ function Layout(props: LayoutProps) {
 
   return (
     <div className={classnames(styles.selector, className)}>
-      <Input placeholder={keywordPlaceholder} className={styles.search} onChange={handleKeywordChange} size="large" />
+      <Input
+        autoFocus
+        placeholder={keywordPlaceholder}
+        className={styles.search}
+        onChange={handleKeywordChange}
+        size="large"
+      />
 
       {children}
     </div>

@@ -153,20 +153,15 @@ $line-color: #e3e4e8;
             }
 
             .and {
-              display: flex;
-              align-items: center;
               padding: 8px;
               line-height: 22px;
               color: #181f43;
-
-              & + .and {
-                margin-top: 12px;
-              }
 
               .symbol {
                 margin-left: 4px;
                 margin-right: 4px;
                 color: rgba(#181f43, 0.5);
+                white-space: nowrap;
               }
             }
           }

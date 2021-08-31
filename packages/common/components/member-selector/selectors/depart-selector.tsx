@@ -6,7 +6,7 @@ import useMemoCallback from '../../../hooks/use-memo-callback';
 import SelectorContext from '../context';
 import { ValueType, TreeData, Key } from '../type';
 import Layout from './layout';
-import { fetchDepts, treeDataMap, filterTreeData } from '../util';
+import { fetchDepts, treeDataMap, filterTreeData, excludeTreeChildren } from '../util';
 import styles from '../index.module.scss';
 
 interface DeptSelectorProps {
@@ -85,9 +85,9 @@ function DeptSelector(props: DeptSelectorProps) {
       checkeds = value.checked;
     }
 
-    // if (!strict) {
-    //   checkeds = excludeTreeChildren(treeData, checkeds);
-    // }
+    if (!strict) {
+      checkeds = excludeTreeChildren(treeData, checkeds);
+    }
 
     if (onChange) {
       onChange(

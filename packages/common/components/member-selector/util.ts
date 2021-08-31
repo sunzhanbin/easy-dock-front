@@ -61,7 +61,7 @@ export function excludeTreeChildren(tree: TreeData, checkeds: Key[]): Key[] {
       value.push(node.key);
     } else {
       if (node.children) {
-        node.children.some(loop);
+        node.children.forEach(loop);
       }
     }
   });

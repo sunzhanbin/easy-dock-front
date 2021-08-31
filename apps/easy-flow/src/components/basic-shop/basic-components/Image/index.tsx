@@ -1,24 +1,27 @@
-import { memo, useCallback } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { Upload } from 'antd';
 import styles from './index.module.scss';
-import cookie from 'js-cookie';
 import { UploadChangeParam, UploadFile, UploadProps } from 'antd/lib/upload/interface';
 import { UploadRequestOption } from 'rc-upload/lib/interface';
-// import { runtimeAxios } from '@/utils';
-// import { batchUpload } from '@/apis/file';
+import useMemoCallback from '@common/hooks/use-memo-callback';
+import { Icon } from '@common/components';
+import { batchUpload } from '@/apis/file';
 
-// const token = cookie.get('token') || '';
-
-const Image = (props: UploadProps & { value?: UploadFile[] }) => {
+const ImageComponent = (props: UploadProps & { value?: UploadFile[]; onChange?: (value: UploadFile[]) => void }) => {
   const { maxCount = 8, value = [], onChange } = props;
-  // console.info(props, 'props');
+  const [fileList, setFileList] = useState<UploadFile[]>(value || []);
 
-  const handleChange = ({ fileList }: UploadChangeParam) => {
-    // setFileList(newFileList);
-    // onChange && onChange({ fileList });
-  };
+  const handleChange = useMemoCallback(({ file, fileList: newList }: UploadChangeParam) => {
+    setFileList((list) => {
+      list.push((file as any).originFileObj);
+      return list;
+    });
+    setTimeout(() => {
+      onChange && onChange(fileList);
+    }, 10);
+  });
 
-  const onPreview = async (file: any) => {
+  const onPreview = useMemoCallback(async (file: any) => {
     let src = file.url;
     if (!src) {
       src = await new Promise((resolve) => {
@@ -27,43 +30,39 @@ const Image = (props: UploadProps & { value?: UploadFile[] }) => {
         reader.onload = () => resolve(reader.result);
       });
     }
-    // const image = new Image();
-    // image.src = src;
-    // const imgWindow = window.open(src);
-    // imgWindow!.document.write(image.outerHTML);
-  };
-  const handleUpload = useCallback(
-    (options: UploadRequestOption) => {
-      const { file } = options;
-      const reader = new FileReader();
-      reader.readAsDataURL(file as Blob); // 读取图片文件
-      reader.onload = (file) => {
-        // console.info(file);
-      };
-      // batchUpload({ maxUploadNum: 8, files: [file] }).then((res) => {
-      //   console.info(res);
-      // });
-      // console.info(value, 'value', options);
-    },
-    [value],
-  );
+    const image = new Image();
+    image.src = src;
+    const imgWindow = window.open(src);
+    imgWindow!.document.write(image.outerHTML);
+  });
+  const handleUpload = useMemoCallback((options: UploadRequestOption) => {
+    const { file } = options;
+    batchUpload({ maxUploadNum: maxCount, files: [file as File] }).then((res) => {
+      console.info(res);
+    });
+  });
   return (
     <div className={styles.image} id={props.id}>
-      <Upload
-        // id={props.id}
-        // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-        // action={`${window.EASY_DOCK_BASE_SERVICE_ENDPOINT}/enc-oss-easydock/api/runtime/v1/file/batchUpload}`}
-        // headers={{ auth: token }}
-        listType="picture-card"
-        fileList={value}
-        customRequest={handleUpload}
-        onChange={handleChange}
-        onPreview={onPreview}
-      >
-        {value.length < maxCount && '+ Upload'}
-      </Upload>
+      {fileList.length < maxCount && (
+        <Upload
+          // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+          // action="2"
+          listType="picture-card"
+          maxCount={maxCount}
+          fileList={fileList}
+          customRequest={handleUpload}
+          onChange={handleChange}
+          onPreview={onPreview}
+        >
+          <span>
+            <Icon type="shangchuantupian" className={styles.icon} />
+            <br />
+            上传图片
+          </span>
+        </Upload>
+      )}
     </div>
   );
 };
 
-export default memo(Image);
+export default memo(ImageComponent);
