@@ -14,8 +14,8 @@ import {
   FieldAuthsMap,
   FieldTemplate,
 } from '@type/flow';
-import { validName } from '@common/rule';
 import { FormMeta } from '@type';
+import { validators } from './validators';
 
 function randomString() {
   return Math.random().toString(36).slice(2);
@@ -218,24 +218,19 @@ export function valid(data: AllNode[], validRes: ValidResultType) {
     if (!node.name) {
       errors.push('未输入节点名称');
     } else {
-      const error = validName(node.name);
+      const error = validators.name(node.name);
+
       if (error) {
         errors.push(error);
       }
     }
 
-    if (node.type === NodeType.StartNode) {
-    } else if (node.type === NodeType.AuditNode) {
-      if (!node.correlationMemberConfig.members.length) {
-        errors.push('请选择办理人');
-      }
-    } else if (node.type === NodeType.FillNode) {
-      if (!node.btnText || Object.keys(node.btnText).length === 0) {
-        errors.push('请配置按钮');
-      }
+    // 审批节点、抄送节点、填写节点需要配置相关处理人
+    if (node.type === NodeType.AuditNode || node.type === NodeType.FillNode || node.type === NodeType.CCNode) {
+      const memberValidMessage = validators.member(node.correlationMemberConfig);
 
-      if (!node.correlationMemberConfig.members.length) {
-        errors.push('请选择办理人');
+      if (memberValidMessage) {
+        errors.push(memberValidMessage);
       }
     }
 

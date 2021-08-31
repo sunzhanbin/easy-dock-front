@@ -36,7 +36,7 @@ export const Branch = memo(function Branch(props: BranchProps) {
     if (!formMeta) return {};
 
     return formMeta.components.reduce((map, next) => {
-      map[next.config.id] = Object.assign({}, next.config, next.props) as FormField;
+      map[next.config.fieldName] = Object.assign({}, next.config, next.props) as FormField;
 
       return map;
     }, {} as FormFieldMapType);
