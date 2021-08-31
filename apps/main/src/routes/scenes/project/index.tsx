@@ -6,6 +6,9 @@ import PopConfirm from '@/components/popover-confirm';
 import Form, { FormType } from './form';
 import { ProjectShape } from '../types';
 import styles from './index.module.scss';
+import { useSelector } from 'react-redux';
+import { userSelector } from '@/store/user';
+import { RoleEnum } from '@/schema/app';
 
 interface ProjectProps {
   data: ProjectShape;
@@ -21,6 +24,13 @@ const Project = (props: ProjectProps) => {
   const [currentProjectIsEditing, setCurrentProjectIsEditing] = useState(false);
   const [currentProjectIsDeleting, setCurrentProjectIsDeleting] = useState(false);
   const formRef = useRef<FormType>();
+
+  const user = useSelector(userSelector);
+  // 当前角色是否是超管
+  const isAdmin = useMemo(() => {
+    const power = user.info?.power || 0;
+    return (power & RoleEnum.ADMIN) === RoleEnum.ADMIN;
+  }, [user]);
 
   // 选中项目
   const handleSelectProject = useCallback(() => {
@@ -56,37 +66,39 @@ const Project = (props: ProjectProps) => {
         <div className={styles.name}>{data.name}</div>
         <div>{data.appCount || 0}</div>
       </div>
-      <div className={styles.icons}>
-        <Popover
-          trigger="click"
-          content={<Form data={data} formRef={formRef} />}
-          placement="bottom"
-          title="编辑项目"
-          onOk={handleEditing}
-          visible={currentProjectIsEditing}
-          onVisibleChange={setCurrentProjectIsEditing}
-          getPopupContainer={getPopupContainer}
-        >
-          <div className={styles['edit-icon-container']}>
-            <Icon type="bianji" className={classnames(styles.icon, { [styles.active]: currentProjectIsEditing })} />
-          </div>
-        </Popover>
+      {isAdmin && (
+        <div className={styles.icons}>
+          <Popover
+            trigger="click"
+            content={<Form data={data} formRef={formRef} />}
+            placement="bottom"
+            title="编辑项目"
+            onOk={handleEditing}
+            visible={currentProjectIsEditing}
+            onVisibleChange={setCurrentProjectIsEditing}
+            getPopupContainer={getPopupContainer}
+          >
+            <div className={styles['edit-icon-container']}>
+              <Icon type="bianji" className={classnames(styles.icon, { [styles.active]: currentProjectIsEditing })} />
+            </div>
+          </Popover>
 
-        <PopConfirm
-          trigger="click"
-          placement="bottom"
-          content="删除后不可恢复，确认删除？"
-          title="删除项目"
-          onConfirm={handleDelete}
-          visible={currentProjectIsDeleting}
-          onVisibleChange={setCurrentProjectIsDeleting}
-          getPopupContainer={getPopupContainer}
-        >
-          <div>
-            <Icon type="shanchu" className={classnames(styles.icon, { [styles.active]: currentProjectIsDeleting })} />
-          </div>
-        </PopConfirm>
-      </div>
+          <PopConfirm
+            trigger="click"
+            placement="bottom"
+            content="删除后不可恢复，确认删除？"
+            title="删除项目"
+            onConfirm={handleDelete}
+            visible={currentProjectIsDeleting}
+            onVisibleChange={setCurrentProjectIsDeleting}
+            getPopupContainer={getPopupContainer}
+          >
+            <div>
+              <Icon type="shanchu" className={classnames(styles.icon, { [styles.active]: currentProjectIsDeleting })} />
+            </div>
+          </PopConfirm>
+        </div>
+      )}
     </div>
   );
 };
