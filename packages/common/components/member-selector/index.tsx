@@ -4,7 +4,8 @@ import classNames from 'classnames';
 import { Icon, Image } from '../../components';
 import useMemoCallback from '../../hooks/use-memo-callback';
 import memberDefaultAvatar from './avatars/member-default-avatar.png';
-import departDefaultAvatar from './avatars/depart-default-avatar.png';
+import depetDefaultAvatar from './avatars/depart-default-avatar.png';
+import roleDefaultAvatar from './avatars/role-default-avatar.png';
 import { ValueType, Key } from './type';
 import Selector from './selector';
 import styles from './index.module.scss';
@@ -56,7 +57,7 @@ export const MemberList = memo(function MemberList(props: MemberListProps) {
           data={depart}
           onDelete={(departId) => onDelete && onDelete(departId, 'dept')}
         >
-          <Image className={styles.avatar} src={depart.avatar} placeholder={departDefaultAvatar} size={24} round />
+          <Image className={styles.avatar} src={depart.avatar} placeholder={depetDefaultAvatar} size={24} round />
         </Member>
       ))}
 
@@ -66,7 +67,9 @@ export const MemberList = memo(function MemberList(props: MemberListProps) {
           key={role.id}
           data={role}
           onDelete={(roleId) => onDelete && onDelete(roleId, 'role')}
-        />
+        >
+          <Image className={styles.avatar} src={role.avatar} placeholder={roleDefaultAvatar} size={24} round />
+        </Member>
       ))}
 
       {members.map((member) => {
