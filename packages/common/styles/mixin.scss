@@ -37,3 +37,19 @@
     background-color: $color;
   }
 }
+
+@mixin inputtheme($border-color) {
+  border-color: transparent !important;
+  background-color: rgba(#182743, 0.04) !important;
+
+  &:hover {
+    border-color: rgba($border-color, 0.85) !important;
+    background-color: transparent !important;
+  }
+
+  &:focus {
+    border-color: rgba($border-color, 0.85) !important;
+    box-shadow: 0 0 0 3px rgba($border-color, 0.2) !important;
+    background-color: transparent !important;
+  }
+}

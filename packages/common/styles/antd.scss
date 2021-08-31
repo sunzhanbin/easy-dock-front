@@ -190,8 +190,10 @@
     padding: 8px 12px;
     font-size: 14px;
   }
+
   &[disabled] {
     background-color: rgba(24, 39, 67, 0.04);
+
     &:hover {
       border-color: transparent;
     }

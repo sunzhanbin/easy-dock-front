@@ -36,7 +36,7 @@ export const Branch = memo(function Branch(props: BranchProps) {
     if (!formMeta) return {};
 
     return formMeta.components.reduce((map, next) => {
-      map[next.config.id] = Object.assign({}, next.config, next.props) as FormField;
+      map[next.config.fieldName] = Object.assign({}, next.config, next.props) as FormField;
 
       return map;
     }, {} as FormFieldMapType);
@@ -56,34 +56,51 @@ export const Branch = memo(function Branch(props: BranchProps) {
     dispatch(setChoosedNode(data));
   });
 
+  const conditions = useMemo(() => {
+    return data.conditions.filter((condition) => {
+      let empty = true;
+
+      condition.forEach((item) => {
+        const { fieldName, symbol } = item;
+
+        if (fieldName || symbol) {
+          empty = false;
+        }
+      });
+
+      return !empty;
+    });
+  }, [data.conditions]);
+
   return (
     <div className={classnames(styles.branch)}>
-      <span className={styles.line}></span>
+      <span className={styles.line} />
 
       <div className={styles.main}>
         <div className={classnames(styles.content, showDeletePopover ? styles['show-del'] : '')}>
           <div className={styles.conditions} onClick={handleBranchClick}>
-            {data.conditions.length === 0 ? (
+            {conditions.length === 0 ? (
               <div className={styles.or}>
                 <div className={styles.and}>所有数据都可进入该分支</div>
               </div>
             ) : (
-              data.conditions.map((condition, cIndex) => {
+              conditions.map((condition, cIndex) => {
                 return (
                   <div key={cIndex} className={styles.or}>
                     {condition.map((and, index) => {
-                      if (formFieldsMap && formFieldsMap[and.fieldName]) {
-                        const { value, symbol, name } = formatRuleValue(and, formFieldsMap[and.fieldName]);
-
-                        return (
-                          <div key={index} className={styles.and}>
-                            <span>{name}</span>
-                            <span className={styles.symbol}>{symbol}</span>
-                            <span>{value}</span>
-                          </div>
-                        );
+                      if (!formFieldsMap[and.fieldName]) {
+                        return null;
                       }
-                      return null;
+
+                      const { value, symbol, name } = formatRuleValue(and, formFieldsMap[and.fieldName]);
+
+                      return (
+                        <div key={index} className={styles.and}>
+                          <span className={styles.name}>{name}</span>
+                          <span className={styles.symbol}>{symbol}</span>
+                          <span>{value}</span>
+                        </div>
+                      );
                     })}
                   </div>
                 );
