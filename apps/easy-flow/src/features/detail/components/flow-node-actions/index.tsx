@@ -18,6 +18,22 @@ function ActionButtons(props: ActionButtonsProps) {
   const { flowMeta, operable, onSave, onSubmit, onApprove, onTerminate, onRevert } = props;
 
   if (operable) {
+    if (flowMeta.type === NodeType.StartNode) {
+      return (
+        <div className={styles.btns}>
+          {/* 填写节点保存按钮 */}
+          <AsyncButton size="large" onClick={onSave}>
+            保存
+          </AsyncButton>
+
+          {/* 填写节点提交按钮 */}
+          <AsyncButton type="primary" size="large" icon={<Icon type="fabu" />} onClick={onSubmit}>
+            提交
+          </AsyncButton>
+        </div>
+      );
+    }
+
     // 填写节点
     if (flowMeta.type === NodeType.FillNode) {
       return (

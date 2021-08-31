@@ -21,9 +21,14 @@ const Cell = memo(function Cell(props: CellProps) {
     <div className={styles.cell}>
       {icon && <Icon className={styles['cell-icon']} type={icon} />}
       <div className={styles['cell-content']}>
-        <Text className={styles['cell-title']} getContainer={getContainer} placement="bottomLeft">
-          {title}
-        </Text>
+        {getContainer ? (
+          <Text className={styles['cell-title']} getContainer={getContainer} placement="bottomLeft">
+            {title}
+          </Text>
+        ) : (
+          <div className={styles['cell-title']}>{title}</div>
+        )}
+
         <div className={styles['cell-desc']}>{desc}</div>
       </div>
     </div>
@@ -104,7 +109,7 @@ function StatusBar(props: StatusBarProps) {
           <Cell
             getContainer={getContainer}
             icon="dangqianchuliren"
-            title={flowIns.currentProcessor.users.map((user) => user.name).join(',')}
+            title={formatAllMembers(flowIns.currentProcessor).join(',')}
             desc="当前处理人"
           />
 
@@ -115,8 +120,13 @@ function StatusBar(props: StatusBarProps) {
 
     return (
       <div className={styles.status}>
-        <Cell icon="dangqianchuliren" title={flowIns.applyUser.name} desc="申请人" getContainer={getContainer} />
-        <Cell icon="xuanzeshijian" title={moment(flowIns.applyTime).format('YYYY-MM-DD HH:mm:ss')} desc="申请时间" />
+        <Cell icon="dangqianchuliren" title={flowIns.applyUser.name} desc="申请人" />
+        <Cell
+          icon="xuanzeshijian"
+          title={moment(flowIns.applyTime).format('YYYY-MM-DD HH:mm:ss')}
+          desc="申请时间"
+          getContainer={getContainer}
+        />
 
         {trackCell}
       </div>
@@ -134,3 +144,11 @@ function StatusBar(props: StatusBarProps) {
 }
 
 export default memo(StatusBar);
+
+function formatAllMembers(data: FlowInstance['currentProcessor']) {
+  const users = (data.users || []).map((user) => user.name);
+  const depts = (data.depts || []).map((dept) => dept.name);
+  const roles = (data.roles || []).map((role) => role.name);
+
+  return depts.concat(roles).concat(users);
+}

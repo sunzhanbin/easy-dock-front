@@ -1,4 +1,4 @@
-import { FormRuleItem } from './index';
+import { FormRuleItem, Dept, Role } from './index';
 import type { FillNode, AuditNode, StartNode } from './flow';
 import { SubApp } from './subapp';
 
@@ -55,7 +55,9 @@ export type FlowInstance = {
   currentNodeName: string;
   processInstanceId: string;
   currentProcessor: {
-    users: User[];
+    users?: User[];
+    depts?: Dept[];
+    roles?: Role[];
   };
   subapp: SubApp;
 };
@@ -82,7 +84,9 @@ export type AuditRecordSchema = {
     };
     nodeName: string;
     taskId: string;
-    userList: User[];
+    userList?: User[];
+    deptList?: Dept[];
+    roleList?: Role[];
   }[];
   taskName: string;
 };
