@@ -576,6 +576,62 @@ const componentSchema = {
       },
     ],
   },
+  // Image: {
+  //   baseInfo: {
+  //     name: '图片',
+  //     icon: 'tupiancaidan',
+  //     category: '基础控件',
+  //     version: '1.0',
+  //     type: 'Image',
+  //   },
+  //   config: [
+  //     {
+  //       key: 'fieldName',
+  //       defaultValue: '',
+  //       label: '数据库字段名',
+  //       placeholder: '字母开头,数字或下划线组成',
+  //       type: 'Input',
+  //       direction: 'vertical',
+  //       required: true,
+  //       requiredMessage: '请输入数据库字段名',
+  //       rules: [
+  //         { pattern: '^[a-zA-Z][a-zA-Z0-9_]{0,29}$', message: '请输入字母开头，包含字母、数字、下划线的1-30位字符' },
+  //       ],
+  //       isProps: false,
+  //     },
+  //     {
+  //       key: 'label',
+  //       defaultValue: '图片',
+  //       label: '控件名称',
+  //       placeholder: '请输入',
+  //       type: 'Input',
+  //       direction: 'vertical',
+  //       required: true,
+  //       requiredMessage: '请输入控件名称',
+  //       isProps: false,
+  //     },
+  //     {
+  //       key: 'desc',
+  //       defaultValue: '',
+  //       label: '提示语',
+  //       placeholder: '请输入',
+  //       type: 'Input',
+  //       direction: 'vertical',
+  //       required: false,
+  //       isProps: false,
+  //     },
+  //     {
+  //       key: 'maxCount',
+  //       defaultValue: 8,
+  //       label: '最大上传数',
+  //       placeholder: '请输入',
+  //       type: 'InputNumber',
+  //       direction: 'vertical',
+  //       required: false,
+  //       isProps: false,
+  //     },
+  //   ],
+  // },
 };
 
 export default componentSchema;
