@@ -61,8 +61,10 @@ const EditorHeader: FC = () => {
   const handlePrev = useCallback(() => {
     if (pathName === flowDesignPath) {
       history.replace(formDesignPath);
+    } else if (pathName === extendPath) {
+      history.replace(flowDesignPath);
     }
-  }, [pathName, history, formDesignPath, flowDesignPath]);
+  }, [pathName, history, formDesignPath, flowDesignPath, extendPath]);
 
   const handleSave = useMemoCallback(async () => {
     if (pathName === formDesignPath) {
@@ -198,17 +200,15 @@ const EditorHeader: FC = () => {
               </span>
             </Tooltip>
           )}
-          {pathName === flowDesignPath && (
+          {pathName !== formDesignPath && (
             <Button className={styles.prev} size="large" onClick={handlePrev}>
               上一步
             </Button>
           )}
 
-          {pathName !== extendPath && (
-            <Button type="primary" ghost className={styles.save} size="large" onClick={handleSave}>
-              保存
-            </Button>
-          )}
+          <Button type="primary" ghost className={styles.save} size="large" onClick={handleSave}>
+            保存
+          </Button>
 
           {pathName === formDesignPath && (
             <Button

@@ -273,23 +273,8 @@
     line-height: 24px;
   }
 }
-// 定制checkbox
-.ant-checkbox-group {
-  .ant-checkbox-wrapper {
-    align-items: center;
-    .ant-checkbox + span {
-      font-size: 14px;
-    }
-  }
-}
-.ant-checkbox-wrapper.ant-checkbox-wrapper {
-  line-height: 1;
-  font-size: 0;
-}
 
 .ant-checkbox {
-  top: 0;
-
   &.ant-checkbox-disabled {
     & + span {
       color: #181f43;
