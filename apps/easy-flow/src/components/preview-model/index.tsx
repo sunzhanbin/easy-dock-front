@@ -17,7 +17,7 @@ import styles from './index.module.scss';
 import classnames from 'classnames';
 import titleImage from '@/assets/title.png';
 
-const propsKey = ['defaultValue', 'showSearch', 'multiple', 'format', 'notSelectPassed'];
+const propsKey = ['defaultValue', 'showSearch', 'multiple', 'format', 'notSelectPassed', 'maxCount'];
 type Key = keyof FormField;
 
 const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, onClose }) => {
@@ -46,6 +46,9 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
           component.props[key] = object[key as Key];
         } else {
           component.config[key] = object[key as Key];
+          if (type === 'Image') {
+            component.props[key] = object[key as Key];
+          }
         }
       });
       components.push(component);

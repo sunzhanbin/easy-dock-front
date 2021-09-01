@@ -1,66 +1,105 @@
-import { memo, useCallback, useState } from 'react';
-import { Upload } from 'antd';
-import styles from './index.module.scss';
+import { memo, useEffect, useState, useRef } from 'react';
+import { Upload, Modal, message } from 'antd';
 import { UploadChangeParam, UploadFile, UploadProps } from 'antd/lib/upload/interface';
-import { UploadRequestOption } from 'rc-upload/lib/interface';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { Icon } from '@common/components';
-import { batchUpload } from '@/apis/file';
+import { getBase64 } from '@/utils';
+import styles from './index.module.scss';
 
-const ImageComponent = (props: UploadProps & { value?: UploadFile[]; onChange?: (value: UploadFile[]) => void }) => {
-  const { maxCount = 8, value = [], onChange } = props;
-  const [fileList, setFileList] = useState<UploadFile[]>(value || []);
-
-  const handleChange = useMemoCallback(({ file, fileList: newList }: UploadChangeParam) => {
-    setFileList((list) => {
-      list.push((file as any).originFileObj);
-      return list;
-    });
-    setTimeout(() => {
-      onChange && onChange(fileList);
-    }, 10);
-  });
-
-  const onPreview = useMemoCallback(async (file: any) => {
-    let src = file.url;
-    if (!src) {
-      src = await new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file.originFileObj);
-        reader.onload = () => resolve(reader.result);
-      });
+const ImageComponent = (
+  props: UploadProps & { colSpace?: string; value?: UploadFile[]; onChange?: (value: UploadFile[]) => void },
+) => {
+  const { maxCount = 8, colSpace = '4', value = [], onChange } = props;
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [previewVisible, setPreviewVisible] = useState<boolean>(false);
+  const [previewTitle, setPreviewTitle] = useState<string>('');
+  const [previewImage, setPreviewImage] = useState<string>('');
+  // 校验图片类型和大小
+  const checkoutFile = useMemoCallback((file: File) => {
+    const { type, size } = file;
+    const isJPG = type === 'image/jpeg';
+    const isPNG = type === 'image/png';
+    const limitSize = 1024 * 1024 * 5; //5M
+    if (!isJPG && !isPNG) {
+      message.error('只支持上传JPG、JPEG、PNG格式的图片~');
+      return false;
     }
-    const image = new Image();
-    image.src = src;
-    const imgWindow = window.open(src);
-    imgWindow!.document.write(image.outerHTML);
+    if (size > limitSize) {
+      message.error('图片超过5M,不允许上传~');
+      return false;
+    }
+    return true;
   });
-  const handleUpload = useMemoCallback((options: UploadRequestOption) => {
-    const { file } = options;
-    batchUpload({ maxUploadNum: maxCount, files: [file as File] }).then((res) => {
-      console.info(res);
-    });
+
+  const handleChange = useMemoCallback(({ file: image }: UploadChangeParam) => {
+    const list = [...value];
+    // 移除图片
+    if (image.status === 'removed') {
+      const index = list.findIndex((item) => item.uid === image.uid);
+      list.splice(index, 1);
+      onChange && onChange(list);
+      return;
+    }
+    // 上传图片
+    const validatedFile = checkoutFile((image as unknown) as File);
+    if (validatedFile) {
+      const file = Object.assign({}, image, { originFileObj: image, percent: 100 });
+      list.push(file);
+      onChange && onChange(list);
+    }
   });
+  // 预览
+  const onPreview = useMemoCallback(async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
+    }
+    setPreviewImage(file.url || file.preview);
+    setPreviewVisible(true);
+    setPreviewTitle(file.name || file.originFileObj.name);
+  });
+  // 阻止图片自动上传
+  const handleBeforeUpload = useMemoCallback(() => {
+    return false;
+  });
+  const handleCancel = useMemoCallback(() => {
+    setPreviewVisible(false);
+  });
+  // 处理每行最多展示8张图片
+  useEffect(() => {
+    const el = containerRef.current!.querySelector('.ant-upload-list-picture-card');
+    if (el) {
+      const classNameList: string[] = [];
+      el.classList.forEach((className) => {
+        if (!className.includes('col-space')) {
+          classNameList.push(className);
+        }
+      });
+      classNameList.push(`col-space-${colSpace}`);
+      el.className = classNameList.join(' ');
+    }
+  }, [colSpace]);
   return (
-    <div className={styles.image} id={props.id}>
-      {fileList.length < maxCount && (
-        <Upload
-          // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-          // action="2"
-          listType="picture-card"
-          maxCount={maxCount}
-          fileList={fileList}
-          customRequest={handleUpload}
-          onChange={handleChange}
-          onPreview={onPreview}
-        >
+    <div className={styles.image} id={props.id} ref={containerRef}>
+      <Upload
+        accept=".png,.jpg,.jpeg"
+        listType="picture-card"
+        maxCount={maxCount}
+        fileList={value}
+        beforeUpload={handleBeforeUpload}
+        onChange={handleChange}
+        onPreview={onPreview}
+      >
+        {value.length >= maxCount ? null : (
           <span>
             <Icon type="shangchuantupian" className={styles.icon} />
             <br />
             上传图片
           </span>
-        </Upload>
-      )}
+        )}
+      </Upload>
+      <Modal width={800} visible={previewVisible} title={previewTitle} footer={null} onCancel={handleCancel}>
+        <img alt="example" style={{ width: '100%' }} src={previewImage} />
+      </Modal>
     </div>
   );
 };

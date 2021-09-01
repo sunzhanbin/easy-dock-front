@@ -143,7 +143,7 @@ const maxCount = {
   type: 'InputNumber',
   direction: 'vertical',
   required: false,
-  isProps: false,
+  isProps: true,
 };
 
 const componentSchema = {

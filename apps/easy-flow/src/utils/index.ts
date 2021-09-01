@@ -479,3 +479,13 @@ export function analysisFormChangeRule(fieldRuleList: fieldRule[][], formValues:
   // 或条件,只要有一个条件块符合即返回true
   return fieldRuleList.some((ruleBlock) => analysisRuleBlock(ruleBlock, formValues));
 }
+
+// 图片文件转base64
+export function getBase64(file: File) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
+}

@@ -1,7 +1,44 @@
 .image {
   width: 100%;
-  height: 100px;
+  height: 200px;
   .icon {
     font-size: 48px;
+  }
+}
+:global {
+  .ant-form {
+    .ant-upload-list-picture-card-container,
+    .ant-upload.ant-upload-select-picture-card {
+      height: 200px;
+    }
+    .col-space-4 {
+      .ant-upload-list-picture-card-container,
+      .ant-upload.ant-upload-select-picture-card {
+        width: calc(12.5% - 8px);
+      }
+    }
+    .col-space-3 {
+      .ant-upload-list-picture-card-container,
+      .ant-upload.ant-upload-select-picture-card {
+        width: calc(16.6666% - 8px);
+      }
+    }
+    .col-space-2 {
+      .ant-upload-list-picture-card-container,
+      .ant-upload.ant-upload-select-picture-card {
+        width: calc(25% - 8px);
+      }
+    }
+    .col-space-1 {
+      .ant-upload-list-picture-card-container,
+      .ant-upload.ant-upload-select-picture-card {
+        width: calc(50% - 8px);
+      }
+    }
+  }
+  .ant-modal {
+    .ant-modal-body {
+      max-height: 800px;
+    }
   }
 }
