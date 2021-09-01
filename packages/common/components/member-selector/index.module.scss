@@ -64,13 +64,13 @@
   .action {
     @include center('flex');
 
+    margin-top: 14px;
     cursor: pointer;
 
     .add {
       width: 20px;
       height: 20px;
       padding: 4px;
-      margin-top: 14px;
       border-radius: 50%;
       color: #fff;
       background-color: $primary-color;

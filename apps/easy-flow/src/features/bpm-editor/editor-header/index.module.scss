@@ -48,8 +48,7 @@
     }
     .operation {
       display: flex;
-      position: absolute;
-      right: 0;
+      align-items: center;
       height: 64px;
       line-height: 64px;
       .iconfont {
@@ -65,12 +64,10 @@
       }
       .prev {
         width: 74px;
-        margin-top: 12px;
         margin-right: 12px;
       }
       .save {
         width: 60px;
-        margin-top: 12px;
         margin-right: 12px;
         border-radius: 3px;
         font-size: 14px;
@@ -78,7 +75,6 @@
       }
       .next {
         width: 74px;
-        margin-top: 12px;
         margin-right: 24px;
         border-radius: 3px;
         font-size: 14px;
@@ -87,8 +83,6 @@
       }
       .publish {
         width: 74px;
-        margin-top: 12px;
-        margin-right: 24px;
         border-radius: 3px;
         font-size: 14px;
         font-weight: 400;

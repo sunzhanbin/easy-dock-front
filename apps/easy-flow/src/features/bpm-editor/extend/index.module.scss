@@ -1,38 +1,121 @@
+@import '@common/styles/mixin.scss';
 @import '@common/styles/var.scss';
 
 .form {
-  padding: 32px;
-  padding-right: 200px;
-  margin-left: calc(50% - 200px);
+  width: 600px;
+  margin: auto;
+  padding-top: 36px;
 
-  .open-visit {
-    margin-bottom: 24px;
+  :global {
+    .ant-form-item-no-colon {
+      height: unset;
+      cursor: pointer;
+    }
 
-    .text {
-      font-weight: 500;
+    .ant-form-item-label {
+      @include center('flex');
     }
   }
 
-  .horizontal-item {
-    display: inline-flex;
+  .open-visit-setting {
+    display: flex;
     align-items: center;
-    cursor: pointer;
-    user-select: none;
+    flex-direction: row;
+    line-height: 34px;
 
-    .text {
-      margin-right: 10px;
+    :global {
+      .ant-form-item-label {
+        padding: 0;
+        font-weight: bold;
+
+        label {
+          font-size: 24px;
+        }
+      }
     }
   }
 
-  .submit {
-    position: absolute;
-    top: 12px;
-    right: 36px;
+  .message-setting__title {
+    margin-bottom: 24px;
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  .visits-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 4px;
+    padding: 5px;
+    border: 1px solid rgba(#181f43, 0.12);
+    border-radius: 50%;
+    color: $primary-color;
+  }
+
+  .visits-label {
+    color: $body-text-color;
+    font-size: 14px;
+    transition: color ease-in-out 0.2s;
+
+    &:hover {
+      color: $title-text-color;
+    }
+  }
+
+  .divider {
+    height: 1px;
+    margin-bottom: 24px;
+    background-color: $background-gray;
+  }
+
+  .message-form-item {
+    margin-bottom: 11px;
+  }
+
+  .tip-format {
+    :global {
+      .ant-form-item-no-colon {
+        cursor: default;
+      }
+    }
+  }
+
+  .help {
+    margin: 0;
+    margin-bottom: 36px;
+    line-height: 22px;
+    color: $body-text-color;
+    font-size: 14px;
+  }
+
+  .webhook-config {
+    margin-bottom: 12px;
+
+    :global {
+      .ant-form-item-control {
+        flex-basis: 388px;
+        flex-grow: 0;
+      }
+    }
+  }
+
+  .webhook-help {
+    margin: 0;
+    padding: 0;
+
+    .webhook-help__item {
+      line-height: 22px;
+      color: $body-text-color;
+      font-size: 14px;
+
+      & + .webhook-help__item {
+        margin-top: 12px;
+      }
+    }
   }
 
   :global {
     .ant-form-item-label {
-      font-weight: 500;
+      font-weight: bold;
     }
 
     .ant-checkbox-group {
