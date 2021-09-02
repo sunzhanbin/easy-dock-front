@@ -30,30 +30,7 @@
 
     &:last-child {
       flex-grow: 0;
-      flex-basis: 52px;
-    }
-  }
-
-  .checkbox {
-    @include center('flex');
-
-    position: relative;
-    cursor: pointer;
-    white-space: nowrap;
-
-    &::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 1;
-    }
-
-    .label {
-      font-size: 14px;
-      margin-left: 8px;
+      flex-basis: 60px;
     }
   }
 }

@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Tooltip, TooltipProps } from 'antd';
 import classnames from 'classnames';
+import { getContainer as commonGetContainer } from '../../utils';
 import styles from './index.module.scss';
 
 interface TextProps {
@@ -22,7 +23,7 @@ function Text(props: TextProps) {
     if (getContainer === false) return undefined;
 
     // 不传时插入父级
-    return getContainer || ((c) => c);
+    return getContainer || commonGetContainer;
   }, [getContainer]);
 
   const handleMouseEnter = useCallback(() => {

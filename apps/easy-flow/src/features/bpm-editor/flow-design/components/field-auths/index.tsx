@@ -1,6 +1,7 @@
 import { memo, useMemo } from 'react';
 import { Checkbox } from 'antd';
 import classnames from 'classnames';
+import { Text } from '@common/components';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { FieldAuthsMap, AuthType, FieldTemplate } from '@type/flow';
 import useFieldsTemplate from '../../hooks/use-fields-template';
@@ -30,28 +31,40 @@ const FieldRow = memo(function FieldRow(props: FieldRowProps) {
 
   return (
     <div className={classnames(styles['flex-row'], max !== AuthType.Required ? styles.limit : '', className)}>
-      <div className={styles.cell}>{label}</div>
+      <Text placement="topLeft" className={styles.cell}>
+        {label}
+      </Text>
+
       <div className={styles.cell}>
-        <span className={styles.checkbox} onClickCapture={() => handleAuthChange(value.auth > 0 ? 0 : 1)}>
-          <Checkbox checked={value.auth > 0} indeterminate={extra?.view.indeterminate} />
-          {extra?.view.label && <span className={styles.label}>{extra.view.label}</span>}
-        </span>
+        <Checkbox
+          checked={value.auth > 0}
+          indeterminate={extra?.view.indeterminate}
+          onChange={(event) => handleAuthChange(event.target.checked ? 1 : 0)}
+        >
+          {extra?.view.label}
+        </Checkbox>
       </div>
 
       {max > 1 && (
         <div className={styles.cell}>
-          <span className={styles.checkbox} onClickCapture={() => handleAuthChange(value.auth > 1 ? 1 : 2)}>
-            <Checkbox checked={value.auth > 1} indeterminate={extra?.edit.indeterminate} />
-            {extra?.edit.label && <span className={styles.label}>{extra.edit.label}</span>}
-          </span>
+          <Checkbox
+            checked={value.auth > 1}
+            indeterminate={extra?.edit.indeterminate}
+            onChange={(event) => handleAuthChange(event.target.checked ? 2 : 1)}
+          >
+            {extra?.edit.label}
+          </Checkbox>
         </div>
       )}
       {max > 2 && (
         <div className={styles.cell}>
-          <span className={styles.checkbox} onClickCapture={() => handleAuthChange(value.auth === 3 ? 2 : 3)}>
-            <Checkbox checked={value.auth === 3} indeterminate={extra?.required.indeterminate} />
-            {extra?.required.label && <span className={styles.label}>{extra.required.label}</span>}
-          </span>
+          <Checkbox
+            checked={value.auth === 3}
+            indeterminate={extra?.required.indeterminate}
+            onChange={(event) => handleAuthChange(event.target.checked ? 3 : 2)}
+          >
+            {extra?.required.label}
+          </Checkbox>
         </div>
       )}
     </div>
