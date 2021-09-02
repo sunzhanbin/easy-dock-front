@@ -46,7 +46,7 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
           component.props[key] = object[key as Key];
         } else {
           component.config[key] = object[key as Key];
-          if (type === 'Image') {
+          if (type === 'Image' || type === 'Attachment') {
             component.props[key] = object[key as Key];
           }
         }

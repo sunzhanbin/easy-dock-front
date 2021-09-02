@@ -75,6 +75,10 @@ export type ImageField = {
   type: 'Image';
   maxNum: number;
 } & BaseField;
+export type AttachmentField = {
+  type: 'Attachment';
+  maxNum: number;
+} & BaseField;
 
 export type FormField =
   | InputField
@@ -85,4 +89,5 @@ export type FormField =
   | CheckboxField
   | SelectField
   | DescTextField
-  | ImageField;
+  | ImageField
+  | AttachmentField;
