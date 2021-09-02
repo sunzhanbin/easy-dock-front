@@ -80,6 +80,11 @@
                   font-size: 14px;
                   font-weight: 400;
                   color: #181f43;
+                  :global {
+                    .ant-checkbox {
+                      top: 0;
+                    }
+                  }
                 }
                 .add {
                   flex: 0 0 24px;

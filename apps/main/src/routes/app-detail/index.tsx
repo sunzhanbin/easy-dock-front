@@ -43,11 +43,11 @@ const AppDetail: FC = () => {
     },
     [appId, history],
   );
-  const handleAssignAppAuth = useMemoCallback((value: AppAuthParams) => {
-    assignAppAuth(value).finally(() => {
-      setShowAuthModal(false);
-    });
-  });
+  // const handleAssignAppAuth = useMemoCallback((value: AppAuthParams) => {
+  //   assignAppAuth(value).finally(() => {
+  //     setShowAuthModal(false);
+  //   });
+  // });
   const handleCrateSubApp = useCallback(() => {
     setShowAppModal(true);
   }, []);
@@ -177,7 +177,9 @@ const AppDetail: FC = () => {
               onClose={() => {
                 setShowAuthModal(false);
               }}
-              onOk={handleAssignAppAuth}
+              onOk={() => {
+                setShowAuthModal(false);
+              }}
             />
           )}
         </div>

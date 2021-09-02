@@ -1,5 +1,5 @@
 import { memo, FC, useMemo, useState, useEffect } from 'react';
-import { Modal, Popover, Checkbox } from 'antd';
+import { Modal, Popover, Checkbox, message } from 'antd';
 import { Icon, MemberList, Loading } from '@common/components';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import {
@@ -13,7 +13,7 @@ import {
   Power,
   AuthEnum,
 } from '@/schema/app';
-import { AppAuthParams, fetchSubAppPowers, Privilege } from '@/api/auth';
+import { AppAuthParams, assignAppAuth, fetchSubAppPowers, Privilege } from '@/api/auth';
 import Selector from '@common/components/member-selector/selector';
 import styles from './index.module.scss';
 import { ValueType } from '@common/components/member-selector/type';
@@ -233,7 +233,12 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: (value: AppAu
       return { id, privileges, openVisit };
     });
     const value: AppAuthParams = { id: String(appId), dataPrivileges, subapps };
-    onOk(value);
+    assignAppAuth(value).then((res) => {
+      if (res.resultCode === 0) {
+        message.success('权限设置成功!');
+        onOk(value);
+      }
+    });
   });
 
   useEffect(() => {
