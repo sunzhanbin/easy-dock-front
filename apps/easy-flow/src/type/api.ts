@@ -25,13 +25,19 @@ export type ParamSchem = {
   type: ParamType;
 };
 
+export type ResponseSchem =
+  | {
+      name: string;
+    }
+  | Omit<ParamSchem, 'location'>[];
+
 export type DataConfig = {
   api: number;
   request: {
     required: ParamSchem[];
     customize: ParamSchem[];
   };
-  response?: Pick<ParamSchem, 'name'>[];
+  response?: ResponseSchem;
 };
 
 export type Field = {

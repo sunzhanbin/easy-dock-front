@@ -5,9 +5,9 @@ const wraps: { [key: string]: (...args: any[]) => any } = {};
 
 export default function useMemoCallback<T extends (...args: any[]) => any>(cb: T): T {
   const hasUnmountRef = useRef(false);
-  const keyRef = useRef<string>(Math.random().toString(36).slice(2));
+  const keyRef = useRef<string>();
 
-  // keyRef.current = keyRef.current || Math.random().toString(36).slice(2);
+  keyRef.current = keyRef.current || Math.random().toString(36).slice(2);
 
   useEffect(() => {
     return () => {

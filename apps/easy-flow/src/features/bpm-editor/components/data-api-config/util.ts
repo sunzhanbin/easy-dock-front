@@ -44,7 +44,7 @@ export function formatPrams(data: ParamData[]) {
   return loop(data, []);
 }
 
-const useMock = true;
+const useMock = false;
 
 if (useMock && process.env.NODE_ENV === 'development') {
   require('./mock');
@@ -66,6 +66,8 @@ export async function queryApiDetail(
       let body: ParamReturn[] = [];
       let response: ParamReturn[] = [];
 
+      if (!data) return [head, body, response];
+
       if (data.headerContent) {
         head = formatPrams(JSON.parse(data.headerContent));
       }
@@ -77,6 +79,7 @@ export async function queryApiDetail(
       if (data.responseParamContent && hasResponse) {
         response = formatPrams(JSON.parse(data.responseParamContent));
       }
+
       const requireds: ParamReturn[] = [];
       const optionals: ParamReturn[] = [];
 

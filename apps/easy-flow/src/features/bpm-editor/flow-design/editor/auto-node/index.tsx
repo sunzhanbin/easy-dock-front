@@ -4,12 +4,13 @@ import { Rule } from 'antd/lib/form';
 import debounce from 'lodash/debounce';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { AutoNode } from '@type/flow';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { updateNode, flowDataSelector } from '../../flow-slice';
+import { useAppDispatch } from '@/app/hooks';
+import { updateNode } from '../../flow-slice';
 import { trimInputValue } from '../../util';
 import { rules } from '../../validators';
 import useValidateForm from '../../hooks/use-validate-form';
 import DataApiConfig from '../../../components/data-api-config';
+import useFieldsTemplate from '../../hooks/use-fields-template';
 
 interface AutoNodeEditorProps {
   node: AutoNode;
@@ -22,7 +23,7 @@ type FormValuesType = {
 function AutoNodeEditor(props: AutoNodeEditorProps) {
   const dispatch = useAppDispatch();
   const { node } = props;
-  const { fieldsTemplate } = useAppSelector(flowDataSelector);
+  const fieldsTemplate = useFieldsTemplate();
   const [form] = Form.useForm<FormValuesType>();
 
   useValidateForm<FormValuesType>(form);
@@ -45,7 +46,7 @@ function AutoNodeEditor(props: AutoNodeEditorProps) {
   }, []);
 
   const fields = useMemo(() => {
-    return fieldsTemplate.map((item) => ({ name: item.name, id: item.id }));
+    return fieldsTemplate.filter((item) => item.type !== 'DescText').map((item) => ({ name: item.name, id: item.id }));
   }, [fieldsTemplate]);
 
   return (

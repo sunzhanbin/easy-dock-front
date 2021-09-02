@@ -29,7 +29,7 @@ function FieldMap(props: FieldMapProps) {
     >
       <Select size="large" placeholder="请选择" getPopupContainer={getPopupContainer}>
         {fields.map((item) => (
-          <Select.Option value={item.id} key={item.id}>
+          <Select.Option value={`\${${item.id}}`} key={item.id}>
             {item.name}
           </Select.Option>
         ))}

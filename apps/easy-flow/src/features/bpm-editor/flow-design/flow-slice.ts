@@ -15,8 +15,10 @@ import {
   FieldTemplate,
 } from '@type/flow';
 import { FormMeta } from '@type';
+import { Api } from '@type/api';
 import { RootState } from '@app/store';
 import { fielduuid, createNode, flowUpdate, branchUpdate, valid, ValidResultType, formatFieldsAuths } from './util';
+import { queryApis } from '../components/data-api-config/util';
 
 export type FlowType = {
   form: FormMeta | null;
@@ -30,6 +32,7 @@ export type FlowType = {
   };
   fieldsTemplate: FieldTemplate[];
   choosedNode: AllNode | null | BranchNode['branches'][number];
+  apis: Api[];
 };
 
 const flowInitial: FlowType = {
@@ -42,6 +45,7 @@ const flowInitial: FlowType = {
   cacheMembers: {},
   fieldsTemplate: [],
   choosedNode: null,
+  apis: [],
 };
 
 function flowRecursion(flowData: Flow, callBack: (node: AllNode) => void) {
@@ -117,6 +121,9 @@ const flow = createSlice({
       state.dirty = true;
 
       delete state.invalidNodesMap[nodeId];
+    },
+    setApis(state, { payload }: PayloadAction<Api[]>) {
+      state.apis = payload;
     },
   },
 });
@@ -243,9 +250,10 @@ export const save = createAsyncThunk<void, { subappId: string; showTip?: boolean
 
     const flow = getState().flow;
     const flowData = flow.data;
-    const validResult: FlowType['invalidNodesMap'] = valid(flowData, {});
 
     try {
+      const validResult: FlowType['invalidNodesMap'] = valid(flowData, {});
+
       await new Promise<void>((resolve, reject) => {
         if (Object.keys(validResult).length) {
           dispatch(flowActions.setInvalidMaps(validResult));
@@ -283,6 +291,12 @@ export const save = createAsyncThunk<void, { subappId: string; showTip?: boolean
     }
   },
 );
+
+export const loadApis = createAsyncThunk('flow/load-api', async (_, { dispatch }) => {
+  const apis = await queryApis();
+
+  dispatch(flowActions.setApis(apis));
+});
 
 export const addSubBranch = createAsyncThunk<void, BranchNode>('flow/add-subbranch', (branchNode, { dispatch }) => {
   dispatch(
@@ -340,7 +354,6 @@ export const addNode = createAsyncThunk<void, { prevId: string; type: AddableNod
 
 export default flow;
 
-// 聚合form和flow, 因为flow的字段权限需要form的字段信息
 export const flowDataSelector = createSelector([(state: RootState) => state.flow], (flow) => flow);
 
 export const fieldsTemplateSelector = createSelector(
@@ -352,3 +365,5 @@ export const formMetaSelector = createSelector(
   (state: RootState) => state.flow.form,
   (form) => form,
 );
+
+export const apisSelector = createSelector([(state: RootState) => state.flow.apis], (apis) => apis);

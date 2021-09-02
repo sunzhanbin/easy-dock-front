@@ -76,8 +76,16 @@ export function createNode(type: NodeType, name?: string) {
       id: fielduuid(),
       name,
       type,
+      dataConfig: {
+        api: 0,
+        request: {
+          required: [],
+          customize: [],
+        },
+      },
     };
   }
+
   const node = {
     id: fielduuid(),
     type,
@@ -231,6 +239,12 @@ export function valid(data: AllNode[], validRes: ValidResultType) {
 
       if (memberValidMessage) {
         errors.push(memberValidMessage);
+      }
+    } else if (node.type === NodeType.AutoNode) {
+      const dataPushValidMessage = validators.data(node.dataConfig);
+
+      if (dataPushValidMessage) {
+        errors.push(dataPushValidMessage);
       }
     }
 

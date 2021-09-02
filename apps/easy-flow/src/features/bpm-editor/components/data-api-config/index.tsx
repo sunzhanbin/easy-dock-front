@@ -66,7 +66,7 @@ function DataApiConfig(props: DataApiConfigProps) {
           })),
           customize: [],
         },
-        response: [],
+        response: undefined,
       });
     }
   }, [apiDetail?.requireds, value?.api, onChange]);
@@ -81,7 +81,7 @@ function DataApiConfig(props: DataApiConfigProps) {
           required: [],
           customize: [],
         },
-        response: [],
+        response: undefined,
       });
     }
   });
