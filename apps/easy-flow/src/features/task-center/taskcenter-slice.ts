@@ -19,7 +19,6 @@ const taskCenter = createSlice({
 export const { setTodoNum, setApp } = taskCenter.actions;
 export const loadApp = createAsyncThunk('app/load', async (appId: string, { dispatch }) => {
   const { data: detailResponse } = await runtimeAxios.get(`/app/${appId}`);
-  console.info(detailResponse, 'detailResponse');
   dispatch(setApp(detailResponse));
 });
 export const appSelector = createSelector([(state: RootState) => state.taskCenter], (data) => data.app);

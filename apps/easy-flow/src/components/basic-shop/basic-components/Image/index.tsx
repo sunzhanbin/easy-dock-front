@@ -23,8 +23,6 @@ const ImageComponent = (
   const { maxCount = 8, colSpace = '4', value, disabled, onChange } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const [fileList, setFileList] = useState<UploadFile[]>([]);
-  const [imgList, setImageList] = useState<any[]>([]);
-
   const [previewVisible, setPreviewVisible] = useState<boolean>(false);
   const [previewTitle, setPreviewTitle] = useState<string>('');
   const [previewImage, setPreviewImage] = useState<string>('');
@@ -59,7 +57,7 @@ const ImageComponent = (
     // 上传图片
     const validatedFile = checkoutFile((image as unknown) as File);
     if (validatedFile) {
-      const file = Object.assign({}, image, { originFileObj: image, percent: 100 });
+      const file = Object.assign({}, image, { originFileObj: image, percent: 99 });
       list.push(file);
       const newValue = Object.assign({}, value, { fileList: list, type: 'Image' });
       setFileList(list);
@@ -82,9 +80,6 @@ const ImageComponent = (
   const handleCancel = useMemoCallback(() => {
     setPreviewVisible(false);
   });
-  const handleDownload = useMemoCallback((file) => {
-    console.info(file);
-  });
   // 处理每行最多展示8张图片
   useEffect(() => {
     const el = containerRef.current!.querySelector('.ant-upload-list-picture-card');
@@ -104,7 +99,6 @@ const ImageComponent = (
       const componentValue = typeof value === 'string' ? (JSON.parse(value) as ImageValue) : { ...value };
       const { fileIdList, fileList } = componentValue;
       const list: UploadFile[] = [];
-      const imageList: any[] = [];
       if (fileIdList && fileIdList.length > 0) {
         const promiseList: Promise<any>[] = [];
 
@@ -114,11 +108,8 @@ const ImageComponent = (
         Promise.all(promiseList).then((resList) => {
           resList.forEach(async (res, index) => {
             const file = fileIdList[index];
-            const blob = new Blob();
+            const blob = new Blob([res]);
             const url: string = window.URL.createObjectURL(blob);
-            const img = document.createElement('img');
-            img.src = url;
-            document.body.appendChild(img);
             list.push({
               name: file.name,
               uid: file.id,
@@ -146,7 +137,6 @@ const ImageComponent = (
         fileList={fileList}
         showUploadList={{ showDownloadIcon: true, showPreviewIcon: true, showRemoveIcon: true }}
         beforeUpload={handleBeforeUpload}
-        onDownload={handleDownload}
         onChange={handleChange}
         onPreview={onPreview}
       >

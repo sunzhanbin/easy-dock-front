@@ -1,13 +1,14 @@
-import { memo, useRef, useEffect, useMemo } from 'react';
+import { memo, useRef, useEffect, useMemo, useState } from 'react';
 import { Upload, message } from 'antd';
 import { UploadChangeParam, UploadFile, UploadProps } from 'antd/lib/upload/interface';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { Icon } from '@common/components';
 import styles from './index.module.scss';
+import { downloadFile } from '@/apis/file';
 
 type FileValue = {
   type: 'Attachment';
-  fileIdList?: { id: string; name: string }[];
+  fileIdList?: { id: string; name: string; mimeType: string }[];
   fileList?: UploadFile[];
 };
 
@@ -16,12 +17,7 @@ const Attachment = (
 ) => {
   const { maxCount = 8, colSpace = '4', value, disabled, onChange } = props;
   const containerRef = useRef<HTMLDivElement>(null);
-  const fileList = useMemo<UploadFile[]>(() => {
-    if (value && value.fileList) {
-      return value.fileList;
-    }
-    return [];
-  }, [value]);
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
   // 校验文件类型和大小
   const checkoutFile = useMemoCallback((file: File) => {
     const { size } = file;
@@ -40,6 +36,7 @@ const Attachment = (
       const index = list.findIndex((item) => item.uid === file.uid);
       list.splice(index, 1);
       const newValue = Object.assign({}, value, { fileList: list, type: 'Attachment' });
+      setFileList(list);
       onChange && onChange(newValue);
       return;
     }
@@ -49,6 +46,7 @@ const Attachment = (
       const fileObj = Object.assign({}, file, { originFileObj: file, percent: 100, name: file.name, type: file.type });
       list.push(fileObj);
       const newValue = Object.assign({}, value, { fileList: list, type: 'Attachment' });
+      setFileList(list);
       onChange && onChange(newValue);
     }
   });
@@ -70,6 +68,39 @@ const Attachment = (
       el.className = classNameList.join(' ');
     }
   }, [colSpace]);
+  useEffect(() => {
+    if (value) {
+      const componentValue = typeof value === 'string' ? (JSON.parse(value) as FileValue) : { ...value };
+      const { fileIdList, fileList } = componentValue;
+      const list: UploadFile[] = [];
+      if (fileIdList && fileIdList.length > 0) {
+        const promiseList: Promise<any>[] = [];
+
+        fileIdList.forEach(({ id }) => {
+          promiseList.push(downloadFile(id));
+        });
+        Promise.all(promiseList).then((resList) => {
+          resList.forEach(async (res, index) => {
+            const file = fileIdList[index];
+            const blob = new Blob([res]);
+            const url: string = window.URL.createObjectURL(blob);
+            list.push({
+              name: file.name,
+              uid: file.id,
+              thumbUrl: '',
+              type: file?.mimeType || 'text/plain',
+            });
+          });
+          if (fileList && fileList.length > 0) {
+            fileList.forEach((val) => {
+              list.push(val);
+            });
+          }
+          setFileList(list);
+        });
+      }
+    }
+  }, []);
   return (
     <div className={styles.attachment} ref={containerRef}>
       <Upload

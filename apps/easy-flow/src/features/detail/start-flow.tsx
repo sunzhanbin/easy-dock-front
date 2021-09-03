@@ -14,7 +14,7 @@ import Header from '@components/header';
 import useSubapp from '@/hooks/use-subapp';
 import styles from './index.module.scss';
 import titleImage from '@/assets/title.png';
-import { batchUpload } from '@apis/file';
+import { uploadFile } from '@utils';
 
 type DataType = {
   processMeta: StartNode;
@@ -84,51 +84,28 @@ function StartFlow() {
   const handleSubmit = useMemoCallback(async () => {
     if (!formRef.current || !subApp) return;
     const values = await formRef.current.validateFields();
-
-    const fileListMap: { [k: string]: any[] } = {};
-    const fileIdMap: { [k: string]: any } = {};
-
-    Object.keys(values).forEach((key) => {
-      if (values[key]?.type === 'Image') {
-        fileListMap[key] = values[key].fileList;
-      }
+    const formValues = await uploadFile(values);
+    // 上传文件成功之后再提交表单
+    await runtimeAxios.post(`/process_instance/start`, {
+      formData: formValues,
+      versionId: subApp.version.id,
     });
-    const promiseList: Promise<any>[] = [];
-    Object.values(fileListMap).forEach((val) => {
-      promiseList.push(batchUpload({ maxUploadNum: val.length, files: val.map((v) => v.originFileObj) }));
-    });
-    // 上传文件
-    Promise.all(promiseList).then(async (resList) => {
-      resList.forEach((res, index) => {
-        const key = Object.keys(fileListMap)[index];
-        fileIdMap[key] = {
-          type: values[key].type,
-          fileList: [],
-          fileIdList: res.data,
-        };
-      });
-      const formValues = Object.assign({}, values, fileIdMap);
-      // 上传文件成功之后再提交表单
-      await runtimeAxios.post(`/process_instance/start`, {
-        formData: formValues,
-        versionId: subApp.version.id,
-      });
 
-      message.success('提交成功');
+    message.success('提交成功');
 
-      setTimeout(() => {
-        // 回任务中心我的发起
-        history.replace(`${dynamicRoutes.toTaskCenter(subApp.app.id)}/start`);
-      }, 1500);
-    });
+    setTimeout(() => {
+      // 回任务中心我的发起
+      history.replace(`${dynamicRoutes.toTaskCenter(subApp.app.id)}/start`);
+    }, 1500);
   });
 
   // const handleSave = useMemoCallback(async () => {
   //   if (!formRef.current || !subApp) return;
   //   const values = await formRef.current.validateFields();
+  //   const formValues = await uploadFile(values);
 
   //   await runtimeAxios.post(`/task/draft/add`, {
-  //     formData: values,
+  //     formData: formValues,
   //     versionId: subApp.version.id,
   //   });
 
