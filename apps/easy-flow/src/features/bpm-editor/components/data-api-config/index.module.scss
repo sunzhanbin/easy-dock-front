@@ -105,6 +105,10 @@
     :global {
       .ant-select {
         width: 118px;
+
+        .ant-select-selection-placeholder {
+          color: inherit;
+        }
       }
 
       .ant-form-item {
@@ -118,8 +122,8 @@
           padding-bottom: 24px !important;
 
           .ant-form-item-explain {
-            display: block;
             position: absolute;
+            display: block;
             bottom: -24px;
             left: 0;
           }

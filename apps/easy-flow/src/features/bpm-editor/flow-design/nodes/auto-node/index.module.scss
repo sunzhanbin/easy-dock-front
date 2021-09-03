@@ -1,0 +1,18 @@
+@import '@common/styles/var.scss';
+@import '@common/styles/mixin.scss';
+
+.api {
+  @include center('flex');
+
+  line-height: 22px;
+  font-size: 14px;
+
+  .desc {
+    margin-right: 4px;
+    color: $caption-text-color;
+  }
+
+  .name {
+    color: $title-text-color;
+  }
+}

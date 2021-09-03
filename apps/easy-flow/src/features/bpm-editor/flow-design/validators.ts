@@ -1,5 +1,6 @@
 import { Rule } from 'antd/lib/form';
 import { CorrelationMemberConfig } from '@type/flow';
+import { DataConfig } from '@type/api';
 import { validName } from '@common/rule';
 
 const member = (value: CorrelationMemberConfig): string => {
@@ -12,9 +13,32 @@ const member = (value: CorrelationMemberConfig): string => {
   return '';
 };
 
+const dataPushConfig = (value: DataConfig): string => {
+  const { api, request: { required = [], customize = [] } = {} } = value || {};
+
+  if (!api) {
+    return '推送数据的接口的不能为空';
+  }
+
+  let message = '';
+
+  [...required, ...customize].some((param) => {
+    if (!param.name || !param.location || !param.map) {
+      message = '推送数据配置不合法';
+
+      return true;
+    }
+
+    return false;
+  });
+
+  return message;
+};
+
 export const validators = {
   member,
   name: validName,
+  data: dataPushConfig,
 };
 
 export const rules: { [key: string]: Rule } = {

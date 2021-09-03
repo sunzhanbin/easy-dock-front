@@ -19,25 +19,19 @@ function ResponseNoMap(props: ResponseNoMapProps) {
     <>
       <div className={styles.subtitle}>{label}</div>
 
-      <Form.List name={name}>
-        {() => (
-          <>
-            <Form.Item name={[0, 'name']}>
-              {optionals.length > 0 ? (
-                <Select size="large" placeholder="请选择" getPopupContainer={getPopupContainer}>
-                  {optionals.map((item) => (
-                    <Select.Option value={item.name} key={item.name}>
-                      {item.name}
-                    </Select.Option>
-                  ))}
-                </Select>
-              ) : (
-                <Input placeholder="请输入" size="large" />
-              )}
-            </Form.Item>
-          </>
+      <Form.Item name={[...name, 'name']}>
+        {optionals.length > 0 ? (
+          <Select size="large" placeholder="请选择" getPopupContainer={getPopupContainer}>
+            {optionals.map((item) => (
+              <Select.Option value={item.name} key={item.name}>
+                {item.name}
+              </Select.Option>
+            ))}
+          </Select>
+        ) : (
+          <Input placeholder="请输入" size="large" />
         )}
-      </Form.List>
+      </Form.Item>
     </>
   );
 }

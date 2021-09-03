@@ -14,7 +14,7 @@ import {
   AutoNodeEditor,
 } from './editor';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { load, flowDataSelector, save, setChoosedNode } from './flow-slice';
+import { load, flowDataSelector, save, setChoosedNode, loadApis } from './flow-slice';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import FlowTree from './flow-tree';
 import styles from './index.module.scss';
@@ -32,6 +32,9 @@ function FlowDesign() {
   }, [dispatch, bpmId]);
 
   useEffect(() => {
+    // 页面加载时请求服务列表为自动节点显示接口名称
+    dispatch(loadApis());
+
     return () => {
       dispatch(setChoosedNode(null));
     };

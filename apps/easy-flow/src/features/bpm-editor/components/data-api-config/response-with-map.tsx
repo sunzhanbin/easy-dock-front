@@ -29,38 +29,40 @@ function ResponseWithMap(props: ResponseWithMapProps) {
               return (
                 <div className={classnames(styles.row)} key={field.fieldKey}>
                   <div className={styles.detail}>
-                    <ParamName name={[field.name, 'name']}>
-                      <Form.Item shouldUpdate={() => true} style={{ margin: 0 }}>
-                        {(form) => {
-                          const value = form.getFieldValue(name);
-                          const { type } = value[index];
-                          const optionals = detail?.responses || [];
+                    <Form.Item shouldUpdate noStyle>
+                      {(form) => {
+                        const value = form.getFieldValue(name);
+                        const { type } = value[index];
+                        const optionals = detail?.responses || [];
+                        let paramNameChildren;
 
-                          if (type === ParamType.Optional && optionals.length > 0) {
-                            return (
-                              <Select
-                                size="large"
-                                placeholder="请选择"
-                                getPopupContainer={getPopupContainer}
-                                dropdownMatchSelectWidth={false}
-                              >
-                                {optionals.map((param) => {
-                                  const name = param.name;
+                        if (type === ParamType.Optional) {
+                          paramNameChildren = (
+                            <Select
+                              size="large"
+                              placeholder="请选择"
+                              getPopupContainer={getPopupContainer}
+                              dropdownMatchSelectWidth={false}
+                            >
+                              {optionals.map((param) => {
+                                const name = param.name;
 
-                                  return (
-                                    <Select.Option key={name} value={name}>
-                                      {name}
-                                    </Select.Option>
-                                  );
-                                })}
-                              </Select>
-                            );
-                          }
+                                return (
+                                  <Select.Option key={name} value={name}>
+                                    {name}
+                                  </Select.Option>
+                                );
+                              })}
+                            </Select>
+                          );
+                        } else {
+                          paramNameChildren = <Input placeholder="请输入" size="large" />;
+                        }
 
-                          return <Input placeholder="请输入" size="large" />;
-                        }}
-                      </Form.Item>
-                    </ParamName>
+                        return <ParamName name={[field.name, 'name']}>{paramNameChildren}</ParamName>;
+                      }}
+                    </Form.Item>
+
                     <span className={styles.map}>对应</span>
                     <FieldMap name={[field.name, 'map']} />
                   </div>
