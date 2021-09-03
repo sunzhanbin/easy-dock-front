@@ -4,6 +4,7 @@ import { UploadChangeParam, UploadFile, UploadProps } from 'antd/lib/upload/inte
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { Icon } from '@common/components';
 import styles from './index.module.scss';
+import { downloadFile } from '@utils';
 
 type FileValue = {
   type: 'Attachment';
@@ -53,6 +54,10 @@ const Attachment = (
   const handleBeforeUpload = useMemoCallback(() => {
     return false;
   });
+  const handleDownload = useMemoCallback((file: UploadFile) => {
+    const { name, uid } = file;
+    downloadFile(uid, name);
+  });
   // 处理每行最多展示4个文件
   useEffect(() => {
     const el = containerRef.current!.querySelector('.ant-upload-select-picture')?.parentElement;
@@ -78,7 +83,8 @@ const Attachment = (
             name: file.name,
             uid: file.id,
             thumbUrl: '',
-            type: 'text/plain',
+            status: 'done',
+            type: file.mimeType || 'text/plain',
           });
         });
         if (fileList && fileList.length > 0) {
@@ -99,9 +105,13 @@ const Attachment = (
         fileList={fileList}
         iconRender={() => <Icon type="wendangshangchuan" className={styles['file-icon']} />}
         isImageUrl={() => false}
-        showUploadList={{ showDownloadIcon: true, showRemoveIcon: true }}
+        showUploadList={{
+          showDownloadIcon: true,
+          showRemoveIcon: true,
+        }}
         beforeUpload={handleBeforeUpload}
         onChange={handleChange}
+        onDownload={handleDownload}
       >
         {fileList.length >= maxCount ? null : (
           <span>

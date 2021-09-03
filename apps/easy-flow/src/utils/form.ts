@@ -1,4 +1,4 @@
-import { batchUpload } from '@/apis/file';
+import { batchUpload, downloadFile as download } from '@/apis/file';
 import { DateField, fieldRule, FormField } from '@/type';
 import moment from 'moment';
 
@@ -401,9 +401,21 @@ export async function uploadFile(values: any) {
     fileIdMap[key] = {
       type: values[key].type,
       fileList: [],
-      fileIdList: res.data,
+      fileIdList: (values[key].fileIdList || []).concat(res.data),
     };
   });
   // 重新组装表单数据
   return Object.assign({}, values, fileIdMap);
+}
+
+export function downloadFile(id: string, name: string) {
+  download(id).then((res) => {
+    const blob = new Blob([res as any]);
+    const urlObject = window.URL || window.webkitURL || window;
+    const save_link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a') as HTMLAnchorElement;
+
+    save_link.href = urlObject.createObjectURL(blob);
+    save_link.download = name;
+    save_link.click();
+  });
 }
