@@ -156,7 +156,7 @@ function FlowDetail() {
   return (
     <div className={styles.container}>
       {loading && <Loading />}
-      <Header className={styles.header} backText="流程详情">
+      <Header className={styles.header} backClassName={styles.back} backText="流程详情">
         {data && (
           <FlowNodeActions
             flowMeta={data.flow.node}

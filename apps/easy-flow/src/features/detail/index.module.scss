@@ -20,6 +20,12 @@
         color: inherit;
       }
     }
+    & > div.back {
+      color: rgba(0, 0, 0, 0.85);
+      svg {
+        color: inherit;
+      }
+    }
 
     .save {
       margin-right: 15px;
@@ -63,7 +69,7 @@
       left: 0;
       width: 710px;
       height: 490px;
-      background-image: url('../../assets/background_left.png');
+      background-image: url('~@/assets/background_left.png');
       background-size: contain;
       background-repeat: no-repeat;
     }
@@ -73,7 +79,7 @@
       right: 0;
       width: 698px;
       height: 380px;
-      background-image: url('../../assets/background_right.png');
+      background-image: url('~@/assets/background_right.png');
       background-size: contain;
       background-repeat: no-repeat;
     }

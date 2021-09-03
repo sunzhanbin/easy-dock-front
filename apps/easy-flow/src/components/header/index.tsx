@@ -6,6 +6,7 @@ import styles from './index.module.scss';
 
 interface DetailHeaderProps {
   backText: string;
+  backClassName?: string;
   children?: ReactNode;
   className?: string;
   goBack?: Function;
@@ -13,7 +14,7 @@ interface DetailHeaderProps {
 
 function DetailHeader(props: DetailHeaderProps) {
   const history = useHistory();
-  const { backText, children, className, goBack } = props;
+  const { backText, backClassName, children, className, goBack } = props;
   const handelClick = useCallback(() => {
     if (goBack) {
       goBack();
@@ -23,7 +24,7 @@ function DetailHeader(props: DetailHeaderProps) {
   }, [history, goBack]);
   return (
     <div className={classnames(styles.header, className)}>
-      <div className={styles.back} onClick={handelClick}>
+      <div className={classnames(styles.back, backClassName)} onClick={handelClick}>
         <Icon className={styles.icon} type="fanhui" />
         {backText}
       </div>

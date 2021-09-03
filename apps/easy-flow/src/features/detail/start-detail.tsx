@@ -56,7 +56,7 @@ function StartDetail() {
   return (
     <div className={styles.container}>
       {loading && <Loading />}
-      <Header className={styles.header} backText="流程详情">
+      <Header className={styles.header} backText="流程详情" backClassName={styles.back}>
         <AsyncButton size="large" disabled>
           撤回
         </AsyncButton>
