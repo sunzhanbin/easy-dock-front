@@ -4,6 +4,10 @@
     font-weight: 400;
     color: #181f43;
   }
+  .file-icon {
+    font-size: 24px;
+    margin-right: 8px;
+  }
   .icon {
     font-size: 16px;
     margin-right: 8px;
@@ -66,6 +70,17 @@
     .col-space-1 {
       .ant-upload-list-picture-container {
         width: 100%;
+      }
+    }
+    .ant-upload-list-picture .ant-upload-list-item {
+      height: 40px;
+    }
+    .ant-upload-list-picture-container {
+      .ant-upload-list-item-thumbnail.ant-upload-list-item-file {
+        width: auto;
+      }
+      .ant-upload-list-item-thumbnail {
+        cursor: default;
       }
     }
   }

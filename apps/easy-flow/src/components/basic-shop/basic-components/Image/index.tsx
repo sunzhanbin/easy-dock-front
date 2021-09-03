@@ -1,4 +1,4 @@
-import { memo, useEffect, useState, useRef, useMemo } from 'react';
+import { memo, useEffect, useState, useRef } from 'react';
 import { Upload, Modal, message } from 'antd';
 import { UploadChangeParam, UploadFile, UploadProps } from 'antd/lib/upload/interface';
 import useMemoCallback from '@common/hooks/use-memo-callback';

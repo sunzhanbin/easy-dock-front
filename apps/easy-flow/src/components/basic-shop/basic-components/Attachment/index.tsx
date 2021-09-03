@@ -1,10 +1,9 @@
-import { memo, useRef, useEffect, useMemo, useState } from 'react';
+import { memo, useRef, useEffect, useState } from 'react';
 import { Upload, message } from 'antd';
 import { UploadChangeParam, UploadFile, UploadProps } from 'antd/lib/upload/interface';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { Icon } from '@common/components';
 import styles from './index.module.scss';
-import { downloadFile } from '@/apis/file';
 
 type FileValue = {
   type: 'Attachment';
@@ -74,30 +73,20 @@ const Attachment = (
       const { fileIdList, fileList } = componentValue;
       const list: UploadFile[] = [];
       if (fileIdList && fileIdList.length > 0) {
-        const promiseList: Promise<any>[] = [];
-
-        fileIdList.forEach(({ id }) => {
-          promiseList.push(downloadFile(id));
-        });
-        Promise.all(promiseList).then((resList) => {
-          resList.forEach(async (res, index) => {
-            const file = fileIdList[index];
-            const blob = new Blob([res]);
-            const url: string = window.URL.createObjectURL(blob);
-            list.push({
-              name: file.name,
-              uid: file.id,
-              thumbUrl: '',
-              type: file?.mimeType || 'text/plain',
-            });
+        fileIdList.forEach((file) => {
+          list.push({
+            name: file.name,
+            uid: file.id,
+            thumbUrl: '',
+            type: 'text/plain',
           });
-          if (fileList && fileList.length > 0) {
-            fileList.forEach((val) => {
-              list.push(val);
-            });
-          }
-          setFileList(list);
         });
+        if (fileList && fileList.length > 0) {
+          fileList.forEach((val) => {
+            list.push(val);
+          });
+        }
+        setFileList(list);
       }
     }
   }, []);
@@ -108,6 +97,9 @@ const Attachment = (
         disabled={disabled}
         maxCount={maxCount}
         fileList={fileList}
+        iconRender={() => <Icon type="wendangshangchuan" className={styles['file-icon']} />}
+        isImageUrl={() => false}
+        showUploadList={{ showDownloadIcon: true, showRemoveIcon: true }}
         beforeUpload={handleBeforeUpload}
         onChange={handleChange}
       >
