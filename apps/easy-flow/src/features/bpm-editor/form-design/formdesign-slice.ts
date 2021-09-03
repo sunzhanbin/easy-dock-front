@@ -143,6 +143,9 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
             props[key] = byId[id][key as Key];
           } else {
             config[key] = byId[id][key as Key];
+            if (key === 'colSpace' && (type === 'Image' || type === 'Attachment')) {
+              props[key] = byId[id][key as Key];
+            }
           }
         });
         // 校验编辑的控件属性

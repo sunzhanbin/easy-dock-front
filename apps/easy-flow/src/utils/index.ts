@@ -481,7 +481,7 @@ export function analysisFormChangeRule(fieldRuleList: fieldRule[][], formValues:
 }
 
 // 图片文件转base64
-export function getBase64(file: File) {
+export function getBase64(file: File | Blob) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);

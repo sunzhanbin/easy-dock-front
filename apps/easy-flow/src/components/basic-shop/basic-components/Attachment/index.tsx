@@ -1,19 +1,31 @@
-import { memo, useRef, useEffect } from 'react';
+import { memo, useRef, useEffect, useMemo } from 'react';
 import { Upload, message } from 'antd';
 import { UploadChangeParam, UploadFile, UploadProps } from 'antd/lib/upload/interface';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { Icon } from '@common/components';
 import styles from './index.module.scss';
 
+type FileValue = {
+  type: 'Attachment';
+  fileIdList?: { id: string; name: string }[];
+  fileList?: UploadFile[];
+};
+
 const Attachment = (
-  props: UploadProps & { colSpace?: string; value?: UploadFile[]; onChange?: (value: UploadFile[]) => void },
+  props: UploadProps & { colSpace?: string; value?: FileValue; onChange?: (value: FileValue) => void },
 ) => {
-  const { maxCount = 8, colSpace = '4', value = [], onChange } = props;
+  const { maxCount = 8, colSpace = '4', value, disabled, onChange } = props;
   const containerRef = useRef<HTMLDivElement>(null);
+  const fileList = useMemo<UploadFile[]>(() => {
+    if (value && value.fileList) {
+      return value.fileList;
+    }
+    return [];
+  }, [value]);
   // 校验文件类型和大小
   const checkoutFile = useMemoCallback((file: File) => {
     const { size } = file;
-    const limitSize = 1024 * 1024 * 20; //5M
+    const limitSize = 1024 * 1024 * 20; //20M
     if (size > limitSize) {
       message.error('文件超过20M,不允许上传~');
       return false;
@@ -22,21 +34,22 @@ const Attachment = (
   });
 
   const handleChange = useMemoCallback(({ file }: UploadChangeParam) => {
-    const list = [...value];
+    const list = [...fileList];
     // 移除文件
     if (file.status === 'removed') {
       const index = list.findIndex((item) => item.uid === file.uid);
       list.splice(index, 1);
-      onChange && onChange(list);
+      const newValue = Object.assign({}, value, { fileList: list, type: 'Attachment' });
+      onChange && onChange(newValue);
       return;
     }
     // 上传文件
     const validatedFile = checkoutFile((file as unknown) as File);
     if (validatedFile) {
       const fileObj = Object.assign({}, file, { originFileObj: file, percent: 100, name: file.name, type: file.type });
-      console.info(file, fileObj);
       list.push(fileObj);
-      onChange && onChange(list);
+      const newValue = Object.assign({}, value, { fileList: list, type: 'Attachment' });
+      onChange && onChange(newValue);
     }
   });
   // 阻止文件自动上传
@@ -61,12 +74,13 @@ const Attachment = (
     <div className={styles.attachment} ref={containerRef}>
       <Upload
         listType="picture"
+        disabled={disabled}
         maxCount={maxCount}
-        fileList={value}
+        fileList={fileList}
         beforeUpload={handleBeforeUpload}
         onChange={handleChange}
       >
-        {value.length >= maxCount ? null : (
+        {fileList.length >= maxCount ? null : (
           <span>
             <Icon type="fujiancaidan" className={styles.icon} />
             上传附件

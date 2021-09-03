@@ -11,3 +11,7 @@ export const batchUpload = ({ maxUploadNum, files }: batchUploadParams) => {
   });
   return runtimeAxios.post(`/file/batchUpload?maxUploadNum=${maxUploadNum}`, formData);
 };
+
+export const downloadFile = (id: string) => {
+  return runtimeAxios.get(`/file/download/${id}`, { responseType: 'blob' });
+};

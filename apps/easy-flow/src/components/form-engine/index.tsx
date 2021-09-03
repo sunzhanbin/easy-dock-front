@@ -174,7 +174,7 @@ const FormDetail = React.forwardRef(function FormDetail(
       // 流程编排中没有配置fieldAuths这个字段默认可见
       visbles[fieldName || id] = fieldsAuths[fieldName || id] !== AuthType.Denied;
     });
-
+    console.info(formValues, 'formValues');
     // 设置表单初始值
     form.setFieldsValue(formValues);
     const hiddenFieldMap: FieldsVisible = {};
