@@ -77,7 +77,7 @@ export function createNode(type: NodeType, name?: string) {
       name,
       type,
       dataConfig: {
-        api: 0,
+        api: undefined,
         request: {
           required: [],
           customize: [],
