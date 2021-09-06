@@ -380,31 +380,37 @@ export function getBase64(file: File | Blob) {
     reader.onerror = (error) => reject(error);
   });
 }
+type FileValue = {
+  type: string;
+  fileList: File[];
+  fileIdList: { id: string; name: string }[];
+};
 // 批量上传文件
 export async function uploadFile(values: any) {
-  const fileListMap: { [k: string]: any[] } = {};
-  const fileIdMap: { [k: string]: any } = {};
+  // 需要上传的文件,图片和附件合并到一起
+  const files: { originFileObj: File }[] = [];
+  const fileListMap: { [k: string]: number } = {};
+  const fileIdMap: { [k: string]: FileValue } = {};
   // 找出需要上传的文件,只有图片和附件需要上传
   Object.keys(values).forEach((key) => {
     if (values[key] && (values[key]?.type === 'Image' || 'Attachment')) {
-      fileListMap[key] = values[key].fileList;
+      const fileList = values[key].fileList.filter((file: { originFileObj: File }) => file.originFileObj);
+      fileListMap[key] = fileList.length;
+      files.push(...fileList);
     }
   });
-  const promiseList: Promise<any>[] = [];
-  Object.values(fileListMap).forEach((val) => {
-    if (val && val.length) {
-      promiseList.push(batchUpload({ maxUploadNum: val.length, files: val.map((v) => v.originFileObj) }));
-    }
-  });
-  const resList = await Promise.all(promiseList);
-  resList.forEach((res, index) => {
-    const key = Object.keys(fileListMap)[index];
-    fileIdMap[key] = {
-      type: values[key].type,
-      fileList: [],
-      fileIdList: (values[key].fileIdList || []).concat(res.data),
-    };
-  });
+  if (files.length > 0) {
+    const res = await batchUpload({ maxUploadNum: files.length, files: files.map((file) => file.originFileObj) });
+    const list = [...res.data];
+    Object.keys(fileListMap).forEach((key) => {
+      const oldValue = values[key];
+      fileIdMap[key] = {
+        type: oldValue.type,
+        fileList: [],
+        fileIdList: (oldValue.fileIdList || []).concat(list.splice(0, fileListMap[key])),
+      };
+    });
+  }
   // 重新组装表单数据
   return Object.assign({}, values, fileIdMap);
 }
