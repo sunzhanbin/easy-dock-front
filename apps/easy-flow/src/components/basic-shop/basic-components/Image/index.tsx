@@ -142,7 +142,7 @@ const ImageComponent = (
       >
         {fileList.length >= maxCount ? null : (
           <span>
-            <Icon type="shangchuantupian" className={styles.icon} />
+            <Icon type="tupian" className={styles.icon} />
             <br />
             上传图片
           </span>

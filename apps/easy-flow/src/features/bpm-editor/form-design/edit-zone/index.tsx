@@ -35,7 +35,7 @@ const EditZone = () => {
   }, [byId, formDesign, setActiveKey]);
   useEffect(() => {
     // 0915临时版本
-    selectedField ? setActiveKey('1') : setActiveKey('2');
+    selectedField ? setActiveKey('1') : setActiveKey('1');
   }, [selectedField]);
   const onSave = useCallback(
     (values, isValidate) => {
@@ -73,9 +73,9 @@ const EditZone = () => {
           />
         </TabPane>
         {/* 0915版本暂时隐藏 */}
-        <TabPane tab="表单属性" key="2">
+        {/* <TabPane tab="表单属性" key="2">
           <FormAttrEditor />
-        </TabPane>
+        </TabPane> */}
       </Tabs>
     </div>
   );
