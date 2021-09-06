@@ -1,17 +1,47 @@
-import React from 'react';
+import 'antd/dist/antd.css';
+import 'react-grid-layout/css/styles.css';
+import 'react-resizable/css/styles.css';
+import './styles/base.scss';
+import appConfig from './init';
 import ReactDOM from 'react-dom';
-import './index.css';
+import { Router } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { createBrowserHistory } from 'history';
+import { store } from './app/store';
+import AntdProvider from '@common/components/antd-provider';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+const APP_CONTAINER_ID = '#easy-chart-root';
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+export async function mount(props?: { container: HTMLElement; basename: string; appId: string }) {
+  const { container, basename = '/', appId } = props || {};
+  const history = createBrowserHistory({ basename });
+  if (appId) {
+    appConfig.appId = appId;
+  }
+
+  ReactDOM.render(
+    <AntdProvider>
+      <Provider store={store}>
+        <Router history={history}>
+          <App />
+        </Router>
+      </Provider>
+    </AntdProvider>,
+    container ? container.querySelector(APP_CONTAINER_ID) : document.querySelector(APP_CONTAINER_ID),
+  );
+}
+
+if (!appConfig.micro) {
+  mount();
+}
+
+export async function bootstrap() {}
+
+export async function unmount(props: { container: HTMLElement }) {
+  const { container } = props;
+
+  ReactDOM.unmountComponentAtNode(
+    (container && container.querySelector(APP_CONTAINER_ID)) || document.querySelector(APP_CONTAINER_ID)!,
+  );
+}

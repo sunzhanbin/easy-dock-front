@@ -61,7 +61,7 @@ const Container = styled.div`
           border-radius: 3px;
           border: 1px solid rgba(24, 31, 67, 0.12);
           margin-bottom: 12px;
-          cursor: not-allowed;
+          cursor: pointer;
           .image {
             flex: 0 0 64px;
             margin: 8px 12px;
@@ -87,6 +87,16 @@ const Container = styled.div`
           }
         }
         .flow {
+          cursor: pointer;
+          border: 1px solid rgba(24, 31, 67, 0.12);
+          &:hover {
+            border: 1px solid rgba(24, 31, 67, 0.5);
+          }
+          &.active {
+            border: 1px solid rgba(24, 31, 67, 0.5);
+          }
+        }
+        .screen {
           cursor: pointer;
           border: 1px solid rgba(24, 31, 67, 0.12);
           &:hover {
@@ -199,7 +209,12 @@ const AppModel: FC<{
                   <div className="desc">可配置表单、流程、列表</div>
                 </div>
               </div>
-              <div className="screen">
+              <div 
+                className={classNames('screen', selectedType === 'screen' ? 'active' : '')}
+                onClick={() => {
+                  setSelectedType('screen');
+                }}
+              >
                 <img src={ScreenImage} alt="ScreenImage" className="image" />
                 <div className="text">
                   <div className="title">新建大屏子应用</div>

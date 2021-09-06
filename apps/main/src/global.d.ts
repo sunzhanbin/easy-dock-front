@@ -12,6 +12,7 @@ interface Window {
   EASY_DOCK_BASE_SERVICE_ENDPOINT: string;
   ALGOR_ORCH_FRONTEND_ENTRY: string;
   EASY_FLOW_FRONTEND_ENTRY: string;
+  EASY_CHART_FRONTEND_ENTRY: string;
   COMMON_LOGIN_URL: string;
   setImmediate(): void;
 }

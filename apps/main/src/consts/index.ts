@@ -38,12 +38,20 @@ export const FlowMicroApp: Readonly<MicroApp> = {
   route: '/builder/flow',
 };
 
+export const ChartMicroApp: Readonly<MicroApp> = {
+  name: 'chart',
+  entry: window.EASY_CHART_FRONTEND_ENTRY,
+  title: '报表编排',
+  route: '/builder/chart',
+};
+
 // 导出微前端应用集合
-export const micros: Readonly<MicroApp>[] = [OrchMicroApp, FlowMicroApp];
+export const micros: Readonly<MicroApp>[] = [OrchMicroApp, FlowMicroApp, ChartMicroApp];
 
 // 配置需要隐藏头部的url
 export const shouldHideHeaderUrls = [
   OrchMicroApp.route + orchRoutes.ORCH_EDIT_GENERATION_API, // 微前端服务编排积木页面
   ROUTES.INTEGRATION_ORCH_EDIT_GENERATION_API, // 集成管理页面加载服务编排时积木页面
   FlowMicroApp.route + '/*',
+  ChartMicroApp.route + '/*',
 ];
