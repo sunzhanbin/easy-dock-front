@@ -63,20 +63,19 @@ type RuleFormProps = {
   components: Array<any>;
   className?: string;
   rule: fieldRule;
+  form: FormInstance;
   blockIndex: number;
   ruleIndex: number;
-  form: FormInstance;
   onChange?: (blockIndex: number, ruleIndex: number, rule: fieldRule) => void;
   loadDataSource?: (id: string) => Promise<{ key: string; value: string }[] | { data: { data: string[] } }>;
 };
-
 const FormList = ({
   components,
   className,
   rule,
+  form,
   blockIndex,
   ruleIndex,
-  form,
   onChange,
   loadDataSource,
 }: RuleFormProps) => {
@@ -177,7 +176,7 @@ const FormList = ({
         setDataSource(fieldName, type);
       }
     }
-  }, []);
+  }, [rule]);
   const renderSymbol = useMemoCallback(() => {
     const component = componentList.find((item) => item.fieldName === fieldName);
     const componentType = component && component.type;
@@ -401,7 +400,7 @@ const FormList = ({
     return null;
   });
   return (
-    <Form.Item noStyle className={classnames(styles.form, className ? className : '')}>
+    <Form.Item className={classnames(styles.form, className ? className : '')}>
       <Form.List name={name}>
         {() => {
           return (

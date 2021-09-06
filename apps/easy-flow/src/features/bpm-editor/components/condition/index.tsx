@@ -77,9 +77,6 @@ const Condition = ({ className, data, value, form, onChange, loadDataSource }: E
     },
     [ruleList, onChange],
   );
-  useEffect(() => {
-    console.info(value, 'value');
-  }, [value]);
   return (
     <div className={classnames(styles.condition, className ? className : '')}>
       <div className={styles.ruleList}>
