@@ -8,7 +8,6 @@ import styles from './index.module.scss';
 import { useAppSelector } from '@/app/hooks';
 import { componentPropsSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 import { fieldRule, FormField, FormRuleItem, SelectField } from '@/type';
-import { runtimeAxios } from '@/utils/axios';
 import { loadFieldDatasource } from '@utils/form';
 
 type modalProps = {
