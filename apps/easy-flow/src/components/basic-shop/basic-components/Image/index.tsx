@@ -127,6 +127,13 @@ const ImageComponent = (
       }
     }
   }, []);
+  useEffect(() => {
+    // 后端保存的是字符串,提交时需要转成json对象
+    if (typeof value === 'string') {
+      const componentValue = JSON.parse(value) as ImageValue;
+      onChange && onChange(componentValue);
+    }
+  }, [value, onChange]);
   return (
     <div className={styles.image} id={props.id} ref={containerRef}>
       <Upload
@@ -142,7 +149,7 @@ const ImageComponent = (
       >
         {fileList.length >= maxCount ? null : (
           <span>
-            <Icon type="shangchuantupian" className={styles.icon} />
+            <Icon type="tupian" className={styles.icon} />
             <br />
             上传图片
           </span>

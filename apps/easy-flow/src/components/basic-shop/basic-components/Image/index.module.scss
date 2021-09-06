@@ -1,12 +1,20 @@
 .image {
+  position: relative;
   width: 100%;
-  min-height: 100px;
+  min-height: 114px;
   .icon {
     font-size: 48px;
   }
 }
 :global {
   .ant-form {
+    .ant-upload-list-picture-card {
+      .ant-upload-select-picture-card {
+        position: absolute;
+        top: 0;
+        z-index: 8;
+      }
+    }
     .ant-upload-list-picture-card-container,
     .ant-upload.ant-upload-select-picture-card {
       height: 100px;
@@ -16,11 +24,17 @@
       .ant-upload.ant-upload-select-picture-card {
         width: calc(12.5% - 8px);
       }
+      .ant-upload-list-picture-card-container:first-child {
+        margin-left: 12.5%;
+      }
     }
     .col-space-3 {
       .ant-upload-list-picture-card-container,
       .ant-upload.ant-upload-select-picture-card {
         width: calc(16.6666% - 8px);
+      }
+      .ant-upload-list-picture-card-container:first-child {
+        margin-left: 16.6666%;
       }
     }
     .col-space-2 {
@@ -28,11 +42,17 @@
       .ant-upload.ant-upload-select-picture-card {
         width: calc(25% - 8px);
       }
+      .ant-upload-list-picture-card-container:first-child {
+        margin-left: 25%;
+      }
     }
     .col-space-1 {
       .ant-upload-list-picture-card-container,
       .ant-upload.ant-upload-select-picture-card {
         width: calc(50% - 8px);
+      }
+      .ant-upload-list-picture-card-container:first-child {
+        margin-left: 50%;
       }
     }
   }

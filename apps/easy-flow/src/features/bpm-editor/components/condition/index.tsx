@@ -1,20 +1,22 @@
 import { memo, useCallback, useMemo } from 'react';
-import { Tooltip, Button } from 'antd';
+import { Tooltip, Button, FormInstance } from 'antd';
 import classnames from 'classnames';
-import RuleForm from '@/features/bpm-editor/components/rule-form';
+// import RuleForm from '@/features/bpm-editor/components/rule-form';
+import FormList from './form-list';
 import { Icon } from '@common/components';
 import { fieldRule, FormField } from '@/type';
 import styles from './index.module.scss';
 
 interface EditProps {
   data: Array<FormField>;
+  form: FormInstance;
   className?: string;
   value?: fieldRule[][];
   onChange?: (value: fieldRule[][]) => void;
   loadDataSource?: (id: string) => Promise<{ key: string; value: string }[] | { data: { data: string[] } }>;
 }
 
-const Condition = ({ className, data, value, onChange, loadDataSource }: EditProps) => {
+const Condition = ({ className, data, value, form, onChange, loadDataSource }: EditProps) => {
   const ruleList = useMemo(() => {
     if (value && value.length > 0) {
       return value;
@@ -89,8 +91,18 @@ const Condition = ({ className, data, value, onChange, loadDataSource }: EditPro
                 {ruleBlock.map((rule: fieldRule, ruleIndex: number) => {
                   return (
                     <div className={styles.rule} key={ruleIndex}>
-                      <RuleForm
+                      {/* <RuleForm
                         rule={rule}
+                        components={components}
+                        className={styles.form}
+                        blockIndex={index}
+                        ruleIndex={ruleIndex}
+                        onChange={handleRuleChange}
+                        loadDataSource={loadDataSource}
+                      /> */}
+                      <FormList
+                        rule={rule}
+                        form={form}
                         components={components}
                         className={styles.form}
                         blockIndex={index}

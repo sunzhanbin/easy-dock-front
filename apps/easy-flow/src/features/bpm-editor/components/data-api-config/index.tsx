@@ -24,12 +24,25 @@ function DataApiConfig(props: DataApiConfigProps) {
   const [apis, setApis] = useState<Api[]>([]);
   const [loading, setLoading] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const shouldResetValueRef = useRef(false);
+  const loadApiDetailFromApiSelector = useRef(false);
   const [apiDetail, setApiDetail] = useState<{
     requireds: ParamReturn[];
     optionals: ParamReturn[];
     responses: ParamReturn[];
   }>();
+  const loadApiDetail = useMemoCallback(async (api: number) => {
+    try {
+      setLoading(true);
+
+      const [requireds, optionals, responses] = await queryApiDetail(api, true);
+
+      setApiDetail({ requireds, optionals, responses });
+
+      return [requireds, optionals, responses];
+    } finally {
+      setLoading(false);
+    }
+  });
 
   useEffect(() => {
     queryApis().then((apis) => setApis(apis));
@@ -37,48 +50,26 @@ function DataApiConfig(props: DataApiConfigProps) {
 
   useEffect(() => {
     (async () => {
-      if (!value?.api) return;
+      if (!value?.api || loadApiDetailFromApiSelector.current) return;
 
-      try {
-        setLoading(true);
-
-        const [requireds, optionals, responses] = await queryApiDetail(value.api, true);
-
-        setApiDetail({ requireds, optionals, responses });
-      } finally {
-        setLoading(false);
-      }
+      loadApiDetail(value.api);
     })();
-  }, [value?.api]);
+  }, [value?.api, loadApiDetail]);
 
-  useEffect(() => {
-    // 此时由于api发生了变化需要重置value
-    if (apiDetail?.requireds && value?.api && onChange && shouldResetValueRef.current) {
-      shouldResetValueRef.current = false;
+  const handleApiChange = useMemoCallback(async (api: number) => {
+    loadApiDetailFromApiSelector.current = true;
 
-      onChange({
-        api: value.api,
-        request: {
-          required: apiDetail.requireds.map((item) => ({
-            name: item.name,
-            type: ParamType.Required,
-            location: item.from,
-          })),
-          customize: [],
-        },
-        response: undefined,
-      });
-    }
-  }, [apiDetail?.requireds, value?.api, onChange]);
-
-  const handleApiChange = useMemoCallback((api: number) => {
-    shouldResetValueRef.current = true;
+    const [requireds] = await loadApiDetail(api);
 
     if (onChange) {
       onChange({
         api,
         request: {
-          required: [],
+          required: requireds.map((item) => ({
+            name: item.name,
+            type: ParamType.Required,
+            location: item.from,
+          })),
           customize: [],
         },
         response: undefined,
@@ -141,7 +132,7 @@ function DataApiConfig(props: DataApiConfigProps) {
         <div className={styles.subtitle}>{label}</div>
 
         {/* 必填参数 */}
-        <Required name={[...thisFormItemName, 'request', 'required']} />
+        <Required key={value?.api} name={[...thisFormItemName, 'request', 'required']} />
 
         {/* 自定义参数包括可选参数 */}
         <Custom name={[...thisFormItemName, 'request', 'customize']} />

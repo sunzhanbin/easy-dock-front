@@ -96,6 +96,13 @@ const Attachment = (
       }
     }
   }, []);
+  useEffect(() => {
+    // 后端保存的是字符串,提交时需要转成json对象
+    if (typeof value === 'string') {
+      const componentValue = JSON.parse(value) as FileValue;
+      onChange && onChange(componentValue);
+    }
+  }, [value, onChange]);
   return (
     <div className={styles.attachment} ref={containerRef}>
       <Upload

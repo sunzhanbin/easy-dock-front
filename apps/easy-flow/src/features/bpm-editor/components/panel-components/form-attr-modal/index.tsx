@@ -8,7 +8,7 @@ import styles from './index.module.scss';
 import { useAppSelector } from '@/app/hooks';
 import { componentPropsSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 import { fieldRule, FormField, FormRuleItem, SelectField } from '@/type';
-import { runtimeAxios } from '@/utils/axios';
+import { loadFieldDatasource } from '@utils/form';
 
 type modalProps = {
   editIndex?: number;
@@ -58,24 +58,8 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
     (fieldName) => {
       const component = componentList.find((item) => item.fieldName === fieldName);
       const { dataSource } = component as SelectField;
-      if (!dataSource) {
-        return Promise.resolve(null);
-      }
-      if (dataSource.type === 'custom') {
-        //自定义数据
-        return Promise.resolve(dataSource.data);
-      } else if (dataSource.type === 'subapp') {
-        //其他表单数据
-        const { fieldName = '', subappId = '' } = dataSource;
-        if (fieldName && subappId) {
-          return runtimeAxios.get(`/subapp/${subappId}/form/${fieldName}/data`).then((res) => {
-            const list = (res.data?.data || []).map((val: string) => ({ key: val, value: val }));
-            return Promise.resolve(list);
-          });
-        }
-        return Promise.resolve([]);
-      }
-      return Promise.resolve(null);
+
+      return loadFieldDatasource(dataSource);
     },
     [componentList],
   );
@@ -87,7 +71,7 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
   }, [form, type, editIndex, onOk]);
   return (
     <Modal className={styles.modal} title="表单逻辑规则设置" visible={true} onCancel={onClose} onOk={handelOk}>
-      <Form form={form} className={styles.form} layout="vertical" initialValues={initFormValues}>
+      <Form form={form} className={styles.form} layout="vertical" autoComplete="off" initialValues={initFormValues}>
         <Form.Item label="选择触发方式" name="mode" className={styles.mode}>
           <Select suffixIcon={<Icon type="xiala" />} size="large">
             <Option key={1} value={1}>
@@ -129,7 +113,7 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
                   </Select>
                 </Form.Item>
                 <Form.Item label="流转条件" name="ruleValue" className={styles.condition}>
-                  <Condition data={Object.values(byId)} loadDataSource={loadDataSource} />
+                  <Condition data={Object.values(byId)} loadDataSource={loadDataSource} form={form} />
                 </Form.Item>
                 <Form.Item
                   noStyle
