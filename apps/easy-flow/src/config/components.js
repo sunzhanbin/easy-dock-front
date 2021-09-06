@@ -235,26 +235,26 @@ const componentSchema = {
     },
     config: [getLabel('描述文字'), descTextValue, colSpace],
   },
-  Image: {
-    baseInfo: {
-      name: '图片',
-      icon: 'tupiancaidan',
-      category: '基础控件',
-      version: '1.0',
-      type: 'Image',
-    },
-    config: [fieldName, getLabel('图片'), desc, maxCount, colSpace],
-  },
-  Attachment: {
-    baseInfo: {
-      name: '附件',
-      icon: 'fujiancaidan',
-      category: '基础控件',
-      version: '1.0',
-      type: 'Attachment',
-    },
-    config: [fieldName, getLabel('附件'), desc, maxCount, colSpace],
-  },
+  // Image: {
+  //   baseInfo: {
+  //     name: '图片',
+  //     icon: 'tupiancaidan',
+  //     category: '基础控件',
+  //     version: '1.0',
+  //     type: 'Image',
+  //   },
+  //   config: [fieldName, getLabel('图片'), desc, maxCount, colSpace],
+  // },
+  // Attachment: {
+  //   baseInfo: {
+  //     name: '附件',
+  //     icon: 'fujiancaidan',
+  //     category: '基础控件',
+  //     version: '1.0',
+  //     type: 'Attachment',
+  //   },
+  //   config: [fieldName, getLabel('附件'), desc, maxCount, colSpace],
+  // },
 };
 
 export default componentSchema;
