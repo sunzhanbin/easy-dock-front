@@ -393,7 +393,8 @@ export async function uploadFile(values: any) {
   const fileIdMap: { [k: string]: FileValue } = {};
   // 找出需要上传的文件,只有图片和附件需要上传
   Object.keys(values).forEach((key) => {
-    if (values[key] && (values[key]?.type === 'Image' || 'Attachment')) {
+    const componentType = values[key] && values[key]?.type;
+    if (componentType === 'Image' || componentType === 'Attachment') {
       const fileList = values[key].fileList.filter((file: { originFileObj: File }) => file.originFileObj);
       fileListMap[key] = fileList.length;
       files.push(...fileList);

@@ -1,4 +1,4 @@
-import { memo, useCallback, useMemo } from 'react';
+import { memo, useCallback, useEffect, useMemo } from 'react';
 import { Tooltip, Button, FormInstance } from 'antd';
 import classnames from 'classnames';
 import RuleForm from '@/features/bpm-editor/components/rule-form';
@@ -77,6 +77,9 @@ const Condition = ({ className, data, value, form, onChange, loadDataSource }: E
     },
     [ruleList, onChange],
   );
+  useEffect(() => {
+    console.info(value, 'value');
+  }, [value]);
   return (
     <div className={classnames(styles.condition, className ? className : '')}>
       <div className={styles.ruleList}>

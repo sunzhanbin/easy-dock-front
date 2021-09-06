@@ -401,7 +401,7 @@ const FormList = ({
     return null;
   });
   return (
-    <div className={classnames(styles.form, className ? className : '')}>
+    <Form.Item noStyle className={classnames(styles.form, className ? className : '')}>
       <Form.List name={name}>
         {() => {
           return (
@@ -428,7 +428,7 @@ const FormList = ({
           );
         }}
       </Form.List>
-    </div>
+    </Form.Item>
   );
 };
 
