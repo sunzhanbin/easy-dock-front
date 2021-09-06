@@ -87,7 +87,7 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
   }, [form, type, editIndex, onOk]);
   return (
     <Modal className={styles.modal} title="表单逻辑规则设置" visible={true} onCancel={onClose} onOk={handelOk}>
-      <Form form={form} className={styles.form} layout="vertical" initialValues={initFormValues}>
+      <Form form={form} className={styles.form} layout="vertical" autoComplete="off" initialValues={initFormValues}>
         <Form.Item label="选择触发方式" name="mode" className={styles.mode}>
           <Select suffixIcon={<Icon type="xiala" />} size="large">
             <Option key={1} value={1}>
@@ -129,7 +129,7 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
                   </Select>
                 </Form.Item>
                 <Form.Item label="流转条件" name="ruleValue" className={styles.condition}>
-                  <Condition data={Object.values(byId)} loadDataSource={loadDataSource} />
+                  <Condition data={Object.values(byId)} loadDataSource={loadDataSource} form={form} />
                 </Form.Item>
                 <Form.Item
                   noStyle

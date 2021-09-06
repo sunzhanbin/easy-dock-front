@@ -44,7 +44,7 @@ function SubBranch(props: SubBranchProps) {
   return (
     <Form form={form} autoComplete="off" layout="vertical" onValuesChange={handleFormValuesChange}>
       <Form.Item name="conditions" label="流转条件">
-        <Condition data={fields}></Condition>
+        <Condition data={fields} form={form}></Condition>
       </Form.Item>
     </Form>
   );
