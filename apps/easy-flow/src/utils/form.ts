@@ -1,6 +1,7 @@
 import { batchUpload, downloadFile as download } from '@/apis/file';
-import { DateField, fieldRule, FormField } from '@/type';
+import { DateField, fieldRule, FormField, SelectOptionItem } from '@/type';
 import moment from 'moment';
+import { runtimeAxios } from './axios';
 
 // 格式化单个条件value
 export function formatRuleValue(
@@ -419,3 +420,26 @@ export function downloadFile(id: string, name: string) {
     save_link.click();
   });
 }
+
+export const loadFieldDatasource = async (config: SelectOptionItem): Promise<any[]> => {
+  if (!config) {
+    return Promise.resolve([]);
+  }
+
+  if (config.type === 'custom') {
+    //自定义数据
+    return Promise.resolve(config.data || []);
+  } else if (config.type === 'subapp') {
+    //其他表单数据
+    const { fieldName = '', subappId = '' } = config;
+    if (fieldName && subappId) {
+      const dataRes = await runtimeAxios.get(`/subapp/${subappId}/form/${fieldName}/data`);
+
+      return (dataRes.data?.data || []).map((val: string) => ({ key: val, value: val }));
+    }
+
+    return Promise.resolve([]);
+  }
+
+  return Promise.resolve([]);
+};

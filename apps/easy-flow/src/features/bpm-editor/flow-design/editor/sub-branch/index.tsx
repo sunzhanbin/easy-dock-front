@@ -1,11 +1,12 @@
 import { memo, useEffect, useMemo } from 'react';
 import { Form } from 'antd';
 import debounce from 'lodash/debounce';
+import { FormField, SelectField } from '@type';
 import { SubBranch as SubBranchType } from '@type/flow';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import Condition from '@/features/bpm-editor/components/condition';
-import { FormField } from '@type';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { loadFieldDatasource } from '@utils/form';
 import { updateNode, formMetaSelector } from '../../flow-slice';
 
 type FormValuesType = {
@@ -35,6 +36,10 @@ function SubBranch(props: SubBranchProps) {
     }, 100),
   );
 
+  const handleLoadDatasource = useMemoCallback((name: string) => {
+    return loadFieldDatasource((fields.find((field) => field.fieldName === name) as SelectField).dataSource);
+  });
+
   useEffect(() => {
     form.setFieldsValue({
       conditions: branch.conditions,
@@ -44,7 +49,7 @@ function SubBranch(props: SubBranchProps) {
   return (
     <Form form={form} autoComplete="off" layout="vertical" onValuesChange={handleFormValuesChange}>
       <Form.Item name="conditions" label="流转条件">
-        <Condition data={fields} form={form}></Condition>
+        <Condition data={fields} loadDataSource={handleLoadDatasource}></Condition>
       </Form.Item>
     </Form>
   );
