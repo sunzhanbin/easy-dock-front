@@ -30,9 +30,9 @@ function SubAppExtend() {
     }
   }, [subapp.data?.id, dispatch]);
 
-  const handleExtendChange = useMemoCallback((_: any, values: SubAppState['extend']) => {
+  const handleExtendChange = useMemoCallback((_: Partial<SubAppState['extend']>, allValues: SubAppState['extend']) => {
     dispatch(setDirty(true));
-    dispatch(setExtend(values));
+    dispatch(setExtend(allValues));
   });
 
   return (
@@ -52,10 +52,8 @@ function SubAppExtend() {
         {({ getFieldValue }) => {
           const isOpenVisit = getFieldValue(['config', 'openVisit']);
 
-          if (isOpenVisit) return null;
-
           return (
-            <Form.Item name="visits">
+            <Form.Item name="visits" style={{ display: isOpenVisit ? 'none' : 'block' }}>
               <MemberSelector projectId={subapp.data?.app.project.id} strictDept>
                 <>
                   <Icon className={styles['visits-icon']} type="xinzeng" />
@@ -120,10 +118,13 @@ function SubAppExtend() {
       <Form.Item shouldUpdate noStyle>
         {({ getFieldValue }) => {
           const showUrl = getFieldValue(['config', 'meta', 'webhookConfig', 'enable']);
-          if (!showUrl) return null;
 
           return (
-            <Form.Item className={styles.webhook} name={['config', 'meta', 'webhookConfig', 'url']}>
+            <Form.Item
+              className={styles.webhook}
+              name={['config', 'meta', 'webhookConfig', 'url']}
+              style={{ display: showUrl ? 'block' : 'none' }}
+            >
               <Input size="large" placeholder="请输入接口地址" />
             </Form.Item>
           );

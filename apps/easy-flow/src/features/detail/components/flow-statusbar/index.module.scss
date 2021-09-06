@@ -29,6 +29,7 @@
   .content {
     @include center('flex');
     width: 84%;
+
     .image {
       width: 150px;
       height: 80px;
@@ -42,6 +43,7 @@
   @include center('flex');
 
   flex: 1;
+  overflow: hidden;
 
   .cell {
     flex: 1 1 0;

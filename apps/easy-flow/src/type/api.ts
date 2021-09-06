@@ -32,7 +32,7 @@ export type ResponseSchem =
   | Omit<ParamSchem, 'location'>[];
 
 export type DataConfig = {
-  api: number;
+  api?: number;
   request: {
     required: ParamSchem[];
     customize: ParamSchem[];
