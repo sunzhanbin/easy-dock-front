@@ -74,6 +74,12 @@ export interface AuditNode extends UserNode {
     type: RevertType;
     nodeId?: string;
   };
+  countersign?: {
+    enable: boolean;
+    type: 1 | 2;
+    count: number;
+    percent: number;
+  };
 }
 
 export interface FillNode extends UserNode {
