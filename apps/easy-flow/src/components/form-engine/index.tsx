@@ -172,7 +172,7 @@ const FormDetail = React.forwardRef(function FormDetail(
 
       comMaps[id] = com;
       // 流程编排中没有配置fieldAuths这个字段默认可见
-      visbles[fieldName || id] = fieldsAuths[fieldName || id] !== AuthType.Denied;
+      visbles[fieldName || id] = fieldsAuths && (fieldsAuths[fieldName || id] !== AuthType.Denied);
     });
     // 设置表单初始值
     form.setFieldsValue(formValues);
@@ -210,7 +210,7 @@ const FormDetail = React.forwardRef(function FormDetail(
             {formRow.map((fieldId) => {
               const { config = {}, props = {} } = compMaps[fieldId];
               const { fieldName = '', colSpace = '', label = '', desc = '', type = '' } = config;
-              const isRequired = fieldsAuths[fieldName] === AuthType.Required;
+              const isRequired = fieldsAuths && fieldsAuths[fieldName] === AuthType.Required;
               const compProps = { ...props };
               const Component = compSources[config?.type as AllComponentType['type']];
 
