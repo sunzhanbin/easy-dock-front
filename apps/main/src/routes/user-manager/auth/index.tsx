@@ -45,13 +45,16 @@ const Auth = () => {
     return {
       total: memberResponse.data.recordTotal,
       index: memberResponse.data.pageIndex,
-      members: memberResponse.data.data.map((item: { userName: string; id: number; avatar: string }) => {
-        return {
-          name: item.userName,
-          id: item.id,
-          avatar: item.avatar,
-        };
-      }),
+      members: memberResponse.data.data.map(
+        (item: { userName: string; id: number; avatar: string; loginName: string }) => {
+          return {
+            name: item.userName,
+            id: item.id,
+            avatar: item.avatar,
+            loginName: item.loginName,
+          };
+        },
+      ),
     };
   });
   const handleMembersChange = useMemoCallback((members, index) => {
