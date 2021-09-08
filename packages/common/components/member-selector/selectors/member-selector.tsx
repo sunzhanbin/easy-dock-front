@@ -10,11 +10,12 @@ import { ValueType } from '../type';
 import SelectorContext from '../context';
 import styles from '../index.module.scss';
 
+type Members = (ValueType['members'][number] & {
+  loginName: string;
+})[];
+
 interface MemberSelectorProps {
-  fetchUser(data: {
-    name: string;
-    page: number;
-  }): Promise<{ total: number; index: number; members: ValueType['members'] }>;
+  fetchUser(data: { name: string; page: number }): Promise<{ total: number; index: number; members: Members }>;
   value?: ValueType['members'];
   onChange?(value: NonNullable<this['value']>): void;
 }
@@ -22,7 +23,7 @@ interface MemberSelectorProps {
 function MemberSelector(props: MemberSelectorProps) {
   const { value, onChange, fetchUser } = props;
   const { wrapperClass, projectId } = useContext(SelectorContext)!;
-  const [members, setMembers] = useState<ValueType['members']>([]);
+  const [members, setMembers] = useState<Members>([]);
   const [loading, setLoading] = useState(false);
   const [memberTotal, setMemberTotal] = useState(0);
   const [memberSearchText, setMemberSearchText] = useState('');
@@ -118,7 +119,9 @@ function MemberSelector(props: MemberSelectorProps) {
           return (
             <div key={member.id} className={styles.item} onClick={() => handleChangeMembers(member, !selected)}>
               <Image src={member.avatar} placeholder={memberDefaultAvatar} className={styles.avatar} size={24} round />
-              <span className={styles.name}>{member.name}</span>
+              <span className={styles.name}>
+                {member.name}({member.loginName})
+              </span>
               <Checkbox checked={selected} />
             </div>
           );
