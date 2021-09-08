@@ -4,7 +4,7 @@
   "scripts": {
     "start": "lerna run start",
     "start:flow": "lerna run start --scope=easy-flow-front --stream",
-    "start:chart": "lerna run start --scope=easy-chart",
+    "start:chart": "lerna run start --scope=easy-chart-front",
     "build": "lerna bootstrap && lerna run build",
     "precommit": "lint-staged",
     "bootstrap": "lerna bootstrap",

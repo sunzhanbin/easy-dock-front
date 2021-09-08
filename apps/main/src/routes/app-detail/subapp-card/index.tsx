@@ -6,7 +6,7 @@ import { axios, getShorterText } from '@/utils';
 import { Popconfirm, Icon } from '@components';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
-import { FlowMicroApp } from '@/consts';
+import { FlowMicroApp, ChartMicroApp } from '@/consts';
 import { message, Tooltip } from 'antd';
 import AppModel from '../app-model';
 import { stopPropagation } from '@consts';
@@ -173,7 +173,11 @@ const Card: FC<{
       : { className: 'stoped', text: '已停用', status: -1 };
   }, [status, version]);
   const handleJump = useCallback(() => {
-    history.push(`${FlowMicroApp.route}/bpm-editor/${id}/form-design`);
+    if (type === 1) {
+      history.push(`${ChartMicroApp.route}/chart-editor/${id}/chart-design`);
+    } else {
+      history.push(`${FlowMicroApp.route}/bpm-editor/${id}/form-design`);
+    }
   }, [id, history]);
   const handleShowOperation = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();

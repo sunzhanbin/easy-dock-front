@@ -14,7 +14,7 @@ import AppModel from './app-model';
 import AuthModal from './auth-modal';
 import { AppInfo } from '@/schema/app';
 import { AppAuthParams, assignAppAuth } from '@/api/auth';
-import { FlowMicroApp, MAIN_CONTENT_CLASSNAME } from '@/consts';
+import { FlowMicroApp, MAIN_CONTENT_CLASSNAME, ChartMicroApp } from '@/consts';
 
 const AppDetail: FC = () => {
   const history = useHistory();
@@ -38,7 +38,11 @@ const AppDetail: FC = () => {
     (name, type) => {
       axios.post('/subapp', { appId, name, type }).then((res) => {
         setShowAppModal(false);
-        history.push(`${FlowMicroApp.route}/bpm-editor/${res.data.id}/form-design`);
+        if (type === 1) {
+          history.push(`${ChartMicroApp.route}/chart-editor/${res.data.id}/chart-design`);
+        } else {
+          history.push(`${FlowMicroApp.route}/bpm-editor/${res.data.id}/form-design`);
+        }
       });
     },
     [appId, history],
