@@ -6,9 +6,11 @@ import useLoadComponents from '@/hooks/use-load-components';
 import { AllComponentType, Datasource, fieldRule, FormChangeRule } from '@type';
 import { FieldAuthsMap, AuthType } from '@type/flow';
 import { FormMeta, FormValue } from '@type/detail';
-import { analysisFormChangeRule } from '@/utils';
+import { analysisFormChangeRule, runtimeAxios } from '@/utils';
 import LabelContent from '../label-content';
 import styles from './index.module.scss';
+import { Loading } from '@common/components';
+import { DataConfig, ParamSchem } from '@/type/api';
 
 type FieldsVisible = { [fieldId: string]: boolean };
 
@@ -30,6 +32,7 @@ const FormDetail = React.forwardRef(function FormDetail(
 ) {
   const { data, fieldsAuths, datasource, initialValue, readonly } = props;
   const [form] = Form.useForm<FormValue>();
+  const [loading, setLoading] = useState<boolean>(false);
   const [fieldsVisible, setFieldsVisible] = useState<FieldsVisible>({});
   const [compMaps, setCompMaps] = useState<CompMaps>({});
   const [showForm, setShowForm] = useState(false);
@@ -43,6 +46,28 @@ const FormDetail = React.forwardRef(function FormDetail(
       .map((rule) => rule.formChangeRule)
       .map((rule) => Object.assign({}, rule, { hasChanged: false }));
   }, [data.formRules]);
+  const initRuleList = useMemo<DataConfig[]>(() => {
+    if (!data.formRules) {
+      return [];
+    }
+    return data.formRules.filter((rule) => rule.type === 'init').map((rule) => rule.formInitRule as DataConfig);
+  }, [data.formRules]);
+  // const fieldNameToIdMap = useMemo<{ [k: string]: string }>(() => {
+  //   const map: { [k: string]: string } = {};
+  //   data.components.forEach((component) => {
+  //     const { id, fieldName } = component.config;
+  //     map[fieldName] = id;
+  //   });
+  //   return map;
+  // }, [data.components]);
+  // const idToFieldNameMap = useMemo<{ [k: string]: string }>(() => {
+  //   const map: { [k: string]: string } = {};
+  //   data.components.forEach((component) => {
+  //     const { id, fieldName } = component.config;
+  //     map[id] = fieldName;
+  //   });
+  //   return map;
+  // }, [data.components]);
   // 值改变规则依赖的字段列表,若表单change的字段不在依赖列表中则不需要进行校验
   const changeFieldList = useMemo<string[]>(() => {
     if (changeRuleList.length === 0) {
@@ -172,7 +197,7 @@ const FormDetail = React.forwardRef(function FormDetail(
 
       comMaps[id] = com;
       // 流程编排中没有配置fieldAuths这个字段默认可见
-      visbles[fieldName || id] = fieldsAuths[fieldName || id] !== AuthType.Denied;
+      visbles[fieldName || id] = fieldsAuths && fieldsAuths[fieldName || id] !== AuthType.Denied;
     });
     // 设置表单初始值
     form.setFieldsValue(formValues);
@@ -192,6 +217,47 @@ const FormDetail = React.forwardRef(function FormDetail(
     setShowForm(true);
   }, [data, fieldsAuths, initialValue, form, formValuesChange]);
 
+  useEffect(() => {
+    // 进入表单时请求接口
+    if (initRuleList.length > 0) {
+      const formDataList: { name: string; value: any }[] = Object.keys(initialValue).map((name) => {
+        return { name, value: initialValue[name] };
+      });
+      const respListMap = initRuleList
+        .map((rule) => rule.response)
+        .map((res) => {
+          if (!res) {
+            return [];
+          }
+          return (res as ParamSchem[]).map((item) => {
+            const { name, map } = item;
+            const fieldName = String(map?.match(/(?<=\$\{).*?(?=\})/));
+            return { fieldName, name };
+          });
+        });
+      const promiseList: Promise<any>[] = [];
+      initRuleList.forEach((rule) => {
+        promiseList.push(runtimeAxios.post('/common/doHttpJson', { jsonObject: rule, formDataList }));
+      });
+      setLoading(true);
+      Promise.all(promiseList)
+        .then((resList) => {
+          const formValues: { [k: string]: any } = {};
+          resList.forEach((res, index) => {
+            respListMap[index].forEach(({ fieldName, name }) => {
+              if (fieldName && name) {
+                formValues[fieldName] = res[name];
+              }
+            });
+          });
+          form.setFieldsValue(formValues);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  }, []);
+
   return (
     <Form
       className={styles.form}
@@ -201,6 +267,7 @@ const FormDetail = React.forwardRef(function FormDetail(
       autoComplete="off"
       onValuesChange={formValuesChange}
     >
+      {loading && <Loading />}
       {data.layout.map((formRow, index) => {
         // 空行或者所用组件未加载不渲染
         if (!formRow.length || !showForm || !compSources) return null;
@@ -210,7 +277,7 @@ const FormDetail = React.forwardRef(function FormDetail(
             {formRow.map((fieldId) => {
               const { config = {}, props = {} } = compMaps[fieldId];
               const { fieldName = '', colSpace = '', label = '', desc = '', type = '' } = config;
-              const isRequired = fieldsAuths[fieldName] === AuthType.Required;
+              const isRequired = fieldsAuths && fieldsAuths[fieldName] === AuthType.Required;
               const compProps = { ...props };
               const Component = compSources[config?.type as AllComponentType['type']];
 

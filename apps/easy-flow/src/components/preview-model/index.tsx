@@ -11,7 +11,7 @@ import {
 import FormEngine from '@components/form-engine';
 import { Datasource, FormMeta } from '@type/detail';
 import { FieldAuthsMap, AuthType } from '@type/flow';
-import { ComponentConfig, FieldType, FormField, FormFieldMap, RadioField } from '@/type';
+import { ComponentConfig, FieldType, FormField, FormFieldMap, InputField, InputNumberField, RadioField } from '@/type';
 import { fetchDataSource } from '@/apis/detail';
 import styles from './index.module.scss';
 import classnames from 'classnames';
@@ -74,6 +74,17 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
     });
     return res;
   }, [byId]);
+  const initialValue = useMemo(() => {
+    const value: { [key: string]: any } = {};
+    Object.keys(byId).forEach((id) => {
+      const config = byId[id];
+      const { defaultValue } = config as InputField | InputNumberField;
+      if (defaultValue || defaultValue === 0) {
+        value[config.fieldName] = defaultValue;
+      }
+    });
+    return value;
+  }, [byId]);
   const title = useMemo(() => {
     return (
       <div className="header">
@@ -105,7 +116,7 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
             </div>
             <FormEngine
               datasource={dataSource}
-              initialValue={{}}
+              initialValue={initialValue}
               data={(formDesign as unknown) as FormMeta}
               fieldsAuths={auths}
             ></FormEngine>

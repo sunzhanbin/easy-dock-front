@@ -31,6 +31,8 @@ export function getStayTime(startTime: number) {
   }
   if (minutes > 0) {
     result += `${minutes < 10 ? '0' + minutes : minutes}分`;
+  } else {
+    result += '0分';
   }
   return result;
 }

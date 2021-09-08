@@ -37,7 +37,7 @@ const FieldRow = memo(function FieldRow(props: FieldRowProps) {
 
       <div className={styles.cell}>
         <Checkbox
-          checked={value.auth > 0}
+          checked={value.auth > 0 && !extra?.view.indeterminate}
           indeterminate={extra?.view.indeterminate}
           onChange={(event) => handleAuthChange(event.target.checked ? 1 : 0)}
         >

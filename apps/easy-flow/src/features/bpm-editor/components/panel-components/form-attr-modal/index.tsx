@@ -28,7 +28,9 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
     return Object.values(byId).map((item: FormField) => item) || [];
   }, [byId]);
   const fields = useMemo<{ id: string; name: string }[]>(() => {
-    return componentList.map((component) => ({ id: component.id as string, name: component.label }));
+    return componentList
+      .filter((com) => com.type !== 'DescText')
+      .map((com) => ({ id: com.fieldName, name: com.label }));
   }, [componentList]);
   const initFormValues = useMemo(() => {
     // 添加规则

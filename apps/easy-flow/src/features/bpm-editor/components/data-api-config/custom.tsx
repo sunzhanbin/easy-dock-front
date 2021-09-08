@@ -16,24 +16,25 @@ function Custom(props: CustomProps) {
   const { detail, layout, getPopupContainer } = useContext(DataContext)!;
 
   return (
-    <Form.List name={name}>
-      {(fields, { add, remove }) => (
-        <>
-          {fields.map((field, index) => {
-            return (
-              <div
-                className={classnames(styles.row, { [styles.vertical]: layout === 'vertical' })}
-                key={field.fieldKey}
-              >
-                <Location name={[field.name, 'location']} />
-                <div className={styles.detail}>
-                  <Form.Item noStyle shouldUpdate>
-                    {(form) => {
-                      const customize = form.getFieldValue(name);
-                      const { type } = customize[index];
+    <Form.Item noStyle shouldUpdate>
+      {(form) => {
+        const customize = form.getFieldValue(name);
 
-                      if (type === ParamType.Optional) {
-                        return (
+        return (
+          <Form.List name={name}>
+            {(fields, { add, remove }) => (
+              <>
+                {fields.map((field, index) => {
+                  const { type } = customize[index];
+
+                  return (
+                    <div
+                      className={classnames(styles.row, { [styles.vertical]: layout === 'vertical' })}
+                      key={field.fieldKey}
+                    >
+                      <Location name={[field.name, 'location']} />
+                      <div className={styles.detail}>
+                        {type === ParamType.Optional ? (
                           <ParamName name={[field.name, 'name']}>
                             <Select
                               size="large"
@@ -52,36 +53,38 @@ function Custom(props: CustomProps) {
                               })}
                             </Select>
                           </ParamName>
-                        );
-                      }
+                        ) : (
+                          <ParamName name={[field.name, 'name']}>
+                            <Input placeholder="请输入" size="large" />
+                          </ParamName>
+                        )}
 
-                      return (
-                        <ParamName name={[field.name, 'name']}>
-                          <Input placeholder="请输入" size="large" />
-                        </ParamName>
-                      );
-                    }}
-                  </Form.Item>
+                        <span className={styles.map}>对应</span>
+                        <FieldMap name={[field.name, 'map']} />
+                      </div>
+                      <Button
+                        onClick={() => remove(field.name)}
+                        className={styles.del}
+                        icon={<Icon type="shanchu" />}
+                      />
+                    </div>
+                  );
+                })}
 
-                  <span className={styles.map}>对应</span>
-                  <FieldMap name={[field.name, 'map']} />
+                <div className={styles.btns}>
+                  <Button icon={<Icon type="xinzeng" />} onClick={() => add({ type: ParamType.Optional })}>
+                    添加已获取的参数
+                  </Button>
+                  <Button icon={<Icon type="xinzeng" />} onClick={() => add({ type: ParamType.Customize })}>
+                    新增参数
+                  </Button>
                 </div>
-                <Button onClick={() => remove(field.name)} className={styles.del} icon={<Icon type="shanchu" />} />
-              </div>
-            );
-          })}
-
-          <div className={styles.btns}>
-            <Button icon={<Icon type="xinzeng" />} onClick={() => add({ type: ParamType.Optional })}>
-              添加已获取的参数
-            </Button>
-            <Button icon={<Icon type="xinzeng" />} onClick={() => add({ type: ParamType.Customize })}>
-              新增参数
-            </Button>
-          </div>
-        </>
-      )}
-    </Form.List>
+              </>
+            )}
+          </Form.List>
+        );
+      }}
+    </Form.Item>
   );
 }
 
