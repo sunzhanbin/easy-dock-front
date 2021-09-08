@@ -52,22 +52,22 @@ const FormDetail = React.forwardRef(function FormDetail(
     }
     return data.formRules.filter((rule) => rule.type === 'init').map((rule) => rule.formInitRule as DataConfig);
   }, [data.formRules]);
-  const fieldNameToIdMap = useMemo<{ [k: string]: string }>(() => {
-    const map: { [k: string]: string } = {};
-    data.components.forEach((component) => {
-      const { id, fieldName } = component.config;
-      map[fieldName] = id;
-    });
-    return map;
-  }, [data.components]);
-  const idToFieldNameMap = useMemo<{ [k: string]: string }>(() => {
-    const map: { [k: string]: string } = {};
-    data.components.forEach((component) => {
-      const { id, fieldName } = component.config;
-      map[id] = fieldName;
-    });
-    return map;
-  }, [data.components]);
+  // const fieldNameToIdMap = useMemo<{ [k: string]: string }>(() => {
+  //   const map: { [k: string]: string } = {};
+  //   data.components.forEach((component) => {
+  //     const { id, fieldName } = component.config;
+  //     map[fieldName] = id;
+  //   });
+  //   return map;
+  // }, [data.components]);
+  // const idToFieldNameMap = useMemo<{ [k: string]: string }>(() => {
+  //   const map: { [k: string]: string } = {};
+  //   data.components.forEach((component) => {
+  //     const { id, fieldName } = component.config;
+  //     map[id] = fieldName;
+  //   });
+  //   return map;
+  // }, [data.components]);
   // 值改变规则依赖的字段列表,若表单change的字段不在依赖列表中则不需要进行校验
   const changeFieldList = useMemo<string[]>(() => {
     if (changeRuleList.length === 0) {
@@ -197,7 +197,7 @@ const FormDetail = React.forwardRef(function FormDetail(
 
       comMaps[id] = com;
       // 流程编排中没有配置fieldAuths这个字段默认可见
-      visbles[fieldName || id] = fieldsAuths && (fieldsAuths[fieldName || id] !== AuthType.Denied);
+      visbles[fieldName || id] = fieldsAuths && fieldsAuths[fieldName || id] !== AuthType.Denied;
     });
     // 设置表单初始值
     form.setFieldsValue(formValues);
@@ -221,15 +221,17 @@ const FormDetail = React.forwardRef(function FormDetail(
     // 进入表单时请求接口
     if (initRuleList.length > 0) {
       const formDataList: { name: string; value: any }[] = Object.keys(initialValue).map((name) => {
-        return { name: fieldNameToIdMap[name], value: initialValue[name] };
+        return { name, value: initialValue[name] };
       });
       const respListMap = initRuleList
         .map((rule) => rule.response)
         .map((res) => {
+          if (!res) {
+            return [];
+          }
           return (res as ParamSchem[]).map((item) => {
             const { name, map } = item;
-            const id = map?.match(/(?<=\$\{).*?(?=\})/);
-            const fieldName = id && idToFieldNameMap[String(id)];
+            const fieldName = String(map?.match(/(?<=\$\{).*?(?=\})/));
             return { fieldName, name };
           });
         });
