@@ -119,6 +119,7 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
               initialValue={initialValue}
               data={(formDesign as unknown) as FormMeta}
               fieldsAuths={auths}
+              className={styles['form-engine']}
             ></FormEngine>
           </div>
         </div>

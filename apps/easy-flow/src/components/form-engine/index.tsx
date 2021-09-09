@@ -1,5 +1,6 @@
 import React, { memo, useEffect, useState, useMemo } from 'react';
 import { Form, Row, Col, FormInstance } from 'antd';
+import classNames from 'classnames';
 import { Rule } from 'antd/lib/form';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import useLoadComponents from '@/hooks/use-load-components';
@@ -19,6 +20,7 @@ interface FormProps {
   fieldsAuths: FieldAuthsMap;
   initialValue: { [key: string]: any };
   readonly?: boolean;
+  className?: string;
   datasource: Datasource;
 }
 
@@ -30,7 +32,7 @@ const FormDetail = React.forwardRef(function FormDetail(
   props: FormProps,
   ref: React.ForwardedRef<FormInstance<FormValue>>,
 ) {
-  const { data, fieldsAuths, datasource, initialValue, readonly } = props;
+  const { data, fieldsAuths, datasource, initialValue, readonly, className } = props;
   const [form] = Form.useForm<FormValue>();
   const [loading, setLoading] = useState<boolean>(false);
   const [fieldsVisible, setFieldsVisible] = useState<FieldsVisible>({});
@@ -52,22 +54,6 @@ const FormDetail = React.forwardRef(function FormDetail(
     }
     return data.formRules.filter((rule) => rule.type === 'init').map((rule) => rule.formInitRule as DataConfig);
   }, [data.formRules]);
-  // const fieldNameToIdMap = useMemo<{ [k: string]: string }>(() => {
-  //   const map: { [k: string]: string } = {};
-  //   data.components.forEach((component) => {
-  //     const { id, fieldName } = component.config;
-  //     map[fieldName] = id;
-  //   });
-  //   return map;
-  // }, [data.components]);
-  // const idToFieldNameMap = useMemo<{ [k: string]: string }>(() => {
-  //   const map: { [k: string]: string } = {};
-  //   data.components.forEach((component) => {
-  //     const { id, fieldName } = component.config;
-  //     map[id] = fieldName;
-  //   });
-  //   return map;
-  // }, [data.components]);
   // 值改变规则依赖的字段列表,若表单change的字段不在依赖列表中则不需要进行校验
   const changeFieldList = useMemo<string[]>(() => {
     if (changeRuleList.length === 0) {
@@ -246,11 +232,14 @@ const FormDetail = React.forwardRef(function FormDetail(
           resList.forEach((res, index) => {
             respListMap[index].forEach(({ fieldName, name }) => {
               if (fieldName && name) {
-                formValues[fieldName] = res[name];
+                formValues[fieldName] = eval(`res.${name}`);
               }
             });
           });
           form.setFieldsValue(formValues);
+        })
+        .catch((err) => {
+          console.error(err);
         })
         .finally(() => {
           setLoading(false);
@@ -260,7 +249,7 @@ const FormDetail = React.forwardRef(function FormDetail(
 
   return (
     <Form
-      className={styles.form}
+      className={classNames(styles.form, className)}
       ref={ref}
       form={form}
       layout="vertical"
