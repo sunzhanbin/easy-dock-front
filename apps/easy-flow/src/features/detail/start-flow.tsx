@@ -14,6 +14,8 @@ import Header from '@components/header';
 import useSubapp from '@/hooks/use-subapp';
 import styles from './index.module.scss';
 import titleImage from '@/assets/title.png';
+import leftImage from '@assets/background_left.png';
+import rightImage from '@assets/background_right.png';
 import { uploadFile } from '@utils';
 
 type DataType = {
@@ -75,6 +77,7 @@ function StartFlow() {
         datasource={datasource}
         ref={formRef}
         data={formMeta}
+        className={styles['form-engine']}
         initialValue={formData}
         fieldsAuths={processMeta.fieldsAuths}
       />
@@ -133,8 +136,8 @@ function StartFlow() {
         </div>
       </Header>
       <div className={styles.background}>
-        <div className={styles.left}></div>
-        <div className={styles.right}></div>
+        <div className={styles.left} style={{ backgroundImage: `url(${leftImage})` }}></div>
+        <div className={styles.right} style={{ backgroundImage: `url(${rightImage})` }}></div>
       </div>
       {subApp && (
         <div className={styles['start-form-wrapper']}>
