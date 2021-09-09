@@ -33,3 +33,22 @@
     border-bottom-left-radius: 0;
   }
 }
+
+.form {
+  :global {
+    .ant-picker-range {
+      display: flex;
+    }
+  }
+}
+
+.frequency {
+  display: flex;
+
+  :global {
+    .ant-select {
+      margin-left: 15px;
+      width: 100px;
+    }
+  }
+}

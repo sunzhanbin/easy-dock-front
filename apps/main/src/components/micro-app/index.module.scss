@@ -24,3 +24,15 @@
     @include center('absolute');
   }
 }
+:global {
+  /* 富文本编辑器在微前端中适配 */
+  .bf-modal-root {
+    .bf-modal-mask {
+      opacity: 1;
+    }
+    .bf-modal-content {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+  }
+}

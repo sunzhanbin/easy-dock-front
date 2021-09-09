@@ -50,7 +50,7 @@ const Detail = forwardRef(function Detail(props: DetailProps, ref: React.Forward
   useEffect(() => {
     if (!flow || !form) return;
 
-    loadDatasource(form.meta, flow.node, flow.instance.subapp.version.id).then((values) => {
+    loadDatasource(form.meta, flow.node.fieldsAuths, flow.instance.subapp.version.id).then((values) => {
       setDatasource(values);
     });
   }, [flow, form]);
@@ -74,13 +74,14 @@ const Detail = forwardRef(function Detail(props: DetailProps, ref: React.Forward
         </div>
       </div>
       <div className={styles.flow}>
+        <div className={styles['record-title']}>审核记录</div>
         <div className={styles.detail}>
           {auditRecords.map((record, index) => (
             <AuditRecord
               className={auditRecords.length === index + 1 ? styles['last-record'] : ''}
               data={record}
               key={index}
-            ></AuditRecord>
+            />
           ))}
         </div>
       </div>

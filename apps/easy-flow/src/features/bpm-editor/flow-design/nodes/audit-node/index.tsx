@@ -1,27 +1,19 @@
 import { memo } from 'react';
 import { Icon } from '@common/components';
-import { MemberList } from '@components/member-selector';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import useShowMembers from '../../hooks/use-show-members';
+import { AuditNode as AuditNodeType } from '@type/flow';
 import BaseNode from '../base-node';
-import { AuditNode as AuditNodeType, FillNode as FillNodeType, AllNode } from '@type/flow';
+import MemberList from '../../components/member-list';
 
 export interface AuditNodeProps {
-  node: AuditNodeType | FillNodeType;
-  onClick(node: this['node'], currentNodePrevNodes: this['prevNodes']): void;
-  prevNodes?: AllNode[];
+  node: AuditNodeType;
 }
 
 function AuditNode(props: AuditNodeProps) {
-  const { node, prevNodes, onClick } = props;
-  const showMembers = useShowMembers(node.correlationMemberConfig.members);
-  const handleNodeClick = useMemoCallback(() => {
-    onClick(node, prevNodes);
-  });
+  const { node } = props;
 
   return (
-    <BaseNode icon={<Icon type="shenhejiedian" />} onClick={handleNodeClick} node={node}>
-      {showMembers.length ? <MemberList members={showMembers} /> : '设置此节点'}
+    <BaseNode icon={<Icon type="shenhejiedian" />} node={node}>
+      <MemberList node={node} />
     </BaseNode>
   );
 }

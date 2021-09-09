@@ -1,10 +1,11 @@
 import { runtimeAxios } from '@utils/axios';
-import { AuthType } from '@type/flow';
+import { AuthType, FieldAuthsMap } from '@type/flow';
 import type { TaskDetailType, FlowMeta, FormMeta, FormValue, FlowInstance, Datasource } from '@type/detail';
+import { CheckboxField, RadioField, SelectField } from '@/type';
 
 export async function loadFlowData(
   flowIns: FlowInstance,
-  type: TaskDetailType,
+  type?: TaskDetailType.MyInitiation,
 ): Promise<[FormMeta, FormValue, FlowMeta]> {
   return await Promise.all([
     // 表单元数据
@@ -30,14 +31,13 @@ export async function loadFlowData(
   ]);
 }
 
-export async function loadDatasource(formMeta: FormMeta, flowMeta: FlowMeta, versionId: number) {
+export async function loadDatasource(formMeta: FormMeta, fieldsAuths: FieldAuthsMap, versionId: number) {
   const allPromises: Promise<void>[] = [];
   const datasource: Datasource = {};
-  const auths = flowMeta.fieldsAuths;
 
   formMeta.components.forEach((comp) => {
     // 有字段权限才去加载
-    if (comp.config.dataSource && auths[comp.config.fieldName] !== AuthType.Denied) {
+    if (comp.config.dataSource && (fieldsAuths && fieldsAuths[comp.config.fieldName] !== AuthType.Denied)) {
       allPromises.push(
         runtimeAxios
           .get<{ data: Datasource[string] }>(`/form/version/${versionId}/form/${comp.config.fieldName}/data`)
@@ -53,17 +53,19 @@ export async function loadDatasource(formMeta: FormMeta, flowMeta: FlowMeta, ver
   return datasource;
 }
 
-export async function fetchDataSource(byId: { [k: string]: any }) {
+export async function fetchDataSource(components: Array<RadioField | CheckboxField | SelectField>) {
   const allPromises: Promise<void>[] = [];
   const source: Datasource = {};
-  Object.keys(byId).forEach(async (id) => {
-    const object = byId[id];
-    if ((object as any)?.dataSource) {
-      const { dataSource } = object as any;
+  components.forEach(async (object) => {
+    if (object?.dataSource) {
+      const key = object.fieldName || object.id || '';
+      const { dataSource } = object;
       if (dataSource.type === 'custom') {
         allPromises.push(
           Promise.resolve(dataSource.data).then((data) => {
-            source[object.fieldName || object.id] = data;
+            if (data) {
+              source[key] = data;
+            }
           }),
         );
       } else if (dataSource.type === 'subapp') {
@@ -72,7 +74,7 @@ export async function fetchDataSource(byId: { [k: string]: any }) {
           allPromises.push(
             runtimeAxios.get(`/subapp/${subappId}/form/${fieldName}/data`).then((res) => {
               const list = (res.data?.data || []).map((val: string) => ({ key: val, value: val }));
-              source[object.fieldName || object.id] = list;
+              source[key] = list;
             }),
           );
         }

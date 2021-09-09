@@ -3,20 +3,23 @@ import { useParams, useHistory } from 'react-router';
 import classnames from 'classnames';
 import { FormInstance, message } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import { AsyncButton, Icon, Loading } from '@common/components';
+import { AsyncButton, Loading } from '@common/components';
 import { runtimeAxios } from '@utils';
 import { dynamicRoutes } from '@consts';
 import { loadDatasource } from '@apis/detail';
-import { FillNode } from '@type/flow';
+import { StartNode } from '@type/flow';
 import { FormMeta, FormValue, Datasource } from '@type/detail';
 import Form from '@components/form-engine';
 import Header from '@components/header';
 import useSubapp from '@/hooks/use-subapp';
 import styles from './index.module.scss';
 import titleImage from '@/assets/title.png';
+import leftImage from '@assets/background_left.png';
+import rightImage from '@assets/background_right.png';
+import { uploadFile } from '@utils';
 
 type DataType = {
-  processMeta: FillNode;
+  processMeta: StartNode;
   formMeta: FormMeta;
   formData: FormValue;
 };
@@ -60,7 +63,7 @@ function StartFlow() {
   useEffect(() => {
     if (!data || !subApp) return;
 
-    loadDatasource(data.formMeta, data.processMeta, subApp.version.id).then((values) => {
+    loadDatasource(data.formMeta, data.processMeta.fieldsAuths, subApp.version.id).then((values) => {
       serDatasource(values);
     });
   }, [data, subApp]);
@@ -74,6 +77,7 @@ function StartFlow() {
         datasource={datasource}
         ref={formRef}
         data={formMeta}
+        className={styles['form-engine']}
         initialValue={formData}
         fieldsAuths={processMeta.fieldsAuths}
       />
@@ -83,9 +87,10 @@ function StartFlow() {
   const handleSubmit = useMemoCallback(async () => {
     if (!formRef.current || !subApp) return;
     const values = await formRef.current.validateFields();
-
+    const formValues = await uploadFile(values);
+    // 上传文件成功之后再提交表单
     await runtimeAxios.post(`/process_instance/start`, {
-      formData: values,
+      formData: formValues,
       versionId: subApp.version.id,
     });
 
@@ -97,7 +102,23 @@ function StartFlow() {
     }, 1500);
   });
 
-  const btns = data?.processMeta.btnText;
+  // const handleSave = useMemoCallback(async () => {
+  //   if (!formRef.current || !subApp) return;
+  //   const values = await formRef.current.validateFields();
+  //   const formValues = await uploadFile(values);
+
+  //   await runtimeAxios.post(`/task/draft/add`, {
+  //     formData: formValues,
+  //     versionId: subApp.version.id,
+  //   });
+
+  //   message.success('保存成功');
+
+  //   setTimeout(() => {
+  //     // 回任务中心我的发起
+  //     history.replace(`${dynamicRoutes.toTaskCenter(subApp.app.id)}/draft`);
+  //   }, 1500);
+  // });
 
   return (
     <div className={styles.container}>
@@ -105,16 +126,18 @@ function StartFlow() {
 
       <Header className={styles.header} backText="发起流程">
         <div className={styles.btns}>
-          {btns?.submit?.enable && (
-            <AsyncButton disabled={!data} className={styles.submit} onClick={handleSubmit} type="primary" size="large">
-              {btns.submit.text || '提交'}
-            </AsyncButton>
-          )}
+          {/* <AsyncButton disabled={!data} className={styles.save} onClick={handleSave} size="large">
+            保存
+          </AsyncButton> */}
+
+          <AsyncButton disabled={!data} className={styles.submit} onClick={handleSubmit} size="large">
+            提交
+          </AsyncButton>
         </div>
       </Header>
       <div className={styles.background}>
-        <div className={styles.left}></div>
-        <div className={styles.right}></div>
+        <div className={styles.left} style={{ backgroundImage: `url(${leftImage})` }}></div>
+        <div className={styles.right} style={{ backgroundImage: `url(${rightImage})` }}></div>
       </div>
       {subApp && (
         <div className={styles['start-form-wrapper']}>

@@ -2,33 +2,48 @@
 @import '@common/styles/mixin.scss';
 
 .container {
+  position: relative;
   display: flex;
   flex-direction: column;
   height: 100%;
-  position: relative;
   overflow: hidden;
 
   .header {
-    flex-shrink: 0;
     position: relative;
+    flex-shrink: 0;
     z-index: 9;
-    svg {
+
+    & > div:first-child {
       color: #fff;
+
+      svg {
+        color: inherit;
+      }
     }
-    & > div {
-      color: #fff;
+    & > div.back {
+      color: rgba(0, 0, 0, 0.85);
+      svg {
+        color: inherit;
+      }
     }
+
+    .save {
+      margin-right: 15px;
+    }
+
     .submit {
-      background: #ffffff;
-      color: #4c5cdb;
+      color: $primary-color;
+
       &:hover {
-        color: rgba(76, 92, 219, 0.8);
+        color: rgba($primary-color, 0.8);
       }
+
       &:active {
-        box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.12);
+        box-shadow: 0 0 0 4px rgba(#fff, 0.12);
       }
+
       &:disabled {
-        color: rgba(76, 92, 219, 0.5);
+        color: rgba($primary-color, 0.5);
       }
     }
   }
@@ -38,6 +53,7 @@
     height: 100%;
     overflow: auto;
   }
+
   .background {
     position: absolute;
     top: 0;
@@ -53,7 +69,7 @@
       left: 0;
       width: 710px;
       height: 490px;
-      background-image: url('../../assets/background_left.png');
+      background-image: url('~@/assets/background_left.png');
       background-size: contain;
       background-repeat: no-repeat;
     }
@@ -63,7 +79,7 @@
       right: 0;
       width: 698px;
       height: 380px;
-      background-image: url('../../assets/background_right.png');
+      background-image: url('~@/assets/background_right.png');
       background-size: contain;
       background-repeat: no-repeat;
     }
@@ -73,21 +89,24 @@
 .start-form-wrapper {
   flex: 1 1 0;
   background-color: #fff;
-  margin-top: 36px;
+  // margin-top: 36px;
+
   .form {
+    display: flex;
+    flex-direction: column;
     position: relative;
     z-index: 9;
     width: 68%;
     margin: 0 16% 24px 16%;
-    padding: 32px;
+    padding: 32px 0 0 32px;
     background-color: #fff;
-    box-shadow: 0px 0px 32px 0px rgba(24, 31, 67, 0.12);
+    box-shadow: 0px -32px 32px 0px rgba(24, 31, 67, 0.12);
     border-radius: 2px;
     border-top: 5px solid #06c498;
-    overflow-y: auto;
+    overflow-y: hidden;
     .title {
-      margin-bottom: 24px;
       padding-bottom: 24px;
+      margin-right: 32px;
       border-bottom: 1px solid rgba(24, 31, 67, 0.12);
       line-height: 34px;
       color: rgba(#000, 0.85);
@@ -97,6 +116,12 @@
         width: 46px;
         margin-right: 12px;
       }
+    }
+    .form-engine {
+      padding-top: 24px;
+      padding: 24px 32px 32px 0;
+      margin-bottom: 0;
+      overflow-y: auto;
     }
   }
 }

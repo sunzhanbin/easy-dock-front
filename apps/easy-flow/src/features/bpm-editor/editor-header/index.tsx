@@ -3,8 +3,9 @@ import { Button, Tooltip, message } from 'antd';
 import PreviewModal from '@components/preview-model';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import useConfirmLeave from '@common/hooks/use-confirm-leave';
-import { useHistory, useRouteMatch, NavLink, useLocation, useParams, Prompt } from 'react-router-dom';
-import { save, saveWithForm, setDirty as setFlowDirty } from '../flow-design/flow-slice';
+import { useHistory, useRouteMatch, NavLink, useLocation, useParams } from 'react-router-dom';
+import { save as saveExtend, setDirty as setExtendDirty } from '@app/app';
+import { save as saveFlow, setDirty as setFlowDirty } from '../flow-design/flow-slice';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { AsyncButton, confirm, Icon } from '@common/components';
 import { axios } from '@utils';
@@ -41,14 +42,16 @@ const EditorHeader: FC = () => {
       onCancel() {
         dispatch(setFormDirty({ isDirty: false }));
         dispatch(setFlowDirty(false));
+        dispatch(setExtendDirty(false));
         go();
       },
     });
   });
 
-  useConfirmLeave(dirty, showConfirm);
+  useConfirmLeave(process.env.NODE_ENV === 'development' ? false : dirty, showConfirm);
 
   const flowDesignPath = `${match.url}/flow-design`;
+  const extendPath = `${match.url}/extend`;
   const formDesignPath = useMemo(() => {
     return `${match.url}/form-design`;
   }, [match]);
@@ -58,17 +61,25 @@ const EditorHeader: FC = () => {
   const handlePrev = useCallback(() => {
     if (pathName === flowDesignPath) {
       history.replace(formDesignPath);
+    } else if (pathName === extendPath) {
+      history.replace(flowDesignPath);
     }
-  }, [pathName, history, formDesignPath, flowDesignPath]);
-  const handleSave = useCallback(async () => {
+  }, [pathName, history, formDesignPath, flowDesignPath, extendPath]);
+
+  const handleSave = useMemoCallback(async () => {
     if (pathName === formDesignPath) {
       return await dispatch(saveForm({ subAppId: bpmId, isShowTip: true, isShowErrorTip: true }));
     }
 
     if (pathName === flowDesignPath) {
-      return await dispatch(save(bpmId));
+      return await dispatch(saveFlow({ subappId: bpmId, showTip: true }));
     }
-  }, [pathName, dispatch, formDesignPath, flowDesignPath, bpmId]);
+
+    if (pathName === extendPath) {
+      return await dispatch(saveExtend());
+    }
+  });
+
   const handleNext = useCallback(() => {
     if (pathName === formDesignPath) {
       history.replace(flowDesignPath);
@@ -76,14 +87,7 @@ const EditorHeader: FC = () => {
   }, [pathName, history, formDesignPath, flowDesignPath]);
 
   const handlePublish = useCallback(async () => {
-    const formResponse = await dispatch(saveForm({ subAppId: bpmId, isShowTip: false, isShowErrorTip: true }));
-
-    if (formResponse.meta.requestStatus === 'rejected') {
-      console.info(111);
-      return;
-    }
-
-    const flowResponse = await dispatch(saveWithForm(bpmId));
+    const flowResponse = await dispatch(saveFlow({ subappId: bpmId }));
 
     if (flowResponse.meta.requestStatus === 'rejected') {
       return;
@@ -103,7 +107,7 @@ const EditorHeader: FC = () => {
   }, [bpmId, dispatch, appId]);
 
   useEffect(() => {
-    if (!dirty) return;
+    if (!dirty || process.env.NODE_ENV === 'development') return;
 
     const beforeLeave = (e: BeforeUnloadEvent) => {
       e.preventDefault();
@@ -126,7 +130,15 @@ const EditorHeader: FC = () => {
     } else {
       history.goBack();
     }
-  }, [dirty]);
+  }, [dirty, history, showConfirm]);
+
+  const disableFlowDesignLink = useMemo(() => {
+    if (pathName === formDesignPath && layout.length === 0) return true;
+
+    if (pathName === flowDesignPath) return true;
+
+    return false;
+  }, [pathName, layout, formDesignPath, flowDesignPath]);
 
   return (
     <div className={styles.header_container} ref={containerRef}>
@@ -150,17 +162,24 @@ const EditorHeader: FC = () => {
             to={`${match.url}/flow-design`}
             activeClassName={styles.active}
             style={{
-              cursor: layout.length === 0 ? 'not-allowed' : 'pointer',
-              color: layout.length === 0 ? 'rgba(24, 31, 67, 0.5)' : 'rgba(24, 31, 67, 0.95)',
+              cursor: disableFlowDesignLink ? 'not-allowed' : 'pointer',
+              color: disableFlowDesignLink ? 'rgba(24, 31, 67, 0.5)' : 'rgba(24, 31, 67, 0.95)',
             }}
             onClick={(e) => {
-              if (layout.length === 0) {
+              if (disableFlowDesignLink) {
                 e.preventDefault();
               }
             }}
           >
             <span className={styles.number}>02</span>
             <span>流程设计</span>
+          </NavLink>
+          <div className={styles.separator}>
+            <Icon className={styles.iconfont} type="jinru" />
+          </div>
+          <NavLink className={styles.step} replace={true} to={extendPath} activeClassName={styles.active}>
+            <span className={styles.number}>03</span>
+            <span>扩展功能</span>
           </NavLink>
         </div>
         <div className={styles.operation}>
@@ -181,14 +200,16 @@ const EditorHeader: FC = () => {
               </span>
             </Tooltip>
           )}
-          {pathName === flowDesignPath && (
+          {pathName !== formDesignPath && (
             <Button className={styles.prev} size="large" onClick={handlePrev}>
               上一步
             </Button>
           )}
+
           <Button type="primary" ghost className={styles.save} size="large" onClick={handleSave}>
             保存
           </Button>
+
           {pathName === formDesignPath && (
             <Button
               type="primary"

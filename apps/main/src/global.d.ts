@@ -1,7 +1,9 @@
 declare type User = {
   avatar: string; // 头像
   username: string; // 中文名
-  loginName: string; //登录名
+  id: number; //登录名
+  power?: number; //权限值
+  name?: string;
 };
 
 interface Window {
@@ -10,6 +12,7 @@ interface Window {
   EASY_DOCK_BASE_SERVICE_ENDPOINT: string;
   ALGOR_ORCH_FRONTEND_ENTRY: string;
   EASY_FLOW_FRONTEND_ENTRY: string;
+  EASY_CHART_FRONTEND_ENTRY: string;
   COMMON_LOGIN_URL: string;
   setImmediate(): void;
 }

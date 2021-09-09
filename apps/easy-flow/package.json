@@ -1,17 +1,12 @@
 {
   "name": "easy-flow-front",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "private": true,
   "dependencies": {
-    "@types/react-dnd": "^3.0.2",
-    "@types/react-dnd-html5-backend": "^3.0.2",
     "antd": "^4.15.2",
     "axios": "^0.21.1",
+    "braft-editor": "^2.3.9",
     "classnames": "^2.3.1",
-    "draft-js": "^0.11.7",
-    "draftjs-to-html": "^0.9.1",
-    "filemanager-webpack-plugin": "^5.0.0",
-    "html-to-draftjs": "^1.5.0",
     "js-cookie": "^2.2.1",
     "lodash": "^4.17.21",
     "qiankun": "^2.4.0",
@@ -42,6 +37,8 @@
     "@types/lodash": "^4.14.168",
     "@types/react": "^17.0.0",
     "@types/react-beautiful-dnd": "^13.0.0",
+    "@types/react-dnd": "^3.0.2",
+    "@types/react-dnd-html5-backend": "^3.0.2",
     "@types/react-dom": "^17.0.0",
     "@types/react-draft-wysiwyg": "^1.13.2",
     "@types/react-redux": "^7.1.7",
@@ -58,6 +55,7 @@
   "scripts": {
     "start": "react-app-rewired start",
     "build": "REACT_APP_TARGET_ENV=staging react-app-rewired build",
+    "build:cluster": "REACT_APP_TARGET_ENV=cluster react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },
@@ -69,14 +67,14 @@
   },
   "browserslist": {
     "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
+    ],
+    "development": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
     ]
   }
 }

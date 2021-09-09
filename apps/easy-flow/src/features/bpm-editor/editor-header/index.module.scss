@@ -2,23 +2,26 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 64px;
+  height: 56px;
   width: 100%;
   border-bottom: 1px solid rgba(24, 31, 67, 0.12);
+
   .edit_header {
     width: 100%;
+
     .steps {
-      width: 220px;
-      display: flex;
+      // 这里的内容宽度和扩展页面的左边距关联
+      display: inline-flex;
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
       .step {
-        height: 64px;
-        line-height: 64px;
+        height: 56px;
+        line-height: 56px;
         font-size: 16px;
         font-weight: 400;
         color: rgba(24, 31, 67, 0.95);
+        white-space: nowrap;
         .number {
           font-size: 18px;
           font-weight: bold;
@@ -31,8 +34,8 @@
       }
       .separator {
         width: 16px;
-        height: 64px;
-        line-height: 64px;
+        height: 56px;
+        line-height: 56px;
         text-align: center;
         font-size: 12px;
         color: #818a9e;
@@ -45,10 +48,9 @@
     }
     .operation {
       display: flex;
-      position: absolute;
-      right: 0;
-      height: 64px;
-      line-height: 64px;
+      align-items: center;
+      height: 56px;
+      line-height: 56px;
       .iconfont {
         display: inline-block;
         width: 20px;
@@ -62,12 +64,10 @@
       }
       .prev {
         width: 74px;
-        margin-top: 12px;
         margin-right: 12px;
       }
       .save {
         width: 60px;
-        margin-top: 12px;
         margin-right: 12px;
         border-radius: 3px;
         font-size: 14px;
@@ -75,7 +75,6 @@
       }
       .next {
         width: 74px;
-        margin-top: 12px;
         margin-right: 24px;
         border-radius: 3px;
         font-size: 14px;
@@ -84,8 +83,6 @@
       }
       .publish {
         width: 74px;
-        margin-top: 12px;
-        margin-right: 24px;
         border-radius: 3px;
         font-size: 14px;
         font-weight: 400;

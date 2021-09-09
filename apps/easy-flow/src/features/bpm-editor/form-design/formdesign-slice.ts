@@ -15,8 +15,9 @@ import {
   setById as setByIdReducer,
   setIsDirty as setIsDirtyReducer,
   setErrors as setErrorsReducer,
+  setFormRules as setFormRulesReducer,
 } from './formzone-reducer';
-import { ConfigItem, ErrorItem, FieldType, FormDesign, FormMeta } from '@/type';
+import { ConfigItem, ErrorItem, FieldType, FormDesign, FormField, FormMeta } from '@/type';
 import { loadComponents } from './toolbox/toolbox-reducer';
 import { RootState } from '@/app/store';
 import { axios } from '@/utils';
@@ -43,6 +44,7 @@ const formDesign = createSlice({
     setById: setByIdReducer,
     setIsDirty: setIsDirtyReducer,
     setErrors: setErrorsReducer,
+    setFormRules: setFormRulesReducer,
   },
   extraReducers: (builder) => {
     builder.addCase(loadComponents.fulfilled, (state, action) => {
@@ -68,6 +70,7 @@ export const {
   setById,
   setIsDirty,
   setErrors,
+  setFormRules,
 } = formDesign.actions;
 
 export default formDesign.reducer;
@@ -103,38 +106,49 @@ type SaveParams = {
   isShowTip?: boolean;
   isShowErrorTip?: boolean;
 };
+type Key = keyof FormField;
 export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>(
   'form/save',
   async ({ subAppId, isShowTip, isShowErrorTip }, { getState, dispatch }) => {
     const { formDesign } = getState();
-    const { layout = [], schema = {}, isDirty = false, byId = {} } = formDesign;
+    const { layout = [], schema = {}, isDirty = false, byId = {}, formRules } = formDesign;
     const formMeta: FormMeta = {
       components: [],
       layout: layout,
       schema: schema,
+      formRules,
     };
     const errors: ErrorItem[] = [];
+    // 组装控件属性
     layout.forEach((row) => {
       row.forEach((id: string) => {
-        const type = id.split('_')[0] || '';
+        const type = <FieldType>(id.split('_')[0] || '');
         const version = schema[type as FieldType]?.baseInfo.version || '';
-        const componentConfig = schema[type as FieldType]?.config;
+        const componentConfig =
+          type === 'DescText'
+            ? schema[type as FieldType]?.config.concat([{ key: 'fieldName', type: 'Input', isProps: false }]) //富文本也要保存fieldName
+            : schema[type as FieldType]?.config;
         const config: ConfigItem = {
           id,
           type,
           version,
           rules: [],
           canSubmit: type === 'DescText' ? false : true,
-          multiple: type === 'Checkbox' || (type === 'Select' && (byId[id] as any).multiple) ? true : false,
+          multiple: type === 'Checkbox' || (type === 'Select' && byId[id].multiple) ? true : false,
         };
-        const props: ConfigItem = {};
+
+        const props: ConfigItem = { type, id };
         componentConfig?.forEach(({ isProps, key }) => {
           if (isProps) {
-            props[key] = (byId[id] as any)[key];
+            props[key] = byId[id][key as Key];
           } else {
-            config[key] = (byId[id] as any)[key];
+            config[key] = byId[id][key as Key];
+            if (key === 'colSpace' && (type === 'Image' || type === 'Attachment')) {
+              props[key] = byId[id][key as Key];
+            }
           }
         });
+        // 校验编辑的控件属性
         const errorItem = validComponentConfig(config);
         if (errorItem) {
           errors.push(errorItem);
@@ -142,6 +156,8 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
         formMeta.components.push({ config, props });
       });
     });
+    // TODO 校验表单规则
+
     if (errors.length > 0) {
       const id = errors[0].id || '';
       id && dispatch(selectField({ id }));
@@ -155,5 +171,48 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
       dispatch(setIsDirty({ isDirty: false }));
     }
     isShowTip && message.success('保存成功!');
+  },
+);
+
+export const moveUpAction = createAsyncThunk<void, { id: string; rowIndex: number }, { state: RootState }>(
+  'component/moveUp',
+  async ({ id, rowIndex }, { getState, dispatch }) => {
+    dispatch(moveUp({ id }));
+    const { formDesign } = getState();
+    const rowList = formDesign.layout;
+    const componentMap = formDesign.byId;
+    const currentRow = rowList[rowIndex - 1];
+    const nextRow = rowList[rowIndex];
+    // 当前行重新布局
+    currentRow.forEach((id) => {
+      const config = Object.assign({}, componentMap[id], { colSpace: currentRow.length === 2 ? '2' : '1' });
+      dispatch(editProps({ id, config }));
+    });
+    // 如果有下一行，重新布局
+    nextRow &&
+      nextRow.forEach((id) => {
+        const config = Object.assign({}, componentMap[id], {
+          colSpace: nextRow.length === 1 ? '4' : nextRow.length === 2 ? '2' : '1',
+        });
+        dispatch(editProps({ id, config }));
+      });
+  },
+);
+export const moveDownAction = createAsyncThunk<void, { id: string; rowIndex: number }, { state: RootState }>(
+  'component/moveUp',
+  async ({ id, rowIndex }, { getState, dispatch }) => {
+    dispatch(moveDown({ id }));
+    const { formDesign } = getState();
+    const rowList = formDesign.layout;
+    const componentMap = formDesign.byId;
+    const componentIdList = rowList[rowIndex];
+    const length = componentIdList.length;
+    // 当前行重新布局
+    componentIdList.forEach((id) => {
+      const config = Object.assign({}, componentMap[id], { colSpace: length === 1 ? '4' : length === 2 ? '2' : '1' });
+      dispatch(editProps({ id, config }));
+    });
+    // 下移之后一定是独占一行
+    dispatch(editProps({ id, config: Object.assign({}, componentMap[id], { colSpace: '4' }) }));
   },
 );

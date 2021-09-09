@@ -1,21 +1,14 @@
-import { AllComponentType, FormField, MoveConfig, TConfigItem } from '@/type';
+import { AllComponentType, FormField, MoveConfig, RadioField, TConfigItem } from '@/type';
 import { Tooltip } from 'antd';
 import LabelContent from '../label-content';
 import { Icon } from '@common/components';
 import React, { memo, FC, useMemo, useCallback } from 'react';
-import { store } from '@app/store';
-import {
-  moveUp,
-  moveDown,
-  exchange,
-  editProps,
-  comAdded,
-  comDeleted,
-} from '@/features/bpm-editor/form-design/formdesign-slice';
+import { exchange, comAdded, comDeleted } from '@/features/bpm-editor/form-design/formdesign-slice';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import useLoadComponents from '@/hooks/use-load-components';
 import styles from './index.module.scss';
-import { selectedFieldSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
+import { formDesignSelector, selectedFieldSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
+import { moveUpAction, moveDownAction } from '@/features/bpm-editor/form-design/formdesign-slice';
 import useDataSource from '@/hooks/use-data-source';
 
 type Component = React.FC | React.ComponentClass;
@@ -28,17 +21,21 @@ const SourceBox: FC<{
 }> = ({ type, config, id, moveConfig, rowIndex }) => {
   const dispatch = useAppDispatch();
   const selectedField = useAppSelector(selectedFieldSelector);
-  const options = useDataSource((config as any)?.dataSource);
+  const formDesign = useAppSelector(formDesignSelector);
+  const options = useDataSource((config as RadioField)?.dataSource);
   // 获取组件源码
-  const compSources: any = useLoadComponents(type as AllComponentType['type']) as Component;
+  const compSources = useLoadComponents(type as AllComponentType['type']) as Component;
   const propList = useMemo(() => {
+    const type = config?.type;
+    if (type === 'Radio' || type === 'Checkbox' || type === 'InputNumber') {
+      return Object.assign({}, config, { id, options });
+    }
     return Object.assign({}, config, { id });
-  }, [config, id]);
+  }, [config, id, options]);
   const handleCopy = useCallback(() => {
-    const formDesign = store.getState().formDesign;
     const com = Object.assign({}, formDesign.byId[id]);
     dispatch(comAdded(com, rowIndex + 1));
-  }, [id, rowIndex, dispatch]);
+  }, [id, rowIndex, formDesign, dispatch]);
   const handleDelete = useCallback(
     (e) => {
       e.stopPropagation();
@@ -47,40 +44,10 @@ const SourceBox: FC<{
     [id, dispatch],
   );
   const handleMoveUp = useCallback(() => {
-    dispatch(moveUp({ id }));
-    const formDesign = store.getState().formDesign;
-    const rowList = formDesign.layout;
-    const componentMap = formDesign.byId;
-    const currentRow = rowList[rowIndex - 1];
-    const nextRow = rowList[rowIndex];
-    // 当前行重新布局
-    currentRow.forEach((id) => {
-      const config = Object.assign({}, componentMap[id], { colSpace: currentRow.length === 2 ? '2' : '1' });
-      dispatch(editProps({ id, config }));
-    });
-    // 如果有下一行，重新布局
-    nextRow &&
-      nextRow.forEach((id) => {
-        const config = Object.assign({}, componentMap[id], {
-          colSpace: nextRow.length === 1 ? '4' : nextRow.length === 2 ? '2' : '1',
-        });
-        dispatch(editProps({ id, config }));
-      });
+    dispatch(moveUpAction({ id, rowIndex }));
   }, [id, rowIndex, dispatch]);
   const handleMoveDown = useCallback(() => {
-    dispatch(moveDown({ id }));
-    const formDesign = store.getState().formDesign;
-    const rowList = formDesign.layout;
-    const componentMap = formDesign.byId;
-    const componentIdList = rowList[rowIndex];
-    const length = componentIdList.length;
-    // 当前行重新布局
-    componentIdList.forEach((id) => {
-      const config = Object.assign({}, componentMap[id], { colSpace: length === 1 ? '4' : length === 2 ? '2' : '1' });
-      dispatch(editProps({ id, config }));
-    });
-    // 下移之后一定是独占一行
-    dispatch(editProps({ id, config: Object.assign({}, componentMap[id], { colSpace: '4' }) }));
+    dispatch(moveDownAction({ id, rowIndex }));
   }, [id, rowIndex, dispatch]);
   const handleMoveLeft = useCallback(() => {
     dispatch(exchange({ id, direction: 'left' }));
@@ -94,12 +61,8 @@ const SourceBox: FC<{
       return (
         <div className={styles.container}>
           <div className={styles.component_container}>
-            <LabelContent label={propList.label} desc={propList.desc} />
-            {(type === 'Radio' || type === 'Checkbox' || type === 'Select') && options ? (
-              <Component {...(propList as TConfigItem)} options={options} />
-            ) : (
-              <Component {...(propList as TConfigItem)} />
-            )}
+            {type !== 'DescText' && <LabelContent label={propList.label} desc={propList.desc} />}
+            <Component {...(propList as TConfigItem)} />
           </div>
           <div className={styles.operation}>
             <Tooltip title="复制">
@@ -144,7 +107,6 @@ const SourceBox: FC<{
     compSources,
     selectedField,
     propList,
-    options,
     handleCopy,
     handleDelete,
     handleMoveDown,

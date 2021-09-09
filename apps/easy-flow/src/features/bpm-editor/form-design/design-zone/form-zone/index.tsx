@@ -1,13 +1,6 @@
 import { FC, memo, useMemo, useCallback } from 'react';
-import SourceBox from '@/components/source-box';
-import { Row, Col } from 'antd';
-import { selectField } from '../../formdesign-slice';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import {
-  layoutSelector,
-  componentPropsSelector,
-  selectedFieldSelector,
-} from '@/features/bpm-editor/form-design/formzone-reducer';
+import { layoutSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 import { moveIndex } from '@/features/bpm-editor/form-design/formdesign-slice';
 import emptyImage from '@assets/drag.png';
 import styles from './index.module.scss';
@@ -21,9 +14,9 @@ const FormZone: FC<{}> = () => {
     (dragIndex: number, hoverIndex: number) => {
       if (dragIndex !== -1) dispatch(moveIndex({ dragIndex, hoverIndex }));
     },
-    [layout],
+    [dispatch],
   );
-  const [{ canDrop, isOver }, drop] = useDrop(
+  const [, drop] = useDrop(
     () => ({
       accept: 'toolItem',
       collect: (monitor) => ({
@@ -49,7 +42,7 @@ const FormZone: FC<{}> = () => {
         )}
       </div>
     );
-  }, [layout]);
+  }, [layout, drop, moveCard]);
   return (
     <div className={styles.container}>
       <div className={styles.form_zone}>{content}</div>

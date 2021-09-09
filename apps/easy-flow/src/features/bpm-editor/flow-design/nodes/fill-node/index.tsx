@@ -1,26 +1,19 @@
 import { memo } from 'react';
 import { Icon } from '@common/components';
-import { MemberList } from '@components/member-selector';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import useShowMembers from '../../hooks/use-show-members';
-import BaseNode from '../base-node';
 import { FillNode as FillNodeType } from '@type/flow';
+import BaseNode from '../base-node';
+import MemberList from '../../components/member-list';
 
 export interface FillNodeProps {
   node: FillNodeType;
-  onClick(node: this['node']): void;
 }
 
 function FillNode(props: FillNodeProps) {
-  const { node, onClick } = props;
-  const showMembers = useShowMembers(node.correlationMemberConfig.members);
-  const handleNodeClick = useMemoCallback(() => {
-    onClick(node);
-  });
+  const { node } = props;
 
   return (
-    <BaseNode icon={<Icon type="tianxiejiedian" />} onClick={handleNodeClick} node={node}>
-      {showMembers.length ? <MemberList members={showMembers} /> : '设置此节点'}
+    <BaseNode icon={<Icon type="tianxiejiedian" />} node={node}>
+      <MemberList node={node} />
     </BaseNode>
   );
 }

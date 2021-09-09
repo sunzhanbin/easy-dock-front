@@ -2,7 +2,6 @@ import { memo, useCallback, FC, useState, useEffect, useMemo } from 'react';
 import { NavLink, Route, Switch, useLocation, useRouteMatch } from 'react-router-dom';
 import { Input, Button } from 'antd';
 import { Icon } from '@common/components';
-import appConfig from '@/init';
 import styles from './index.module.scss';
 import Todo from './todo';
 import Start from './start';
@@ -10,13 +9,16 @@ import Done from './done';
 import Card from './card';
 import { useAppSelector } from '@/app/hooks';
 import { todoNumSelector } from './taskcenter-reducer';
+import { loadApp } from './taskcenter-slice';
 import useAppId from '@/hooks/use-app-id';
+import { useAppDispatch } from '@app/hooks';
 import { SubAppItem } from './type';
-import { axios } from '@/utils';
+import { runtimeAxios } from '@/utils';
 
 // import Copy from './copy';
 
 const TaskCenter: FC<{}> = () => {
+  const dispatch = useAppDispatch();
   const match = useRouteMatch();
   const matchedPath = match.path.replace(/\/$/, '');
   const matchedUrl = match.url.replace(/\/$/, '');
@@ -35,12 +37,15 @@ const TaskCenter: FC<{}> = () => {
 
   useEffect(() => {
     if (isShowDrawer && appId) {
-      axios.get(`/subapp/${appId}/list/all/deployed`).then((res) => {
+      runtimeAxios.get(`/subapp/${appId}/list/all`).then((res) => {
         const list = res.data || [];
         setSubAppList(list);
       });
     }
   }, [appId, isShowDrawer]);
+  useEffect(() => {
+    appId && dispatch(loadApp(appId));
+  }, [appId, dispatch]);
   return (
     <div className={styles.container}>
       <div className={styles.header}>

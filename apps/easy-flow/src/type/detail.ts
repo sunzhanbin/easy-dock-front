@@ -1,4 +1,5 @@
-import type { FillNode, AuditNode } from './flow';
+import { FormRuleItem, Dept, Role } from './index';
+import type { FillNode, AuditNode, StartNode } from './flow';
 import { SubApp } from './subapp';
 
 export interface FormMeta {
@@ -22,6 +23,7 @@ export interface FormMeta {
     message?: string;
     children?: Omit<NonNullable<FormMeta['rules']>[number], 'children'>[];
   }[];
+  formRules?: FormRuleItem[];
 }
 
 export type FormValue = { [key: string]: any };
@@ -32,7 +34,7 @@ export enum TaskDetailType {
   MyTodo = 1,
 }
 
-export type FlowMeta = FillNode | AuditNode;
+export type FlowMeta = FillNode | AuditNode | StartNode;
 
 type User = { name: string; id: string; avatar: string };
 
@@ -53,7 +55,9 @@ export type FlowInstance = {
   currentNodeName: string;
   processInstanceId: string;
   currentProcessor: {
-    users: User[];
+    users?: User[];
+    depts?: Dept[];
+    roles?: Role[];
   };
   subapp: SubApp;
 };
@@ -80,7 +84,9 @@ export type AuditRecordSchema = {
     };
     nodeName: string;
     taskId: string;
-    userList: User[];
+    userList?: User[];
+    deptList?: Dept[];
+    roleList?: Role[];
   }[];
   taskName: string;
 };

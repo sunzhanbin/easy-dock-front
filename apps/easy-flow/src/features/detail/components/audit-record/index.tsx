@@ -110,13 +110,13 @@ function NodeActionRecord(props: NodeActionRecordProps) {
         {data.auditRecordList.map((record) => {
           return (
             <div className={styles.node} key={record.taskId}>
-              {record.userList.map((user) => {
+              {formatRecordList(record).map((member) => {
                 const action = mapActionInfo(record.auditType);
 
                 return (
-                  <div className={styles.user} key={user.id}>
-                    <Avatar size={24} className={styles.avatar} src={user.avatar} name={user.name} />
-                    <div className={styles['user-name']}>{user.name}</div>
+                  <div className={styles.user} key={member.id}>
+                    <Avatar size={24} className={styles.avatar} src={member.avatar} name={member.name} />
+                    <div className={styles['user-name']}>{member.name}</div>
                     <div className={classnames(styles.tag, action.className)}>{action.text}</div>
                   </div>
                 );
@@ -141,3 +141,14 @@ function NodeActionRecord(props: NodeActionRecordProps) {
 }
 
 export default memo(NodeActionRecord);
+
+function formatRecordList(data: AuditRecordSchema['auditRecordList'][number]) {
+  const users = data.userList || [];
+  const depts = data.deptList || [];
+  const roles = data.roleList || [];
+
+  return depts
+    .concat(roles)
+    .concat(users)
+    .map((item) => ({ name: item.name, avatar: item.avatar, id: item.id }));
+}

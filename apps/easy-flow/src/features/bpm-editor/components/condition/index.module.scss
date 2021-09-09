@@ -1,0 +1,60 @@
+.condition {
+  .title {
+    height: 32px;
+    line-height: 32px;
+  }
+  .ruleList {
+    .ruleBlock {
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(24, 31, 67, 0.12);
+      .rule {
+        display: flex;
+        position: relative;
+        .form {
+          flex: 1;
+          max-width: calc(100% - 32px);
+        }
+        .delete {
+          visibility: hidden;
+          flex: 0 0 32px;
+          width: 32px;
+          height: 40px;
+          line-height: 40px;
+          text-align: center;
+          cursor: pointer;
+          svg {
+            height: 20px;
+            line-height: 20px;
+            font-size: 20px;
+            &:hover {
+              color: #4c5cdb;
+            }
+          }
+        }
+        &:hover {
+          .delete {
+            visibility: visible;
+          }
+        }
+      }
+      .and {
+        padding: 0;
+        width: 86px;
+        & > svg {
+          font-size: 16px;
+        }
+      }
+    }
+    .or {
+      margin: 8px 0;
+    }
+    .addOr {
+      width: 86px;
+      margin-top: 15px;
+      padding: 0;
+      & > svg {
+        font-size: 16px;
+      }
+    }
+  }
+}

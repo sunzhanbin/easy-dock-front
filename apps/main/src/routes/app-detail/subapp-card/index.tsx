@@ -6,7 +6,7 @@ import { axios, getShorterText } from '@/utils';
 import { Popconfirm, Icon } from '@components';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
-import { FlowMicroApp } from '@/consts';
+import { FlowMicroApp, ChartMicroApp } from '@/consts';
 import { message, Tooltip } from 'antd';
 import AppModel from '../app-model';
 import { stopPropagation } from '@consts';
@@ -27,7 +27,7 @@ const CardContainer = styled.div`
       width: 100%;
     }
   }
-  .content {
+  & > .content {
     flex: 1;
     padding: 16px;
     background: rgba(24, 39, 67, 0.03);
@@ -173,7 +173,11 @@ const Card: FC<{
       : { className: 'stoped', text: '已停用', status: -1 };
   }, [status, version]);
   const handleJump = useCallback(() => {
-    history.push(`${FlowMicroApp.route}/bpm-editor/${id}/form-design`);
+    if (type === 1) {
+      history.push(`${ChartMicroApp.route}/chart-editor/${id}/chart-design`);
+    } else {
+      history.push(`${FlowMicroApp.route}/bpm-editor/${id}/form-design`);
+    }
   }, [id, history]);
   const handleShowOperation = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
@@ -191,33 +195,30 @@ const Card: FC<{
       message.success('启用成功!');
       onChange && onChange();
     });
-  }, [id, setIsShowOperation, onChange]);
+  }, [id, onChange]);
   const handleStop = useCallback(() => {
     axios.put('/subapp/status', { id, status: -1 }).then(() => {
       setIsShowOperation(false);
       message.success('停用成功!');
       onChange && onChange();
     });
-  }, [id, setIsShowOperation, onChange]);
-  const handleEdit = useCallback(
-    (e: React.MouseEvent) => {
-      e.stopPropagation();
-      setIsShowOperation(false);
-      const { x = 0 } = containerRef.current?.getBoundingClientRect() as DOMRect;
-      if (document.body.clientWidth - x < 400) {
-        setPosition('right');
-      }
-      setIsShowModel(true);
-    },
-    [setIsShowModel, setIsShowOperation, setPosition],
-  );
+  }, [id, onChange]);
+  const handleEdit = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsShowOperation(false);
+    const { x = 0 } = containerRef.current?.getBoundingClientRect() as DOMRect;
+    if (document.body.clientWidth - x < 400) {
+      setPosition('right');
+    }
+    setIsShowModel(true);
+  }, []);
   const handleDelete = useCallback(() => {
     setIsShowOperation(false);
     axios.delete(`/subapp/${id}`).then(() => {
       message.success('删除成功!');
       onChange && onChange();
     });
-  }, [id, setIsShowOperation, onChange]);
+  }, [id, onChange]);
   const handleOK = useCallback(
     (name) => {
       axios.put('/subapp', { id, name }).then(() => {
@@ -226,7 +227,7 @@ const Card: FC<{
         onChange && onChange();
       });
     },
-    [id, setIsShowModel, onChange],
+    [id, onChange],
   );
 
   return (

@@ -1,9 +1,9 @@
-import { ReactNode, memo, useMemo } from 'react';
+import { ReactNode, memo, useMemo, useRef } from 'react';
 import classnames from 'classnames';
 import moment from 'moment';
 import appConfig from '@/init';
 import { timeDiff } from '@utils';
-import { Icon } from '@common/components';
+import { Icon, Text } from '@common/components';
 import { NodeStatusType, FlowInstance } from '@type/detail';
 import styles from './index.module.scss';
 
@@ -11,15 +11,24 @@ interface CellProps {
   title: string | ReactNode;
   icon?: string;
   desc: string | ReactNode;
+  getContainer?(): HTMLElement;
 }
 
 const Cell = memo(function Cell(props: CellProps) {
-  const { title, icon, desc } = props;
+  const { title, icon, desc, getContainer } = props;
+
   return (
     <div className={styles.cell}>
       {icon && <Icon className={styles['cell-icon']} type={icon} />}
       <div className={styles['cell-content']}>
-        <div className={styles['cell-title']}>{title}</div>
+        {getContainer ? (
+          <Text className={styles['cell-title']} getContainer={getContainer} placement="bottomLeft">
+            {title}
+          </Text>
+        ) : (
+          <div className={styles['cell-title']}>{title}</div>
+        )}
+
         <div className={styles['cell-desc']}>{desc}</div>
       </div>
     </div>
@@ -35,6 +44,7 @@ interface StatusBarProps {
 function StatusBar(props: StatusBarProps) {
   const { flowIns, showCurrentProcessor, className } = props;
   const status = flowIns.state;
+  const containerRef = useRef<HTMLDivElement>(null);
   const { image, styleName } = useMemo(() => {
     let image = '';
     let styleName = '';
@@ -59,6 +69,10 @@ function StatusBar(props: StatusBarProps) {
 
     return { image, styleName };
   }, [status]);
+
+  const getContainer = useMemo(() => {
+    return () => containerRef.current!;
+  }, []);
 
   // 渲染statusbar内容
   const content = useMemo(() => {
@@ -93,8 +107,9 @@ function StatusBar(props: StatusBarProps) {
         <div className={styles.status}>
           <Cell icon="dangqianjiedian" title={flowIns.currentNodeName} desc="当前节点" />
           <Cell
+            getContainer={getContainer}
             icon="dangqianchuliren"
-            title={flowIns.currentProcessor.users.map((user) => user.name).join(',')}
+            title={formatAllMembers(flowIns.currentProcessor).join(',')}
             desc="当前处理人"
           />
 
@@ -106,15 +121,20 @@ function StatusBar(props: StatusBarProps) {
     return (
       <div className={styles.status}>
         <Cell icon="dangqianchuliren" title={flowIns.applyUser.name} desc="申请人" />
-        <Cell icon="xuanzeshijian" title={moment(flowIns.applyTime).format('YYYY-MM-DD HH:mm:ss')} desc="申请时间" />
+        <Cell
+          icon="xuanzeshijian"
+          title={moment(flowIns.applyTime).format('YYYY-MM-DD HH:mm:ss')}
+          desc="申请时间"
+          getContainer={getContainer}
+        />
 
         {trackCell}
       </div>
     );
-  }, [flowIns, showCurrentProcessor]);
+  }, [flowIns, showCurrentProcessor, getContainer]);
 
   return (
-    <div className={classnames(styles.statusbar, styleName, className)}>
+    <div className={classnames(styles.statusbar, styleName, className)} ref={containerRef}>
       <div className={styles.content}>
         <img className={styles.image} src={image} alt="状态图" />
         {content}
@@ -124,3 +144,11 @@ function StatusBar(props: StatusBarProps) {
 }
 
 export default memo(StatusBar);
+
+function formatAllMembers(data: FlowInstance['currentProcessor']) {
+  const users = (data.users || []).map((user) => user.name);
+  const depts = (data.depts || []).map((dept) => dept.name);
+  const roles = (data.roles || []).map((role) => role.name);
+
+  return depts.concat(roles).concat(users);
+}

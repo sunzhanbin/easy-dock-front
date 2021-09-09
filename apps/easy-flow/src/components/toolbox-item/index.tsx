@@ -1,7 +1,6 @@
 import { FC, memo, useCallback } from 'react';
-import { store } from '@app/store';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { configSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
+import { configSelector, formDesignSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 import { comAdded, comInserted } from '../../features/bpm-editor/form-design/formdesign-slice';
 import { FieldType, FormField } from '@/type';
 import { Icon } from '@common/components';
@@ -17,7 +16,8 @@ interface DropResult {
 const ToolBoxItem: FC<{ icon: string; displayName: string; type: FieldType }> = ({ icon, displayName, type }) => {
   const dispatch = useAppDispatch();
   const configMap = useAppSelector(configSelector);
-  const [{ isDragging }, drag] = useDrag(
+  const formDesign = useAppSelector(formDesignSelector);
+  const [, drag] = useDrag(
     () => ({
       type: 'toolItem',
       item: { rowIndex: -1, id: type },
@@ -35,11 +35,10 @@ const ToolBoxItem: FC<{ icon: string; displayName: string; type: FieldType }> = 
     [type],
   );
   const addComponent = useCallback(() => {
-    const formDesign = store.getState().formDesign;
     const com = { ...configMap[type], type };
     const rowIndex = formDesign?.layout?.length || -1;
     dispatch(comAdded(com as FormField, rowIndex + 1));
-  }, [type, configMap, dispatch]);
+  }, [type, configMap, formDesign, dispatch]);
   return (
     <div
       className={styles.container}

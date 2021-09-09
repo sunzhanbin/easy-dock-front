@@ -26,5 +26,24 @@ export type SubApp = {
     remark: string;
     status: AppStatus;
     createTime: number;
+    project: {
+      id: number;
+      name: string;
+    };
+  };
+  openVisit?: boolean;
+  meta?: {
+    messageConfig: {
+      enableTodo: boolean;
+      enableDone: boolean;
+      noticeChannels: TipType[];
+    };
   };
 };
+
+export enum TipType {
+  WeiChat = 1,
+  SMS = 2,
+  Email = 3,
+  Phone = 4,
+}

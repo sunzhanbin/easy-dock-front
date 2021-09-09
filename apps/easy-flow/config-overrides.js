@@ -42,69 +42,74 @@ module.exports = {
     },
 
     function overrideWebpackPlugin(config) {
-      process.env.NODE_ENV === 'development' &&
-        config.plugins.push(
-          new FileManagerPlugin({
-            events: {
-              onEnd: {
-                copy: [
-                  {
-                    source: `${paths.appPath}/conf.js`,
-                    destination: `${paths.appPublic}/config.js`,
-                  },
-                ],
-              },
-            },
-          }),
-        );
+      // process.env.NODE_ENV === 'development' &&
+      //   config.plugins.push(
+      //     new FileManagerPlugin({
+      //       events: {
+      //         onEnd: {
+      //           copy: [
+      //             {
+      //               source: `${paths.appPath}/conf.js`,
+      //               destination: `${paths.appPublic}/config.js`,
+      //             },
+      //           ],
+      //         },
+      //       },
+      //     }),
+      //   );
 
-      process.env.NODE_ENV !== 'development' &&
-        config.plugins.push(
-          new FileManagerPlugin({
-            events: {
-              onEnd: {
-                mkdir: [`zip/${appPackageJson.name}/dist`, `zip/${appPackageJson.name}/template`],
-                copy: [
-                  {
-                    source: paths.appBuild,
-                    destination: `zip/${appPackageJson.name}/dist`,
-                  },
-                  {
-                    source: `${paths.appPath}/conf${
-                      process.env.REACT_APP_TARGET_ENV === 'staging' ? '.staging.js' : '.production.js'
-                    }`,
-                    destination: `zip/${appPackageJson.name}/dist/config.js`,
-                  },
-                  {
-                    source: paths.appTemplate,
-                    destination: `zip/${appPackageJson.name}/template`,
-                  },
-                  {
-                    source: `${paths.appPath}/conf.template.js`,
-                    destination: `zip/${appPackageJson.name}/template/config.js`,
-                  },
-                ],
-                archive: [
-                  {
-                    source: `zip`,
-                    destination: `../../${appPackageJson.name}-${appPackageJson.version}-SNAPSHOT.tar.gz`,
-                    format: 'tar',
-                    options: {
-                      gzip: true,
-                      gzipOptions: {
-                        level: 1,
-                      },
-                      globOptions: {
-                        nomount: true,
-                      },
+      /*  process.env.NODE_ENV !== 'development' && */
+      config.plugins.push(
+        new FileManagerPlugin({
+          events: {
+            onEnd: {
+              mkdir: [`zip/${appPackageJson.name}/dist`, `zip/${appPackageJson.name}/template`],
+              copy: [
+                {
+                  source: `${paths.appPath}/conf${
+                    process.env.REACT_APP_TARGET_ENV === 'staging'
+                      ? '.staging.js'
+                      : process.env.REACT_APP_TARGET_ENV === 'cluster'
+                      ? '.cluster.js'
+                      : '.production.js'
+                  }`,
+                  destination: `${paths.appBuild}/config.js`,
+                },
+                {
+                  source: `${paths.appBuild}`,
+                  destination: `zip/${appPackageJson.name}/dist`,
+                },
+                {
+                  source: paths.appTemplate,
+                  destination: `zip/${appPackageJson.name}/template`,
+                },
+                {
+                  source: `${paths.appPath}/conf.template.js`,
+                  destination: `zip/${appPackageJson.name}/template/config.js`,
+                },
+              ],
+              archive: [
+                {
+                  source: `zip`,
+                  destination: `../../${appPackageJson.name}-${appPackageJson.version}-SNAPSHOT.tar.gz`,
+                  format: 'tar',
+                  options: {
+                    gzip: true,
+                    gzipOptions: {
+                      level: 1,
+                    },
+                    globOptions: {
+                      nomount: true,
                     },
                   },
-                ],
-                delete: ['zip'],
-              },
+                },
+              ],
+              delete: ['zip'],
             },
-          }),
-        );
+          },
+          runTasksInSeries: true,
+        }),
+      );
       return config;
     },
   ),

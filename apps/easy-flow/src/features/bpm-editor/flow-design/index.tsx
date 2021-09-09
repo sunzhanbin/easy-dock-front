@@ -1,49 +1,51 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { memo, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { Drawer } from 'antd';
-import useMemoCallback from '@common/hooks/use-memo-callback';
 import { Loading, Icon } from '@common/components';
-import { load, flowDataSelector, save } from './flow-slice';
-import { AllNode, BranchNode as BranchNodeType, NodeType } from '@type/flow';
-import { StartNode, AuditNode, FillNode, FinishNode, CardHeader } from './nodes';
-import { AuditNodeProps } from './nodes/audit-node';
-import { StartNodeEditor, AuditNodeEditor, FillNodeEditor, FinishNodeEditor } from './editor';
+import { NodeType } from '@type/flow';
+import { CardHeader } from './nodes';
+import {
+  StartNodeEditor,
+  AuditNodeEditor,
+  FillNodeEditor,
+  CCNodeEditor,
+  FinishNodeEditor,
+  SubBranchEditor,
+  AutoNodeEditor,
+} from './editor';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { load, flowDataSelector, save, setChoosedNode, loadApis } from './flow-slice';
+import useMemoCallback from '@common/hooks/use-memo-callback';
+import FlowTree from './flow-tree';
 import styles from './index.module.scss';
 
 function FlowDesign() {
   const dispatch = useAppDispatch();
   const { bpmId } = useParams<{ bpmId: string }>();
-  const { loading, data: flow } = useAppSelector(flowDataSelector);
-  const [currentEditNode, setCurrentEditNode] = useState<AllNode | null>(null);
-  const [showEditDrawer, setShowEditDrawer] = useState(false);
-  const [currentEditNodePrevNodes, setCurrentEditNodePrevNodes] = useState<AllNode[]>([]);
+  const { loading, data: flow, choosedNode } = useAppSelector(flowDataSelector);
+  const handleCloseDrawer = useMemoCallback(() => {
+    dispatch(setChoosedNode(null));
+  });
 
   useEffect(() => {
     dispatch(load(bpmId));
   }, [dispatch, bpmId]);
 
-  const handleClickNode = useMemoCallback((node: Exclude<AllNode, BranchNodeType>) => {
-    setCurrentEditNode(node);
-    setShowEditDrawer(true);
-  });
+  useEffect(() => {
+    // 页面加载时请求服务列表为自动节点显示接口名称
+    dispatch(loadApis());
 
-  const handleCloseNodeEditor = useMemoCallback(() => {
-    setShowEditDrawer(false);
-  });
-
-  const handleClickAuditNode: AuditNodeProps['onClick'] = useMemoCallback((node, prevNodes) => {
-    setCurrentEditNode(node);
-    setCurrentEditNodePrevNodes(prevNodes || []);
-    setShowEditDrawer(true);
-  });
+    return () => {
+      dispatch(setChoosedNode(null));
+    };
+  }, [dispatch]);
 
   useEffect(() => {
     function handleSave(event: KeyboardEvent) {
       if (event.key === 's' && (navigator.platform.match('Mac') ? event.metaKey : event.ctrlKey)) {
         event.preventDefault();
 
-        dispatch(save(bpmId));
+        dispatch(save({ subappId: bpmId, showTip: true }));
       }
     }
 
@@ -55,95 +57,98 @@ function FlowDesign() {
   }, [dispatch, bpmId]);
 
   const drawerHeader = useMemo(() => {
-    if (currentEditNode) {
-      if (currentEditNode.type === NodeType.AuditNode) {
-        return (
-          <CardHeader icon={<Icon type="shenhejiedian" />} type={currentEditNode.type}>
-            审批节点
-          </CardHeader>
-        );
-      } else if (currentEditNode.type === NodeType.StartNode) {
-        return (
-          <CardHeader icon={<Icon type="baocunbingzhixing" />} type={currentEditNode.type}>
-            开始节点
-          </CardHeader>
-        );
-      } else if (currentEditNode.type === NodeType.FinishNode) {
-        return (
-          <CardHeader icon={<Icon type="jieshujiedian" />} type={currentEditNode.type}>
-            结束节点
-          </CardHeader>
-        );
-      } else if (currentEditNode.type === NodeType.FillNode) {
-        return (
-          <CardHeader icon={<Icon type="tianxiejiedian" />} type={currentEditNode.type}>
-            填写节点
-          </CardHeader>
-        );
-      }
+    if (!choosedNode) {
+      return null;
     }
 
-    return null;
-  }, [currentEditNode]);
+    if (choosedNode.type === NodeType.SubBranch) {
+      return <div className={styles['branch-title']}>分支节点</div>;
+    }
+
+    if (choosedNode.type === NodeType.AuditNode) {
+      return (
+        <CardHeader icon={<Icon type="shenhejiedian" />} type={choosedNode.type}>
+          审批节点
+        </CardHeader>
+      );
+    } else if (choosedNode.type === NodeType.StartNode) {
+      return (
+        <CardHeader icon={<Icon type="baocunbingzhixing" />} type={choosedNode.type}>
+          开始节点
+        </CardHeader>
+      );
+    } else if (choosedNode.type === NodeType.FinishNode) {
+      return (
+        <CardHeader icon={<Icon type="jieshujiedian" />} type={choosedNode.type}>
+          结束节点
+        </CardHeader>
+      );
+    } else if (choosedNode.type === NodeType.FillNode) {
+      return (
+        <CardHeader icon={<Icon type="tianxiejiedian" />} type={choosedNode.type}>
+          填写节点
+        </CardHeader>
+      );
+    } else if (choosedNode.type === NodeType.CCNode) {
+      return (
+        <CardHeader icon={<Icon type="chaosongdise" />} type={choosedNode.type}>
+          抄送节点
+        </CardHeader>
+      );
+    } else if (choosedNode.type === NodeType.AutoNode) {
+      return (
+        <CardHeader icon={<Icon type="zidongjiediandise" />} type={choosedNode.type}>
+          自动节点
+        </CardHeader>
+      );
+    }
+  }, [choosedNode]);
+
+  const drawerWidth = useMemo(() => {
+    if (choosedNode && choosedNode.type === NodeType.SubBranch) {
+      return 600;
+    }
+
+    return 368;
+  }, [choosedNode]);
 
   return (
-    <div className={styles.flow}>
-      {loading && <Loading />}
-      <div className={styles.content}>
-        {flow.map((node, index) => {
-          const prevNodes = flow.slice(0, index);
+    <div className={styles['scroll-container']}>
+      <div className={styles.flow}>
+        {loading && <Loading />}
 
-          switch (node.type) {
-            case NodeType.StartNode: {
-              return <StartNode key={node.id} node={node} onClick={handleClickNode} />;
-            }
-
-            case NodeType.AuditNode: {
-              return <AuditNode key={node.id} node={node} onClick={handleClickAuditNode} prevNodes={prevNodes} />;
-            }
-
-            case NodeType.FillNode: {
-              return <FillNode key={node.id} node={node} onClick={handleClickNode} />;
-            }
-
-            case NodeType.FinishNode: {
-              return <FinishNode key={node.id} node={node} onClick={handleClickNode} />;
-            }
-            default: {
-              return null;
-            }
-          }
-        })}
+        <div className={styles.content} id="flow-design-container">
+          <FlowTree data={flow} />
+        </div>
       </div>
-
       <Drawer
-        width={368}
-        visible={showEditDrawer}
+        width={drawerWidth}
+        visible={!!choosedNode}
         getContainer={false}
-        onClose={handleCloseNodeEditor}
+        onClose={handleCloseDrawer}
         destroyOnClose
         closable={false}
       >
         {drawerHeader}
 
         <div className={styles.editor}>
-          {currentEditNode && currentEditNode.type === NodeType.StartNode && <StartNodeEditor node={currentEditNode} />}
+          {choosedNode && choosedNode.type === NodeType.StartNode && <StartNodeEditor node={choosedNode} />}
 
-          {currentEditNode && currentEditNode.type === NodeType.AuditNode && (
-            <AuditNodeEditor node={currentEditNode} prevNodes={currentEditNodePrevNodes} />
-          )}
+          {choosedNode && choosedNode.type === NodeType.AuditNode && <AuditNodeEditor node={choosedNode} />}
 
-          {currentEditNode && currentEditNode.type === NodeType.FillNode && (
-            <FillNodeEditor node={currentEditNode} prevNodes={currentEditNodePrevNodes} />
-          )}
+          {choosedNode && choosedNode.type === NodeType.FillNode && <FillNodeEditor node={choosedNode} />}
 
-          {currentEditNode && currentEditNode.type === NodeType.FinishNode && (
-            <FinishNodeEditor node={currentEditNode} />
-          )}
+          {choosedNode && choosedNode.type === NodeType.CCNode && <CCNodeEditor node={choosedNode} />}
+
+          {choosedNode && choosedNode.type === NodeType.FinishNode && <FinishNodeEditor node={choosedNode} />}
+
+          {choosedNode && choosedNode.type === NodeType.SubBranch && <SubBranchEditor branch={choosedNode} />}
+
+          {choosedNode && choosedNode.type === NodeType.AutoNode && <AutoNodeEditor node={choosedNode} />}
         </div>
       </Drawer>
     </div>
   );
 }
 
-export default React.memo(FlowDesign);
+export default memo(FlowDesign);

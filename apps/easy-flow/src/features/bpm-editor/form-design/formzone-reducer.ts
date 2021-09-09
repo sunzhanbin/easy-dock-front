@@ -1,6 +1,15 @@
 import { createSelector, PayloadAction } from '@reduxjs/toolkit';
 import { uniqueId } from 'lodash';
-import { ErrorItem, FieldType, FormDesign, FormField, FormFieldMap, TConfigItem, TConfigMap } from '@type';
+import {
+  ErrorItem,
+  FieldType,
+  FormDesign,
+  FormField,
+  FormFieldMap,
+  FormRuleItem,
+  TConfigItem,
+  TConfigMap,
+} from '@type';
 import { RootState } from '@/app/store';
 
 function locateById(target: string, layout: Array<string[]>): [number, number] {
@@ -25,7 +34,11 @@ const reducers = {
         state.layout = [];
       }
       if (state.byId[com.id!]) return state;
-      state.byId[com.id!] = Object.assign({}, com, { fieldName: com.id });
+      let config = Object.assign({}, com, { fieldName: com.id });
+      if ((com.type as string) === 'DescText') {
+        config = Object.assign({}, config, { label: config.label + com.id?.split('_')[1] });
+      }
+      state.byId[com.id!] = Object.assign({}, com, config);
       // 如果当前选中了某一行，则在当前行之后插入；否则在末尾插入
       if (state.selectedField) {
         const rowNumber = locateById(state.selectedField, state.layout)[0];
@@ -57,7 +70,11 @@ const reducers = {
         state.layout = [];
       }
       if (state.byId[com.id!]) return state;
-      state.byId[com.id!] = Object.assign({}, com, { fieldName: com.id });
+      let config = Object.assign({}, com, { fieldName: com.id });
+      if ((com.type as string) === 'DescText') {
+        config = Object.assign({}, config, { label: config.label + com.id?.split('_')[1] });
+      }
+      state.byId[com.id!] = Object.assign({}, com, config);
       const index = rowIndex !== undefined ? rowIndex : state.layout.length - 1;
       // 如果当前选中了某一行，则在当前行之后插入；否则在末尾插入
       state.layout.splice(index + 1, 0, [com.id!]);
@@ -103,7 +120,7 @@ const reducers = {
     state.isDirty = true;
     return state;
   },
-  moveUp(state: FormDesign, action: PayloadAction<{ id: string }>) {
+  moveUp(state: FormDesign, action: PayloadAction<{ id: string; rowIndex?: number }>) {
     const { id } = action.payload;
     let [row, col] = locateById(id, state.layout);
     if (!state.byId[id] || row === 0) return state;
@@ -159,10 +176,11 @@ const reducers = {
   },
   editProps(
     state: FormDesign,
-    action: PayloadAction<{ id: string; config: TConfigItem; isEdit?: boolean; isValidate?: boolean }>,
+    action: PayloadAction<{ id: string; config: FormField; isEdit?: boolean; isValidate?: boolean }>,
   ) {
     const { id, config, isEdit, isValidate } = action.payload;
-    state.byId[id] = config as FormField;
+    const componentConfig = id.startsWith('DescText') ? Object.assign({}, config, { fieldName: config.id }) : config;
+    state.byId[id] = componentConfig;
     // 如果改变控件宽度后导致整行的宽度大于100%,则需要改变layout布局以实现换行
     if (isEdit) {
       const [rowIndex, colIndex] = locateById(id, state.layout);
@@ -226,7 +244,16 @@ const reducers = {
     state.errors = errors;
     return state;
   },
+  setFormRules(state: FormDesign, action: PayloadAction<{ formRules: FormRuleItem[] }>) {
+    const { formRules } = action.payload;
+    state.formRules = formRules;
+    state.isDirty = true;
+    return state;
+  },
 };
+export const formDesignSelector = createSelector([(state: RootState) => state.formDesign], (formDesign) => {
+  return formDesign;
+});
 
 export const configSelector = createSelector(
   [
@@ -291,6 +318,9 @@ export const dirtySelector = createSelector([(state: RootState) => state.formDes
 export const errorSelector = createSelector([(state: RootState) => state.formDesign], (formDesign) => {
   return formDesign.errors;
 });
+export const formRulesSelector = createSelector([(state: RootState) => state.formDesign], (formDesign) => {
+  return formDesign.formRules;
+});
 
 export const {
   comAdded,
@@ -308,4 +338,5 @@ export const {
   setById,
   setIsDirty,
   setErrors,
+  setFormRules,
 } = reducers;

@@ -5,7 +5,7 @@ import { Loading } from '@common/components';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import ConfirmModal, { ActionType } from './components/confirm-modal';
 import Header from '@components/header';
-import { runtimeAxios } from '@utils';
+import { runtimeAxios, uploadFile } from '@utils';
 import { loadFlowData } from '@/apis/detail';
 import { dynamicRoutes } from '@consts';
 import Detail from './components/detail';
@@ -32,7 +32,7 @@ export type DataType = {
 const loadData = async function (taskId: string): Promise<DataType> {
   const { data } = await runtimeAxios.get(`/process_instance/getInstanceDetailByTaskId?taskId=${taskId}`);
   const flowInstance: DataType['flow']['instance'] = data.processInstance;
-  const [formMeta, formValue, node] = await loadFlowData(flowInstance, data.state);
+  const [formMeta, formValue, node] = await loadFlowData(flowInstance);
 
   return {
     task: {
@@ -73,9 +73,11 @@ function FlowDetail() {
 
   const handleSaveNodeForm = useMemoCallback(async () => {
     if (!formRef.current) return;
+    const values = await formRef.current!.validateFields();
+    const formValues = await uploadFile(values);
 
     await runtimeAxios.post(`/process_instance/saveNodeForm`, {
-      formData: formRef.current.getFieldsValue(),
+      formData: formValues,
       taskId,
     });
 
@@ -83,7 +85,8 @@ function FlowDetail() {
   });
 
   const handleSubmitNodeForm = useMemoCallback(async () => {
-    const formValues = await formRef.current!.validateFields();
+    const values = await formRef.current!.validateFields();
+    const formValues = await uploadFile(values);
 
     await runtimeAxios.post(`/process_instance/submit`, {
       formData: formValues,
@@ -99,25 +102,26 @@ function FlowDetail() {
 
   const handleConfirm = useMemoCallback(async (remark: string) => {
     const values = await formRef.current!.validateFields();
+    const formValues = await uploadFile(values);
 
     // 同意
     if (showConfirmType === ActionType.Approve) {
       await runtimeAxios.post(`/process_instance/approve`, {
-        formData: values,
+        formData: formValues,
         remark,
         taskId,
       });
       // 终止
     } else if (showConfirmType === ActionType.Terminate) {
       await runtimeAxios.post(`/process_instance/stop`, {
-        formData: values,
+        formData: formValues,
         taskId,
         remark: '',
       });
     } else if (showConfirmType === ActionType.Revert) {
       // 驳回
       await runtimeAxios.post(`/process_instance/backTo`, {
-        formData: values,
+        formData: formValues,
         remark,
         taskId,
       });
@@ -152,7 +156,7 @@ function FlowDetail() {
   return (
     <div className={styles.container}>
       {loading && <Loading />}
-      <Header className={styles.header} backText="流程详情">
+      <Header className={styles.header} backClassName={styles.back} backText="流程详情">
         {data && (
           <FlowNodeActions
             flowMeta={data.flow.node}

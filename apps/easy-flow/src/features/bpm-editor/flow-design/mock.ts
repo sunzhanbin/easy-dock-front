@@ -52,7 +52,7 @@ mock(/^\/user\/list/, 'post', function (options: Options) {
     data: data.map((item: string) => {
       return {
         avatar: `https://picsum.photos/100/100?t=${Math.random()}`,
-        loginName: item,
+        id: item,
         name: mock('@cname'),
       };
     }),
