@@ -26,7 +26,7 @@ function AutoNodeEditor(props: AutoNodeEditorProps) {
   const fieldsTemplate = useFieldsTemplate();
   const [form] = Form.useForm<FormValuesType>();
 
-  useValidateForm<FormValuesType>(form);
+  useValidateForm<FormValuesType>(form, node.id);
 
   const formInitialValues = useMemo(() => {
     return {

@@ -1,20 +1,21 @@
 import { memo, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
-import { Form, Input, Checkbox, InputNumber } from 'antd';
+import { Form, Input, Checkbox, InputNumber, Button } from 'antd';
 import { Rule } from 'antd/lib/form';
 import debounce from 'lodash/debounce';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import { AuditNode } from '@type/flow';
+import { AuditNode, RevertType } from '@type/flow';
 import MemberSelector from '../../components/member-selector';
 import FieldAuths from '../../components/field-auths';
-import ButtonConfigs from './button-configs';
+import ButtonEditor from '../../components/button-editor';
 // import CounterSignButtonGroup from './countersign-btn-group';
 import { updateNode } from '../../flow-slice';
 import { trimInputValue } from '../../util';
 import useValidateForm from '../../hooks/use-validate-form';
 import usePrevNodes from '../../hooks/use-prev-nodes';
+import RevertCascader from './revert-cascader';
 import { rules } from '../../validators';
-// import styles from './index.module.scss';
+import styles from './index.module.scss';
 
 interface AuditNodeEditorProps {
   node: AuditNode;
@@ -37,7 +38,7 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
   const [form] = Form.useForm<FormValuesType>();
   const prevNodes = usePrevNodes(node.id);
 
-  useValidateForm<FormValuesType>(form);
+  useValidateForm<FormValuesType>(form, node.id);
 
   const formInitialValues = useMemo(() => {
     return {
@@ -54,7 +55,7 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
 
   const handleFormValuesChange = useMemoCallback(
     debounce(() => {
-      const allValues = form.getFieldsValue(true);
+      const allValues: FormValuesType = form.getFieldsValue(true);
 
       dispatch(
         updateNode({
@@ -92,8 +93,56 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
       <Form.Item label="选择办理人" name="correlationMemberConfig" rules={memberRules} required>
         <MemberSelector />
       </Form.Item>
-      <Form.Item label="操作权限" name="btnConfigs" required>
-        <ButtonConfigs prevNodes={prevNodes} />
+      <Form.Item className={styles['btn-configs']} label="操作权限" required>
+        <Form.Item name={['btnConfigs', 'btnText', 'save']}>
+          <ButtonEditor className={styles.editor} checkable={false} btnKey="save">
+            <Button size="large">保存</Button>
+          </ButtonEditor>
+        </Form.Item>
+        <Form.Item name={['btnConfigs', 'btnText', 'approve']}>
+          <ButtonEditor className={styles.editor} checkable={false} btnKey="approve">
+            <Button size="large" className={styles.approve}>
+              同意
+            </Button>
+          </ButtonEditor>
+        </Form.Item>
+
+        <Form.Item name={['btnConfigs', 'btnText', 'revert']}>
+          <ButtonEditor className={styles.editor} checkable={false} btnKey="revert">
+            <Button size="large" type="primary" danger>
+              驳回
+            </Button>
+          </ButtonEditor>
+        </Form.Item>
+
+        <Form.Item
+          name={['btnConfigs', 'revert']}
+          rules={[
+            {
+              validator(_, revert: AuditNode['revert']) {
+                if (revert.type === RevertType.Specify && !revert.nodeId) {
+                  return Promise.reject('选择驳回到指定节点时指定节点不能为空');
+                }
+
+                return Promise.resolve();
+              },
+            },
+          ]}
+        >
+          <RevertCascader prevNodes={prevNodes}></RevertCascader>
+        </Form.Item>
+
+        <Form.Item name={['btnConfigs', 'btnText', 'transfer']}>
+          <ButtonEditor className={styles.editor} btnKey="transfer">
+            <Button size="large">转办</Button>
+          </ButtonEditor>
+        </Form.Item>
+
+        <Form.Item name={['btnConfigs', 'btnText', 'terminate']}>
+          <ButtonEditor className={styles.editor} btnKey="terminate">
+            <Button size="large">终止</Button>
+          </ButtonEditor>
+        </Form.Item>
       </Form.Item>
       {/* 会签915之后打开 */}
       {/* <Form.Item>
