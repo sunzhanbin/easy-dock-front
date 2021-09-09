@@ -16,6 +16,8 @@ import { fetchDataSource } from '@/apis/detail';
 import styles from './index.module.scss';
 import classnames from 'classnames';
 import titleImage from '@/assets/title.png';
+import leftImage from '@assets/background_left.png';
+import rightImage from '@assets/background_right.png';
 
 const propsKey = ['defaultValue', 'showSearch', 'multiple', 'format', 'notSelectPassed', 'maxCount'];
 type Key = keyof FormField;
@@ -105,8 +107,8 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
     >
       <div className="content">
         <div className={styles.background}>
-          <div className={styles.left}></div>
-          <div className={styles.right}></div>
+          <div className={styles.left} style={{ backgroundImage: `url(${leftImage})` }}></div>
+          <div className={styles.right} style={{ backgroundImage: `url(${rightImage})` }}></div>
         </div>
         <div className={styles['start-form-wrapper']}>
           <div className={classnames(styles.form)} style={{ height: `${document.body.clientHeight - 124}px` }}>
