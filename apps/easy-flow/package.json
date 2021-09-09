@@ -1,6 +1,6 @@
 {
   "name": "easy-flow-front",
-  "version": "0.3.0",
+  "version": "0.2.1",
   "private": true,
   "dependencies": {
     "antd": "^4.15.2",
