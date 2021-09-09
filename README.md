@@ -54,4 +54,4 @@ yarn start
 
 ### 给 npm-client 传递参数
 
-可以通过 `--` 后添加选项, 设置 npm cient 的参数。
+可以通过 `--` 后添加选项, 设置 npm cient 的参数。.
