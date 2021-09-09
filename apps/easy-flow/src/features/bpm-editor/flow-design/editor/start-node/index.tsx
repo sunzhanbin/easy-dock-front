@@ -30,7 +30,7 @@ function StartNodeEditor(props: StartNodeEditorProps) {
   const [triggerType, setTriggerType] = useState(node.trigger.type);
 
   // 触发保存时校验form
-  useValidateForm<FormValuesType>(form);
+  useValidateForm<FormValuesType>(form, node.id);
 
   const handleFormValuesChange = useMemoCallback(
     debounce((_, allValues: FormValuesType) => {

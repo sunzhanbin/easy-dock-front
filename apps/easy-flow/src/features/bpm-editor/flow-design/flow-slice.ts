@@ -13,6 +13,7 @@ import {
   TriggerType,
   Flow,
   FieldTemplate,
+  RevertType,
 } from '@type/flow';
 import { FormMeta } from '@type';
 import { Api } from '@type/api';
@@ -118,6 +119,15 @@ const flow = createSlice({
     },
     delNode(state, { payload: nodeId }: PayloadAction<string>) {
       state.data = flowUpdate(state.data, nodeId, null);
+
+      flowRecursion(state.data, (node) => {
+        if (node.type === NodeType.AuditNode) {
+          if (node.revert.type === RevertType.Specify && node.revert.nodeId === nodeId) {
+            delete node.revert.nodeId;
+          }
+        }
+      });
+
       state.dirty = true;
 
       delete state.invalidNodesMap[nodeId];

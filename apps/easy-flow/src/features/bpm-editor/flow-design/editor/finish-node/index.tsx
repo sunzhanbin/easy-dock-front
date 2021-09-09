@@ -38,7 +38,7 @@ function FinishNodeEditor(props: FinishNodeEditorProps) {
     };
   }, [node]);
 
-  useValidateForm<FormValuesType>(form);
+  useValidateForm<FormValuesType>(form, node.id);
 
   return (
     <Form
