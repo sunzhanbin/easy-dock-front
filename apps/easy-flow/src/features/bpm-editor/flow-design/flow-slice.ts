@@ -246,6 +246,7 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
     dispatch(flowActions.setFieldsTemplate(fieldsTemplate));
     dispatch(flowActions.setInitialFlow(flowData));
     dispatch(flowActions.setForm(form.meta));
+    dispatch(flowActions.setInvalidMaps({}));
   } catch (e) {
     console.error(e);
   } finally {
