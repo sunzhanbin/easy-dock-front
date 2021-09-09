@@ -37,10 +37,10 @@ function AddNodeButton(props: AddNodeButtonProps) {
           <span>添加填写节点</span>
         </div>
 
-        <div onClick={() => handleAddNode(NodeType.BranchNode)}>
+        {/* <div onClick={() => handleAddNode(NodeType.BranchNode)}>
           <Icon type="jicheng" />
           <span>添加子分支</span>
-        </div>
+        </div> */}
         {/* 
         <div onClick={() => handleAddNode(NodeType.CCNode)}>
           <Icon type="chaosongjiedian" />

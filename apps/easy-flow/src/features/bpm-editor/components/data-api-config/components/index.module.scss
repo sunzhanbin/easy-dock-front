@@ -1,0 +1,21 @@
+@import '@common/styles/var.scss';
+
+.field-selected {
+  color: $primary-color;
+  background-color: rgba($primary-color, 0.08);
+}
+
+.options {
+  padding: 8px;
+
+  :global {
+    .ant-dropdown-menu-item {
+      padding: 5px 8px;
+      border-radius: 3px;
+    }
+
+    .ant-dropdown-menu-item + .ant-dropdown-menu-item {
+      margin-top: 4px;
+    }
+  }
+}
