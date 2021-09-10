@@ -80,21 +80,7 @@ const ImageComponent = (
   const handleCancel = useMemoCallback(() => {
     setPreviewVisible(false);
   });
-  // 处理每行最多展示8张图片
-  useEffect(() => {
-    const el = containerRef.current!.querySelector('.ant-upload-list-picture-card');
-    if (el) {
-      const classNameList: string[] = [];
-      el.classList.forEach((className) => {
-        if (!className.includes('col-space')) {
-          classNameList.push(className);
-        }
-      });
-      classNameList.push(`col-space-${colSpace}`);
-      el.className = classNameList.join(' ');
-    }
-  }, [colSpace]);
-  useEffect(() => {
+  const initFileList = useMemoCallback(() => {
     if (value) {
       const componentValue = typeof value === 'string' ? (JSON.parse(value) as ImageValue) : { ...value };
       const { fileIdList, fileList } = componentValue;
@@ -126,7 +112,24 @@ const ImageComponent = (
         });
       }
     }
-  }, []);
+  });
+  // 处理每行最多展示8张图片
+  useEffect(() => {
+    const el = containerRef.current!.querySelector('.ant-upload-list-picture-card');
+    if (el) {
+      const classNameList: string[] = [];
+      el.classList.forEach((className) => {
+        if (!className.includes('col-space')) {
+          classNameList.push(className);
+        }
+      });
+      classNameList.push(`col-space-${colSpace}`);
+      el.className = classNameList.join(' ');
+    }
+  }, [colSpace]);
+  useEffect(() => {
+    initFileList();
+  }, [initFileList]);
   useEffect(() => {
     // 后端保存的是字符串,提交时需要转成json对象
     if (typeof value === 'string') {

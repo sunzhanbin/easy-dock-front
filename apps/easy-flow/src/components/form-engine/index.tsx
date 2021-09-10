@@ -247,7 +247,7 @@ const FormDetail = React.forwardRef(function FormDetail(
           setLoading(false);
         });
     }
-  }, []);
+  }, [form, initRuleList, initialValue]);
 
   return (
     <Form

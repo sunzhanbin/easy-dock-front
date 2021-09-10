@@ -97,7 +97,7 @@ const Member = (
 
   useEffect(() => {
     fetchMembers(1, '');
-  }, []);
+  }, [fetchMembers]);
 
   return (
     <Select {...propList} style={{ width: '100%' }} onPopupScroll={handleScroll} onSearch={handleSearch}>

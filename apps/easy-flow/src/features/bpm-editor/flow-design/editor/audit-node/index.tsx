@@ -1,6 +1,6 @@
 import { memo, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
-import { Form, Input, Checkbox, InputNumber, Button } from 'antd';
+import { Form, Input, Button } from 'antd';
 import { Rule } from 'antd/lib/form';
 import debounce from 'lodash/debounce';
 import useMemoCallback from '@common/hooks/use-memo-callback';

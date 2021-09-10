@@ -89,7 +89,7 @@ function StartFlow() {
         fieldsAuths={processMeta.fieldsAuths}
       />
     );
-  }, [data, datasource]);
+  }, [data, datasource, projectId]);
 
   const handleSubmit = useMemoCallback(async () => {
     if (!formRef.current || !subApp) return;

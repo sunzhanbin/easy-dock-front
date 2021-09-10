@@ -151,8 +151,7 @@ const FormList = ({
     };
     onChange && onChange(blockIndex, ruleIndex, fieldRule);
   });
-
-  useEffect(() => {
+  const init = useMemoCallback(() => {
     if (rule) {
       const { fieldName, symbol, value, fieldType } = rule;
       setFieldName(fieldName);
@@ -176,7 +175,11 @@ const FormList = ({
         setDataSource(fieldName, type);
       }
     }
-  }, [rule]);
+  });
+
+  useEffect(() => {
+    init();
+  }, [init]);
   const renderSymbol = useMemoCallback(() => {
     const component = componentList.find((item) => item.fieldName === fieldName);
     const componentType = component && component.type;

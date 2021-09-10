@@ -58,21 +58,7 @@ const Attachment = (
     const { name, uid } = file;
     downloadFile(uid, name);
   });
-  // 处理每行最多展示4个文件
-  useEffect(() => {
-    const el = containerRef.current!.querySelector('.ant-upload-select-picture')?.parentElement;
-    if (el) {
-      const classNameList: string[] = [];
-      el.classList.forEach((className) => {
-        if (!className.includes('col-space')) {
-          classNameList.push(className);
-        }
-      });
-      classNameList.push(`col-space-${colSpace}`);
-      el.className = classNameList.join(' ');
-    }
-  }, [colSpace]);
-  useEffect(() => {
+  const initFileList = useMemoCallback(() => {
     if (value) {
       const componentValue = typeof value === 'string' ? (JSON.parse(value) as FileValue) : { ...value };
       const { fileIdList, fileList } = componentValue;
@@ -95,7 +81,24 @@ const Attachment = (
         setFileList(list);
       }
     }
-  }, []);
+  });
+  // 处理每行最多展示4个文件
+  useEffect(() => {
+    const el = containerRef.current!.querySelector('.ant-upload-select-picture')?.parentElement;
+    if (el) {
+      const classNameList: string[] = [];
+      el.classList.forEach((className) => {
+        if (!className.includes('col-space')) {
+          classNameList.push(className);
+        }
+      });
+      classNameList.push(`col-space-${colSpace}`);
+      el.className = classNameList.join(' ');
+    }
+  }, [colSpace]);
+  useEffect(() => {
+    initFileList();
+  }, [initFileList]);
   useEffect(() => {
     // 后端保存的是字符串,提交时需要转成json对象
     if (typeof value === 'string') {
