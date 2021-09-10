@@ -1,5 +1,5 @@
 import { Rule } from 'antd/lib/form';
-import { CorrelationMemberConfig } from '@type/flow';
+import { CorrelationMemberConfig, AuditNode, RevertType } from '@type/flow';
 import { DataConfig } from '@type/api';
 import { validName } from '@common/rule';
 
@@ -35,33 +35,44 @@ const dataPushConfig = (value: DataConfig): string => {
   return message;
 };
 
+const revert = (value: AuditNode['revert']) => {
+  if (value.type === RevertType.Specify && !value.nodeId) {
+    return '选择驳回到指定节点时指定节点不能为空';
+  }
+
+  return '';
+};
+
 export const validators = {
   member,
   name: validName,
   data: dataPushConfig,
+  revert: revert,
 };
+
+function handleValidWithMessage(message: string) {
+  if (message) {
+    return Promise.reject(new Error(message));
+  }
+
+  return Promise.resolve();
+}
 
 export const rules: { [key: string]: Rule } = {
   member: {
     validator(_, value: CorrelationMemberConfig) {
-      const message = validators.member(value);
-
-      if (message) {
-        return Promise.reject(new Error(message));
-      }
-
-      return Promise.resolve();
+      return handleValidWithMessage(validators.member(value));
     },
   },
+
   name: {
     validator: (_, value: string) => {
-      const message = validName(value);
-
-      if (message) {
-        return Promise.reject(new Error(message));
-      } else {
-        return Promise.resolve();
-      }
+      return handleValidWithMessage(validators.name(value));
+    },
+  },
+  revert: {
+    validator(_, value: AuditNode['revert']) {
+      return handleValidWithMessage(validators.revert(value));
     },
   },
 };

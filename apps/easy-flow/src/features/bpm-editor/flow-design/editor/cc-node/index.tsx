@@ -27,7 +27,7 @@ function CCNodeEditor(props: CCNodeEditorProps) {
   const { node } = props;
   const [form] = Form.useForm<FormValuesType>();
 
-  useValidateForm<FormValuesType>(form);
+  useValidateForm<FormValuesType>(form, node.id);
 
   const formInitialValues = useMemo(() => {
     return {

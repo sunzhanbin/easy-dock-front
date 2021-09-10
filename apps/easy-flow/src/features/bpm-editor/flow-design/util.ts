@@ -237,6 +237,14 @@ export function valid(data: AllNode[], validRes: ValidResultType) {
     if (node.type === NodeType.AuditNode || node.type === NodeType.FillNode || node.type === NodeType.CCNode) {
       const memberValidMessage = validators.member(node.correlationMemberConfig);
 
+      if (node.type === NodeType.AuditNode) {
+        const validRevertMessage = validators.revert(node.revert);
+
+        if (validRevertMessage) {
+          errors.push(validRevertMessage);
+        }
+      }
+
       if (memberValidMessage) {
         errors.push(memberValidMessage);
       }
