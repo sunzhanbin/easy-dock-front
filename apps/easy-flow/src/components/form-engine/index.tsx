@@ -21,6 +21,7 @@ interface FormProps {
   initialValue: { [key: string]: any };
   readonly?: boolean;
   className?: string;
+  projectId?: number;
   datasource: Datasource;
 }
 
@@ -32,7 +33,7 @@ const FormDetail = React.forwardRef(function FormDetail(
   props: FormProps,
   ref: React.ForwardedRef<FormInstance<FormValue>>,
 ) {
-  const { data, fieldsAuths, datasource, initialValue, readonly, className } = props;
+  const { data, fieldsAuths, datasource, initialValue, readonly, className, projectId } = props;
   const [form] = Form.useForm<FormValue>();
   const [loading, setLoading] = useState<boolean>(false);
   const [fieldsVisible, setFieldsVisible] = useState<FieldsVisible>({});
@@ -303,6 +304,7 @@ const FormDetail = React.forwardRef(function FormDetail(
                           fieldsAuths[fieldName] === AuthType.View,
                       }),
                       datasource && (datasource[fieldName] || datasource[fieldId]),
+                      projectId,
                     )}
                   </Form.Item>
                 </Col>
@@ -322,10 +324,13 @@ function compRender(
   Component: any,
   props: any,
   datasource?: Datasource[keyof Datasource],
+  projectId?: number,
 ) {
   if ((type === 'Select' || type === 'Radio' || type === 'Checkbox') && datasource) {
     return <Component {...props} options={datasource} />;
   }
-
+  if (type === 'Member') {
+    return <Component {...props} projectid={projectId} />;
+  }
   return <Component {...props} />;
 }

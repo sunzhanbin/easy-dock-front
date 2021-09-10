@@ -13,6 +13,7 @@ import { Datasource, FormMeta } from '@type/detail';
 import { FieldAuthsMap, AuthType } from '@type/flow';
 import { ComponentConfig, FieldType, FormField, FormFieldMap, InputField, InputNumberField, RadioField } from '@/type';
 import { fetchDataSource } from '@/apis/detail';
+import { useSubAppDetail } from '@/app/app';
 import styles from './index.module.scss';
 import classnames from 'classnames';
 import titleImage from '@/assets/title.png';
@@ -28,6 +29,13 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
   const byId: FormFieldMap = useAppSelector(componentPropsSelector);
   const formRules = useAppSelector(formRulesSelector);
   const [dataSource, setDataSource] = useState<Datasource>({});
+  const subAppDetail = useSubAppDetail();
+  const projectId = useMemo(() => {
+    if (subAppDetail && subAppDetail.data && subAppDetail.data.app) {
+      return subAppDetail.data.app.project.id;
+    }
+  }, [subAppDetail]);
+
   useEffect(() => {
     const components = Object.values(byId).filter((component) => {
       const { type } = component;
@@ -122,6 +130,7 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
               data={(formDesign as unknown) as FormMeta}
               fieldsAuths={auths}
               className={styles['form-engine']}
+              projectId={projectId}
             ></FormEngine>
           </div>
         </div>

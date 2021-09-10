@@ -33,6 +33,12 @@ function StartFlow() {
   const formRef = useRef<FormInstance<FormValue>>(null);
   const [datasource, serDatasource] = useState<Datasource>();
 
+  const projectId = useMemo(() => {
+    if (subApp && subApp.app) {
+      return subApp.app?.project?.id;
+    }
+  }, [subApp]);
+
   useEffect(() => {
     if (!subApp) return;
 
@@ -79,6 +85,7 @@ function StartFlow() {
         data={formMeta}
         className={styles['form-engine']}
         initialValue={formData}
+        projectId={projectId}
         fieldsAuths={processMeta.fieldsAuths}
       />
     );
