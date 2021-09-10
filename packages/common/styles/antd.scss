@@ -597,8 +597,14 @@
       }
     }
   }
+
   td.ant-table-column-sort {
     background-color: #fff;
+  }
+
+  .ant-table-column-sorter-up.active,
+  .ant-table-column-sorter-down.active {
+    color: $primary-color;
   }
 }
 

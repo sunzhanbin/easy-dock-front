@@ -7,6 +7,7 @@ import Todo from './todo';
 import Start from './start';
 import Done from './done';
 import Card from './card';
+import Draft from './draft';
 import { useAppSelector } from '@/app/hooks';
 import { todoNumSelector } from './taskcenter-reducer';
 import { loadApp } from './taskcenter-slice';
@@ -63,6 +64,9 @@ const TaskCenter: FC<{}> = () => {
             <NavLink to={`${matchedUrl}/done`} replace className={styles.nav} activeClassName={styles.active}>
               我的已办
             </NavLink>
+            <NavLink to={`${matchedUrl}/draft`} replace className={styles.nav} activeClassName={styles.active}>
+              草稿
+            </NavLink>
             {/* 这个版本暂时不做 */}
             {/* <NavLink to={`${matchedUrl}/copy`} className={styles.nav} activeClassName={styles.active}>
               抄送我的
@@ -79,6 +83,7 @@ const TaskCenter: FC<{}> = () => {
         <Switch>
           <Route path={`${matchedPath}/start`} component={Start}></Route>
           <Route path={`${matchedPath}/done`} component={Done}></Route>
+          <Route path={`${matchedPath}/draft`} component={Draft}></Route>
           <Route path={matchedPath} component={Todo}></Route>
           {/* <Route path={`${matchedPath}/copy`} component={Copy}></Route> */}
           {/* <Redirect to={`${matchedPath}/todo`}></Redirect> */}
