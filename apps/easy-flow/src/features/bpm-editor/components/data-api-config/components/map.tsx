@@ -1,7 +1,6 @@
 import { memo, useContext, useMemo } from 'react';
-import { Form, Input, Dropdown, Menu } from 'antd';
+import { Form, Input, Dropdown, Menu, DropDownProps } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import { getContainer } from '@common/utils/dom';
 import DataContext from '../context';
 import styles from './index.module.scss';
 
@@ -38,7 +37,7 @@ function FieldMap(props: FieldMapProps) {
       ]}
       trigger="onChange"
     >
-      <AutoSelector options={options}></AutoSelector>
+      <AutoSelector options={options} getPopupContainer={getPopupContainer} />
     </Form.Item>
   );
 }
@@ -49,10 +48,11 @@ interface AutoSelectorProps {
   value?: string;
   onChange?(value: this['value']): void;
   options: { id: string | number; name: string }[];
+  getPopupContainer?: DropDownProps['getPopupContainer'];
 }
 
 function AutoSelector(props: AutoSelectorProps) {
-  const { options, value, onChange } = props;
+  const { options, value, onChange, getPopupContainer } = props;
   const showValue = useMemo(() => {
     return options.find((item) => item.id === value)?.name || value;
   }, [options, value]);
@@ -67,7 +67,7 @@ function AutoSelector(props: AutoSelectorProps) {
 
   return (
     <Dropdown
-      getPopupContainer={getContainer}
+      getPopupContainer={getPopupContainer}
       overlay={
         <Menu className={styles.options} onClick={handleMenuClick}>
           {options.map((item) => {

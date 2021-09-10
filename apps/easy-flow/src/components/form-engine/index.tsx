@@ -232,6 +232,7 @@ const FormDetail = React.forwardRef(function FormDetail(
           resList.forEach((res, index) => {
             respListMap[index].forEach(({ fieldName, name }) => {
               if (fieldName && name) {
+                // TODO 替换eval
                 formValues[fieldName] = eval(`res.${name}`);
               }
             });

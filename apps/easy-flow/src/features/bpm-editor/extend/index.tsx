@@ -36,7 +36,7 @@ function SubAppExtend() {
   });
 
   return (
-    <Form form={form} className={styles.form} onValuesChange={handleExtendChange} colon={false}>
+    <Form form={form} className={styles.form} onValuesChange={handleExtendChange} colon={false} autoComplete="off">
       {subapp.loading && <Loading />}
 
       <Form.Item

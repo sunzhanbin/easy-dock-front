@@ -5,35 +5,40 @@ import { ButtonAuth } from '@type/flow';
 import styles from './index.module.scss';
 
 interface ButtonEditorProps extends ButtonAuth {
-  onChange(btnKey: this['btnKey'], config: ButtonAuth): void;
   children: ReactNode;
   checkable?: boolean;
   className?: string;
   btnKey: string;
+  value?: ButtonAuth;
+  onChange?(value: this['value']): void;
 }
 
 function ButtonEditor(props: ButtonEditorProps) {
-  const { text, enable, children, onChange, checkable = true, btnKey, className } = props;
+  const { value, children, onChange, checkable = true, className } = props;
 
   return (
     <div className={classnames(styles['btn-editor'], className)}>
       <div className={styles['btn-content']}>{children}</div>
       <Input
         className={styles['btn-alias']}
-        value={text}
+        value={value?.text}
         placeholder="请输入按钮别名"
         onChange={(event) => {
-          onChange(btnKey, { text: event.target.value.trim(), enable: enable || false });
+          if (onChange) {
+            onChange({ text: event.target.value.trim(), enable: value?.enable || false });
+          }
         }}
         size="large"
       />
       {checkable && (
         <Checkbox
           className={styles.choose}
-          checked={enable}
+          checked={value?.enable}
           disabled={!checkable}
           onChange={(event) => {
-            onChange(btnKey, { text, enable: event.target.checked });
+            if (onChange) {
+              onChange({ text: value?.text || '', enable: event.target.checked });
+            }
           }}
         />
       )}
