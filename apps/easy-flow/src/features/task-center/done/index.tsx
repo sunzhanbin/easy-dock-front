@@ -1,4 +1,4 @@
-import { memo, FC, useMemo, useState, useCallback, useEffect } from 'react';
+import { memo, FC, useMemo, useState, useCallback, useEffect, useRef } from 'react';
 import styles from './index.module.scss';
 import { Form, Input, Select, Button, DatePicker, Table } from 'antd';
 import { useHistory } from 'react-router-dom';
@@ -12,6 +12,7 @@ import useMemoCallback from '@common/hooks/use-memo-callback';
 import { useAppSelector } from '@/app/hooks';
 import { appSelector } from '../taskcenter-slice';
 import { Icon } from '@common/components';
+import { debounce, throttle } from 'lodash';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -30,6 +31,9 @@ const Done: FC<{}> = () => {
   });
   const [data, setData] = useState<DoneItem[]>([]);
   const [optionList, setOptionList] = useState<UserItem[]>([]);
+  const [total, setTotal] = useState<number>(0);
+  const [keyword, setKeyword] = useState<string>('');
+  const pageNumberRef = useRef(1);
   const [sortDirection, setSortDirection] = useState<'DESC' | 'ASC'>('DESC');
   const columns = useMemo(() => {
     return [
@@ -142,16 +146,49 @@ const Done: FC<{}> = () => {
         });
     },
   );
-  const fetchOptionList = useCallback(() => {
-    projectId &&
-      runtimeAxios.post('/user/search', { index: 0, size: 100, keyword: '', projectId }).then((res) => {
-        const list = res.data?.data || [];
-        setOptionList(list);
-      });
-  }, [projectId]);
-  const handleFilterOption = useCallback((inputValue, option) => {
-    return option.children.indexOf(inputValue) > -1;
-  }, []);
+  const fetchOptionList = useCallback(
+    (pageNum: number, keyword: string) => {
+      if (projectId) {
+        runtimeAxios.post('/user/search', { index: pageNum, size: 20, keyword, projectId }).then((res) => {
+          const list = res.data?.data || [];
+          const total = res.data?.recordTotal;
+          const index = res.data?.pageIndex;
+          setOptionList((val) => {
+            // 从第一页搜索时覆盖原数组
+            if (pageNum === 1) {
+              return list;
+            }
+            return val.concat(list);
+          });
+          // 更新当前页数
+          pageNumberRef.current = index;
+          setTotal(total);
+        });
+      }
+    },
+    [projectId],
+  );
+  const handleScroll = useMemoCallback(
+    throttle((event: React.UIEvent<HTMLDivElement, UIEvent>) => {
+      // 全部加载完了就不加载了
+      if (optionList.length === total) return;
+
+      const container = event.target as HTMLDivElement;
+
+      if (container.scrollHeight - container.offsetHeight - container.scrollTop < 20) {
+        if (loading) return;
+
+        fetchOptionList(pageNumberRef.current + 1, keyword);
+      }
+    }, 300),
+  );
+  const handleSearchUser = useMemoCallback(
+    debounce((val) => {
+      setKeyword(val);
+      pageNumberRef.current = 1;
+      fetchOptionList(1, val);
+    }, 500),
+  );
   const handleKeyUp = useCallback(
     (e) => {
       if (e.keyCode === 13) {
@@ -175,7 +212,7 @@ const Done: FC<{}> = () => {
     fetchData();
   }, [form, fetchData]);
   useEffect(() => {
-    fetchOptionList();
+    fetchOptionList(1, '');
   }, [fetchOptionList]);
   useEffect(() => {
     appId && fetchData();
@@ -199,17 +236,19 @@ const Done: FC<{}> = () => {
             <Form.Item label="发起人" name="starter" className="initiator">
               <Select
                 showSearch
-                filterOption={handleFilterOption}
                 allowClear
                 style={{ width: '100%' }}
                 suffixIcon={<Icon type="xiala" />}
                 placeholder="请选择"
+                optionFilterProp="label"
+                onPopupScroll={handleScroll}
+                onSearch={handleSearchUser}
                 onChange={() => {
                   fetchData();
                 }}
               >
                 {optionList.map(({ id, userName }) => (
-                  <Option key={id} value={id}>
+                  <Option key={id} value={id} label={userName}>
                     {userName}
                   </Option>
                 ))}
