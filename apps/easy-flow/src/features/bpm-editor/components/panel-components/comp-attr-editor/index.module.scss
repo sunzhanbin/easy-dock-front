@@ -15,7 +15,7 @@
       display: flex;
       justify-content: space-between;
       .ant-radio-button-wrapper {
-        width: 47px;
+        width: calc(25% - 8px);
         height: 40px;
         line-height: 40px;
         text-align: center;

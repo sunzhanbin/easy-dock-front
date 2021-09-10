@@ -80,7 +80,7 @@ export type DataBaseField = {
   dataFilter?: DataFilterCondition[] | null;
 };
 
-export type OptionMode = 'custom' | 'subapp';
+export type OptionMode = 'custom' | 'subapp' | 'interface';
 export type OptionItem = {
   key: string;
   value: string;

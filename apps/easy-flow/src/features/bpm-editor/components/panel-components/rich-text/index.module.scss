@@ -72,7 +72,10 @@
     :global {
       .bf-media {
         .bf-media-toolbar {
-          display: none;
+          position: absolute;
+          left: -10%;
+          margin-left: 0 !important;
+          transform: scale(0.88);
         }
       }
     }

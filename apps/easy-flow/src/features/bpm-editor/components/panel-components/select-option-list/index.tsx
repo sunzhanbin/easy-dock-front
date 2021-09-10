@@ -257,7 +257,7 @@ const SelectOptionList = (props: editProps) => {
     <div className={styles.container}>
       <div className={styles.title}>
         <div
-          className={classNames(styles.left, type === 'custom' ? styles.active : '')}
+          className={classNames(styles.custom, type === 'custom' ? styles.active : '')}
           onClick={() => {
             setType('custom');
           }}
@@ -265,13 +265,21 @@ const SelectOptionList = (props: editProps) => {
           自定义数据
         </div>
         <div
-          className={classNames(styles.right, type === 'subapp' ? styles.active : '')}
+          className={classNames(styles.subapp, type === 'subapp' ? styles.active : '')}
           onClick={() => {
             setType('subapp');
             setCanChange(true);
           }}
         >
           其他表单数据
+        </div>
+        <div
+          className={classNames(styles.interface, type === 'interface' ? styles.active : '')}
+          onClick={() => {
+            setType('interface');
+          }}
+        >
+          接口数据
         </div>
       </div>
       <div className={styles.content}>{type === 'custom' ? customContent : dictContent}</div>
