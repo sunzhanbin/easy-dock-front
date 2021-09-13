@@ -76,9 +76,9 @@ function Draft() {
 
           return timeDiff(Math.max(Date.now() - data.createTime, 0));
         },
-        sorter: (prev, next) => next.createTime - prev.createTime,
-        sortDirections: ['descend', 'ascend'],
-        defaultSortOrder: 'ascend',
+        // sorter: (prev, next) => next.createTime - prev.createTime,
+        // sortDirections: ['descend', 'ascend'],
+        // defaultSortOrder: 'ascend',
       },
       {
         title: '',
