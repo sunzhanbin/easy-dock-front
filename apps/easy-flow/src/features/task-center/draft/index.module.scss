@@ -9,9 +9,9 @@
 }
 
 .del {
-  cursor: pointer;
   display: flex;
   font-size: 20px;
+  cursor: pointer;
 
   &:hover {
     .icon {
@@ -30,4 +30,12 @@
       }
     }
   }
+
+  // :global(.ant-table-row) {
+  //   &:hover {
+  //     .del {
+  //       display: flex;
+  //     }
+  //   }
+  // }
 }

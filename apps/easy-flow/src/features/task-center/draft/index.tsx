@@ -1,10 +1,13 @@
-import { memo, useEffect, useState, useMemo } from 'react';
+import { memo, useEffect, useState, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Table, TableProps, message, Popconfirm } from 'antd';
+import { Table, TableProps, message } from 'antd';
+import { TablePaginationConfig } from 'antd/lib/table';
+import { debounce } from 'lodash';
 import { Icon, PopoverConfirm } from '@common/components';
 import { timeDiff } from '@utils';
 import { dynamicRoutes } from '@consts';
 import { runtimeAxios } from '@utils/axios';
+import { deleteDraft } from '@apis/detail';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import useAppId from '@/hooks/use-app-id';
 import styles from './index.module.scss';
@@ -23,10 +26,19 @@ interface DraftData {
 function Draft() {
   const appId = useAppId();
   const [draftData, setDraftData] = useState<DraftData[]>([]);
+  const [activeDataId, setActiveDataId] = useState<number>();
+  const [loading, setLoading] = useState(false);
   const handleDeleteDraftData = useMemoCallback(async (draftId: number) => {
-    await runtimeAxios.delete(`task/draft/${draftId}`);
+    await deleteDraft(draftId);
 
+    fetchDraftData();
     message.success('操作成功');
+  });
+  const paginationRef = useRef<TablePaginationConfig>({
+    pageSize: 10,
+    current: 1,
+    total: 0,
+    showSizeChanger: true,
   });
   const columns: TableProps<DraftData>['columns'] = useMemo(() => {
     return [
@@ -58,19 +70,27 @@ function Draft() {
         key: 'createTime',
         width: '30%',
         render(_: string, data: DraftData) {
-          return timeDiff(Date.now() - data.createTime);
+          if (Date.now() - data.createTime < 60 * 1000) {
+            return '刚刚';
+          }
+
+          return timeDiff(Math.max(Date.now() - data.createTime, 0));
         },
-        sorter: (prev, next) => prev.createTime - next.createTime,
+        sorter: (prev, next) => next.createTime - prev.createTime,
         sortDirections: ['descend', 'ascend'],
+        defaultSortOrder: 'ascend',
       },
       {
         title: '',
         key: 'action',
         width: 100,
         render(_: string, data: DraftData) {
+          if (data.subappId !== activeDataId) return null;
+
           return (
             <PopoverConfirm
-              title={`确认删除${data.subappName}草稿吗？`}
+              title={`确认删除`}
+              content={`确认删除${data.subappName}草稿吗？`}
               placement="left"
               onConfirm={() => handleDeleteDraftData(data.subappId)}
             >
@@ -82,24 +102,68 @@ function Draft() {
         },
       },
     ];
-  }, [handleDeleteDraftData]);
+  }, [handleDeleteDraftData, activeDataId]);
 
-  useEffect(() => {
+  const fetchDraftData = useMemoCallback(() => {
+    setLoading(true);
+
+    const data = paginationRef.current;
+
     runtimeAxios
       .post(`/task/draft/list`, {
         appId: appId,
         filter: {
-          pageIndex: 0,
-          pageSize: 10,
+          pageIndex: data.current || 1,
+          pageSize: data.pageSize || 10,
           starter: '',
         },
       })
       .then(({ data }) => {
+        paginationRef.current.total = data?.recordTotal || 0;
         setDraftData(data?.data || []);
+      })
+      .finally(() => {
+        setLoading(false);
       });
-  }, [appId]);
+  });
 
-  return <Table className={styles.table} columns={columns} dataSource={draftData} rowKey="subappId" />;
+  useEffect(() => {
+    fetchDraftData();
+  }, [fetchDraftData]);
+
+  const onRowEvent = useMemo(() => {
+    return (data: DraftData) => {
+      return {
+        onMouseEnter() {
+          setActiveDataId(data.subappId);
+        },
+        onMouseLeave() {
+          setActiveDataId(undefined);
+        },
+      };
+    };
+  }, []);
+
+  const handleTableConfigChange = useMemoCallback(
+    debounce((page: TablePaginationConfig) => {
+      paginationRef.current = page;
+
+      fetchDraftData();
+    }, 200),
+  );
+
+  return (
+    <Table
+      className={styles.table}
+      columns={columns}
+      dataSource={draftData}
+      rowKey="subappId"
+      onRow={onRowEvent}
+      loading={loading}
+      pagination={paginationRef.current}
+      onChange={handleTableConfigChange}
+    />
+  );
 }
 
 export default memo(Draft);

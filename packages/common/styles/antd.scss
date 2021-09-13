@@ -608,6 +608,38 @@
   }
 }
 
+.ant-pagination-item-active {
+  border-color: $primary-color;
+}
+
+.ant-pagination-item-active a {
+  color: $primary-color;
+}
+
+.ant-pagination-item:focus-visible,
+.ant-pagination-item:hover {
+  border-color: $primary-color;
+
+  a {
+    color: $primary-color;
+  }
+}
+
+.ant-pagination-prev:focus-visible .ant-pagination-item-link,
+.ant-pagination-next:focus-visible .ant-pagination-item-link,
+.ant-pagination-prev:hover .ant-pagination-item-link,
+.ant-pagination-next:hover .ant-pagination-item-link {
+  border-color: $primary-color;
+  color: $primary-color;
+}
+
+.ant-pagination-disabled .ant-pagination-item-link,
+.ant-pagination-disabled:hover .ant-pagination-item-link,
+.ant-pagination-disabled:focus-visible .ant-pagination-item-link {
+  border-color: #d9d9d9;
+  color: rgba(#000, 0.2);
+}
+
 // 定制局部区域空状态
 .ant-empty {
   &.ant-empty-normal {

@@ -37,7 +37,7 @@ export async function loadDatasource(formMeta: FormMeta, fieldsAuths: FieldAuths
 
   formMeta.components.forEach((comp) => {
     // 有字段权限才去加载
-    if (comp.config.dataSource && (fieldsAuths && fieldsAuths[comp.config.fieldName] !== AuthType.Denied)) {
+    if (comp.config.dataSource && fieldsAuths && fieldsAuths[comp.config.fieldName] !== AuthType.Denied) {
       allPromises.push(
         runtimeAxios
           .get<{ data: Datasource[string] }>(`/form/version/${versionId}/form/${comp.config.fieldName}/data`)
@@ -84,3 +84,7 @@ export async function fetchDataSource(components: Array<RadioField | CheckboxFie
   await Promise.all(allPromises);
   return source;
 }
+
+export const deleteDraft = async (draftId: number | string) => {
+  await runtimeAxios.delete(`task/draft/${draftId}`);
+};
