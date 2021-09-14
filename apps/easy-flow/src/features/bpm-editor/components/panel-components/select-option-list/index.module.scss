@@ -1,6 +1,7 @@
 .container {
   .title {
     display: flex;
+    align-items: center;
     height: 40px;
     line-height: 40px;
     background: rgba(24, 39, 67, 0.04);
@@ -12,13 +13,30 @@
       flex: 1;
       text-align: center;
       cursor: pointer;
-    }
-    .active {
-      background: #ffffff;
-      border-radius: 3px 0px 0px 3px;
-      border: 1px solid rgba(24, 31, 67, 0.12);
-      font-weight: 500;
-      color: #4c5cdb;
+      position: relative;
+      &:not(.active) {
+        &::after {
+          content: '';
+          width: 1px;
+          height: 34px;
+          position: absolute;
+          top: 3px;
+          right: 0;
+          background-color: #e3e4e8;
+        }
+      }
+      &:last-child {
+        &::after {
+          width: 0;
+        }
+      }
+      &.active {
+        background: #ffffff;
+        border-radius: 3px 0px 0px 3px;
+        border: 1px solid rgba(24, 31, 67, 0.12);
+        font-weight: 500;
+        color: #4c5cdb;
+      }
     }
   }
   .custom_list {
@@ -77,5 +95,10 @@
   }
   .dict_content {
     padding: 12px 0;
+  }
+  .content {
+    .form {
+      margin-top: 8px;
+    }
   }
 }

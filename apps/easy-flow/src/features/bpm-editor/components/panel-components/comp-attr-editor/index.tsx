@@ -53,7 +53,7 @@ const componentMap: { [k in string]: (props: { [k in string]: any }) => ReactNod
   ColSpace: () => <Radio.Group options={options} optionType="button" />,
   Checkbox: (props) => <Checkbox>{props.label}</Checkbox>,
   Switch: () => <Switch />,
-  SelectOptionList: () => <SelectOptionList />,
+  SelectOptionList: (props) => <SelectOptionList id={props.componentId} />,
   SelectDefaultOption: (props) => <SelectDefaultOption id={props.componentId} />,
   InputNumber: (props) => <InputNumber size="large" className="input_number" placeholder={props.placeholder} />,
   DefaultDate: (props) => <DefaultDate id={props.componentId} />,
@@ -91,7 +91,14 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
     onSave && onSave(values, isValidate);
   };
   const handleChange = () => {
-    onFinish(form.getFieldsValue());
+    let formValues = form.getFieldsValue();
+    let { dataSource } = formValues;
+    const { apiConfig } = formValues;
+    if (apiConfig && dataSource) {
+      dataSource = Object.assign({}, dataSource, { type: 'interface', apiConfig });
+      formValues = Object.assign({}, formValues, { dataSource });
+    }
+    onFinish(formValues);
   };
 
   useEffect(() => {

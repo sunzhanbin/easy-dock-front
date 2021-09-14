@@ -90,6 +90,7 @@ export type SelectOptionItem = {
   data?: OptionItem[];
   subappId?: string;
   fieldName?: string;
+  apiConfig?: DataConfig;
 };
 
 export type FormFieldMap = {
