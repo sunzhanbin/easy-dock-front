@@ -204,6 +204,7 @@ function MemberSelector(props: MemberSelectorProps) {
           className="aaa"
           overlayClassName={styles.popover}
           arrowContent={null}
+          autoAdjustOverflow={{ adjustX: 1, adjustY: 0 }}
         >
           <div className={styles.action}>
             {children ? children : <Icon type="xinzengjiacu" className={styles.add} />}
