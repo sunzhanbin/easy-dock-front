@@ -177,6 +177,10 @@ const FormList = ({
     }
   });
 
+  const getPopupContainer = useMemo(() => {
+    return (node: HTMLDivElement) => node;
+  }, []);
+
   useEffect(() => {
     init();
   }, [init]);
@@ -215,6 +219,7 @@ const FormList = ({
           className={styles.symbol}
           suffixIcon={<Icon type="xiala" />}
           onChange={changeSymbol}
+          getPopupContainer={getPopupContainer}
         >
           {symbolList.map(({ value, label }) => (
             <Option key={value} value={value} label={label}>
@@ -295,6 +300,7 @@ const FormList = ({
               className={styles.value}
               value={value as string}
               onChange={changeValue}
+              getPopupContainer={getPopupContainer}
             >
               {Object.values(dynamicMap).map((item) => (
                 <Option key={item.value} value={item.value} label={item.label}>
@@ -364,6 +370,7 @@ const FormList = ({
               suffixIcon={<Icon type="xiala" />}
               value={value as string | string[]}
               onChange={changeValue}
+              getPopupContainer={getPopupContainer}
               {...mode}
             >
               {optionList.map(({ key, value }) => (
@@ -386,6 +393,7 @@ const FormList = ({
               suffixIcon={<Icon type="xiala" />}
               value={value as string[]}
               onChange={changeValue}
+              getPopupContainer={getPopupContainer}
             >
               {optionList.map(({ key, value }) => (
                 <Option key={key} value={key} label={value}>
@@ -415,6 +423,7 @@ const FormList = ({
                   className={styles.fieldName}
                   value={fieldName}
                   onChange={changeField}
+                  getPopupContainer={getPopupContainer}
                   suffixIcon={<Icon type="xiala" />}
                 >
                   {componentList.map(({ fieldName, label }) => (

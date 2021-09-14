@@ -9,6 +9,7 @@ import { useAppSelector } from '@/app/hooks';
 import { componentPropsSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 import { fieldRule, FormField, FormRuleItem, SelectField } from '@/type';
 import { loadFieldDatasource } from '@utils/form';
+import useMemoCallback from '@common/hooks/use-memo';
 
 type modalProps = {
   editIndex?: number;
@@ -71,11 +72,14 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
       onOk && onOk(rules, type, editIndex);
     });
   }, [form, type, editIndex, onOk]);
+  const getPopupContainer = useMemo(() => {
+    return (node: HTMLDivElement) => node;
+  }, []);
   return (
     <Modal className={styles.modal} title="表单逻辑规则设置" visible={true} onCancel={onClose} onOk={handelOk}>
       <Form form={form} className={styles.form} layout="vertical" autoComplete="off" initialValues={initFormValues}>
         <Form.Item label="选择触发方式" name="mode" className={styles.mode}>
-          <Select suffixIcon={<Icon type="xiala" />} size="large">
+          <Select suffixIcon={<Icon type="xiala" />} size="large" getPopupContainer={getPopupContainer}>
             <Option key={1} value={1}>
               值改变时
             </Option>
@@ -91,7 +95,7 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
               return (
                 <>
                   <Form.Item label="选择规则" name="ruleType" className={styles.ruleType}>
-                    <Select suffixIcon={<Icon type="xiala" />} size="large">
+                    <Select suffixIcon={<Icon type="xiala" />} size="large" getPopupContainer={getPopupContainer}>
                       <Option key={1} value={1}>
                         读取数据
                       </Option>
@@ -108,7 +112,7 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
             return (
               <>
                 <Form.Item label="选择规则" name="ruleType" className={styles.ruleType}>
-                  <Select suffixIcon={<Icon type="xiala" />} size="large">
+                  <Select suffixIcon={<Icon type="xiala" />} size="large" getPopupContainer={getPopupContainer}>
                     <Option key={1} value={1}>
                       显示隐藏规则
                     </Option>
@@ -139,7 +143,13 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
                     return (
                       <>
                         <Form.Item label="显示控件" name="showComponents" className={styles.showComponents}>
-                          <Select suffixIcon={<Icon type="xiala" />} mode="multiple" placeholder="请选择" size="large">
+                          <Select
+                            suffixIcon={<Icon type="xiala" />}
+                            mode="multiple"
+                            placeholder="请选择"
+                            size="large"
+                            getPopupContainer={getPopupContainer}
+                          >
                             {options.map((option) => (
                               <Option key={option.fieldName} value={option.fieldName!}>
                                 {option.label}
@@ -174,6 +184,7 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
                                   mode="multiple"
                                   placeholder="请选择"
                                   size="large"
+                                  getPopupContainer={getPopupContainer}
                                 >
                                   {options.map((option) => (
                                     <Option key={option.fieldName} value={option.fieldName!}>

@@ -13,6 +13,9 @@
     margin-bottom: 14px;
   }
   :global {
+    .ant-tabs {
+      overflow: visible;
+    }
     .ant-tabs-tab {
       height: 20px;
       font-size: 14px;
