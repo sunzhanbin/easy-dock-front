@@ -3,6 +3,7 @@ import { MemberSelector as Selector, MemberSelectorProps as SelectorProps } from
 import { UserNode, CorrelationMemberConfigKey } from '@type/flow';
 import { useSubAppDetail } from '@app/app';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import useShowMembers from '../../hooks/use-show-members';
 import { flowDataSelector, setCacheMembers } from '../../flow-slice';
 
 interface MemberSelectorProps {
@@ -11,7 +12,7 @@ interface MemberSelectorProps {
 }
 
 function MemberSelector(props: MemberSelectorProps) {
-  const { cacheMembers, fieldsTemplate } = useAppSelector(flowDataSelector);
+  const { fieldsTemplate } = useAppSelector(flowDataSelector);
   const { value, onChange } = props;
   const { data: subAppDetail } = useSubAppDetail();
   const dispatch = useAppDispatch();
@@ -21,24 +22,7 @@ function MemberSelector(props: MemberSelectorProps) {
       .map((field) => ({ name: field.name, key: field.id }));
   }, [fieldsTemplate]);
 
-  const showValue: NonNullable<SelectorProps['value']> = useMemo(() => {
-    const { members = [], depts = [], roles = [], dynamic } = value!;
-    const fieldsMap = (dynamic?.fields || []).reduce((curr, next) => {
-      curr[next] = true;
-      return curr;
-    }, {} as { [key: string]: true });
-
-    return {
-      depts: depts.map((id) => ({ ...cacheMembers[id] })),
-      members: members.map((id) => ({ ...cacheMembers[id] })),
-      roles: roles.map((id) => ({ ...cacheMembers[id] })),
-      dynamic: {
-        starter: dynamic?.starter,
-        roles: (dynamic?.roles || []).map((id) => ({ ...cacheMembers[id] })),
-        fields: dynamicFields.filter((field) => fieldsMap[field.key]),
-      },
-    };
-  }, [value, cacheMembers, dynamicFields]);
+  const showValue: NonNullable<SelectorProps['value']> = useShowMembers(value!);
 
   const handleChange = (value: NonNullable<SelectorProps['value']>) => {
     const caches: Parameters<typeof setCacheMembers>[number] = {};
@@ -46,6 +30,11 @@ function MemberSelector(props: MemberSelectorProps) {
     const memberIds: CorrelationMemberConfigKey[] = [];
     const deptIds: CorrelationMemberConfigKey[] = [];
     const roleIds: CorrelationMemberConfigKey[] = [];
+    const dynamicRoles = (dynamic?.roles || []).map((role) => {
+      caches[role.id] = role;
+
+      return role.id;
+    });
 
     members.forEach((user) => {
       caches[user.id] = user;
@@ -71,7 +60,7 @@ function MemberSelector(props: MemberSelectorProps) {
         roles: roles.map((role) => role.id),
         dynamic: {
           starter: dynamic?.starter,
-          roles: (dynamic?.roles || []).map((role) => role.id),
+          roles: dynamicRoles,
           fields: (dynamic?.fields || []).map((field) => field.key),
         },
       });
@@ -84,6 +73,7 @@ function MemberSelector(props: MemberSelectorProps) {
       value={showValue}
       onChange={handleChange}
       strictDept
+      showDynamic
       dynamicFields={dynamicFields}
     />
   );

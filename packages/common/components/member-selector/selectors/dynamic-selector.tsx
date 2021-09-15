@@ -30,7 +30,7 @@ function DynamicSelector(props: DynamicSelectorProps) {
   const treeRoles = useMemo(() => {
     return [
       {
-        title: '发起人的主管',
+        title: '发起人所属部门的角色',
         key: 'ALL',
         checkable: false,
         children: roles.map((role) => ({
@@ -45,7 +45,8 @@ function DynamicSelector(props: DynamicSelectorProps) {
     return [
       {
         title: '表单中人员控件的值',
-        key: 'ALL',
+        key: 'ALL_MEMBER_FIELD_IN_FORM',
+        checkable: false,
         children: (fields || []).map((field) => ({ title: field.name, key: field.key })),
       },
     ];
@@ -80,6 +81,31 @@ function DynamicSelector(props: DynamicSelectorProps) {
     }
   });
 
+  const choosedFields = useMemo(() => {
+    const fields = value?.fields || [];
+
+    return fields.map((field) => field.key);
+  }, [value?.fields]);
+
+  const handleFieldsChange = useMemoCallback((fieldsValue: { checked: Key[]; halfChecked: Key[] } | Key[]) => {
+    let checkeds: Key[];
+
+    if (Array.isArray(fieldsValue)) {
+      checkeds = fieldsValue;
+    } else {
+      checkeds = fieldsValue.checked;
+    }
+
+    const fieldsMap = (fields || []).reduce(
+      (curr, next) => ((curr[next.key] = next), curr),
+      {} as { [key: string]: DynamicFields[number] },
+    );
+
+    if (onChange) {
+      onChange(Object.assign({}, value, { fields: checkeds.map((item) => fieldsMap[item]) }));
+    }
+  });
+
   return (
     <Layout onKeywordChange={() => {}} keywordPlaceholder="搜索动态">
       <div className={styles.list}>
@@ -108,6 +134,8 @@ function DynamicSelector(props: DynamicSelectorProps) {
           blockNode
           selectable={false}
           virtual={false}
+          onCheck={handleFieldsChange}
+          checkedKeys={choosedFields}
           defaultExpandAll
         />
       </div>
