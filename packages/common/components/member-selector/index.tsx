@@ -6,7 +6,7 @@ import useMemoCallback from '../../hooks/use-memo-callback';
 import memberDefaultAvatar from './avatars/member-default-avatar.png';
 import depetDefaultAvatar from './avatars/depart-default-avatar.png';
 import roleDefaultAvatar from './avatars/role-default-avatar.png';
-import { ValueType, Key } from './type';
+import { ValueType, Key, DynamicFields } from './type';
 import Selector from './selector';
 import { getContainer } from '../../utils';
 import styles from './index.module.scss';
@@ -101,6 +101,8 @@ export interface MemberSelectorProps {
   onDelete?(id: string | number, type: MemberType): void;
   listClass?: string;
   getPopupContainer?(container: HTMLElement): HTMLElement;
+  showDynamic?: boolean;
+  dynamicFields?: DynamicFields;
 }
 
 const defaultValue: ValueType = {
@@ -120,11 +122,12 @@ function MemberSelector(props: MemberSelectorProps) {
     onDelete,
     listClass,
     getPopupContainer,
+    showDynamic,
+    dynamicFields,
   } = props;
   const [showPopover, setShowPopover] = useState(false);
   const [localValue, setLocalValue] = useState<ValueType>(value || defaultValue);
   const popoverContentContainerRef = useRef<HTMLDivElement>(null);
-  const selectorContainerRef = useRef<HTMLDivElement>(null);
   const showValue = value || localValue;
 
   const handleChange = useMemoCallback((newValue: ValueType) => {
@@ -162,17 +165,17 @@ function MemberSelector(props: MemberSelectorProps) {
 
   const content = useMemo(() => {
     return (
-      <div ref={selectorContainerRef}>
-        <Selector
-          className={selectorWrapperClass}
-          value={showValue}
-          onChange={handleChange}
-          projectId={projectId}
-          strictDept={strictDept}
-        />
-      </div>
+      <Selector
+        className={selectorWrapperClass}
+        value={showValue}
+        onChange={handleChange}
+        projectId={projectId}
+        strictDept={strictDept}
+        dynamicFields={dynamicFields}
+        showDynamic={showDynamic}
+      />
     );
-  }, [showValue, handleChange, projectId, selectorWrapperClass, strictDept]);
+  }, [showValue, handleChange, projectId, selectorWrapperClass, strictDept, showDynamic, dynamicFields]);
 
   useEffect(() => {
     return () => {
@@ -181,7 +184,7 @@ function MemberSelector(props: MemberSelectorProps) {
       // HACK: 用于更新Popover弹出层的位置
       window.dispatchEvent(new Event('resize'));
     };
-  }, [value?.members.length, value?.depts.length]);
+  }, [value?.members.length, value?.depts.length, value?.roles.length]);
 
   return (
     <div className={styles.container} ref={popoverContentContainerRef}>
@@ -201,7 +204,6 @@ function MemberSelector(props: MemberSelectorProps) {
           onVisibleChange={setShowPopover}
           destroyTooltipOnHide
           placement="bottomLeft"
-          className="aaa"
           overlayClassName={styles.popover}
           arrowContent={null}
           autoAdjustOverflow={{ adjustX: 1, adjustY: 0 }}

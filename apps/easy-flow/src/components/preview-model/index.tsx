@@ -124,14 +124,16 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
               <img src={titleImage} alt="title" className={styles.image} />
               <span>{appName}</span>
             </div>
-            <FormEngine
-              datasource={dataSource}
-              initialValue={initialValue}
-              data={(formDesign as unknown) as FormMeta}
-              fieldsAuths={auths}
-              className={styles['form-engine']}
-              projectId={projectId}
-            ></FormEngine>
+            <div className={styles['form-wrap']}>
+              <FormEngine
+                datasource={dataSource}
+                initialValue={initialValue}
+                data={(formDesign as unknown) as FormMeta}
+                fieldsAuths={auths}
+                className={styles['form-engine']}
+                projectId={projectId}
+              ></FormEngine>
+            </div>
           </div>
         </div>
       </div>

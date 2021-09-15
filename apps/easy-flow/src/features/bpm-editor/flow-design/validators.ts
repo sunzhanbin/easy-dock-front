@@ -3,10 +3,18 @@ import { CorrelationMemberConfig, AuditNode, RevertType } from '@type/flow';
 import { DataConfig } from '@type/api';
 import { validName } from '@common/rule';
 
-const member = (value: CorrelationMemberConfig): string => {
-  const { members = [], depts = [], roles = [] } = value;
+function dynamicIsEmpty(data: CorrelationMemberConfig['dynamic']) {
+  if (!data) return true;
 
-  if (!members.length && !depts.length && !roles.length) {
+  if (!data.starter && !data.fields.length && !data.roles.length) return true;
+
+  return false;
+}
+
+const member = (value: CorrelationMemberConfig): string => {
+  const { members = [], depts = [], roles = [], dynamic } = value;
+
+  if (!members.length && !depts.length && !roles.length && dynamicIsEmpty(dynamic)) {
     return '办理人不能为空';
   }
 

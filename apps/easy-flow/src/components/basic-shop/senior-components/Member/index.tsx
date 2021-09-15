@@ -100,9 +100,16 @@ const Member = (
   }, [fetchMembers]);
 
   return (
-    <Select {...propList} style={{ width: '100%' }} onPopupScroll={handleScroll} onSearch={handleSearch}>
+    <Select
+      {...propList}
+      style={{ width: '100%' }}
+      optionFilterProp="label"
+      onPopupScroll={handleScroll}
+      onSearch={handleSearch}
+      allowClear
+    >
       {(memberList || []).map(({ id, userName }) => (
-        <Option value={userName} key={id} label={userName}>
+        <Option key={id} value={id} label={userName}>
           {userName}
         </Option>
       ))}

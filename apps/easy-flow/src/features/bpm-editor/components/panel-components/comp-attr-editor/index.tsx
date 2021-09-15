@@ -4,7 +4,7 @@ import SelectOptionList from '../select-option-list';
 import SelectDefaultOption from '../select-default-option';
 import DefaultDate from '../default-date';
 import Editor from '../rich-text';
-import { FormField, rangeItem, SchemaConfigItem } from '@/type';
+import { FormField, rangeItem, SchemaConfigItem, SelectField } from '@/type';
 import { Store } from 'antd/lib/form/interface';
 import styles from './index.module.scss';
 import { useAppSelector } from '@/app/hooks';
@@ -86,6 +86,14 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
   const [form] = Form.useForm();
   const errors = useAppSelector(errorSelector);
   const errorIdList = useMemo(() => (errors || []).map(({ id }) => id), [errors]);
+  const initFormValues = useMemo(() => {
+    let formValues = { ...initValues };
+    const dataSource = (formValues as SelectField).dataSource;
+    if (dataSource && dataSource.type === 'interface') {
+      formValues = Object.assign({}, formValues, { apiConfig: dataSource.apiConfig || {} });
+    }
+    return formValues;
+  }, [initValues]);
   const onFinish = (values: Store) => {
     const isValidate = form.isFieldsTouched(['fieldName', 'label']);
     onSave && onSave(values, isValidate);
@@ -110,7 +118,12 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
     };
   }, [componentId, form, errorIdList]);
   useEffect(() => {
-    form.setFieldsValue(initValues);
+    let formValues = { ...initValues };
+    const dataSource = (formValues as SelectField).dataSource;
+    if (dataSource && dataSource.type === 'interface') {
+      formValues = Object.assign({}, formValues, { apiConfig: dataSource.apiConfig || {} });
+    }
+    form.setFieldsValue(formValues);
   }, [initValues, form]);
 
   return (
@@ -119,7 +132,7 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
         form={form}
         name="form_editor"
         autoComplete="off"
-        initialValues={initValues}
+        initialValues={initFormValues}
         onFinish={onFinish}
         onValuesChange={handleChange}
       >

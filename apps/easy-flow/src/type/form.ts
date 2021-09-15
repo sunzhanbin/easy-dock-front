@@ -1,3 +1,5 @@
+import { DataConfig } from './api';
+
 export type FieldType = FormField['type'];
 
 export type BaseField = {
@@ -38,7 +40,7 @@ export type DateField = {
   defaultValue: number;
 } & BaseField;
 
-export type OptionMode = 'custom' | 'subapp';
+export type OptionMode = 'custom' | 'subapp' | 'interface';
 export type OptionItem = {
   key: string;
   value: string;
@@ -48,6 +50,7 @@ export type SelectOptionItem = {
   data?: OptionItem[];
   subappId?: string;
   fieldName?: string;
+  apiConfig?: DataConfig;
 };
 
 export type RadioField = {
