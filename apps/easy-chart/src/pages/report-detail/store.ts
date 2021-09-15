@@ -1,77 +1,49 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ComponentType, InitialStateType } from './types';
+import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {ComponentClass, InitialStateType} from './types';
 // import schema from '@components/schema';
 
 const initialState: InitialStateType = {
-  curComponentData: {
-    isMobile: false,
-    id: '',
-    type: '',
-    pos: [0, 0],
-    permission: '',
-  },
-  componentList: []
+  currentSelectId: '',
+  componentList: {}
 };
 const componentConfig = createSlice({
   name: 'editComponent',
   initialState,
   reducers: {
-    addComponent(state, { payload }: PayloadAction<ComponentType>) {
-      const componentList = [...state.componentList, payload];
-      // todo 组装面板属性配置editableEl
-      // const editableEl = schema[payload.type].editData;
-      state = {
-        ...state,
-        componentList,
-        curComponentData: {...payload }
-        // curComponentData: {...payload, editableEl }}
-      };
-    },
-    editComponent(state, { payload }: PayloadAction<ComponentType>) {
+    addComponent(state, { payload }: PayloadAction<ComponentClass>) {
       const { id } = payload;
-      const componentList = state.componentList.map((item) => {
-        if(item.id === id) {
-          return payload;
-        }
-        return { ...item };
-      });
-      // todo 组装editableEl
-      // const editableEl = schema[payload.type].editData
-      state = {
-        ...state,
-        componentList,
-        curComponentData: {...payload }
-        // curComponentData: {...payload, editableEl}
-      };
+      // todo 组装面板属性配置editData
+      // const { editData } = schema[payload.type];
+      // const componentList = {...state.componentList, [payload.id]: {...payload, editData}};
+      state.currentSelectId = id as string;
+      state.componentList = {...state.componentList, [id]: {...payload}};
     },
-    deleteComponent(state, { payload }: PayloadAction<ComponentType>) {
+    editComponent(state, { payload }: PayloadAction<ComponentClass>) {
       const { id } = payload;
-      const componentList = state.componentList.filter(item => item.id !== id);
-      state = {
-        ...state,
-        componentList,
-        curComponentData: null
-      };
+      state.currentSelectId = id as string;
+      state.componentList = {...state.componentList, [id]: {...payload}};
     },
-    copyComponent(state, { payload }: PayloadAction<ComponentType>) {
+    deleteComponent(state, { payload }: PayloadAction<ComponentClass>) {
       const { id } = payload;
-      const componentList: ComponentType[] = [];
-      state.componentList.forEach(item => {
-        componentList.push({ ...item });
-        if(item.id === id) {
-          componentList.push({ ...item, id: new Date().getTime() });
-        }
-      });
-      state = {
-        ...state,
-        componentList
-      };
+      delete state.componentList[id];
+    },
+    copyComponent(state, { payload }: PayloadAction<ComponentClass>) {
+      const generateId = new Date().getTime().toString();
+      state.currentSelectId = generateId;
+      state.componentList = {...state.componentList, [generateId]: {...payload, id: generateId}};
     },
   }
 });
 
+export const {
+  addComponent,
+  editComponent,
+  deleteComponent,
+  copyComponent
+} = componentConfig.actions;
+
 // todo getComponentList
-export const loadComponents = createAsyncThunk('getComponentList', async () => {
+export const getComponentList = createAsyncThunk('getComponentList', async () => {
   // return await getComponentList();
 });
 export default componentConfig.reducer;

@@ -23,7 +23,7 @@ function MicroPage({ hasHeader }: { hasHeader?: boolean }) {
 
   return (
     <MicroApp
-      className={classnames(styles.micro, { [styles['has-header']]: hasHeader })}
+      className={classnames(styles.micro, { [styles['has-components']]: hasHeader })}
       name={currentInfo.name}
       entry={currentInfo.entry}
     />
