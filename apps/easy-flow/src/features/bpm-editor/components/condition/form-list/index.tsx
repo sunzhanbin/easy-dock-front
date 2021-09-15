@@ -3,7 +3,7 @@ import { Form, Select, Input, InputNumber } from 'antd';
 import classnames from 'classnames';
 import { DateField, fieldRule, FormField } from '@/type';
 import { symbolMap, dynamicMap } from '@/utils';
-import { Icon } from '@common/components';
+import { Icon, Loading } from '@common/components';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import MultiText from '@/features/bpm-editor/components/multi-text';
 import NumberRange from '@/features/bpm-editor/components/number-range';
@@ -83,6 +83,7 @@ const FormList = ({
   const [symbol, setSymbol] = useState<string | undefined>(undefined);
   const [value, setValue] = useState<string | number | string[] | [number, number] | undefined>(undefined);
   const [optionList, setOptionList] = useState<{ key: string; value: string }[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
   const name = useMemo(() => {
     return [blockIndex, ruleIndex, 'fieldRule'];
   }, [blockIndex, ruleIndex]);
@@ -105,18 +106,23 @@ const FormList = ({
   }, [components]);
   const setDataSource = useMemoCallback((fieldName, fieldType) => {
     if (loadDataSource && (fieldType === 'Select' || fieldType === 'Radio' || fieldType === 'Checkbox')) {
-      loadDataSource(fieldName).then((res) => {
-        if (res) {
-          // 如果返回的是一个key-value数组,直接赋值给下拉选项
-          if (Array.isArray(res)) {
-            setOptionList(res);
-            // 如果返回的直接是接口数据,需要做一个转换
-          } else if (res.data) {
-            const list = (res.data?.data || []).map((val: string) => ({ key: val, value: val }));
-            setOptionList(list);
+      setLoading(true);
+      loadDataSource(fieldName)
+        .then((res) => {
+          if (res) {
+            // 如果返回的是一个key-value数组,直接赋值给下拉选项
+            if (Array.isArray(res)) {
+              setOptionList(res);
+              // 如果返回的直接是接口数据,需要做一个转换
+            } else if (res.data) {
+              const list = (res.data?.data || []).map((val: string) => ({ key: val, value: val }));
+              setOptionList(list);
+            }
           }
-        }
-      });
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     }
   });
   const changeField = useMemoCallback((fieldName) => {
@@ -416,6 +422,7 @@ const FormList = ({
         {() => {
           return (
             <>
+              {loading && <Loading className={styles.loading} />}
               <Form.Item name="fieldName" rules={[{ required: true, message: '请选择关联字段!' }]}>
                 <Select
                   placeholder="关联字段"

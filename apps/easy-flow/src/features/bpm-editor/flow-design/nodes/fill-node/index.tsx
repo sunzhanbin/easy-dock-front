@@ -13,7 +13,7 @@ function FillNode(props: FillNodeProps) {
 
   return (
     <BaseNode icon={<Icon type="tianxiejiedian" />} node={node}>
-      <MemberList node={node} />
+      <MemberList config={node.correlationMemberConfig} />
     </BaseNode>
   );
 }

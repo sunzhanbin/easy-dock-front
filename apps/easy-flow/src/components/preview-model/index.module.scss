@@ -1,5 +1,8 @@
 .container {
   width: 100%;
+  .loading {
+    z-index: 8888;
+  }
   .background {
     position: absolute;
     top: 0;

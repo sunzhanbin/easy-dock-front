@@ -2,14 +2,7 @@ import { Rule } from 'antd/lib/form';
 import { CorrelationMemberConfig, AuditNode, RevertType } from '@type/flow';
 import { DataConfig } from '@type/api';
 import { validName } from '@common/rule';
-
-function dynamicIsEmpty(data: CorrelationMemberConfig['dynamic']) {
-  if (!data) return true;
-
-  if (!data.starter && !data.fields.length && !data.roles.length) return true;
-
-  return false;
-}
+import { dynamicIsEmpty } from './util';
 
 const member = (value: CorrelationMemberConfig): string => {
   const { members = [], depts = [], roles = [], dynamic } = value;

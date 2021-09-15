@@ -13,7 +13,7 @@ function AuditNode(props: AuditNodeProps) {
 
   return (
     <BaseNode icon={<Icon type="shenhejiedian" />} node={node}>
-      <MemberList node={node} />
+      <MemberList config={node.correlationMemberConfig} />
     </BaseNode>
   );
 }
