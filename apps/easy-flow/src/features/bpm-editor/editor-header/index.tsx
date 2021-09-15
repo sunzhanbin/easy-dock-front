@@ -83,8 +83,10 @@ const EditorHeader: FC = () => {
   const handleNext = useCallback(() => {
     if (pathName === formDesignPath) {
       history.replace(flowDesignPath);
+    } else {
+      history.replace(extendPath);
     }
-  }, [pathName, history, formDesignPath, flowDesignPath]);
+  }, [pathName, history, formDesignPath, flowDesignPath, extendPath]);
 
   const handlePublish = useCallback(async () => {
     const flowResponse = await dispatch(saveFlow({ subappId: bpmId }));
@@ -203,6 +205,12 @@ const EditorHeader: FC = () => {
           {pathName !== formDesignPath && (
             <Button className={styles.prev} size="large" onClick={handlePrev}>
               上一步
+            </Button>
+          )}
+
+          {pathName === flowDesignPath && (
+            <Button className={styles.prev} size="large" onClick={handleNext}>
+              下一步
             </Button>
           )}
 
