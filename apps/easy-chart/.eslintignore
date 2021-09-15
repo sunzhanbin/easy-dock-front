@@ -1,0 +1,10 @@
+**/out/**
+**/build/**
+**/config/**
+**/dist/**
+**/doc/**
+**/node_modules/**
+**/public/**
+**/webpack.config*.js
+**/rollup.config.js
+**/iconfont.js
