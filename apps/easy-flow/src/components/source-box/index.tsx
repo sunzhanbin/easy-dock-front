@@ -1,8 +1,8 @@
-import { AllComponentType, FormField, MoveConfig, RadioField, TConfigItem } from '@/type';
+import { AllComponentType, FormField, InputField, MoveConfig, RadioField, TConfigItem } from '@/type';
 import { Tooltip } from 'antd';
 import LabelContent from '../label-content';
-import { Icon } from '@common/components';
-import React, { memo, FC, useMemo, useCallback } from 'react';
+import { Icon, Loading } from '@common/components';
+import React, { memo, FC, useMemo, useCallback, useEffect } from 'react';
 import { exchange, comAdded, comDeleted } from '@/features/bpm-editor/form-design/formdesign-slice';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import useLoadComponents from '@/hooks/use-load-components';
@@ -22,7 +22,18 @@ const SourceBox: FC<{
   const dispatch = useAppDispatch();
   const selectedField = useAppSelector(selectedFieldSelector);
   const formDesign = useAppSelector(formDesignSelector);
-  const options = useDataSource((config as RadioField)?.dataSource);
+
+  const formDataList: { name: string; value: any }[] = useMemo(() => {
+    const componentList = Object.values(formDesign.byId);
+    if (componentList.length > 0) {
+      return componentList.map((component) => ({
+        name: component.fieldName,
+        value: (component as InputField).defaultValue,
+      }));
+    }
+    return [];
+  }, [formDesign.byId]);
+  const [options, loading] = useDataSource((config as RadioField)?.dataSource, config.id, selectedField, formDataList);
   // 获取组件源码
   const compSources = useLoadComponents(type as AllComponentType['type']) as Component;
   const propList = useMemo(() => {
@@ -60,6 +71,7 @@ const SourceBox: FC<{
       const Component = compSources;
       return (
         <div className={styles.container}>
+          {loading && <Loading />}
           <div className={styles.component_container}>
             {type !== 'DescText' && <LabelContent label={propList.label} desc={propList.desc} />}
             <Component {...(propList as TConfigItem)} />
@@ -107,6 +119,7 @@ const SourceBox: FC<{
     compSources,
     selectedField,
     propList,
+    loading,
     handleCopy,
     handleDelete,
     handleMoveDown,
