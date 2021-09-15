@@ -247,16 +247,17 @@
     .ant-input {
       box-shadow: none;
     }
+
     .ant-input,
     .ant-input-affix-wrapper {
-      border-color: #ff5568 !important;
+      border-color: #ff5568;
       &:hover {
         border-color: #ff5568;
       }
     }
 
     .ant-select-selector {
-      border: 1px solid #ff5568 !important;
+      border: 1px solid #ff5568;
     }
   }
 
@@ -281,11 +282,13 @@
     }
   }
 }
+
 .ant-checkbox-group {
   .ant-checkbox-wrapper {
     margin-bottom: 12px;
   }
 }
+
 .ant-checkbox-checked .ant-checkbox-inner,
 .ant-tree-checkbox-checked .ant-tree-checkbox-inner {
   background-color: $primary-color;
@@ -295,6 +298,12 @@
 // 树形控件半选状态
 .ant-tree-checkbox-indeterminate .ant-tree-checkbox-inner::after {
   background-color: $primary-color;
+}
+
+.ant-tree-checkbox-wrapper:hover .ant-tree-checkbox-inner,
+.ant-tree-checkbox:hover .ant-tree-checkbox-inner,
+.ant-tree-checkbox-input:focus + .ant-tree-checkbox-inner {
+  border-color: $primary-color;
 }
 
 .ant-checkbox-indeterminate .ant-checkbox-inner::after {

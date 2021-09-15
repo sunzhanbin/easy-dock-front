@@ -1,6 +1,5 @@
 import { memo, useState, useEffect, useContext, useMemo } from 'react';
-import { Checkbox, Input } from 'antd';
-import { debounce } from 'lodash';
+import { Checkbox } from 'antd';
 import { fetchRoles } from '../util';
 import { Role } from '../type';
 import Layout from './layout';
@@ -46,14 +45,6 @@ function RoleSelector(props: RoleSelectorProps) {
 
     onChange(newRoles);
   });
-
-  const handleKeywordChange = useMemoCallback(
-    debounce((event: React.ChangeEvent<HTMLInputElement>) => {
-      const inputValue = event.target.value;
-
-      setKeyword(inputValue.trim());
-    }, 300),
-  );
 
   const showRoles = useMemo(() => {
     if (!keyword) return roles;
