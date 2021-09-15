@@ -13,6 +13,7 @@ import {
   AuthType,
   FieldAuthsMap,
   FieldTemplate,
+  CorrelationMemberConfig,
 } from '@type/flow';
 import { FormMeta } from '@type';
 import { validators } from './validators';
@@ -340,4 +341,12 @@ export function formatFieldsTemplate(form: FormMeta | null): FieldTemplate[] {
       id: field.config.id as string,
     };
   });
+}
+
+export function dynamicIsEmpty(data?: CorrelationMemberConfig['dynamic']) {
+  if (!data) return true;
+
+  if (!data.starter && !data.fields.length && !data.roles.length) return true;
+
+  return false;
 }

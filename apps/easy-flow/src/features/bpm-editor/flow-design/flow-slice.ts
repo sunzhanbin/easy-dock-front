@@ -203,9 +203,11 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
           (node.correlationMemberConfig.depts || []).forEach((dept) => {
             deptIds.add(dept);
           });
-          (node.correlationMemberConfig.roles || []).forEach((role) => {
-            roleIds.add(role);
-          });
+          (node.correlationMemberConfig.roles || [])
+            .concat(node.correlationMemberConfig.dynamic?.roles || [])
+            .forEach((role) => {
+              roleIds.add(role);
+            });
         }
       });
 

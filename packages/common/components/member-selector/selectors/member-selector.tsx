@@ -22,7 +22,7 @@ interface MemberSelectorProps {
 
 function MemberSelector(props: MemberSelectorProps) {
   const { value, onChange, fetchUser } = props;
-  const { wrapperClass, projectId } = useContext(SelectorContext)!;
+  const { wrapperClass } = useContext(SelectorContext)!;
   const [members, setMembers] = useState<Members>([]);
   const [loading, setLoading] = useState(false);
   const [memberTotal, setMemberTotal] = useState(0);
@@ -89,7 +89,7 @@ function MemberSelector(props: MemberSelectorProps) {
 
   useEffect(() => {
     searchMembers({ name: '', page: 1 });
-  }, [searchMembers, projectId]);
+  }, [searchMembers]);
 
   const handleMemberListScroll = useMemoCallback(
     throttle((event: React.UIEvent<HTMLDivElement, UIEvent>) => {
