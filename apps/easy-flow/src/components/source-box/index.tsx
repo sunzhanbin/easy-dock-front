@@ -33,7 +33,13 @@ const SourceBox: FC<{
     }
     return [];
   }, [formDesign.byId]);
-  const [options, loading] = useDataSource((config as RadioField)?.dataSource, config.id, selectedField, formDataList);
+
+  const [options, loading] = useDataSource({
+    dataSource: (config as RadioField)?.dataSource,
+    id: config.id,
+    selectId: selectedField,
+    formDataList,
+  });
   // 获取组件源码
   const compSources = useLoadComponents(type as AllComponentType['type']) as Component;
   const propList = useMemo(() => {

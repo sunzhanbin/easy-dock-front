@@ -2,16 +2,18 @@ import { useState, useEffect, useCallback } from 'react';
 import { runtimeAxios } from '@utils';
 import { OptionItem, SelectOptionItem } from '@/type';
 
-export default function useDataSource(
-  dataSource: SelectOptionItem,
-  id: string,
-  selectId: string,
-  formDataList?: { name: string; value: any }[],
-) {
+export type DataSourceParams = {
+  dataSource: SelectOptionItem;
+  id?: string;
+  selectId?: string;
+  formDataList?: { name: string; value: any }[];
+};
+
+export default function useDataSource({ dataSource, id, selectId, formDataList }: DataSourceParams) {
   const [data, setData] = useState<OptionItem[]>();
   const [loading, setLoading] = useState<boolean>(false);
   const loadData = useCallback(() => {
-    if (!dataSource || id !== selectId) {
+    if (!dataSource) {
       return;
     }
     if (dataSource?.type === 'custom') {
@@ -63,7 +65,14 @@ export default function useDataSource(
     }
   }, [dataSource, formDataList, id, selectId]);
   useEffect(() => {
+    // 当前组件改变才更新数据源
+    if (id === selectId) {
+      loadData();
+    }
+  }, [loadData, id, selectId]);
+  // 初始化请求数据源
+  useEffect(() => {
     loadData();
-  }, [loadData]);
+  }, []);
   return [data, loading];
 }

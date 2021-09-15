@@ -1,7 +1,7 @@
 import { memo, useEffect, useMemo } from 'react';
 import { Form } from 'antd';
 import debounce from 'lodash/debounce';
-import { FormField, SelectField } from '@type';
+import { FormField, InputField, InputNumberField, SelectField } from '@type';
 import { SubBranch as SubBranchType } from '@type/flow';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import Condition from '@/features/bpm-editor/components/condition';
@@ -37,7 +37,13 @@ function SubBranch(props: SubBranchProps) {
   );
 
   const handleLoadDatasource = useMemoCallback((name: string) => {
-    return loadFieldDatasource((fields.find((field) => field.fieldName === name) as SelectField).dataSource);
+    const dataSource = (fields.find((field) => field.fieldName === name) as SelectField).dataSource;
+    const formDataList = fields
+      .map((comp) => {
+        return { name: comp.fieldName, value: (comp as InputField | InputNumberField).defaultValue };
+      })
+      .filter((item) => item.value !== undefined);
+    return loadFieldDatasource(dataSource, formDataList);
   });
 
   useEffect(() => {

@@ -1,6 +1,6 @@
 import { memo, FC, useMemo, useState, useEffect } from 'react';
 import { Modal } from 'antd';
-import { Icon } from '@common/components';
+import { Icon, Loading } from '@common/components';
 import { useAppSelector } from '@/app/hooks';
 import {
   componentPropsSelector,
@@ -29,6 +29,7 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
   const byId: FormFieldMap = useAppSelector(componentPropsSelector);
   const formRules = useAppSelector(formRulesSelector);
   const [dataSource, setDataSource] = useState<Datasource>({});
+  const [loading, setLoading] = useState<boolean>(false);
   const subAppDetail = useSubAppDetail();
   const projectId = useMemo(() => {
     if (subAppDetail && subAppDetail.data && subAppDetail.data.app) {
@@ -105,9 +106,14 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
       name: key,
       value: initialValue[key],
     }));
-    fetchDataSource(components as RadioField[], formDataList).then((res) => {
-      setDataSource(res);
-    });
+    setLoading(true);
+    fetchDataSource(components as RadioField[], formDataList)
+      .then((res) => {
+        setDataSource(res);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, [byId, initialValue]);
   return (
     <Modal
@@ -118,6 +124,7 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
       wrapClassName={styles.container}
       destroyOnClose={true}
     >
+      {loading && <Loading className={styles.loading} />}
       <div className="content">
         <div className={styles.background}>
           <div className={styles.left} style={{ backgroundImage: `url(${leftImage})` }}></div>
