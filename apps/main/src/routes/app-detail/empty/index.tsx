@@ -81,11 +81,11 @@ const EmptyDetail: FC<{ appId: string }> = ({ appId }) => {
       </div>
       <div
         className={classNames(styles.screen_app, activeName === 'chart' ? styles.active : '')}
-        onClick={() => {
-          setActiveName('chart');
-          setCanEdit(false);
-          setCanChartEdit(true);
-        }}
+        // onClick={() => {
+        //   setActiveName('chart');
+        //   setCanEdit(false);
+        //   setCanChartEdit(true);
+        // }}
       >
         {canChartEdit && (
           <div className={styles.close} onClick={handleClose}>
