@@ -53,7 +53,10 @@ export async function loadDatasource(formMeta: FormMeta, fieldsAuths: FieldAuths
   return datasource;
 }
 
-export async function fetchDataSource(components: Array<RadioField | CheckboxField | SelectField>) {
+export async function fetchDataSource(
+  components: Array<RadioField | CheckboxField | SelectField>,
+  formDataList?: { name: string; value: any }[],
+) {
   const allPromises: Promise<void>[] = [];
   const source: Datasource = {};
   components.forEach(async (object) => {
@@ -77,6 +80,32 @@ export async function fetchDataSource(components: Array<RadioField | CheckboxFie
               source[key] = list;
             }),
           );
+        }
+      } else if (dataSource.type === 'interface') {
+        const { apiConfig } = dataSource;
+        if (apiConfig && formDataList) {
+          const name = (apiConfig.response as { name: string })?.name;
+          const formValues = formDataList.filter((val) => val.value);
+          if (name) {
+            allPromises.push(
+              runtimeAxios
+                .post('/common/doHttpJson', { jsonObject: apiConfig, formDataList: formValues })
+                .then((res) => {
+                  const data = eval(`res.${name}`);
+                  let list: { key: string; value: string }[] = [];
+                  if (Array.isArray(data)) {
+                    if (data.every((val) => typeof val === 'string')) {
+                      // 字符串数组
+                      list = data.map((val) => ({ key: val, value: val }));
+                    } else if (data.every((val) => val.key && val.value)) {
+                      // key-value对象数组
+                      list = data.map((item) => ({ key: item.key, value: item.value }));
+                    }
+                  }
+                  source[key] = list;
+                }),
+            );
+          }
         }
       }
     }

@@ -36,15 +36,6 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
     }
   }, [subAppDetail]);
 
-  useEffect(() => {
-    const components = Object.values(byId).filter((component) => {
-      const { type } = component;
-      return type === 'Radio' || type === 'Checkbox' || type === 'Select';
-    });
-    fetchDataSource(components as RadioField[]).then((res) => {
-      setDataSource(res);
-    });
-  }, [byId]);
   const formDesign = useMemo(() => {
     const components: ComponentConfig[] = [];
     Object.keys(byId).forEach((id) => {
@@ -104,6 +95,20 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
       </div>
     );
   }, [onClose]);
+
+  useEffect(() => {
+    const components = Object.values(byId).filter((component) => {
+      const { type } = component;
+      return type === 'Radio' || type === 'Checkbox' || type === 'Select';
+    });
+    const formDataList: { name: string; value: any }[] = Object.keys(initialValue).map((key) => ({
+      name: key,
+      value: initialValue[key],
+    }));
+    fetchDataSource(components as RadioField[], formDataList).then((res) => {
+      setDataSource(res);
+    });
+  }, [byId, initialValue]);
   return (
     <Modal
       visible={visible}

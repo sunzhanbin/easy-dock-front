@@ -1,4 +1,4 @@
-import { memo, useEffect, Fragment, useMemo, ReactNode } from 'react';
+import { memo, useEffect, Fragment, useMemo, ReactNode, useRef } from 'react';
 import { Form, Select, Input, Switch, Radio, Checkbox, InputNumber } from 'antd';
 import SelectOptionList from '../select-option-list';
 import SelectDefaultOption from '../select-default-option';
@@ -98,12 +98,17 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
     const isValidate = form.isFieldsTouched(['fieldName', 'label']);
     onSave && onSave(values, isValidate);
   };
+  const configRef = useRef();
   const handleChange = () => {
     let formValues = form.getFieldsValue();
     let { dataSource } = formValues;
     const { apiConfig } = formValues;
-    if (apiConfig && dataSource) {
-      dataSource = Object.assign({}, dataSource, { type: 'interface', apiConfig });
+    if (apiConfig) {
+      // 记录上一次的值
+      configRef.current = apiConfig;
+    }
+    if (configRef.current && dataSource && dataSource.type === 'interface') {
+      dataSource = Object.assign({}, dataSource, { type: 'interface', apiConfig: configRef.current });
       formValues = Object.assign({}, formValues, { dataSource });
     }
     onFinish(formValues);
@@ -130,6 +135,7 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
     <div className={styles.container}>
       <Form
         form={form}
+        key={componentId}
         name="form_editor"
         autoComplete="off"
         initialValues={initFormValues}
