@@ -61,13 +61,13 @@ export function AutoSelector(props: AutoSelectorProps) {
     onChange!(key);
   });
 
-  const handleInputChange = useMemoCallback((event: any) => {
+  const handleInputChange = useMemoCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     onChange!(event.target.value);
   });
 
   return (
     <Dropdown
-      getPopupContainer={getPopupContainer}
+      getPopupContainer={(c) => c}
       overlay={
         <Menu className={styles.options} onClick={handleMenuClick}>
           {options.map((item) => {
@@ -82,7 +82,7 @@ export function AutoSelector(props: AutoSelectorProps) {
       trigger={['click']}
     >
       <div className={styles.selector}>
-        <Input size="large" value={showValue || value} onInput={handleInputChange} placeholder="请输入"></Input>
+        <Input size="large" value={showValue || value} onInput={handleInputChange} placeholder="请输入" />
       </div>
     </Dropdown>
   );
