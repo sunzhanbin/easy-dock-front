@@ -1,0 +1,26 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@utils": ["src/utils"],
+      "@utils*": ["src/utils*"],
+      "@components": ["src/components"],
+      "@components/*": ["src/components/*"],
+      "@consts": ["src/consts"],
+      "@consts/*": ["src/consts/*"],
+      "@routes": ["src/routes"],
+      "@routes/*": ["src/routes/*"],
+      "@layouts": ["src/layouts"],
+      "@layouts/*": ["src/layouts/*"],
+      "@assets": ["src/assets"],
+      "@assets/*": ["src/assets/*"],
+      "@schema": ["src/schema"],
+      "@schema/*": ["src/schema/*"],
+      "@styles/*": ["src/styles/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@common/*": ["../../packages/common/*"]
+    }
+  }
+}

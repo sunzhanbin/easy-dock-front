@@ -1,0 +1,15 @@
+@import '@common/styles/var.scss';
+@import '@common/styles/mixin.scss';
+
+.btns {
+  @include center('flex');
+
+  button + button {
+    margin-left: 12px;
+  }
+
+  .save {
+    color: $primary-color;
+    border-color: rgba($primary-color, 0.85);
+  }
+}

@@ -1,0 +1,12 @@
+@import '@common/styles/var.scss';
+@import '@common/styles/mixin.scss';
+
+.orch {
+  position: relative;
+  flex: 1 1 0;
+  overflow-y: auto;
+
+  .loading {
+    @include center('absolute');
+  }
+}

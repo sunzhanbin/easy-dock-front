@@ -1,0 +1,21 @@
+.form {
+  .fieldName {
+    width: 135px;
+  }
+  .symbol {
+    width: 135px;
+  }
+  .valueWrapper {
+    flex: 1;
+    max-width: calc(100% - 304px);
+    margin-right: 0;
+    .value {
+      width: 100%;
+    }
+  }
+  :global {
+    .ant-form-item-control-input-content {
+      display: flex;
+    }
+  }
+}

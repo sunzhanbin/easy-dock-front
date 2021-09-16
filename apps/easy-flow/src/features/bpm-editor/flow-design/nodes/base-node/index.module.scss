@@ -1,0 +1,142 @@
+@import '@common/styles/var.scss';
+@import '@common/styles/mixin.scss';
+
+.header {
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  line-height: 22px;
+  color: #fff;
+  background-color: #818a9e;
+  font-weight: 500;
+
+  &.audit-node {
+    background-color: rgba($primary-color, 0.8);
+  }
+
+  &.fill-node {
+    background-color: rgba(#06c498, 0.8);
+  }
+
+  &.cc-node {
+    background-color: rgba(#783fc7, 0.8);
+  }
+
+  &.auto-node {
+    background-color: rgba(#2f9ddd, 0.8);
+  }
+
+  .icon-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-right: 8px;
+    font-size: 24px;
+
+    & > svg {
+      color: #fff;
+    }
+  }
+
+  .title {
+    @include ellipsis;
+
+    flex: 1 1 0;
+  }
+}
+
+.node {
+  width: 248px;
+  position: relative;
+  user-select: none;
+
+  &:hover {
+    .actions {
+      opacity: 1;
+    }
+  }
+
+  .card {
+    position: relative;
+    border-radius: 3px;
+    overflow: hidden;
+    cursor: pointer;
+    background-color: #fff;
+
+    &:hover {
+      box-shadow: 0 6px 24px 0 rgba(#181f43, 0.12);
+    }
+
+    &.invalid {
+      box-shadow: 0 0 0 4px rgba(#ff5568, 0.12);
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border: 2px solid #ff5568;
+        border-radius: 3px;
+      }
+    }
+  }
+
+  .content {
+    padding: 12px;
+    line-height: 20px;
+    color: rgba($color: #181f43, $alpha: 0.95);
+    background-color: #fff;
+    font-size: 12px;
+    font-weight: 400;
+  }
+
+  .footer {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 0;
+  }
+
+  .actions {
+    @include center('flex');
+
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 4px 0;
+    padding-left: 30px;
+    line-height: 1;
+    z-index: 9;
+    transform: translateY(-100%);
+    opacity: 0;
+    transition: opacity ease-in-out 0.3s;
+
+    &.show {
+      opacity: 1;
+
+      .icon {
+        color: $primary-color;
+      }
+    }
+
+    .action {
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+
+      &:hover > .icon {
+        color: $primary-color;
+      }
+    }
+
+    .action + .action {
+      margin-left: 10px;
+    }
+  }
+}

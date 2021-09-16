@@ -1,0 +1,145 @@
+@import '@common/styles/var.scss';
+@import '@common/styles/mixin.scss';
+
+.container {
+  & > .header {
+    @include center('flex');
+
+    margin-bottom: 24px;
+    padding-top: 12px;
+
+    .back {
+      width: 20px;
+      height: 20px;
+      margin-right: 16px;
+      cursor: pointer;
+    }
+    .status {
+      width: 48px;
+      height: 22px;
+      line-height: 22px;
+      text-align: center;
+      border-radius: 3px;
+      font-size: 12px;
+      font-weight: 400;
+      margin-right: 8px;
+
+      &.active {
+        color: #03a882;
+        background: rgba(6, 196, 152, 0.12);
+      }
+
+      &.negative {
+        color: #fff;
+        background: #b9bcc6;
+      }
+    }
+    .app_info {
+      display: flex;
+      align-items: center;
+      .name {
+        @include ellipsis;
+        max-width: 150px;
+        font-size: 18px;
+        font-weight: 600;
+        color: rgba(0, 0, 0, 0.85);
+      }
+      .number {
+        margin: 0 8px 0 4px;
+        font-size: 18px;
+        font-weight: 500;
+        color: rgba(24, 31, 67, 0.3);
+      }
+      .line {
+        margin-right: 8px;
+        width: 1px;
+        height: 16px;
+        background-color: rgba(24, 31, 67, 0.12);
+      }
+      .auth {
+        display: flex;
+        align-items: center;
+        height: 28px;
+        cursor: pointer;
+        color: #181f43;
+        .icon {
+          font-size: 16px;
+          margin-right: 4px;
+        }
+        .text {
+          font-size: 14px;
+          font-weight: 400;
+        }
+        &:hover {
+          color: #4c5cdb;
+          .icon {
+            color: #4c5cdb;
+          }
+        }
+      }
+    }
+
+    .search_container {
+      @include center('flex');
+
+      justify-content: flex-end;
+      flex: 1 1 0;
+
+      .search {
+        width: 382px;
+        cursor: pointer;
+      }
+    }
+  }
+
+  & > .content {
+    .scenes {
+      position: relative;
+      display: grid;
+      grid-row-gap: 24px;
+      grid-column-gap: 24px;
+
+      &.no-scene {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 92px;
+        background: #fff;
+        border-radius: 3px;
+        line-height: 22px;
+        color: #181f43;
+        font-size: 14px;
+        font-weight: 400;
+
+        .btn {
+          margin-right: 12px;
+        }
+      }
+      .scene {
+        border: 1px solid rgba(24, 31, 67, 0.12);
+      }
+    }
+  }
+}
+@media screen and (min-width: 1640px) and (max-width: 1919px) {
+  .scenes {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+@media screen and (max-width: 1639px) {
+  .scenes {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media screen and (min-width: 1920px) {
+  .scenes {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}

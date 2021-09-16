@@ -1,0 +1,225 @@
+@import '@common/styles/var.scss';
+@import '@common/styles/mixin.scss';
+
+.container {
+  user-select: none;
+}
+
+.avatar {
+  object-fit: cover;
+}
+
+// 成员样式
+.member {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+
+  &:hover {
+    .delete {
+      transform: scale(1);
+    }
+  }
+
+  .avatar {
+    margin-right: 4px;
+  }
+
+  .name {
+    color: rgba(#181f43, 0.95);
+    line-height: 22px;
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  .delete {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 16px;
+    height: 16px;
+    padding: 2px;
+    border-radius: 50%;
+    color: #fff;
+    background-color: rgba(#181f43, 0.75);
+    cursor: pointer;
+    transition: transform ease-in-out 0.3s;
+    transform: scale(0);
+    overflow: hidden;
+  }
+}
+
+// 成员列表
+.members {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: -14px;
+
+  .member {
+    margin-top: 14px;
+    margin-right: 16px;
+  }
+
+  .action {
+    @include center('flex');
+
+    margin-top: 14px;
+    cursor: pointer;
+
+    .add {
+      width: 20px;
+      height: 20px;
+      padding: 4px;
+      border-radius: 50%;
+      color: #fff;
+      background-color: $primary-color;
+      font-size: 12px;
+    }
+  }
+}
+
+// 选择组件样式通用
+.selector {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 232px;
+  max-height: 300px;
+  color: rgba(#181f43, 0.95);
+  font-size: 14px;
+  font-weight: 400;
+
+  .search {
+    @include inputtheme($primary-color);
+
+    margin-bottom: 12px;
+  }
+
+  .list {
+    flex: 1 1 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    .item {
+      @include center('flex');
+
+      padding: 8px;
+      border-radius: 3px;
+      cursor: pointer;
+
+      &:hover {
+        background: rgba(#182743, 0.04);
+      }
+
+      .avatar {
+        margin-right: 8px;
+      }
+
+      & > .name {
+        @include ellipsis;
+
+        flex: 1 1 0;
+        margin-right: 8px;
+        line-height: 22px;
+      }
+    }
+  }
+
+  .loading {
+    z-index: 9;
+  }
+}
+
+// 人员选择
+.member-selector {
+  .total {
+    margin-bottom: 12px;
+  }
+}
+
+// 部门选择
+.tree {
+  &.in-search {
+    :global {
+      .ant-tree-treenode {
+        display: none;
+      }
+
+      .filter-node {
+        display: flex;
+
+        .ant-tree-title {
+          font-weight: normal !important;
+        }
+      }
+    }
+  }
+
+  :global {
+    .ant-tree-checkbox {
+      order: 1;
+      margin-left: 7px;
+      margin-right: 7px;
+    }
+
+    .ant-tree-node-selected {
+      background-color: transparent !important;
+    }
+
+    .ant-tree-treenode {
+      & > .ant-tree-switcher-noop {
+        display: none;
+      }
+    }
+  }
+}
+
+// 选择组件主体内覆盖antd样式
+.selector-wrapper {
+  :global {
+    .ant-tabs {
+      overflow: visible;
+
+      .ant-tabs-tab {
+        height: 37px;
+        padding-top: 0;
+        line-height: 20px;
+        color: rgba(#181f43, 0.75);
+        font-size: 14px;
+        font-weight: 400;
+
+        &:hover {
+          color: rgba($primary-color, 0.75);
+        }
+
+        .ant-tabs-tab-btn {
+          height: 25px;
+          line-height: 25px;
+        }
+      }
+    }
+
+    .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+      color: rgba(#181f43, 0.95);
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    .ant-tabs-ink-bar {
+      height: 5px !important;
+      background-color: $primary-color;
+    }
+  }
+}
+
+// 覆盖antd的popover样式
+.popover {
+  user-select: none;
+
+  :global {
+    .ant-popover-arrow {
+      display: none;
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "packages": ["packages/core", "apps/easy-flow", "apps/main"],
+  "version": "independent",
+  "changelog": {
+    "labels": {
+      "tag: new feature": ":rocket: New Feature",
+      "tag: breaking change": ":boom: Breaking Change",
+      "tag: bug fix": ":bug: Bug Fix",
+      "tag: enhancement": ":nail_care: Enhancement",
+      "tag: documentation": ":memo: Documentation",
+      "tag: internal": ":house: Internal"
+    },
+    "cacheDir": ".changelog"
+  },
+  "command": {
+    "bootstrap": {
+      "npmClient": "yarn",
+      "useWorkspaces": true
+    }
+  }
+}

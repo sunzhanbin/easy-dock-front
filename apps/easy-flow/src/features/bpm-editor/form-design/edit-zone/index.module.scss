@@ -1,0 +1,43 @@
+.container {
+  flex: 0 0 260px;
+  height: calc(100vh - 64px);
+  background: #fff;
+  padding: 20px 21px;
+  overflow-y: auto;
+  box-shadow: 0px 6px 24px 0px rgba(24, 31, 67, 0.1);
+  .edit_title {
+    font-size: 18px;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.85);
+    line-height: 28px;
+    margin-bottom: 14px;
+  }
+  :global {
+    .ant-tabs-tab {
+      height: 20px;
+      font-size: 14px;
+      font-weight: 400;
+      color: rgba(24, 31, 67, 0.75);
+      line-height: 20px;
+      .ant-tabs-tab-btn {
+        margin-bottom: 10px;
+      }
+      &.ant-tabs-tab-active {
+        height: 28px;
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 28px;
+        .ant-tabs-tab-btn {
+          color: rgba(0, 0, 0, 0.85);
+        }
+      }
+    }
+    .ant-tabs-top > .ant-tabs-nav .ant-tabs-ink-bar,
+    .ant-tabs-bottom > .ant-tabs-nav .ant-tabs-ink-bar,
+    .ant-tabs-top > div > .ant-tabs-nav .ant-tabs-ink-bar,
+    .ant-tabs-bottom > div > .ant-tabs-nav .ant-tabs-ink-bar {
+      height: 5px;
+      background: #4c5cdb;
+    }
+  }
+}

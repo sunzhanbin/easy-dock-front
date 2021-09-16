@@ -1,0 +1,23 @@
+@import '@common/styles/global.scss';
+
+.easy-dock-content {
+  margin: 0 auto;
+}
+
+@media screen and (max-width: 1365px) {
+  .easy-dock-content {
+    width: 1230px;
+  }
+}
+
+@media screen and (min-width: 1366px) {
+  .easy-dock-content {
+    width: 90vw;
+  }
+}
+
+@media screen and (min-width: 1401px) {
+  .main-content {
+    width: 90%;
+  }
+}

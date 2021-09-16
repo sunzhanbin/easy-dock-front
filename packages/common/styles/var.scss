@@ -1,0 +1,18 @@
+$primary-color: #4c5cdb;
+$main-content-min-height: calc(100vh - 65px);
+$primary-text-color: #181f43;
+$title-text-color: rgba($primary-text-color, 1);
+$body-text-color: rgba($primary-text-color, 0.75);
+$caption-text-color: rgba($primary-text-color, 0.5);
+$hint-color: rgba($primary-text-color, 0.3);
+$border-color: rgba($primary-text-color, 0.12);
+$background-gray: rgba($primary-text-color, 0.08);
+$background-light: rgba($primary-text-color, 0.04);
+$sub-text-color: rgba($primary-text-color, 0.55);
+$tooltip-color: rgba($primary-text-color, 0.85);
+$icon-color: #818a9e;
+$mask-color: #1a1b1e;
+$white: #fff;
+$disabled-color: rgba($white, 0.35);
+$deep-mask-color: rgba($mask-color, 0.85);
+$success-color: #63c4ad;

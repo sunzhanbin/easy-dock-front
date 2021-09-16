@@ -1,0 +1,47 @@
+@import '@common/styles/var.scss';
+
+.layout {
+  display: flex;
+  width: 100vw;
+  height: calc(100vh - 58px);
+  .sidebar {
+    width: 282px;
+    height: calc(100vh - 64px);
+    border-right: 1px solid rgba(24, 31, 67, 0.08);
+    .menus {
+      margin-left: 43px;
+      .nav {
+        display: flex;
+        align-items: center;
+        padding: 13px 29px;
+        color: rgba(#181f43, 0.95);
+        background-color: transparent;
+
+        .icon {
+          flex-shrink: 0;
+          margin-right: 10px;
+          font-size: 20px;
+        }
+
+        .text {
+          flex: 1 1 0;
+          line-height: 22px;
+          font-size: 14px;
+        }
+
+        &.active {
+          border-right: 5px solid $primary-color;
+          color: $primary-color;
+          background: #f6f7f8;
+
+          .icon {
+            color: inherit;
+          }
+        }
+      }
+    }
+  }
+  .content {
+    flex: 1;
+  }
+}

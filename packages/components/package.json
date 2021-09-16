@@ -1,0 +1,48 @@
+{
+  "name": "@easydock/components",
+  "version": "0.0.1",
+  "description": "> TODO: description",
+  "author": "jisi wang",
+  "license": "MIT",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./lib/index.d.ts",
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc && rollup -c rollup.config.js",
+    "clean": "../../scripts/clean_package.sh",
+    "start": "tsc -w & rollup -c rollup.config.js -w",
+    "test": "jest --coverage"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "dependencies": {
+    "antd": "^4.15.2",
+    "axios": "^0.21.1",
+    "classnames": "^2.3.1",
+    "lodash": "^4.17.21",
+    "react": "^17.0.2",
+    "react-beautiful-dnd": "^13.1.0",
+    "react-dom": "^17.0.2",
+    "react-scripts": "4.0.3",
+    "styled-component": "^2.8.0",
+    "typescript": "^4.1.2",
+    "use-immer": "^0.5.1"
+  },
+  "devDependencies": {
+    "@types/classnames": "^2.3.1",
+    "@types/lodash": "^4.14.168",
+    "@types/react": "^17.0.0",
+    "@types/react-beautiful-dnd": "^13.0.0",
+    "@types/react-dom": "^17.0.0",
+    "@types/webpack-env": "^1.16.0",
+    "filemanager-webpack-plugin": "^4.0.0",
+    "node-sass": "^5.0.0",
+    "sass-loader": "^11.0.1"
+  }
+}

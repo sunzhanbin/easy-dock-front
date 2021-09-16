@@ -1,0 +1,135 @@
+@import '@common/styles/var.scss';
+@import '@common/styles/mixin.scss';
+
+.card {
+  @include center('flex');
+
+  position: relative;
+  align-items: stretch;
+  height: 128px;
+  border-radius: 6px;
+  background-color: rgba(24, 31, 67, 0.03);
+  transition: background-color linear 0.3s;
+  cursor: pointer;
+  overflow: hidden;
+
+  &:hover {
+    box-shadow: 0px 0px 16px 0px rgba(24, 31, 67, 0.08);
+    background-color: #fff;
+  }
+
+  img {
+    width: 128px;
+    height: 128px;
+    border-radius: 3px;
+    object-fit: cover;
+  }
+
+  .content {
+    position: relative;
+    flex: 1 1 0;
+    padding: 16px 16px 0;
+    overflow: hidden;
+
+    .title {
+      @include ellipsis;
+
+      padding-right: 15px;
+      color: #181f43;
+      font-size: 14px;
+      font-weight: 400;
+    }
+
+    .remark {
+      @include ellipsis;
+
+      margin-bottom: 24px;
+      line-height: 20px;
+      color: rgba(24, 31, 67, 0.55);
+      font-size: 12px;
+      font-weight: 400;
+    }
+
+    .footer {
+      @include center('flex');
+
+      justify-content: space-between;
+
+      .editing {
+        height: 24px;
+        padding: 0 8px;
+        line-height: 24px;
+        border-radius: 12px;
+        color: #fff;
+        background-color: #f2d09d;
+      }
+
+      .version {
+        line-height: 20px;
+        color: #181f43;
+        font-size: 12px;
+        font-weight: 400;
+      }
+    }
+
+    .tool {
+      position: absolute;
+      top: 11px;
+      right: 10px;
+      cursor: pointer;
+      z-index: 1;
+
+      .del {
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1;
+      }
+
+      .more {
+        position: relative;
+        z-index: 2;
+        font-size: 0;
+
+        & > svg {
+          font-size: 20px;
+        }
+
+        &:hover {
+          & > svg {
+            color: $primary-color;
+          }
+        }
+      }
+    }
+  }
+}
+
+.menus {
+  width: 92px;
+  padding: 16px;
+
+  .item {
+    @include center('flex');
+
+    color: #fff;
+    cursor: pointer;
+
+    &.disabled {
+      color: $disabled-color;
+      cursor: not-allowed;
+    }
+
+    & > svg {
+      margin-right: 12px;
+      color: inherit;
+      font-size: 20px;
+    }
+  }
+
+  .item + .item {
+    margin-top: 16px;
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.path.json",
+  "include": [
+    "src/**/*",
+    "../../packages/common/**/*"
+  ],
+  "exclude": [
+    "lib/**",
+    "public/**",
+    "build/**",
+    "dist/**",
+    "node_modules/**",
+    "template/**"
+  ],
+  "compilerOptions": {}
+}

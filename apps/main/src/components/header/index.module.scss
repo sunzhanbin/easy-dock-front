@@ -1,0 +1,122 @@
+@import '@common/styles/mixin.scss';
+
+.container {
+  display: inline-block;
+  padding: 0;
+  // border-bottom: 1px solid rgba(24, 31, 67, 0.12);
+  box-shadow: 0px 2px 8px 0px rgba(24, 31, 67, 0.08);
+  background-color: #fff;
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+  }
+  .right {
+    display: flex;
+    .appClient {
+      display: flex;
+      align-items: center;
+      width: 84px;
+      height: 32px;
+      border: 1px solid rgba(24, 31, 67, 0.12);
+      border-radius: 3px;
+      padding: 0 8px;
+      margin-right: 24px;
+      .icon {
+        font-size: 20px;
+        margin-right: 4px;
+      }
+      .text {
+        font-size: 14px;
+        font-weight: 400;
+        color: rgba(0, 0, 0, 0.85);
+      }
+      &:hover {
+        border-color: #4c5cdb;
+        .text {
+          color: #4c5cdb;
+        }
+      }
+      &.active {
+        box-shadow: 0px 0px 0px 4px rgba(76, 92, 219, 0.12);
+      }
+    }
+  }
+  .logo {
+    margin-right: 24px;
+    font-size: 0;
+
+    img {
+      height: 42px;
+    }
+  }
+}
+
+.user {
+  @include center('flex');
+
+  flex-shrink: 0;
+
+  .avatar {
+    margin-right: 8px;
+  }
+
+  .name {
+    line-height: 22px;
+    color: rgba(0, 0, 0, 0.85);
+    font-size: 14px;
+    font-weight: 400;
+  }
+}
+.menuItem {
+  width: 120px;
+  height: 40px;
+  line-height: 40px;
+  padding: 0;
+  font-size: 14px;
+  font-weight: 400;
+  color: #181f43;
+  .icon {
+    font-size: 16px;
+    margin-right: 8px;
+  }
+  &.line {
+    height: 17px;
+    :global {
+      .ant-dropdown-menu-title-content {
+        margin: 8px 12px;
+        height: 0px;
+        border-top: 1px solid rgba(24, 31, 67, 0.12);
+      }
+    }
+  }
+  &:hover {
+    background-color: transparent;
+    :global {
+      .ant-dropdown-menu-title-content {
+        background-color: rgba(24, 39, 67, 0.04);
+        border-radius: 3px;
+      }
+    }
+  }
+  :global {
+    .ant-dropdown-menu-title-content {
+      width: 104px;
+      margin: 0 8px;
+      text-align: center;
+      & > span {
+        display: flex;
+        align-items: center;
+        padding: 0 8px;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 1366px) {
+  .container {
+    display: block;
+  }
+}

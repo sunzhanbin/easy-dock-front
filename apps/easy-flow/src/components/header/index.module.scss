@@ -1,0 +1,25 @@
+@import '@common/styles/mixin.scss';
+
+.header {
+  @include center('flex');
+
+  position: relative;
+  justify-content: space-between;
+  height: 56px;
+  padding: 0 32px;
+
+  .back {
+    @include center('flex');
+
+    line-height: 28px;
+    color: rgba(#000, 0.85);
+    font-size: 18px;
+    font-weight: 400;
+    cursor: pointer;
+
+    .icon {
+      margin-right: 12px;
+      font-size: 20px;
+    }
+  }
+}

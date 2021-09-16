@@ -1,0 +1,18 @@
+@import '@common/styles/mixin.scss';
+
+.btn-editor {
+  @include center('flex');
+
+  .btn-content {
+    @include center('flex');
+  }
+
+  .btn-alias {
+    flex: 1 1 0;
+    margin-left: 10px;
+  }
+
+  .choose {
+    margin-left: 10px;
+  }
+}

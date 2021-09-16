@@ -1,7 +1,0 @@
-@import '@styles/mixin.scss';
-
-.loading {
-  @include center('absolute');
-
-  z-index: 1000;
-}

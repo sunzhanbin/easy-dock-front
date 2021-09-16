@@ -1,0 +1,142 @@
+@import '@common/styles/mixin.scss';
+
+.container {
+  @include center('flex');
+
+  align-items: flex-start;
+
+  .icon {
+    @include center('flex');
+
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    margin-top: 1px;
+    margin-right: 12px;
+    border-radius: 3px;
+    font-size: 12px;
+
+    svg {
+      color: #fff;
+    }
+
+    &.success {
+      background-color: #06c498;
+    }
+
+    &.error {
+      background-color: #ff5568;
+    }
+
+    &.processing {
+      background-color: #4c5cdb;
+    }
+  }
+
+  .content {
+    flex: 1 1 0;
+  }
+
+  .tag {
+    padding: 4px;
+    border-radius: 3px;
+    border-width: 1px;
+    border-style: solid;
+    line-height: 1;
+    font-size: 12px;
+    font-weight: 400;
+    white-space: nowrap;
+
+    &.primary {
+      border-color: rgba(#4c5cdb, 0.35);
+      color: #4c5cdb;
+    }
+
+    &.success {
+      color: #06c498;
+      border-color: rgba(#06c498, 0.35);
+    }
+
+    &.error {
+      border-color: rgba(#ff5568, 0.3);
+      color: #ff5568;
+    }
+
+    &.warning {
+      border-color: rgba(#ff9900, 0.3);
+      color: #ff9900;
+    }
+  }
+
+  .node-name {
+    margin-bottom: 13px;
+    line-height: 20px;
+    color: #181f43;
+    font-size: 12px;
+    font-weight: 400;
+  }
+
+  .node {
+    & > .user {
+      display: flex;
+      align-items: flex-start;
+
+      margin-bottom: 4px;
+
+      & + .user {
+        margin-top: 8px;
+      }
+
+      .avatar {
+        flex-shrink: 0;
+        margin-right: 8px;
+        border-radius: 50%;
+      }
+
+      .user-name {
+        margin-right: 4px;
+        line-height: 22px;
+        color: #181f43;
+        font-size: 14px;
+        font-weight: 400;
+      }
+    }
+
+    .time {
+      margin-bottom: 4px;
+      line-height: 20px;
+      color: rgba(#181f43, 0.5);
+      font-size: 12px;
+      font-weight: 400;
+    }
+
+    .comment {
+      @include center('flex');
+
+      align-items: flex-start;
+
+      & > svg {
+        flex-shrink: 0;
+        margin-top: 4px;
+        margin-right: 8px;
+        font-size: 12px;
+      }
+
+      .text {
+        flex: 1 1 0;
+        line-height: 20px;
+        color: rgba(#181f43, 0.75);
+        font-size: 12px;
+        font-weight: 400;
+      }
+    }
+
+    :last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.container + .container {
+  margin-top: 25px;
+}

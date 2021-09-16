@@ -1,0 +1,88 @@
+@import '@common/styles/mixin.scss';
+
+.scroll-container {
+  position: relative;
+  height: 100%;
+  font-size: 0;
+  overflow: auto;
+
+  .editor {
+    flex: 1 1 0;
+    padding: 24px;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    :global {
+      .ant-form-item-label {
+        padding-bottom: 12px;
+
+        & > label {
+          line-height: 22px;
+          color: rgba(#181f43, 0.95);
+          font-size: 14px;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+
+  :global {
+    .ant-drawer-right {
+      height: unset;
+      top: 56px;
+      bottom: 0;
+
+      .ant-drawer-body {
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+      }
+    }
+
+    .ant-drawer-mask {
+      background-color: transparent;
+    }
+
+    .ant-cascader-menu {
+      height: unset;
+    }
+  }
+}
+
+.flow {
+  display: inline-block;
+  min-width: 100%;
+  min-height: 100%;
+  font-size: 14px;
+  background-color: #f6f7f8;
+
+  .content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 95px;
+    padding-bottom: 24px;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      transform: translate3d(-50%, 0, 0);
+      background-color: #e3e4e8;
+      width: 1px;
+      top: 95px;
+      bottom: 24px;
+    }
+  }
+}
+
+.branch-title {
+  padding: 24px;
+  padding-bottom: 0;
+  line-height: 28px;
+  color: rgba(#000, 0.85);
+  font-size: 18px;
+  font-weight: bold;
+}
