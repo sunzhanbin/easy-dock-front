@@ -51,7 +51,7 @@ interface AutoSelectorProps {
   getPopupContainer?: DropDownProps['getPopupContainer'];
 }
 
-function AutoSelector(props: AutoSelectorProps) {
+export function AutoSelector(props: AutoSelectorProps) {
   const { options, value, onChange, getPopupContainer } = props;
   const showValue = useMemo(() => {
     return options.find((item) => item.id === value)?.name || value;

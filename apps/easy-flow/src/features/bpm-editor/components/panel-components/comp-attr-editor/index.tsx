@@ -11,6 +11,8 @@ import { useAppSelector } from '@/app/hooks';
 import { errorSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 import { Icon } from '@common/components';
 import { Rule } from 'antd/lib/form';
+import useMemoCallback from '@common/hooks/use-memo-callback';
+import { debounce } from 'lodash';
 
 const { Option } = Select;
 
@@ -94,25 +96,27 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
     }
     return formValues;
   }, [initValues]);
-  const onFinish = (values: Store) => {
+  const onFinish = useMemoCallback((values: Store) => {
     const isValidate = form.isFieldsTouched(['fieldName', 'label']);
     onSave && onSave(values, isValidate);
-  };
+  });
   const configRef = useRef();
-  const handleChange = () => {
-    let formValues = form.getFieldsValue();
-    let { dataSource } = formValues;
-    const { apiConfig } = formValues;
-    if (apiConfig) {
-      // 记录上一次的值
-      configRef.current = apiConfig;
-    }
-    if (configRef.current && dataSource && dataSource.type === 'interface') {
-      dataSource = Object.assign({}, dataSource, { type: 'interface', apiConfig: configRef.current });
-      formValues = Object.assign({}, formValues, { dataSource });
-    }
-    onFinish(formValues);
-  };
+  const handleChange = useMemoCallback(
+    debounce(() => {
+      let formValues = form.getFieldsValue();
+      let { dataSource } = formValues;
+      const { apiConfig } = formValues;
+      if (apiConfig) {
+        // 记录上一次的值
+        configRef.current = apiConfig;
+      }
+      if (configRef.current && dataSource && dataSource.type === 'interface') {
+        dataSource = Object.assign({}, dataSource, { type: 'interface', apiConfig: configRef.current });
+        formValues = Object.assign({}, formValues, { dataSource });
+      }
+      onFinish(formValues);
+    }, 500),
+  );
 
   useEffect(() => {
     if (errorIdList.includes(componentId)) {
