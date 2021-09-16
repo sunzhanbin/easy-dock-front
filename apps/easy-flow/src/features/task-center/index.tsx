@@ -8,6 +8,7 @@ import Start from './start';
 import Done from './done';
 import Card from './card';
 import Draft from './draft';
+import Copy from './copy';
 import { useAppSelector } from '@/app/hooks';
 import { todoNumSelector } from './taskcenter-reducer';
 import { loadApp } from './taskcenter-slice';
@@ -15,8 +16,6 @@ import useAppId from '@/hooks/use-app-id';
 import { useAppDispatch } from '@app/hooks';
 import { SubAppItem } from './type';
 import { runtimeAxios } from '@/utils';
-
-// import Copy from './copy';
 
 const TaskCenter: FC<{}> = () => {
   const dispatch = useAppDispatch();
@@ -64,13 +63,12 @@ const TaskCenter: FC<{}> = () => {
             <NavLink to={`${matchedUrl}/done`} replace className={styles.nav} activeClassName={styles.active}>
               我的已办
             </NavLink>
+            <NavLink to={`${matchedUrl}/copy`} className={styles.nav} activeClassName={styles.active}>
+              抄送我的
+            </NavLink>
             <NavLink to={`${matchedUrl}/draft`} replace className={styles.nav} activeClassName={styles.active}>
               草稿
             </NavLink>
-            {/* 这个版本暂时不做 */}
-            {/* <NavLink to={`${matchedUrl}/copy`} className={styles.nav} activeClassName={styles.active}>
-              抄送我的
-            </NavLink> */}
           </div>
         </div>
         <div className={styles.right}>
@@ -84,8 +82,8 @@ const TaskCenter: FC<{}> = () => {
           <Route path={`${matchedPath}/start`} component={Start}></Route>
           <Route path={`${matchedPath}/done`} component={Done}></Route>
           <Route path={`${matchedPath}/draft`} component={Draft}></Route>
+          <Route path={`${matchedPath}/copy`} component={Copy}></Route>
           <Route path={matchedPath} component={Todo}></Route>
-          {/* <Route path={`${matchedPath}/copy`} component={Copy}></Route> */}
           {/* <Redirect to={`${matchedPath}/todo`}></Redirect> */}
         </Switch>
       </div>
