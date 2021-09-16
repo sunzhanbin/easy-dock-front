@@ -3,6 +3,7 @@ const {
   addWebpackAlias,
   removeModuleScopePlugin,
   babelInclude,
+  adjustStyleLoaders,
   overrideDevServer,
   /*  addWebpackPlugin, */
 } = require('customize-cra');
@@ -17,9 +18,19 @@ module.exports = {
   webpack: override(
     babelInclude([path.resolve(__dirname, '../../packages/common'), path.resolve(__dirname, 'src')]),
     removeModuleScopePlugin(),
+    adjustStyleLoaders(rule => {
+        if (rule.test.toString().includes("scss")) {
+          rule.use.push({
+            loader: require.resolve("sass-resources-loader"),
+            options: {
+              resources: "./src/styles/base.scss" //这里是你自己放公共scss变量的路径
+            }
+          });
+        }
+      }),
     addWebpackAlias({
       '@utils': path.resolve(__dirname, './src/utils'),
-      '$app': path.resolve(__dirname, './src/app'),
+      '@app': path.resolve(__dirname, './src/app'),
       '@': path.resolve(__dirname, './src'),
       '@layouts': path.resolve(__dirname, './src/layouts'),
       '@components': path.resolve(__dirname, './src/components'),

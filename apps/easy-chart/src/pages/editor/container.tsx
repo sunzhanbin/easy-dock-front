@@ -5,7 +5,15 @@ const Container: FC = (props) => {
   console.log(props, 'props');
   return (
     <div className={styles.container}>
-      Container
+      <div className={styles.editorHeader}>
+        
+      </div>
+      <div className={styles.editZone}>
+        
+      </div>
+      <div className={styles.attrSetting}>
+        
+      </div>
     </div>
   );
 };

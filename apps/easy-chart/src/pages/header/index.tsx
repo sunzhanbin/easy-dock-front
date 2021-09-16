@@ -1,36 +1,40 @@
-import React, { memo, ReactNode, useCallback } from 'react';
+import React, { FC, memo, useCallback, useRef } from 'react';
+import { Button } from 'antd';
+import useMemoCallback from '@common/hooks/use-memo-callback';
 import { useHistory } from 'react-router-dom';
-import classnames from 'classnames';
-import { Icon } from '@common/components';
 import styles from './index.module.scss';
+import Header from './component';
 
-interface HeaderProps {
-  backText: string;
-  backClassName?: string;
-  children?: ReactNode;
-  className?: string;
-  goBack?: () => void;
-}
-
-function Header(props: HeaderProps) {
+const EditorHeader: FC = () => {
   const history = useHistory();
-  const { backText, backClassName, children, className, goBack } = props;
-  const handelClick = useCallback(() => {
-    if (goBack) {
-      goBack();
-    } else {
-      history.goBack();
-    }
-  }, [history, goBack]);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleSave = useMemoCallback(async () => {
+    console.log('保存');
+  });
+
+  const handleGoBack = useCallback(() => {
+    history.goBack();
+  }, [ history]);
+
   return (
-    <div className={classnames(styles.header, className)}>
-      <div className={classnames(styles.back, backClassName)} onClick={handelClick}>
-        <Icon className={styles.icon} type="fanhui" />
-        {backText}
-      </div>
-      {children}
+    <div className={styles.header_container} ref={containerRef}>
+      <Header backText={'appName'} className={styles.edit_header} goBack={handleGoBack}>
+
+        <div className={styles.operation}>
+          <Button type="primary" ghost className={styles.save} size="large" onClick={handleSave}>
+            预览
+          </Button>
+          <Button type="primary" ghost className={styles.save} size="large" onClick={handleSave}>
+            保存
+          </Button>
+          <Button type="primary" ghost className={styles.save} size="large" onClick={handleSave}>
+            发布
+          </Button>
+        </div>
+      </Header>
     </div>
   );
-}
+};
 
-export default memo(Header);
+export default memo(EditorHeader);
