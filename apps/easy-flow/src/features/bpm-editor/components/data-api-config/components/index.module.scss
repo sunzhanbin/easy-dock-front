@@ -1,21 +1,37 @@
 @import '@common/styles/var.scss';
+@import '@common/styles/mixin.scss';
 
 .field-selected {
   color: $primary-color;
   background-color: rgba($primary-color, 0.08);
 }
 
-.options {
-  padding: 8px;
-
+.selector {
   :global {
-    .ant-dropdown-menu-item {
-      padding: 5px 8px;
-      border-radius: 3px;
+    .ant-dropdown {
+      max-width: 100%;
     }
+  }
+  .options {
+    max-height: 220px;
+    padding: 8px;
+    overflow-y: auto;
 
-    .ant-dropdown-menu-item + .ant-dropdown-menu-item {
-      margin-top: 4px;
+    :global {
+      .ant-dropdown-menu-item {
+        padding: 5px 8px;
+        border-radius: 3px;
+
+        .ant-dropdown-menu-title-content {
+          @include ellipsis();
+
+          max-width: 100%;
+        }
+      }
+
+      .ant-dropdown-menu-item + .ant-dropdown-menu-item {
+        margin-top: 4px;
+      }
     }
   }
 }
