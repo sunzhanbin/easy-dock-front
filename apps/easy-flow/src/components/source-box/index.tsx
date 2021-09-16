@@ -47,9 +47,9 @@ const SourceBox: FC<{
   }, [formDesign.byId]);
 
   const [options, loading] = useDataSource({
-    id: config.id,
     selectId: selectedField,
     prevDataSource: sourceRef.current,
+    id,
     dataSource,
     formDataList,
   });
