@@ -9,7 +9,6 @@ import { useAppSelector } from '@/app/hooks';
 import { componentPropsSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 import { fieldRule, FormField, FormRuleItem, InputField, InputNumberField, SelectField } from '@/type';
 import { loadFieldDatasource } from '@utils/form';
-import useMemoCallback from '@common/hooks/use-memo';
 
 type modalProps = {
   editIndex?: number;

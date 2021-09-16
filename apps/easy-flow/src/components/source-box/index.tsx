@@ -2,7 +2,7 @@ import { AllComponentType, FormField, InputField, MoveConfig, RadioField, TConfi
 import { Tooltip } from 'antd';
 import LabelContent from '../label-content';
 import { Icon, Loading } from '@common/components';
-import React, { memo, FC, useMemo, useCallback, useEffect } from 'react';
+import React, { memo, FC, useMemo, useCallback, useRef, useEffect } from 'react';
 import { exchange, comAdded, comDeleted } from '@/features/bpm-editor/form-design/formdesign-slice';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import useLoadComponents from '@/hooks/use-load-components';
@@ -22,6 +22,18 @@ const SourceBox: FC<{
   const dispatch = useAppDispatch();
   const selectedField = useAppSelector(selectedFieldSelector);
   const formDesign = useAppSelector(formDesignSelector);
+  const sourceRef = useRef<any>(null);
+
+  const dataSource = useMemo(() => {
+    if (config && (config as RadioField)?.dataSource) {
+      const source = (config as RadioField)?.dataSource;
+      return source;
+    }
+    return null;
+  }, [config]);
+  useEffect(() => {
+    sourceRef.current = dataSource;
+  }, [dataSource]);
 
   const formDataList: { name: string; value: any }[] = useMemo(() => {
     const componentList = Object.values(formDesign.byId);
@@ -35,9 +47,10 @@ const SourceBox: FC<{
   }, [formDesign.byId]);
 
   const [options, loading] = useDataSource({
-    dataSource: (config as RadioField)?.dataSource,
     id: config.id,
     selectId: selectedField,
+    prevDataSource: sourceRef.current,
+    dataSource,
     formDataList,
   });
   // 获取组件源码
