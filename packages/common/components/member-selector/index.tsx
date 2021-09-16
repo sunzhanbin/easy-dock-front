@@ -257,7 +257,7 @@ function MemberSelector(props: MemberSelectorProps) {
       // HACK: 用于更新Popover弹出层的位置
       window.dispatchEvent(new Event('resize'));
     };
-  }, [value]);
+  }, [showValue]);
 
   return (
     <div className={styles.container} ref={popoverContentContainerRef}>
