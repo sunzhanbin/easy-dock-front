@@ -134,14 +134,6 @@ const EditorHeader: FC = () => {
     }
   }, [dirty, history, showConfirm]);
 
-  const disableFlowDesignLink = useMemo(() => {
-    if (pathName === formDesignPath && layout.length === 0) return true;
-
-    if (pathName === flowDesignPath) return true;
-
-    return false;
-  }, [pathName, layout, formDesignPath, flowDesignPath]);
-
   return (
     <div className={styles.header_container} ref={containerRef}>
       <Header backText={appName} className={styles.edit_header} goBack={handleGoBack}>
@@ -163,15 +155,6 @@ const EditorHeader: FC = () => {
             replace={true}
             to={`${match.url}/flow-design`}
             activeClassName={styles.active}
-            style={{
-              cursor: disableFlowDesignLink ? 'not-allowed' : 'pointer',
-              color: disableFlowDesignLink ? 'rgba(24, 31, 67, 0.5)' : 'rgba(24, 31, 67, 0.95)',
-            }}
-            onClick={(e) => {
-              if (disableFlowDesignLink) {
-                e.preventDefault();
-              }
-            }}
           >
             <span className={styles.number}>02</span>
             <span>流程设计</span>
