@@ -116,7 +116,7 @@ function FlowDetail() {
       await runtimeAxios.post(`/process_instance/stop`, {
         formData: formValues,
         taskId,
-        remark: '',
+        remark,
       });
     } else if (showConfirmType === ActionType.Revert) {
       // 驳回

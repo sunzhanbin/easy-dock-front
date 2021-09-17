@@ -1,4 +1,4 @@
-import { memo, useCallback, useState, useMemo } from 'react';
+import { memo, useCallback, useState, useMemo, useEffect } from 'react';
 import { Form, Modal, Input } from 'antd';
 
 export enum ActionType {
@@ -6,6 +6,7 @@ export enum ActionType {
   Revert = 2, // 驳回
   Terminate = 3, // 终止
   Cancel = 4, // 取消操作
+  Revoke = 5, // 撤回操作
 }
 
 interface ConfirmModalProps {
@@ -19,7 +20,6 @@ function ComfirmModal(props: ConfirmModalProps) {
   const { onConfirm, onCanel, type, visble } = props;
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
-
   const handleConfirm = useCallback(async () => {
     if (onConfirm) {
       setLoading(true);
@@ -47,8 +47,18 @@ function ComfirmModal(props: ConfirmModalProps) {
       return '终止';
     }
 
+    if (type === ActionType.Revoke) {
+      return '撤回';
+    }
+
     return '' as never;
   }, [type]);
+
+  useEffect(() => {
+    if (!visble) {
+      form.resetFields();
+    }
+  }, [visble, form]);
 
   return (
     <Modal
