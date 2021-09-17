@@ -1,5 +1,5 @@
 import { memo, useContext, useMemo } from 'react';
-import { Form, Input, Dropdown, Menu, DropDownProps } from 'antd';
+import { Form, Input, Dropdown, Menu } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import DataContext from '../context';
 import styles from './index.module.scss';
@@ -10,7 +10,7 @@ interface FieldMapProps {
 
 function FieldMap(props: FieldMapProps) {
   const { name } = props;
-  const { fields, getPopupContainer } = useContext(DataContext)!;
+  const { fields } = useContext(DataContext)!;
   const options = useMemo(() => {
     return fields.map((item) => {
       return {
@@ -37,7 +37,7 @@ function FieldMap(props: FieldMapProps) {
       ]}
       trigger="onChange"
     >
-      <AutoSelector options={options} getPopupContainer={getPopupContainer} />
+      <AutoSelector options={options} />
     </Form.Item>
   );
 }
@@ -48,11 +48,10 @@ interface AutoSelectorProps {
   value?: string;
   onChange?(value: this['value']): void;
   options: { id: string | number; name: string }[];
-  getPopupContainer?: DropDownProps['getPopupContainer'];
 }
 
 export function AutoSelector(props: AutoSelectorProps) {
-  const { options, value, onChange, getPopupContainer } = props;
+  const { options, value, onChange } = props;
   const showValue = useMemo(() => {
     return options.find((item) => item.id === value)?.name || value;
   }, [options, value]);

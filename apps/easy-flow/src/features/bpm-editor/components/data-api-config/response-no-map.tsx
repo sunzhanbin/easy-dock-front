@@ -10,8 +10,8 @@ interface ResponseNoMapProps {
 
 function ResponseNoMap(props: ResponseNoMapProps) {
   const { label } = props;
-  const { name: parentName, detail, getPopupContainer } = useContext(DataContext)!;
-  const optionals = detail?.responses || [];
+  const { name: parentName, detail } = useContext(DataContext)!;
+  const optionals = useMemo(() => detail?.responses || [], [detail]);
   const name = useMemo(() => {
     return [...parentName, 'response'];
   }, [parentName]);
@@ -24,11 +24,7 @@ function ResponseNoMap(props: ResponseNoMapProps) {
       <div className={styles.subtitle}>{label}</div>
 
       <Form.Item name={[...name, 'name']}>
-        {optionals.length > 0 ? (
-          <AutoSelector options={options} getPopupContainer={getPopupContainer} />
-        ) : (
-          <Input placeholder="请输入" size="large" />
-        )}
+        {optionals.length > 0 ? <AutoSelector options={options} /> : <Input placeholder="请输入" size="large" />}
       </Form.Item>
     </>
   );

@@ -51,10 +51,20 @@ export type FlowInstance = {
   applyTime: number;
   state: NodeStatusType;
   endTime: number;
-  currentNodeId: string;
-  currentNodeName: string;
+  currentNodeId?: string;
+  currentNodeName?: string;
   processInstanceId: string;
-  currentProcessor: {
+  // 与currentNodeId互斥 我的发起时有值
+  currentNodeList?: {
+    currentNodeId: string;
+    currentNodeName: string;
+    currentProcessor: {
+      users?: User[];
+      depts?: Dept[];
+      roles?: Role[];
+    };
+  }[];
+  currentProcessor?: {
     users?: User[];
     depts?: Dept[];
     roles?: Role[];
