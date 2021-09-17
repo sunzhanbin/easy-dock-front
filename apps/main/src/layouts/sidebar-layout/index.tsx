@@ -10,6 +10,7 @@ import { AppSchema } from '@schema/app';
 import styles from './index.module.scss';
 
 const TaskCenter = React.lazy(() => import(/* webpackChunkName: "task-center" */ '@/routes/runtime/task-center'));
+const DataManage = React.lazy(() => import(/* webpackChunkName: "task-center" */ '@/routes/runtime/data-manage'));
 
 function SidebarLayout() {
   const dispatch = useDispatch();
@@ -63,6 +64,10 @@ function SidebarLayout() {
                 <Icon type="renwu" className={styles.icon}></Icon>
                 <div className={styles.text}>任务中心</div>
               </NavLink>
+              <NavLink to={`${matchedUrl}/process/data-manage`} className={styles.nav} activeClassName={styles.active}>
+                <Icon type="liuchengshujuguanli" className={styles.icon}></Icon>
+                <div className={styles.text}>流程数据管理</div>
+              </NavLink>
             </div>
           </div>
         )}
@@ -79,6 +84,7 @@ function SidebarLayout() {
             {
               <Suspense fallback={fallback}>
                 <Route path={ROUTES.APP_PROCESS} component={TaskCenter}></Route>
+                <Route path={ROUTES.APP_PROCESS_DATA_MANAGE} component={DataManage}></Route>
               </Suspense>
             }
           </div>
