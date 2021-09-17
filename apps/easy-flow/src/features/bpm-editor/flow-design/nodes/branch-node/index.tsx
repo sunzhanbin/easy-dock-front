@@ -6,7 +6,14 @@ import { BranchNode as BranchNodeType } from '@type/flow';
 import { Icon, PopoverConfirm } from '@common/components';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { delNode, addSubBranch, delSubBranch, setChoosedNode, formMetaSelector } from '../../flow-slice';
+import {
+  delNode,
+  addSubBranch,
+  delSubBranch,
+  setChoosedNode,
+  formMetaSelector,
+  flowDataSelector,
+} from '../../flow-slice';
 import AddNodeButton from '../../components/add-node-button';
 import { formatRuleValue } from '@utils';
 import styles from './index.module.scss';
@@ -28,6 +35,7 @@ type FormFieldMapType = { [key: string]: FormField };
 
 export const Branch = memo(function Branch(props: BranchProps) {
   const dispatch = useAppDispatch();
+  const { invalidNodesMap } = useAppSelector(flowDataSelector);
   const { data, parentNode, children } = props;
   const [showDeletePopover, setShowDeletePopover] = useState(false);
   const formMeta = useAppSelector(formMetaSelector);
@@ -72,13 +80,24 @@ export const Branch = memo(function Branch(props: BranchProps) {
     });
   }, [data.conditions]);
 
+  const hasValidCondition = useMemo(() => {
+    if (invalidNodesMap[data.id] && invalidNodesMap[data.id].errors.length > 0) {
+      return true;
+    }
+
+    return false;
+  }, [invalidNodesMap, data.id]);
+
   return (
     <div className={classnames(styles.branch)}>
       <span className={styles.line} />
 
       <div className={styles.main}>
         <div className={classnames(styles.content, showDeletePopover ? styles['show-del'] : '')}>
-          <div className={styles.conditions} onClick={handleBranchClick}>
+          <div
+            className={classnames(styles.conditions, hasValidCondition ? styles['invalid'] : '')}
+            onClick={handleBranchClick}
+          >
             {conditions.length === 0 ? (
               <div className={styles.or}>
                 <div className={styles.and}>所有数据都可进入该分支</div>

@@ -217,8 +217,29 @@ export function valid(data: AllNode[], validRes: ValidResultType) {
   data.forEach((node) => {
     if (node.type === NodeType.BranchNode) {
       node.branches.forEach((branch) => {
+        const errors: string[] = [];
+
+        branch.conditions.some((row) => {
+          return row.some((col) => {
+            if (!col.fieldName || !col.symbol || !col.value) {
+              errors.push('条件配置不合法');
+
+              return true;
+            }
+          });
+        });
+
+        if (errors.length) {
+          validRes[branch.id] = {
+            name: '子分支',
+            id: branch.id,
+            errors,
+          };
+        }
+
         valid(branch.nodes, validRes);
       });
+
       return;
     }
 
