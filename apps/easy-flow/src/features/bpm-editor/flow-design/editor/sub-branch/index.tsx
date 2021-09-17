@@ -7,6 +7,7 @@ import useMemoCallback from '@common/hooks/use-memo-callback';
 import Condition from '@/features/bpm-editor/components/condition';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { loadFieldDatasource } from '@utils/form';
+import useValidateForm from '../../hooks/use-validate-form';
 import { updateNode, formMetaSelector } from '../../flow-slice';
 
 type FormValuesType = {
@@ -51,6 +52,8 @@ function SubBranch(props: SubBranchProps) {
       conditions: branch.conditions,
     });
   }, [form, branch]);
+
+  useValidateForm<FormValuesType>(form, branch.id);
 
   return (
     <Form form={form} autoComplete="off" layout="vertical" onValuesChange={handleFormValuesChange}>

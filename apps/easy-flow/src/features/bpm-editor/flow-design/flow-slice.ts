@@ -14,6 +14,8 @@ import {
   Flow,
   FieldTemplate,
   RevertType,
+  AuthType,
+  FieldAuthsMap,
 } from '@type/flow';
 import { FormMeta } from '@type';
 import { Api } from '@type/api';
@@ -195,19 +197,63 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
       const deptIds: Set<number | string> = new Set();
       const roleIds: Set<number | string> = new Set();
 
+      let fieldsMap = fieldsTemplate.reduce((curr, prev) => {
+        curr[prev.id] = true;
+        return curr;
+      }, {} as { [key: string]: true });
+
       flowRecursion(flowData, (node) => {
-        if (node.type === NodeType.FillNode || node.type === NodeType.AuditNode || node.type === NodeType.CCNode) {
-          (node.correlationMemberConfig.members || []).forEach((member) => {
-            userIds.add(member);
-          });
-          (node.correlationMemberConfig.depts || []).forEach((dept) => {
-            deptIds.add(dept);
-          });
-          (node.correlationMemberConfig.roles || [])
-            .concat(node.correlationMemberConfig.dynamic?.roles || [])
-            .forEach((role) => {
-              roleIds.add(role);
+        if (
+          node.type === NodeType.FillNode ||
+          node.type === NodeType.AuditNode ||
+          node.type === NodeType.CCNode ||
+          node.type === NodeType.StartNode
+        ) {
+          if (node.type !== NodeType.StartNode) {
+            // 舍弃办理人动态值里的多余字段
+            node.correlationMemberConfig.dynamic = Object.assign({}, node.correlationMemberConfig.dynamic, {
+              fields: (node.correlationMemberConfig.dynamic?.fields || []).filter((field) => fieldsMap[field]),
             });
+
+            // 提取每个节点的人员
+            (node.correlationMemberConfig.members || []).forEach((member) => {
+              userIds.add(member);
+            });
+
+            // 提取每个节点中的部门
+            (node.correlationMemberConfig.depts || []).forEach((dept) => {
+              deptIds.add(dept);
+            });
+
+            // 提取每个节点中的角色
+            (node.correlationMemberConfig.roles || [])
+              .concat(node.correlationMemberConfig.dynamic?.roles || [])
+              .forEach((role) => {
+                roleIds.add(role);
+              });
+          }
+
+          const fieldsAuths: FieldAuthsMap = {};
+
+          // 舍弃冗余字段
+          fieldsTemplate.forEach((field) => {
+            if (node.fieldsAuths[field.id] !== undefined) {
+              fieldsAuths[field.id] = node.fieldsAuths[field.id];
+            } else {
+              fieldsAuths[field.id] = AuthType.View;
+            }
+          });
+
+          node.fieldsAuths = fieldsAuths;
+        } else if (node.type === NodeType.BranchNode) {
+          node.branches = node.branches.map((branch) => {
+            return {
+              ...branch,
+              conditions: branch.conditions.map((row) => {
+                return row.filter((col) => fieldsMap[col.fieldName]);
+              }),
+            };
+          });
         }
       });
 

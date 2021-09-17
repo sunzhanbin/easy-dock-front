@@ -131,6 +131,21 @@ $line-color: #e3e4e8;
           padding: 12px;
           border-radius: 3px;
 
+          &.invalid {
+            box-shadow: 0 0 0 4px rgba(#ff5568, 0.12);
+
+            &::after {
+              content: '';
+              position: absolute;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              border: 2px solid #ff5568;
+              border-radius: 3px;
+            }
+          }
+
           .or {
             background-color: rgba(#182743, 0.04);
 
