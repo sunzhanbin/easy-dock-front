@@ -432,7 +432,6 @@ export const loadFieldDatasource = async (
   config: SelectOptionItem,
   formDataList?: { name: string; value: any }[],
 ): Promise<any[]> => {
-  console.info(111);
   if (!config) {
     return Promise.resolve([]);
   }

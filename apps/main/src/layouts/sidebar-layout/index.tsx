@@ -20,7 +20,8 @@ function SidebarLayout() {
   const [appDetail, setAppDetail] = useState<AppSchema>();
   const [loading, setLoading] = useState(false);
   const showHeader = useMemo(() => {
-    return pathname.replace(ROUTES.APP_PROCESS.replace(':appId', appId), '').startsWith('/task-center');
+    const path = pathname.replace(ROUTES.APP_PROCESS.replace(':appId', appId), '');
+    return path.startsWith('/task-center') || path === '/data-manage';
   }, [pathname, appId]);
 
   useEffect(() => {

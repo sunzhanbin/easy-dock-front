@@ -5,7 +5,7 @@ const staticRoutes = {
   BPM_EDITOR: '/bpm-editor/:bpmId',
   TASK_CENTER: '/task-center/:appId',
   TASK_CENTER_WITH_NO_APPID: '/task-center',
-  PROCESS_DATA_MANAGE: '/process-data-manage',
+  PROCESS_DATA_MANAGE: '/data-manage',
   START_FLOW: '/start/flow/:subAppId',
   START_DETAIL: '/start/detail/:flowId',
   TASK_DETAIL: '/task/detail/:taskId',

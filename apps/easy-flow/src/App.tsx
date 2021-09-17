@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import { Switch, Route, useRouteMatch } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import { ROUTES } from './consts';
 import BpmEditor from './features/bpm-editor';
 import TaskDetail from './features/detail/task-detail';
@@ -10,7 +10,6 @@ import ProcessDataManage from './features/process-data-manage';
 import appConfig from '@/init';
 
 function App() {
-  const { url: basename } = useRouteMatch();
   return (
     <Switch>
       <Route path={ROUTES.BPM_EDITOR} component={BpmEditor}></Route>
