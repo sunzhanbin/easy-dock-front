@@ -51,7 +51,7 @@ function mapActionInfo(type: AuditRecordType) {
   if (type === AuditRecordType.BACK) {
     return {
       text: '撤回',
-      className: styles.success,
+      className: styles.revoke,
     };
   }
 

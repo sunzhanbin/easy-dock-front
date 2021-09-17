@@ -1,4 +1,4 @@
-import { forwardRef, memo, useEffect, useMemo, useState } from 'react';
+import { forwardRef, memo, useEffect, useState } from 'react';
 import { FormInstance } from 'antd';
 import classnames from 'classnames';
 import { runtimeAxios } from '@utils';
@@ -34,11 +34,6 @@ const Detail = forwardRef(function Detail(props: DetailProps, ref: React.Forward
   const { flow, form, type, className } = props;
   const [auditRecords, setAuditRecords] = useState<AuditRecordSchema[]>([]);
   const [datasource, setDatasource] = useState<Datasource>();
-  const [projectId, setProjectId] = useState();
-
-  const appId = useMemo<number>(() => {
-    return flow.instance.subapp.app.id;
-  }, [flow]);
 
   useEffect(() => {
     if (!flow) return;
@@ -60,29 +55,19 @@ const Detail = forwardRef(function Detail(props: DetailProps, ref: React.Forward
     });
   }, [flow, form]);
 
-  useEffect(() => {
-    if (!appId) {
-      return;
-    }
-    runtimeAxios.get(`/app/${appId}`).then((res) => {
-      const projectId = res.data?.project?.id;
-      setProjectId(projectId);
-    });
-  }, [appId]);
-
   return (
     <div className={classnames(styles.main, className)}>
       <div className={styles.content}>
         <FlowStatusBar flowIns={flow.instance} showCurrentProcessor={type === TaskDetailType.MyInitiation} />
         <div className={styles.form}>
           <div className={styles.title}>{flow.instance.subapp.name}</div>
-          {datasource && projectId && (
+          {datasource && (
             <FormEngine
               datasource={datasource}
               readonly={type !== TaskDetailType.MyTodo}
               ref={ref}
               data={form.meta}
-              projectId={projectId}
+              projectId={flow.instance.subapp.app.project.id}
               initialValue={form.value}
               fieldsAuths={flow.node.fieldsAuths}
             />

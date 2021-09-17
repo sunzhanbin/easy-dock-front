@@ -103,13 +103,15 @@ function StatusBar(props: StatusBarProps) {
 
     // 显示当前处理人
     if (showCurrentProcessor && flowIns.state !== NodeStatusType.Terminated) {
+      const currentNodesName = (flowIns.currentNodeList || []).map((item) => item.currentNodeName).join(',');
+
       return (
         <div className={styles.status}>
-          <Cell icon="dangqianjiedian" title={flowIns.currentNodeName} desc="当前节点" />
+          <Cell icon="dangqianjiedian" title={currentNodesName} desc="当前节点" />
           <Cell
             getContainer={getContainer}
             icon="dangqianchuliren"
-            title={formatAllMembers(flowIns.currentProcessor).join(',')}
+            title={formatAllMembers(flowIns).join(',')}
             desc="当前处理人"
           />
 
@@ -145,10 +147,31 @@ function StatusBar(props: StatusBarProps) {
 
 export default memo(StatusBar);
 
-function formatAllMembers(data: FlowInstance['currentProcessor']) {
-  const users = (data.users || []).map((user) => user.name);
-  const depts = (data.depts || []).map((dept) => dept.name);
-  const roles = (data.roles || []).map((role) => role.name);
+function formatAllMembers(data: FlowInstance) {
+  if (data.currentNodeList) {
+    const list = data.currentNodeList || [];
+
+    let userNames: string[] = [];
+    let deptNames: string[] = [];
+    let roleNames: string[] = [];
+
+    list.forEach((item) => {
+      const users = item.currentProcessor.users || [];
+      const depts = item.currentProcessor.depts || [];
+      const roles = item.currentProcessor.roles || [];
+
+      userNames = userNames.concat(users.map((user) => user.name));
+      deptNames = deptNames.concat(depts.map((dept) => dept.name));
+      roleNames = roleNames.concat(roles.map((role) => role.name));
+    });
+
+    return deptNames.concat(roleNames).concat(userNames);
+  }
+
+  const currentMembers = data.currentProcessor || {};
+  const users = (currentMembers.users || []).map((user) => user.name);
+  const depts = (currentMembers.depts || []).map((dept) => dept.name);
+  const roles = (currentMembers.roles || []).map((role) => role.name);
 
   return depts.concat(roles).concat(users);
 }

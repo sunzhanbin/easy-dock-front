@@ -75,6 +75,7 @@ function StartDetail() {
       remark,
     });
 
+    setShowConfirm(false);
     message.success('撤回成功');
 
     setTimeout(() => {

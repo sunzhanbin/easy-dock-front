@@ -1,3 +1,4 @@
+@import '@common/styles/var.scss';
 @import '@common/styles/mixin.scss';
 
 .container {
@@ -65,6 +66,11 @@
     &.warning {
       border-color: rgba(#ff9900, 0.3);
       color: #ff9900;
+    }
+
+    &.revoke {
+      border-color: rgba($primary-text-color, 0.5);
+      color: $caption-text-color;
     }
   }
 
