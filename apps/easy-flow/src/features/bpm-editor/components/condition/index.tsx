@@ -1,7 +1,6 @@
 import { memo, useCallback, useMemo } from 'react';
 import { Tooltip, Button, FormInstance } from 'antd';
 import classnames from 'classnames';
-// import RuleForm from '@/features/bpm-editor/components/rule-form';
 import FormList from './form-list';
 import { Icon } from '@common/components';
 import { fieldRule, FormField } from '@/type';
@@ -91,15 +90,6 @@ const Condition = ({ className, data, value, form, onChange, loadDataSource }: E
                 {ruleBlock.map((rule: fieldRule, ruleIndex: number) => {
                   return (
                     <div className={styles.rule} key={ruleIndex}>
-                      {/* <RuleForm
-                        rule={rule}
-                        components={components}
-                        className={styles.form}
-                        blockIndex={index}
-                        ruleIndex={ruleIndex}
-                        onChange={handleRuleChange}
-                        loadDataSource={loadDataSource}
-                      /> */}
                       <FormList
                         rule={rule}
                         form={form}

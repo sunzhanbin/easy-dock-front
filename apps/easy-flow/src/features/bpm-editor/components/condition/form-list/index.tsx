@@ -158,28 +158,26 @@ const FormList = ({
     onChange && onChange(blockIndex, ruleIndex, fieldRule);
   });
   const init = useMemoCallback(() => {
-    if (rule) {
-      const { fieldName, symbol, value, fieldType } = rule;
-      setFieldName(fieldName);
-      setSymbol(symbol);
-      setValue(value);
-      const values = form.getFieldsValue();
-      // 设置默认值
-      if (fieldName && values[blockIndex][ruleIndex]) {
-        const newValues = Object.assign({}, values[blockIndex], {
-          [ruleIndex]: { fieldRule: { fieldName, symbol, value } },
-        });
-        form.setFieldsValue({ [blockIndex]: newValues });
-      } else {
-        const newValues = Object.assign({}, values[blockIndex], {
-          [ruleIndex]: { fieldRule: {} },
-        });
-        form.setFieldsValue({ [blockIndex]: newValues });
-      }
-      if (fieldName) {
-        const type = fieldType;
-        setDataSource(fieldName, type);
-      }
+    const { fieldName, symbol, value, fieldType } = rule;
+    setFieldName(fieldName);
+    setSymbol(symbol);
+    setValue(value);
+    const values = form.getFieldsValue();
+    // 设置默认值
+    if (fieldName && values[blockIndex][ruleIndex]) {
+      const newValues = Object.assign({}, values[blockIndex], {
+        [ruleIndex]: { fieldRule: { fieldName, symbol, value } },
+      });
+      form.setFieldsValue({ [blockIndex]: newValues });
+    } else {
+      const newValues = Object.assign({}, values[blockIndex], {
+        [ruleIndex]: { fieldRule: {} },
+      });
+      form.setFieldsValue({ [blockIndex]: newValues });
+    }
+    if (fieldName) {
+      const type = fieldType;
+      setDataSource(fieldName, type);
     }
   });
 
@@ -188,8 +186,10 @@ const FormList = ({
   }, []);
 
   useEffect(() => {
-    init();
-  }, [init]);
+    if (rule) {
+      init();
+    }
+  }, [init, rule]);
   const renderSymbol = useMemoCallback(() => {
     const component = componentList.find((item) => item.fieldName === fieldName);
     const componentType = component && component.type;
