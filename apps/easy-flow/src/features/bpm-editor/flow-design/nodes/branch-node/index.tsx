@@ -107,11 +107,11 @@ export const Branch = memo(function Branch(props: BranchProps) {
                 return (
                   <div key={cIndex} className={styles.or}>
                     {condition.map((and, index) => {
-                      if (!formFieldsMap[and.fieldName]) {
+                      if (!formFieldsMap[and.fieldName as string]) {
                         return null;
                       }
 
-                      const { value, symbol, name } = formatRuleValue(and, formFieldsMap[and.fieldName]);
+                      const { value, symbol, name } = formatRuleValue(and, formFieldsMap[and.fieldName as string]);
 
                       return (
                         <div key={index} className={styles.and}>

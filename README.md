@@ -55,3 +55,17 @@ yarn start
 ### 给 npm-client 传递参数
 
 可以通过 `--` 后添加选项, 设置 npm cient 的参数。.
+
+### 开发过程中 Windows 端口被占用解决办法
+
+- 查看指定端口的占用情况
+
+  ```sh
+  netstat -aon|findstr "8082"
+  ```
+
+- 直接强制杀死指定端口(假设端口被进程号为 4136 的进程占用)
+
+  ```sh
+  taskkill /pid 4136 /t /f
+  ```

@@ -102,7 +102,7 @@ export type ErrorItem = {
 };
 
 export type fieldRule = {
-  fieldName: string;
+  fieldName: string | undefined;
   symbol?: string;
   fieldType?: string;
   value?: string | number | string[] | [number, number];

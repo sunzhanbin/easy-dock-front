@@ -250,7 +250,7 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
             return {
               ...branch,
               conditions: branch.conditions.map((row) => {
-                return row.filter((col) => fieldsMap[col.fieldName]);
+                return row.filter((col) => fieldsMap[col.fieldName as string]);
               }),
             };
           });

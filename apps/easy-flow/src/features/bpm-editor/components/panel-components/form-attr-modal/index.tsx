@@ -67,7 +67,6 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
 
   const handelOk = useCallback(() => {
     form.validateFields().then((rules) => {
-      console.info(rules, 'rules');
       onOk && onOk(rules, type, editIndex);
     });
   }, [form, type, editIndex, onOk]);
@@ -118,7 +117,7 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
                   </Select>
                 </Form.Item>
                 <Form.Item label="流转条件" name="ruleValue" className={styles.condition}>
-                  <Condition data={Object.values(byId)} loadDataSource={loadDataSource} form={form} name="ruleValue" />
+                  <Condition data={Object.values(byId)} loadDataSource={loadDataSource} name="ruleValue" />
                 </Form.Item>
                 <Form.Item
                   noStyle

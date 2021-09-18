@@ -67,7 +67,7 @@ const FormDetail = React.forwardRef(function FormDetail(
     const list = fieldRuleList
       .filter((item) => item)
       .flat(3)
-      .map((rule) => rule.fieldName);
+      .map((rule) => rule.fieldName as string);
     const set = new Set(list);
     return Array.from(set);
   }, [changeRuleList]);

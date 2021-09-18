@@ -10,7 +10,6 @@ import NumberRange from '@/features/bpm-editor/components/number-range';
 import TimesDatePicker from '@/features/bpm-editor/components/date-picker';
 import DateRange from '@/features/bpm-editor/components/date-range';
 import styles from './index.module.scss';
-import { FormInstance } from 'antd/es/form/Form';
 
 const { Option } = Select;
 
@@ -63,7 +62,6 @@ type RuleFormProps = {
   components: Array<any>;
   className?: string;
   rule: fieldRule;
-  form: FormInstance;
   name: string;
   blockIndex: number;
   ruleIndex: number;
@@ -74,7 +72,6 @@ const FormList = ({
   components,
   className,
   rule,
-  form,
   name,
   blockIndex,
   ruleIndex,
