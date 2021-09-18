@@ -82,14 +82,14 @@ export async function fetchDataSource(
           );
         }
       } else if (dataSource.type === 'interface') {
-        // const { apiConfig } = dataSource;
-        // if (apiConfig && formDataList) {
-        //   const name = (apiConfig.response as { name: string })?.name;
+        // const { apiconfig } = dataSource;
+        // if (apiconfig && formDataList) {
+        //   const name = (apiconfig.response as { name: string })?.name;
         //   const formValues = formDataList.filter((val) => val.value);
         //   if (name) {
         //     allPromises.push(
         //       runtimeAxios
-        //         .post('/common/doHttpJson', { jsonObject: apiConfig, formDataList: formValues })
+        //         .post('/common/doHttpJson', { jsonObject: apiconfig, formDataList: formValues })
         //         .then((res) => {
         //           const data = eval(`res.${name}`);
         //           let list: { key: string; value: string }[] = [];

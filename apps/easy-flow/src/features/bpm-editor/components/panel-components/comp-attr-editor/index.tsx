@@ -92,7 +92,7 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
     let formValues = { ...initValues };
     const dataSource = (formValues as SelectField).dataSource;
     if (dataSource && dataSource.type === 'interface') {
-      formValues = Object.assign({}, formValues, { apiConfig: dataSource.apiConfig || {} });
+      formValues = Object.assign({}, formValues, { apiconfig: dataSource.apiconfig || {} });
     }
     return formValues;
   }, [initValues]);
@@ -105,13 +105,13 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
     debounce(() => {
       let formValues = form.getFieldsValue();
       let { dataSource } = formValues;
-      const { apiConfig } = formValues;
-      if (apiConfig) {
+      const { apiconfig } = formValues;
+      if (apiconfig) {
         // 记录上一次的值
-        configRef.current = apiConfig;
+        configRef.current = apiconfig;
       }
       if (configRef.current && dataSource && dataSource.type === 'interface') {
-        dataSource = Object.assign({}, dataSource, { type: 'interface', apiConfig: configRef.current });
+        dataSource = Object.assign({}, dataSource, { type: 'interface', apiconfig: configRef.current });
         formValues = Object.assign({}, formValues, { dataSource });
       }
       onFinish(formValues);
@@ -130,7 +130,7 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
     let formValues = { ...initValues };
     const dataSource = (formValues as SelectField).dataSource;
     if (dataSource && dataSource.type === 'interface') {
-      formValues = Object.assign({}, formValues, { apiConfig: dataSource.apiConfig || {} });
+      formValues = Object.assign({}, formValues, { apiconfig: dataSource.apiconfig || {} });
     }
     form.setFieldsValue(formValues);
   }, [initValues, form]);

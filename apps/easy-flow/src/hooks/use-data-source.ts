@@ -35,15 +35,15 @@ export default function useDataSource({ dataSource, prevDataSource }: DataSource
           });
       }
     } else if (dataSource?.type === 'interface') {
-      // const { apiConfig } = dataSource;
+      // const { apiconfig } = dataSource;
       // let list: OptionItem[] = [];
-      // if (apiConfig && formDataList) {
-      //   const name = (apiConfig.response as { name: string })?.name;
+      // if (apiconfig && formDataList) {
+      //   const name = (apiconfig.response as { name: string })?.name;
       //   const formValues = formDataList.filter((val) => val.value);
       //   if (name) {
       //     setLoading(true);
       //     runtimeAxios
-      //       .post('/common/doHttpJson', { jsonObject: apiConfig, formDataList: formValues })
+      //       .post('/common/doHttpJson', { jsonObject: apiconfig, formDataList: formValues })
       //       .then((res) => {
       //         const data = eval(`res.${name}`);
       //         if (Array.isArray(data)) {

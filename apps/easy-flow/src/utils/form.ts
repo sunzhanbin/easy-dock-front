@@ -451,11 +451,11 @@ export const loadFieldDatasource = async (
     return Promise.resolve([]);
   } else if (config.type === 'interface') {
     // 接口数据 构建端拿不到入参,不需要调用接口
-    // const { apiConfig } = config;
-    // if (apiConfig && formDataList) {
-    //   const name = (apiConfig.response as { name: string })?.name;
+    // const { apiconfig } = config;
+    // if (apiconfig && formDataList) {
+    //   const name = (apiconfig.response as { name: string })?.name;
     //   if (name) {
-    //     const res = await runtimeAxios.post('/common/doHttpJson', { jsonObject: apiConfig, formDataList });
+    //     const res = await runtimeAxios.post('/common/doHttpJson', { jsonObject: apiconfig, formDataList });
     //     let list: OptionItem[] = [];
     //     const data = eval(`res.${name}`);
     //     if (Array.isArray(data)) {
