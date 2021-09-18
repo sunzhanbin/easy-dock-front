@@ -190,12 +190,10 @@ const ToDo: FC<{}> = () => {
         width: '15%',
         sortDirections: ['ascend' as 'ascend', 'descend' as 'descend', 'ascend' as 'ascend'],
         defaultSortOrder: 'descend' as 'descend',
+        sorter: true,
         render(_: string, record: TodoItem) {
           const { taskCreateTime } = record;
           return moment(taskCreateTime).format('YYYY-MM-DD HH:mm');
-        },
-        sorter(rowA: TodoItem, rowB: TodoItem) {
-          return rowA.startTime - rowB.startTime;
         },
       },
     ];
@@ -218,10 +216,12 @@ const ToDo: FC<{}> = () => {
   const handleTableChange = useCallback(
     (newPagination, filters, sorter) => {
       sorter.order === 'ascend' ? setSortDirection('ASC') : setSortDirection('DESC');
-      setPagination((pagination) => {
-        fetchData(newPagination);
-        return { ...pagination, ...newPagination };
-      });
+      setTimeout(() => {
+        setPagination((pagination) => {
+          fetchData(newPagination);
+          return { ...pagination, ...newPagination };
+        });
+      }, 0);
     },
     [fetchData],
   );

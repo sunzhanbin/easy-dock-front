@@ -144,12 +144,10 @@ const Copy: FC<{}> = () => {
         width: '15%',
         sortDirections: ['ascend' as 'ascend', 'descend' as 'descend', 'ascend' as 'ascend'],
         defaultSortOrder: 'descend' as 'descend',
+        sorter: true,
         render(_: string, record: CopyItem) {
           const { copyTime } = record;
           return <div className={styles.copyTime}>{copyTime ? getPassedTime(copyTime) : ''}</div>;
-        },
-        sorter(rowA: CopyItem, rowB: CopyItem) {
-          return rowA.copyTime - rowB.copyTime;
         },
       },
     ];
@@ -182,10 +180,12 @@ const Copy: FC<{}> = () => {
   );
   const handleTableChange = useMemoCallback((newPagination, filters, sorter) => {
     sorter.order === 'ascend' ? setSortDirection('ASC') : setSortDirection('DESC');
-    setPagination((pagination) => {
-      fetchData(newPagination);
-      return { ...pagination, ...newPagination };
-    });
+    setTimeout(() => {
+      setPagination((pagination) => {
+        fetchData(newPagination);
+        return { ...pagination, ...newPagination };
+      });
+    }, 0);
   });
   const fetchData = useMemoCallback(
     (pagination: Pagination = { pageSize: 10, current: 1, total: 0, showSizeChanger: true }) => {

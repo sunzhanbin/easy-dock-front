@@ -75,12 +75,10 @@ const Done: FC<{}> = () => {
         width: '20%',
         sortDirections: ['ascend' as 'ascend', 'descend' as 'descend', 'ascend' as 'ascend'],
         defaultSortOrder: 'descend' as 'descend',
+        sorter: true,
         render(_: string, record: DoneItem) {
           const { startTime } = record;
           return <div className={styles.startTime}>{getPassedTime(startTime)}</div>;
-        },
-        sorter(rowA: DoneItem, rowB: DoneItem) {
-          return rowA.startTime - rowB.startTime;
         },
       },
       {
@@ -200,10 +198,12 @@ const Done: FC<{}> = () => {
   const handleTableChange = useCallback(
     (newPagination, filters, sorter) => {
       sorter.order === 'ascend' ? setSortDirection('ASC') : setSortDirection('DESC');
-      setPagination((pagination) => {
-        fetchData(newPagination);
-        return { ...pagination, ...newPagination };
-      });
+      setTimeout(() => {
+        setPagination((pagination) => {
+          fetchData(newPagination);
+          return { ...pagination, ...newPagination };
+        });
+      }, 0);
     },
     [fetchData],
   );
