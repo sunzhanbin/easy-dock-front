@@ -221,11 +221,14 @@ export function valid(data: AllNode[], validRes: ValidResultType) {
 
         branch.conditions.some((row) => {
           return row.some((col) => {
-            if (!col.fieldName || !col.symbol || !col.value) {
-              errors.push('条件配置不合法');
+            for (let key in col) {
+              if (!col[key as keyof typeof col]) {
+                errors.push('条件配置不合法');
 
-              return true;
+                return true;
+              }
             }
+
             return false;
           });
         });

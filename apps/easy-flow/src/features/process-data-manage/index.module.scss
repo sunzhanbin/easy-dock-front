@@ -1,10 +1,27 @@
 .container {
+  padding: 24px 56px;
+
   .header {
     height: 34px;
+    margin-bottom: 24px;
     font-size: 24px;
     font-weight: bold;
     color: rgba(0, 0, 0, 0.85);
     line-height: 34px;
-    margin: 24px 54px;
+  }
+
+  .form {
+    margin-bottom: 24px;
+
+    .subapp-selector {
+      min-width: 120px;
+      max-width: 300px;
+    }
+
+    :global {
+      .ant-form-item {
+        line-height: 40px;
+      }
+    }
   }
 }

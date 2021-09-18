@@ -1,9 +1,9 @@
-enum SubAppType {
+export enum SubAppType {
   CANVAS = 1,
   FLOW = 2,
 }
 
-enum AppStatus {
+export enum AppStatus {
   ON = 1,
   OFF = -1,
 }
@@ -47,3 +47,10 @@ export enum TipType {
   Email = 3,
   Phone = 4,
 }
+
+export type SubappShort = {
+  id: number;
+  name: string;
+  type: SubAppType;
+  status: AppStatus;
+};
