@@ -124,12 +124,12 @@ export default function Scene(props: SceneProps) {
           <PopoverConfirm
             title="提示"
             key="switch-status"
-            content={`确认${data.status === 1 ? '关闭' : '启用'}所选应用吗?`}
+            content={`确认${data.status === 1 ? '停用' : '启用'}所选应用吗?`}
             onConfirm={handleStatusChange}
             getPopupContainer={getPopupContainer}
           >
             <div onClick={stopPropagation}>
-              <Switch checkedChildren="开启" unCheckedChildren="关闭" checked={data.status === 1} />
+              <Switch checkedChildren="启用" unCheckedChildren="停用" checked={data.status === 1} />
             </div>
           </PopoverConfirm>
         </div>

@@ -97,13 +97,15 @@ const Container = styled.div`
           }
         }
         .screen {
-          cursor: pointer;
+          cursor: not-allowed; //暂时禁用
           border: 1px solid rgba(24, 31, 67, 0.12);
           &:hover {
-            border: 1px solid rgba(24, 31, 67, 0.5);
+            /* border: 1px solid rgba(24, 31, 67, 0.5); */
+            border: 1px solid rgba(24, 31, 67, 0.12);
           }
           &.active {
-            border: 1px solid rgba(24, 31, 67, 0.5);
+            /* border: 1px solid rgba(24, 31, 67, 0.5); */
+            border: 1px solid rgba(24, 31, 67, 0.12);
           }
         }
       }
@@ -209,12 +211,7 @@ const AppModel: FC<{
                   <div className="desc">可配置表单、流程、列表</div>
                 </div>
               </div>
-              <div 
-                className={classNames('screen', selectedType === 'screen' ? 'active' : '')}
-                onClick={() => {
-                  setSelectedType('screen');
-                }}
-              >
+              <div className={classNames('screen', selectedType === 'screen' ? 'active' : '')}>
                 <img src={ScreenImage} alt="ScreenImage" className="image" />
                 <div className="text">
                   <div className="title">新建大屏子应用</div>

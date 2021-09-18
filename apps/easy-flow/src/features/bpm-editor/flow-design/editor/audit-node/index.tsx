@@ -132,11 +132,11 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
           <RevertCascader prevNodes={prevNodes}></RevertCascader>
         </Form.Item>
 
-        <Form.Item name={['btnConfigs', 'btnText', 'transfer']}>
+        {/* <Form.Item name={['btnConfigs', 'btnText', 'transfer']}>
           <ButtonEditor className={styles.editor} btnKey="transfer">
             <Button size="large">转办</Button>
           </ButtonEditor>
-        </Form.Item>
+        </Form.Item> */}
 
         <Form.Item name={['btnConfigs', 'btnText', 'terminate']}>
           <ButtonEditor className={styles.editor} btnKey="terminate">
