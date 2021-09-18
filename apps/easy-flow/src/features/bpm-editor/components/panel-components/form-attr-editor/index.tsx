@@ -98,13 +98,13 @@ const FormAttrEditor = () => {
               const condition = item!.formChangeRule!.fieldRule;
               const showComponentList = item!.formChangeRule!.showComponents || [];
               const hideComponentList = item!.formChangeRule!.hideComponents || [];
-              const showComponents = showComponentList.map((id) => {
-                const component = Object.values(byId).find((comp) => comp.id === id);
-                return component?.label || id;
+              const showComponents = showComponentList.map((fieldName) => {
+                const component = Object.values(byId).find((comp) => comp.fieldName === fieldName);
+                return component?.label || fieldName;
               });
-              const hideComponents = hideComponentList.map((id) => {
-                const component = Object.values(byId).find((comp) => comp.id === id);
-                return component?.label || id;
+              const hideComponents = hideComponentList.map((fieldName) => {
+                const component = Object.values(byId).find((comp) => comp.fieldName === fieldName);
+                return component?.label || fieldName;
               });
               if (!condition) {
                 return null;

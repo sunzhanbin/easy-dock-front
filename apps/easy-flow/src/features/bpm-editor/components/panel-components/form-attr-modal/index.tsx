@@ -27,13 +27,6 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
   const componentList = useMemo(() => {
     return Object.values(byId).map((item: FormField) => item) || [];
   }, [byId]);
-  const fieldNameToIdMap = useMemo<{ [k: string]: string }>(() => {
-    const map: { [k: string]: string } = {};
-    componentList.forEach((comp) => {
-      map[comp.fieldName] = comp.id;
-    });
-    return map;
-  }, [componentList]);
   const fields = useMemo<{ id: string; name: string }[]>(() => {
     return componentList
       .filter((com) => com.type !== 'DescText')
@@ -137,15 +130,13 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
                     const ruleValue: fieldRule[] = getFieldValue('ruleValue') || [];
                     const hideComponents = getFieldValue('hideComponents') || [];
                     // 规则中选中的组件fieldName列表
-                    const ruleComponentFieldIdList = ruleValue
-                      .flat(1)
-                      .map((item) => fieldNameToIdMap[item.fieldName as string]);
+                    const ruleComponentFieldIdList = ruleValue.flat(1).map((item) => item.fieldName);
                     const set = new Set(ruleComponentFieldIdList.concat(hideComponents));
                     const selectFieldIdList = Array.from(set);
                     // 显示控件的列表要排除规则中已有的组件列表和已选择的隐藏控件
                     let options = [...componentList];
-                    selectFieldIdList.forEach((fieldId) => {
-                      options = options.filter((option) => option.id !== fieldId);
+                    selectFieldIdList.forEach((fieldName) => {
+                      options = options.filter((option) => option.fieldName !== fieldName);
                     });
                     return (
                       <>
@@ -158,7 +149,7 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
                             getPopupContainer={getPopupContainer}
                           >
                             {options.map((option) => (
-                              <Option key={option.id} value={option.id!}>
+                              <Option key={option.fieldName} value={option.fieldName!}>
                                 {option.label}
                               </Option>
                             ))}
@@ -176,14 +167,13 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
                             const ruleValue: fieldRule[] = getFieldValue('ruleValue') || [];
                             // 规则中选中的组件fieldName列表
                             const ruleComponentFieldIdList =
-                              ruleValue && ruleValue.flat(1).map((item) => fieldNameToIdMap[item.fieldName as string]);
+                              ruleValue && ruleValue.flat(1).map((item) => item.fieldName);
                             const set = new Set(ruleComponentFieldIdList.concat(showComponents));
                             const selectFieldIdList = Array.from(set);
                             // 隐藏控件的列表要排除规则中已有的组件列表和已选择的显示控件
                             let options = [...componentList];
-                            console.info(options);
-                            selectFieldIdList.forEach((fieldId) => {
-                              options = options.filter((option) => option.id !== fieldId);
+                            selectFieldIdList.forEach((fieldName) => {
+                              options = options.filter((option) => option.fieldName !== fieldName);
                             });
                             return (
                               <Form.Item label="隐藏控件" name="hideComponents" className={styles.hideComponents}>
@@ -195,7 +185,7 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
                                   getPopupContainer={getPopupContainer}
                                 >
                                   {options.map((option) => (
-                                    <Option key={option.id} value={option.id!}>
+                                    <Option key={option.fieldName} value={option.fieldName!}>
                                       {option.label}
                                     </Option>
                                   ))}
