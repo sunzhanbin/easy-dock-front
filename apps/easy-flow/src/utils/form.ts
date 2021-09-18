@@ -333,7 +333,10 @@ function analysisOptionRule(symbol: string, value: string | string[], formValue:
 // 解析单个条件是否匹配
 export function analysisRule(rule: fieldRule, formValues: { [k in string]: any }): boolean {
   const { fieldName, fieldType = '', symbol, value } = rule;
-  const formValue = formValues[fieldName];
+  const formValue = fieldName && formValues[fieldName];
+  if (!symbol || !formValue) {
+    return true;
+  }
   // 文本类型
   if (fieldType === 'Input' || fieldType === 'Textarea') {
     return analysisTextRule(symbol, value as string | string[], formValue as string);

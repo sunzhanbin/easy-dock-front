@@ -9,13 +9,14 @@ import styles from './index.module.scss';
 interface EditProps {
   data: Array<FormField>;
   form: FormInstance;
+  name: string;
   className?: string;
   value?: fieldRule[][];
   onChange?: (value: fieldRule[][]) => void;
   loadDataSource?: (id: string) => Promise<{ key: string; value: string }[] | { data: { data: string[] } }>;
 }
 
-const Condition = ({ className, data, value, form, onChange, loadDataSource }: EditProps) => {
+const Condition = ({ className, data, value, form, name, onChange, loadDataSource }: EditProps) => {
   const ruleList = useMemo(() => {
     if (value && value.length > 0) {
       return value;
@@ -95,6 +96,7 @@ const Condition = ({ className, data, value, form, onChange, loadDataSource }: E
                         form={form}
                         components={components}
                         className={styles.form}
+                        name={name}
                         blockIndex={index}
                         ruleIndex={ruleIndex}
                         onChange={handleRuleChange}

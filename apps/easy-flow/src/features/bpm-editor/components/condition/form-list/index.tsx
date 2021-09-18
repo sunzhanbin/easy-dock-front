@@ -64,6 +64,7 @@ type RuleFormProps = {
   className?: string;
   rule: fieldRule;
   form: FormInstance;
+  name: string;
   blockIndex: number;
   ruleIndex: number;
   onChange?: (blockIndex: number, ruleIndex: number, rule: fieldRule) => void;
@@ -74,6 +75,7 @@ const FormList = ({
   className,
   rule,
   form,
+  name,
   blockIndex,
   ruleIndex,
   onChange,
@@ -84,9 +86,9 @@ const FormList = ({
   const [value, setValue] = useState<string | number | string[] | [number, number] | undefined>(undefined);
   const [optionList, setOptionList] = useState<{ key: string; value: string }[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const name = useMemo(() => {
-    return [blockIndex, ruleIndex, 'fieldRule'];
-  }, [blockIndex, ruleIndex]);
+  const nameList = useMemo(() => {
+    return [name, blockIndex, ruleIndex];
+  }, [blockIndex, ruleIndex, name]);
   const componentList = useMemo(() => {
     if (components && components?.length > 0) {
       const list = [...components];
@@ -130,32 +132,25 @@ const FormList = ({
     setFieldName(fieldName);
     setSymbol(undefined);
     setValue(undefined);
-    const values = form.getFieldsValue();
-    const newValues = Object.assign({}, values[blockIndex], {
-      [ruleIndex]: { fieldRule: { fieldName, symbol: undefined, value: undefined } },
-    });
-    form.setFieldsValue({ [blockIndex]: newValues });
     const component = componentList.find((item) => item.fieldName === fieldName);
     const fieldType = component && (component.type as string);
     setDataSource(fieldName, fieldType);
+    const fieldRule = {
+      fieldName: fieldName!,
+      fieldType: component?.type || rule.fieldType,
+    };
+    onChange && onChange(blockIndex, ruleIndex, fieldRule);
   });
   const changeSymbol = useMemoCallback((symbol) => {
     setSymbol(symbol);
     setValue(undefined);
-    const values = form.getFieldsValue();
-    const newValues = Object.assign({}, values[blockIndex], {
-      [ruleIndex]: { fieldRule: { symbol, value: undefined } },
-    });
-    form.setFieldsValue({ [blockIndex]: newValues });
-    if (symbol === 'null' || symbol === 'notNull') {
-      const selectComponent = componentList.find((item) => item.fieldName === fieldName);
-      const fieldRule = {
-        fieldName: fieldName!,
-        symbol: symbol!,
-        fieldType: rule.fieldType || selectComponent?.type,
-      };
-      onChange && onChange(blockIndex, ruleIndex, fieldRule);
-    }
+    const selectComponent = componentList.find((item) => item.fieldName === fieldName);
+    const fieldRule = {
+      fieldName: fieldName!,
+      symbol: symbol!,
+      fieldType: selectComponent?.type || rule.fieldType,
+    };
+    onChange && onChange(blockIndex, ruleIndex, fieldRule);
   });
   const changeValue = useMemoCallback((value) => {
     setValue(value);
@@ -164,7 +159,7 @@ const FormList = ({
       fieldName: fieldName!,
       symbol: symbol!,
       value: value!,
-      fieldType: rule.fieldType || selectComponent?.type,
+      fieldType: selectComponent?.type || rule.fieldType,
     };
     onChange && onChange(blockIndex, ruleIndex, fieldRule);
   });
@@ -173,19 +168,6 @@ const FormList = ({
     setFieldName(fieldName);
     setSymbol(symbol);
     setValue(value);
-    const values = form.getFieldsValue();
-    // 设置默认值
-    if (fieldName && values[blockIndex][ruleIndex]) {
-      const newValues = Object.assign({}, values[blockIndex], {
-        [ruleIndex]: { fieldRule: { fieldName, symbol, value } },
-      });
-      form.setFieldsValue({ [blockIndex]: newValues });
-    } else {
-      const newValues = Object.assign({}, values[blockIndex], {
-        [ruleIndex]: { fieldRule: {} },
-      });
-      form.setFieldsValue({ [blockIndex]: newValues });
-    }
     if (fieldName) {
       const type = fieldType;
       setDataSource(fieldName, type);
@@ -460,7 +442,7 @@ const FormList = ({
   });
   return (
     <Form.Item className={classnames(styles.form, className ? className : '')}>
-      <Form.List name={name}>
+      <Form.List name={nameList}>
         {() => {
           return (
             <>

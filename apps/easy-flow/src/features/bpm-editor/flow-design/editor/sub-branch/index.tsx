@@ -53,7 +53,7 @@ function SubBranch(props: SubBranchProps) {
   return (
     <Form form={form} autoComplete="off" layout="vertical" onValuesChange={handleFormValuesChange}>
       <Form.Item name="conditions" label="流转条件">
-        <Condition form={form} data={fields} loadDataSource={handleLoadDatasource}></Condition>
+        <Condition form={form} data={fields} name="conditions" loadDataSource={handleLoadDatasource}></Condition>
       </Form.Item>
     </Form>
   );
