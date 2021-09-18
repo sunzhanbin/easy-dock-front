@@ -1,7 +1,7 @@
 import { memo, useMemo, useState, useEffect } from 'react';
 import { Form, Select, Input, InputNumber } from 'antd';
 import classnames from 'classnames';
-import { DateField, fieldRule, FormField } from '@/type';
+import { DateField, fieldRule, FormField, SelectField } from '@/type';
 import { symbolMap, dynamicMap } from '@/utils';
 import { Icon, Loading } from '@common/components';
 import useMemoCallback from '@common/hooks/use-memo-callback';
@@ -98,6 +98,7 @@ const FormList = ({
             id: item.id!,
             type: item.type,
             format: (item as DateField).format,
+            sourceType: (item as SelectField).dataSource?.type || '',
             fieldName: item.fieldName,
           })) || []
       );
@@ -129,6 +130,11 @@ const FormList = ({
     setFieldName(fieldName);
     setSymbol(undefined);
     setValue(undefined);
+    const values = form.getFieldsValue();
+    const newValues = Object.assign({}, values[blockIndex], {
+      [ruleIndex]: { fieldRule: { fieldName, symbol: undefined, value: undefined } },
+    });
+    form.setFieldsValue({ [blockIndex]: newValues });
     const component = componentList.find((item) => item.fieldName === fieldName);
     const fieldType = component && (component.type as string);
     setDataSource(fieldName, fieldType);
@@ -136,6 +142,11 @@ const FormList = ({
   const changeSymbol = useMemoCallback((symbol) => {
     setSymbol(symbol);
     setValue(undefined);
+    const values = form.getFieldsValue();
+    const newValues = Object.assign({}, values[blockIndex], {
+      [ruleIndex]: { fieldRule: { symbol, value: undefined } },
+    });
+    form.setFieldsValue({ [blockIndex]: newValues });
     if (symbol === 'null' || symbol === 'notNull') {
       const selectComponent = componentList.find((item) => item.fieldName === fieldName);
       const fieldRule = {
@@ -367,6 +378,29 @@ const FormList = ({
       }
       if (symbol === 'equal' || symbol === 'unequal') {
         const mode: { mode: 'multiple' } | null = componentType === 'Checkbox' ? { mode: 'multiple' } : null;
+        const sourceType = component?.sourceType || '';
+        if (sourceType === 'interface' || sourceType === undefined) {
+          if (componentType === 'Checkbox') {
+            return (
+              <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: '请输入!' }]}>
+                <MultiText className={styles.value} value={value as string[]} onChange={changeValue} />
+              </Form.Item>
+            );
+          }
+          return (
+            <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: '请输入!' }]}>
+              <Input
+                placeholder="输入值"
+                size="large"
+                className={styles.value}
+                value={value as string}
+                onChange={(e) => {
+                  changeValue(e.target.value);
+                }}
+              />
+            </Form.Item>
+          );
+        }
         return (
           <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: '请选择!' }]}>
             <Select
@@ -389,6 +423,14 @@ const FormList = ({
         );
       }
       if (symbol === 'equalAnyOne' || symbol === 'unequalAnyOne') {
+        const sourceType = component?.sourceType || '';
+        if (sourceType === 'interface' || sourceType === undefined) {
+          return (
+            <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: '请输入!' }]}>
+              <MultiText className={styles.value} value={value as string[]} onChange={changeValue} />
+            </Form.Item>
+          );
+        }
         return (
           <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: '请选择!' }]}>
             <Select

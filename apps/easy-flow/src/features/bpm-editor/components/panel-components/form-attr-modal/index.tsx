@@ -7,7 +7,7 @@ import ResponseWithMap from '@/features/bpm-editor/components/data-api-config/re
 import styles from './index.module.scss';
 import { useAppSelector } from '@/app/hooks';
 import { componentPropsSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
-import { fieldRule, FormField, FormRuleItem, InputField, InputNumberField, SelectField } from '@/type';
+import { fieldRule, FormField, FormRuleItem, SelectField } from '@/type';
 import { loadFieldDatasource } from '@utils/form';
 
 type modalProps = {
@@ -60,12 +60,7 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
     (fieldName) => {
       const component = componentList.find((item) => item.fieldName === fieldName);
       const { dataSource } = component as SelectField;
-      const formDataList = componentList
-        .map((comp) => {
-          return { name: comp.fieldName, value: (comp as InputField | InputNumberField).defaultValue };
-        })
-        .filter((item) => item.value !== undefined);
-      return loadFieldDatasource(dataSource, formDataList);
+      return loadFieldDatasource(dataSource);
     },
     [componentList],
   );

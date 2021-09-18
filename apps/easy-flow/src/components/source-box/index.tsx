@@ -1,4 +1,4 @@
-import { AllComponentType, FormField, InputField, MoveConfig, RadioField, TConfigItem } from '@/type';
+import { AllComponentType, FormField, MoveConfig, RadioField, TConfigItem } from '@/type';
 import { Tooltip } from 'antd';
 import LabelContent from '../label-content';
 import { Icon, Loading } from '@common/components';
@@ -35,24 +35,7 @@ const SourceBox: FC<{
     sourceRef.current = dataSource;
   }, [dataSource]);
 
-  const formDataList: { name: string; value: any }[] = useMemo(() => {
-    const componentList = Object.values(formDesign.byId);
-    if (componentList.length > 0) {
-      return componentList.map((component) => ({
-        name: component.fieldName,
-        value: (component as InputField).defaultValue,
-      }));
-    }
-    return [];
-  }, [formDesign.byId]);
-
-  const [options, loading] = useDataSource({
-    selectId: selectedField,
-    prevDataSource: sourceRef.current,
-    id,
-    dataSource,
-    formDataList,
-  });
+  const [options, loading] = useDataSource({ prevDataSource: sourceRef.current, dataSource });
   // 获取组件源码
   const compSources = useLoadComponents(type as AllComponentType['type']) as Component;
   const propList = useMemo(() => {

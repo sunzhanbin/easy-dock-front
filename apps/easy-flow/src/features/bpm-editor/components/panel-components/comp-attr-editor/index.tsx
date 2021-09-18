@@ -115,7 +115,7 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
         formValues = Object.assign({}, formValues, { dataSource });
       }
       onFinish(formValues);
-    }, 500),
+    }, 66),
   );
 
   useEffect(() => {

@@ -1,5 +1,5 @@
 import { batchUpload, downloadFile as download } from '@/apis/file';
-import { DateField, fieldRule, FormField, OptionItem, SelectOptionItem } from '@/type';
+import { DateField, fieldRule, FormField, SelectOptionItem } from '@/type';
 import moment from 'moment';
 import { runtimeAxios } from './axios';
 
@@ -450,27 +450,27 @@ export const loadFieldDatasource = async (
 
     return Promise.resolve([]);
   } else if (config.type === 'interface') {
-    // 接口数据
-    const { apiConfig } = config;
-    if (apiConfig && formDataList) {
-      const name = (apiConfig.response as { name: string })?.name;
-      if (name) {
-        const res = await runtimeAxios.post('/common/doHttpJson', { jsonObject: apiConfig, formDataList });
-        let list: OptionItem[] = [];
-        const data = eval(`res.${name}`);
-        if (Array.isArray(data)) {
-          if (data.every((val) => typeof val === 'string')) {
-            // 字符串数组
-            list = data.map((val) => ({ key: val, value: val }));
-          } else if (data.every((val) => val.key && val.value)) {
-            // key-value对象数组
-            list = data.map((item) => ({ key: item.key, value: item.value }));
-          }
-        }
-        return list;
-      }
-      return Promise.resolve([]);
-    }
+    // 接口数据 构建端拿不到入参,不需要调用接口
+    // const { apiConfig } = config;
+    // if (apiConfig && formDataList) {
+    //   const name = (apiConfig.response as { name: string })?.name;
+    //   if (name) {
+    //     const res = await runtimeAxios.post('/common/doHttpJson', { jsonObject: apiConfig, formDataList });
+    //     let list: OptionItem[] = [];
+    //     const data = eval(`res.${name}`);
+    //     if (Array.isArray(data)) {
+    //       if (data.every((val) => typeof val === 'string')) {
+    //         // 字符串数组
+    //         list = data.map((val) => ({ key: val, value: val }));
+    //       } else if (data.every((val) => val.key && val.value)) {
+    //         // key-value对象数组
+    //         list = data.map((item) => ({ key: item.key, value: item.value }));
+    //       }
+    //     }
+    //     return list;
+    //   }
+    //   return Promise.resolve([]);
+    // }
   }
 
   return Promise.resolve([]);

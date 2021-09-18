@@ -10,7 +10,7 @@ export type DataSourceParams = {
   formDataList?: { name: string; value: any }[];
 };
 
-export default function useDataSource({ dataSource, prevDataSource, id, selectId, formDataList }: DataSourceParams) {
+export default function useDataSource({ dataSource, prevDataSource }: DataSourceParams) {
   const [data, setData] = useState<OptionItem[]>();
   const [loading, setLoading] = useState<boolean>(false);
   const loadData = useCallback(() => {
@@ -35,45 +35,39 @@ export default function useDataSource({ dataSource, prevDataSource, id, selectId
           });
       }
     } else if (dataSource?.type === 'interface') {
-      const { apiConfig } = dataSource;
-      let list: OptionItem[] = [];
-      if (apiConfig && formDataList) {
-        const name = (apiConfig.response as { name: string })?.name;
-        const formValues = formDataList.filter((val) => val.value);
-        if (name) {
-          setLoading(true);
-          runtimeAxios
-            .post('/common/doHttpJson', { jsonObject: apiConfig, formDataList: formValues })
-            .then((res) => {
-              const data = eval(`res.${name}`);
-              if (Array.isArray(data)) {
-                if (data.every((val) => typeof val === 'string')) {
-                  // 字符串数组
-                  list = data.map((val) => ({ key: val, value: val }));
-                } else if (data.every((val) => val.key && val.value)) {
-                  // key-value对象数组
-                  list = data.map((item) => ({ key: item.key, value: item.value }));
-                }
-                setData(list);
-              }
-            })
-            .finally(() => {
-              setLoading(false);
-            });
-        }
-      }
-      setData(list);
+      // const { apiConfig } = dataSource;
+      // let list: OptionItem[] = [];
+      // if (apiConfig && formDataList) {
+      //   const name = (apiConfig.response as { name: string })?.name;
+      //   const formValues = formDataList.filter((val) => val.value);
+      //   if (name) {
+      //     setLoading(true);
+      //     runtimeAxios
+      //       .post('/common/doHttpJson', { jsonObject: apiConfig, formDataList: formValues })
+      //       .then((res) => {
+      //         const data = eval(`res.${name}`);
+      //         if (Array.isArray(data)) {
+      //           if (data.every((val) => typeof val === 'string')) {
+      //             // 字符串数组
+      //             list = data.map((val) => ({ key: val, value: val }));
+      //           } else if (data.every((val) => val.key && val.value)) {
+      //             // key-value对象数组
+      //             list = data.map((item) => ({ key: item.key, value: item.value }));
+      //           }
+      //           setData(list);
+      //         }
+      //       })
+      //       .finally(() => {
+      //         setLoading(false);
+      //       });
+      //   }
+      // }
+      // setData(list);
+      setData([]);
     }
-  }, [dataSource, formDataList, prevDataSource]);
-  useEffect(() => {
-    // 当前组件改变才更新数据源
-    if (id === selectId) {
-      loadData();
-    }
-  }, [loadData, id, selectId]);
-  // 初始化请求数据源
+  }, [dataSource, prevDataSource]);
   useEffect(() => {
     loadData();
-  }, []);
+  }, [loadData]);
   return [data, loading];
 }

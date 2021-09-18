@@ -82,31 +82,36 @@ export async function fetchDataSource(
           );
         }
       } else if (dataSource.type === 'interface') {
-        const { apiConfig } = dataSource;
-        if (apiConfig && formDataList) {
-          const name = (apiConfig.response as { name: string })?.name;
-          const formValues = formDataList.filter((val) => val.value);
-          if (name) {
-            allPromises.push(
-              runtimeAxios
-                .post('/common/doHttpJson', { jsonObject: apiConfig, formDataList: formValues })
-                .then((res) => {
-                  const data = eval(`res.${name}`);
-                  let list: { key: string; value: string }[] = [];
-                  if (Array.isArray(data)) {
-                    if (data.every((val) => typeof val === 'string')) {
-                      // 字符串数组
-                      list = data.map((val) => ({ key: val, value: val }));
-                    } else if (data.every((val) => val.key && val.value)) {
-                      // key-value对象数组
-                      list = data.map((item) => ({ key: item.key, value: item.value }));
-                    }
-                  }
-                  source[key] = list;
-                }),
-            );
-          }
-        }
+        // const { apiConfig } = dataSource;
+        // if (apiConfig && formDataList) {
+        //   const name = (apiConfig.response as { name: string })?.name;
+        //   const formValues = formDataList.filter((val) => val.value);
+        //   if (name) {
+        //     allPromises.push(
+        //       runtimeAxios
+        //         .post('/common/doHttpJson', { jsonObject: apiConfig, formDataList: formValues })
+        //         .then((res) => {
+        //           const data = eval(`res.${name}`);
+        //           let list: { key: string; value: string }[] = [];
+        //           if (Array.isArray(data)) {
+        //             if (data.every((val) => typeof val === 'string')) {
+        //               // 字符串数组
+        //               list = data.map((val) => ({ key: val, value: val }));
+        //             } else if (data.every((val) => val.key && val.value)) {
+        //               // key-value对象数组
+        //               list = data.map((item) => ({ key: item.key, value: item.value }));
+        //             }
+        //           }
+        //           source[key] = list;
+        //         }),
+        //     );
+        //   }
+        // }
+        allPromises.push(
+          Promise.resolve(1).then(() => {
+            source[key] = [];
+          }),
+        );
       }
     }
   });

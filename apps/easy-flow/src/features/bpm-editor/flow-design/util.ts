@@ -226,6 +226,7 @@ export function valid(data: AllNode[], validRes: ValidResultType) {
 
               return true;
             }
+            return false;
           });
         });
 
