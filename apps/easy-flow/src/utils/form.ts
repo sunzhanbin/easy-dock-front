@@ -246,20 +246,20 @@ function getDynamicTimeRange(dynamic: string): [number, number] {
       endTime = moment(lastYear).endOf('day').format('x');
       break;
     case 'last7days':
-      startDay = moment().subtract(7, 'day').format('YYYY-MM-DD');
-      endDay = moment().subtract(1, 'day').format('YYYY-MM-DD');
+      startDay = moment().subtract(6, 'day').format('YYYY-MM-DD');
+      endDay = moment().subtract(0, 'day').format('YYYY-MM-DD');
       startTime = moment(startDay).startOf('day').format('x');
       endTime = moment(endDay).endOf('day').format('x');
       break;
     case 'last30days':
-      startDay = moment().subtract(30, 'day').format('YYYY-MM-DD');
-      endDay = moment().subtract(1, 'day').format('YYYY-MM-DD');
+      startDay = moment().subtract(29, 'day').format('YYYY-MM-DD');
+      endDay = moment().subtract(0, 'day').format('YYYY-MM-DD');
       startTime = moment(startDay).startOf('day').format('x');
       endTime = moment(endDay).endOf('day').format('x');
       break;
     case 'last90days':
-      startDay = moment().subtract(90, 'day').format('YYYY-MM-DD');
-      endDay = moment().subtract(1, 'day').format('YYYY-MM-DD');
+      startDay = moment().subtract(89, 'day').format('YYYY-MM-DD');
+      endDay = moment().subtract(0, 'day').format('YYYY-MM-DD');
       startTime = moment(startDay).startOf('day').format('x');
       endTime = moment(endDay).endOf('day').format('x');
       break;
