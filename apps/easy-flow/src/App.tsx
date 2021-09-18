@@ -16,11 +16,15 @@ function App() {
       <Route path={ROUTES.START_FLOW} component={StartFlow}></Route>
       <Route path={ROUTES.START_DETAIL} component={StartDetail}></Route>
       <Route path={ROUTES.TASK_DETAIL} component={TaskDetail}></Route>
-      <Route path={ROUTES.PROCESS_DATA_MANAGE} component={ProcessDataManage}></Route>
       <Route
         // 从主应用传appid时用没有id参数的这种路由
         path={appConfig.appId ? ROUTES.TASK_CENTER_WITH_NO_APPID : ROUTES.TASK_CENTER}
         component={TaskCenter}
+      ></Route>
+      <Route
+        // 从主应用传appid时用没有id参数的这种路由
+        path={appConfig.appId ? ROUTES.PROCESS_DATA_MANAGE_WITH_NO_APPID : ROUTES.PROCESS_DATA_MANAGE}
+        component={ProcessDataManage}
       ></Route>
     </Switch>
   );
