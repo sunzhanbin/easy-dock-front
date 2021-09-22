@@ -419,15 +419,21 @@ export async function uploadFile(values: any) {
   return Object.assign({}, values, fileIdMap);
 }
 
+export function exportFile(res: any, name?: string) {
+  const blob = new Blob([res]);
+  const urlObject = window.URL || window.webkitURL || window;
+  const save_link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a') as HTMLAnchorElement;
+
+  save_link.href = urlObject.createObjectURL(blob);
+  if (name) {
+    save_link.download = name;
+  }
+  save_link.click();
+}
+
 export function downloadFile(id: string, name: string) {
   download(id).then((res) => {
-    const blob = new Blob([res as any]);
-    const urlObject = window.URL || window.webkitURL || window;
-    const save_link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a') as HTMLAnchorElement;
-
-    save_link.href = urlObject.createObjectURL(blob);
-    save_link.download = name;
-    save_link.click();
+    exportFile(res, name);
   });
 }
 

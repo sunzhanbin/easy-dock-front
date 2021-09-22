@@ -10,7 +10,7 @@ import { Text } from '@common/components';
 import Tag from '@components/status-tag';
 import useAppId from '@/hooks/use-app-id';
 import { FieldType } from '@type/form';
-import { runtimeAxios } from '@utils';
+import { exportFile, runtimeAxios } from '@utils';
 import { Icon } from '@common/components';
 import styles from './index.module.scss';
 
@@ -56,6 +56,7 @@ const DataManage = () => {
       type: FieldType;
     };
   }>({});
+  const componentListRef = useRef<{ fieldName: string; label: string; type: string }[]>([]);
   const membersCacheRef = useRef<{
     [id: string]: { name: string; avatar?: string; id: number | string };
   }>({});
@@ -175,6 +176,11 @@ const DataManage = () => {
             type: item.type,
           };
         });
+        componentListRef.current = (fieldResponse.data || []).map((item) => ({
+          fieldName: item.field,
+          label: item.name,
+          type: item.type,
+        }));
       }
 
       const data: TableDataBase[] = listResponse.data.data || [];
@@ -343,7 +349,20 @@ const DataManage = () => {
 
   const handleRefresh = useMemoCallback(debounce(fetchDatasource, 200));
   const handleExport = useMemoCallback(() => {
-    console.info('export');
+    const { subappId, stateList, table } = form.getFieldsValue();
+    const { sortDirection } = table;
+    const params = {
+      componentList: componentListRef.current,
+      managerRequest: {
+        subappId,
+        stateList,
+        sortDirection,
+      },
+    };
+    const selectSubApp = subapps.find((subapp) => (subapp.id === subappId));
+    runtimeAxios.post('/task/processDataManager/export', params).then((res) => {
+      exportFile(res, `${selectSubApp?.name || 'file'}.xlsx`);
+    });
   });
 
   return (
