@@ -41,7 +41,6 @@
         align-items: center;
         padding: 13px 24px;
         color: rgba(#181f43, 0.95);
-        background-color: #fff;
 
         .icon {
           flex-shrink: 0;
@@ -58,6 +57,7 @@
         &.active {
           border-right: 5px solid $primary-color;
           color: $primary-color;
+          background-color: #fff;
 
           .icon {
             color: inherit;
