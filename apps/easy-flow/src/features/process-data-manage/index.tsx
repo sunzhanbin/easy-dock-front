@@ -359,9 +359,10 @@ const DataManage = () => {
         sortDirection,
       },
     };
-    const selectSubApp = subapps.find((subapp) => (subapp.id === subappId));
-    runtimeAxios.post('/task/processDataManager/export', params).then((res) => {
-      exportFile(res, `${selectSubApp?.name || 'file'}.xlsx`);
+    const selectSubApp = subapps.find((subapp) => subapp.id === subappId);
+    runtimeAxios.post('/task/processDataManager/export', params, { responseType: 'blob' }).then((res) => {
+      const type = (res as any).type;
+      exportFile(res, `${selectSubApp?.name || 'file'}.xlsx`, type);
     });
   });
 

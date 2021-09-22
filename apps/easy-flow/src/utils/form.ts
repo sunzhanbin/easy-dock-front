@@ -419,8 +419,9 @@ export async function uploadFile(values: any) {
   return Object.assign({}, values, fileIdMap);
 }
 
-export function exportFile(res: any, name?: string) {
-  const blob = new Blob([res]);
+export function exportFile(res: any, name: string, type?: string) {
+  const blobConfig = type ? { type } : {};
+  const blob = new Blob([res], blobConfig);
   const urlObject = window.URL || window.webkitURL || window;
   const save_link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a') as HTMLAnchorElement;
 
