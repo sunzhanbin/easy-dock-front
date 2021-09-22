@@ -2,15 +2,13 @@ import React, { useEffect, useState, Suspense, useMemo } from 'react';
 import { Route, useParams, NavLink, useRouteMatch, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import UserComponent from '@components/header/user';
+import MicroApp from '@components/micro-app';
 import { Loading, Icon } from '@common/components';
 import { getUserInfo } from '@/store/user';
 import { runtimeAxios, getSceneImageUrl } from '@utils';
-import { ROUTES } from '@consts';
+import { ROUTES, envs } from '@consts';
 import { AppSchema } from '@schema/app';
 import styles from './index.module.scss';
-
-const TaskCenter = React.lazy(() => import(/* webpackChunkName: "task-center" */ '@/routes/runtime/task-center'));
-const DataManage = React.lazy(() => import(/* webpackChunkName: "task-center" */ '@/routes/runtime/data-manage'));
 
 function SidebarLayout() {
   const dispatch = useDispatch();
@@ -41,10 +39,14 @@ function SidebarLayout() {
     dispatch(getUserInfo());
   }, [dispatch]);
 
+  const microExtra = useMemo(() => ({ appId }), [appId]);
   const fallback = useMemo(() => <Loading />, []);
   const matchedUrl = useMemo(() => {
     return matched.url.replace(/\/+$/, '');
   }, [matched.url]);
+  const microBasename = useMemo(() => {
+    return ROUTES.APP_PROCESS.replace(':appId', appId);
+  }, [appId]);
 
   return (
     <>
@@ -84,8 +86,15 @@ function SidebarLayout() {
 
             {
               <Suspense fallback={fallback}>
-                <Route path={ROUTES.APP_PROCESS} component={TaskCenter}></Route>
-                <Route path={ROUTES.APP_PROCESS_DATA_MANAGE} component={DataManage}></Route>
+                <Route path={ROUTES.APP_PROCESS}>
+                  <MicroApp
+                    className={styles.micro}
+                    entry={envs.EASY_FLOW_FRONTEND_ENTRY}
+                    name="easy-flow"
+                    basename={microBasename}
+                    extra={microExtra}
+                  />
+                </Route>
               </Suspense>
             }
           </div>
