@@ -111,7 +111,7 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
         configRef.current = apiconfig;
       }
       if (configRef.current && dataSource && dataSource.type === 'interface') {
-        dataSource = Object.assign({}, dataSource, { type: 'interface', apiconfig: configRef.current });
+        dataSource = Object.assign({}, dataSource, { type: 'interface', apiConfig: configRef.current });
         formValues = Object.assign({}, formValues, { dataSource });
       }
       onFinish(formValues);

@@ -49,8 +49,12 @@ const Detail = forwardRef(function Detail(props: DetailProps, ref: React.Forward
 
   useEffect(() => {
     if (!flow || !form) return;
-
-    loadDatasource(form.meta, flow.node.fieldsAuths, flow.instance.subapp.version.id).then((values) => {
+    loadDatasource(
+      form.meta,
+      flow.node.fieldsAuths,
+      flow.instance.subapp.version.id,
+      flow.instance.processInstanceId,
+    ).then((values) => {
       setDatasource(values);
     });
   }, [flow, form]);

@@ -31,16 +31,22 @@ export async function loadFlowData(
   ]);
 }
 
-export async function loadDatasource(formMeta: FormMeta, fieldsAuths: FieldAuthsMap, versionId: number) {
+export async function loadDatasource(
+  formMeta: FormMeta,
+  fieldsAuths: FieldAuthsMap,
+  versionId: number,
+  processInstanceId?: string,
+) {
   const allPromises: Promise<void>[] = [];
   const datasource: Datasource = {};
-
   formMeta.components.forEach((comp) => {
     // 有字段权限才去加载
     if (comp.config.dataSource && fieldsAuths && fieldsAuths[comp.config.fieldName] !== AuthType.Denied) {
       allPromises.push(
         runtimeAxios
-          .get<{ data: Datasource[string] }>(`/form/version/${versionId}/form/${comp.config.fieldName}/data`)
+          .post<{ data: Datasource[string] }>(`/form/version/${versionId}/form/${comp.config.fieldName}/data`, {
+            processInstanceId,
+          })
           .then(({ data }) => {
             datasource[comp.config.fieldName] = data;
           }),
