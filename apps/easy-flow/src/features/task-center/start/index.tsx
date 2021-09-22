@@ -1,7 +1,7 @@
-import { memo, FC, useState, useMemo, useCallback, useEffect } from 'react';
-import { Form, Input, Select, Button, DatePicker, Table } from 'antd';
+import { memo, FC, useState, useMemo, useCallback, useEffect, useRef } from 'react';
+import { Form, Input, Select, Button, DatePicker, Table, Popover } from 'antd';
 import styles from './index.module.scss';
-import { Pagination, StartItem } from '../type';
+import { currentNodeItem, Pagination, StartItem } from '../type';
 import { getStayTime, getPassedTime, runtimeAxios } from '@/utils';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
@@ -63,6 +63,7 @@ const Start: FC<{}> = () => {
   const [form] = Form.useForm();
   const history = useHistory();
   const appId = useAppId();
+  const tableRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [sortDirection, setSortDirection] = useState<'DESC' | 'ASC'>('DESC');
   const [pagination, setPagination] = useState<Pagination>({
@@ -72,6 +73,18 @@ const Start: FC<{}> = () => {
     showSizeChanger: true,
   });
   const [data, setData] = useState<StartItem[]>([]);
+  const renderContent = useMemoCallback((nodes: currentNodeItem[]) => {
+    return (
+      <div className="nodes">
+        {nodes.map(({ currentNode, currentNodeStartTime, currentNodeId }) => (
+          <div className="node" key={currentNodeId}>
+            <div className="name">{currentNode}</div>
+            <div className="stay">{currentNodeStartTime && getStayTime(currentNodeStartTime)}</div>
+          </div>
+        ))}
+      </div>
+    );
+  });
   const columns = useMemo(() => {
     return [
       {
@@ -117,6 +130,32 @@ const Start: FC<{}> = () => {
         dataIndex: 'currentNode',
         key: 'currentNode',
         width: '15%',
+        render(_: string, record: StartItem) {
+          const { currentNodes } = record;
+          if (!Array.isArray(currentNodes) || currentNodes.length === 0) {
+            return null;
+          }
+          const currentNode = currentNodes[0].currentNode;
+          if (currentNodes.length === 1) {
+            return <div className={styles.currentNode}>{currentNode}</div>;
+          }
+          if (currentNodes.length > 1) {
+            return (
+              <div className={styles.currentNode}>
+                <span className={styles.text}>{currentNode}</span>
+                <Popover
+                  placement="bottom"
+                  trigger="click"
+                  title={null}
+                  content={renderContent(currentNodes)}
+                  getPopupContainer={() => tableRef.current as HTMLDivElement}
+                >
+                  <Icon type="gengduo" className={styles.icon} />
+                </Popover>
+              </div>
+            );
+          }
+        },
       },
       {
         title: '节点停留',
@@ -124,8 +163,24 @@ const Start: FC<{}> = () => {
         key: 'stayTime',
         width: '15%',
         render(_: string, record: StartItem) {
-          const { currentNodeStartTime } = record;
-          return <div className={styles.stayTime}>{currentNodeStartTime ? getStayTime(currentNodeStartTime) : ''}</div>;
+          const { currentNodes } = record;
+          if (!Array.isArray(currentNodes) || currentNodes.length === 0) {
+            return null;
+          }
+          const startTime = currentNodes[0].currentNodeStartTime;
+          if (currentNodes.length === 1) {
+            return <div className={styles.stayTime}>{startTime && getStayTime(startTime)}</div>;
+          }
+          if (currentNodes.length > 1) {
+            return (
+              <div className={styles.stayTime}>
+                <span>{startTime && getStayTime(startTime)}</span>
+                <Popover placement="bottom" trigger="click" title={null} content={renderContent(currentNodes)}>
+                  <Icon type="gengduo" className={styles.icon} />
+                </Popover>
+              </div>
+            );
+          }
         },
       },
       {
@@ -274,7 +329,7 @@ const Start: FC<{}> = () => {
           </div>
         </div>
       </div>
-      <div className={styles.content}>
+      <div className={styles.content} ref={tableRef}>
         <Table
           loading={loading}
           pagination={pagination}

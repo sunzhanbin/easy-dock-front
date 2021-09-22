@@ -26,10 +26,17 @@ export type CopyItem = {
   state: 1 | 2 | 3 | 4 | 5;
 };
 
+export type currentNodeItem = {
+  currentNode: string;
+  currentNodeId: string;
+  currentNodeStartTime: number | null;
+};
+
 export type StartItem = {
   currentNode: string;
   currentNodeId: string;
   currentNodeStartTime: number | null;
+  currentNodes: currentNodeItem[];
   endTime: number;
   processInstanceId: string;
   processName: string;
