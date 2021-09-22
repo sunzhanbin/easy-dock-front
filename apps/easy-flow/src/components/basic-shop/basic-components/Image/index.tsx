@@ -20,7 +20,7 @@ const ImageComponent = (
     onChange?: (value: ImageValue | string) => void;
   },
 ) => {
-  const { maxCount = 8, colSpace = '4', value, disabled, onChange } = props;
+  const { maxCount = 10, colSpace = '4', value, disabled, onChange } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [previewVisible, setPreviewVisible] = useState<boolean>(false);

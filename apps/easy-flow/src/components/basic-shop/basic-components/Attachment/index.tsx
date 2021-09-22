@@ -15,7 +15,7 @@ type FileValue = {
 const Attachment = (
   props: UploadProps & { colSpace?: string; value?: FileValue; onChange?: (value: FileValue) => void },
 ) => {
-  const { maxCount = 8, colSpace = '4', value, disabled, onChange } = props;
+  const { maxCount = 5, colSpace = '4', value, disabled, onChange } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   // 校验文件类型和大小

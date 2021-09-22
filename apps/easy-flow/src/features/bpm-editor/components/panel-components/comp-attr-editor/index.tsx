@@ -39,7 +39,7 @@ const options = [
   { label: '1', value: '4' },
 ];
 
-const componentMap: { [k in string]: (props: { [k in string]: any }) => ReactNode } = {
+const componentMap: { [k: string]: (props: { [k: string]: any }) => ReactNode } = {
   Input: (props) => <Input placeholder={props.placeholder} size="large" />,
   Textarea: (props) => <Input.TextArea placeholder={props.placeholder} rows={4} size="large" />,
   Select: (props) => (
@@ -57,7 +57,15 @@ const componentMap: { [k in string]: (props: { [k in string]: any }) => ReactNod
   Switch: () => <Switch />,
   SelectOptionList: (props) => <SelectOptionList id={props.componentId} />,
   SelectDefaultOption: (props) => <SelectDefaultOption id={props.componentId} />,
-  InputNumber: (props) => <InputNumber size="large" className="input_number" placeholder={props.placeholder} />,
+  InputNumber: (props) => (
+    <InputNumber
+      size="large"
+      className="input_number"
+      min={props.min}
+      max={props.max}
+      placeholder={props.placeholder}
+    />
+  ),
   DefaultDate: (props) => <DefaultDate id={props.componentId} />,
   Editor: () => <Editor />,
 };
@@ -146,8 +154,8 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
         onFinish={onFinish}
         onValuesChange={handleChange}
       >
-        {config.map(({ key, label, type, range, placeholder, required, requiredMessage, rules }) => {
-          const props = { placeholder, range, label, componentId };
+        {config.map(({ key, label, type, range, placeholder, required, requiredMessage, rules, max, min }) => {
+          const props = { placeholder, range, label, componentId, max, min };
           const component = componentMap[type](props);
           return (
             <Fragment key={key}>

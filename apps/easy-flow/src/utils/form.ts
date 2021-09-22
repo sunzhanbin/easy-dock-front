@@ -404,7 +404,7 @@ export async function uploadFile(values: any) {
     }
   });
   if (files.length > 0) {
-    const res = await batchUpload({ maxUploadNum: files.length, files: files.map((file) => file.originFileObj) });
+    const res = await batchUpload({ files: files.map((file) => file.originFileObj) });
     const list = [...res.data];
     Object.keys(fileListMap).forEach((key) => {
       const oldValue = values[key];

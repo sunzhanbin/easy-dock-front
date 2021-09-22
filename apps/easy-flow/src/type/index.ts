@@ -18,6 +18,8 @@ export type SchemaConfigItem = {
   direction?: 'vertical' | 'horizontal';
   range?: rangeItem[];
   isProps: boolean;
+  max?: number;
+  min?: number;
 };
 
 export type rangeItem = {
