@@ -237,7 +237,7 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
 
           // 舍弃冗余字段
           fieldsTemplate.forEach((field) => {
-            if (node.fieldsAuths[field.id] !== undefined) {
+            if (node.fieldsAuths && node.fieldsAuths[field.id] !== undefined) {
               fieldsAuths[field.id] = node.fieldsAuths[field.id];
             } else {
               fieldsAuths[field.id] = AuthType.View;
