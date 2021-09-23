@@ -49,14 +49,8 @@ const DataManage = () => {
   const [loading, setLoading] = useState(true);
   const [form] = Form.useForm<FormValue>();
   const containerRef = useRef<HTMLDivElement>(null);
+  const [fields, setFields] = useState<{ name: string; field: string; type: FieldType; defaultValue: string }[]>([]);
   const prevActiveSubappId = useRef<number>();
-  const fieldsMapRef = useRef<{
-    [fieldname: string]: {
-      name: string;
-      type: FieldType;
-    };
-  }>({});
-  const componentListRef = useRef<{ fieldName: string; label: string; type: string }[]>([]);
   const membersCacheRef = useRef<{
     [id: string]: { name: string; avatar?: string; id: number | string };
   }>({});
@@ -122,15 +116,6 @@ const DataManage = () => {
           return moment(data.startTime).format('YYYY-MM-DD HH:MM');
         },
       },
-      {
-        width: 80,
-        title: '操作',
-        key: 'action',
-        fixed: 'right',
-        render() {
-          return <div>操作</div>;
-        },
-      },
     ];
   }, []);
 
@@ -148,8 +133,7 @@ const DataManage = () => {
       if (!prevActiveSubappId.current || prevActiveSubappId.current !== others.subappId) {
         // 同步当前subapp的id
         prevActiveSubappId.current = others.subappId;
-        fieldsMapRef.current = {};
-        fieldsPromise = runtimeAxios.get<{ data: { name: string; field: string; type: FieldType }[] }>(
+        fieldsPromise = runtimeAxios.get<{ data: { name: string; field: string; label: string; type: FieldType }[] }>(
           `/form/subapp/${others.subappId}/all/components`,
           { baseURL: baseServiceUrl },
         );
@@ -169,35 +153,99 @@ const DataManage = () => {
         fieldsPromise || Promise.resolve(null),
       ]);
 
+      let currentFields = fields;
+
       if (fieldResponse) {
-        (fieldResponse.data || []).forEach((item) => {
-          fieldsMapRef.current[item.field] = {
-            name: item.name,
-            type: item.type,
+        currentFields = (fieldResponse.data || [])
+          .filter((field) => {
+            return field.type !== 'Attachment' && field.type !== 'DescText' && field.type !== 'Image';
+          })
+          .map((item) => {
+            return {
+              field: item.field,
+              name: item.name,
+              type: item.type,
+              defaultValue: '',
+            };
+          });
+
+        const dynamicColumns: TableProps<TableDataBase>['columns'] = currentFields.map((field) => {
+          let tableKey = `formData.${field.field}`;
+          let tableColumn: typeof baseColumns[number] = {
+            key: tableKey,
+            title: field.name,
+            dataIndex: tableKey,
+            width: 150,
           };
+
+          if (field.type === 'Member') {
+            tableColumn.render = (_: string, data: TableDataBase) => {
+              const member = data.formData[field.field] || field.defaultValue;
+              if (!member) return null;
+
+              let text;
+
+              if (Array.isArray(member)) {
+                text = member.map((id) => membersCacheRef.current[id].name).join(',');
+              } else {
+                text = membersCacheRef.current[member].name;
+              }
+
+              return <Text text={String(text)} />;
+            };
+          } else if (field.type === 'Date') {
+            tableColumn.render = (_: string, data: TableDataBase) => {
+              const date = data.formData[field.field] || field.defaultValue || '';
+
+              tableColumn.width = 180;
+
+              if (Array.isArray(date)) {
+                tableColumn.width = 360;
+
+                return date.map((ts) => moment(ts).format('YYYY-MM-DD HH:mm:ss')).join('至');
+              }
+
+              return moment(date).format('YYYY-MM-DD HH:mm:ss');
+            };
+          } else {
+            tableColumn.render = (_: string, data: TableDataBase) => {
+              const value = data.formData[field.field] || field.defaultValue || '';
+              let text;
+
+              if (Array.isArray(value)) {
+                text = value.join(',');
+              } else {
+                text = value;
+              }
+
+              return <Text text={String(text)} />;
+            };
+          }
+          return tableColumn;
         });
-        componentListRef.current = (fieldResponse.data || []).map((item) => ({
-          fieldName: item.field,
-          label: item.name,
-          type: item.type,
-        }));
+
+        if (dynamicColumns.length) {
+          setTableColumns(() => {
+            return baseColumns.concat(dynamicColumns);
+          });
+        }
+
+        setFields(currentFields);
       }
 
       const data: TableDataBase[] = listResponse.data.data || [];
       // 搜集人员字段的值方便后面拉取人员列表
       const ids = new Set<number | string>();
-      const dynamicColumns: TableProps<TableDataBase>['columns'] = [];
-      const keyMap: { [key: string]: boolean } = {};
+      const fieldsMap = currentFields.reduce(
+        (curr, next) => ((curr[next.field] = next), curr),
+        {} as { [fieldname: string]: typeof fields[number] },
+      );
 
       data.forEach((item) => {
         Object.keys(item.formData).forEach((key) => {
-          const field = fieldsMapRef.current[key];
+          const field = fieldsMap[key];
 
-          if (!field || field.type === 'Attachment' || field.type === 'DescText' || field.type === 'Image') {
-            return;
-          }
-
-          let tableKey = `formData.${key}`;
+          if (!field) return;
 
           if (field.type === 'Member') {
             const mValue = item.formData[key];
@@ -214,61 +262,6 @@ const DataManage = () => {
               }
             }
           }
-
-          if (keyMap[tableKey]) return;
-
-          keyMap[tableKey] = true;
-
-          let tableColumn: typeof baseColumns[number] = {
-            key: tableKey,
-            title: field.name,
-            dataIndex: tableKey,
-            width: 150,
-          };
-
-          if (field.type === 'Member') {
-            tableColumn.render = (_: string, data: TableDataBase) => {
-              const member = data.formData[key];
-              let text;
-
-              if (Array.isArray(member)) {
-                text = member.map((id) => membersCacheRef.current[id].name).join(',');
-              } else {
-                text = membersCacheRef.current[member].name;
-              }
-
-              return <Text text={String(text)} />;
-            };
-          } else if (field.type === 'Date') {
-            tableColumn.render = (_: string, data: TableDataBase) => {
-              const date = data.formData[key];
-
-              tableColumn.width = 180;
-
-              if (Array.isArray(date)) {
-                tableColumn.width = 360;
-
-                return date.map((ts) => moment(ts).format('YYYY-MM-DD HH:mm:ss')).join('至');
-              }
-
-              return moment(date).format('YYYY-MM-DD HH:mm:ss');
-            };
-          } else {
-            tableColumn.render = (_: string, data: TableDataBase) => {
-              const value = data.formData[key];
-              let text;
-
-              if (Array.isArray(value)) {
-                text = value.join(',');
-              } else {
-                text = value;
-              }
-
-              return <Text text={String(text)} />;
-            };
-          }
-
-          dynamicColumns.push(tableColumn);
         });
       });
 
@@ -289,12 +282,6 @@ const DataManage = () => {
       }
 
       setDataSource(data);
-
-      if (dynamicColumns.length) {
-        setTableColumns(() => {
-          return baseColumns.slice(0, -1).concat(dynamicColumns).concat(baseColumns.slice(-1));
-        });
-      }
 
       form.setFieldsValue({
         table: {
@@ -331,6 +318,7 @@ const DataManage = () => {
   useEffect(() => {
     if (subapps.length) {
       form.setFieldsValue({ subappId: subapps[0].id });
+
       fetchDatasource();
     }
   }, [subapps, fetchDatasource]);
@@ -352,7 +340,7 @@ const DataManage = () => {
     const { subappId, stateList, table } = form.getFieldsValue();
     const { sortDirection } = table;
     const params = {
-      componentList: componentListRef.current,
+      componentList: fields.map((field) => ({ fieldName: field.field, label: field.name, type: field.type })),
       managerRequest: {
         subappId,
         stateList,
