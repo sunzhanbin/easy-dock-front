@@ -1,6 +1,8 @@
 @import '@common/styles/mixin.scss';
 
 .container {
+  position: relative;
+  z-index: 1000;
   display: inline-block;
   padding: 0;
   // border-bottom: 1px solid rgba(24, 31, 67, 0.12);
