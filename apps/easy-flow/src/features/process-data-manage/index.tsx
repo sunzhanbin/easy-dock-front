@@ -1,7 +1,7 @@
 import { memo, useState, useEffect, useRef, useMemo } from 'react';
 import moment from 'moment';
 import { debounce } from 'lodash';
-import { Select, Form, Checkbox, Table, Tooltip } from 'antd';
+import { Select, Form, Checkbox, Table, Tooltip, message } from 'antd';
 import type { TablePaginationConfig, TableProps } from 'antd/lib/table';
 import { SorterResult } from 'antd/lib/table/interface';
 import { SubappShort, AppStatus, SubAppType } from '@type/subapp';
@@ -300,7 +300,7 @@ const DataManage = () => {
     setLoading(true);
 
     runtimeAxios
-      .get<{ data: SubappShort[] }>(`/subapp/${appId}/list/all`, {
+      .get<{ data: SubappShort[] }>(`/subapp/${appId}/list/all?all=true`, {
         baseURL: baseServiceUrl,
       })
       .then(({ data }) => {
@@ -338,7 +338,10 @@ const DataManage = () => {
   const handleRefresh = useMemoCallback(debounce(fetchDatasource, 200));
   const handleExport = useMemoCallback(() => {
     const { subappId, stateList, table } = form.getFieldsValue();
-    const { sortDirection } = table;
+    const { sortDirection, total } = table;
+    if (total > 10000) {
+      message.info('当前数据多余10000条,只能导出10000条数据!');
+    }
     const params = {
       componentList: fields.map((field) => ({ fieldName: field.field, label: field.name, type: field.type })),
       managerRequest: {
