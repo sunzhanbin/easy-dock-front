@@ -133,10 +133,9 @@ const DataManage = () => {
       if (!prevActiveSubappId.current || prevActiveSubappId.current !== others.subappId) {
         // 同步当前subapp的id
         prevActiveSubappId.current = others.subappId;
-        fieldsPromise = runtimeAxios.get<{ data: { name: string; field: string; label: string; type: FieldType }[] }>(
-          `/form/subapp/${others.subappId}/all/components`,
-          { baseURL: baseServiceUrl },
-        );
+        fieldsPromise = runtimeAxios.get<{ data: typeof fields }>(`/form/subapp/${others.subappId}/all/components`, {
+          baseURL: baseServiceUrl,
+        });
       }
 
       const [listResponse, fieldResponse] = await Promise.all([
@@ -156,18 +155,9 @@ const DataManage = () => {
       let currentFields = fields;
 
       if (fieldResponse) {
-        currentFields = (fieldResponse.data || [])
-          .filter((field) => {
-            return field.type !== 'Attachment' && field.type !== 'DescText' && field.type !== 'Image';
-          })
-          .map((item) => {
-            return {
-              field: item.field,
-              name: item.name,
-              type: item.type,
-              defaultValue: '',
-            };
-          });
+        currentFields = (fieldResponse.data || []).filter((field) => {
+          return field.type !== 'Attachment' && field.type !== 'DescText' && field.type !== 'Image';
+        });
 
         const dynamicColumns: TableProps<TableDataBase>['columns'] = currentFields.map((field) => {
           let tableKey = `formData.${field.field}`;
@@ -198,6 +188,8 @@ const DataManage = () => {
               const date = data.formData[field.field] || field.defaultValue || '';
 
               tableColumn.width = 180;
+
+              if (!date) return null;
 
               if (Array.isArray(date)) {
                 tableColumn.width = 360;
@@ -233,7 +225,8 @@ const DataManage = () => {
         setFields(currentFields);
       }
 
-      const data: TableDataBase[] = listResponse.data.data || [];
+      const data: TableDataBase[] = listResponse.data?.data || [];
+
       // 搜集人员字段的值方便后面拉取人员列表
       const ids = new Set<number | string>();
       const fieldsMap = currentFields.reduce(
@@ -286,10 +279,12 @@ const DataManage = () => {
       form.setFieldsValue({
         table: {
           ...formValues.table,
-          total: listResponse.data.recordTotal,
+          total: listResponse.data?.recordTotal || 0,
         },
       });
-    } catch {
+    } catch (e) {
+      console.log(e);
+
       prevActiveSubappId.current = undefined;
     } finally {
       setLoading(false);
