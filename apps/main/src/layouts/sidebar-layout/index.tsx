@@ -7,7 +7,7 @@ import { Loading, Icon } from '@common/components';
 import { getUserInfo } from '@/store/user';
 import { runtimeAxios, getSceneImageUrl } from '@utils';
 import { ROUTES, envs } from '@consts';
-import { AppSchema } from '@schema/app';
+import { AppSchema, AuthEnum } from '@schema/app';
 import styles from './index.module.scss';
 
 function SidebarLayout() {
@@ -17,6 +17,7 @@ function SidebarLayout() {
   const { pathname } = useLocation();
   const [appDetail, setAppDetail] = useState<AppSchema>();
   const [loading, setLoading] = useState(false);
+  const [showDataManage, setShowDataManage] = useState<boolean>(false);
   const showHeader = useMemo(() => {
     const path = pathname.replace(ROUTES.APP_PROCESS.replace(':appId', appId), '');
     return path.startsWith('/task-center') || path === '/data-manage';
@@ -28,7 +29,11 @@ function SidebarLayout() {
     runtimeAxios
       .get<{ data: AppSchema }>(`/app/${appId}`)
       .then(({ data }) => {
+        const { power } = data;
         setAppDetail(data);
+        setShowDataManage(() => {
+          return (power & AuthEnum.DATA) === AuthEnum.DATA;
+        });
       })
       .finally(() => {
         setLoading(false);
@@ -67,10 +72,16 @@ function SidebarLayout() {
                 <Icon type="renwu" className={styles.icon}></Icon>
                 <div className={styles.text}>任务中心</div>
               </NavLink>
-              <NavLink to={`${matchedUrl}/process/data-manage`} className={styles.nav} activeClassName={styles.active}>
-                <Icon type="liuchengshujuguanli" className={styles.icon}></Icon>
-                <div className={styles.text}>流程数据管理</div>
-              </NavLink>
+              {showDataManage && (
+                <NavLink
+                  to={`${matchedUrl}/process/data-manage`}
+                  className={styles.nav}
+                  activeClassName={styles.active}
+                >
+                  <Icon type="liuchengshujuguanli" className={styles.icon}></Icon>
+                  <div className={styles.text}>流程数据管理</div>
+                </NavLink>
+              )}
             </div>
           </div>
         )}

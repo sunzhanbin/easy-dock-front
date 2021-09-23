@@ -7,6 +7,7 @@ export type AppSchema = {
   remark: string;
   status: 1 | -1;
   createTime: number;
+  power: number;
 };
 
 export enum RoleEnum {
