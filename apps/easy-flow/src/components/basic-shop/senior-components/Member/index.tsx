@@ -15,7 +15,7 @@ const Member = (
     projectid: number;
   },
 ) => {
-  const { defaultValue, multiple, showSearch, projectid, onChange } = props;
+  const { defaultValue, multiple, value, showSearch, projectid, onChange } = props;
   const [memberList, setMemberList] = useState([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [memberTotal, setMemberTotal] = useState<number>(0);
@@ -28,19 +28,20 @@ const Member = (
       showSearch: showSearch as boolean,
       placeholder: '请选择',
       suffixIcon: <Icon type="xiala" />,
+      value: Number(value),
       onChange: onChange as Function,
     };
     if (multiple) {
       prop.mode = 'multiple';
     }
     if (defaultValue) {
-      prop.defaultValue = defaultValue as string;
+      prop.defaultValue = Number(value);
     }
     const result = Object.assign({}, props, prop);
     delete result.fieldName;
     delete result.colSpace;
     return result;
-  }, [defaultValue, multiple, showSearch, props, onChange]);
+  }, [defaultValue, value, multiple, showSearch, props, onChange]);
 
   const fetchMembers = useMemoCallback(async (pageNum: number, keyword: string) => {
     if (projectid && !loading) {
