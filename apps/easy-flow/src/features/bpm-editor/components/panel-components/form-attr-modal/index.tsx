@@ -1,5 +1,5 @@
 import { memo, useCallback, useMemo } from 'react';
-import { Modal, Form, Select } from 'antd';
+import { Modal, Form, Select, message } from 'antd';
 import { Icon } from '@common/components';
 import Condition from '@/features/bpm-editor/components/condition';
 import DataApiConfig from '@/features/bpm-editor/components/data-api-config';
@@ -67,7 +67,25 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
 
   const handelOk = useCallback(() => {
     form.validateFields().then((rules) => {
-      onOk && onOk(rules, type, editIndex);
+      const { hideComponents = [], showComponents = [], ruleValue = [], mode } = rules;
+      if (mode === 1) {
+        const fieldNameList = hideComponents.concat(showComponents);
+        const nameList = ruleValue
+          .filter((item: fieldRule[][][]) => item)
+          .flat(3)
+          .map((item: fieldRule) => item.fieldName);
+        const intersection = fieldNameList.filter((val: string) => {
+          return nameList.indexOf(val) > -1;
+        });
+        // 显示控件和隐藏控件中包含了条件中关联的控件
+        if (intersection.length > 0) {
+          message.error('条件关联的控件中包含了显示隐藏的控件');
+          return;
+        }
+        onOk && onOk(rules, type, editIndex);
+      } else {
+        onOk && onOk(rules, type, editIndex);
+      }
     });
   }, [form, type, editIndex, onOk]);
   const getPopupContainer = useMemo(() => {
