@@ -145,7 +145,7 @@ const DataManage = () => {
           let tableKey = `formData.${field.field}`;
           let tableColumn: typeof baseColumns[number] = {
             key: tableKey,
-            title: <Text className={styles['dynamic-title']} text={field.name} />,
+            title: <Text className={styles['dynamic-cell']} text={field.name} />,
             dataIndex: tableKey,
             width: 150,
           };
@@ -163,7 +163,7 @@ const DataManage = () => {
                 text = membersCacheRef.current[member].name;
               }
 
-              return <Text text={String(text)} />;
+              return <Text className={styles['dynamic-cell']} text={String(text)} />;
             };
           } else if (field.type === 'Date') {
             tableColumn.render = (_: string, data: TableDataBase) => {
@@ -192,9 +192,10 @@ const DataManage = () => {
                 text = value;
               }
 
-              return <Text text={String(text)} />;
+              return <Text className={styles['dynamic-cell']} text={String(text)} />;
             };
           }
+
           return tableColumn;
         });
 
@@ -304,7 +305,6 @@ const DataManage = () => {
   const handleFormValueChange = useMemoCallback(debounce(fetchDatasource, 200));
   const formatValueFromTable = useMemo(() => {
     return ((pagination: TablePaginationConfig, _, sorter: SorterResult<TableDataBase>) => {
-      debugger;
       return {
         pageSize: pagination.pageSize,
         current: pagination.current,

@@ -42,8 +42,15 @@ function Text(props: TextProps) {
     setShowTooltip(false);
   }, []);
 
-  const wraperNode = useMemo(() => {
-    return (
+  return (
+    <Tooltip
+      title={children || text}
+      visible={showTooltip}
+      zIndex={zIndex}
+      placement={placement}
+      getTooltipContainer={getTooltipContainer}
+      destroyTooltipOnHide
+    >
       <div
         ref={containerRef}
         className={classnames(styles.container, className)}
@@ -52,25 +59,8 @@ function Text(props: TextProps) {
       >
         {children || text}
       </div>
-    );
-  }, [children, text, handleMouseEnter, handleMouseLeave, className]);
-
-  if (showTooltip) {
-    return (
-      <Tooltip
-        title={children || text}
-        visible
-        zIndex={zIndex}
-        placement={placement}
-        getTooltipContainer={getTooltipContainer}
-        destroyTooltipOnHide
-      >
-        {wraperNode}
-      </Tooltip>
-    );
-  }
-
-  return <>{wraperNode}</>;
+    </Tooltip>
+  );
 }
 
 export default React.memo(Text);
