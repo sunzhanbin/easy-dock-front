@@ -197,6 +197,7 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
       const deptIds: Set<number | string> = new Set();
       const roleIds: Set<number | string> = new Set();
 
+      let hasAutoNode = false;
       let fieldsMap = fieldsTemplate.reduce((curr, prev) => {
         curr[prev.id] = true;
         return curr;
@@ -254,8 +255,14 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
               }),
             };
           });
+        } else if (node.type === NodeType.AutoNode && !hasAutoNode) {
+          hasAutoNode = true;
         }
       });
+
+      if (hasAutoNode) {
+        dispatch(loadApis());
+      }
 
       // 这样设计为了避免用户更新完头像或者名称后不在节点中更新的问题
       const userResponse = await runtimeAxios.post('/user/query/owner', {
@@ -382,11 +389,17 @@ export const addNode = createAsyncThunk<void, { prevId: string; type: AddableNod
   'flow/create-node',
   ({ prevId, type }, { getState, dispatch }) => {
     let tmpNode;
+    const { flow } = getState();
 
     if (type === NodeType.BranchNode) {
       tmpNode = createNode(type);
     } else if (type === NodeType.AutoNode) {
       tmpNode = createNode(type, '自动节点');
+
+      // 如果添加了自动节点判断下服务编排里的接口有没有被加载进来
+      if (flow.apis.length === 0) {
+        dispatch(loadApis());
+      }
     } else {
       if (type === NodeType.AuditNode) {
         tmpNode = createNode(type, '审批节点');
@@ -398,7 +411,7 @@ export const addNode = createAsyncThunk<void, { prevId: string; type: AddableNod
         throw Error('传入类型不正确');
       }
 
-      tmpNode.fieldsAuths = formatFieldsAuths(getState().flow.fieldsTemplate);
+      tmpNode.fieldsAuths = formatFieldsAuths(flow.fieldsTemplate);
     }
 
     // 给新节点设置初始字段权限
