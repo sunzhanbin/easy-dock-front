@@ -7,7 +7,6 @@ import { SorterResult } from 'antd/lib/table/interface';
 import { SubappShort, AppStatus, SubAppType } from '@type/subapp';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { Text } from '@common/components';
-import Tag from '@components/status-tag';
 import useAppId from '@/hooks/use-app-id';
 import { FieldType } from '@type/form';
 import { exportFile, runtimeAxios } from '@utils';
@@ -51,12 +50,12 @@ const DataManage = () => {
   const [form] = Form.useForm<FormValue>();
   const containerRef = useRef<HTMLDivElement>(null);
   const [fields, setFields] = useState<{ name: string; field: string; type: FieldType; defaultValue: string }[]>([]);
-  const prevActiveSubappId = useRef<number>();
+  const shouldReFetchFormFields = useRef<boolean>(true);
   const membersCacheRef = useRef<{
     [id: string]: { name: string; avatar?: string; id: number | string };
   }>({});
   const [dataSource, setDataSource] = useState<any[]>();
-  const formInititalValue: Partial<FormValue> = useMemo(() => {
+  const formInititalValue: Omit<FormValue, 'subappId'> = useMemo(() => {
     return {
       stateList: [1, 2, 3, 4, 5],
       table: {
@@ -112,9 +111,8 @@ const DataManage = () => {
       let fieldsPromise;
 
       // 判断是否需要重新拉取表单字段
-      if (!prevActiveSubappId.current || prevActiveSubappId.current !== others.subappId) {
+      if (shouldReFetchFormFields.current) {
         // 同步当前subapp的id
-        prevActiveSubappId.current = others.subappId;
         fieldsPromise = runtimeAxios.get<{ data: typeof fields }>(`/form/subapp/${others.subappId}/all/components`, {
           baseURL: baseServiceUrl,
         });
@@ -137,6 +135,7 @@ const DataManage = () => {
       let currentFields = fields;
 
       if (fieldResponse) {
+        shouldReFetchFormFields.current = false;
         currentFields = (fieldResponse.data || []).filter((field) => {
           return field.type !== 'Attachment' && field.type !== 'DescText' && field.type !== 'Image';
         });
@@ -268,7 +267,7 @@ const DataManage = () => {
     } catch (e) {
       console.log(e);
 
-      prevActiveSubappId.current = undefined;
+      shouldReFetchFormFields.current = true;
       setDataSource([]);
     } finally {
       setLoading(false);
@@ -302,7 +301,7 @@ const DataManage = () => {
     }
   }, [subapps, fetchDatasource]);
 
-  const handleFormValueChange = useMemoCallback(debounce(fetchDatasource, 200));
+  const handleFormValueChange = useMemoCallback(debounce(fetchDatasource, 300));
   const formatValueFromTable = useMemo(() => {
     return ((pagination: TablePaginationConfig, _, sorter: SorterResult<TableDataBase>) => {
       return {
@@ -336,6 +335,12 @@ const DataManage = () => {
     });
   });
 
+  const handleSubappChange = useMemoCallback(() => {
+    shouldReFetchFormFields.current = true;
+
+    form.setFieldsValue(formInititalValue);
+  });
+
   return (
     <div className={styles.container} ref={containerRef}>
       <div className={styles.header}>流程数据管理</div>
@@ -366,6 +371,7 @@ const DataManage = () => {
             placeholder="请选择子应用"
             disabled={loading}
             getPopupContainer={(c) => c}
+            onChange={handleSubappChange}
           >
             {subapps.map((subapp) => (
               <Select.Option key={subapp.id} value={subapp.id}>
