@@ -3,13 +3,13 @@ import { Form, Input, Select, Button, DatePicker, Table, Popover } from 'antd';
 import styles from './index.module.scss';
 import { currentNodeItem, Pagination, StartItem } from '../type';
 import { getStayTime, getPassedTime, runtimeAxios } from '@/utils';
-import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 import moment from 'moment';
 import { dynamicRoutes } from '@/consts/route';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import useAppId from '@/hooks/use-app-id';
 import { Icon } from '@common/components';
+import StateTag from '@/features/bpm-editor/components/state-tag';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -35,29 +35,6 @@ const stateList: { key: number; value: string }[] = [
     value: '已撤回',
   },
 ];
-
-const statusMap: { [k: number]: { className: string; text: string } } = {
-  1: {
-    className: 'doing',
-    text: '进行中',
-  },
-  2: {
-    className: 'stop',
-    text: '已终止',
-  },
-  5: {
-    className: 'reject',
-    text: '已驳回',
-  },
-  4: {
-    className: 'done',
-    text: '已办结',
-  },
-  3: {
-    className: 'recall',
-    text: '已撤回',
-  },
-};
 
 const Start: FC<{}> = () => {
   const [form] = Form.useForm();
@@ -190,8 +167,7 @@ const Start: FC<{}> = () => {
         width: '15%',
         render(_: string, record: StartItem) {
           const { state } = record;
-          const statusObj = statusMap[state];
-          return <div className={classNames(styles.status, styles[statusObj.className])}>{statusObj.text}</div>;
+          return <StateTag state={state} />;
         },
       },
     ];

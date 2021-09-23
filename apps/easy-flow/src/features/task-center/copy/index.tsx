@@ -12,7 +12,7 @@ import { useHistory } from 'react-router';
 import { dynamicRoutes } from '@/consts';
 import moment from 'moment';
 import useAppId from '@/hooks/use-app-id';
-import classNames from 'classnames';
+import StateTag from '@/features/bpm-editor/components/state-tag';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -39,28 +39,6 @@ const stateList: { key: number; value: string }[] = [
     value: '已撤回',
   },
 ];
-const statusMap: { [k: number]: { className: string; text: string } } = {
-  1: {
-    className: 'doing',
-    text: '进行中',
-  },
-  2: {
-    className: 'stop',
-    text: '已终止',
-  },
-  5: {
-    className: 'reject',
-    text: '已驳回',
-  },
-  4: {
-    className: 'done',
-    text: '已办结',
-  },
-  3: {
-    className: 'recall',
-    text: '已撤回',
-  },
-};
 
 const Copy: FC<{}> = () => {
   const [form] = Form.useForm();
@@ -127,8 +105,7 @@ const Copy: FC<{}> = () => {
         width: '15%',
         render(_: string, record: CopyItem) {
           const { state } = record;
-          const statusObj = statusMap[state];
-          return <div className={classNames(styles.status, styles[statusObj.className])}>{statusObj.text}</div>;
+          return <StateTag state={state} />;
         },
       },
       {

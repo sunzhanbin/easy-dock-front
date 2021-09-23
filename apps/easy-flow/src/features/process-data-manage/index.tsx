@@ -12,6 +12,7 @@ import useAppId from '@/hooks/use-app-id';
 import { FieldType } from '@type/form';
 import { exportFile, runtimeAxios } from '@utils';
 import { Icon } from '@common/components';
+import StateTag from '@/features/bpm-editor/components/state-tag';
 import styles from './index.module.scss';
 
 const useMock = false;
@@ -75,27 +76,8 @@ const DataManage = () => {
         title: '流程状态',
         width: 100,
         render(_, data: TableDataBase) {
-          if (data.state === 1) {
-            return <Tag status="primary">进行中</Tag>;
-          }
-
-          if (data.state === 2) {
-            return <Tag status="error">已终止</Tag>;
-          }
-
-          if (data.state === 3) {
-            return <Tag status="revoke">已撤回</Tag>;
-          }
-
-          if (data.state === 4) {
-            return <Tag status="success">已办结</Tag>;
-          }
-
-          if (data.state === 5) {
-            return <Tag status="warning">已驳回</Tag>;
-          }
-
-          return null as never;
+          const { state } = data;
+          return <StateTag state={state} />;
         },
       },
       {
