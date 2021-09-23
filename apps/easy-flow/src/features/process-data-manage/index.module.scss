@@ -45,8 +45,11 @@
       }
     }
     .refresh {
+      display: flex;
+      align-items: center;
       padding-left: 12px;
       cursor: pointer;
+
       .icon {
         font-size: 20px;
       }
@@ -82,6 +85,10 @@
   .table {
     width: 100%;
     margin-top: 24px;
+
+    .dynamic-cell {
+      max-width: 150px;
+    }
   }
 }
 

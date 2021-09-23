@@ -102,7 +102,6 @@ $line-color: #e3e4e8;
       align-items: center;
       padding: 30px;
       padding-bottom: 0;
-      cursor: pointer;
 
       .content {
         position: relative;
@@ -111,6 +110,7 @@ $line-color: #e3e4e8;
         border-radius: 3px;
         color: #181f43;
         z-index: 1;
+        cursor: pointer;
 
         &:hover,
         &.show-del {

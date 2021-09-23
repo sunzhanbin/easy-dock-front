@@ -95,7 +95,7 @@ const DataManage = () => {
         defaultSortOrder: 'descend',
         width: 180,
         render(_, data: TableDataBase) {
-          return moment(data.startTime).format('YYYY-MM-DD HH:MM');
+          return moment(data.startTime).format('YYYY-MM-DD HH:mm');
         },
       },
     ];
@@ -145,7 +145,7 @@ const DataManage = () => {
           let tableKey = `formData.${field.field}`;
           let tableColumn: typeof baseColumns[number] = {
             key: tableKey,
-            title: field.name,
+            title: <Text className={styles['dynamic-cell']} text={field.name} />,
             dataIndex: tableKey,
             width: 150,
           };
@@ -163,7 +163,7 @@ const DataManage = () => {
                 text = membersCacheRef.current[member].name;
               }
 
-              return <Text text={String(text)} />;
+              return <Text className={styles['dynamic-cell']} text={String(text)} />;
             };
           } else if (field.type === 'Date') {
             tableColumn.render = (_: string, data: TableDataBase) => {
@@ -192,9 +192,10 @@ const DataManage = () => {
                 text = value;
               }
 
-              return <Text text={String(text)} />;
+              return <Text className={styles['dynamic-cell']} text={String(text)} />;
             };
           }
+
           return tableColumn;
         });
 
@@ -268,6 +269,7 @@ const DataManage = () => {
       console.log(e);
 
       prevActiveSubappId.current = undefined;
+      setDataSource([]);
     } finally {
       setLoading(false);
     }
@@ -342,13 +344,11 @@ const DataManage = () => {
           <Icon type="daochu" className={styles.icon} />
           <span className={styles.text}>导出</span>
         </div>
-        <div className={styles.refresh} onClick={handleRefresh}>
-          <Tooltip title="刷新">
-            <span>
-              <Icon type="chongpao" className={styles.icon} />
-            </span>
-          </Tooltip>
-        </div>
+        <Tooltip title="刷新">
+          <div className={styles.refresh} onClick={handleRefresh}>
+            <Icon type="chongpao" className={styles.icon} />
+          </div>
+        </Tooltip>
       </div>
       <Form
         className={styles.form}
