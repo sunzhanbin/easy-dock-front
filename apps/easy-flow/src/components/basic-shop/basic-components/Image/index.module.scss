@@ -26,6 +26,9 @@
       }
       .ant-upload-list-picture-card-container:first-child {
         margin-left: 12.5%;
+        &.overlay {
+          margin-left: 0;
+        }
       }
     }
     .col-space-3 {
@@ -35,6 +38,9 @@
       }
       .ant-upload-list-picture-card-container:first-child {
         margin-left: 16.6666%;
+        &.overlay {
+          margin-left: 0;
+        }
       }
     }
     .col-space-2 {
@@ -44,6 +50,9 @@
       }
       .ant-upload-list-picture-card-container:first-child {
         margin-left: 25%;
+        &.overlay {
+          margin-left: 0;
+        }
       }
     }
     .col-space-1 {
@@ -53,12 +62,20 @@
       }
       .ant-upload-list-picture-card-container:first-child {
         margin-left: 50%;
+        &.overlay {
+          margin-left: 0;
+        }
       }
     }
   }
   .ant-modal {
+    .ant-modal-content {
+      padding: 32px 0 32px 32px;
+    }
     .ant-modal-body {
+      padding-right: 32px;
       max-height: 800px;
+      overflow-y: auto;
     }
   }
 }

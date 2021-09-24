@@ -137,6 +137,26 @@ const ImageComponent = (
       onChange && onChange(componentValue);
     }
   }, [value, onChange]);
+  useEffect(() => {
+    if (value) {
+      const componentValue = typeof value === 'string' ? (JSON.parse(value) as ImageValue) : { ...value };
+      const { fileIdList = [], fileList = [] } = componentValue;
+      const fileCount = fileIdList.length + fileList.length;
+      const el = containerRef.current!.querySelector('.ant-upload-list-picture-card-container:first-child');
+      const classNameList: string[] = [];
+      if (el) {
+        el.classList.forEach((c) => {
+          if (!c.includes('overlay')) {
+            classNameList.push(c);
+          }
+        });
+        if (fileCount >= maxCount) {
+          classNameList.push('overlay');
+        }
+        el.className = classNameList.join(' ');
+      }
+    }
+  }, [maxCount, value]);
   return (
     <div className={styles.image} id={props.id} ref={containerRef}>
       <Upload
