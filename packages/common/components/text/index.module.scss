@@ -3,4 +3,9 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  opacity: 0.999;
+
+  &:hover {
+    opacity: 1;
+  }
 }

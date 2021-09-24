@@ -1,4 +1,4 @@
-import { memo, useState, FC, useMemo, useCallback, useEffect } from 'react';
+import { memo, useState, FC, useMemo, useCallback, useEffect, useRef } from 'react';
 import styles from './index.module.scss';
 import { Form, Input, Select, Button, DatePicker, Table } from 'antd';
 import moment from 'moment';
@@ -12,6 +12,7 @@ import useAppId from '@/hooks/use-app-id';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { setTodoNum, appSelector } from '../taskcenter-slice';
 import { Icon } from '@common/components';
+import { debounce, throttle } from 'lodash';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -25,6 +26,9 @@ const ToDo: FC<{}> = () => {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [optionList, setOptionList] = useState<UserItem[]>([]);
+  const [total, setTotal] = useState<number>(0);
+  const [keyword, setKeyword] = useState<string>('');
+  const pageNumberRef = useRef(1);
   const [pagination, setPagination] = useState<Pagination>({
     pageSize: 10,
     current: 1,
@@ -86,13 +90,49 @@ const ToDo: FC<{}> = () => {
         });
     },
   );
-  const fetchOptionList = useCallback(() => {
-    projectId &&
-      runtimeAxios.post('/user/search', { index: 0, size: 100, keyword: '', projectId }).then((res) => {
-        const list = res.data?.data || [];
-        setOptionList(list);
-      });
-  }, [projectId]);
+  const fetchOptionList = useCallback(
+    (pageNum: number, keyword: string) => {
+      if (projectId) {
+        runtimeAxios.post('/user/search', { index: pageNum, size: 20, keyword, projectId }).then((res) => {
+          const list = res.data?.data || [];
+          const total = res.data?.recordTotal;
+          const index = res.data?.pageIndex;
+          setOptionList((val) => {
+            // 从第一页搜索时覆盖原数组
+            if (pageNum === 1) {
+              return list;
+            }
+            return val.concat(list);
+          });
+          // 更新当前页数
+          pageNumberRef.current = index;
+          setTotal(total);
+        });
+      }
+    },
+    [projectId],
+  );
+  const handleScroll = useMemoCallback(
+    throttle((event: React.UIEvent<HTMLDivElement, UIEvent>) => {
+      // 全部加载完了就不加载了
+      if (optionList.length === total) return;
+
+      const container = event.target as HTMLDivElement;
+
+      if (container.scrollHeight - container.offsetHeight - container.scrollTop < 20) {
+        if (loading) return;
+
+        fetchOptionList(pageNumberRef.current + 1, keyword);
+      }
+    }, 300),
+  );
+  const handleSearchUser = useMemoCallback(
+    debounce((val) => {
+      setKeyword(val);
+      pageNumberRef.current = 1;
+      fetchOptionList(1, val);
+    }, 500),
+  );
 
   const columns = useMemo(() => {
     return [
@@ -150,19 +190,14 @@ const ToDo: FC<{}> = () => {
         width: '15%',
         sortDirections: ['ascend' as 'ascend', 'descend' as 'descend', 'ascend' as 'ascend'],
         defaultSortOrder: 'descend' as 'descend',
+        sorter: true,
         render(_: string, record: TodoItem) {
           const { taskCreateTime } = record;
           return moment(taskCreateTime).format('YYYY-MM-DD HH:mm');
         },
-        sorter(rowA: TodoItem, rowB: TodoItem) {
-          return rowA.startTime - rowB.startTime;
-        },
       },
     ];
   }, [history]);
-  const handleFilterOption = useCallback((inputValue, option) => {
-    return option.children.indexOf(inputValue) > -1;
-  }, []);
   const handleKeyUp = useCallback(
     (e) => {
       if (e.keyCode === 13) {
@@ -181,10 +216,12 @@ const ToDo: FC<{}> = () => {
   const handleTableChange = useCallback(
     (newPagination, filters, sorter) => {
       sorter.order === 'ascend' ? setSortDirection('ASC') : setSortDirection('DESC');
-      setPagination((pagination) => {
-        fetchData(newPagination);
-        return { ...pagination, ...newPagination };
-      });
+      setTimeout(() => {
+        setPagination((pagination) => {
+          fetchData(newPagination);
+          return { ...pagination, ...newPagination };
+        });
+      }, 0);
     },
     [fetchData],
   );
@@ -192,7 +229,7 @@ const ToDo: FC<{}> = () => {
     appId && fetchData();
   }, [fetchData, appId]);
   useEffect(() => {
-    fetchOptionList();
+    fetchOptionList(1, '');
   }, [fetchOptionList]);
   return (
     <div className={styles.container}>
@@ -213,17 +250,19 @@ const ToDo: FC<{}> = () => {
             <Form.Item label="发起人" name="starter" className="starter">
               <Select
                 showSearch
-                filterOption={handleFilterOption}
                 onChange={() => {
                   fetchData();
                 }}
+                onPopupScroll={handleScroll}
+                onSearch={handleSearchUser}
                 style={{ width: '100%' }}
                 suffixIcon={<Icon type="xiala" />}
                 placeholder="请选择"
+                optionFilterProp="label"
                 allowClear
               >
                 {optionList.map(({ id, userName }) => (
-                  <Option key={id} value={id}>
+                  <Option key={id} value={id} label={userName}>
                     {userName}
                   </Option>
                 ))}
@@ -257,7 +296,7 @@ const ToDo: FC<{}> = () => {
         <Table
           loading={loading}
           pagination={pagination}
-          rowKey="processInstanceId"
+          rowKey="taskId"
           columns={columns}
           dataSource={data}
           onChange={handleTableChange}

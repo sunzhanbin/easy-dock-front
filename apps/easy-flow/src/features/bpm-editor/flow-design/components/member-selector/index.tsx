@@ -3,6 +3,7 @@ import { MemberSelector as Selector, MemberSelectorProps as SelectorProps } from
 import { UserNode, CorrelationMemberConfigKey } from '@type/flow';
 import { useSubAppDetail } from '@app/app';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import useShowMembers from '../../hooks/use-show-members';
 import { flowDataSelector, setCacheMembers } from '../../flow-slice';
 
 interface MemberSelectorProps {
@@ -11,26 +12,29 @@ interface MemberSelectorProps {
 }
 
 function MemberSelector(props: MemberSelectorProps) {
-  const { cacheMembers } = useAppSelector(flowDataSelector);
+  const { fieldsTemplate } = useAppSelector(flowDataSelector);
   const { value, onChange } = props;
   const { data: subAppDetail } = useSubAppDetail();
   const dispatch = useAppDispatch();
-  const showValue: NonNullable<SelectorProps['value']> = useMemo(() => {
-    const { members = [], depts = [], roles = [] } = value!;
+  const dynamicFields = useMemo(() => {
+    return fieldsTemplate
+      .filter((field) => field.type === 'Member')
+      .map((field) => ({ name: field.name, key: field.id }));
+  }, [fieldsTemplate]);
 
-    return {
-      depts: depts.map((id) => ({ ...cacheMembers[id] })),
-      members: members.map((id) => ({ ...cacheMembers[id] })),
-      roles: roles.map((id) => ({ ...cacheMembers[id] })),
-    };
-  }, [value, cacheMembers]);
+  const showValue: NonNullable<SelectorProps['value']> = useShowMembers(value!);
 
   const handleChange = (value: NonNullable<SelectorProps['value']>) => {
     const caches: Parameters<typeof setCacheMembers>[number] = {};
-    const { members = [], depts = [], roles = [] } = value;
+    const { members = [], depts = [], roles = [], dynamic } = value;
     const memberIds: CorrelationMemberConfigKey[] = [];
     const deptIds: CorrelationMemberConfigKey[] = [];
     const roleIds: CorrelationMemberConfigKey[] = [];
+    const dynamicRoles = (dynamic?.roles || []).map((role) => {
+      caches[role.id] = role;
+
+      return role.id;
+    });
 
     members.forEach((user) => {
       caches[user.id] = user;
@@ -42,7 +46,7 @@ function MemberSelector(props: MemberSelectorProps) {
       deptIds.push(dept.id);
     });
 
-    roles.forEach((role) => {
+    roles.concat(dynamic?.roles || []).forEach((role) => {
       caches[role.id] = role;
       roleIds.push(role.id);
     });
@@ -54,11 +58,25 @@ function MemberSelector(props: MemberSelectorProps) {
         members: memberIds,
         depts: depts.map((depart) => depart.id),
         roles: roles.map((role) => role.id),
+        dynamic: {
+          starter: dynamic?.starter,
+          roles: dynamicRoles,
+          fields: (dynamic?.fields || []).map((field) => field.key),
+        },
       });
     }
   };
 
-  return <Selector projectId={subAppDetail?.app.project.id} value={showValue} onChange={handleChange} strictDept />;
+  return (
+    <Selector
+      projectId={subAppDetail?.app.project.id}
+      value={showValue}
+      onChange={handleChange}
+      strictDept
+      showDynamic
+      dynamicFields={dynamicFields}
+    />
+  );
 }
 
 export default memo(MemberSelector);

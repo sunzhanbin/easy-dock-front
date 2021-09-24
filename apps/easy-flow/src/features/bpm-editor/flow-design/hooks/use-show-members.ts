@@ -1,14 +1,32 @@
+import { useMemo } from 'react';
 import { useAppSelector } from '@/app/hooks';
-import { flowDataSelector } from '../flow-slice';
-import { AuditNode, FillNode, CCNode } from '@type/flow';
+import { flowDataSelector, fieldsTemplateSelector } from '../flow-slice';
+import { CorrelationMemberConfig } from '@type/flow';
 
-export default function useShowMembers(node: AuditNode | FillNode | CCNode) {
+export default function useShowMembers(correlationMemberConfig: CorrelationMemberConfig) {
   const { cacheMembers } = useAppSelector(flowDataSelector);
-  const { members = [], depts = [], roles = [] } = node.correlationMemberConfig;
+  const fieldsTemplate = useAppSelector(fieldsTemplateSelector);
 
-  return [
-    members.map((memberId) => cacheMembers[memberId]),
-    depts.map((deptId) => cacheMembers[deptId]),
-    roles.map((roleId) => cacheMembers[roleId]),
-  ];
+  const dynamicFields = useMemo(() => {
+    return fieldsTemplate.map((field) => ({ name: field.name, key: field.id }));
+  }, [fieldsTemplate]);
+
+  return useMemo(() => {
+    const { members = [], depts = [], roles = [], dynamic } = correlationMemberConfig!;
+    const fieldsMap = (dynamic?.fields || []).reduce((curr, next) => {
+      curr[next] = true;
+      return curr;
+    }, {} as { [key: string]: true });
+
+    return {
+      depts: depts.map((id) => ({ ...cacheMembers[id] })),
+      members: members.map((id) => ({ ...cacheMembers[id] })),
+      roles: roles.map((id) => ({ ...cacheMembers[id] })),
+      dynamic: {
+        starter: dynamic?.starter,
+        roles: (dynamic?.roles || []).map((id) => ({ ...cacheMembers[id] })),
+        fields: dynamicFields.filter((field) => fieldsMap[field.key]),
+      },
+    };
+  }, [correlationMemberConfig, cacheMembers, dynamicFields]);
 }

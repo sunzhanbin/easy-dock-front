@@ -11,7 +11,7 @@
   .header {
     position: relative;
     flex-shrink: 0;
-    z-index: 9;
+    z-index: 99;
 
     & > div:first-child {
       color: #fff;
@@ -118,8 +118,7 @@
       }
     }
     .form-engine {
-      padding-top: 24px;
-      padding: 24px 32px 32px 0;
+      padding: 24px 32px 32px 4px;
       margin-bottom: 0;
       overflow-y: auto;
     }

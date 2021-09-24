@@ -13,6 +13,7 @@ import {
   AuthType,
   FieldAuthsMap,
   FieldTemplate,
+  CorrelationMemberConfig,
 } from '@type/flow';
 import { FormMeta } from '@type';
 import { validators } from './validators';
@@ -216,8 +217,33 @@ export function valid(data: AllNode[], validRes: ValidResultType) {
   data.forEach((node) => {
     if (node.type === NodeType.BranchNode) {
       node.branches.forEach((branch) => {
+        const errors: string[] = [];
+
+        branch.conditions.some((row) => {
+          return row.some((col) => {
+            for (let key in col) {
+              if (!col[key as keyof typeof col]) {
+                errors.push('条件配置不合法');
+
+                return true;
+              }
+            }
+
+            return false;
+          });
+        });
+
+        if (errors.length) {
+          validRes[branch.id] = {
+            name: '子分支',
+            id: branch.id,
+            errors,
+          };
+        }
+
         valid(branch.nodes, validRes);
       });
+
       return;
     }
 
@@ -340,4 +366,12 @@ export function formatFieldsTemplate(form: FormMeta | null): FieldTemplate[] {
       id: field.config.id as string,
     };
   });
+}
+
+export function dynamicIsEmpty(data?: CorrelationMemberConfig['dynamic']) {
+  if (!data) return true;
+
+  if (!data.starter && !data.fields.length && !data.roles.length) return true;
+
+  return false;
 }

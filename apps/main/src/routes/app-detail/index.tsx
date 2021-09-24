@@ -13,7 +13,6 @@ import Card from './subapp-card';
 import AppModel from './app-model';
 import AuthModal from './auth-modal';
 import { AppInfo } from '@/schema/app';
-import { AppAuthParams, assignAppAuth } from '@/api/auth';
 import { FlowMicroApp, MAIN_CONTENT_CLASSNAME, ChartMicroApp } from '@/consts';
 
 const AppDetail: FC = () => {

@@ -1,0 +1,25 @@
+.editorContainer {
+  .container {
+    display: flex;
+    .editorHeader {
+        height: 50px;
+        border-bottom: 1px solid rgba(24, 31, 67, 0.12);
+    }
+    .editZone {
+        overflow: hidden;
+        height: calc(100% - 100px);
+        position: relative;
+        flex: 1;
+    }
+    .attrSetting {
+        width: 304px;
+        padding: 23px 0 60px 20px;
+        background: #fff;
+        height: 100%;
+        box-shadow: -2px 0px 4px 0px rgba(0, 0, 0, 0.1);
+        overflow: auto;
+        position: fixed;
+        right: 0;
+    }
+  }
+}

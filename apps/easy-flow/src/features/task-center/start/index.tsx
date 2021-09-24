@@ -1,15 +1,15 @@
-import { memo, FC, useState, useMemo, useCallback, useEffect } from 'react';
-import { Form, Input, Select, Button, DatePicker, Table } from 'antd';
+import { memo, FC, useState, useMemo, useCallback, useEffect, useRef } from 'react';
+import { Form, Input, Select, Button, DatePicker, Table, Popover } from 'antd';
 import styles from './index.module.scss';
-import { Pagination, StartItem } from '../type';
+import { currentNodeItem, Pagination, StartItem } from '../type';
 import { getStayTime, getPassedTime, runtimeAxios } from '@/utils';
-import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
 import moment from 'moment';
 import { dynamicRoutes } from '@/consts/route';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import useAppId from '@/hooks/use-app-id';
 import { Icon } from '@common/components';
+import StateTag from '@/features/bpm-editor/components/state-tag';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -36,33 +36,11 @@ const stateList: { key: number; value: string }[] = [
   },
 ];
 
-const statusMap: { [k: number]: { className: string; text: string } } = {
-  1: {
-    className: 'doing',
-    text: '进行中',
-  },
-  2: {
-    className: 'stop',
-    text: '已终止',
-  },
-  5: {
-    className: 'reject',
-    text: '已驳回',
-  },
-  4: {
-    className: 'done',
-    text: '已办结',
-  },
-  3: {
-    className: 'recall',
-    text: '已撤回',
-  },
-};
-
 const Start: FC<{}> = () => {
   const [form] = Form.useForm();
   const history = useHistory();
   const appId = useAppId();
+  const tableRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [sortDirection, setSortDirection] = useState<'DESC' | 'ASC'>('DESC');
   const [pagination, setPagination] = useState<Pagination>({
@@ -72,6 +50,18 @@ const Start: FC<{}> = () => {
     showSizeChanger: true,
   });
   const [data, setData] = useState<StartItem[]>([]);
+  const renderContent = useMemoCallback((nodes: currentNodeItem[]) => {
+    return (
+      <div className="nodes">
+        {nodes.map(({ currentNode, currentNodeStartTime, currentNodeId }) => (
+          <div className="node" key={currentNodeId}>
+            <div className="name">{currentNode}</div>
+            <div className="stay">{currentNodeStartTime && getStayTime(currentNodeStartTime)}</div>
+          </div>
+        ))}
+      </div>
+    );
+  });
   const columns = useMemo(() => {
     return [
       {
@@ -106,12 +96,10 @@ const Start: FC<{}> = () => {
         width: '15%',
         sortDirections: ['ascend' as 'ascend', 'descend' as 'descend', 'ascend' as 'ascend'],
         defaultSortOrder: 'descend' as 'descend',
+        sorter: true,
         render(_: string, record: StartItem) {
           const { startTime } = record;
           return <div className={styles.startTime}>{startTime ? getPassedTime(startTime) : ''}</div>;
-        },
-        sorter(rowA: StartItem, rowB: StartItem) {
-          return rowA.startTime - rowB.startTime;
         },
       },
       {
@@ -119,6 +107,32 @@ const Start: FC<{}> = () => {
         dataIndex: 'currentNode',
         key: 'currentNode',
         width: '15%',
+        render(_: string, record: StartItem) {
+          const { currentNodes } = record;
+          if (!Array.isArray(currentNodes) || currentNodes.length === 0) {
+            return null;
+          }
+          const currentNode = currentNodes[0].currentNode;
+          if (currentNodes.length === 1) {
+            return <div className={styles.currentNode}>{currentNode}</div>;
+          }
+          if (currentNodes.length > 1) {
+            return (
+              <div className={styles.currentNode}>
+                <span className={styles.text}>{currentNode}</span>
+                <Popover
+                  placement="bottom"
+                  trigger="click"
+                  title={null}
+                  content={renderContent(currentNodes)}
+                  getPopupContainer={() => tableRef.current as HTMLDivElement}
+                >
+                  <Icon type="gengduo" className={styles.icon} />
+                </Popover>
+              </div>
+            );
+          }
+        },
       },
       {
         title: '节点停留',
@@ -126,8 +140,24 @@ const Start: FC<{}> = () => {
         key: 'stayTime',
         width: '15%',
         render(_: string, record: StartItem) {
-          const { currentNodeStartTime } = record;
-          return <div className={styles.stayTime}>{currentNodeStartTime ? getStayTime(currentNodeStartTime) : ''}</div>;
+          const { currentNodes } = record;
+          if (!Array.isArray(currentNodes) || currentNodes.length === 0) {
+            return null;
+          }
+          const startTime = currentNodes[0].currentNodeStartTime;
+          if (currentNodes.length === 1) {
+            return <div className={styles.stayTime}>{startTime && getStayTime(startTime)}</div>;
+          }
+          if (currentNodes.length > 1) {
+            return (
+              <div className={styles.stayTime}>
+                <span>{startTime && getStayTime(startTime)}</span>
+                <Popover placement="bottom" trigger="click" title={null} content={renderContent(currentNodes)}>
+                  <Icon type="gengduo" className={styles.icon} />
+                </Popover>
+              </div>
+            );
+          }
         },
       },
       {
@@ -137,12 +167,11 @@ const Start: FC<{}> = () => {
         width: '15%',
         render(_: string, record: StartItem) {
           const { state } = record;
-          const statusObj = statusMap[state];
-          return <div className={classNames(styles.status, styles[statusObj.className])}>{statusObj.text}</div>;
+          return <StateTag state={state} />;
         },
       },
     ];
-  }, [history]);
+  }, [history, renderContent]);
   const fetchData = useMemoCallback(
     (pagination: Pagination = { pageSize: 10, current: 1, total: 0, showSizeChanger: true }) => {
       if (!appId) return;
@@ -206,10 +235,12 @@ const Start: FC<{}> = () => {
   const handleTableChange = useCallback(
     (newPagination, filters, sorter) => {
       sorter.order === 'ascend' ? setSortDirection('ASC') : setSortDirection('DESC');
-      setPagination((pagination) => {
-        fetchData(newPagination);
-        return { ...pagination, ...newPagination };
-      });
+      setTimeout(() => {
+        setPagination((pagination) => {
+          fetchData(newPagination);
+          return { ...pagination, ...newPagination };
+        });
+      }, 0);
     },
     [fetchData],
   );
@@ -274,7 +305,7 @@ const Start: FC<{}> = () => {
           </div>
         </div>
       </div>
-      <div className={styles.content}>
+      <div className={styles.content} ref={tableRef}>
         <Table
           loading={loading}
           pagination={pagination}

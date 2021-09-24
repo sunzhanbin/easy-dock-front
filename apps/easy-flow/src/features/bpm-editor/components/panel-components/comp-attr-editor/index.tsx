@@ -1,16 +1,18 @@
-import { memo, useEffect, Fragment, useMemo, ReactNode } from 'react';
+import { memo, useEffect, Fragment, useMemo, ReactNode, useRef } from 'react';
 import { Form, Select, Input, Switch, Radio, Checkbox, InputNumber } from 'antd';
 import SelectOptionList from '../select-option-list';
 import SelectDefaultOption from '../select-default-option';
 import DefaultDate from '../default-date';
 import Editor from '../rich-text';
-import { FormField, rangeItem, SchemaConfigItem } from '@/type';
+import { FormField, rangeItem, SchemaConfigItem, SelectField } from '@/type';
 import { Store } from 'antd/lib/form/interface';
 import styles from './index.module.scss';
 import { useAppSelector } from '@/app/hooks';
 import { errorSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 import { Icon } from '@common/components';
 import { Rule } from 'antd/lib/form';
+import useMemoCallback from '@common/hooks/use-memo-callback';
+import { debounce } from 'lodash';
 
 const { Option } = Select;
 
@@ -37,7 +39,7 @@ const options = [
   { label: '1', value: '4' },
 ];
 
-const componentMap: { [k in string]: (props: { [k in string]: any }) => ReactNode } = {
+const componentMap: { [k: string]: (props: { [k: string]: any }) => ReactNode } = {
   Input: (props) => <Input placeholder={props.placeholder} size="large" />,
   Textarea: (props) => <Input.TextArea placeholder={props.placeholder} rows={4} size="large" />,
   Select: (props) => (
@@ -53,9 +55,17 @@ const componentMap: { [k in string]: (props: { [k in string]: any }) => ReactNod
   ColSpace: () => <Radio.Group options={options} optionType="button" />,
   Checkbox: (props) => <Checkbox>{props.label}</Checkbox>,
   Switch: () => <Switch />,
-  SelectOptionList: () => <SelectOptionList />,
+  SelectOptionList: (props) => <SelectOptionList id={props.componentId} />,
   SelectDefaultOption: (props) => <SelectDefaultOption id={props.componentId} />,
-  InputNumber: (props) => <InputNumber size="large" className="input_number" placeholder={props.placeholder} />,
+  InputNumber: (props) => (
+    <InputNumber
+      size="large"
+      className="input_number"
+      min={props.min}
+      max={props.max}
+      placeholder={props.placeholder}
+    />
+  ),
   DefaultDate: (props) => <DefaultDate id={props.componentId} />,
   Editor: () => <Editor />,
 };
@@ -86,13 +96,35 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
   const [form] = Form.useForm();
   const errors = useAppSelector(errorSelector);
   const errorIdList = useMemo(() => (errors || []).map(({ id }) => id), [errors]);
-  const onFinish = (values: Store) => {
+  const initFormValues = useMemo(() => {
+    let formValues = { ...initValues };
+    const dataSource = (formValues as SelectField).dataSource;
+    if (dataSource && dataSource.type === 'interface') {
+      formValues = Object.assign({}, formValues, { apiconfig: dataSource.apiconfig || {} });
+    }
+    return formValues;
+  }, [initValues]);
+  const onFinish = useMemoCallback((values: Store) => {
     const isValidate = form.isFieldsTouched(['fieldName', 'label']);
     onSave && onSave(values, isValidate);
-  };
-  const handleChange = () => {
-    onFinish(form.getFieldsValue());
-  };
+  });
+  const configRef = useRef();
+  const handleChange = useMemoCallback(
+    debounce(() => {
+      let formValues = form.getFieldsValue();
+      let { dataSource } = formValues;
+      const { apiconfig } = formValues;
+      if (apiconfig) {
+        // 记录上一次的值
+        configRef.current = apiconfig;
+      }
+      if (configRef.current && dataSource && dataSource.type === 'interface') {
+        dataSource = Object.assign({}, dataSource, { type: 'interface', apiconfig: configRef.current });
+        formValues = Object.assign({}, formValues, { dataSource });
+      }
+      onFinish(formValues);
+    }, 66),
+  );
 
   useEffect(() => {
     if (errorIdList.includes(componentId)) {
@@ -103,21 +135,27 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
     };
   }, [componentId, form, errorIdList]);
   useEffect(() => {
-    form.setFieldsValue(initValues);
+    let formValues = { ...initValues };
+    const dataSource = (formValues as SelectField).dataSource;
+    if (dataSource && dataSource.type === 'interface') {
+      formValues = Object.assign({}, formValues, { apiconfig: dataSource.apiconfig || {} });
+    }
+    form.setFieldsValue(formValues);
   }, [initValues, form]);
 
   return (
     <div className={styles.container}>
       <Form
         form={form}
+        key={componentId}
         name="form_editor"
         autoComplete="off"
-        initialValues={initValues}
+        initialValues={initFormValues}
         onFinish={onFinish}
         onValuesChange={handleChange}
       >
-        {config.map(({ key, label, type, range, placeholder, required, requiredMessage, rules }) => {
-          const props = { placeholder, range, label, componentId };
+        {config.map(({ key, label, type, range, placeholder, required, requiredMessage, rules, max, min }) => {
+          const props = { placeholder, range, label, componentId, max, min };
           const component = componentMap[type](props);
           return (
             <Fragment key={key}>

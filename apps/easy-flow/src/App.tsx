@@ -6,6 +6,7 @@ import TaskDetail from './features/detail/task-detail';
 import StartFlow from './features/detail/start-flow';
 import TaskCenter from './features/task-center';
 import StartDetail from './features/detail/start-detail';
+import ProcessDataManage from './features/process-data-manage';
 import appConfig from '@/init';
 
 function App() {
@@ -19,6 +20,11 @@ function App() {
         // 从主应用传appid时用没有id参数的这种路由
         path={appConfig.appId ? ROUTES.TASK_CENTER_WITH_NO_APPID : ROUTES.TASK_CENTER}
         component={TaskCenter}
+      ></Route>
+      <Route
+        // 从主应用传appid时用没有id参数的这种路由
+        path={appConfig.appId ? ROUTES.PROCESS_DATA_MANAGE_WITH_NO_APPID : ROUTES.PROCESS_DATA_MANAGE}
+        component={ProcessDataManage}
       ></Route>
     </Switch>
   );

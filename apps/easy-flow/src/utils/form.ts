@@ -246,20 +246,20 @@ function getDynamicTimeRange(dynamic: string): [number, number] {
       endTime = moment(lastYear).endOf('day').format('x');
       break;
     case 'last7days':
-      startDay = moment().subtract(7, 'day').format('YYYY-MM-DD');
-      endDay = moment().subtract(1, 'day').format('YYYY-MM-DD');
+      startDay = moment().subtract(6, 'day').format('YYYY-MM-DD');
+      endDay = moment().subtract(0, 'day').format('YYYY-MM-DD');
       startTime = moment(startDay).startOf('day').format('x');
       endTime = moment(endDay).endOf('day').format('x');
       break;
     case 'last30days':
-      startDay = moment().subtract(30, 'day').format('YYYY-MM-DD');
-      endDay = moment().subtract(1, 'day').format('YYYY-MM-DD');
+      startDay = moment().subtract(29, 'day').format('YYYY-MM-DD');
+      endDay = moment().subtract(0, 'day').format('YYYY-MM-DD');
       startTime = moment(startDay).startOf('day').format('x');
       endTime = moment(endDay).endOf('day').format('x');
       break;
     case 'last90days':
-      startDay = moment().subtract(90, 'day').format('YYYY-MM-DD');
-      endDay = moment().subtract(1, 'day').format('YYYY-MM-DD');
+      startDay = moment().subtract(89, 'day').format('YYYY-MM-DD');
+      endDay = moment().subtract(0, 'day').format('YYYY-MM-DD');
       startTime = moment(startDay).startOf('day').format('x');
       endTime = moment(endDay).endOf('day').format('x');
       break;
@@ -333,7 +333,10 @@ function analysisOptionRule(symbol: string, value: string | string[], formValue:
 // 解析单个条件是否匹配
 export function analysisRule(rule: fieldRule, formValues: { [k in string]: any }): boolean {
   const { fieldName, fieldType = '', symbol, value } = rule;
-  const formValue = formValues[fieldName];
+  const formValue = fieldName && formValues[fieldName];
+  if (!symbol || !formValue) {
+    return true;
+  }
   // 文本类型
   if (fieldType === 'Input' || fieldType === 'Textarea') {
     return analysisTextRule(symbol, value as string | string[], formValue as string);
@@ -401,7 +404,7 @@ export async function uploadFile(values: any) {
     }
   });
   if (files.length > 0) {
-    const res = await batchUpload({ maxUploadNum: files.length, files: files.map((file) => file.originFileObj) });
+    const res = await batchUpload({ files: files.map((file) => file.originFileObj) });
     const list = [...res.data];
     Object.keys(fileListMap).forEach((key) => {
       const oldValue = values[key];
@@ -416,19 +419,29 @@ export async function uploadFile(values: any) {
   return Object.assign({}, values, fileIdMap);
 }
 
+export function exportFile(res: any, name: string, type?: string) {
+  const blobConfig = type ? { type } : {};
+  const blob = new Blob([res], blobConfig);
+  const urlObject = window.URL || window.webkitURL || window;
+  const save_link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a') as HTMLAnchorElement;
+
+  save_link.href = urlObject.createObjectURL(blob);
+  if (name) {
+    save_link.download = name;
+  }
+  save_link.click();
+}
+
 export function downloadFile(id: string, name: string) {
   download(id).then((res) => {
-    const blob = new Blob([res as any]);
-    const urlObject = window.URL || window.webkitURL || window;
-    const save_link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a') as HTMLAnchorElement;
-
-    save_link.href = urlObject.createObjectURL(blob);
-    save_link.download = name;
-    save_link.click();
+    exportFile(res, name);
   });
 }
 
-export const loadFieldDatasource = async (config: SelectOptionItem): Promise<any[]> => {
+export const loadFieldDatasource = async (
+  config: SelectOptionItem,
+  formDataList?: { name: string; value: any }[],
+): Promise<any[]> => {
   if (!config) {
     return Promise.resolve([]);
   }
@@ -446,6 +459,28 @@ export const loadFieldDatasource = async (config: SelectOptionItem): Promise<any
     }
 
     return Promise.resolve([]);
+  } else if (config.type === 'interface') {
+    // 接口数据 构建端拿不到入参,不需要调用接口
+    // const { apiconfig } = config;
+    // if (apiconfig && formDataList) {
+    //   const name = (apiconfig.response as { name: string })?.name;
+    //   if (name) {
+    //     const res = await runtimeAxios.post('/common/doHttpJson', { jsonObject: apiconfig, formDataList });
+    //     let list: OptionItem[] = [];
+    //     const data = eval(`res.${name}`);
+    //     if (Array.isArray(data)) {
+    //       if (data.every((val) => typeof val === 'string')) {
+    //         // 字符串数组
+    //         list = data.map((val) => ({ key: val, value: val }));
+    //       } else if (data.every((val) => val.key && val.value)) {
+    //         // key-value对象数组
+    //         list = data.map((item) => ({ key: item.key, value: item.value }));
+    //       }
+    //     }
+    //     return list;
+    //   }
+    //   return Promise.resolve([]);
+    // }
   }
 
   return Promise.resolve([]);

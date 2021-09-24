@@ -6,7 +6,7 @@ import useMemoCallback from '../../hooks/use-memo-callback';
 import memberDefaultAvatar from './avatars/member-default-avatar.png';
 import depetDefaultAvatar from './avatars/depart-default-avatar.png';
 import roleDefaultAvatar from './avatars/role-default-avatar.png';
-import { ValueType, Key } from './type';
+import { ValueType, Key, DynamicFields } from './type';
 import Selector from './selector';
 import { getContainer } from '../../utils';
 import styles from './index.module.scss';
@@ -44,10 +44,24 @@ interface MemberListProps {
   onDelete?(id: Key, tpye: MemberType): void;
   children?: ReactNode;
   className?: string;
+  dynamic?: ValueType['dynamic'];
+  onDeleteDynamicMember?(id: Key, type?: 'field' | 'role'): void;
 }
 
+const STARTERID = 'STARTERID';
+
 export const MemberList = memo(function MemberList(props: MemberListProps) {
-  const { members = [], depts = [], roles = [], editable, onDelete, children, className } = props;
+  const {
+    members = [],
+    depts = [],
+    roles = [],
+    dynamic,
+    onDeleteDynamicMember,
+    editable,
+    onDelete,
+    children,
+    className,
+  } = props;
 
   return (
     <div className={classNames(styles.members, className)}>
@@ -86,6 +100,39 @@ export const MemberList = memo(function MemberList(props: MemberListProps) {
         );
       })}
 
+      {dynamic?.starter && (
+        <Member
+          editable={editable}
+          key={STARTERID}
+          data={{ id: STARTERID, name: '发起人' }}
+          onDelete={(memberId) => onDeleteDynamicMember && onDeleteDynamicMember(memberId)}
+        >
+          <Image className={styles.avatar} placeholder={memberDefaultAvatar} size={24} round />
+        </Member>
+      )}
+
+      {(dynamic?.roles || []).map((role) => (
+        <Member
+          editable={editable}
+          key={role.id}
+          data={{ name: role.name + '(动态)', id: role.id }}
+          onDelete={(roleId) => onDeleteDynamicMember && onDeleteDynamicMember(roleId, 'role')}
+        >
+          <Image className={styles.avatar} src={role.avatar} placeholder={roleDefaultAvatar} size={24} round />
+        </Member>
+      ))}
+
+      {(dynamic?.fields || []).map((field) => (
+        <Member
+          editable={editable}
+          key={field.key}
+          data={{ name: field.name + '(动态)', id: field.key }}
+          onDelete={(fieldId) => onDeleteDynamicMember && onDeleteDynamicMember(fieldId, 'field')}
+        >
+          <Image className={styles.avatar} placeholder={roleDefaultAvatar} size={24} round />
+        </Member>
+      ))}
+
       {children}
     </div>
   );
@@ -101,6 +148,8 @@ export interface MemberSelectorProps {
   onDelete?(id: string | number, type: MemberType): void;
   listClass?: string;
   getPopupContainer?(container: HTMLElement): HTMLElement;
+  showDynamic?: boolean;
+  dynamicFields?: DynamicFields;
 }
 
 const defaultValue: ValueType = {
@@ -120,13 +169,13 @@ function MemberSelector(props: MemberSelectorProps) {
     onDelete,
     listClass,
     getPopupContainer,
+    showDynamic,
+    dynamicFields,
   } = props;
   const [showPopover, setShowPopover] = useState(false);
   const [localValue, setLocalValue] = useState<ValueType>(value || defaultValue);
   const popoverContentContainerRef = useRef<HTMLDivElement>(null);
-  const selectorContainerRef = useRef<HTMLDivElement>(null);
   const showValue = value || localValue;
-
   const handleChange = useMemoCallback((newValue: ValueType) => {
     if (onChange) {
       onChange(newValue);
@@ -160,19 +209,46 @@ function MemberSelector(props: MemberSelectorProps) {
     });
   });
 
+  const handleDeleteDynamicMember: NonNullable<MemberListProps['onDeleteDynamicMember']> = useMemoCallback(
+    (key, type) => {
+      if (!onChange) return;
+
+      let dynamic: ValueType['dynamic'];
+
+      if (key === STARTERID) {
+        dynamic = Object.assign({}, showValue.dynamic, { starter: false });
+      } else if (type === 'field') {
+        const fields = showValue.dynamic?.fields || [];
+
+        dynamic = Object.assign({}, showValue.dynamic, { fields: fields.filter((field) => key !== field.key) });
+      } else if (type === 'role') {
+        const roles = showValue.dynamic?.roles || [];
+
+        dynamic = Object.assign({}, showValue.dynamic, { roles: roles.filter((role) => key !== role.id) });
+      } else {
+        return null as never;
+      }
+
+      onChange({
+        ...showValue,
+        dynamic,
+      });
+    },
+  );
+
   const content = useMemo(() => {
     return (
-      <div ref={selectorContainerRef}>
-        <Selector
-          className={selectorWrapperClass}
-          value={showValue}
-          onChange={handleChange}
-          projectId={projectId}
-          strictDept={strictDept}
-        />
-      </div>
+      <Selector
+        className={selectorWrapperClass}
+        value={showValue}
+        onChange={handleChange}
+        projectId={projectId}
+        strictDept={strictDept}
+        dynamicFields={dynamicFields}
+        showDynamic={showDynamic}
+      />
     );
-  }, [showValue, handleChange, projectId, selectorWrapperClass, strictDept]);
+  }, [showValue, handleChange, projectId, selectorWrapperClass, strictDept, showDynamic, dynamicFields]);
 
   useEffect(() => {
     return () => {
@@ -181,7 +257,7 @@ function MemberSelector(props: MemberSelectorProps) {
       // HACK: 用于更新Popover弹出层的位置
       window.dispatchEvent(new Event('resize'));
     };
-  }, [value?.members.length, value?.depts.length]);
+  }, [showValue]);
 
   return (
     <div className={styles.container} ref={popoverContentContainerRef}>
@@ -190,6 +266,8 @@ function MemberSelector(props: MemberSelectorProps) {
         onDelete={handleDeleteMember}
         depts={showValue.depts}
         roles={showValue.roles}
+        dynamic={value?.dynamic}
+        onDeleteDynamicMember={handleDeleteDynamicMember}
         className={listClass}
         editable
       >
@@ -201,9 +279,9 @@ function MemberSelector(props: MemberSelectorProps) {
           onVisibleChange={setShowPopover}
           destroyTooltipOnHide
           placement="bottomLeft"
-          className="aaa"
           overlayClassName={styles.popover}
           arrowContent={null}
+          autoAdjustOverflow={{ adjustX: 1, adjustY: 0 }}
         >
           <div className={styles.action}>
             {children ? children : <Icon type="xinzengjiacu" className={styles.add} />}

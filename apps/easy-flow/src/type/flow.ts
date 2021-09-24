@@ -54,6 +54,11 @@ export type CorrelationMemberConfig = {
   members: CorrelationMemberConfigKey[];
   depts: CorrelationMemberConfigKey[];
   roles: CorrelationMemberConfigKey[];
+  dynamic?: {
+    starter?: boolean;
+    roles: CorrelationMemberConfigKey[];
+    fields: CorrelationMemberConfigKey[];
+  };
 };
 // 审批节点
 export interface UserNode extends BaseNode {

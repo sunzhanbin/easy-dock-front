@@ -30,8 +30,10 @@ export type DataType = {
 };
 
 const loadData = async function (taskId: string): Promise<DataType> {
-  const { data } = await runtimeAxios.get(`/process_instance/getInstanceDetailByTaskId?taskId=${taskId}`);
-  const flowInstance: DataType['flow']['instance'] = data.processInstance;
+  const { data } = await runtimeAxios.get<{
+    data: { processInstance: DataType['flow']['instance']; id: string; state: TaskDetailType };
+  }>(`/process_instance/getInstanceDetailByTaskId?taskId=${taskId}`);
+  const flowInstance = data.processInstance;
   const [formMeta, formValue, node] = await loadFlowData(flowInstance);
 
   return {
@@ -116,7 +118,7 @@ function FlowDetail() {
       await runtimeAxios.post(`/process_instance/stop`, {
         formData: formValues,
         taskId,
-        remark: '',
+        remark,
       });
     } else if (showConfirmType === ActionType.Revert) {
       // 驳回

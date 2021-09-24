@@ -7,6 +7,7 @@ import useMemoCallback from '@common/hooks/use-memo-callback';
 import Condition from '@/features/bpm-editor/components/condition';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { loadFieldDatasource } from '@utils/form';
+import useValidateForm from '../../hooks/use-validate-form';
 import { updateNode, formMetaSelector } from '../../flow-slice';
 
 type FormValuesType = {
@@ -37,7 +38,8 @@ function SubBranch(props: SubBranchProps) {
   );
 
   const handleLoadDatasource = useMemoCallback((name: string) => {
-    return loadFieldDatasource((fields.find((field) => field.fieldName === name) as SelectField).dataSource);
+    const dataSource = (fields.find((field) => field.fieldName === name) as SelectField).dataSource;
+    return loadFieldDatasource(dataSource);
   });
 
   useEffect(() => {
@@ -46,10 +48,12 @@ function SubBranch(props: SubBranchProps) {
     });
   }, [form, branch]);
 
+  useValidateForm<FormValuesType>(form, branch.id);
+
   return (
     <Form form={form} autoComplete="off" layout="vertical" onValuesChange={handleFormValuesChange}>
       <Form.Item name="conditions" label="流转条件">
-        <Condition form={form} data={fields} loadDataSource={handleLoadDatasource}></Condition>
+        <Condition data={fields} name="conditions" loadDataSource={handleLoadDatasource}></Condition>
       </Form.Item>
     </Form>
   );

@@ -2,63 +2,64 @@ import { memo, useMemo } from 'react';
 import classnames from 'classnames';
 import moment from 'moment';
 import { Icon, Avatar } from '@common/components';
+import Tag, { StatusTagProps } from '@components/status-tag';
 import { AuditRecordType, AuditRecordSchema } from '@type/detail';
 import styles from './index.module.scss';
 
-function mapActionInfo(type: AuditRecordType) {
+function mapActionInfo(type: AuditRecordType): { text: string; status: StatusTagProps['status'] } {
   if (type === AuditRecordType.APPROVE) {
     return {
       text: '同意',
-      className: styles.success,
+      status: 'success',
     };
   }
 
   if (type === AuditRecordType.FORM_FILL) {
     return {
       text: '提交',
-      className: styles.primary,
+      status: 'primary',
     };
   }
 
   if (type === AuditRecordType.REJECT) {
     return {
       text: '驳回',
-      className: styles.warning,
+      status: 'warning',
     };
   }
 
   if (type === AuditRecordType.INSTANCE_STOP) {
     return {
       text: '终止',
-      className: styles.error,
+      status: 'error',
     };
   }
 
   if (type === AuditRecordType.TURN) {
     return {
       text: '转办',
-      className: styles.primary,
+      status: 'primary',
     };
   }
 
   if (type === AuditRecordType.START) {
     return {
       text: '开始',
-      className: styles.primary,
+      status: 'primary',
     };
   }
 
   if (type === AuditRecordType.BACK) {
     return {
       text: '撤回',
-      className: styles.success,
+      status: 'revoke',
     };
   }
 
   if (type === AuditRecordType.RUNNING) {
     return {
       text: '进行中',
-      className: styles.primary,
+      status: 'primary',
     };
   }
 
@@ -117,7 +118,7 @@ function NodeActionRecord(props: NodeActionRecordProps) {
                   <div className={styles.user} key={member.id}>
                     <Avatar size={24} className={styles.avatar} src={member.avatar} name={member.name} />
                     <div className={styles['user-name']}>{member.name}</div>
-                    <div className={classnames(styles.tag, action.className)}>{action.text}</div>
+                    <Tag status={action.status}>{action.text}</Tag>
                   </div>
                 );
               })}

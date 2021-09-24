@@ -31,16 +31,22 @@ export async function loadFlowData(
   ]);
 }
 
-export async function loadDatasource(formMeta: FormMeta, fieldsAuths: FieldAuthsMap, versionId: number) {
+export async function loadDatasource(
+  formMeta: FormMeta,
+  fieldsAuths: FieldAuthsMap,
+  versionId: number,
+  processInstanceId?: string,
+) {
   const allPromises: Promise<void>[] = [];
   const datasource: Datasource = {};
-
   formMeta.components.forEach((comp) => {
     // 有字段权限才去加载
-    if (comp.config.dataSource && (fieldsAuths && fieldsAuths[comp.config.fieldName] !== AuthType.Denied)) {
+    if (comp.config.dataSource && fieldsAuths && fieldsAuths[comp.config.fieldName] !== AuthType.Denied) {
       allPromises.push(
         runtimeAxios
-          .get<{ data: Datasource[string] }>(`/form/version/${versionId}/form/${comp.config.fieldName}/data`)
+          .post<{ data: Datasource[string] }>(`/form/version/${versionId}/form/${comp.config.fieldName}/data`, {
+            processInstanceId,
+          })
           .then(({ data }) => {
             datasource[comp.config.fieldName] = data;
           }),
@@ -53,7 +59,10 @@ export async function loadDatasource(formMeta: FormMeta, fieldsAuths: FieldAuths
   return datasource;
 }
 
-export async function fetchDataSource(components: Array<RadioField | CheckboxField | SelectField>) {
+export async function fetchDataSource(
+  components: Array<RadioField | CheckboxField | SelectField>,
+  formDataList?: { name: string; value: any }[],
+) {
   const allPromises: Promise<void>[] = [];
   const source: Datasource = {};
   components.forEach(async (object) => {
@@ -78,9 +87,44 @@ export async function fetchDataSource(components: Array<RadioField | CheckboxFie
             }),
           );
         }
+      } else if (dataSource.type === 'interface') {
+        // const { apiconfig } = dataSource;
+        // if (apiconfig && formDataList) {
+        //   const name = (apiconfig.response as { name: string })?.name;
+        //   const formValues = formDataList.filter((val) => val.value);
+        //   if (name) {
+        //     allPromises.push(
+        //       runtimeAxios
+        //         .post('/common/doHttpJson', { jsonObject: apiconfig, formDataList: formValues })
+        //         .then((res) => {
+        //           const data = eval(`res.${name}`);
+        //           let list: { key: string; value: string }[] = [];
+        //           if (Array.isArray(data)) {
+        //             if (data.every((val) => typeof val === 'string')) {
+        //               // 字符串数组
+        //               list = data.map((val) => ({ key: val, value: val }));
+        //             } else if (data.every((val) => val.key && val.value)) {
+        //               // key-value对象数组
+        //               list = data.map((item) => ({ key: item.key, value: item.value }));
+        //             }
+        //           }
+        //           source[key] = list;
+        //         }),
+        //     );
+        //   }
+        // }
+        allPromises.push(
+          Promise.resolve(1).then(() => {
+            source[key] = [];
+          }),
+        );
       }
     }
   });
   await Promise.all(allPromises);
   return source;
 }
+
+export const deleteDraft = async (draftId: number | string) => {
+  await runtimeAxios.delete(`task/draft/${draftId}`);
+};

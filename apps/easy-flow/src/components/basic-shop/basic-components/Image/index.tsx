@@ -20,7 +20,7 @@ const ImageComponent = (
     onChange?: (value: ImageValue | string) => void;
   },
 ) => {
-  const { maxCount = 8, colSpace = '4', value, disabled, onChange } = props;
+  const { maxCount = 10, colSpace = '4', value, disabled, onChange } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [previewVisible, setPreviewVisible] = useState<boolean>(false);
@@ -80,21 +80,7 @@ const ImageComponent = (
   const handleCancel = useMemoCallback(() => {
     setPreviewVisible(false);
   });
-  // 处理每行最多展示8张图片
-  useEffect(() => {
-    const el = containerRef.current!.querySelector('.ant-upload-list-picture-card');
-    if (el) {
-      const classNameList: string[] = [];
-      el.classList.forEach((className) => {
-        if (!className.includes('col-space')) {
-          classNameList.push(className);
-        }
-      });
-      classNameList.push(`col-space-${colSpace}`);
-      el.className = classNameList.join(' ');
-    }
-  }, [colSpace]);
-  useEffect(() => {
+  const initFileList = useMemoCallback(() => {
     if (value) {
       const componentValue = typeof value === 'string' ? (JSON.parse(value) as ImageValue) : { ...value };
       const { fileIdList, fileList } = componentValue;
@@ -126,7 +112,24 @@ const ImageComponent = (
         });
       }
     }
-  }, []);
+  });
+  // 处理每行最多展示8张图片
+  useEffect(() => {
+    const el = containerRef.current!.querySelector('.ant-upload-list-picture-card');
+    if (el) {
+      const classNameList: string[] = [];
+      el.classList.forEach((className) => {
+        if (!className.includes('col-space')) {
+          classNameList.push(className);
+        }
+      });
+      classNameList.push(`col-space-${colSpace}`);
+      el.className = classNameList.join(' ');
+    }
+  }, [colSpace]);
+  useEffect(() => {
+    initFileList();
+  }, [initFileList]);
   useEffect(() => {
     // 后端保存的是字符串,提交时需要转成json对象
     if (typeof value === 'string') {
@@ -134,6 +137,26 @@ const ImageComponent = (
       onChange && onChange(componentValue);
     }
   }, [value, onChange]);
+  useEffect(() => {
+    if (value) {
+      const componentValue = typeof value === 'string' ? (JSON.parse(value) as ImageValue) : { ...value };
+      const { fileIdList = [], fileList = [] } = componentValue;
+      const fileCount = fileIdList.length + fileList.length;
+      const el = containerRef.current!.querySelector('.ant-upload-list-picture-card-container:first-child');
+      const classNameList: string[] = [];
+      if (el) {
+        el.classList.forEach((c) => {
+          if (!c.includes('overlay')) {
+            classNameList.push(c);
+          }
+        });
+        if (fileCount >= maxCount) {
+          classNameList.push('overlay');
+        }
+        el.className = classNameList.join(' ');
+      }
+    }
+  }, [maxCount, value]);
   return (
     <div className={styles.image} id={props.id} ref={containerRef}>
       <Upload

@@ -1,16 +1,15 @@
 import { memo, useMemo, useState, useEffect } from 'react';
 import { Form, Select, Input, InputNumber } from 'antd';
 import classnames from 'classnames';
-import { DateField, fieldRule, FormField } from '@/type';
+import { DateField, fieldRule, FormField, SelectField } from '@/type';
 import { symbolMap, dynamicMap } from '@/utils';
-import { Icon } from '@common/components';
+import { Icon, Loading } from '@common/components';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import MultiText from '@/features/bpm-editor/components/multi-text';
 import NumberRange from '@/features/bpm-editor/components/number-range';
 import TimesDatePicker from '@/features/bpm-editor/components/date-picker';
 import DateRange from '@/features/bpm-editor/components/date-range';
 import styles from './index.module.scss';
-import { FormInstance } from 'antd/es/form/Form';
 
 const { Option } = Select;
 
@@ -63,7 +62,7 @@ type RuleFormProps = {
   components: Array<any>;
   className?: string;
   rule: fieldRule;
-  form: FormInstance;
+  name: string;
   blockIndex: number;
   ruleIndex: number;
   onChange?: (blockIndex: number, ruleIndex: number, rule: fieldRule) => void;
@@ -73,7 +72,7 @@ const FormList = ({
   components,
   className,
   rule,
-  form,
+  name,
   blockIndex,
   ruleIndex,
   onChange,
@@ -83,9 +82,10 @@ const FormList = ({
   const [symbol, setSymbol] = useState<string | undefined>(undefined);
   const [value, setValue] = useState<string | number | string[] | [number, number] | undefined>(undefined);
   const [optionList, setOptionList] = useState<{ key: string; value: string }[]>([]);
-  const name = useMemo(() => {
-    return [blockIndex, ruleIndex, 'fieldRule'];
-  }, [blockIndex, ruleIndex]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const nameList = useMemo(() => {
+    return [name, blockIndex, ruleIndex];
+  }, [blockIndex, ruleIndex, name]);
   const componentList = useMemo(() => {
     if (components && components?.length > 0) {
       const list = [...components];
@@ -97,6 +97,7 @@ const FormList = ({
             id: item.id!,
             type: item.type,
             format: (item as DateField).format,
+            sourceType: (item as SelectField).dataSource?.type || '',
             fieldName: item.fieldName,
           })) || []
       );
@@ -105,18 +106,23 @@ const FormList = ({
   }, [components]);
   const setDataSource = useMemoCallback((fieldName, fieldType) => {
     if (loadDataSource && (fieldType === 'Select' || fieldType === 'Radio' || fieldType === 'Checkbox')) {
-      loadDataSource(fieldName).then((res) => {
-        if (res) {
-          // 如果返回的是一个key-value数组,直接赋值给下拉选项
-          if (Array.isArray(res)) {
-            setOptionList(res);
-            // 如果返回的直接是接口数据,需要做一个转换
-          } else if (res.data) {
-            const list = (res.data?.data || []).map((val: string) => ({ key: val, value: val }));
-            setOptionList(list);
+      setLoading(true);
+      loadDataSource(fieldName)
+        .then((res) => {
+          if (res) {
+            // 如果返回的是一个key-value数组,直接赋值给下拉选项
+            if (Array.isArray(res)) {
+              setOptionList(res);
+              // 如果返回的直接是接口数据,需要做一个转换
+            } else if (res.data) {
+              const list = (res.data?.data || []).map((val: string) => ({ key: val, value: val }));
+              setOptionList(list);
+            }
           }
-        }
-      });
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     }
   });
   const changeField = useMemoCallback((fieldName) => {
@@ -126,19 +132,22 @@ const FormList = ({
     const component = componentList.find((item) => item.fieldName === fieldName);
     const fieldType = component && (component.type as string);
     setDataSource(fieldName, fieldType);
+    const fieldRule = {
+      fieldName: fieldName!,
+      fieldType: component?.type || rule.fieldType,
+    };
+    onChange && onChange(blockIndex, ruleIndex, fieldRule);
   });
   const changeSymbol = useMemoCallback((symbol) => {
     setSymbol(symbol);
     setValue(undefined);
-    if (symbol === 'null' || symbol === 'notNull') {
-      const selectComponent = componentList.find((item) => item.fieldName === fieldName);
-      const fieldRule = {
-        fieldName: fieldName!,
-        symbol: symbol!,
-        fieldType: rule.fieldType || selectComponent?.type,
-      };
-      onChange && onChange(blockIndex, ruleIndex, fieldRule);
-    }
+    const selectComponent = componentList.find((item) => item.fieldName === fieldName);
+    const fieldRule = {
+      fieldName: fieldName!,
+      symbol: symbol!,
+      fieldType: selectComponent?.type || rule.fieldType,
+    };
+    onChange && onChange(blockIndex, ruleIndex, fieldRule);
   });
   const changeValue = useMemoCallback((value) => {
     setValue(value);
@@ -147,36 +156,30 @@ const FormList = ({
       fieldName: fieldName!,
       symbol: symbol!,
       value: value!,
-      fieldType: rule.fieldType || selectComponent?.type,
+      fieldType: selectComponent?.type || rule.fieldType,
     };
     onChange && onChange(blockIndex, ruleIndex, fieldRule);
   });
+  const init = useMemoCallback(() => {
+    const { fieldName, symbol, value, fieldType } = rule;
+    setFieldName(fieldName);
+    setSymbol(symbol);
+    setValue(value);
+    if (fieldName) {
+      const type = fieldType;
+      setDataSource(fieldName, type);
+    }
+  });
+
+  const getPopupContainer = useMemo(() => {
+    return (node: HTMLDivElement) => node;
+  }, []);
 
   useEffect(() => {
     if (rule) {
-      const { fieldName, symbol, value, fieldType } = rule;
-      setFieldName(fieldName);
-      setSymbol(symbol);
-      setValue(value);
-      const values = form.getFieldsValue();
-      // 设置默认值
-      if (fieldName && values[blockIndex][ruleIndex]) {
-        const newValues = Object.assign({}, values[blockIndex], {
-          [ruleIndex]: { fieldRule: { fieldName, symbol, value } },
-        });
-        form.setFieldsValue({ [blockIndex]: newValues });
-      } else {
-        const newValues = Object.assign({}, values[blockIndex], {
-          [ruleIndex]: { fieldRule: {} },
-        });
-        form.setFieldsValue({ [blockIndex]: newValues });
-      }
-      if (fieldName) {
-        const type = fieldType;
-        setDataSource(fieldName, type);
-      }
+      init();
     }
-  }, [rule]);
+  }, [init, rule]);
   const renderSymbol = useMemoCallback(() => {
     const component = componentList.find((item) => item.fieldName === fieldName);
     const componentType = component && component.type;
@@ -212,6 +215,7 @@ const FormList = ({
           className={styles.symbol}
           suffixIcon={<Icon type="xiala" />}
           onChange={changeSymbol}
+          getPopupContainer={getPopupContainer}
         >
           {symbolList.map(({ value, label }) => (
             <Option key={value} value={value} label={label}>
@@ -292,6 +296,7 @@ const FormList = ({
               className={styles.value}
               value={value as string}
               onChange={changeValue}
+              getPopupContainer={getPopupContainer}
             >
               {Object.values(dynamicMap).map((item) => (
                 <Option key={item.value} value={item.value} label={item.label}>
@@ -352,6 +357,29 @@ const FormList = ({
       }
       if (symbol === 'equal' || symbol === 'unequal') {
         const mode: { mode: 'multiple' } | null = componentType === 'Checkbox' ? { mode: 'multiple' } : null;
+        const sourceType = component?.sourceType || '';
+        if (sourceType === 'interface' || sourceType === undefined) {
+          if (componentType === 'Checkbox') {
+            return (
+              <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: '请输入!' }]}>
+                <MultiText className={styles.value} value={value as string[]} onChange={changeValue} />
+              </Form.Item>
+            );
+          }
+          return (
+            <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: '请输入!' }]}>
+              <Input
+                placeholder="输入值"
+                size="large"
+                className={styles.value}
+                value={value as string}
+                onChange={(e) => {
+                  changeValue(e.target.value);
+                }}
+              />
+            </Form.Item>
+          );
+        }
         return (
           <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: '请选择!' }]}>
             <Select
@@ -361,6 +389,7 @@ const FormList = ({
               suffixIcon={<Icon type="xiala" />}
               value={value as string | string[]}
               onChange={changeValue}
+              getPopupContainer={getPopupContainer}
               {...mode}
             >
               {optionList.map(({ key, value }) => (
@@ -373,6 +402,14 @@ const FormList = ({
         );
       }
       if (symbol === 'equalAnyOne' || symbol === 'unequalAnyOne') {
+        const sourceType = component?.sourceType || '';
+        if (sourceType === 'interface' || sourceType === undefined) {
+          return (
+            <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: '请输入!' }]}>
+              <MultiText className={styles.value} value={value as string[]} onChange={changeValue} />
+            </Form.Item>
+          );
+        }
         return (
           <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: '请选择!' }]}>
             <Select
@@ -383,6 +420,7 @@ const FormList = ({
               suffixIcon={<Icon type="xiala" />}
               value={value as string[]}
               onChange={changeValue}
+              getPopupContainer={getPopupContainer}
             >
               {optionList.map(({ key, value }) => (
                 <Option key={key} value={key} label={value}>
@@ -401,10 +439,11 @@ const FormList = ({
   });
   return (
     <Form.Item className={classnames(styles.form, className ? className : '')}>
-      <Form.List name={name}>
+      <Form.List name={nameList}>
         {() => {
           return (
             <>
+              {loading && <Loading className={styles.loading} />}
               <Form.Item name="fieldName" rules={[{ required: true, message: '请选择关联字段!' }]}>
                 <Select
                   placeholder="关联字段"
@@ -412,6 +451,7 @@ const FormList = ({
                   className={styles.fieldName}
                   value={fieldName}
                   onChange={changeField}
+                  getPopupContainer={getPopupContainer}
                   suffixIcon={<Icon type="xiala" />}
                 >
                   {componentList.map(({ fieldName, label }) => (
