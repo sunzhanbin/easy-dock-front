@@ -27,7 +27,7 @@ const SelectOptionList = (props: editProps) => {
   const [canDrag, setCanDrag] = useState<boolean>(false);
   const [subAppKey, setSubAppKey] = useState<string>(value?.subappId || '');
   const [appList, setAppList] = useState<(OptionItem & { versionId: number })[]>([]);
-  const [componentKey, setComponentKey] = useState<string>(value?.fieldName || '');
+  const [componentKey, setComponentKey] = useState<string | undefined>(value?.fieldName);
   const [componentList, setComponentList] = useState<OptionItem[]>([]);
 
   const fields = useMemo<{ id: string; name: string }[]>(() => {
@@ -117,7 +117,7 @@ const SelectOptionList = (props: editProps) => {
   const handleChangeApp = useCallback(
     (e) => {
       setSubAppKey(e as string);
-      setComponentKey('');
+      setComponentKey(undefined);
       fetchFieldNames(appList, e);
     },
     [appList, fetchFieldNames],
@@ -220,8 +220,8 @@ const SelectOptionList = (props: editProps) => {
               className={styles.dict_content}
               size="large"
               suffixIcon={<Icon type="xiala" />}
+              value={componentKey}
               onChange={handleChangeComponent}
-              {...(componentKey ? { defaultValue: componentKey } : null)}
             >
               {componentList.map(({ key, value }) => (
                 <Option value={key} key={key}>
