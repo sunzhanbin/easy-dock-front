@@ -171,7 +171,7 @@ const Start: FC<{}> = () => {
         },
       },
     ];
-  }, [history]);
+  }, [history, renderContent]);
   const fetchData = useMemoCallback(
     (pagination: Pagination = { pageSize: 10, current: 1, total: 0, showSizeChanger: true }) => {
       if (!appId) return;

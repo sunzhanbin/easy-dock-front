@@ -1,5 +1,4 @@
 import { mock, setup } from 'mockjs';
-import { FieldType } from '@type/form';
 import { TableDataBase } from './index';
 
 type Options = {

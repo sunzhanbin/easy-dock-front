@@ -299,7 +299,7 @@ const DataManage = () => {
 
       fetchDatasource();
     }
-  }, [subapps, fetchDatasource]);
+  }, [subapps, form, fetchDatasource]);
 
   const handleFormValueChange = useMemoCallback(debounce(fetchDatasource, 300));
   const formatValueFromTable = useMemo(() => {
