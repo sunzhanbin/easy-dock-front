@@ -28,11 +28,13 @@ const Member = (
       showSearch: showSearch as boolean,
       placeholder: '请选择',
       suffixIcon: <Icon type="xiala" />,
-      value: Number(value),
       onChange: onChange as Function,
     };
     if (multiple) {
       prop.mode = 'multiple';
+    }
+    if (value) {
+      prop.value = Number(value);
     }
     if (defaultValue) {
       prop.defaultValue = Number(value);
