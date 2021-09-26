@@ -86,9 +86,6 @@ const Done: FC<{}> = () => {
         defaultSortOrder: 'descend' as 'descend',
         sorter: true,
         width: '20%',
-        sortDirections: ['ascend' as 'ascend', 'descend' as 'descend', 'ascend' as 'ascend'],
-        defaultSortOrder: 'descend' as 'descend',
-        sorter: true,
         render(_: string, record: DoneItem) {
           const { endTime } = record;
           return <div className={styles.endTime}>{endTime ? moment(endTime).format('YYYY-MM-DD HH:mm') : ''}</div>;
