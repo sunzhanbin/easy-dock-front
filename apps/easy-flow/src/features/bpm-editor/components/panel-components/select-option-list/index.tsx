@@ -39,13 +39,13 @@ const SelectOptionList = (props: editProps) => {
 
   const addItem = useCallback(() => {
     const list: OptionItem[] = [...content];
-    const filterList = list.filter((item: OptionItem) => item.key.startsWith('未命名'));
+    const filterList = list.filter((item: OptionItem) => item.key.startsWith('选项'));
     let maxIndex = 1;
     if (filterList.length > 0) {
-      const indexList = filterList.map((item) => +item.key.slice(3));
+      const indexList = filterList.map((item) => +item.key.slice(2));
       maxIndex = Math.max(...indexList) + 1;
     }
-    const name = `未命名${maxIndex}`;
+    const name = `选项${maxIndex}`;
     list.push({ key: name, value: name });
     setContent(list);
     onChange && onChange({ type: 'custom', data: list });
