@@ -73,9 +73,6 @@ const Done: FC<{}> = () => {
         dataIndex: 'startTime',
         key: 'startTime',
         width: '20%',
-        sortDirections: ['ascend' as 'ascend', 'descend' as 'descend', 'ascend' as 'ascend'],
-        defaultSortOrder: 'descend' as 'descend',
-        sorter: true,
         render(_: string, record: DoneItem) {
           const { startTime } = record;
           return <div className={styles.startTime}>{getPassedTime(startTime)}</div>;
@@ -86,6 +83,9 @@ const Done: FC<{}> = () => {
         dataIndex: 'endTime',
         key: 'endTime',
         width: '20%',
+        sortDirections: ['ascend' as 'ascend', 'descend' as 'descend', 'ascend' as 'ascend'],
+        defaultSortOrder: 'descend' as 'descend',
+        sorter: true,
         render(_: string, record: DoneItem) {
           const { endTime } = record;
           return <div className={styles.endTime}>{endTime ? moment(endTime).format('YYYY-MM-DD HH:mm') : ''}</div>;
