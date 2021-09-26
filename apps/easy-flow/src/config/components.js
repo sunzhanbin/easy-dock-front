@@ -86,9 +86,9 @@ const dataSource = {
   defaultValue: {
     type: 'custom',
     data: [
-      { key: '选项一', value: '选项一' },
-      { key: '选项二', value: '选项二' },
-      { key: '选项三', value: '选项三' },
+      { key: '选项1', value: '选项1' },
+      { key: '选项2', value: '选项2' },
+      { key: '选项3', value: '选项3' },
     ],
   },
   label: '选项内容',

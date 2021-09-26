@@ -41,7 +41,7 @@ const Done: FC<{}> = () => {
         title: '序号',
         dataIndex: 'id',
         key: 'id',
-        width: 200,
+        width: '7.5%',
         render(_: string, record: DoneItem, index: number) {
           return <div>{index + 1}</div>;
         },
@@ -73,9 +73,6 @@ const Done: FC<{}> = () => {
         dataIndex: 'startTime',
         key: 'startTime',
         width: '20%',
-        sortDirections: ['ascend' as 'ascend', 'descend' as 'descend', 'ascend' as 'ascend'],
-        defaultSortOrder: 'descend' as 'descend',
-        sorter: true,
         render(_: string, record: DoneItem) {
           const { startTime } = record;
           return <div className={styles.startTime}>{getPassedTime(startTime)}</div>;
@@ -85,6 +82,9 @@ const Done: FC<{}> = () => {
         title: '办理时间',
         dataIndex: 'endTime',
         key: 'endTime',
+        sortDirections: ['ascend' as 'ascend', 'descend' as 'descend', 'ascend' as 'ascend'],
+        defaultSortOrder: 'descend' as 'descend',
+        sorter: true,
         width: '20%',
         render(_: string, record: DoneItem) {
           const { endTime } = record;
