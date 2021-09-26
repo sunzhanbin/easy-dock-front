@@ -41,7 +41,7 @@ const Done: FC<{}> = () => {
         title: '序号',
         dataIndex: 'id',
         key: 'id',
-        width: 200,
+        width: '7.5%',
         render(_: string, record: DoneItem, index: number) {
           return <div>{index + 1}</div>;
         },

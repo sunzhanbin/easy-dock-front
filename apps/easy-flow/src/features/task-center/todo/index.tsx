@@ -140,7 +140,7 @@ const ToDo: FC<{}> = () => {
         title: '序号',
         dataIndex: 'id',
         key: 'id',
-        width: '15%',
+        width: '7.5%',
         render(_: string, record: TodoItem, index: number) {
           return <div>{index + 1}</div>;
         },
