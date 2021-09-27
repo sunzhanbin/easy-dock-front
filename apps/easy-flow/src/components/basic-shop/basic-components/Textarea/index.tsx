@@ -9,6 +9,8 @@ const TextareaComponent = (props: TextAreaProps) => {
   const propList = useMemo(() => {
     const prop: { [k: string]: string | number | boolean | undefined | Function } = {
       rows: 4,
+      maxLength: 1000, //最大长度200 v1.0.0暂定
+      showCount: true,
       size: 'large',
       placeholder: '请输入',
       onChange: onChange,
