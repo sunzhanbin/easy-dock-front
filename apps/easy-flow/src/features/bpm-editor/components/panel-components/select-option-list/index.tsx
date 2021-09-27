@@ -1,5 +1,6 @@
-import { memo, useCallback, useMemo, useState, useEffect } from 'react';
+import { memo, useCallback, useMemo, useState, useEffect, useRef } from 'react';
 import { Select, Input, Tooltip, Form } from 'antd';
+import { useDrag, useDrop, DropTargetMonitor } from 'react-dnd';
 import { axios } from '@utils';
 import { FormField, OptionItem, OptionMode, SelectOptionItem } from '@/type';
 import { Icon } from '@common/components';
@@ -56,38 +57,24 @@ const SelectOptionList = (props: editProps) => {
     setContent(list);
     onChange && onChange({ type: 'custom', data: list });
   });
-  const handleDragstart = useCallback((e, index) => {
-    e.dataTransfer.dropEffect = 'move';
-    e.dataTransfer.setData('index', index);
-  }, []);
-  const handleDrop = useMemoCallback((e, index) => {
-    e.preventDefault();
-    e.stopPropagation();
-    e.dataTransfer.dropEffect = 'move';
-    const sourceIndex = +e.dataTransfer.getData('index');
-    const targetIndex = index;
+
+  const handleDrop = useMemoCallback((sourceIndex: number, targetIndex: number) => {
     const list: OptionItem[] = [...content];
-    if (sourceIndex > targetIndex) {
-      list.splice(targetIndex, 0, list[sourceIndex]);
-      list.splice(sourceIndex + 1, 1);
-    } else {
-      const target = list[sourceIndex];
-      list.splice(sourceIndex, 1);
-      list.splice(targetIndex, 0, target);
-    }
+
+    let tmp = list[sourceIndex];
+
+    list[sourceIndex] = list[targetIndex];
+    list[targetIndex] = tmp;
+
     setContent(list);
     onChange && onChange({ type: 'custom', data: list });
   });
-  const handleDragOver = useCallback((e) => {
-    e.preventDefault();
-    e.stopPropagation();
-  }, []);
-  const handleBlur = useMemoCallback((e, index) => {
+
+  const handleBlur = useMemoCallback((value: string, index: number) => {
     const list = [...content];
-    const text = e.target.value;
     list[index] = {
-      key: text,
-      value: text,
+      key: value,
+      value: value,
     };
     setContent(list);
     onChange && onChange({ type: 'custom', data: list });
@@ -134,8 +121,11 @@ const SelectOptionList = (props: editProps) => {
     } else if (type === 'subapp' && subAppKey && componentKey) {
       onChange && onChange({ type, subappId: subAppKey, fieldName: componentKey });
     } else if (type === 'interface') {
-      onChange && onChange({ type, apiconfig: value?.apiconfig });
+      onChange && onChange({ type, apiConfig: value?.apiConfig });
     }
+  });
+  const handleApiChange = useMemoCallback((apiConfig) => {
+    onChange && onChange({ type, apiConfig });
   });
 
   const renderContent = useMemoCallback(() => {
@@ -143,53 +133,14 @@ const SelectOptionList = (props: editProps) => {
       return (
         <div className={styles.custom_list}>
           {content.map((item: OptionItem, index: number) => (
-            <div
-              className={styles.custom_item}
+            <DragableOption
               key={item.key}
-              draggable={canDrag}
-              onDragStart={(e) => {
-                handleDragstart(e, index);
-              }}
-              onDrop={(e) => {
-                handleDrop(e, index);
-              }}
-              onDragOver={handleDragOver}
-            >
-              <div
-                className={styles.delete}
-                onClick={() => {
-                  deleteItem(index);
-                }}
-              >
-                <Tooltip title="删除">
-                  <span>
-                    <Icon className={styles.iconfont} type="shanchu" />
-                  </span>
-                </Tooltip>
-              </div>
-              <div
-                className={styles.move}
-                onMouseEnter={() => {
-                  setCanDrag(true);
-                }}
-                onMouseLeave={() => {
-                  setCanDrag(false);
-                }}
-              >
-                <Tooltip title="拖动换行">
-                  <span>
-                    <Icon className={styles.iconfont} type="caidan" />
-                  </span>
-                </Tooltip>
-              </div>
-              <Input
-                size="large"
-                defaultValue={item.value}
-                onBlur={(e) => {
-                  handleBlur(e, index);
-                }}
-              />
-            </div>
+              index={index}
+              data={item}
+              onChange={handleBlur}
+              onDrop={handleDrop}
+              onDelete={deleteItem}
+            />
           ))}
           <div className={styles.add_custom} onClick={addItem}>
             <Icon className={styles.iconfont} type="xinzengjiacu" />
@@ -234,8 +185,14 @@ const SelectOptionList = (props: editProps) => {
       );
     } else if (type === 'interface') {
       return (
-        <Form.Item className={styles.form} name="apiconfig" label="选择要读取数据的接口">
-          <DataApiConfig name="apiconfig" label="为表单控件匹配请求参数" layout="vertical" fields={fields}>
+        <Form.Item className={styles.form} name="apiConfig" label="选择要读取数据的接口">
+          <DataApiConfig
+            name={['dataSource', 'apiConfig']}
+            label="为表单控件匹配请求参数"
+            layout="vertical"
+            fields={fields}
+            onChange={handleApiChange}
+          >
             <ResponseNoMap label="选择返回参数" />
           </DataApiConfig>
         </Form.Item>
@@ -300,3 +257,68 @@ const SelectOptionList = (props: editProps) => {
 };
 
 export default memo(SelectOptionList);
+
+interface DragableOptionProps {
+  data: OptionItem;
+  onDelete(index: this['index']): void;
+  onChange(value: this['data']['value'], index: this['index']): void;
+  onDrop(sourceIndex: number, targetIndex: number): void;
+  index: number;
+}
+
+function DragableOption(props: DragableOptionProps) {
+  const { onDelete, data, onChange, onDrop, index } = props;
+  const dragWrapperRef = useRef<HTMLDivElement>(null);
+  const [_, drag] = useDrag(
+    () => ({
+      type: 'option',
+      item() {
+        return { index };
+      },
+    }),
+    [index],
+  );
+  const [__, drop] = useDrop(
+    () => ({
+      accept: 'option',
+      drop: (currentDragItem: { index: number }) => {
+        if (currentDragItem.index !== index) {
+          onDrop(currentDragItem.index, index);
+        }
+      },
+    }),
+    [onDrop, index],
+  );
+
+  const handleInputBlur = useMemoCallback((event: React.FocusEvent<HTMLInputElement>) => {
+    onChange(event.target.value, index);
+  });
+
+  const handleDelete = useMemoCallback(() => {
+    onDelete(index);
+  });
+
+  useEffect(() => {
+    drag(drop(dragWrapperRef));
+  }, [drag, drop]);
+
+  return (
+    <div className={styles.custom_item} ref={dragWrapperRef}>
+      <div className={styles.delete} onClick={handleDelete}>
+        <Tooltip title="删除">
+          <span>
+            <Icon className={styles.iconfont} type="shanchu" />
+          </span>
+        </Tooltip>
+      </div>
+      <div className={styles.move}>
+        <Tooltip title="拖动换行">
+          <span>
+            <Icon className={styles.iconfont} type="caidan" />
+          </span>
+        </Tooltip>
+      </div>
+      <Input size="large" defaultValue={data.value} onBlur={handleInputBlur} />
+    </div>
+  );
+}

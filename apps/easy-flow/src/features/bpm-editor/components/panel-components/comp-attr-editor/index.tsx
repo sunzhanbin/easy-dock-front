@@ -1,10 +1,10 @@
-import { memo, useEffect, Fragment, useMemo, ReactNode, useRef } from 'react';
+import { memo, useEffect, Fragment, useMemo, ReactNode } from 'react';
 import { Form, Select, Input, Switch, Radio, Checkbox, InputNumber } from 'antd';
 import SelectOptionList from '../select-option-list';
 import SelectDefaultOption from '../select-default-option';
 import DefaultDate from '../default-date';
 import Editor from '../rich-text';
-import { FormField, rangeItem, SchemaConfigItem, SelectField } from '@/type';
+import { FormField, rangeItem, SchemaConfigItem } from '@/type';
 import { Store } from 'antd/lib/form/interface';
 import styles from './index.module.scss';
 import { useAppSelector } from '@/app/hooks';
@@ -96,33 +96,13 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
   const [form] = Form.useForm();
   const errors = useAppSelector(errorSelector);
   const errorIdList = useMemo(() => (errors || []).map(({ id }) => id), [errors]);
-  const initFormValues = useMemo(() => {
-    let formValues = { ...initValues };
-    const dataSource = (formValues as SelectField).dataSource;
-    if (dataSource && dataSource.type === 'interface') {
-      formValues = Object.assign({}, formValues, { apiconfig: dataSource.apiconfig || {} });
-    }
-    return formValues;
-  }, [initValues]);
   const onFinish = useMemoCallback((values: Store) => {
     const isValidate = form.isFieldsTouched(['fieldName', 'label']);
     onSave && onSave(values, isValidate);
   });
-  const configRef = useRef();
   const handleChange = useMemoCallback(
     debounce(() => {
-      let formValues = form.getFieldsValue();
-      let { dataSource } = formValues;
-      const { apiconfig } = formValues;
-      if (apiconfig) {
-        // 记录上一次的值
-        configRef.current = apiconfig;
-      }
-      if (configRef.current && dataSource && dataSource.type === 'interface') {
-        dataSource = Object.assign({}, dataSource, { type: 'interface', apiconfig: configRef.current });
-        formValues = Object.assign({}, formValues, { dataSource });
-      }
-      onFinish(formValues);
+      onFinish(form.getFieldsValue());
     }, 66),
   );
 
@@ -135,12 +115,7 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
     };
   }, [componentId, form, errorIdList]);
   useEffect(() => {
-    let formValues = { ...initValues };
-    const dataSource = (formValues as SelectField).dataSource;
-    if (dataSource && dataSource.type === 'interface') {
-      formValues = Object.assign({}, formValues, { apiconfig: dataSource.apiconfig || {} });
-    }
-    form.setFieldsValue(formValues);
+    form.setFieldsValue(initValues);
   }, [initValues, form]);
 
   return (
@@ -150,7 +125,7 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
         key={componentId}
         name="form_editor"
         autoComplete="off"
-        initialValues={initFormValues}
+        initialValues={initValues}
         onFinish={onFinish}
         onValuesChange={handleChange}
       >
