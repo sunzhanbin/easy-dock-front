@@ -23,6 +23,7 @@ const ImageComponent = (
   const { maxCount = 10, colSpace = '4', value, disabled, onChange } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [addFileCount, setAddFileCount] = useState<number>(0);
   const [previewVisible, setPreviewVisible] = useState<boolean>(false);
   const [previewTitle, setPreviewTitle] = useState<string>('');
   const [previewImage, setPreviewImage] = useState<string>('');
@@ -52,6 +53,7 @@ const ImageComponent = (
       const newValue = Object.assign({}, value, { fileList: list, type: 'Image' });
       setFileList(list);
       onChange && onChange(newValue);
+      setAddFileCount((n) => n - 1);
       return;
     }
     // 上传图片
@@ -61,6 +63,7 @@ const ImageComponent = (
       list.push(file);
       const newValue = Object.assign({}, value, { fileList: list, type: 'Image' });
       setFileList(list);
+      setAddFileCount((n) => n + 1);
       onChange && onChange(newValue);
     }
   });
@@ -83,10 +86,13 @@ const ImageComponent = (
   const handleRemove = useMemoCallback((file) => {
     if (value) {
       const componentValue = typeof value === 'string' ? (JSON.parse(value) as ImageValue) : { ...value };
-      const { fileIdList = [], fileList = [] } = componentValue;
+      const { fileIdList = [] } = componentValue;
       const list = [...fileIdList];
       const index = list.findIndex((v) => v.id === file.uid);
-      index > -1 && list.splice(index, 1);
+      if (index > -1) {
+        list.splice(index, 1);
+        setAddFileCount((n) => n + 1); //代偿性+1
+      }
       const newValue = Object.assign({}, componentValue, { fileIdList: list });
       onChange && onChange(newValue);
     }
@@ -151,8 +157,8 @@ const ImageComponent = (
   useEffect(() => {
     if (value) {
       const componentValue = typeof value === 'string' ? (JSON.parse(value) as ImageValue) : { ...value };
-      const { fileList = [] } = componentValue;
-      const fileCount = fileList.length;
+      const { fileIdList = [] } = componentValue;
+      const fileCount = fileIdList.length + addFileCount;
       const el = containerRef.current!.querySelector('.ant-upload-list-picture-card');
       const classNameList: string[] = [];
       if (el) {
@@ -170,7 +176,7 @@ const ImageComponent = (
         el.className = classNameList.join(' ');
       }
     }
-  }, [maxCount, value]);
+  }, [maxCount, value, addFileCount]);
   return (
     <div className={styles.image} id={props.id} ref={containerRef}>
       <Upload
