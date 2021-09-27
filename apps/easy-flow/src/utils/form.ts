@@ -391,7 +391,8 @@ type FileValue = {
 // 批量上传文件
 export async function uploadFile(values: any) {
   // 需要上传的文件,图片和附件合并到一起
-  const files: { originFileObj: File }[] = [];
+  const imageFiles: { originFileObj: File }[] = [];
+  const attachmentFiles: { originFileObj: File }[] = [];
   const fileListMap: { [k: string]: number } = {};
   const fileIdMap: { [k: string]: FileValue } = {};
   // 找出需要上传的文件,只有图片和附件需要上传
@@ -400,21 +401,26 @@ export async function uploadFile(values: any) {
     if (componentType === 'Image' || componentType === 'Attachment') {
       const fileList = values[key].fileList.filter((file: { originFileObj: File }) => file.originFileObj);
       fileListMap[key] = fileList.length;
-      files.push(...fileList);
+      componentType === 'Image' ? imageFiles.push(...fileList) : attachmentFiles.push(...fileList);
     }
   });
-  if (files.length > 0) {
-    const res = await batchUpload({ files: files.map((file) => file.originFileObj) });
-    const list = [...res.data];
-    Object.keys(fileListMap).forEach((key) => {
-      const oldValue = values[key];
-      fileIdMap[key] = {
-        type: oldValue.type,
-        fileList: [],
-        fileIdList: (oldValue.fileIdList || []).concat(list.splice(0, fileListMap[key])),
-      };
-    });
+  const promiseList: Promise<any>[] = [];
+  if (imageFiles.length > 0) {
+    promiseList.push(batchUpload({ files: imageFiles.map((file) => file.originFileObj), type: 1 }));
   }
+  if (attachmentFiles.length > 0) {
+    promiseList.push(batchUpload({ files: attachmentFiles.map((file) => file.originFileObj), type: 2 }));
+  }
+  const [imageRes, attachmentRes] = await Promise.all(promiseList);
+  const list = imageRes.data.concat(attachmentRes.data);
+  Object.keys(fileListMap).forEach((key) => {
+    const oldValue = values[key];
+    fileIdMap[key] = {
+      type: oldValue.type,
+      fileList: [],
+      fileIdList: (oldValue.fileIdList || []).concat(list.splice(0, fileListMap[key])),
+    };
+  });
   // 重新组装表单数据
   return Object.assign({}, values, fileIdMap);
 }
@@ -438,10 +444,7 @@ export function downloadFile(id: string, name: string) {
   });
 }
 
-export const loadFieldDatasource = async (
-  config: SelectOptionItem,
-  formDataList?: { name: string; value: any }[],
-): Promise<any[]> => {
+export const loadFieldDatasource = async (config: SelectOptionItem): Promise<any[]> => {
   if (!config) {
     return Promise.resolve([]);
   }

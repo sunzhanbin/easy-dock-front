@@ -33,7 +33,8 @@ function SubBranch(props: SubBranchProps) {
 
   const handleFormValuesChange = useMemoCallback(
     debounce((_, allValues: FormValuesType) => {
-      dispatch(updateNode(Object.assign({}, branch, allValues)));
+      const formValues = form.getFieldsValue();
+      dispatch(updateNode(Object.assign({}, branch, formValues)));
     }, 100),
   );
 
