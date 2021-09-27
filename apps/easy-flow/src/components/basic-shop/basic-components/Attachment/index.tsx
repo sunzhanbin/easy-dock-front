@@ -58,6 +58,17 @@ const Attachment = (
     const { name, uid } = file;
     downloadFile(uid, name);
   });
+  const handleRemove = useMemoCallback((file) => {
+    if (value) {
+      const componentValue = typeof value === 'string' ? (JSON.parse(value) as FileValue) : { ...value };
+      const { fileIdList = [], fileList = [] } = componentValue;
+      const list = [...fileIdList];
+      const index = list.findIndex((v) => v.id === file.uid);
+      index > -1 && list.splice(index, 1);
+      const newValue = Object.assign({}, componentValue, { fileIdList: list });
+      onChange && onChange(newValue);
+    }
+  });
   const initFileList = useMemoCallback(() => {
     if (value) {
       const componentValue = typeof value === 'string' ? (JSON.parse(value) as FileValue) : { ...value };
@@ -122,6 +133,7 @@ const Attachment = (
         beforeUpload={handleBeforeUpload}
         onChange={handleChange}
         onDownload={handleDownload}
+        onRemove={handleRemove}
       >
         {fileList.length >= maxCount ? null : (
           <span>
