@@ -151,8 +151,8 @@ const ImageComponent = (
   useEffect(() => {
     if (value) {
       const componentValue = typeof value === 'string' ? (JSON.parse(value) as ImageValue) : { ...value };
-      const { fileIdList = [], fileList = [] } = componentValue;
-      const fileCount = fileIdList.length + fileList.length;
+      const { fileList = [] } = componentValue;
+      const fileCount = fileList.length;
       const el = containerRef.current!.querySelector('.ant-upload-list-picture-card');
       const classNameList: string[] = [];
       if (el) {
@@ -163,6 +163,9 @@ const ImageComponent = (
         });
         if (fileCount >= maxCount) {
           classNameList.push('overlay');
+        } else {
+          const index = classNameList.findIndex((v) => v === 'overlay');
+          index > -1 && classNameList.splice(index, 1);
         }
         el.className = classNameList.join(' ');
       }
