@@ -142,7 +142,7 @@ const ImageComponent = (
       const componentValue = typeof value === 'string' ? (JSON.parse(value) as ImageValue) : { ...value };
       const { fileIdList = [], fileList = [] } = componentValue;
       const fileCount = fileIdList.length + fileList.length;
-      const el = containerRef.current!.querySelector('.ant-upload-list-picture-card-container:first-child');
+      const el = containerRef.current!.querySelector('.ant-upload-list-picture-card');
       const classNameList: string[] = [];
       if (el) {
         el.classList.forEach((c) => {
