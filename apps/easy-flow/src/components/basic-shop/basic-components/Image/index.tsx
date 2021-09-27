@@ -80,6 +80,17 @@ const ImageComponent = (
   const handleCancel = useMemoCallback(() => {
     setPreviewVisible(false);
   });
+  const handleRemove = useMemoCallback((file) => {
+    if (value) {
+      const componentValue = typeof value === 'string' ? (JSON.parse(value) as ImageValue) : { ...value };
+      const { fileIdList = [], fileList = [] } = componentValue;
+      const list = [...fileIdList];
+      const index = list.findIndex((v) => v.id === file.uid);
+      index > -1 && list.splice(index, 1);
+      const newValue = Object.assign({}, componentValue, { fileIdList: list });
+      onChange && onChange(newValue);
+    }
+  });
   const initFileList = useMemoCallback(() => {
     if (value) {
       const componentValue = typeof value === 'string' ? (JSON.parse(value) as ImageValue) : { ...value };
@@ -169,6 +180,7 @@ const ImageComponent = (
         beforeUpload={handleBeforeUpload}
         onChange={handleChange}
         onPreview={onPreview}
+        onRemove={handleRemove}
       >
         {fileList.length >= maxCount ? null : (
           <span>
@@ -178,7 +190,14 @@ const ImageComponent = (
           </span>
         )}
       </Upload>
-      <Modal width={800} visible={previewVisible} title={previewTitle} footer={null} onCancel={handleCancel}>
+      <Modal
+        width={800}
+        visible={previewVisible}
+        title={previewTitle}
+        footer={null}
+        bodyStyle={{ maxHeight: '600px' }}
+        onCancel={handleCancel}
+      >
         <img alt="example" style={{ width: '100%' }} src={previewImage} />
       </Modal>
     </div>
