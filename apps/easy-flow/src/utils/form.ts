@@ -412,7 +412,7 @@ export async function uploadFile(values: any) {
     promiseList.push(batchUpload({ files: attachmentFiles.map((file) => file.originFileObj), type: 2 }));
   }
   const [imageRes, attachmentRes] = await Promise.all(promiseList);
-  const list = imageRes.data.concat(attachmentRes.data);
+  const list = (imageRes?.data || []).concat(attachmentRes?.data || []);
   Object.keys(fileListMap).forEach((key) => {
     const oldValue = values[key];
     fileIdMap[key] = {
