@@ -134,8 +134,11 @@ const SelectOptionList = (props: editProps) => {
     } else if (type === 'subapp' && subAppKey && componentKey) {
       onChange && onChange({ type, subappId: subAppKey, fieldName: componentKey });
     } else if (type === 'interface') {
-      onChange && onChange({ type, apiconfig: value?.apiconfig });
+      onChange && onChange({ type, apiConfig: value?.apiConfig });
     }
+  });
+  const handleApiChange = useMemoCallback((apiConfig) => {
+    onChange && onChange({ type, apiConfig });
   });
 
   const renderContent = useMemoCallback(() => {
@@ -234,8 +237,14 @@ const SelectOptionList = (props: editProps) => {
       );
     } else if (type === 'interface') {
       return (
-        <Form.Item className={styles.form} name="apiconfig" label="选择要读取数据的接口">
-          <DataApiConfig name="apiconfig" label="为表单控件匹配请求参数" layout="vertical" fields={fields}>
+        <Form.Item className={styles.form} name="apiConfig" label="选择要读取数据的接口">
+          <DataApiConfig
+            name={['dataSource', 'apiConfig']}
+            label="为表单控件匹配请求参数"
+            layout="vertical"
+            fields={fields}
+            onChange={handleApiChange}
+          >
             <ResponseNoMap label="选择返回参数" />
           </DataApiConfig>
         </Form.Item>
