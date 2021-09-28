@@ -319,10 +319,10 @@ function analysisOptionRule(symbol: string, value: string | string[], formValue:
       }
       break;
     case 'null':
-      result = formValue === undefined;
+      result = Array.isArray(formValue) ? formValue.length === 0 : formValue === undefined;
       break;
     case 'notNull':
-      result = formValue !== undefined;
+      result = Array.isArray(formValue) ? formValue.length > 0 : formValue !== undefined;
       break;
     default:
       result = true;
