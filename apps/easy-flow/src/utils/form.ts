@@ -122,7 +122,7 @@ function analysisTextRule(symbol: string, value: string | string[], formValue: s
       result = formValue !== undefined && formValue.trim() !== '';
       break;
     default:
-      result = true;
+      result = false;
       break;
   }
   return result;
@@ -160,7 +160,7 @@ function analysisNumberRule(symbol: string, value: number | [number, number], fo
       result = formValue !== undefined && formValue !== null;
       break;
     default:
-      result = true;
+      result = false;
       break;
   }
   return result;
@@ -196,7 +196,7 @@ function analysisDateRule(symbol: string, value: number | [number, number] | str
       result = formValue !== undefined;
       break;
     default:
-      result = true;
+      result = false;
   }
   return result;
 }
@@ -319,13 +319,13 @@ function analysisOptionRule(symbol: string, value: string | string[], formValue:
       }
       break;
     case 'null':
-      result = formValue === undefined;
+      result = Array.isArray(formValue) ? formValue.length === 0 : formValue === undefined;
       break;
     case 'notNull':
-      result = formValue !== undefined;
+      result = Array.isArray(formValue) ? formValue.length > 0 : formValue !== undefined;
       break;
     default:
-      result = true;
+      result = false;
       break;
   }
   return result;
@@ -335,7 +335,7 @@ export function analysisRule(rule: fieldRule, formValues: { [k in string]: any }
   const { fieldName, fieldType = '', symbol, value } = rule;
   const formValue = fieldName && formValues[fieldName];
   if (!symbol || !formValue) {
-    return true;
+    return false;
   }
   // 文本类型
   if (fieldType === 'Input' || fieldType === 'Textarea') {
@@ -360,7 +360,7 @@ export function analysisRule(rule: fieldRule, formValues: { [k in string]: any }
   if (symbol === 'notNull') {
     return formValue !== undefined && formValue.trim() !== '';
   }
-  return true;
+  return false;
 }
 // 解析单个条件块是否匹配
 export function analysisRuleBlock(ruleBlock: fieldRule[], formValues: { [k in string]: any }): boolean {

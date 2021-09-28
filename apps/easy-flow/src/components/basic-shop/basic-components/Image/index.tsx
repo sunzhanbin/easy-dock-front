@@ -34,11 +34,11 @@ const ImageComponent = (
     const isPNG = type === 'image/png';
     const limitSize = 1024 * 1024 * 5; //5M
     if (!isJPG && !isPNG) {
-      message.error('只支持上传JPG、JPEG、PNG格式的图片~');
+      message.error('当前仅支持上传.png .jpg .jpeg格式图片');
       return false;
     }
     if (size > limitSize) {
-      message.error('图片超过5M,不允许上传~');
+      message.error('您所上传的图片超过5M，请调整后上传');
       return false;
     }
     return true;
