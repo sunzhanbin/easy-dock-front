@@ -40,43 +40,33 @@ const RichText = (props: RichTextProps) => {
     [onChange],
   );
   const handleUpload: (params: UploadParams) => void = useCallback(({ file, success, error }) => {
-    let fileId: string = '';
     batchUpload({ files: [file], type: 1 })
       .then((res) => {
         const id = res.data[0].id;
         if (id) {
-          fileId = String(id);
-          return Promise.resolve(id);
+          success({
+            url: `${window.EASY_DOCK_BASE_SERVICE_ENDPOINT}/enc-oss-easydock/api/runtime/v1/file/get/${id}`,
+            meta: {
+              id,
+              title: file.name,
+              alt: file.name,
+              loop: false,
+              autoPlay: false,
+              controls: false,
+              poster: '',
+            },
+          });
         }
         return Promise.reject('上传失败');
-      })
-      .then((id) => {
-        return downloadFile(id);
-      })
-      .then((res) => {
-        const blob = new Blob([res as any]);
-        const url: string = window.URL.createObjectURL(blob);
-        success({
-          url,
-          meta: {
-            id: fileId,
-            title: file.name,
-            alt: file.name,
-            loop: false,
-            autoPlay: false,
-            controls: false,
-            poster: '',
-          },
-        });
       })
       .catch(() => {
         error({ msg: '上传失败' });
       });
   }, []);
   const handleValidate: (file: File) => boolean = useCallback((file) => {
-    const limitSize = 1024 * 40; //文件大小，限制为5M
+    const limitSize = 1024 * 1024 * 5; //文件大小，限制为5M
     if (file.size > limitSize) {
-      message.error('您所上传的图片超过40kb，请调整后上传');
+      message.error('您所上传的图片超过5MB，请调整后上传');
       return false;
     }
     return true;
@@ -106,7 +96,7 @@ const RichText = (props: RichTextProps) => {
         media={{
           accepts: { video: false, audio: false },
           externals: { image: true, video: false, audio: false, embed: false },
-          // uploadFn: handleUpload,
+          uploadFn: handleUpload,
           validateFn: handleValidate,
         }}
         controls={controls}
