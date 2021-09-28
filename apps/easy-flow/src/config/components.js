@@ -139,12 +139,13 @@ const descTextValue = {
 const getMaxCount = (max, min, defaultValue) => {
   return {
     key: 'maxCount',
-    label: '最大上传数',
+    label: `最大上传数(正整数且最大为${max})`,
     placeholder: '请输入',
     type: 'InputNumber',
     direction: 'vertical',
     required: false,
     isProps: true,
+    precision: 0,
     defaultValue,
     max,
     min,

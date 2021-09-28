@@ -20,6 +20,7 @@ export type SchemaConfigItem = {
   isProps: boolean;
   max?: number;
   min?: number;
+  precision?: number;
 };
 
 export type rangeItem = {

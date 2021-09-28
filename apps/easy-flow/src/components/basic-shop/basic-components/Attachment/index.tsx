@@ -23,7 +23,7 @@ const Attachment = (
     const { size } = file;
     const limitSize = 1024 * 1024 * 20; //20M
     if (size > limitSize) {
-      message.error('文件超过20M,不允许上传~');
+      message.error('您所上传的图片超过20M，请调整后上传');
       return false;
     }
     return true;

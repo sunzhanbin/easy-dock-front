@@ -64,6 +64,7 @@ const componentMap: { [k: string]: (props: { [k: string]: any }) => ReactNode } 
       min={props.min}
       max={props.max}
       placeholder={props.placeholder}
+      {...(props.precision === undefined ? {} : { precision: props.precision })}
     />
   ),
   DefaultDate: (props) => <DefaultDate id={props.componentId} />,
@@ -129,24 +130,26 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
         onFinish={onFinish}
         onValuesChange={handleChange}
       >
-        {config.map(({ key, label, type, range, placeholder, required, requiredMessage, rules, max, min }) => {
-          const props = { placeholder, range, label, componentId, max, min };
-          const component = componentMap[type](props);
-          return (
-            <Fragment key={key}>
-              <FormItemWrap
-                id={key}
-                label={label as string}
-                type={type}
-                required={required}
-                requiredMessage={requiredMessage}
-                rules={rules}
-              >
-                {component}
-              </FormItemWrap>
-            </Fragment>
-          );
-        })}
+        {config.map(
+          ({ key, label, type, range, placeholder, required, requiredMessage, rules, max, min, precision }) => {
+            const props = { placeholder, range, label, componentId, max, min, precision };
+            const component = componentMap[type](props);
+            return (
+              <Fragment key={key}>
+                <FormItemWrap
+                  id={key}
+                  label={label as string}
+                  type={type}
+                  required={required}
+                  requiredMessage={requiredMessage}
+                  rules={rules}
+                >
+                  {component}
+                </FormItemWrap>
+              </Fragment>
+            );
+          },
+        )}
       </Form>
     </div>
   );
