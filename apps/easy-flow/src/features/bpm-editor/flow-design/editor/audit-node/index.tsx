@@ -87,7 +87,7 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
       onValuesChange={handleFormValuesChange}
       autoComplete="off"
     >
-      <Form.Item label="节点名称" name="name" rules={nameRules} getValueFromEvent={trimInputValue}>
+      <Form.Item label="节点名称" name="name" rules={nameRules} required getValueFromEvent={trimInputValue}>
         <Input size="large" placeholder="请输入用户节点名称" />
       </Form.Item>
       <Form.Item label="选择办理人" name="correlationMemberConfig" rules={memberRules} required>
@@ -129,7 +129,7 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
             },
           ]}
         >
-          <RevertCascader prevNodes={prevNodes}></RevertCascader>
+          <RevertCascader prevNodes={prevNodes} />
         </Form.Item>
 
         {/* <Form.Item name={['btnConfigs', 'btnText', 'transfer']}>
