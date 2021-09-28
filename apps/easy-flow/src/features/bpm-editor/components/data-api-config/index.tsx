@@ -101,7 +101,7 @@ function DataApiConfig(props: DataApiConfigProps) {
           className={styles['api-form-item']}
           rules={[
             {
-              validator(val) {
+              validator(_, val) {
                 if (!val) {
                   return Promise.reject(new Error('不能为空'));
                 }
@@ -110,8 +110,6 @@ function DataApiConfig(props: DataApiConfigProps) {
               },
             },
           ]}
-          // HACK, 这里是不想通过FormItem自动注入的onChange触发value变化，而是通过Select的change事件手动触发
-          trigger="onDrag"
         >
           <Select
             onChange={handleApiChange}

@@ -60,7 +60,7 @@ function AutoNodeEditor(props: AutoNodeEditorProps) {
       <Form.Item label="节点名称" name="name" rules={nameRules} getValueFromEvent={trimInputValue} required>
         <Input size="large" placeholder="请输入抄送节点名称" />
       </Form.Item>
-      <Form.Item name="dataConfig" label="选择要推送数据的接口">
+      <Form.Item name="dataConfig" label="选择要推送数据的接口" required>
         <DataApiConfig name="dataConfig" label="选择接口的推送参数" fields={fields} />
       </Form.Item>
     </Form>
