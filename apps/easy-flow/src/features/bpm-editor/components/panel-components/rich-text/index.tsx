@@ -1,7 +1,8 @@
 import { memo, useState, useCallback, useMemo } from 'react';
 import BraftEditor, { ControlType, EditorState } from 'braft-editor';
 import { message } from 'antd';
-import { batchUpload, downloadFile } from '@/apis/file';
+import { batchUpload } from '@/apis/file';
+import { Icon } from '@common/components';
 import 'braft-editor/dist/index.css';
 import styles from './index.module.scss';
 
@@ -85,6 +86,7 @@ const RichText = (props: RichTextProps) => {
       {
         key: 'media',
         title: '图片',
+        text: <Icon type="tupiancaidan" />,
       },
     ];
   }, []);
