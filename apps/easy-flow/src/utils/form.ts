@@ -52,6 +52,10 @@ export function formatRuleValue(
   // 选项类型
   if (fieldType === 'Select' || fieldType === 'Radio' || fieldType === 'Checkbox') {
     if (symbol === 'equal' || symbol === 'unequal' || symbol === 'include' || symbol === 'exclude') {
+      if (Array.isArray(value)) {
+        const text = ((value as string[]) || []).join('、');
+        return { name, symbol: label, value: text };
+      }
       return { name, symbol: label, value: value as string };
     }
     if (symbol === 'equalAnyOne' || symbol === 'unequalAnyOne') {
@@ -270,6 +274,9 @@ function getDynamicTimeRange(dynamic: string): [number, number] {
   }
   return [+startTime, +endTime];
 }
+function arraySort(v: string[]): string {
+  return v.join('').split('').sort().join('');
+}
 // 解析选项类型规则
 function analysisOptionRule(symbol: string, value: string | string[], formValue: string | string[]): boolean {
   let result = false;
@@ -277,7 +284,7 @@ function analysisOptionRule(symbol: string, value: string | string[], formValue:
     case 'equal':
       if (Array.isArray(formValue)) {
         // 复选框或者下拉框多选
-        result = formValue.join() === (value as string[]).join();
+        result = arraySort(formValue) === arraySort(value as string[]);
       } else {
         // 单选按钮或者下拉框单选
         result = formValue === (value as string);
@@ -285,21 +292,21 @@ function analysisOptionRule(symbol: string, value: string | string[], formValue:
       break;
     case 'unequal':
       if (Array.isArray(formValue)) {
-        result = formValue.join() !== (value as string[]).join();
+        result = arraySort(formValue) === arraySort(value as string[]);
       } else {
         result = formValue !== (value as string);
       }
       break;
     case 'equalAnyOne':
       if (Array.isArray(formValue)) {
-        result = formValue.some((val) => (value as string[]).includes(val));
+        result = (value as string[]).some((val) => formValue.toString() === val);
       } else {
         result = (value as string[]).includes(formValue);
       }
       break;
     case 'unequalAnyOne':
       if (Array.isArray(formValue)) {
-        result = formValue.every((val) => !(value as string).includes(val));
+        result = (value as string[]).every((val) => formValue.toString() !== val) && formValue.length <= 1;
       } else {
         result = !(value as string[]).includes(formValue);
       }

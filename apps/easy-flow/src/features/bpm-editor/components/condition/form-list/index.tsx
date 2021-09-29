@@ -99,6 +99,7 @@ const FormList = ({
             format: (item as DateField).format,
             sourceType: (item as SelectField).dataSource?.type || '',
             fieldName: item.fieldName,
+            multiple: (item as SelectField)?.multiple || false,
           })) || []
       );
     }
@@ -229,6 +230,7 @@ const FormList = ({
   const renderValue = useMemoCallback(() => {
     const component = componentList.find((item) => item.fieldName === fieldName);
     const componentType = component && (component.type as string);
+    const multiple = component?.multiple || false;
     if (symbol === 'null' || symbol === 'notNull') {
       return null;
     }
@@ -356,10 +358,11 @@ const FormList = ({
         );
       }
       if (symbol === 'equal' || symbol === 'unequal') {
-        const mode: { mode: 'multiple' } | null = componentType === 'Checkbox' ? { mode: 'multiple' } : null;
+        const mode: { mode: 'multiple' } | null =
+          componentType === 'Checkbox' || multiple ? { mode: 'multiple' } : null;
         const sourceType = component?.sourceType || '';
         if (sourceType === 'interface' || sourceType === undefined) {
-          if (componentType === 'Checkbox') {
+          if (componentType === 'Checkbox' || multiple) {
             return (
               <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: '请输入!' }]}>
                 <MultiText className={styles.value} value={value as string[]} onChange={changeValue} />
