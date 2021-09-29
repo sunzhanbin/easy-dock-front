@@ -20,10 +20,10 @@ export const toolboxSelector = createSelector(
     return reduce(
       tools,
       (memo: any, tool) => {
-        if (!memo[tool!.baseInfo.category]) {
-          memo[tool!.baseInfo.category] = [];
+        if (!memo[tool.baseInfo.category]) {
+          memo[tool.baseInfo.category] = [];
         }
-        memo[tool!.baseInfo.category].push(tool?.baseInfo);
+        memo[tool.baseInfo.category].push(tool?.baseInfo);
         return memo;
       },
       {},

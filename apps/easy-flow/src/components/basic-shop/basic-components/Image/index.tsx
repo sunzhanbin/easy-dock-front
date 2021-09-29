@@ -116,8 +116,8 @@ const ImageComponent = (
             list.push({
               name: file.name,
               uid: file.id,
-              url: url as string,
-              thumbUrl: url as string,
+              url: url,
+              thumbUrl: url,
             });
           });
           if (fileList && fileList.length > 0) {

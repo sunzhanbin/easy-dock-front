@@ -89,12 +89,12 @@ const validComponentConfig = (config: ConfigItem) => {
           : `${label}的数据库字段名不符合规范`
         : `请填写${label}的数据库字段名`;
       if (errorText) {
-        errorItem.id = config.id as string;
+        errorItem.id = config.id;
         errorItem.content = errorText;
         break;
       }
     } else if (key === 'label' && !config.label) {
-      errorItem.id = config.id as string;
+      errorItem.id = config.id;
       errorItem.content = '请输入控件名称';
       break;
     }
@@ -123,18 +123,18 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
     layout.forEach((row) => {
       row.forEach((id: string) => {
         const type = <FieldType>(id.split('_')[0] || '');
-        const version = schema[type as FieldType]?.baseInfo.version || '';
+        const version = schema[type]?.baseInfo.version || '';
         const componentConfig =
           type === 'DescText'
-            ? schema[type as FieldType]?.config.concat([{ key: 'fieldName', type: 'Input', isProps: false }]) //富文本也要保存fieldName
-            : schema[type as FieldType]?.config;
+            ? schema[type]?.config.concat([{ key: 'fieldName', type: 'Input', isProps: false }]) //富文本也要保存fieldName
+            : schema[type]?.config;
         const config: ConfigItem = {
           id,
           type,
           version,
           rules: [],
-          canSubmit: type === 'DescText' ? false : true,
-          multiple: type === 'Checkbox' || (type === 'Select' && byId[id].multiple) ? true : false,
+          canSubmit: type !== 'DescText',
+          multiple: type === 'Checkbox' || (type === 'Select' && byId[id].multiple),
         };
 
         const props: ConfigItem = { type, id };

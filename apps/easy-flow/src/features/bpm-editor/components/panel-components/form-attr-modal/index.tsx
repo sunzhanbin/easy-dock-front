@@ -174,7 +174,7 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
                             getPopupContainer={getPopupContainer}
                           >
                             {options.map((option) => (
-                              <Option key={option.fieldName} value={option.fieldName!}>
+                              <Option key={option.fieldName} value={option.fieldName}>
                                 {option.label}
                               </Option>
                             ))}
@@ -210,7 +210,7 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
                                   getPopupContainer={getPopupContainer}
                                 >
                                   {options.map((option) => (
-                                    <Option key={option.fieldName} value={option.fieldName!}>
+                                    <Option key={option.fieldName} value={option.fieldName}>
                                       {option.label}
                                     </Option>
                                   ))}

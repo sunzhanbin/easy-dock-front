@@ -75,7 +75,7 @@ function FlowDetail() {
 
   const handleSaveNodeForm = useMemoCallback(async () => {
     if (!formRef.current) return;
-    const values = await formRef.current!.validateFields();
+    const values = await formRef.current.validateFields();
     const formValues = await uploadFile(values);
 
     await runtimeAxios.post(`/process_instance/saveNodeForm`, {

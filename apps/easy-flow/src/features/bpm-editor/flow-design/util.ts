@@ -371,7 +371,7 @@ export function formatFieldsTemplate(form: FormMeta | null): FieldTemplate[] {
     return {
       name: field.config.label as string,
       type: field.config.type,
-      id: field.config.id as string,
+      id: field.config.id,
     };
   });
 }

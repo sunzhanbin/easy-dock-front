@@ -95,9 +95,9 @@ const FormAttrEditor = () => {
         <div className={styles.content}>
           {rules.map((item: FormRuleItem, index: number) => {
             if (item.type === 'change') {
-              const condition = item!.formChangeRule!.fieldRule;
-              const showComponentList = item!.formChangeRule!.showComponents || [];
-              const hideComponentList = item!.formChangeRule!.hideComponents || [];
+              const condition = item.formChangeRule!.fieldRule;
+              const showComponentList = item.formChangeRule!.showComponents || [];
+              const hideComponentList = item.formChangeRule!.hideComponents || [];
               const showComponents = showComponentList.map((fieldName) => {
                 const component = Object.values(byId).find((comp) => comp.fieldName === fieldName);
                 return component?.label || fieldName;

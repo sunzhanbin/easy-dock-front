@@ -207,10 +207,7 @@ function analysisDateRule(symbol: string, value: number | [number, number] | str
 }
 // 获取动态范围的起止时间
 function getDynamicTimeRange(dynamic: string): [number, number] {
-  let startTime = '0',
-    endTime = '0',
-    startDay = '1',
-    endDay = '1';
+  let startTime, endTime, startDay, endDay;
 
   switch (dynamic) {
     case 'today':
@@ -316,14 +313,14 @@ function analysisOptionRule(symbol: string, value: string | string[], formValue:
       if (Array.isArray(formValue)) {
         result = formValue.some((val) => val.indexOf(value as string) > -1);
       } else {
-        result = formValue && formValue.indexOf(value as string) > -1 ? true : false;
+        result = Boolean(formValue.trim()) && formValue.indexOf(value as string) > -1;
       }
       break;
     case 'exclude':
       if (Array.isArray(formValue)) {
         result = formValue.every((val) => val.indexOf(value as string) === -1);
       } else {
-        result = formValue && formValue.indexOf(value as string) === -1 ? true : false;
+        result = Boolean(formValue.trim()) && formValue.indexOf(value as string) === -1;
       }
       break;
     case 'null':

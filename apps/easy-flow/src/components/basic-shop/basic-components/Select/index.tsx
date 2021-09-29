@@ -27,7 +27,7 @@ const SelectComponent = (
       prop.mode = 'multiple';
     }
     if (defaultValue) {
-      prop.defaultValue = defaultValue as string;
+      prop.defaultValue = defaultValue;
     }
     const result = Object.assign({}, props, prop);
     delete result.fieldName;

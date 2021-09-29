@@ -14,6 +14,13 @@
 
     .ant-form-item-label {
       @include center('flex');
+      font-weight: bold;
+    }
+
+    .ant-checkbox-group {
+      .ant-checkbox-wrapper {
+        margin-bottom: 0;
+      }
     }
   }
 
@@ -109,18 +116,6 @@
 
       & + .webhook-help__item {
         margin-top: 12px;
-      }
-    }
-  }
-
-  :global {
-    .ant-form-item-label {
-      font-weight: bold;
-    }
-
-    .ant-checkbox-group {
-      .ant-checkbox-wrapper {
-        margin-bottom: 0;
       }
     }
   }

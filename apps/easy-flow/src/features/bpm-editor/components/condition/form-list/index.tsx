@@ -94,7 +94,7 @@ const FormList = ({
           .filter((item: { type: string }) => item.type !== 'DescText')
           .map((item: FormField) => ({
             label: item.label,
-            id: item.id!,
+            id: item.id,
             type: item.type,
             format: (item as DateField).format,
             sourceType: (item as SelectField).dataSource?.type || '',
@@ -134,7 +134,7 @@ const FormList = ({
     const fieldType = component && (component.type as string);
     setDataSource(fieldName, fieldType);
     const fieldRule = {
-      fieldName: fieldName!,
+      fieldName: fieldName,
       fieldType: component?.type || rule.fieldType,
     };
     onChange && onChange(blockIndex, ruleIndex, fieldRule);
@@ -144,8 +144,8 @@ const FormList = ({
     setValue(undefined);
     const selectComponent = componentList.find((item) => item.fieldName === fieldName);
     const fieldRule = {
-      fieldName: fieldName!,
-      symbol: symbol!,
+      fieldName: fieldName,
+      symbol: symbol,
       fieldType: selectComponent?.type || rule.fieldType,
     };
     onChange && onChange(blockIndex, ruleIndex, fieldRule);
@@ -154,9 +154,9 @@ const FormList = ({
     setValue(value);
     const selectComponent = componentList.find((item) => item.fieldName === fieldName);
     const fieldRule = {
-      fieldName: fieldName!,
-      symbol: symbol!,
-      value: value!,
+      fieldName: fieldName,
+      symbol: symbol,
+      value: value,
       fieldType: selectComponent?.type || rule.fieldType,
     };
     onChange && onChange(blockIndex, ruleIndex, fieldRule);
@@ -310,7 +310,7 @@ const FormList = ({
         );
       }
       const format = component && component.format;
-      const showTime = format === 'YYYY-MM-DD HH:mm:ss' ? true : false;
+      const showTime = format === 'YYYY-MM-DD HH:mm:ss';
       if (symbol === 'range') {
         return (
           <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: '请选择!' }]}>

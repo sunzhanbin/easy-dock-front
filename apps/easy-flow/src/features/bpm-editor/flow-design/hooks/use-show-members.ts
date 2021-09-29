@@ -12,7 +12,7 @@ export default function useShowMembers(correlationMemberConfig: CorrelationMembe
   }, [fieldsTemplate]);
 
   return useMemo(() => {
-    const { members = [], depts = [], roles = [], dynamic } = correlationMemberConfig!;
+    const { members = [], depts = [], roles = [], dynamic } = correlationMemberConfig;
     const fieldsMap = (dynamic?.fields || []).reduce((curr, next) => {
       curr[next] = true;
       return curr;
