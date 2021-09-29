@@ -1,4 +1,5 @@
 import { batchUpload, downloadFile as download } from '@/apis/file';
+import { ImageValue } from '@/components/basic-shop/basic-components/Image';
 import { DateField, fieldRule, FormField, SelectOptionItem } from '@/type';
 import moment from 'moment';
 import { runtimeAxios } from './axios';
@@ -337,6 +338,33 @@ function analysisOptionRule(symbol: string, value: string | string[], formValue:
   }
   return result;
 }
+// 解析图片、附件规则
+function analysisFile(symbol: string, formValue: any): boolean {
+  let result = false;
+  const fileValue: ImageValue =
+    typeof formValue === 'string' ? (JSON.parse(formValue) as ImageValue) : { ...formValue };
+  const fileListLength = (fileValue.fileIdList?.length || 0) + (fileValue.fileList?.length || 0);
+  if (symbol === 'null') {
+    return fileListLength === 0;
+  } else if (symbol === 'notNull') {
+    return fileListLength > 0;
+  }
+  return result;
+}
+function analysisMember(symbol: string, formValue: number | number[]): boolean {
+  let result = false;
+  switch (symbol) {
+    case 'null':
+      result = Array.isArray(formValue) ? formValue.length === 0 : formValue === undefined;
+      break;
+    case 'notNull':
+      result = Array.isArray(formValue) ? formValue.length > 0 : formValue !== undefined;
+      break;
+    default:
+      result = false;
+  }
+  return result;
+}
 // 解析单个条件是否匹配
 export function analysisRule(rule: fieldRule, formValues: { [k in string]: any }): boolean {
   const { fieldName, fieldType = '', symbol = '', value } = rule;
@@ -356,6 +384,14 @@ export function analysisRule(rule: fieldRule, formValues: { [k in string]: any }
   // 选项类型
   if (fieldType === 'Select' || fieldType === 'Radio' || fieldType === 'Checkbox') {
     return analysisOptionRule(symbol, value as string | string[], formValue as string);
+  }
+  // 图片或附件类型
+  if (fieldType === 'Image' || fieldType === 'Attachment') {
+    return analysisFile(symbol, formValue);
+  }
+  // 人员组件
+  if (fieldType === 'Member') {
+    return analysisMember(symbol, formValue as number | number[]);
   }
   // 其他类型
   if (symbol === 'null') {
