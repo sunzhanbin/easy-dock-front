@@ -7,7 +7,7 @@ import { getBase64 } from '@/utils';
 import { downloadFile } from '@/apis/file';
 import styles from './index.module.scss';
 
-type ImageValue = {
+export type ImageValue = {
   type: 'Image';
   fileIdList?: { id: string; name: string }[];
   fileList?: UploadFile[];
