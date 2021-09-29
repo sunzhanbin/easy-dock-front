@@ -243,6 +243,10 @@
   .ant-input-affix-wrapper-focused {
     box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.2);
   }
+
+  .ant-input-number.ant-input-number-focused {
+    box-shadow: none;
+  }
 }
 
 .ant-form-item {
@@ -381,12 +385,18 @@
     box-shadow: 0 0 0 3px rgba(76, 92, 219, 0.2);
     background-color: transparent;
   }
+
+  &.ant-input-number-focused {
+    box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+  }
+
   .ant-input-number-input {
     &[disabled] {
       background-color: rgba(24, 39, 67, 0.04);
     }
   }
 }
+
 // 定制抽屉
 .ant-drawer-content {
   padding: 0;
@@ -664,4 +674,8 @@
       height: 96px;
     }
   }
+}
+
+.ant-message {
+  top: 48px;
 }

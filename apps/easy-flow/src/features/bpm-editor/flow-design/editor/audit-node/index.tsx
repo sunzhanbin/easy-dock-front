@@ -172,14 +172,40 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
 
                 {type === 1 ? (
                   <div className={styles['countersign-detail']}>
-                    <Form.Item name={['countersign', 'percent']}>
+                    <Form.Item
+                      name={['countersign', 'percent']}
+                      rules={[
+                        {
+                          validator(_, value) {
+                            if (!value) {
+                              return Promise.reject(new Error('百分比不能为空'));
+                            }
+
+                            return Promise.resolve();
+                          },
+                        },
+                      ]}
+                    >
                       <InputNumber size="large" min={0} max={100} placeholder="请输入" />
                     </Form.Item>
                     <span>% 同意时进入下一节点，否则驳回</span>
                   </div>
                 ) : (
                   <div className={styles['countersign-detail']}>
-                    <Form.Item name={['countersign', 'count']}>
+                    <Form.Item
+                      name={['countersign', 'count']}
+                      rules={[
+                        {
+                          validator(_, value) {
+                            if (!value) {
+                              return Promise.reject(new Error('人数不能为空'));
+                            }
+
+                            return Promise.resolve();
+                          },
+                        },
+                      ]}
+                    >
                       <InputNumber size="large" min={0} precision={0} placeholder="请输入" />
                     </Form.Item>
                     <span>人同意时进入下一节点，否则驳回</span>

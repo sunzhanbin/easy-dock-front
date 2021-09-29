@@ -269,6 +269,14 @@ export function valid(data: AllNode[], validRes: ValidResultType) {
         if (validRevertMessage) {
           errors.push(validRevertMessage);
         }
+
+        if (node.countersign && node.countersign.enable) {
+          if (node.countersign.type === 1 && !node.countersign.percent) {
+            errors.push('会签百分比不能为空');
+          } else if (node.countersign.type === 2 && !node.countersign.count) {
+            errors.push('会签人数不能为空');
+          }
+        }
       }
 
       if (memberValidMessage) {
