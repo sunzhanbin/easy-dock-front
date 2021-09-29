@@ -1,6 +1,6 @@
 import { memo, useCallback, useMemo, useState, useEffect, useRef } from 'react';
 import { Select, Input, Tooltip, Form } from 'antd';
-import { useDrag, useDrop, DropTargetMonitor } from 'react-dnd';
+import { useDrag, useDrop } from 'react-dnd';
 import { axios } from '@utils';
 import { FormField, OptionItem, OptionMode, SelectOptionItem } from '@/type';
 import { Icon } from '@common/components';
@@ -25,7 +25,6 @@ const SelectOptionList = (props: editProps) => {
   const byId = useAppSelector(componentPropsSelector);
   const [type, setType] = useState<OptionMode>(value?.type || 'custom');
   const [content, setContent] = useState<OptionItem[]>(value?.data || []);
-  const [canDrag, setCanDrag] = useState<boolean>(false);
   const [subAppKey, setSubAppKey] = useState<string>(value?.subappId || '');
   const [appList, setAppList] = useState<(OptionItem & { versionId: number })[]>([]);
   const [componentKey, setComponentKey] = useState<string | undefined>(value?.fieldName);
@@ -269,7 +268,7 @@ interface DragableOptionProps {
 function DragableOption(props: DragableOptionProps) {
   const { onDelete, data, onChange, onDrop, index } = props;
   const dragWrapperRef = useRef<HTMLDivElement>(null);
-  const [_, drag] = useDrag(
+  const [, drag] = useDrag(
     () => ({
       type: 'option',
       item() {
@@ -278,7 +277,7 @@ function DragableOption(props: DragableOptionProps) {
     }),
     [index],
   );
-  const [__, drop] = useDrop(
+  const [, drop] = useDrop(
     () => ({
       accept: 'option',
       drop: (currentDragItem: { index: number }) => {
