@@ -77,6 +77,25 @@
           margin-left: 0 !important;
           transform: scale(0.88);
         }
+        img {
+          object-fit: contain;
+        }
+      }
+    }
+  }
+}
+
+:global {
+  .bf-modal-root {
+    .bf-modal-content {
+      .bf-item.error {
+        &::before {
+          display: block;
+          content: '\E912';
+        }
+        &::after {
+          background-color: rgba(52, 152, 219, 0.6);
+        }
       }
     }
   }

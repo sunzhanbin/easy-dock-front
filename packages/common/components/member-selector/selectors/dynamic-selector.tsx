@@ -106,6 +106,8 @@ function DynamicSelector(props: DynamicSelectorProps) {
     }
   });
 
+  console.log(formMemberFields);
+
   return (
     <Layout onKeywordChange={() => {}} keywordPlaceholder="搜索动态">
       <div className={styles.list}>
@@ -128,7 +130,7 @@ function DynamicSelector(props: DynamicSelectorProps) {
         />
 
         <Tree
-          className={classnames(styles.tree)}
+          className={classnames(styles.tree, !fields || fields.length === 0 ? styles['dynamic-empty-fields'] : '')}
           checkable
           treeData={formMemberFields}
           blockNode

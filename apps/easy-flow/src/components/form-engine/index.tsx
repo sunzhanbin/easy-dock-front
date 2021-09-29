@@ -55,22 +55,6 @@ const FormDetail = React.forwardRef(function FormDetail(
     }
     return data.formRules.filter((rule) => rule.type === 'init').map((rule) => rule.formInitRule as DataConfig);
   }, [data.formRules]);
-  // 值改变规则依赖的字段列表,若表单change的字段不在依赖列表中则不需要进行校验
-  const changeFieldList = useMemo<string[]>(() => {
-    if (changeRuleList.length === 0) {
-      return [];
-    }
-    const fieldRuleList: fieldRule[][][] = [];
-    changeRuleList.forEach((rule) => {
-      fieldRuleList.push(rule.fieldRule);
-    });
-    const list = fieldRuleList
-      .filter((item) => item)
-      .flat(3)
-      .map((rule) => rule.fieldName as string);
-    const set = new Set(list);
-    return Array.from(set);
-  }, [changeRuleList]);
   // 缓存之前的表单控件显隐状态
   const cacheFieldsVisibleMap = useMemo(() => {
     const map: { [k: number]: FieldsVisible } = {};
@@ -87,6 +71,15 @@ const FormDetail = React.forwardRef(function FormDetail(
 
   // 获取组件源码
   const compSources = useLoadComponents(componentTypes);
+  // 收集单个规则的控件依赖
+  const collectFieldNameList = useMemoCallback((rule: fieldRule[][]) => {
+    const list = rule
+      .filter((v) => v)
+      .flat(2)
+      .map((rule) => rule.fieldName as string);
+    const set = new Set(list);
+    return Array.from(set);
+  });
   const formValuesChange = useMemoCallback((changedValues: FormValue) => {
     // 处理单个控件绑定的事件
     if (data.events && data.events.onchange) {
@@ -123,8 +116,13 @@ const FormDetail = React.forwardRef(function FormDetail(
     const formValues = form.getFieldsValue();
     const changedFieldName = Object.keys(changedValues).length > 0 ? Object.keys(changedValues)[0] : '';
     // 处理表单属性值改变时事件
-    if (changeRuleList.length > 0 && Object.keys(formValues).length > 0 && changeFieldList.includes(changedFieldName)) {
+    if (changeRuleList.length > 0 && Object.keys(formValues).length > 0) {
       changeRuleList.forEach((rule, index) => {
+        const fieldNameList = collectFieldNameList(rule.fieldRule);
+        // 此次改变的表单控件不在这个规则的依赖字段中,直接返回
+        if (!fieldNameList.includes(changedFieldName)) {
+          return;
+        }
         const result = analysisFormChangeRule(rule!.fieldRule, formValues);
         const showComponents = rule?.showComponents || [];
         const hideComponents = rule?.hideComponents || [];

@@ -166,4 +166,4 @@ export type Flow = AllNode[];
 
 export type FieldTemplate = { id: string; name: string; type: FieldType };
 
-export type AddableNode = AuditNode | FillNode | BranchNode | CCNode | BranchNode | SubBranch | AutoNode;
+export type AddableNode = AuditNode | FillNode | BranchNode | CCNode | SubBranch | AutoNode;

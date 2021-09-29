@@ -92,7 +92,14 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
     return (node: HTMLDivElement) => node;
   }, []);
   return (
-    <Modal className={styles.modal} title="表单逻辑规则设置" visible={true} onCancel={onClose} onOk={handelOk}>
+    <Modal
+      className={styles.modal}
+      title="表单逻辑规则设置"
+      visible={true}
+      centered={true}
+      onCancel={onClose}
+      onOk={handelOk}
+    >
       <Form form={form} className={styles.form} layout="vertical" autoComplete="off" initialValues={initFormValues}>
         <Form.Item label="选择触发方式" name="mode" className={styles.mode}>
           <Select suffixIcon={<Icon type="xiala" />} size="large" getPopupContainer={getPopupContainer}>
