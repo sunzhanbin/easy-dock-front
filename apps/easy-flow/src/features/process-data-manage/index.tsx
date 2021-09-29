@@ -211,10 +211,10 @@ const DataManage = () => {
 
       // 搜集人员字段的值方便后面拉取人员列表
       const ids = new Set<number | string>();
-      const fieldsMap = currentFields.reduce(
-        (curr, next) => ((curr[next.field] = next), curr),
-        {} as { [fieldname: string]: typeof fields[number] },
-      );
+      const fieldsMap = currentFields.reduce((curr, next) => {
+        curr[next.field] = next;
+        return curr;
+      }, {} as { [fieldname: string]: typeof fields[number] });
 
       data.forEach((item) => {
         Object.keys(item.formData).forEach((key) => {
