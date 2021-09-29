@@ -80,8 +80,8 @@ const RichText = (props: RichTextProps) => {
       'strike-through',
       'headings',
       'font-size',
-      'text-align',
       'text-color',
+      'text-align',
       'link',
       {
         key: 'media',

@@ -453,6 +453,7 @@ const FormList = ({
                   size="large"
                   className={styles.fieldName}
                   value={fieldName}
+                  virtual={false}
                   onChange={changeField}
                   getPopupContainer={getPopupContainer}
                   suffixIcon={<Icon type="xiala" />}

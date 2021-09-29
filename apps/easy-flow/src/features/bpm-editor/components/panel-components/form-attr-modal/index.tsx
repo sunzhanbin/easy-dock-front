@@ -171,6 +171,7 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
                             mode="multiple"
                             placeholder="请选择"
                             size="large"
+                            virtual={false}
                             getPopupContainer={getPopupContainer}
                           >
                             {options.map((option) => (
@@ -207,6 +208,7 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
                                   mode="multiple"
                                   placeholder="请选择"
                                   size="large"
+                                  virtual={false}
                                   getPopupContainer={getPopupContainer}
                                 >
                                   {options.map((option) => (
