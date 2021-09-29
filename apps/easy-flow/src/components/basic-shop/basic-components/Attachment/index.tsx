@@ -61,7 +61,7 @@ const Attachment = (
   const handleRemove = useMemoCallback((file) => {
     if (value) {
       const componentValue = typeof value === 'string' ? (JSON.parse(value) as FileValue) : { ...value };
-      const { fileIdList = [], fileList = [] } = componentValue;
+      const { fileIdList = [] } = componentValue;
       const list = [...fileIdList];
       const index = list.findIndex((v) => v.id === file.uid);
       index > -1 && list.splice(index, 1);

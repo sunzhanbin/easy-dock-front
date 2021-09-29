@@ -123,7 +123,7 @@ const FormDetail = React.forwardRef(function FormDetail(
         if (!fieldNameList.includes(changedFieldName)) {
           return;
         }
-        const result = analysisFormChangeRule(rule!.fieldRule, formValues);
+        const result = analysisFormChangeRule(rule.fieldRule, formValues);
         const showComponents = rule?.showComponents || [];
         const hideComponents = rule?.hideComponents || [];
         if (result) {

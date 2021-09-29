@@ -152,7 +152,7 @@ const getMaxCount = (max, min, defaultValue) => {
   };
 };
 
-const componentSchema = {
+const components = {
   Input: {
     baseInfo: {
       name: '单行文本',
@@ -273,4 +273,4 @@ const componentSchema = {
   },
 };
 
-export default componentSchema;
+export default components;

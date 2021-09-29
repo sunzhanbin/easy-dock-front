@@ -49,13 +49,13 @@ export default function AppHeader({ children }: AppHeaderProps) {
         <div className={styles.right}>
           {match.url === '/' ? (
             canGoBuilder ? (
-              <a href={ROUTES.BUILDER} target="_blank" className={styles.appClient}>
+              <a href={ROUTES.BUILDER} target="_blank" rel="noreferrer" className={styles.appClient}>
                 <Icon type="yingyonduandinglan" className={styles.icon} />
                 <span className={styles.text}>构建端</span>
               </a>
             ) : null
           ) : canGoApp ? (
-            <a href={ROUTES.INDEX} target="_blank" className={styles.appClient}>
+            <a href={ROUTES.INDEX} target="_blank" rel="noreferrer" className={styles.appClient}>
               <Icon type="yingyonduandinglan" className={styles.icon} />
               <span className={styles.text}>应用端</span>
             </a>

@@ -22,6 +22,13 @@ const Member = (
   const [keyword, setKeyword] = useState<string>('');
   const memberPageNumberRef = useRef(1);
 
+  const handleSearch = useMemoCallback(
+    debounce((val) => {
+      setKeyword(val);
+      memberPageNumberRef.current = 1;
+      fetchMembers(1, val);
+    }, 500),
+  );
   const propList = useMemo(() => {
     const prop: { [k: string]: string | boolean | Function | ReactNode } = {
       size: 'large',
@@ -39,11 +46,14 @@ const Member = (
     if (defaultValue) {
       prop.defaultValue = Number(value);
     }
+    if (showSearch) {
+      prop.onSearch = handleSearch;
+    }
     const result = Object.assign({}, props, prop);
     delete result.fieldName;
     delete result.colSpace;
     return result;
-  }, [defaultValue, value, multiple, showSearch, props, onChange]);
+  }, [defaultValue, value, multiple, showSearch, props, handleSearch, onChange]);
 
   const fetchMembers = useMemoCallback(async (pageNum: number, keyword: string) => {
     if (projectid && !loading) {
@@ -90,27 +100,12 @@ const Member = (
     }, 300),
   );
 
-  const handleSearch = useMemoCallback(
-    debounce((val) => {
-      setKeyword(val);
-      memberPageNumberRef.current = 1;
-      fetchMembers(1, val);
-    }, 500),
-  );
-
   useEffect(() => {
     fetchMembers(1, '');
   }, [fetchMembers]);
 
   return (
-    <Select
-      {...propList}
-      style={{ width: '100%' }}
-      optionFilterProp="label"
-      onPopupScroll={handleScroll}
-      onSearch={handleSearch}
-      allowClear
-    >
+    <Select {...propList} style={{ width: '100%' }} optionFilterProp="label" onPopupScroll={handleScroll} allowClear>
       {(memberList || []).map(({ id, userName }) => (
         <Option key={id} value={id} label={userName}>
           {userName}

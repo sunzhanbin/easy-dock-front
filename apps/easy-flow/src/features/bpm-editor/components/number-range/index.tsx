@@ -10,18 +10,8 @@ interface EditProps {
 }
 
 const NumberRange = ({ className, value, onChange }: EditProps) => {
-  const [minNumber, setMinNumber] = useState<number | undefined>(() => {
-    if (value && value.length > 0) {
-      return value[0];
-    }
-    return undefined;
-  });
-  const [maxNumber, setMaxNumber] = useState<number | undefined>(() => {
-    if (value && value.length > 1) {
-      return value[1];
-    }
-    return undefined;
-  });
+  const [minNumber, setMinNumber] = useState<number | undefined>(value && value.length > 0 ? value[0] : undefined);
+  const [maxNumber, setMaxNumber] = useState<number | undefined>(value && value.length > 1 ? value[1] : undefined);
   const changeMinNumber = useCallback(
     (e) => {
       if (e !== null && e !== undefined) {
