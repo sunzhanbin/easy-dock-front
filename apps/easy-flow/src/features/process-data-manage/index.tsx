@@ -162,7 +162,7 @@ const DataManage = () => {
                 text = membersCacheRef.current[member].name;
               }
 
-              return <Text className={styles['dynamic-cell']} text={String(text)} />;
+              return <Text className={styles['dynamic-cell']} text={String(text)} getContainer={false} />;
             };
           } else if (field.type === 'Date') {
             tableColumn.render = (_: string, data: TableDataBase) => {
@@ -191,7 +191,7 @@ const DataManage = () => {
                 text = value;
               }
 
-              return <Text className={styles['dynamic-cell']} text={String(text)} />;
+              return <Text className={styles['dynamic-cell']} text={String(text)} getContainer={false} />;
             };
           }
 
