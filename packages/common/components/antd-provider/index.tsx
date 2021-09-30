@@ -6,7 +6,7 @@ import 'moment/locale/zh-cn';
 
 function AntdProvider({ children }: { children: ReactNode }) {
   return (
-    <ConfigProvider locale={zh_CN} renderEmpty={Empty}>
+    <ConfigProvider locale={zh_CN} renderEmpty={Empty} virtual={false}>
       {children}
     </ConfigProvider>
   );
