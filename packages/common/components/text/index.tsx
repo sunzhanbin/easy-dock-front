@@ -83,6 +83,7 @@ function Text(props: TextProps) {
         placement={placement}
         getTooltipContainer={getTooltipContainer}
         destroyTooltipOnHide
+        overlayClassName={styles.tooltip}
       >
         {wraperNode}
       </Tooltip>
