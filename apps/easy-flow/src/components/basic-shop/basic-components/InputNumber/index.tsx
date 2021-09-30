@@ -10,6 +10,8 @@ const TextareaComponent = (props: InputNumberProps) => {
     const prop: { [k: string]: string | number | boolean | undefined | Function } = {
       size: 'large',
       placeholder: '请输入',
+      max: Number.MAX_SAFE_INTEGER,
+      min: Number.MIN_SAFE_INTEGER,
       onChange: onChange,
     };
     if (defaultValue) {
