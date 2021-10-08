@@ -436,16 +436,20 @@ export async function uploadFile(values: any) {
   // 找出需要上传的文件,只有图片和附件需要上传
   Object.keys(values).forEach((key) => {
     const componentType = values[key] && values[key]?.type;
-    const fileList = values[key].fileList.filter((file: { originFileObj: File }) => file.originFileObj);
 
-    if (componentType === 'Image') {
-      fileIndexLocationRecord[key] = [imageFiles.length, imageFiles.length + fileList.length];
-      imageFiles.push(...fileList);
-    } else if (componentType === 'Attachment') {
-      fileIndexLocationRecord[key] = [attachmentFiles.length, attachmentFiles.length + fileList.length];
-      attachmentFiles.push(...fileList);
+    if (componentType === 'Image' || componentType === 'Attachment') {
+      const fileList = values[key].fileList.filter((file: { originFileObj: File }) => file.originFileObj);
+
+      if (componentType === 'Image') {
+        fileIndexLocationRecord[key] = [imageFiles.length, imageFiles.length + fileList.length];
+        imageFiles.push(...fileList);
+      } else if (componentType === 'Attachment') {
+        fileIndexLocationRecord[key] = [attachmentFiles.length, attachmentFiles.length + fileList.length];
+        attachmentFiles.push(...fileList);
+      }
     }
   });
+
   const promiseList: Promise<any>[] = [];
   if (imageFiles.length > 0) {
     promiseList.push(batchUpload({ files: imageFiles.map((file) => file.originFileObj), type: 1 }));
