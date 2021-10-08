@@ -426,19 +426,24 @@ type FileValue = {
   fileIdList: { id: string; name: string }[];
 };
 // 批量上传文件
+// TODO 这里不要用any, 看不懂values的结构
 export async function uploadFile(values: any) {
   // 需要上传的文件,图片和附件合并到一起
   const imageFiles: { originFileObj: File }[] = [];
   const attachmentFiles: { originFileObj: File }[] = [];
-  const fileListMap: { [k: string]: number } = {};
+  const fileIndexLocationRecord: { [key: string]: [number, number] } = {};
   const fileIdMap: { [k: string]: FileValue } = {};
   // 找出需要上传的文件,只有图片和附件需要上传
   Object.keys(values).forEach((key) => {
     const componentType = values[key] && values[key]?.type;
-    if (componentType === 'Image' || componentType === 'Attachment') {
-      const fileList = values[key].fileList.filter((file: { originFileObj: File }) => file.originFileObj);
-      fileListMap[key] = fileList.length;
-      componentType === 'Image' ? imageFiles.push(...fileList) : attachmentFiles.push(...fileList);
+    const fileList = values[key].fileList.filter((file: { originFileObj: File }) => file.originFileObj);
+
+    if (componentType === 'Image') {
+      fileIndexLocationRecord[key] = [imageFiles.length, imageFiles.length + fileList.length];
+      imageFiles.push(...fileList);
+    } else if (componentType === 'Attachment') {
+      fileIndexLocationRecord[key] = [attachmentFiles.length, attachmentFiles.length + fileList.length];
+      attachmentFiles.push(...fileList);
     }
   });
   const promiseList: Promise<any>[] = [];
@@ -449,13 +454,21 @@ export async function uploadFile(values: any) {
     promiseList.push(batchUpload({ files: attachmentFiles.map((file) => file.originFileObj), type: 2 }));
   }
   const [imageRes, attachmentRes] = await Promise.all(promiseList);
-  const list = (imageRes?.data || []).concat(attachmentRes?.data || []);
-  Object.keys(fileListMap).forEach((key) => {
+
+  Object.keys(fileIndexLocationRecord).forEach((key) => {
     const oldValue = values[key];
+    let fileIdList;
+
+    if (oldValue.type === 'Image') {
+      fileIdList = (imageRes?.data || []).slice(...fileIndexLocationRecord[key]);
+    } else if (oldValue.type === 'Attachment') {
+      fileIdList = (attachmentRes?.data || []).slice(...fileIndexLocationRecord[key]);
+    }
+
     fileIdMap[key] = {
       type: oldValue.type,
       fileList: [],
-      fileIdList: (oldValue.fileIdList || []).concat(list.splice(0, fileListMap[key])),
+      fileIdList: (oldValue.fileIdList || []).concat(fileIdList),
     };
   });
   // 重新组装表单数据
