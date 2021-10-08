@@ -23,7 +23,7 @@ function MicroApp(props: MicroAppProps) {
     if (containerRef.current) {
       const app = loadMicroApp({
         name,
-        entry,
+        entry: entry.replace(/\/$/, '') + `?ts=${Date.now()}`,
         container: containerRef.current,
         props: {
           basename: basename || matchedRoute,
