@@ -453,10 +453,15 @@ export async function uploadFile(values: any) {
   const promiseList: Promise<any>[] = [];
   if (imageFiles.length > 0) {
     promiseList.push(batchUpload({ files: imageFiles.map((file) => file.originFileObj), type: 1 }));
+  } else {
+    promiseList.push(Promise.resolve());
   }
   if (attachmentFiles.length > 0) {
     promiseList.push(batchUpload({ files: attachmentFiles.map((file) => file.originFileObj), type: 2 }));
+  } else {
+    promiseList.push(Promise.resolve());
   }
+
   const [imageRes, attachmentRes] = await Promise.all(promiseList);
 
   Object.keys(fileIndexLocationRecord).forEach((key) => {

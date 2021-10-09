@@ -128,7 +128,7 @@ function StartFlow() {
 
     setTimeout(() => {
       // 回任务中心我的发起
-      history.replace(`${dynamicRoutes.toTaskCenter(subApp.app.id)}/draft`);
+      // history.replace(`${dynamicRoutes.toTaskCenter(subApp.app.id)}/draft`);
     }, 1500);
   });
 
