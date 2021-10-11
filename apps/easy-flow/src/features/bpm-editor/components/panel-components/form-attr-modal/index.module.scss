@@ -25,14 +25,11 @@
         font-weight: 500;
         color: #181f43;
         line-height: 24px;
-        margin-right: 36px;
       }
+
       .ant-modal-body {
         min-height: 450px;
         max-height: 450px;
-        padding: 0;
-        padding-left: 2px;
-        padding-right: 32px;
         overflow-y: auto;
         .ant-form {
           margin: 24px 0;
@@ -44,9 +41,6 @@
             padding-bottom: 4px;
           }
         }
-      }
-      .ant-modal-footer {
-        margin-right: 0;
       }
     }
   }

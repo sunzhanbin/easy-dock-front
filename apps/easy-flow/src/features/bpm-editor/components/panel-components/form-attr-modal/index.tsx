@@ -99,6 +99,7 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
       centered={true}
       onCancel={onClose}
       onOk={handelOk}
+      width={660}
     >
       <Form form={form} className={styles.form} layout="vertical" autoComplete="off" initialValues={initFormValues}>
         <Form.Item label="选择触发方式" name="mode" className={styles.mode}>
