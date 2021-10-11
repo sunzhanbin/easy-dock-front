@@ -5,6 +5,7 @@ import { axios } from '@utils';
 import { FormField, OptionItem, OptionMode, SelectOptionItem } from '@/type';
 import { Icon } from '@common/components';
 import { useAppSelector } from '@/app/hooks';
+import { dataSource } from '@/config/components';
 import { componentPropsSelector, subAppSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 import styles from './index.module.scss';
 import classNames from 'classnames';
@@ -24,7 +25,7 @@ const SelectOptionList = (props: editProps) => {
   const { appId, id: subAppId } = useAppSelector(subAppSelector);
   const byId = useAppSelector(componentPropsSelector);
   const [type, setType] = useState<OptionMode>(value?.type || 'custom');
-  const [content, setContent] = useState<OptionItem[]>(value?.data || []);
+  const [content, setContent] = useState<OptionItem[]>(value?.data || dataSource.defaultValue.data);
   const [subAppKey, setSubAppKey] = useState<string>(value?.subappId || '');
   const [appList, setAppList] = useState<(OptionItem & { versionId: number })[]>([]);
   const [componentKey, setComponentKey] = useState<string | undefined>(value?.fieldName);
@@ -115,6 +116,7 @@ const SelectOptionList = (props: editProps) => {
 
   const handleChangeType = useMemoCallback((type: OptionMode) => {
     setType(type);
+
     if (type === 'custom' && content.length > 0) {
       onChange && onChange({ type, data: content });
     } else if (type === 'subapp' && subAppKey && componentKey) {

@@ -1,5 +1,5 @@
 import { memo, useState, useCallback, useEffect } from 'react';
-import { Button, Tooltip } from 'antd';
+import { Button, Tooltip, message } from 'antd';
 import { FormField, FormRuleItem } from '@/type';
 import { formatRuleValue } from '@/utils';
 import { Icon } from '@common/components';
@@ -21,8 +21,18 @@ const FormAttrEditor = () => {
   const handleClose = useCallback(() => {
     setShowModal(false);
   }, []);
+  // TODO 这里禁止any，很难阅读，rules看起来是个数组却有mode属性
   const handleOk = useCallback((rules, type, editIndex) => {
-    setShowModal(false);
+    try {
+      const subs: any[][] = rules.ruleValue || [];
+
+      if (subs.filter((item) => item.length !== 0).length !== 0) {
+        setShowModal(false);
+      } else {
+        message.warning('配置条件不能为空');
+      }
+    } catch {}
+
     let rule: FormRuleItem;
     if (rules.mode === 1) {
       // 值改变时

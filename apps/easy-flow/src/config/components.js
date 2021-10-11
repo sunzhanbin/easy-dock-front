@@ -81,7 +81,8 @@ const showSearch = {
   required: false,
   isProps: true,
 };
-const dataSource = {
+
+export const dataSource = {
   key: 'dataSource',
   defaultValue: {
     type: 'custom',
