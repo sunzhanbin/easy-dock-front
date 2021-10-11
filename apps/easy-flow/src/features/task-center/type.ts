@@ -19,8 +19,12 @@ export type TodoItem = {
 export type CopyItem = {
   copyTime: number;
   copyUser: string;
-  currentNodeId: string;
-  currentNodeName: string;
+  currentNodeId?: string;
+  currentNodes: {
+    currentNode: string;
+    currentNodeId: string;
+    currentNodeStartTime: number;
+  }[];
   processInstanceId: string;
   processName: string;
   state: 1 | 2 | 3 | 4 | 5;
