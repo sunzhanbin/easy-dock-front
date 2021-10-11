@@ -26,7 +26,7 @@ const FormAttrEditor = () => {
     try {
       const subs: any[][] = rules.ruleValue || [];
 
-      if (subs.filter((item) => item.length !== 0).length !== 0) {
+      if (rules.mode === 2 || subs.filter((item) => item.length !== 0).length !== 0) {
         setShowModal(false);
       } else {
         message.warning('配置条件不能为空');
