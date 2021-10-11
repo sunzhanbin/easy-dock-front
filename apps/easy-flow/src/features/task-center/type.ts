@@ -20,7 +20,7 @@ export type CopyItem = {
   copyTime: number;
   copyUser: string;
   currentNodeId?: string;
-  currentNodes: {
+  currentNodes?: {
     currentNode: string;
     currentNodeId: string;
     currentNodeStartTime: number;

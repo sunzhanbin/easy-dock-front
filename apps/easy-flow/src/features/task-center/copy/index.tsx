@@ -101,6 +101,8 @@ const Copy: FC<{}> = () => {
         render(_: string, record: CopyItem) {
           const { currentNodes } = record;
 
+          if (!currentNodes) return null;
+
           if (currentNodes.length > 1) {
             return (
               <div className={styles.currentNode}>
