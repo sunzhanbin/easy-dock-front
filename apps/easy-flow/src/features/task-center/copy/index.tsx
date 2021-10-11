@@ -1,11 +1,11 @@
 import { memo, FC, useState, useRef, useMemo, useEffect } from 'react';
-import { Form, Input, Button, DatePicker, Select, Table } from 'antd';
+import { Form, Input, Button, DatePicker, Select, Table, Popover } from 'antd';
 import styles from './index.module.scss';
 import { Icon } from '@common/components';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { debounce, throttle } from 'lodash';
 import { CopyItem, Pagination, UserItem } from '../type';
-import { getPassedTime, runtimeAxios } from '@/utils';
+import { getPassedTime, runtimeAxios, getStayTime } from '@/utils';
 import { useAppSelector } from '@/app/hooks';
 import { appSelector } from '../taskcenter-slice';
 import { useHistory } from 'react-router';
@@ -59,6 +59,7 @@ const Copy: FC<{}> = () => {
   });
   const [data, setData] = useState<CopyItem[]>([]);
   const [sortDirection, setSortDirection] = useState<'DESC' | 'ASC'>('DESC');
+  const tableWrapperContainerRef = useRef<HTMLDivElement>(null);
 
   const projectId = useMemo(() => {
     if (app && app.project) {
@@ -97,6 +98,37 @@ const Copy: FC<{}> = () => {
         dataIndex: 'currentNodeName',
         key: 'currentNodeName',
         width: '15%',
+        render(_: string, record: CopyItem) {
+          const { currentNodes } = record;
+
+          if (currentNodes.length > 1) {
+            return (
+              <div className={styles.currentNode}>
+                <span className={styles.text}>{currentNodes[0].currentNode}</span>
+                <Popover
+                  placement="bottom"
+                  trigger="click"
+                  title={null}
+                  content={
+                    <div className={styles.nodes}>
+                      {currentNodes.map(({ currentNode, currentNodeStartTime, currentNodeId }) => (
+                        <div className={styles.node} key={currentNodeId}>
+                          <div className={styles.name}>{currentNode}</div>
+                          <div className={styles.stay}>{currentNodeStartTime && getStayTime(currentNodeStartTime)}</div>
+                        </div>
+                      ))}
+                    </div>
+                  }
+                  getPopupContainer={() => tableWrapperContainerRef.current!}
+                >
+                  <Icon type="gengduo" className={styles.icon} />
+                </Popover>
+              </div>
+            );
+          } else {
+            return <div className={styles.currentNode}>{currentNodes[0].currentNode}</div>;
+          }
+        },
       },
       {
         title: '状态',
@@ -319,7 +351,7 @@ const Copy: FC<{}> = () => {
           </div>
         </Form>
       </div>
-      <div className={styles.content}>
+      <div className={styles.content} ref={tableWrapperContainerRef}>
         <Table
           loading={loading}
           pagination={pagination}
