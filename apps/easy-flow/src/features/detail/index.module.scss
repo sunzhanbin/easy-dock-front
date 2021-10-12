@@ -28,7 +28,23 @@
     }
 
     .save {
-      margin-right: 15px;
+      margin-right: 12px;
+      background-color: transparent;
+      color: rgba(255, 255, 255, 1);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+
+      &:hover {
+        color: rgba(255, 255, 255, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.17);
+      }
+      &:active {
+        box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.35);
+        border: 1px solid rgba(255, 255, 255, 0.35);
+      }
+      &:disabled {
+        border: 1px solid rgba(255, 255, 255, 0.17);
+        color: rgba(255, 255, 255, 0.35);
+      }
     }
 
     .submit {
