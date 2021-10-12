@@ -10,7 +10,7 @@
     margin-bottom: 0;
 
     .apis {
-      margin-bottom: 12px;
+      margin-bottom: 24px;
     }
   }
 
@@ -41,6 +41,10 @@
         position: absolute;
         right: 0;
         top: -8px;
+      }
+
+      .apis {
+        margin-bottom: 12px;
       }
 
       .location {
@@ -139,7 +143,11 @@
   }
 
   .btns {
-    margin-bottom: 12px;
+    margin-bottom: 24px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
 
     :global {
       .ant-btn {

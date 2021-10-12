@@ -350,7 +350,7 @@ export const save = createAsyncThunk<void, { subappId: string; showTip?: boolean
     } catch (e) {
       console.error(e);
 
-      Promise.reject(e.message || e);
+      return Promise.reject(e.message || e);
     } finally {
       dispatch(setLoading(false));
       dispatch(setSaving(false));
