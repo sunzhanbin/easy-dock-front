@@ -99,6 +99,14 @@
   .content {
     .form {
       margin-top: 8px;
+      margin-bottom: 0;
+      .apiConfig {
+        div {
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
+      }
     }
   }
 }
