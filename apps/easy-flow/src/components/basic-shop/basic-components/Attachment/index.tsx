@@ -129,6 +129,7 @@ const Attachment = (
         showUploadList={{
           showDownloadIcon: true,
           showRemoveIcon: true,
+          removeIcon:<Icon type="shanchu"/>
         }}
         beforeUpload={handleBeforeUpload}
         onChange={handleChange}
