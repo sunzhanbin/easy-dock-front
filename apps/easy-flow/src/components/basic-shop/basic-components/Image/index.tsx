@@ -7,7 +7,7 @@ import { getBase64 } from '@/utils';
 import { downloadFile } from '@/apis/file';
 import styles from './index.module.scss';
 
-type ImageValue = {
+export type ImageValue = {
   type: 'Image';
   fileIdList?: { id: string; name: string }[];
   fileList?: UploadFile[];
@@ -20,9 +20,10 @@ const ImageComponent = (
     onChange?: (value: ImageValue | string) => void;
   },
 ) => {
-  const { maxCount = 8, colSpace = '4', value, disabled, onChange } = props;
+  const { maxCount = 10, colSpace = '4', value, disabled, onChange } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [addFileCount, setAddFileCount] = useState<number>(0);
   const [previewVisible, setPreviewVisible] = useState<boolean>(false);
   const [previewTitle, setPreviewTitle] = useState<string>('');
   const [previewImage, setPreviewImage] = useState<string>('');
@@ -33,11 +34,11 @@ const ImageComponent = (
     const isPNG = type === 'image/png';
     const limitSize = 1024 * 1024 * 5; //5M
     if (!isJPG && !isPNG) {
-      message.error('只支持上传JPG、JPEG、PNG格式的图片~');
+      message.error('当前仅支持上传.png .jpg .jpeg格式图片');
       return false;
     }
     if (size > limitSize) {
-      message.error('图片超过5M,不允许上传~');
+      message.error('您所上传的图片超过5M，请调整后上传');
       return false;
     }
     return true;
@@ -52,16 +53,23 @@ const ImageComponent = (
       const newValue = Object.assign({}, value, { fileList: list, type: 'Image' });
       setFileList(list);
       onChange && onChange(newValue);
+      setAddFileCount((n) => n - 1);
       return;
     }
     // 上传图片
     const validatedFile = checkoutFile((image as unknown) as File);
     if (validatedFile) {
-      const file = Object.assign({}, image, { originFileObj: image, percent: 99 });
-      list.push(file);
-      const newValue = Object.assign({}, value, { fileList: list, type: 'Image' });
-      setFileList(list);
-      onChange && onChange(newValue);
+      const reader = new FileReader();
+      reader.readAsDataURL(image as any);
+      reader.onload = function () {
+        const url = reader.result;
+        const file = Object.assign({}, image, { originFileObj: image, percent: 99, thumbUrl: url });
+        list.push(file);
+        const newValue = Object.assign({}, value, { fileList: list, type: 'Image' });
+        setFileList(list);
+        setAddFileCount((n) => n + 1);
+        onChange && onChange(newValue);
+      };
     }
   });
   // 预览
@@ -80,21 +88,21 @@ const ImageComponent = (
   const handleCancel = useMemoCallback(() => {
     setPreviewVisible(false);
   });
-  // 处理每行最多展示8张图片
-  useEffect(() => {
-    const el = containerRef.current!.querySelector('.ant-upload-list-picture-card');
-    if (el) {
-      const classNameList: string[] = [];
-      el.classList.forEach((className) => {
-        if (!className.includes('col-space')) {
-          classNameList.push(className);
-        }
-      });
-      classNameList.push(`col-space-${colSpace}`);
-      el.className = classNameList.join(' ');
+  const handleRemove = useMemoCallback((file) => {
+    if (value) {
+      const componentValue = typeof value === 'string' ? (JSON.parse(value) as ImageValue) : { ...value };
+      const { fileIdList = [] } = componentValue;
+      const list = [...fileIdList];
+      const index = list.findIndex((v) => v.id === file.uid);
+      if (index > -1) {
+        list.splice(index, 1);
+        setAddFileCount((n) => n + 1); //代偿性+1
+      }
+      const newValue = Object.assign({}, componentValue, { fileIdList: list });
+      onChange && onChange(newValue);
     }
-  }, [colSpace]);
-  useEffect(() => {
+  });
+  const initFileList = useMemoCallback(() => {
     if (value) {
       const componentValue = typeof value === 'string' ? (JSON.parse(value) as ImageValue) : { ...value };
       const { fileIdList, fileList } = componentValue;
@@ -113,8 +121,8 @@ const ImageComponent = (
             list.push({
               name: file.name,
               uid: file.id,
-              url: url as string,
-              thumbUrl: url as string,
+              url: url,
+              thumbUrl: url,
             });
           });
           if (fileList && fileList.length > 0) {
@@ -126,7 +134,24 @@ const ImageComponent = (
         });
       }
     }
-  }, []);
+  });
+  // 处理每行最多展示8张图片
+  useEffect(() => {
+    const el = containerRef.current!.querySelector('.ant-upload-list-picture-card');
+    if (el) {
+      const classNameList: string[] = [];
+      el.classList.forEach((className) => {
+        if (!className.includes('col-space')) {
+          classNameList.push(className);
+        }
+      });
+      classNameList.push(`col-space-${colSpace}`);
+      el.className = classNameList.join(' ');
+    }
+  }, [colSpace]);
+  useEffect(() => {
+    initFileList();
+  }, [initFileList]);
   useEffect(() => {
     // 后端保存的是字符串,提交时需要转成json对象
     if (typeof value === 'string') {
@@ -134,6 +159,29 @@ const ImageComponent = (
       onChange && onChange(componentValue);
     }
   }, [value, onChange]);
+  useEffect(() => {
+    if (value) {
+      const componentValue = typeof value === 'string' ? (JSON.parse(value) as ImageValue) : { ...value };
+      const { fileIdList = [] } = componentValue;
+      const fileCount = fileIdList.length + addFileCount;
+      const el = containerRef.current!.querySelector('.ant-upload-list-picture-card');
+      const classNameList: string[] = [];
+      if (el) {
+        el.classList.forEach((c) => {
+          if (!c.includes('overlay')) {
+            classNameList.push(c);
+          }
+        });
+        if (fileCount >= maxCount) {
+          classNameList.push('overlay');
+        } else {
+          const index = classNameList.findIndex((v) => v === 'overlay');
+          index > -1 && classNameList.splice(index, 1);
+        }
+        el.className = classNameList.join(' ');
+      }
+    }
+  }, [maxCount, value, addFileCount]);
   return (
     <div className={styles.image} id={props.id} ref={containerRef}>
       <Upload
@@ -142,10 +190,16 @@ const ImageComponent = (
         maxCount={maxCount}
         disabled={disabled}
         fileList={fileList}
-        showUploadList={{ showDownloadIcon: true, showPreviewIcon: true, showRemoveIcon: true }}
+        showUploadList={{
+          showDownloadIcon: true,
+          showPreviewIcon: true,
+          showRemoveIcon: true,
+          removeIcon: <Icon type="shanchu" style={{ color: '#fff' }} />,
+        }}
         beforeUpload={handleBeforeUpload}
         onChange={handleChange}
         onPreview={onPreview}
+        onRemove={handleRemove}
       >
         {fileList.length >= maxCount ? null : (
           <span>
@@ -155,7 +209,14 @@ const ImageComponent = (
           </span>
         )}
       </Upload>
-      <Modal width={800} visible={previewVisible} title={previewTitle} footer={null} onCancel={handleCancel}>
+      <Modal
+        width={800}
+        visible={previewVisible}
+        title={previewTitle}
+        footer={null}
+        bodyStyle={{ maxHeight: '600px' }}
+        onCancel={handleCancel}
+      >
         <img alt="example" style={{ width: '100%' }} src={previewImage} />
       </Modal>
     </div>

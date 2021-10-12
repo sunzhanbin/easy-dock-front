@@ -8,6 +8,7 @@ const InputComponent = (props: InputProps & { unique: boolean }) => {
     const prop: { [k: string]: string | boolean | number | undefined | null | Function } = {
       size: 'large',
       placeholder: '请输入',
+      maxLength: 200, //最大长度200 v1.0.0暂定
       unique: String(unique),
       onChange: onChange,
     };

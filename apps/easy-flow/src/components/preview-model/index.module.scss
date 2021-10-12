@@ -1,5 +1,8 @@
 .container {
   width: 100%;
+  .loading {
+    z-index: 8888;
+  }
   .background {
     position: absolute;
     top: 0;
@@ -59,11 +62,13 @@
           margin-right: 12px;
         }
       }
-      .form-engine {
-        padding-top: 24px;
-        padding: 24px 32px 32px 0;
-        margin-bottom: 0;
+      .form-wrap {
         overflow-y: auto;
+        padding-left: 4px;
+        .form-engine {
+          padding: 24px 32px 32px 0;
+          margin-bottom: 0;
+        }
       }
     }
   }

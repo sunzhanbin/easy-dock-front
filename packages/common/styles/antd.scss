@@ -112,11 +112,10 @@
   padding: 0;
 
   .ant-modal-content {
-    padding: 32px;
-    padding-bottom: 0;
+    overflow: hidden;
 
     .ant-modal-header {
-      padding: 0;
+      padding: 32px;
       padding-bottom: 12px;
       border-bottom: 1px solid rgba(24, 31, 67, 0.08);
 
@@ -129,7 +128,7 @@
     }
 
     .ant-modal-close {
-      top: 12px;
+      top: 16px;
       right: 12px;
     }
 
@@ -141,7 +140,8 @@
 
   .ant-modal-body {
     max-height: 330px;
-    padding: 12px 0 24px;
+    padding: 12px 32px 24px;
+    overflow-y: auto;
 
     .ant-form {
       margin-bottom: -24px;
@@ -155,7 +155,7 @@
     height: 80px;
     margin-left: -32px;
     margin-right: -32px;
-    padding: 0 32px;
+    padding: 0 64px;
     border: none;
     background-color: rgba(24, 31, 67, 0.04);
 
@@ -240,6 +240,10 @@
   .ant-input-affix-wrapper-focused {
     box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.2);
   }
+
+  .ant-input-number.ant-input-number-focused {
+    box-shadow: none;
+  }
 }
 
 .ant-form-item {
@@ -247,16 +251,17 @@
     .ant-input {
       box-shadow: none;
     }
+
     .ant-input,
     .ant-input-affix-wrapper {
-      border-color: #ff5568 !important;
+      border-color: #ff5568;
       &:hover {
         border-color: #ff5568;
       }
     }
 
     .ant-select-selector {
-      border: 1px solid #ff5568 !important;
+      border: 1px solid #ff5568;
     }
   }
 
@@ -269,9 +274,6 @@
     }
   }
 
-  .ant-form-item-explain {
-    line-height: 24px;
-  }
 }
 
 .ant-checkbox {
@@ -281,11 +283,13 @@
     }
   }
 }
+
 .ant-checkbox-group {
   .ant-checkbox-wrapper {
     margin-bottom: 12px;
   }
 }
+
 .ant-checkbox-checked .ant-checkbox-inner,
 .ant-tree-checkbox-checked .ant-tree-checkbox-inner {
   background-color: $primary-color;
@@ -295,6 +299,12 @@
 // 树形控件半选状态
 .ant-tree-checkbox-indeterminate .ant-tree-checkbox-inner::after {
   background-color: $primary-color;
+}
+
+.ant-tree-checkbox-wrapper:hover .ant-tree-checkbox-inner,
+.ant-tree-checkbox:hover .ant-tree-checkbox-inner,
+.ant-tree-checkbox-input:focus + .ant-tree-checkbox-inner {
+  border-color: $primary-color;
 }
 
 .ant-checkbox-indeterminate .ant-checkbox-inner::after {
@@ -369,12 +379,18 @@
     box-shadow: 0 0 0 3px rgba(76, 92, 219, 0.2);
     background-color: transparent;
   }
+
+  &.ant-input-number-focused {
+    box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+  }
+
   .ant-input-number-input {
     &[disabled] {
       background-color: rgba(24, 39, 67, 0.04);
     }
   }
 }
+
 // 定制抽屉
 .ant-drawer-content {
   padding: 0;
@@ -513,7 +529,7 @@
       .ant-select-selector {
         background: rgba(24, 39, 67, 0.04);
         border-radius: 3px;
-        border: none;
+        border-color: transparent;
       }
     }
 
@@ -574,6 +590,11 @@
   font-weight: normal;
 }
 
+.ant-select:not(.ant-select-disabled):hover .ant-select-selector,
+.ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  border-color: $primary-color;
+}
+
 // 定制表格
 .ant-table {
   // 表头
@@ -593,13 +614,51 @@
   .ant-table-tbody {
     & > tr.ant-table-row:hover {
       & > td {
-        background: rgba(76, 92, 219, 0.06);
+        background-color: #f1f2fd;
       }
     }
   }
+
   td.ant-table-column-sort {
     background-color: #fff;
   }
+
+  .ant-table-column-sorter-up.active,
+  .ant-table-column-sorter-down.active {
+    color: $primary-color;
+  }
+}
+
+.ant-pagination-item-active {
+  border-color: $primary-color;
+}
+
+.ant-pagination-item-active a {
+  color: $primary-color;
+}
+
+.ant-pagination-item:focus-visible,
+.ant-pagination-item:hover {
+  border-color: $primary-color;
+
+  a {
+    color: $primary-color;
+  }
+}
+
+.ant-pagination-prev:focus-visible .ant-pagination-item-link,
+.ant-pagination-next:focus-visible .ant-pagination-item-link,
+.ant-pagination-prev:hover .ant-pagination-item-link,
+.ant-pagination-next:hover .ant-pagination-item-link {
+  border-color: $primary-color;
+  color: $primary-color;
+}
+
+.ant-pagination-disabled .ant-pagination-item-link,
+.ant-pagination-disabled:hover .ant-pagination-item-link,
+.ant-pagination-disabled:focus-visible .ant-pagination-item-link {
+  border-color: #d9d9d9;
+  color: rgba(#000, 0.2);
 }
 
 // 定制局部区域空状态
@@ -609,4 +668,8 @@
       height: 96px;
     }
   }
+}
+
+.ant-message {
+  top: 48px;
 }

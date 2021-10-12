@@ -1,4 +1,5 @@
 import { batchUpload, downloadFile as download } from '@/apis/file';
+import { ImageValue } from '@/components/basic-shop/basic-components/Image';
 import { DateField, fieldRule, FormField, SelectOptionItem } from '@/type';
 import moment from 'moment';
 import { runtimeAxios } from './axios';
@@ -52,6 +53,10 @@ export function formatRuleValue(
   // 选项类型
   if (fieldType === 'Select' || fieldType === 'Radio' || fieldType === 'Checkbox') {
     if (symbol === 'equal' || symbol === 'unequal' || symbol === 'include' || symbol === 'exclude') {
+      if (Array.isArray(value)) {
+        const text = ((value as string[]) || []).join('、');
+        return { name, symbol: label, value: text };
+      }
       return { name, symbol: label, value: value as string };
     }
     if (symbol === 'equalAnyOne' || symbol === 'unequalAnyOne') {
@@ -122,7 +127,7 @@ function analysisTextRule(symbol: string, value: string | string[], formValue: s
       result = formValue !== undefined && formValue.trim() !== '';
       break;
     default:
-      result = true;
+      result = false;
       break;
   }
   return result;
@@ -160,7 +165,7 @@ function analysisNumberRule(symbol: string, value: number | [number, number], fo
       result = formValue !== undefined && formValue !== null;
       break;
     default:
-      result = true;
+      result = false;
       break;
   }
   return result;
@@ -196,16 +201,13 @@ function analysisDateRule(symbol: string, value: number | [number, number] | str
       result = formValue !== undefined;
       break;
     default:
-      result = true;
+      result = false;
   }
   return result;
 }
 // 获取动态范围的起止时间
 function getDynamicTimeRange(dynamic: string): [number, number] {
-  let startTime = '0',
-    endTime = '0',
-    startDay = '1',
-    endDay = '1';
+  let startTime, endTime, startDay, endDay;
 
   switch (dynamic) {
     case 'today':
@@ -246,20 +248,20 @@ function getDynamicTimeRange(dynamic: string): [number, number] {
       endTime = moment(lastYear).endOf('day').format('x');
       break;
     case 'last7days':
-      startDay = moment().subtract(7, 'day').format('YYYY-MM-DD');
-      endDay = moment().subtract(1, 'day').format('YYYY-MM-DD');
+      startDay = moment().subtract(6, 'day').format('YYYY-MM-DD');
+      endDay = moment().subtract(0, 'day').format('YYYY-MM-DD');
       startTime = moment(startDay).startOf('day').format('x');
       endTime = moment(endDay).endOf('day').format('x');
       break;
     case 'last30days':
-      startDay = moment().subtract(30, 'day').format('YYYY-MM-DD');
-      endDay = moment().subtract(1, 'day').format('YYYY-MM-DD');
+      startDay = moment().subtract(29, 'day').format('YYYY-MM-DD');
+      endDay = moment().subtract(0, 'day').format('YYYY-MM-DD');
       startTime = moment(startDay).startOf('day').format('x');
       endTime = moment(endDay).endOf('day').format('x');
       break;
     case 'last90days':
-      startDay = moment().subtract(90, 'day').format('YYYY-MM-DD');
-      endDay = moment().subtract(1, 'day').format('YYYY-MM-DD');
+      startDay = moment().subtract(89, 'day').format('YYYY-MM-DD');
+      endDay = moment().subtract(0, 'day').format('YYYY-MM-DD');
       startTime = moment(startDay).startOf('day').format('x');
       endTime = moment(endDay).endOf('day').format('x');
       break;
@@ -270,6 +272,9 @@ function getDynamicTimeRange(dynamic: string): [number, number] {
   }
   return [+startTime, +endTime];
 }
+function arraySort(v: string[]): string {
+  return v.join('').split('').sort().join('');
+}
 // 解析选项类型规则
 function analysisOptionRule(symbol: string, value: string | string[], formValue: string | string[]): boolean {
   let result = false;
@@ -277,7 +282,7 @@ function analysisOptionRule(symbol: string, value: string | string[], formValue:
     case 'equal':
       if (Array.isArray(formValue)) {
         // 复选框或者下拉框多选
-        result = formValue.join() === (value as string[]).join();
+        result = arraySort(formValue) === arraySort(value as string[]);
       } else {
         // 单选按钮或者下拉框单选
         result = formValue === (value as string);
@@ -285,21 +290,21 @@ function analysisOptionRule(symbol: string, value: string | string[], formValue:
       break;
     case 'unequal':
       if (Array.isArray(formValue)) {
-        result = formValue.join() !== (value as string[]).join();
+        result = arraySort(formValue) === arraySort(value as string[]);
       } else {
         result = formValue !== (value as string);
       }
       break;
     case 'equalAnyOne':
       if (Array.isArray(formValue)) {
-        result = formValue.some((val) => (value as string[]).includes(val));
+        result = (value as string[]).some((val) => formValue.toString() === val);
       } else {
         result = (value as string[]).includes(formValue);
       }
       break;
     case 'unequalAnyOne':
       if (Array.isArray(formValue)) {
-        result = formValue.every((val) => !(value as string).includes(val));
+        result = (value as string[]).every((val) => formValue.toString() !== val) && formValue.length <= 1;
       } else {
         result = !(value as string[]).includes(formValue);
       }
@@ -308,32 +313,59 @@ function analysisOptionRule(symbol: string, value: string | string[], formValue:
       if (Array.isArray(formValue)) {
         result = formValue.some((val) => val.indexOf(value as string) > -1);
       } else {
-        result = formValue && formValue.indexOf(value as string) > -1 ? true : false;
+        result = Boolean(formValue.trim()) && formValue.indexOf(value as string) > -1;
       }
       break;
     case 'exclude':
       if (Array.isArray(formValue)) {
         result = formValue.every((val) => val.indexOf(value as string) === -1);
       } else {
-        result = formValue && formValue.indexOf(value as string) === -1 ? true : false;
+        result = Boolean(formValue.trim()) && formValue.indexOf(value as string) === -1;
       }
       break;
     case 'null':
-      result = formValue === undefined;
+      result = Array.isArray(formValue) ? formValue.length === 0 : formValue === undefined;
       break;
     case 'notNull':
-      result = formValue !== undefined;
+      result = Array.isArray(formValue) ? formValue.length > 0 : formValue !== undefined;
       break;
     default:
-      result = true;
+      result = false;
       break;
+  }
+  return result;
+}
+// 解析图片、附件规则
+function analysisFile(symbol: string, formValue: any): boolean {
+  let result = false;
+  const fileValue: ImageValue =
+    typeof formValue === 'string' ? (JSON.parse(formValue) as ImageValue) : { ...formValue };
+  const fileListLength = (fileValue.fileIdList?.length || 0) + (fileValue.fileList?.length || 0);
+  if (symbol === 'null') {
+    return fileListLength === 0;
+  } else if (symbol === 'notNull') {
+    return fileListLength > 0;
+  }
+  return result;
+}
+function analysisMember(symbol: string, formValue: number | number[]): boolean {
+  let result = false;
+  switch (symbol) {
+    case 'null':
+      result = Array.isArray(formValue) ? formValue.length === 0 : formValue === undefined;
+      break;
+    case 'notNull':
+      result = Array.isArray(formValue) ? formValue.length > 0 : formValue !== undefined;
+      break;
+    default:
+      result = false;
   }
   return result;
 }
 // 解析单个条件是否匹配
 export function analysisRule(rule: fieldRule, formValues: { [k in string]: any }): boolean {
-  const { fieldName, fieldType = '', symbol, value } = rule;
-  const formValue = formValues[fieldName];
+  const { fieldName, fieldType = '', symbol = '', value } = rule;
+  const formValue = fieldName && formValues[fieldName];
   // 文本类型
   if (fieldType === 'Input' || fieldType === 'Textarea') {
     return analysisTextRule(symbol, value as string | string[], formValue as string);
@@ -350,6 +382,14 @@ export function analysisRule(rule: fieldRule, formValues: { [k in string]: any }
   if (fieldType === 'Select' || fieldType === 'Radio' || fieldType === 'Checkbox') {
     return analysisOptionRule(symbol, value as string | string[], formValue as string);
   }
+  // 图片或附件类型
+  if (fieldType === 'Image' || fieldType === 'Attachment') {
+    return analysisFile(symbol, formValue);
+  }
+  // 人员组件
+  if (fieldType === 'Member') {
+    return analysisMember(symbol, formValue as number | number[]);
+  }
   // 其他类型
   if (symbol === 'null') {
     return formValue === undefined || formValue.trim() === '';
@@ -357,7 +397,7 @@ export function analysisRule(rule: fieldRule, formValues: { [k in string]: any }
   if (symbol === 'notNull') {
     return formValue !== undefined && formValue.trim() !== '';
   }
-  return true;
+  return false;
 }
 // 解析单个条件块是否匹配
 export function analysisRuleBlock(ruleBlock: fieldRule[], formValues: { [k in string]: any }): boolean {
@@ -386,45 +426,80 @@ type FileValue = {
   fileIdList: { id: string; name: string }[];
 };
 // 批量上传文件
+// TODO 这里不要用any, 看不懂values的结构
 export async function uploadFile(values: any) {
   // 需要上传的文件,图片和附件合并到一起
-  const files: { originFileObj: File }[] = [];
-  const fileListMap: { [k: string]: number } = {};
+  const imageFiles: { originFileObj: File }[] = [];
+  const attachmentFiles: { originFileObj: File }[] = [];
+  const fileIndexLocationRecord: { [key: string]: [number, number] } = {};
   const fileIdMap: { [k: string]: FileValue } = {};
   // 找出需要上传的文件,只有图片和附件需要上传
   Object.keys(values).forEach((key) => {
     const componentType = values[key] && values[key]?.type;
+
     if (componentType === 'Image' || componentType === 'Attachment') {
       const fileList = values[key].fileList.filter((file: { originFileObj: File }) => file.originFileObj);
-      fileListMap[key] = fileList.length;
-      files.push(...fileList);
+
+      if (componentType === 'Image') {
+        fileIndexLocationRecord[key] = [imageFiles.length, imageFiles.length + fileList.length];
+        imageFiles.push(...fileList);
+      } else if (componentType === 'Attachment') {
+        fileIndexLocationRecord[key] = [attachmentFiles.length, attachmentFiles.length + fileList.length];
+        attachmentFiles.push(...fileList);
+      }
     }
   });
-  if (files.length > 0) {
-    const res = await batchUpload({ maxUploadNum: files.length, files: files.map((file) => file.originFileObj) });
-    const list = [...res.data];
-    Object.keys(fileListMap).forEach((key) => {
-      const oldValue = values[key];
-      fileIdMap[key] = {
-        type: oldValue.type,
-        fileList: [],
-        fileIdList: (oldValue.fileIdList || []).concat(list.splice(0, fileListMap[key])),
-      };
-    });
+
+  const promiseList: Promise<any>[] = [];
+  if (imageFiles.length > 0) {
+    promiseList.push(batchUpload({ files: imageFiles.map((file) => file.originFileObj), type: 1 }));
+  } else {
+    promiseList.push(Promise.resolve());
   }
+  if (attachmentFiles.length > 0) {
+    promiseList.push(batchUpload({ files: attachmentFiles.map((file) => file.originFileObj), type: 2 }));
+  } else {
+    promiseList.push(Promise.resolve());
+  }
+
+  const [imageRes, attachmentRes] = await Promise.all(promiseList);
+
+  Object.keys(fileIndexLocationRecord).forEach((key) => {
+    const oldValue = values[key];
+    let fileIdList;
+
+    if (oldValue.type === 'Image') {
+      fileIdList = (imageRes?.data || []).slice(...fileIndexLocationRecord[key]);
+    } else if (oldValue.type === 'Attachment') {
+      fileIdList = (attachmentRes?.data || []).slice(...fileIndexLocationRecord[key]);
+    }
+
+    fileIdMap[key] = {
+      type: oldValue.type,
+      fileList: [],
+      fileIdList: (oldValue.fileIdList || []).concat(fileIdList),
+    };
+  });
   // 重新组装表单数据
   return Object.assign({}, values, fileIdMap);
 }
 
+export function exportFile(res: any, name: string, type?: string) {
+  const blobConfig = type ? { type } : {};
+  const blob = new Blob([res], blobConfig);
+  const urlObject = window.URL || window.webkitURL || window;
+  const save_link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a') as HTMLAnchorElement;
+
+  save_link.href = urlObject.createObjectURL(blob);
+  if (name) {
+    save_link.download = name;
+  }
+  save_link.click();
+}
+
 export function downloadFile(id: string, name: string) {
   download(id).then((res) => {
-    const blob = new Blob([res as any]);
-    const urlObject = window.URL || window.webkitURL || window;
-    const save_link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a') as HTMLAnchorElement;
-
-    save_link.href = urlObject.createObjectURL(blob);
-    save_link.download = name;
-    save_link.click();
+    exportFile(res, name);
   });
 }
 
@@ -446,6 +521,28 @@ export const loadFieldDatasource = async (config: SelectOptionItem): Promise<any
     }
 
     return Promise.resolve([]);
+  } else if (config.type === 'interface') {
+    // 接口数据 构建端拿不到入参,不需要调用接口
+    // const { apiconfig } = config;
+    // if (apiconfig && formDataList) {
+    //   const name = (apiconfig.response as { name: string })?.name;
+    //   if (name) {
+    //     const res = await runtimeAxios.post('/common/doHttpJson', { jsonObject: apiconfig, formDataList });
+    //     let list: OptionItem[] = [];
+    //     const data = eval(`res.${name}`);
+    //     if (Array.isArray(data)) {
+    //       if (data.every((val) => typeof val === 'string')) {
+    //         // 字符串数组
+    //         list = data.map((val) => ({ key: val, value: val }));
+    //       } else if (data.every((val) => val.key && val.value)) {
+    //         // key-value对象数组
+    //         list = data.map((item) => ({ key: item.key, value: item.value }));
+    //       }
+    //     }
+    //     return list;
+    //   }
+    //   return Promise.resolve([]);
+    // }
   }
 
   return Promise.resolve([]);

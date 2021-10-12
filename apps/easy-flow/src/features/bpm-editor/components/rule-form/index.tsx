@@ -85,7 +85,7 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
           .filter((item: { type: string }) => item.type !== 'DescText')
           .map((item: FormField) => ({
             label: item.label,
-            id: item.id!,
+            id: item.id,
             type: item.type,
             format: (item as DateField).format,
             fieldName: item.fieldName,
@@ -141,7 +141,7 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
         value: undefined,
       });
       if (selectComponent) {
-        newRule = Object.assign({}, newRule, { fieldType: selectComponent!.type });
+        newRule = Object.assign({}, newRule, { fieldType: selectComponent.type });
       }
       onChange && onChange(blockIndex, ruleIndex, newRule);
       return;
@@ -151,7 +151,7 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
         value: undefined,
       });
       if (selectComponent) {
-        newRule = Object.assign({}, newRule, { fieldType: selectComponent!.type });
+        newRule = Object.assign({}, newRule, { fieldType: selectComponent.type });
       }
       onChange && onChange(blockIndex, ruleIndex, newRule);
       return;
@@ -159,7 +159,7 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
     if (values.value !== undefined && rule.value !== values.value) {
       let newRule: fieldRule = Object.assign({}, values);
       if (selectComponent) {
-        newRule = Object.assign({}, newRule, { fieldType: selectComponent!.type });
+        newRule = Object.assign({}, newRule, { fieldType: selectComponent.type });
       }
       onChange && onChange(blockIndex, ruleIndex, newRule);
     }
@@ -285,7 +285,7 @@ const RuleForm = ({ rule, className, components, blockIndex, ruleIndex, onChange
         );
       }
       const format = component && component.format;
-      const showTime = format === 'YYYY-MM-DD HH:mm:ss' ? true : false;
+      const showTime = format === 'YYYY-MM-DD HH:mm:ss';
       if (symbol === 'range') {
         return (
           <Form.Item name="value" className={styles.valueWrapper}>

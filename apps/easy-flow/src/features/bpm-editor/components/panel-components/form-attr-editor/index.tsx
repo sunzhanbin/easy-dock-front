@@ -1,5 +1,5 @@
 import { memo, useState, useCallback, useEffect } from 'react';
-import { Button, Tooltip } from 'antd';
+import { Button, Tooltip, message } from 'antd';
 import { FormField, FormRuleItem } from '@/type';
 import { formatRuleValue } from '@/utils';
 import { Icon } from '@common/components';
@@ -18,60 +18,21 @@ const FormAttrEditor = () => {
   const [editIndex, setEditIndex] = useState<number>(0);
   const [type, setType] = useState<'add' | 'edit'>('add');
   const [showModal, setShowModal] = useState<boolean>(false);
-  // 组装tooltip文字内容(产品确认暂时不需要 2021-08-11)
-  // const getText = useCallback(
-  //   (rule: FormRuleItem) => {
-  //     let text = '';
-  //     if (rule.type === 'change') {
-  //       const condition = rule!.formChangeRule!.fieldRule;
-  //       const showComponentList = rule!.formChangeRule!.showComponents || [];
-  //       const hideComponentList = rule!.formChangeRule!.hideComponents || [];
-  //       const showComponents = showComponentList.map((id) => byId[id].label);
-  //       const hideComponents = hideComponentList.map((id) => byId[id].label);
-  //       text += '当';
-  //       condition.forEach((ruleBlock, blockIndex) => {
-  //         ruleBlock.forEach((item, index) => {
-  //           const component = byId[item.fieldId] || {};
-  //           const formatRule = formatRuleValue(item, component);
-  //           text += `${formatRule?.name || ''}${formatRule?.symbol || ''}${formatRule?.value || ''}`;
-  //           if (index !== ruleBlock.length - 1) {
-  //             text += ' 且';
-  //           }
-  //         });
-  //         if (blockIndex !== condition.length - 1) {
-  //           text += ' 或';
-  //         }
-  //       });
-  //       text += '时 ';
-  //       if (showComponents.length > 0) {
-  //         text += ' 显示';
-  //         showComponents.forEach((name, index) => {
-  //           text += name;
-  //           if (index !== showComponents.length - 1) {
-  //             text += '、';
-  //           }
-  //         });
-  //       }
-  //       if (hideComponents.length > 0) {
-  //         text += ' 隐藏';
-  //         hideComponents.forEach((name, index) => {
-  //           text += name;
-  //           if (index !== hideComponents.length - 1) {
-  //             text += '、';
-  //           }
-  //         });
-  //       }
-  //       return text;
-  //     }
-  //     return text;
-  //   },
-  //   [byId],
-  // );
   const handleClose = useCallback(() => {
     setShowModal(false);
   }, []);
+  // TODO 这里禁止any，很难阅读，rules看起来是个数组却有mode属性
   const handleOk = useCallback((rules, type, editIndex) => {
-    setShowModal(false);
+    try {
+      const subs: any[][] = rules.ruleValue || [];
+
+      if (rules.mode === 2 || subs.filter((item) => item.length !== 0).length !== 0) {
+        setShowModal(false);
+      } else {
+        message.warning('配置条件不能为空');
+      }
+    } catch {}
+
     let rule: FormRuleItem;
     if (rules.mode === 1) {
       // 值改变时
@@ -144,9 +105,9 @@ const FormAttrEditor = () => {
         <div className={styles.content}>
           {rules.map((item: FormRuleItem, index: number) => {
             if (item.type === 'change') {
-              const condition = item!.formChangeRule!.fieldRule;
-              const showComponentList = item!.formChangeRule!.showComponents || [];
-              const hideComponentList = item!.formChangeRule!.hideComponents || [];
+              const condition = item.formChangeRule!.fieldRule;
+              const showComponentList = item.formChangeRule!.showComponents || [];
+              const hideComponentList = item.formChangeRule!.hideComponents || [];
               const showComponents = showComponentList.map((fieldName) => {
                 const component = Object.values(byId).find((comp) => comp.fieldName === fieldName);
                 return component?.label || fieldName;
@@ -160,7 +121,6 @@ const FormAttrEditor = () => {
               }
               return (
                 <div className={styles.ruleItem} key={index}>
-                  {/* <Tooltip placement="top" title={getText(item)}> */}
                   <div className={styles.content}>
                     <span>当</span>
                     {condition.map((ruleBlock, blockIndex) => {
@@ -214,7 +174,6 @@ const FormAttrEditor = () => {
                       </span>
                     )}
                   </div>
-                  {/* </Tooltip> */}
                   <div className={styles.operation}>
                     <Tooltip title="编辑">
                       <span>

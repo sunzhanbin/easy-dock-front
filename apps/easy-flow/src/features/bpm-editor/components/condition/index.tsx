@@ -1,7 +1,6 @@
 import { memo, useCallback, useMemo } from 'react';
-import { Tooltip, Button, FormInstance } from 'antd';
+import { Tooltip, Button } from 'antd';
 import classnames from 'classnames';
-// import RuleForm from '@/features/bpm-editor/components/rule-form';
 import FormList from './form-list';
 import { Icon } from '@common/components';
 import { fieldRule, FormField } from '@/type';
@@ -9,19 +8,19 @@ import styles from './index.module.scss';
 
 interface EditProps {
   data: Array<FormField>;
-  form: FormInstance;
+  name: string;
   className?: string;
   value?: fieldRule[][];
   onChange?: (value: fieldRule[][]) => void;
   loadDataSource?: (id: string) => Promise<{ key: string; value: string }[] | { data: { data: string[] } }>;
 }
 
-const Condition = ({ className, data, value, form, onChange, loadDataSource }: EditProps) => {
+const Condition = ({ className, data, value, name, onChange, loadDataSource }: EditProps) => {
   const ruleList = useMemo(() => {
     if (value && value.length > 0) {
       return value;
     }
-    return [[{ fieldName: '', symbol: '' }]];
+    return [[{ fieldName: undefined, symbol: undefined }]];
   }, [value]);
   const components = useMemo(() => {
     return data || [];
@@ -32,7 +31,7 @@ const Condition = ({ className, data, value, form, onChange, loadDataSource }: E
       const result = list.map((ruleBlock, blockIndex) => {
         if (index === blockIndex) {
           const block = [...ruleBlock];
-          block.push({ fieldName: '', symbol: '' });
+          block.push({ fieldName: undefined, symbol: undefined });
           return block;
         }
         return ruleBlock;
@@ -58,7 +57,7 @@ const Condition = ({ className, data, value, form, onChange, loadDataSource }: E
   );
   const addRuleBlock = useCallback(() => {
     const list = [...ruleList];
-    list.push([{ fieldName: '', symbol: '' }]);
+    list.push([{ fieldName: undefined, symbol: undefined }]);
     onChange && onChange(list);
   }, [ruleList, onChange]);
   const handleRuleChange = useCallback(
@@ -91,20 +90,11 @@ const Condition = ({ className, data, value, form, onChange, loadDataSource }: E
                 {ruleBlock.map((rule: fieldRule, ruleIndex: number) => {
                   return (
                     <div className={styles.rule} key={ruleIndex}>
-                      {/* <RuleForm
-                        rule={rule}
-                        components={components}
-                        className={styles.form}
-                        blockIndex={index}
-                        ruleIndex={ruleIndex}
-                        onChange={handleRuleChange}
-                        loadDataSource={loadDataSource}
-                      /> */}
                       <FormList
                         rule={rule}
-                        form={form}
                         components={components}
                         className={styles.form}
+                        name={name}
                         blockIndex={index}
                         ruleIndex={ruleIndex}
                         onChange={handleRuleChange}

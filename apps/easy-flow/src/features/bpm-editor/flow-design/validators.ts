@@ -2,11 +2,12 @@ import { Rule } from 'antd/lib/form';
 import { CorrelationMemberConfig, AuditNode, RevertType } from '@type/flow';
 import { DataConfig } from '@type/api';
 import { validName } from '@common/rule';
+import { dynamicIsEmpty } from './util';
 
 const member = (value: CorrelationMemberConfig): string => {
-  const { members = [], depts = [], roles = [] } = value;
+  const { members = [], depts = [], roles = [], dynamic } = value;
 
-  if (!members.length && !depts.length && !roles.length) {
+  if (!members.length && !depts.length && !roles.length && dynamicIsEmpty(dynamic)) {
     return '办理人不能为空';
   }
 

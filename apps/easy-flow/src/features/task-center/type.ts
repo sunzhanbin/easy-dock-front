@@ -16,10 +16,31 @@ export type TodoItem = {
   taskName: string;
 };
 
+export type CopyItem = {
+  copyTime: number;
+  copyUser: string;
+  currentNodeId?: string;
+  currentNodes?: {
+    currentNode: string;
+    currentNodeId: string;
+    currentNodeStartTime: number;
+  }[];
+  processInstanceId: string;
+  processName: string;
+  state: 1 | 2 | 3 | 4 | 5;
+};
+
+export type currentNodeItem = {
+  currentNode: string;
+  currentNodeId: string;
+  currentNodeStartTime: number | null;
+};
+
 export type StartItem = {
   currentNode: string;
   currentNodeId: string;
   currentNodeStartTime: number | null;
+  currentNodes: currentNodeItem[];
   endTime: number;
   processInstanceId: string;
   processName: string;

@@ -62,7 +62,7 @@ function CCNodeEditor(props: CCNodeEditorProps) {
       <Form.Item label="节点名称" name="name" rules={nameRules} getValueFromEvent={trimInputValue} required>
         <Input size="large" placeholder="请输入抄送节点名称" />
       </Form.Item>
-      <Form.Item label="选择办理人" name="correlationMemberConfig" rules={memberRules}>
+      <Form.Item label="选择办理人" name="correlationMemberConfig" rules={memberRules} required>
         <MemberSelector />
       </Form.Item>
       <Form.Item label="字段权限" name="fieldsAuths">

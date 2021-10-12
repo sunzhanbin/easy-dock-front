@@ -21,6 +21,7 @@ interface FormProps {
   initialValue: { [key: string]: any };
   readonly?: boolean;
   className?: string;
+  projectId?: number;
   datasource: Datasource;
 }
 
@@ -32,7 +33,7 @@ const FormDetail = React.forwardRef(function FormDetail(
   props: FormProps,
   ref: React.ForwardedRef<FormInstance<FormValue>>,
 ) {
-  const { data, fieldsAuths, datasource, initialValue, readonly, className } = props;
+  const { data, fieldsAuths, datasource, initialValue, readonly, className, projectId } = props;
   const [form] = Form.useForm<FormValue>();
   const [loading, setLoading] = useState<boolean>(false);
   const [fieldsVisible, setFieldsVisible] = useState<FieldsVisible>({});
@@ -54,25 +55,9 @@ const FormDetail = React.forwardRef(function FormDetail(
     }
     return data.formRules.filter((rule) => rule.type === 'init').map((rule) => rule.formInitRule as DataConfig);
   }, [data.formRules]);
-  // 值改变规则依赖的字段列表,若表单change的字段不在依赖列表中则不需要进行校验
-  const changeFieldList = useMemo<string[]>(() => {
-    if (changeRuleList.length === 0) {
-      return [];
-    }
-    const fieldRuleList: fieldRule[][][] = [];
-    changeRuleList.forEach((rule) => {
-      fieldRuleList.push(rule.fieldRule);
-    });
-    const list = fieldRuleList
-      .filter((item) => item)
-      .flat(3)
-      .map((rule) => rule.fieldName);
-    const set = new Set(list);
-    return Array.from(set);
-  }, [changeRuleList]);
   // 缓存之前的表单控件显隐状态
   const cacheFieldsVisibleMap = useMemo(() => {
-    const map: { [k in number]: FieldsVisible } = {};
+    const map: { [k: number]: FieldsVisible } = {};
     changeRuleList.forEach((rule, index) => {
       map[index] = {};
     });
@@ -84,16 +69,17 @@ const FormDetail = React.forwardRef(function FormDetail(
     return data.components.map((comp) => comp.config.type);
   }, [data]);
 
-  const componentIdMap = useMemo(() => {
-    const map: { [k in string]: string } = {};
-    data.components.forEach((comp) => {
-      map[comp.config.id] = comp.config.fieldName;
-    });
-    return map;
-  }, [data]);
-
   // 获取组件源码
   const compSources = useLoadComponents(componentTypes);
+  // 收集单个规则的控件依赖
+  const collectFieldNameList = useMemoCallback((rule: fieldRule[][]) => {
+    const list = rule
+      .filter((v) => v)
+      .flat(2)
+      .map((rule) => rule.fieldName as string);
+    const set = new Set(list);
+    return Array.from(set);
+  });
   const formValuesChange = useMemoCallback((changedValues: FormValue) => {
     // 处理单个控件绑定的事件
     if (data.events && data.events.onchange) {
@@ -130,18 +116,23 @@ const FormDetail = React.forwardRef(function FormDetail(
     const formValues = form.getFieldsValue();
     const changedFieldName = Object.keys(changedValues).length > 0 ? Object.keys(changedValues)[0] : '';
     // 处理表单属性值改变时事件
-    if (changeRuleList.length > 0 && Object.keys(formValues).length > 0 && changeFieldList.includes(changedFieldName)) {
+    if (changeRuleList.length > 0 && Object.keys(formValues).length > 0) {
       changeRuleList.forEach((rule, index) => {
-        const result = analysisFormChangeRule(rule!.fieldRule, formValues);
+        const fieldNameList = collectFieldNameList(rule.fieldRule);
+        // 此次改变的表单控件不在这个规则的依赖字段中,直接返回
+        if (!fieldNameList.includes(changedFieldName)) {
+          return;
+        }
+        const result = analysisFormChangeRule(rule.fieldRule, formValues);
         const showComponents = rule?.showComponents || [];
         const hideComponents = rule?.hideComponents || [];
         if (result) {
           const fieldVisible: FieldsVisible = {};
-          showComponents.forEach((id) => {
-            id.startsWith('DescText') ? (fieldVisible[id] = true) : (fieldVisible[componentIdMap[id]] = true);
+          showComponents.forEach((fieldName) => {
+            fieldVisible[fieldName] = true;
           });
-          hideComponents.forEach((id) => {
-            id.startsWith('DescText') ? (fieldVisible[id] = false) : (fieldVisible[componentIdMap[id]] = false);
+          hideComponents.forEach((fieldName) => {
+            fieldVisible[fieldName] = false;
           });
           setFieldsVisible((oldVisible) => {
             const visible: FieldsVisible = {};
@@ -206,23 +197,39 @@ const FormDetail = React.forwardRef(function FormDetail(
   useEffect(() => {
     // 进入表单时请求接口
     if (initRuleList.length > 0) {
-      const formDataList: { name: string; value: any }[] = Object.keys(initialValue).map((name) => {
+      const formDataList: { name: string; value: any }[] = (Object.keys(initialValue) || []).map((name) => {
         return { name, value: initialValue[name] };
       });
-      const respListMap = initRuleList
-        .map((rule) => rule.response)
-        .map((res) => {
-          if (!res) {
-            return [];
-          }
-          return (res as ParamSchem[]).map((item) => {
-            const { name, map } = item;
-            const fieldName = String(map?.match(/(?<=\$\{).*?(?=\})/));
-            return { fieldName, name };
-          });
-        });
+      // 返回值映射列表
+      const respListMap: { fieldName: string; name: string }[][] = [];
       const promiseList: Promise<any>[] = [];
-      initRuleList.forEach((rule) => {
+      initRuleList.forEach((rule, index) => {
+        const requestMapList = rule.request.required
+          .concat(rule.request.customize)
+          .map((item) => {
+            const { map } = item;
+            if (!map) {
+              return '';
+            }
+            return String(map?.match(/(?<=\$\{).*?(?=\})/));
+          })
+          .filter((name) => name !== 'null' && name !== '');
+        // 只要接口关联表单值得参数中有一个没有值就不请求接口
+        const isEmpty = requestMapList.some((name) => {
+          return initialValue[name] === undefined;
+        });
+        if (isEmpty) {
+          return;
+        }
+        const resMap = ((rule?.response as ParamSchem[]) || []).map((res) => {
+          if (!res) {
+            return { fieldName: '', name: '' };
+          }
+          const { name, map } = res;
+          const fieldName = String(map?.match(/(?<=\$\{).*?(?=\})/));
+          return { fieldName, name };
+        });
+        respListMap.push(resMap);
         promiseList.push(runtimeAxios.post('/common/doHttpJson', { jsonObject: rule, formDataList }));
       });
       setLoading(true);
@@ -246,7 +253,7 @@ const FormDetail = React.forwardRef(function FormDetail(
           setLoading(false);
         });
     }
-  }, []);
+  }, [form, initRuleList, initialValue]);
 
   return (
     <Form
@@ -304,6 +311,7 @@ const FormDetail = React.forwardRef(function FormDetail(
                           fieldsAuths[fieldName] === AuthType.View,
                       }),
                       datasource && (datasource[fieldName] || datasource[fieldId]),
+                      projectId,
                     )}
                   </Form.Item>
                 </Col>
@@ -323,10 +331,13 @@ function compRender(
   Component: any,
   props: any,
   datasource?: Datasource[keyof Datasource],
+  projectId?: number,
 ) {
   if ((type === 'Select' || type === 'Radio' || type === 'Checkbox') && datasource) {
     return <Component {...props} options={datasource} />;
   }
-
+  if (type === 'Member') {
+    return <Component {...props} projectid={projectId} />;
+  }
   return <Component {...props} />;
 }

@@ -1,8 +1,8 @@
 import { AllComponentType, FormField, MoveConfig, RadioField, TConfigItem } from '@/type';
 import { Tooltip } from 'antd';
 import LabelContent from '../label-content';
-import { Icon } from '@common/components';
-import React, { memo, FC, useMemo, useCallback } from 'react';
+import { Icon, Loading } from '@common/components';
+import React, { memo, FC, useMemo, useCallback, useRef, useEffect } from 'react';
 import { exchange, comAdded, comDeleted } from '@/features/bpm-editor/form-design/formdesign-slice';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import useLoadComponents from '@/hooks/use-load-components';
@@ -22,7 +22,20 @@ const SourceBox: FC<{
   const dispatch = useAppDispatch();
   const selectedField = useAppSelector(selectedFieldSelector);
   const formDesign = useAppSelector(formDesignSelector);
-  const options = useDataSource((config as RadioField)?.dataSource);
+  const sourceRef = useRef<any>(null);
+
+  const dataSource = useMemo(() => {
+    if (config && (config as RadioField)?.dataSource) {
+      const source = (config as RadioField)?.dataSource;
+      return source;
+    }
+    return null;
+  }, [config]);
+  useEffect(() => {
+    sourceRef.current = dataSource;
+  }, [dataSource]);
+
+  const [options, loading] = useDataSource({ prevDataSource: sourceRef.current, dataSource });
   // 获取组件源码
   const compSources = useLoadComponents(type as AllComponentType['type']) as Component;
   const propList = useMemo(() => {
@@ -60,6 +73,7 @@ const SourceBox: FC<{
       const Component = compSources;
       return (
         <div className={styles.container}>
+          {loading && <Loading />}
           <div className={styles.component_container}>
             {type !== 'DescText' && <LabelContent label={propList.label} desc={propList.desc} />}
             <Component {...(propList as TConfigItem)} />
@@ -107,6 +121,7 @@ const SourceBox: FC<{
     compSources,
     selectedField,
     propList,
+    loading,
     handleCopy,
     handleDelete,
     handleMoveDown,

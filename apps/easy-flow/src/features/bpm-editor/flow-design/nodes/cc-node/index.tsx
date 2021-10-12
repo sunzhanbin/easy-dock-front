@@ -13,7 +13,7 @@ function CCNode(props: CCNodeProps) {
 
   return (
     <BaseNode icon={<Icon type="chaosongdise" />} node={node}>
-      <MemberList node={node} />
+      <MemberList config={node.correlationMemberConfig} />
     </BaseNode>
   );
 }

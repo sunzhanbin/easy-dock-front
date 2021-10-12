@@ -1,6 +1,6 @@
 import { memo, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
-import { Form, Input, Checkbox, InputNumber, Button } from 'antd';
+import { Form, Input, Button, Checkbox, InputNumber } from 'antd';
 import { Rule } from 'antd/lib/form';
 import debounce from 'lodash/debounce';
 import useMemoCallback from '@common/hooks/use-memo-callback';
@@ -8,7 +8,7 @@ import { AuditNode, RevertType } from '@type/flow';
 import MemberSelector from '../../components/member-selector';
 import FieldAuths from '../../components/field-auths';
 import ButtonEditor from '../../components/button-editor';
-// import CounterSignButtonGroup from './countersign-btn-group';
+import CounterSignButtonGroup from './countersign-btn-group';
 import { updateNode } from '../../flow-slice';
 import { trimInputValue } from '../../util';
 import useValidateForm from '../../hooks/use-validate-form';
@@ -87,7 +87,7 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
       onValuesChange={handleFormValuesChange}
       autoComplete="off"
     >
-      <Form.Item label="节点名称" name="name" rules={nameRules} getValueFromEvent={trimInputValue}>
+      <Form.Item label="节点名称" name="name" rules={nameRules} required getValueFromEvent={trimInputValue}>
         <Input size="large" placeholder="请输入用户节点名称" />
       </Form.Item>
       <Form.Item label="选择办理人" name="correlationMemberConfig" rules={memberRules} required>
@@ -129,7 +129,7 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
             },
           ]}
         >
-          <RevertCascader prevNodes={prevNodes}></RevertCascader>
+          <RevertCascader prevNodes={prevNodes} />
         </Form.Item>
 
         {/* <Form.Item name={['btnConfigs', 'btnText', 'transfer']}>
@@ -144,8 +144,8 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
           </ButtonEditor>
         </Form.Item>
       </Form.Item>
-      {/* 会签915之后打开 */}
-      {/* <Form.Item>
+
+      <Form.Item>
         <Form.Item
           name={['countersign', 'enable']}
           label="会签设置"
@@ -172,14 +172,40 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
 
                 {type === 1 ? (
                   <div className={styles['countersign-detail']}>
-                    <Form.Item name={['countersign', 'percent']}>
+                    <Form.Item
+                      name={['countersign', 'percent']}
+                      rules={[
+                        {
+                          validator(_, value) {
+                            if (!value) {
+                              return Promise.reject(new Error('百分比不能为空'));
+                            }
+
+                            return Promise.resolve();
+                          },
+                        },
+                      ]}
+                    >
                       <InputNumber size="large" min={0} max={100} placeholder="请输入" />
                     </Form.Item>
                     <span>% 同意时进入下一节点，否则驳回</span>
                   </div>
                 ) : (
                   <div className={styles['countersign-detail']}>
-                    <Form.Item name={['countersign', 'count']}>
+                    <Form.Item
+                      name={['countersign', 'count']}
+                      rules={[
+                        {
+                          validator(_, value) {
+                            if (!value) {
+                              return Promise.reject(new Error('人数不能为空'));
+                            }
+
+                            return Promise.resolve();
+                          },
+                        },
+                      ]}
+                    >
                       <InputNumber size="large" min={0} precision={0} placeholder="请输入" />
                     </Form.Item>
                     <span>人同意时进入下一节点，否则驳回</span>
@@ -189,7 +215,7 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
             );
           }}
         </Form.Item>
-      </Form.Item> */}
+      </Form.Item>
       <Form.Item label="字段权限" name="fieldsAuths">
         <FieldAuths />
       </Form.Item>

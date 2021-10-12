@@ -49,8 +49,12 @@ const Detail = forwardRef(function Detail(props: DetailProps, ref: React.Forward
 
   useEffect(() => {
     if (!flow || !form) return;
-
-    loadDatasource(form.meta, flow.node.fieldsAuths, flow.instance.subapp.version.id).then((values) => {
+    loadDatasource(
+      form.meta,
+      flow.node.fieldsAuths,
+      flow.instance.subapp.version.id,
+      flow.instance.processInstanceId,
+    ).then((values) => {
       setDatasource(values);
     });
   }, [flow, form]);
@@ -67,6 +71,7 @@ const Detail = forwardRef(function Detail(props: DetailProps, ref: React.Forward
               readonly={type !== TaskDetailType.MyTodo}
               ref={ref}
               data={form.meta}
+              projectId={flow.instance.subapp.app.project.id}
               initialValue={form.value}
               fieldsAuths={flow.node.fieldsAuths}
             />

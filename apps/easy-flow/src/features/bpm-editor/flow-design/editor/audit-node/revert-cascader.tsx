@@ -5,7 +5,7 @@ import useMemoCallback from '@common/hooks/use-memo-callback';
 import { AuditNode, AllNode, BranchNode, RevertType } from '@type/flow';
 import styles from './index.module.scss';
 
-interface ReverCascaderProps {
+interface RevertCascaderProps {
   prevNodes: Exclude<AllNode, BranchNode>[];
   value?: AuditNode['revert'];
   onChange?(value: this['value']): void;
@@ -17,7 +17,7 @@ type RevertOptionsType = {
   children?: RevertOptionsType[];
 };
 
-function ReverCascader(props: ReverCascaderProps) {
+function RevertCascader(props: RevertCascaderProps) {
   const { prevNodes, value, onChange } = props;
 
   const options = useMemo(() => {
@@ -86,4 +86,4 @@ function ReverCascader(props: ReverCascaderProps) {
   );
 }
 
-export default memo(ReverCascader);
+export default memo(RevertCascader);

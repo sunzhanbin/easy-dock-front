@@ -1,5 +1,5 @@
 import { memo, useContext, useMemo } from 'react';
-import { Form, Input, Dropdown, Menu, DropDownProps } from 'antd';
+import { Form, Input, Dropdown, Menu } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import DataContext from '../context';
 import styles from './index.module.scss';
@@ -10,7 +10,7 @@ interface FieldMapProps {
 
 function FieldMap(props: FieldMapProps) {
   const { name } = props;
-  const { fields, getPopupContainer } = useContext(DataContext)!;
+  const { fields } = useContext(DataContext)!;
   const options = useMemo(() => {
     return fields.map((item) => {
       return {
@@ -37,7 +37,7 @@ function FieldMap(props: FieldMapProps) {
       ]}
       trigger="onChange"
     >
-      <AutoSelector options={options} getPopupContainer={getPopupContainer} />
+      <AutoSelector options={options} />
     </Form.Item>
   );
 }
@@ -48,11 +48,10 @@ interface AutoSelectorProps {
   value?: string;
   onChange?(value: this['value']): void;
   options: { id: string | number; name: string }[];
-  getPopupContainer?: DropDownProps['getPopupContainer'];
 }
 
-function AutoSelector(props: AutoSelectorProps) {
-  const { options, value, onChange, getPopupContainer } = props;
+export function AutoSelector(props: AutoSelectorProps) {
+  const { options, value, onChange } = props;
   const showValue = useMemo(() => {
     return options.find((item) => item.id === value)?.name || value;
   }, [options, value]);
@@ -61,13 +60,13 @@ function AutoSelector(props: AutoSelectorProps) {
     onChange!(key);
   });
 
-  const handleInputChange = useMemoCallback((event: any) => {
+  const handleInputChange = useMemoCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     onChange!(event.target.value);
   });
 
   return (
     <Dropdown
-      getPopupContainer={getPopupContainer}
+      getPopupContainer={(c) => c}
       overlay={
         <Menu className={styles.options} onClick={handleMenuClick}>
           {options.map((item) => {
@@ -82,7 +81,7 @@ function AutoSelector(props: AutoSelectorProps) {
       trigger={['click']}
     >
       <div className={styles.selector}>
-        <Input size="large" value={showValue || value} onInput={handleInputChange} placeholder="请输入"></Input>
+        <Input size="large" value={showValue || value} onInput={handleInputChange} placeholder="请输入" />
       </div>
     </Dropdown>
   );

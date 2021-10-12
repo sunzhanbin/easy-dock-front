@@ -25,7 +25,7 @@ function SubAppExtend() {
       dispatch(loadExtend(subapp.data.id))
         .then(unwrapResult)
         .then((data) => {
-          formRef.current!.setFieldsValue(data);
+          formRef.current.setFieldsValue(data);
         });
     }
   }, [subapp.data?.id, dispatch]);

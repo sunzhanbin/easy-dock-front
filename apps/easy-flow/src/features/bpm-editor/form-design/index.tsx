@@ -37,7 +37,7 @@ const FormDesign: FC<{}> = () => {
               componentConfig[key] = config[key];
             }
           });
-          byId[id as string] = componentConfig;
+          byId[id] = componentConfig;
         });
         dispatch(setFormRules({ formRules: formRules }));
         dispatch(setById({ byId: byId as FormFieldMap }));

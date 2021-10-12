@@ -33,6 +33,15 @@
     .bf-modal-content {
       opacity: 1;
       transform: translate(-50%, -50%);
+      .bf-item.error {
+        &::before {
+          display: block;
+          content: '\E912';
+        }
+        &::after {
+          background-color: rgba(52, 152, 219, 0.6);
+        }
+      }
     }
   }
 }

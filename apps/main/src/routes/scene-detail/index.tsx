@@ -57,7 +57,7 @@ function GridColumn(props: GridCloumnProps) {
 
   return (
     <div className={classnames(styles.column, className)}>
-      <div className={styles['column-header']}>
+      <div className={styles['column-components']}>
         <div className={styles.title}>
           <Icon className={styles['column-icon']} type={icon} />
           <div className={styles.text}>{title}</div>

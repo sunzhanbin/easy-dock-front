@@ -81,14 +81,15 @@ const showSearch = {
   required: false,
   isProps: true,
 };
-const dataSource = {
+
+export const dataSource = {
   key: 'dataSource',
   defaultValue: {
     type: 'custom',
     data: [
-      { key: '选项一', value: '选项一' },
-      { key: '选项二', value: '选项二' },
-      { key: '选项三', value: '选项三' },
+      { key: '选项1', value: '选项1' },
+      { key: '选项2', value: '选项2' },
+      { key: '选项3', value: '选项3' },
     ],
   },
   label: '选项内容',
@@ -135,18 +136,24 @@ const descTextValue = {
   required: true,
   isProps: false,
 };
-const maxCount = {
-  key: 'maxCount',
-  defaultValue: 8,
-  label: '最大上传数',
-  placeholder: '请输入',
-  type: 'InputNumber',
-  direction: 'vertical',
-  required: false,
-  isProps: true,
+
+const getMaxCount = (max, min, defaultValue) => {
+  return {
+    key: 'maxCount',
+    label: `最大上传数(正整数且最大为${max})`,
+    placeholder: '请输入',
+    type: 'InputNumber',
+    direction: 'vertical',
+    required: false,
+    isProps: true,
+    precision: 0,
+    defaultValue,
+    max,
+    min,
+  };
 };
 
-const componentSchema = {
+const components = {
   Input: {
     baseInfo: {
       name: '单行文本',
@@ -235,26 +242,36 @@ const componentSchema = {
     },
     config: [getLabel('描述文字'), descTextValue, colSpace],
   },
-  // Image: {
-  //   baseInfo: {
-  //     name: '图片',
-  //     icon: 'tupiancaidan',
-  //     category: '基础控件',
-  //     version: '1.0',
-  //     type: 'Image',
-  //   },
-  //   config: [fieldName, getLabel('图片'), desc, maxCount, colSpace],
-  // },
-  // Attachment: {
-  //   baseInfo: {
-  //     name: '附件',
-  //     icon: 'fujiancaidan',
-  //     category: '基础控件',
-  //     version: '1.0',
-  //     type: 'Attachment',
-  //   },
-  //   config: [fieldName, getLabel('附件'), desc, maxCount, colSpace],
-  // },
+  Image: {
+    baseInfo: {
+      name: '图片',
+      icon: 'tupiancaidan',
+      category: '基础控件',
+      version: '1.0',
+      type: 'Image',
+    },
+    config: [fieldName, getLabel('图片'), desc, getMaxCount(10, 1, 10), colSpace],
+  },
+  Attachment: {
+    baseInfo: {
+      name: '附件',
+      icon: 'fujiancaidan',
+      category: '基础控件',
+      version: '1.0',
+      type: 'Attachment',
+    },
+    config: [fieldName, getLabel('附件'), desc, getMaxCount(5, 1, 5), colSpace],
+  },
+  Member: {
+    baseInfo: {
+      name: '人员',
+      icon: 'jibenxinxi',
+      category: '高级控件',
+      version: '1.0',
+      type: 'Member',
+    },
+    config: [fieldName, getLabel('人员'), desc, multiple, showSearch, colSpace],
+  },
 };
 
-export default componentSchema;
+export default components;

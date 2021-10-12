@@ -14,6 +14,7 @@ const staticRoutes = {
   BUILDER_APP: '/builder/app/:appId',
   APP_RUNTIME_DETAIL: '/app/:appId',
   APP_PROCESS: '/app/:appId/process',
+  APP_PROCESS_DATA_MANAGE: '/app/:appId/process/data-manage',
   APP_TASK_CENTER: '/app/:appId/process/task-center',
   INTEGRATION: '/builder/integration',
   INTEGRATION_ORCH_INDEX: `/builder/integration/orch${orchRoutes.ORCH_INDEX}`,

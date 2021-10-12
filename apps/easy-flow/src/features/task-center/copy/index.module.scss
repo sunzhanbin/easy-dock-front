@@ -5,48 +5,97 @@
     flex: 1;
     :global {
       #copy_form {
-        flex: 1;
-        .name {
-          width: 33%;
-        }
-        .state {
-          width: 33%;
-        }
-        .copyer {
-          width: 33%;
-        }
-        .timeRange {
-          width: 33%;
+        display: block;
+        width: 100%;
+        .copy_form_row {
+          display: flex;
+          .ant-form-item {
+            flex: 1;
+            margin-right: 40px;
+            margin-bottom: 20px;
+            &.timeRange {
+              flex: 2;
+              margin-right: 0;
+            }
+            &.empty {
+              flex: 2;
+              margin-right: 40px;
+            }
+            &.operation {
+              margin-right: 0;
+              .btn_list {
+                display: flex;
+                justify-content: flex-end;
+                width: 200px;
+                float: right;
+                .search {
+                  flex: 0 0 60px;
+                  border-radius: 3px;
+                  border: 1px solid rgba(76, 92, 219, 0.85);
+                  font-size: 14px;
+                  font-weight: 400;
+                  color: #4c5cdb;
+                  margin-right: 12px;
+                  &:hover {
+                    border: 1px solid rgba(76, 92, 219, 0.5);
+                    color: rgba(76, 92, 219, 0.8);
+                  }
+                }
+                .reset {
+                  flex: 0 0 60px;
+                  border-radius: 3px;
+                  border: 1px solid rgba(24, 31, 67, 0.12);
+                  font-size: 14px;
+                  font-weight: 400;
+                  color: rgba(24, 31, 67, 0.95);
+                  //   margin-right: 12px;
+                  &:hover {
+                    border: 1px solid rgba(24, 31, 67, 0.3);
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }
-    .operation {
-      flex: 0 0 200px;
-      display: flex;
-      .search {
-        flex: 0 0 60px;
-        border-radius: 3px;
-        border: 1px solid rgba(76, 92, 219, 0.85);
-        font-size: 14px;
-        font-weight: 400;
+  }
+  .content {
+    margin-top: 24px;
+
+    .name {
+      cursor: pointer;
+      &:hover {
         color: #4c5cdb;
-        margin-right: 12px;
+      }
+    }
+    .currentNode,
+    .stayTime {
+      display: flex;
+      align-items: center;
+      .icon {
+        font-size: 16px;
+        margin-left: 4px;
+        cursor: pointer;
         &:hover {
-          border: 1px solid rgba(76, 92, 219, 0.5);
-          color: rgba(76, 92, 219, 0.8);
+          color: #4c5cdb;
         }
       }
-      .reset {
-        flex: 0 0 60px;
-        border-radius: 3px;
-        border: 1px solid rgba(24, 31, 67, 0.12);
+    }
+  }
+}
+
+:global(.ant-popover-inner-content) {
+  .nodes {
+    .node {
+      display: flex;
+      align-items: center;
+      line-height: 22px;
+      .name {
         font-size: 14px;
         font-weight: 400;
-        color: rgba(24, 31, 67, 0.95);
-        //   margin-right: 12px;
-        &:hover {
-          border: 1px solid rgba(24, 31, 67, 0.3);
-        }
+        color: rgba(24, 31, 67, 0.75);
+        margin-right: 16px;
       }
     }
   }

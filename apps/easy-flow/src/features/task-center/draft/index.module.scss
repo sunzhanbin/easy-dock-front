@@ -1,0 +1,41 @@
+@import '@common/styles/var.scss';
+
+.link {
+  color: inherit;
+
+  &:hover {
+    color: $primary-color;
+  }
+}
+
+.del {
+  display: flex;
+  font-size: 20px;
+  cursor: pointer;
+
+  &:hover {
+    .icon {
+      color: $danger-color;
+    }
+  }
+}
+
+.table {
+  :global {
+    .ant-table-column-sorters {
+      display: inline-flex;
+
+      .ant-table-column-title {
+        margin-right: 10px;
+      }
+    }
+  }
+
+  // :global(.ant-table-row) {
+  //   &:hover {
+  //     .del {
+  //       display: flex;
+  //     }
+  //   }
+  // }
+}

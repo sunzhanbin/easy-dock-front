@@ -1,4 +1,4 @@
-import { memo, useState, useCallback, useEffect } from 'react';
+import { memo, useState, useCallback } from 'react';
 import { Input } from 'antd';
 import classnames from 'classnames';
 import { Icon, Text } from '@common/components';
@@ -11,36 +11,30 @@ interface EditProps {
 }
 
 const MultiText = ({ className, value, onChange }: EditProps) => {
-  const [textList, setTextList] = useState<string[]>(Array.isArray(value) ? value : []);
   const [text, setText] = useState<string>('');
   const handleAddText = useCallback(() => {
     if (text.trim()) {
-      setTextList((list) => {
-        const textList = [...list];
-        textList.push(text);
-        return textList;
-      });
+      const list = value ? [...value] : [];
+      list.push(text);
+      onChange && onChange(list);
     }
     setText('');
-  }, [text]);
+  }, [text, value, onChange]);
 
   const handleDelete = useCallback(
     (index) => {
-      const list = [...textList];
+      const list = value ? [...value] : [];
       list.splice(index, 1);
-      setTextList(list);
+      onChange && onChange(list);
     },
-    [textList, setTextList],
+    [value, onChange],
   );
-  useEffect(() => {
-    onChange && onChange(textList);
-  }, [textList, onChange]);
   return (
     <div className={classnames(styles.muliText, className ? className : '')}>
-      {textList.length > 0 && (
+      {value && value.length > 0 && (
         <div className={styles.textContainer}>
           <div className={styles.textList}>
-            {textList.map((text: string, index: number) => (
+            {value.map((text: string, index: number) => (
               <span className={styles.textWrapper} key={index}>
                 <Text text={text} getContainer={false}>
                   <span tabIndex={index} className={classnames(styles.text)}>

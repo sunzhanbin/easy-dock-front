@@ -14,6 +14,8 @@ import {
   Flow,
   FieldTemplate,
   RevertType,
+  AuthType,
+  FieldAuthsMap,
 } from '@type/flow';
 import { FormMeta } from '@type';
 import { Api } from '@type/api';
@@ -195,19 +197,72 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
       const deptIds: Set<number | string> = new Set();
       const roleIds: Set<number | string> = new Set();
 
+      let hasAutoNode = false;
+      let fieldsMap = fieldsTemplate.reduce((curr, prev) => {
+        curr[prev.id] = true;
+        return curr;
+      }, {} as { [key: string]: true });
+
       flowRecursion(flowData, (node) => {
-        if (node.type === NodeType.FillNode || node.type === NodeType.AuditNode || node.type === NodeType.CCNode) {
-          (node.correlationMemberConfig.members || []).forEach((member) => {
-            userIds.add(member);
+        if (
+          node.type === NodeType.FillNode ||
+          node.type === NodeType.AuditNode ||
+          node.type === NodeType.CCNode ||
+          node.type === NodeType.StartNode
+        ) {
+          if (node.type !== NodeType.StartNode) {
+            // 舍弃办理人动态值里的多余字段
+            node.correlationMemberConfig.dynamic = Object.assign({}, node.correlationMemberConfig.dynamic, {
+              fields: (node.correlationMemberConfig.dynamic?.fields || []).filter((field) => fieldsMap[field]),
+            });
+
+            // 提取每个节点的人员
+            (node.correlationMemberConfig.members || []).forEach((member) => {
+              userIds.add(member);
+            });
+
+            // 提取每个节点中的部门
+            (node.correlationMemberConfig.depts || []).forEach((dept) => {
+              deptIds.add(dept);
+            });
+
+            // 提取每个节点中的角色
+            (node.correlationMemberConfig.roles || [])
+              .concat(node.correlationMemberConfig.dynamic?.roles || [])
+              .forEach((role) => {
+                roleIds.add(role);
+              });
+          }
+
+          const fieldsAuths: FieldAuthsMap = {};
+
+          // 舍弃冗余字段
+          fieldsTemplate.forEach((field) => {
+            if (node.fieldsAuths && node.fieldsAuths[field.id] !== undefined) {
+              fieldsAuths[field.id] = node.fieldsAuths[field.id];
+            } else {
+              fieldsAuths[field.id] = AuthType.View;
+            }
           });
-          (node.correlationMemberConfig.depts || []).forEach((dept) => {
-            deptIds.add(dept);
+
+          node.fieldsAuths = fieldsAuths;
+        } else if (node.type === NodeType.BranchNode) {
+          node.branches = node.branches.map((branch) => {
+            return {
+              ...branch,
+              conditions: branch.conditions.map((row) => {
+                return row.filter((col) => fieldsMap[col.fieldName as string]);
+              }),
+            };
           });
-          (node.correlationMemberConfig.roles || []).forEach((role) => {
-            roleIds.add(role);
-          });
+        } else if (node.type === NodeType.AutoNode && !hasAutoNode) {
+          hasAutoNode = true;
         }
       });
+
+      if (hasAutoNode) {
+        dispatch(loadApis());
+      }
 
       // 这样设计为了避免用户更新完头像或者名称后不在节点中更新的问题
       const userResponse = await runtimeAxios.post('/user/query/owner', {
@@ -295,7 +350,7 @@ export const save = createAsyncThunk<void, { subappId: string; showTip?: boolean
     } catch (e) {
       console.error(e);
 
-      Promise.reject(e.message || e);
+      return Promise.reject(e.message || e);
     } finally {
       dispatch(setLoading(false));
       dispatch(setSaving(false));
@@ -334,11 +389,17 @@ export const addNode = createAsyncThunk<void, { prevId: string; type: AddableNod
   'flow/create-node',
   ({ prevId, type }, { getState, dispatch }) => {
     let tmpNode;
+    const { flow } = getState();
 
     if (type === NodeType.BranchNode) {
       tmpNode = createNode(type);
     } else if (type === NodeType.AutoNode) {
       tmpNode = createNode(type, '自动节点');
+
+      // 如果添加了自动节点判断下服务编排里的接口有没有被加载进来
+      if (flow.apis.length === 0) {
+        dispatch(loadApis());
+      }
     } else {
       if (type === NodeType.AuditNode) {
         tmpNode = createNode(type, '审批节点');
@@ -350,7 +411,7 @@ export const addNode = createAsyncThunk<void, { prevId: string; type: AddableNod
         throw Error('传入类型不正确');
       }
 
-      tmpNode.fieldsAuths = formatFieldsAuths(getState().flow.fieldsTemplate);
+      tmpNode.fieldsAuths = formatFieldsAuths(flow.fieldsTemplate);
     }
 
     // 给新节点设置初始字段权限

@@ -18,6 +18,9 @@ export type SchemaConfigItem = {
   direction?: 'vertical' | 'horizontal';
   range?: rangeItem[];
   isProps: boolean;
+  max?: number;
+  min?: number;
+  precision?: number;
 };
 
 export type rangeItem = {
@@ -80,7 +83,7 @@ export type DataBaseField = {
   dataFilter?: DataFilterCondition[] | null;
 };
 
-export type OptionMode = 'custom' | 'subapp';
+export type OptionMode = 'custom' | 'subapp' | 'interface';
 export type OptionItem = {
   key: string;
   value: string;
@@ -90,6 +93,7 @@ export type SelectOptionItem = {
   data?: OptionItem[];
   subappId?: string;
   fieldName?: string;
+  apiConfig?: DataConfig;
 };
 
 export type FormFieldMap = {
@@ -101,8 +105,8 @@ export type ErrorItem = {
 };
 
 export type fieldRule = {
-  fieldName: string;
-  symbol: string;
+  fieldName: string | undefined;
+  symbol?: string;
   fieldType?: string;
   value?: string | number | string[] | [number, number];
 };

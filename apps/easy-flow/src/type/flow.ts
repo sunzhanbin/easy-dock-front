@@ -54,6 +54,11 @@ export type CorrelationMemberConfig = {
   members: CorrelationMemberConfigKey[];
   depts: CorrelationMemberConfigKey[];
   roles: CorrelationMemberConfigKey[];
+  dynamic?: {
+    starter?: boolean;
+    roles: CorrelationMemberConfigKey[];
+    fields: CorrelationMemberConfigKey[];
+  };
 };
 // 审批节点
 export interface UserNode extends BaseNode {
@@ -161,4 +166,4 @@ export type Flow = AllNode[];
 
 export type FieldTemplate = { id: string; name: string; type: FieldType };
 
-export type AddableNode = AuditNode | FillNode | BranchNode | CCNode | BranchNode | SubBranch | AutoNode;
+export type AddableNode = AuditNode | FillNode | BranchNode | CCNode | SubBranch | AutoNode;

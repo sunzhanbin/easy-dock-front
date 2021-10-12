@@ -15,7 +15,7 @@ type FileValue = {
 const Attachment = (
   props: UploadProps & { colSpace?: string; value?: FileValue; onChange?: (value: FileValue) => void },
 ) => {
-  const { maxCount = 8, colSpace = '4', value, disabled, onChange } = props;
+  const { maxCount = 5, colSpace = '4', value, disabled, onChange } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   // 校验文件类型和大小
@@ -23,7 +23,7 @@ const Attachment = (
     const { size } = file;
     const limitSize = 1024 * 1024 * 20; //20M
     if (size > limitSize) {
-      message.error('文件超过20M,不允许上传~');
+      message.error('您所上传的图片超过20M，请调整后上传');
       return false;
     }
     return true;
@@ -58,21 +58,18 @@ const Attachment = (
     const { name, uid } = file;
     downloadFile(uid, name);
   });
-  // 处理每行最多展示4个文件
-  useEffect(() => {
-    const el = containerRef.current!.querySelector('.ant-upload-select-picture')?.parentElement;
-    if (el) {
-      const classNameList: string[] = [];
-      el.classList.forEach((className) => {
-        if (!className.includes('col-space')) {
-          classNameList.push(className);
-        }
-      });
-      classNameList.push(`col-space-${colSpace}`);
-      el.className = classNameList.join(' ');
+  const handleRemove = useMemoCallback((file) => {
+    if (value) {
+      const componentValue = typeof value === 'string' ? (JSON.parse(value) as FileValue) : { ...value };
+      const { fileIdList = [] } = componentValue;
+      const list = [...fileIdList];
+      const index = list.findIndex((v) => v.id === file.uid);
+      index > -1 && list.splice(index, 1);
+      const newValue = Object.assign({}, componentValue, { fileIdList: list });
+      onChange && onChange(newValue);
     }
-  }, [colSpace]);
-  useEffect(() => {
+  });
+  const initFileList = useMemoCallback(() => {
     if (value) {
       const componentValue = typeof value === 'string' ? (JSON.parse(value) as FileValue) : { ...value };
       const { fileIdList, fileList } = componentValue;
@@ -95,7 +92,24 @@ const Attachment = (
         setFileList(list);
       }
     }
-  }, []);
+  });
+  // 处理每行最多展示4个文件
+  useEffect(() => {
+    const el = containerRef.current!.querySelector('.ant-upload-select-picture')?.parentElement;
+    if (el) {
+      const classNameList: string[] = [];
+      el.classList.forEach((className) => {
+        if (!className.includes('col-space')) {
+          classNameList.push(className);
+        }
+      });
+      classNameList.push(`col-space-${colSpace}`);
+      el.className = classNameList.join(' ');
+    }
+  }, [colSpace]);
+  useEffect(() => {
+    initFileList();
+  }, [initFileList]);
   useEffect(() => {
     // 后端保存的是字符串,提交时需要转成json对象
     if (typeof value === 'string') {
@@ -115,10 +129,12 @@ const Attachment = (
         showUploadList={{
           showDownloadIcon: true,
           showRemoveIcon: true,
+          removeIcon:<Icon type="shanchu"/>
         }}
         beforeUpload={handleBeforeUpload}
         onChange={handleChange}
         onDownload={handleDownload}
+        onRemove={handleRemove}
       >
         {fileList.length >= maxCount ? null : (
           <span>

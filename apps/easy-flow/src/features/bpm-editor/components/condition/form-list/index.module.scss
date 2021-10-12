@@ -1,6 +1,9 @@
 .form {
   display: flex;
   margin-bottom: 4px;
+  .loading {
+    z-index: 8888;
+  }
   .fieldName {
     width: 135px;
     margin-right: 14px;

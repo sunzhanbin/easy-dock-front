@@ -52,6 +52,10 @@ export default memo(function Main() {
 
       setProjects(list);
       setActiveProjectId((prevActiveProjectIid) => {
+        const activeProjectId = sessionStorage.getItem('activeProjectId');
+        if (activeProjectId) {
+          return +activeProjectId;
+        }
         if (list.length && !list.find((proj) => proj.id === prevActiveProjectIid)) {
           return list[0].id;
         }
@@ -226,6 +230,11 @@ export default memo(function Main() {
     [fetchProjectList],
   );
 
+  const handleSelected = useMemoCallback((id) => {
+    sessionStorage.setItem('activeProjectId', id);
+    setActiveProjectId(id);
+  });
+
   return (
     <div className={classnames(styles.container, MAIN_CONTENT_CLASSNAME)}>
       {fetching && <Loading />}
@@ -239,7 +248,7 @@ export default memo(function Main() {
                   key={project.id}
                   data={project}
                   isActive={activeProjectId === project.id}
-                  onSelected={setActiveProjectId}
+                  onSelected={handleSelected}
                   onUpdate={handleEditProjectSubmit}
                   onDelete={handleDeleteProject}
                 />
