@@ -185,7 +185,12 @@ const ImageComponent = (
         maxCount={maxCount}
         disabled={disabled}
         fileList={fileList}
-        showUploadList={{ showDownloadIcon: true, showPreviewIcon: true, showRemoveIcon: true }}
+        showUploadList={{
+          showDownloadIcon: true,
+          showPreviewIcon: true,
+          showRemoveIcon: true,
+          removeIcon: <Icon type="shanchu" style={{ color: '#fff' }} />,
+        }}
         beforeUpload={handleBeforeUpload}
         onChange={handleChange}
         onPreview={onPreview}

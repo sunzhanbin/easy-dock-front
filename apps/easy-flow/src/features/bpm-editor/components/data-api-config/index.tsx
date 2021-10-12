@@ -1,4 +1,5 @@
 import { memo, useEffect, useState, useMemo, useRef, ReactNode } from 'react';
+import classNames from 'classnames';
 import { Select, Form } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { Api, ParamType, DataConfig } from '@type/api';
@@ -16,11 +17,12 @@ export interface DataApiConfigProps {
   fields: { name: string; id: string }[];
   name: string | string[];
   children?: ReactNode;
+  className?: string;
   label: string;
 }
 
 function DataApiConfig(props: DataApiConfigProps) {
-  const { value, onChange, layout = 'vertical', fields, name, children, label } = props;
+  const { value, onChange, layout = 'vertical', fields, name, children, label, className } = props;
   const [apis, setApis] = useState<Api[]>([]);
   const [loading, setLoading] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -93,7 +95,7 @@ function DataApiConfig(props: DataApiConfigProps) {
     <DataContext.Provider
       value={{ name: thisFormItemName, fields: excludeDescField, detail: apiDetail, layout, getPopupContainer }}
     >
-      <div className={styles.container} ref={containerRef}>
+      <div className={classNames(styles.container, className)} ref={containerRef}>
         {loading && <Loading className={styles.loading} />}
 
         <Form.Item

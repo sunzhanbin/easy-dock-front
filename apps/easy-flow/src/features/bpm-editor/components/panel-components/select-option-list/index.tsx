@@ -191,6 +191,7 @@ const SelectOptionList = (props: editProps) => {
             name={['dataSource', 'apiConfig']}
             label="为表单控件匹配请求参数"
             layout="vertical"
+            className={styles.apiConfig}
             fields={fields}
             onChange={handleApiChange}
           >
