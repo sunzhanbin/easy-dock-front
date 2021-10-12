@@ -59,12 +59,17 @@ const ImageComponent = (
     // 上传图片
     const validatedFile = checkoutFile((image as unknown) as File);
     if (validatedFile) {
-      const file = Object.assign({}, image, { originFileObj: image, percent: 99 });
-      list.push(file);
-      const newValue = Object.assign({}, value, { fileList: list, type: 'Image' });
-      setFileList(list);
-      setAddFileCount((n) => n + 1);
-      onChange && onChange(newValue);
+      const reader = new FileReader();
+      reader.readAsDataURL(image as any);
+      reader.onload = function () {
+        const url = reader.result;
+        const file = Object.assign({}, image, { originFileObj: image, percent: 99, thumbUrl: url });
+        list.push(file);
+        const newValue = Object.assign({}, value, { fileList: list, type: 'Image' });
+        setFileList(list);
+        setAddFileCount((n) => n + 1);
+        onChange && onChange(newValue);
+      };
     }
   });
   // 预览
