@@ -103,7 +103,7 @@ function DataApiConfig(props: DataApiConfigProps) {
             {
               validator(_, val) {
                 if (!val) {
-                  return Promise.reject(new Error('不能为空'));
+                  return Promise.reject(new Error('数据接口不能为空'));
                 }
 
                 return Promise.resolve();
