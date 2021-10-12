@@ -134,7 +134,7 @@ function StartFlow() {
 
     if (subApp) {
       setTimeout(() => {
-        // 回任务中心我的发起
+        // 回任务中心草稿列表
         history.replace(`${dynamicRoutes.toTaskCenter(subApp.app.id)}/draft`);
       }, 1500);
     }
