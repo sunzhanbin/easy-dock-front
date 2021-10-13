@@ -71,6 +71,13 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
     }, 100),
   );
 
+  const validateRule = useMemoCallback((value: string, errorTip: string) => {
+    if (!value) {
+      return Promise.reject(new Error(errorTip));
+    }
+    return Promise.resolve();
+  });
+
   const nameRules: Rule[] = useMemo(() => {
     return [rules.name];
   }, []);
@@ -177,11 +184,7 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
                       rules={[
                         {
                           validator(_, value) {
-                            if (!value) {
-                              return Promise.reject(new Error('百分比不能为空'));
-                            }
-
-                            return Promise.resolve();
+                            return validateRule(value, '百分比不能为空');
                           },
                         },
                       ]}
@@ -197,11 +200,7 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
                       rules={[
                         {
                           validator(_, value) {
-                            if (!value) {
-                              return Promise.reject(new Error('人数不能为空'));
-                            }
-
-                            return Promise.resolve();
+                            return validateRule(value, '人数不能为空');
                           },
                         },
                       ]}

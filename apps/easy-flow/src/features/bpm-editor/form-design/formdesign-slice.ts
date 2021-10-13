@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
   comAdded as addedReducer,
-  comInserted as insertedReducer,
+  // comInserted as insertedReducer,
   moveDown as moveDownReducer,
   moveRow as moveRowReducer,
   moveUp as moveUpReducer,
@@ -30,7 +30,7 @@ const formDesign = createSlice({
   initialState,
   reducers: {
     comAdded: addedReducer,
-    comInserted: insertedReducer,
+    comInserted: addedReducer,
     comDeleted: comDeletedReducer,
     moveDown: moveDownReducer,
     moveRow: moveRowReducer,

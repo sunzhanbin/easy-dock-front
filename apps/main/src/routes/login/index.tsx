@@ -9,6 +9,7 @@ import { runtimeAxios } from '@utils';
 import { ROUTES } from '@consts';
 import { Loading } from '@components';
 import styles from './index.module.scss';
+import useMemoCallback from '@common/hooks/use-memo-callback';
 
 export default function Login() {
   const [form] = Form.useForm();
@@ -43,16 +44,19 @@ export default function Login() {
     }
   }, [form, search, loading]);
 
+  const validateRule = useMemoCallback((value: string, errorTip: string) => {
+    if (!value) {
+      return Promise.reject(new Error(errorTip));
+    }
+    return Promise.resolve();
+  });
+
   const nameRules = useMemo(() => {
     return [
       {
         required: true,
         validator(_: any, value: string) {
-          if (!value) {
-            return Promise.reject(new Error('用户名必填'));
-          }
-
-          return Promise.resolve();
+          return validateRule(value, '用户名必填');
         },
       },
     ];
@@ -63,11 +67,7 @@ export default function Login() {
       {
         required: true,
         validator(_: any, value: string) {
-          if (!value) {
-            return Promise.reject(new Error('用户密码必填'));
-          }
-
-          return Promise.resolve();
+          return validateRule(value, '用户密码必填');
         },
       },
     ];

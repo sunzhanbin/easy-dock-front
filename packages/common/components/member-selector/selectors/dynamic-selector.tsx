@@ -74,7 +74,10 @@ function DynamicSelector(props: DynamicSelectorProps) {
       checkeds = treeValue.checked;
     }
 
-    const rolesMap = roles.reduce((curr, next) => ((curr[next.id] = next), curr), {} as { [key: string]: Role });
+    const rolesMap = roles.reduce((curr, next) => {
+      curr[next.id] = next;
+      return curr;
+    }, {} as { [key: string]: Role });
 
     if (onChange) {
       onChange(Object.assign({}, value, { roles: checkeds.map((item) => rolesMap[item]) }));
@@ -96,17 +99,15 @@ function DynamicSelector(props: DynamicSelectorProps) {
       checkeds = fieldsValue.checked;
     }
 
-    const fieldsMap = (fields || []).reduce(
-      (curr, next) => ((curr[next.key] = next), curr),
-      {} as { [key: string]: DynamicFields[number] },
-    );
+    const fieldsMap = (fields || []).reduce((curr, next) => {
+      curr[next.key] = next;
+      return curr;
+    }, {} as { [key: string]: DynamicFields[number] });
 
     if (onChange) {
       onChange(Object.assign({}, value, { fields: checkeds.map((item) => fieldsMap[item]) }));
     }
   });
-
-  console.log(formMemberFields);
 
   return (
     <Layout onKeywordChange={() => {}} keywordPlaceholder="搜索动态">

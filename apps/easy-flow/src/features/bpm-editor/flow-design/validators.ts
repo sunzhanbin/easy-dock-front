@@ -23,7 +23,7 @@ const dataPushConfig = (value: DataConfig): string => {
 
   let message = '';
 
-  [...required, ...customize].some((param) => {
+  const isInvalid = [...required, ...customize].some((param) => {
     if (!param.name || !param.location || !param.map) {
       message = '推送数据配置不合法';
 
@@ -33,7 +33,11 @@ const dataPushConfig = (value: DataConfig): string => {
     return false;
   });
 
-  return message;
+  if (isInvalid) {
+    return message;
+  }
+  
+  return '';
 };
 
 const revert = (value: AuditNode['revert']) => {

@@ -219,7 +219,7 @@ export function valid(data: AllNode[], validRes: ValidResultType) {
       node.branches.forEach((branch) => {
         const errors: string[] = [];
 
-        branch.conditions.some((row) => {
+        const isInvalid = branch.conditions.some((row) => {
           return row.some((col) => {
             for (let key in col) {
               if (!col[key as keyof typeof col]) {
@@ -233,14 +233,13 @@ export function valid(data: AllNode[], validRes: ValidResultType) {
           });
         });
 
-        if (errors.length) {
+        if (errors.length && isInvalid) {
           validRes[branch.id] = {
             name: '子分支',
             id: branch.id,
             errors,
           };
         }
-
         valid(branch.nodes, validRes);
       });
 
