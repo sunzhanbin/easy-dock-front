@@ -56,7 +56,7 @@ export default function Login() {
       {
         required: true,
         validator(_: any, value: string) {
-          return validateRule(value, '用户名必填');
+          return validateRule(value, '请输入用户名');
         },
       },
     ];
@@ -66,9 +66,7 @@ export default function Login() {
     return [
       {
         required: true,
-        validator(_: any, value: string) {
-          return validateRule(value, '用户密码必填');
-        },
+        message: '请输入密码',
       },
     ];
   }, []);

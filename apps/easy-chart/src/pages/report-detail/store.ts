@@ -24,7 +24,7 @@ const componentConfig = createSlice({
     //   state.componentList = {...state.componentList, [id]: {...payload}};
     // },
     deleteComponent(state, { payload }: PayloadAction<ComponentClass>) {
-      const { id } = payload;
+      // const { id } = payload;
       // delete state.componentList[id];
     },
     copyComponent(state, { payload }: PayloadAction<ComponentClass>) {
