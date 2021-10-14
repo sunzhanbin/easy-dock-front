@@ -60,39 +60,6 @@ const reducers = {
       };
     },
   },
-  // 与comAdded重复,可以复用
-  // comInserted: {
-  //   reducer: (state: FormDesign, action: PayloadAction<{ com: FormField; rowIndex: number }>) => {
-  //     const { com, rowIndex } = action.payload;
-  //     if (!state.byId) {
-  //       state.byId = {};
-  //     }
-  //     if (!state.layout) {
-  //       state.layout = [];
-  //     }
-  //     if (state.byId[com.id]) return state;
-  //     let config = Object.assign({}, com, { fieldName: com.id });
-  //     if ((com.type as string) === 'DescText') {
-  //       config = Object.assign({}, config, { label: config.label + com.id?.split('_')[1] });
-  //     }
-  //     state.byId[com.id] = Object.assign({}, com, config);
-  //     const index = rowIndex !== undefined ? rowIndex : state.layout.length - 1;
-  //     // 如果当前选中了某一行，则在当前行之后插入；否则在末尾插入
-  //     state.layout.splice(index + 1, 0, [com.id]);
-  //     state.isDirty = true;
-  //     state.selectedField = com.id;
-  //     return state;
-  //   },
-  //   prepare: (com: FormField, rowIndex: number) => {
-  //     com.id = uniqueId(`${com.type}_`);
-  //     return {
-  //       payload: {
-  //         rowIndex,
-  //         com,
-  //       },
-  //     };
-  //   },
-  // },
   comDeleted(state: FormDesign, action: PayloadAction<{ id: string }>) {
     const { id } = action.payload;
     let [row, col] = locateById(id, state.layout);
@@ -325,7 +292,6 @@ export const formRulesSelector = createSelector([(state: RootState) => state.for
 
 export const {
   comAdded,
-  // comInserted,
   comDeleted,
   moveRow,
   moveDown,
