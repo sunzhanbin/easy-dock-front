@@ -72,7 +72,6 @@ const EditZone = () => {
             componentId={selectedField}
           />
         </TabPane>
-        {/* 0915版本暂时隐藏 */}
         <TabPane tab="表单属性" key="2">
           <FormAttrEditor />
         </TabPane>
