@@ -4,6 +4,7 @@ import SelectOptionList from '../select-option-list';
 import SelectDefaultOption from '../select-default-option';
 import DefaultDate from '../default-date';
 import Editor from '../rich-text';
+import FieldManage from '../field-manage';
 import { FormField, rangeItem, SchemaConfigItem } from '@/type';
 import { Store } from 'antd/lib/form/interface';
 import styles from './index.module.scss';
@@ -69,6 +70,7 @@ const componentMap: { [k: string]: (props: { [k: string]: any }) => ReactNode } 
   ),
   DefaultDate: (props) => <DefaultDate id={props.componentId} />,
   Editor: () => <Editor />,
+  FieldManage: () => <FieldManage />,
 };
 
 const FormItemWrap = (props: ComponentProps) => {

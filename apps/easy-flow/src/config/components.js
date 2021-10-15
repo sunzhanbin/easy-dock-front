@@ -153,6 +153,14 @@ const getMaxCount = (max, min, defaultValue) => {
   };
 };
 
+const fieldManage = {
+  key: 'fields',
+  label: '字段管理',
+  type: 'FieldManage',
+  required: false,
+  isProps: true,
+};
+
 const components = {
   Input: {
     baseInfo: {
@@ -271,6 +279,16 @@ const components = {
       type: 'Member',
     },
     config: [fieldName, getLabel('人员'), desc, multiple, showSearch, colSpace],
+  },
+  Tabs: {
+    baseInfo: {
+      name: '标签页',
+      icon: 'renwu',
+      category: '高级控件',
+      version: '1.0',
+      type: 'Tabs',
+    },
+    config: [fieldName, getLabel('标签页'), desc, fieldManage, colSpace],
   },
 };
 
