@@ -130,6 +130,7 @@ export type FormDesign = {
   layout: string[][];
   errors: ErrorItem[];
   formRules: FormRuleItem[];
+  fieldRules: FormRuleItem[];
   schema: Schema;
   isDirty: boolean;
   subAppInfo: {
@@ -199,6 +200,7 @@ export type FormMeta = {
   events?: Events;
   schema: { [k: string]: SchemaItem };
   formRules: FormRuleItem[];
+  fieldRules: FormRuleItem[];
   rules?: FormRule[];
   themes?: Theme[];
 };

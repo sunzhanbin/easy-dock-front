@@ -12,15 +12,16 @@ interface EditProps {
   className?: string;
   value?: fieldRule[][];
   onChange?: (value: fieldRule[][]) => void;
+  isFormRule?: boolean;
   loadDataSource?: (id: string) => Promise<{ key: string; value: string }[] | { data: { data: string[] } }>;
 }
 
-const Condition = ({ className, data, value, name, onChange, loadDataSource }: EditProps) => {
+const Condition = ({className, data, value, name, onChange, loadDataSource, isFormRule}: EditProps) => {
   const ruleList = useMemo(() => {
     if (value && value.length > 0) {
       return value;
     }
-    return [[{ fieldName: undefined, symbol: undefined }]];
+    return [[{fieldName: undefined, symbol: undefined}]];
   }, [value]);
   const components = useMemo(() => {
     return data || [];
@@ -28,6 +29,7 @@ const Condition = ({ className, data, value, name, onChange, loadDataSource }: E
   const addRule = useCallback(
     (index: number) => {
       const list = [...ruleList];
+      debugger
       const result = list.map((ruleBlock, blockIndex) => {
         if (index === blockIndex) {
           const block = [...ruleBlock];
@@ -97,6 +99,7 @@ const Condition = ({ className, data, value, name, onChange, loadDataSource }: E
                         name={name}
                         blockIndex={index}
                         ruleIndex={ruleIndex}
+                        isFormRule={isFormRule}
                         onChange={handleRuleChange}
                         loadDataSource={loadDataSource}
                       />
@@ -127,9 +130,10 @@ const Condition = ({ className, data, value, name, onChange, loadDataSource }: E
             </div>
           );
         })}
-        <Button className={styles.addOr} type="default" icon={<Icon type="xinzeng" />} onClick={addRuleBlock}>
+        {isFormRule &&
+        <Button className={styles.addOr} type="default" icon={<Icon type="xinzeng"/>} onClick={addRuleBlock}>
           或条件
-        </Button>
+        </Button>}
       </div>
     </div>
   );

@@ -1,15 +1,16 @@
-import { memo, useEffect, useState, useMemo, useCallback } from 'react';
+import {memo, useEffect, useState, useMemo, useCallback} from 'react';
 import CompAttrEditor from '@/features/bpm-editor/components/panel-components/comp-attr-editor';
 import FormAttrEditor from '@/features/bpm-editor/components/panel-components/form-attr-editor';
-import { editProps } from '../formdesign-slice';
-import { FieldType, SchemaConfigItem } from '@/type';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import FieldAttrEditor from '@/features/bpm-editor/components/panel-components/field-attr-editor';
+import {editProps} from '../formdesign-slice';
+import {FieldType, SchemaConfigItem} from '@/type';
+import {useAppDispatch, useAppSelector} from '@/app/hooks';
 import {
   componentPropsSelector,
   formDesignSelector,
   selectedFieldSelector,
 } from '@/features/bpm-editor/form-design/formzone-reducer';
-import { Tabs } from 'antd';
+import {Tabs} from 'antd';
 import styles from './index.module.scss';
 
 const { TabPane } = Tabs;
@@ -73,7 +74,10 @@ const EditZone = () => {
           />
         </TabPane>
         <TabPane tab="表单属性" key="2">
-          <FormAttrEditor />
+          <FormAttrEditor/>
+        </TabPane>
+        <TabPane tab="日期规则" key="3">
+          <FieldAttrEditor/>
         </TabPane>
       </Tabs>
     </div>

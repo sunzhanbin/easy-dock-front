@@ -144,7 +144,8 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
                   </Select>
                 </Form.Item>
                 <Form.Item label="流转条件" name="ruleValue" className={styles.condition}>
-                  <Condition data={Object.values(byId)} loadDataSource={loadDataSource} name="ruleValue" />
+                  <Condition data={Object.values(byId)} loadDataSource={loadDataSource} name="ruleValue"
+                             isFormRule={true}/>
                 </Form.Item>
                 <Form.Item
                   noStyle
