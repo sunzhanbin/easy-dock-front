@@ -65,6 +65,7 @@
        script.src = url;
        document.getElementsByTagName('head')[0].appendChild(script);
    }
-   loadScript(`${SSO_LOGIN_URL}/sso/js/sso.js`);
+   console.info(SSO_LOGIN_URL,'url');
+   loadScript(`${SSO_LOGIN_URL||'http://10.19.146.100:28017'}/sso/js/sso.js`);
   </script>
 </html>
