@@ -5,4 +5,5 @@
   conf.ALGOR_ORCH_FRONTEND_ENTRY = 'http://10.19.151.144:28217';
   conf.EASY_FLOW_FRONTEND_ENTRY = 'http://10.19.151.144:28301';
   conf.EASY_CHART_FRONTEND_ENTRY = 'http://10.19.146.100:28301';
+  conf.SSO_LOGIN_URL = 'http://10.19.146.100:28017';
 })(window);

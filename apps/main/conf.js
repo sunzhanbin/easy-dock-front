@@ -6,4 +6,5 @@
   conf.ALGOR_ORCH_FRONTEND_ENTRY = 'http://localhost:3000';
   conf.EASY_FLOW_FRONTEND_ENTRY = 'http://localhost:8083';
   conf.EASY_CHART_FRONTEND_ENTRY = 'http://localhost:8084';
+  conf.SSO_LOGIN_URL = 'http://10.19.248.238:28017';
 })(window);

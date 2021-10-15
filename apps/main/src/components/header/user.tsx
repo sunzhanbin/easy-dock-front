@@ -1,5 +1,5 @@
 import { memo, useMemo, useCallback } from 'react';
-import { NavLink, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { Dropdown, Menu } from 'antd';
 import classNames from 'classnames';
@@ -9,18 +9,24 @@ import { userSelector, logout } from '@/store/user';
 import { ROUTES } from '@consts';
 import { RoleEnum } from '@/schema/app';
 import styles from './index.module.scss';
+import useMemoCallback from '@common/hooks/use-memo-callback';
+import cookie from 'js-cookie';
 
 function HeaderUser() {
   const history = useHistory();
   const dispatch = useDispatch();
-  const handleLogout = useCallback(async () => {
-    const logoutResponse = await dispatch(logout());
-
-    if (logoutResponse.meta.requestStatus === 'rejected') {
-      return;
+  const handleLogin = useMemoCallback(async () => {
+    let token = await window.Auth.getToken(true, window.EASY_DOCK_BASE_SERVICE_ENDPOINT);
+    if (token) {
+      cookie.set('token', token, { expires: 1 });
+      Promise.resolve().then(() => {
+        window.location.reload();
+      });
     }
-
-    history.replace(ROUTES.LOGIN + `?redirect=${encodeURIComponent(window.location.href)}`);
+  });
+  const handleLogout = useCallback(() => {
+    dispatch(logout());
+    // history.replace(ROUTES.LOGIN + `?redirect=${encodeURIComponent(window.location.href)}`);
   }, [history, dispatch]);
 
   const user = useSelector(userSelector);
@@ -68,7 +74,10 @@ function HeaderUser() {
           </div>
         </Dropdown>
       ) : (
-        <NavLink to={ROUTES.LOGIN}>登陆</NavLink>
+        // <NavLink to={ROUTES.LOGIN}>登陆</NavLink>
+        <div className={styles.login} onClick={handleLogin}>
+          登录
+        </div>
       )}
     </>
   );

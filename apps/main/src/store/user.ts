@@ -40,17 +40,21 @@ export const getUserInfo = createAsyncThunk('main-app-user/get-user', (_, { disp
   });
 });
 
-export const logout = createAsyncThunk('main-app-user/logout', async (_, { dispatch }) => {
-  await runtimeAxios.delete('/auth/logout');
+export const logout = createAsyncThunk<void, string | undefined, { state: RootState }>(
+  'main-app-user/logout',
+  async (url, { dispatch }) => {
+    // await runtimeAxios.delete('/auth/logout');
+    window.Auth.logout(url ? url : undefined);
 
-  // 删除请求头里的auth
-  delete runtimeAxios.defaults.headers.auth;
+    // 删除请求头里的auth
+    delete runtimeAxios.defaults.headers.auth;
 
-  // 清掉cookie
-  cookie.remove('token');
+    // 清掉cookie
+    cookie.remove('token');
 
-  dispatch(clear());
-});
+    dispatch(clear());
+  },
+);
 
 export default user.reducer;
 
