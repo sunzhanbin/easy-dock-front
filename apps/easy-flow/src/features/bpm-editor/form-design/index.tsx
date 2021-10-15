@@ -3,8 +3,8 @@ import { useParams } from 'react-router';
 import DesignZone from './design-zone';
 import ToolBox from './toolbox';
 import EditZone from './edit-zone';
-import { setLayout, setById, selectField, setIsDirty, setErrors, setFormRules } from './formdesign-slice';
-import { ComponentConfig, ConfigItem, FieldType, FormFieldMap } from '@/type';
+import {setLayout, setById, selectField, setIsDirty, setErrors, setFormRules, setFieldRules} from './formdesign-slice';
+import {ComponentConfig, ConfigItem, FieldType, FormFieldMap} from '@/type';
 import { useAppDispatch } from '@/app/hooks';
 import { axios } from '@/utils';
 import styles from './index.module.scss';
@@ -39,13 +39,15 @@ const FormDesign: FC<{}> = () => {
           });
           byId[id] = componentConfig;
         });
-        dispatch(setFormRules({ formRules: formRules }));
-        dispatch(setById({ byId: byId as FormFieldMap }));
+        dispatch(setFormRules({formRules: formRules}));
+        dispatch(setFieldRules({fieldRules: formRules}));
+        dispatch(setById({byId: byId as FormFieldMap}));
         dispatch(setLayout({ layout }));
         selectFieldId && dispatch(selectField({ id: selectFieldId }));
       } else {
-        dispatch(setFormRules({ formRules: [] }));
-        dispatch(setById({ byId: {} }));
+        dispatch(setFormRules({formRules: []}));
+        dispatch(setFieldRules({fieldRules: []}));
+        dispatch(setById({byId: {}}));
         dispatch(setLayout({ layout: [] }));
         dispatch(selectField({ id: '' }));
       }

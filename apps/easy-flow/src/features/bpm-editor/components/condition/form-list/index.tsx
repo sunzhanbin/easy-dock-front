@@ -45,6 +45,12 @@ const symbolListMap = {
     symbolMap.null,
     symbolMap.notNull,
   ],
+  dateFilter: [
+    symbolMap.equal,
+    symbolMap.unequal,
+    symbolMap.greaterOrEqual,
+    symbolMap.lessOrEqual,
+  ],
   option: [
     symbolMap.equal,
     symbolMap.unequal,
@@ -65,19 +71,21 @@ type RuleFormProps = {
   name: string;
   blockIndex: number;
   ruleIndex: number;
+  isFormRule: boolean | undefined;
   onChange?: (blockIndex: number, ruleIndex: number, rule: fieldRule) => void;
   loadDataSource?: (id: string) => Promise<{ key: string; value: string }[] | { data: { data: string[] } }>;
 };
 const FormList = ({
-  components,
-  className,
-  rule,
-  name,
-  blockIndex,
-  ruleIndex,
-  onChange,
-  loadDataSource,
-}: RuleFormProps) => {
+                    components,
+                    className,
+                    rule,
+                    name,
+                    isFormRule,
+                    blockIndex,
+                    ruleIndex,
+                    onChange,
+                    loadDataSource,
+                  }: RuleFormProps) => {
   const [fieldName, setFieldName] = useState<string | undefined>(undefined);
   const [symbol, setSymbol] = useState<string | undefined>(undefined);
   const [value, setValue] = useState<string | number | string[] | [number, number] | undefined>(undefined);
@@ -195,7 +203,7 @@ const FormList = ({
           symbolList = symbolListMap.number;
           break;
         case 'Date':
-          symbolList = symbolListMap.date;
+          symbolList = isFormRule ? symbolListMap.date : symbolListMap.dateFilter
           break;
         case 'Select':
         case 'Radio':

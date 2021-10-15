@@ -208,13 +208,19 @@ const reducers = {
     return state;
   },
   setErrors(state: FormDesign, action: PayloadAction<{ errors: ErrorItem[] }>) {
-    const { errors } = action.payload;
+    const {errors} = action.payload;
     state.errors = errors;
     return state;
   },
   setFormRules(state: FormDesign, action: PayloadAction<{ formRules: FormRuleItem[] }>) {
-    const { formRules } = action.payload;
+    const {formRules} = action.payload;
     state.formRules = formRules;
+    state.isDirty = true;
+    return state;
+  },
+  setFieldRules(state: FormDesign, action: PayloadAction<{ fieldRules: FormRuleItem[] }>) {
+    const {fieldRules} = action.payload;
+    state.fieldRules = fieldRules;
     state.isDirty = true;
     return state;
   },
@@ -289,7 +295,9 @@ export const errorSelector = createSelector([(state: RootState) => state.formDes
 export const formRulesSelector = createSelector([(state: RootState) => state.formDesign], (formDesign) => {
   return formDesign.formRules;
 });
-
+export const fieldRulesSelector = createSelector([(state: RootState) => state.formDesign], (formDesign) => {
+  return formDesign.fieldRules;
+});
 export const {
   comAdded,
   comDeleted,
@@ -306,4 +314,5 @@ export const {
   setIsDirty,
   setErrors,
   setFormRules,
+  setFieldRules,
 } = reducers;
