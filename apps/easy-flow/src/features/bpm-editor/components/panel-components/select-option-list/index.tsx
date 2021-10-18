@@ -271,14 +271,16 @@ interface DragableOptionProps {
 function DragableOption(props: DragableOptionProps) {
   const { onDelete, data, onChange, onDrop, index } = props;
   const dragWrapperRef = useRef<HTMLDivElement>(null);
+  const [canMove, setCanMove] = useState<boolean>(false);
   const [, drag] = useDrag(
     () => ({
       type: 'option',
       item() {
         return { index };
       },
+      canDrag: () => canMove,
     }),
-    [index],
+    [index, canMove],
   );
   const [, drop] = useDrop(
     () => ({
@@ -300,6 +302,14 @@ function DragableOption(props: DragableOptionProps) {
     onDelete(index);
   });
 
+  const handleMouseEnter = useMemoCallback(() => {
+    setCanMove(true);
+  });
+
+  const handleMouseLeave = useMemoCallback(() => {
+    setCanMove(false);
+  });
+
   useEffect(() => {
     drag(drop(dragWrapperRef));
   }, [drag, drop]);
@@ -313,7 +323,7 @@ function DragableOption(props: DragableOptionProps) {
           </span>
         </Tooltip>
       </div>
-      <div className={styles.move}>
+      <div className={styles.move} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
         <Tooltip title="拖动换行">
           <span>
             <Icon className={styles.iconfont} type="caidan" />

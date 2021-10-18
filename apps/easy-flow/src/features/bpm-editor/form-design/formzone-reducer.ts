@@ -1,7 +1,8 @@
 import { createSelector, PayloadAction } from '@reduxjs/toolkit';
 import { uniqueId } from 'lodash';
 import {
-  ErrorItem, FieldRuleItem,
+  ErrorItem,
+  FieldRuleItem,
   FieldType,
   FormDesign,
   FormField,
@@ -182,8 +183,8 @@ const reducers = {
     }
     state.isDirty = true;
     if (isValidate) {
-      const index = state.errors.findIndex((item) => item.id === id);
-      state.errors.splice(index, 1);
+      const index = (state.errors || []).findIndex((item) => item.id === id);
+      index > -1 && state.errors.splice(index, 1);
     }
     return state;
   },
@@ -208,18 +209,18 @@ const reducers = {
     return state;
   },
   setErrors(state: FormDesign, action: PayloadAction<{ errors: ErrorItem[] }>) {
-    const {errors} = action.payload;
+    const { errors } = action.payload;
     state.errors = errors;
     return state;
   },
   setFormRules(state: FormDesign, action: PayloadAction<{ formRules: FormRuleItem[] }>) {
-    const {formRules} = action.payload;
+    const { formRules } = action.payload;
     state.formRules = formRules;
     state.isDirty = true;
     return state;
   },
   setFieldRules(state: FormDesign, action: PayloadAction<{ fieldRules: FieldRuleItem[] }>) {
-    const {fieldRules} = action.payload;
+    const { fieldRules } = action.payload;
     state.fieldRules = fieldRules;
     state.isDirty = true;
     return state;
