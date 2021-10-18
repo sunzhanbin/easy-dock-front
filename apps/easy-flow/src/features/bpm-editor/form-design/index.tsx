@@ -40,10 +40,11 @@ const FormDesign: FC<{}> = () => {
           byId[id] = componentConfig;
         });
         dispatch(setFormRules({formRules: formRules}));
-        dispatch(setFieldRules({fieldRules: formRules}));
+        // todo fieldRules
+        dispatch(setFieldRules({fieldRules: []}));
         dispatch(setById({byId: byId as FormFieldMap}));
-        dispatch(setLayout({ layout }));
-        selectFieldId && dispatch(selectField({ id: selectFieldId }));
+        dispatch(setLayout({layout}));
+        selectFieldId && dispatch(selectField({id: selectFieldId}));
       } else {
         dispatch(setFormRules({formRules: []}));
         dispatch(setFieldRules({fieldRules: []}));

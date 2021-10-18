@@ -5,11 +5,11 @@ import { DatePickerProps } from 'antd/lib/date-picker';
 import moment, { Moment } from 'moment';
 
 const Date = (props: DatePickerProps & { notSelectPassed: boolean; onChange: (value?: number) => void }) => {
-  const { format, notSelectPassed, defaultValue, value, onChange } = props;
+  const {format, notSelectPassed, defaultValue, value, onChange, disabledDate} = props;
   const propList = useMemo(() => {
     const prop: { [k: string]: string | boolean | Function | Moment | ReactNode } = {
       size: 'large',
-      suffixIcon: <Icon type="riqi" />,
+      suffixIcon: <Icon type="riqi"/>,
       onChange(val: moment.Moment) {
         const time = moment(val).format(format as string);
         onChange && onChange(val ? moment(time).valueOf() : undefined);
@@ -39,6 +39,6 @@ const Date = (props: DatePickerProps & { notSelectPassed: boolean; onChange: (va
 
     return Object.assign({}, props, prop);
   }, [format, notSelectPassed, defaultValue, value, props, onChange]);
-  return <DatePicker {...propList} style={{ width: '100%' }} key={defaultValue?.toString()} />;
+  return <DatePicker {...propList} style={{width: '100%'}} key={defaultValue?.toString()} disabledDate={disabledDate}/>;
 };
 export default memo(Date);

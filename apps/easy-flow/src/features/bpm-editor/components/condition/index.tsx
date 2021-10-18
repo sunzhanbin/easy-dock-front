@@ -29,7 +29,6 @@ const Condition = ({className, data, value, name, onChange, loadDataSource, isFo
   const addRule = useCallback(
     (index: number) => {
       const list = [...ruleList];
-      debugger
       const result = list.map((ruleBlock, blockIndex) => {
         if (index === blockIndex) {
           const block = [...ruleBlock];

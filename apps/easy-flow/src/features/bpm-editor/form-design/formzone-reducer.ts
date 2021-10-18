@@ -1,7 +1,7 @@
 import { createSelector, PayloadAction } from '@reduxjs/toolkit';
 import { uniqueId } from 'lodash';
 import {
-  ErrorItem,
+  ErrorItem, FieldRuleItem,
   FieldType,
   FormDesign,
   FormField,
@@ -218,7 +218,7 @@ const reducers = {
     state.isDirty = true;
     return state;
   },
-  setFieldRules(state: FormDesign, action: PayloadAction<{ fieldRules: FormRuleItem[] }>) {
+  setFieldRules(state: FormDesign, action: PayloadAction<{ fieldRules: FieldRuleItem[] }>) {
     const {fieldRules} = action.payload;
     state.fieldRules = fieldRules;
     state.isDirty = true;

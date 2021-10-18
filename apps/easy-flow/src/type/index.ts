@@ -117,11 +117,20 @@ export type FormChangeRule = {
   hideComponents: string[];
 };
 
+export type FieldChangeRule = {
+  fieldRule: fieldRule[][]
+}
+
 export type FormRuleItem = {
   type: 'change' | 'init';
   formChangeRule?: FormChangeRule;
   formInitRule?: DataConfig;
 };
+
+export type FieldRuleItem = {
+  type: 'change' | 'init';
+  formChangeRule?: FieldChangeRule;
+}
 
 export type FormDesign = {
   formId?: string;
@@ -130,7 +139,7 @@ export type FormDesign = {
   layout: string[][];
   errors: ErrorItem[];
   formRules: FormRuleItem[];
-  fieldRules: FormRuleItem[];
+  fieldRules: FieldRuleItem[];
   schema: Schema;
   isDirty: boolean;
   subAppInfo: {
@@ -200,7 +209,7 @@ export type FormMeta = {
   events?: Events;
   schema: { [k: string]: SchemaItem };
   formRules: FormRuleItem[];
-  fieldRules: FormRuleItem[];
+  fieldRules: FieldRuleItem[];
   rules?: FormRule[];
   themes?: Theme[];
 };

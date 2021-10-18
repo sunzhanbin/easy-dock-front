@@ -8,6 +8,7 @@ import { runtimeAxios } from './axios';
 export function formatRuleValue(
   rule: fieldRule,
   field: FormField,
+  fieldNext?: FormField
 ): { name: string | undefined; symbol: string; value?: string } {
   const { symbol, value } = rule;
   const name = field.label;
@@ -41,14 +42,18 @@ export function formatRuleValue(
       const [start, end] = (value as [number, number]) || [0, 0];
       const startTime = start ? moment(start).format(format) : '';
       const endTime = end ? moment(end).format(format) : '';
-      return { name, symbol: label, value: startTime ? `在${startTime}和${endTime}之间` : '' };
+      return {name, symbol: label, value: startTime ? `在${startTime}和${endTime}之间` : ''};
     }
     if (symbol === 'dynamic') {
       const text = dynamicMap[value as string]?.label || '';
-      return { name, symbol: label, value: text ? `在${text}之内` : '' };
+      return {name, symbol: label, value: text ? `在${text}之内` : ''};
+    }
+    if (symbol === 'earlier' || symbol === 'latter') {
+      const value = fieldNext?.label
+      return {name, symbol: label, value: value || ''}
     }
     const text = moment(value as number).format(format);
-    return { name, symbol: label, value: value ? text : '' };
+    return {name, symbol: label, value: value ? text : ''};
   }
   // 选项类型
   if (fieldType === 'Select' || fieldType === 'Radio' || fieldType === 'Checkbox') {
@@ -69,20 +74,22 @@ export function formatRuleValue(
 
 // 条件符号映射
 export const symbolMap: { [k in string]: { value: string; label: string } } = {
-  equal: { value: 'equal', label: '等于' },
-  unequal: { value: 'unequal', label: '不等于' },
-  greater: { value: 'greater', label: '大于' },
-  greaterOrEqual: { value: 'greaterOrEqual', label: '大于等于' },
-  less: { value: 'less', label: '小于' },
-  lessOrEqual: { value: 'lessOrEqual', label: '小于等于' },
-  range: { value: 'range', label: '选择范围' },
-  dynamic: { value: 'dynamic', label: '动态筛选' },
-  equalAnyOne: { value: 'equalAnyOne', label: '等于任意一个' },
-  unequalAnyOne: { value: 'unequalAnyOne', label: '不等于任意一个' },
-  include: { value: 'include', label: '包含' },
-  exclude: { value: 'exclude', label: '不包含' },
-  null: { value: 'null', label: '为空' },
-  notNull: { value: 'notNull', label: '不为空' },
+  equal: {value: 'equal', label: '等于'},
+  unequal: {value: 'unequal', label: '不等于'},
+  greater: {value: 'greater', label: '大于'},
+  greaterOrEqual: {value: 'greaterOrEqual', label: '大于等于'},
+  less: {value: 'less', label: '小于'},
+  lessOrEqual: {value: 'lessOrEqual', label: '小于等于'},
+  latter: {value: 'latter', label: '不早于'},
+  earlier: {value: 'earlier', label: '不晚于'},
+  range: {value: 'range', label: '选择范围'},
+  dynamic: {value: 'dynamic', label: '动态筛选'},
+  equalAnyOne: {value: 'equalAnyOne', label: '等于任意一个'},
+  unequalAnyOne: {value: 'unequalAnyOne', label: '不等于任意一个'},
+  include: {value: 'include', label: '包含'},
+  exclude: {value: 'exclude', label: '不包含'},
+  null: {value: 'null', label: '为空'},
+  notNull: {value: 'notNull', label: '不为空'},
 };
 
 export const dynamicMap: { [k in string]: { value: string; label: string } } = {
