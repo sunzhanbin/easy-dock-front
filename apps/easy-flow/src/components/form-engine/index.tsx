@@ -63,7 +63,7 @@ const FormDetail = React.forwardRef(function FormDetail(
     }
     return data.fieldRules
       .map((rule) => rule.formChangeRule)
-  }, [data.fieldRules])
+  }, [data])
   // 缓存之前的表单控件显隐状态
   const cacheFieldsVisibleMap = useMemo(() => {
     const map: { [k: number]: FieldsVisible } = {};
