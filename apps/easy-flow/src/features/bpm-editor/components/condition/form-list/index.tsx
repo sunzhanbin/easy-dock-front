@@ -46,10 +46,8 @@ const symbolListMap = {
     symbolMap.notNull,
   ],
   dateFilter: [
-    symbolMap.equal,
-    symbolMap.unequal,
-    symbolMap.greaterOrEqual,
-    symbolMap.lessOrEqual,
+    symbolMap.latter,
+    symbolMap.earlier,
   ],
   option: [
     symbolMap.equal,
@@ -321,7 +319,7 @@ const FormList = ({
       const showTime = format === 'YYYY-MM-DD HH:mm:ss';
       if (symbol === 'range') {
         return (
-          <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: '请选择!' }]}>
+          <Form.Item name="value" className={styles.valueWrapper} rules={[{required: true, message: '请选择!'}]}>
             <DateRange
               format={format}
               showTime={showTime}
@@ -332,9 +330,28 @@ const FormList = ({
           </Form.Item>
         );
       }
+      if (symbol === 'latter' || symbol === 'earlier') {
+        return (
+          <Form.Item name="value" className={styles.valueWrapper} rules={[{required: true, message: '请选择!'}]}>
+            <Select
+              placeholder="请选择"
+              size="large"
+              className={styles.value}
+              value={value as string}
+              getPopupContainer={getPopupContainer}
+            >
+              {componentList.filter((item) => item.fieldName !== fieldName).map(({fieldName, label}) => (
+                <Option key={fieldName} value={fieldName} label={label}>
+                  {label}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+        )
+      }
       if (symbol) {
         return (
-          <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: '请选择!' }]}>
+          <Form.Item name="value" className={styles.valueWrapper} rules={[{required: true, message: '请选择!'}]}>
             <TimesDatePicker
               className={styles.value}
               format={format}

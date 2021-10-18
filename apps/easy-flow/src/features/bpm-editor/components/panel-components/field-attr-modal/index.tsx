@@ -4,12 +4,12 @@ import Condition from '@/features/bpm-editor/components/condition';
 import styles from './index.module.scss';
 import {useAppSelector} from '@/app/hooks';
 import {componentPropsSelector} from '@/features/bpm-editor/form-design/formzone-reducer';
-import {fieldRule, FormField, FormRuleItem, SelectField} from '@/type';
+import {FieldRuleItem, FormField, SelectField} from '@/type';
 import {loadFieldDatasource} from '@utils/form';
 
 type modalProps = {
   editIndex?: number;
-  rule: FormRuleItem | null;
+  rule: FieldRuleItem | null;
   type: 'add' | 'edit';
   onClose: () => void;
   onOk: (rules: any, type: 'add' | 'edit', editIndex?: number) => void;
@@ -23,7 +23,6 @@ const FormAttrModal = ({editIndex, type, rule, onClose, onOk}: modalProps) => {
     return Object.values(byId).map((item: FormField) => item) || [];
   }, [byId]);
   const initFormValues = useMemo(() => {
-    console.log(222)
     // 添加规则
     if (!rule) {
       return {};
@@ -47,7 +46,6 @@ const FormAttrModal = ({editIndex, type, rule, onClose, onOk}: modalProps) => {
 
   const handelOk = useCallback(() => {
     form.validateFields().then((rules) => {
-      // const {ruleValue = []} = rules;
       onOk && onOk(rules, type, editIndex);
     });
   }, [form, type, editIndex, onOk]);

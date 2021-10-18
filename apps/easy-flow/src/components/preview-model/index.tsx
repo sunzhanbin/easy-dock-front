@@ -1,19 +1,19 @@
-import { memo, FC, useMemo, useState, useEffect } from 'react';
-import { Modal } from 'antd';
-import { Icon, Loading } from '@common/components';
-import { useAppSelector } from '@/app/hooks';
+import {FC, memo, useEffect, useMemo, useState} from 'react';
+import {Modal} from 'antd';
+import {Icon, Loading} from '@common/components';
+import {useAppSelector} from '@/app/hooks';
 import {
-  componentPropsSelector,
+  componentPropsSelector, fieldRulesSelector,
   formRulesSelector,
   layoutSelector,
   subAppSelector,
 } from '@/features/bpm-editor/form-design/formzone-reducer';
 import FormEngine from '@components/form-engine';
-import { Datasource, FormMeta } from '@type/detail';
-import { FieldAuthsMap, AuthType } from '@type/flow';
-import { ComponentConfig, FieldType, FormField, FormFieldMap, InputField, InputNumberField, RadioField } from '@/type';
-import { fetchDataSource } from '@/apis/detail';
-import { useSubAppDetail } from '@/app/app';
+import {Datasource, FormMeta} from '@type/detail';
+import {AuthType, FieldAuthsMap} from '@type/flow';
+import {ComponentConfig, FieldType, FormField, FormFieldMap, InputField, InputNumberField, RadioField} from '@/type';
+import {fetchDataSource} from '@/apis/detail';
+import {useSubAppDetail} from '@/app/app';
 import styles from './index.module.scss';
 import classnames from 'classnames';
 import titleImage from '@/assets/title.png';
@@ -23,11 +23,12 @@ import rightImage from '@assets/background_right.png';
 const propsKey = ['defaultValue', 'showSearch', 'multiple', 'format', 'notSelectPassed', 'maxCount'];
 type Key = keyof FormField;
 
-const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, onClose }) => {
-  const { name: appName } = useAppSelector(subAppSelector);
+const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({visible, onClose}) => {
+  const {name: appName} = useAppSelector(subAppSelector);
   const layout = useAppSelector(layoutSelector);
   const byId: FormFieldMap = useAppSelector(componentPropsSelector);
   const formRules = useAppSelector(formRulesSelector);
+  const fieldRules = useAppSelector(fieldRulesSelector);
   const [dataSource, setDataSource] = useState<Datasource>({});
   const [loading, setLoading] = useState<boolean>(false);
   const subAppDetail = useSubAppDetail();
@@ -55,23 +56,23 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
       });
       components.push(component);
     });
-    const formMeta = {
+    return {
       layout,
       events: {
         onchange: [],
       },
       rules: [],
       formRules,
+      fieldRules,
       themes: [{}],
       components: components,
       selectedTheme: '',
     };
-    return formMeta;
-  }, [layout, byId, formRules]);
+  }, [layout, byId, formRules, fieldRules]);
   const auths = useMemo(() => {
     const res: FieldAuthsMap = {};
     Object.keys(byId).forEach((id) => {
-      const { fieldName = '' } = byId[id];
+      const {fieldName = ''} = byId[id];
       res[fieldName || id] = AuthType.Edit;
     });
     return res;

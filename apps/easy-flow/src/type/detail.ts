@@ -24,6 +24,7 @@ export interface FormMeta {
     children?: Omit<NonNullable<FormMeta['rules']>[number], 'children'>[];
   }[];
   formRules?: FormRuleItem[];
+  fieldRules?: FormRuleItem[];
 }
 
 export type FormValue = { [key: string]: any };
