@@ -9,10 +9,11 @@ import styles from './index.module.scss';
 
 interface FormListProps {
   fields: CompConfig[];
-  key: string;
+  id: string;
+  parentId: string;
 }
 
-const FormList = ({ fields, key }: FormListProps) => {
+const FormList = ({ fields, id, parentId }: FormListProps) => {
   const componentTypes = useMemo(() => {
     return fields.map((v) => v.type);
   }, [fields]);
@@ -35,7 +36,7 @@ const FormList = ({ fields, key }: FormListProps) => {
     }
   }, [optionComponents]);
   return (
-    <Form.List name={['fields', 'tabs']} key={key}>
+    <Form.List name={[parentId, id]}>
       {() => {
         return (
           <Row className={styles.row}>
@@ -44,13 +45,20 @@ const FormList = ({ fields, key }: FormListProps) => {
               const { fieldName = '', label = '', colSpace = '4', desc = '' } = config;
               const Component = compSources ? compSources[type] : null;
               const dataSource = dataSourceMap[fieldName] || [];
+              const propsKey = ['defaultValue', 'showSearch', 'multiple', 'format', 'notSelectPassed', 'maxCount'];
+              const props: { [k: string]: string | boolean | number } = {};
+              Object.keys(config).forEach((key) => {
+                if (propsKey.includes(key)) {
+                  props[key] = config[key];
+                }
+              });
               return (
-                <Col span={Number(colSpace) * 6} className={styles.col}>
+                <Col span={Number(colSpace) * 6} className={styles.col} key={fieldName}>
                   <Form.Item
                     name={fieldName}
                     label={type !== 'DescText' ? <LabelContent label={label} desc={desc} /> : null}
                   >
-                    {Component && compRender(type, Component, config, dataSource, projectId)}
+                    {Component && compRender(type, Component, props, dataSource, projectId)}
                   </Form.Item>
                 </Col>
               );

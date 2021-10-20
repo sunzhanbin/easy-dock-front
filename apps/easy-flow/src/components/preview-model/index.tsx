@@ -21,7 +21,16 @@ import titleImage from '@/assets/title.png';
 import leftImage from '@assets/background_left.png';
 import rightImage from '@assets/background_right.png';
 
-const propsKey = ['defaultValue', 'showSearch', 'multiple', 'format', 'notSelectPassed', 'maxCount', 'fields'];
+const propsKey = [
+  'defaultValue',
+  'showSearch',
+  'multiple',
+  'format',
+  'notSelectPassed',
+  'maxCount',
+  'fields',
+  'fieldName',
+];
 type Key = keyof FormField;
 
 const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, onClose }) => {

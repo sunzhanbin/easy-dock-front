@@ -15,15 +15,16 @@ type PaneType = {
 
 interface TabProps {
   fields?: CompConfig[];
+  fieldName: string;
   value?: any;
   onChange?: (value: this['value']) => void;
 }
 
-const Tabs = ({ fields = [], value, onChange }: TabProps) => {
+const Tabs = ({ fields = [], fieldName, value, onChange }: TabProps) => {
   const [form] = Form.useForm();
   const tabRef = useRef<HTMLDivElement>(null);
   const content = useMemoCallback((key) => {
-    return <FormList fields={fields} key={key} />;
+    return <FormList fields={fields} id={key} parentId={fieldName} />;
   });
   const [panes, setPanes] = useState<PaneType[]>([]);
   const [activeKey, setActiveKey] = useState<string>('1');
@@ -55,7 +56,7 @@ const Tabs = ({ fields = [], value, onChange }: TabProps) => {
     form.validateFields().then((values) => {
       const { title } = values;
       const list = [...panes];
-      const key = Date.now().toString();
+      const key = String(list.length);
       list.push({ key, title, content });
       setPanes(list);
       setActiveKey(key);
@@ -71,7 +72,7 @@ const Tabs = ({ fields = [], value, onChange }: TabProps) => {
     if (el?.contains(tabRef.current)) {
       setPanes([{ title: 'tab', content, key: '1' }]);
     }
-  }, [tabRef, content]);
+  }, [tabRef, fieldName, content]);
   return (
     <div className={styles.tabs} ref={tabRef}>
       <TabList
