@@ -2,7 +2,7 @@ import { CompConfig } from '@/type';
 import { Icon } from '@common/components';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { Tooltip } from 'antd';
-import { memo, useEffect, useRef, useState } from 'react';
+import React, { memo, useEffect, useRef, useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import styles from './index.module.scss';
 
@@ -38,7 +38,8 @@ const DraggableOption = ({ data, index, onEdit, onDelete, onDrop }: DragProps) =
     }),
     [onDrop, index],
   );
-  const handleDelete = useMemoCallback(() => {
+  const handleDelete = useMemoCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
     onDelete(index);
   });
 

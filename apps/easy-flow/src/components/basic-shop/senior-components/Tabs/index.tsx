@@ -1,4 +1,4 @@
-import { memo, useMemo, useState } from 'react';
+import { memo, useState, useRef, useEffect } from 'react';
 import { Tabs as TabList, Modal, Form, Input } from 'antd';
 import { Icon } from '@common/components';
 import useMemoCallback from '@common/hooks/use-memo-callback';
@@ -21,10 +21,11 @@ interface TabProps {
 
 const Tabs = ({ fields = [], value, onChange }: TabProps) => {
   const [form] = Form.useForm();
-  const content = useMemoCallback(() => {
-    return <FormList fields={fields} />;
+  const tabRef = useRef<HTMLDivElement>(null);
+  const content = useMemoCallback((key) => {
+    return <FormList fields={fields} key={key} />;
   });
-  const [panes, setPanes] = useState<PaneType[]>([{ title: 'tab', content, key: '1' }]);
+  const [panes, setPanes] = useState<PaneType[]>([]);
   const [activeKey, setActiveKey] = useState<string>('1');
   const [showModal, setShowModal] = useState<boolean>(false);
   const handleAdd = useMemoCallback(() => {
@@ -64,8 +65,15 @@ const Tabs = ({ fields = [], value, onChange }: TabProps) => {
   const handleChange = useMemoCallback((key) => {
     setActiveKey(key);
   });
+  // 编辑态默认有个tab,用于展示编辑的控件
+  useEffect(() => {
+    const el = document.getElementById('edit-form');
+    if (el?.contains(tabRef.current)) {
+      setPanes([{ title: 'tab', content, key: '1' }]);
+    }
+  }, [tabRef, content]);
   return (
-    <div className={styles.tabs}>
+    <div className={styles.tabs} ref={tabRef}>
       <TabList
         type="editable-card"
         activeKey={activeKey}
@@ -76,7 +84,7 @@ const Tabs = ({ fields = [], value, onChange }: TabProps) => {
         {panes.map(({ title, content, key }) => {
           return (
             <TabPane tab={title} key={key}>
-              {content()}
+              {content(key)}
             </TabPane>
           );
         })}

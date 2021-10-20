@@ -34,7 +34,7 @@ const FormZone: FC<{}> = () => {
     return (
       <div className={styles.form_design} ref={drop}>
         {layout && layout.length > 0 ? (
-          <Form layout="vertical" autoComplete="off">
+          <Form layout="vertical" autoComplete="off" id="edit-form">
             {layout.map((row, rowIndex) => renderCard({ row, rowIndex, moveCard }, rowIndex))}
           </Form>
         ) : (

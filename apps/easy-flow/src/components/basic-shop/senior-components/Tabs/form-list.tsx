@@ -9,9 +9,10 @@ import styles from './index.module.scss';
 
 interface FormListProps {
   fields: CompConfig[];
+  key: string;
 }
 
-const FormList = ({ fields }: FormListProps) => {
+const FormList = ({ fields, key }: FormListProps) => {
   const componentTypes = useMemo(() => {
     return fields.map((v) => v.type);
   }, [fields]);
@@ -34,7 +35,7 @@ const FormList = ({ fields }: FormListProps) => {
     }
   }, [optionComponents]);
   return (
-    <Form.List name={['fields', 'tabs']}>
+    <Form.List name={['fields', 'tabs']} key={key}>
       {() => {
         return (
           <Row className={styles.row}>
