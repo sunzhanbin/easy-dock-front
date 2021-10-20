@@ -84,16 +84,29 @@ export type DataBaseField = {
 };
 
 export type OptionMode = 'custom' | 'subapp' | 'interface';
+export type OptionSource = 'custom' | 'fromData';
 export type OptionItem = {
   key: string;
   value: string;
 };
+export type ColumnsItem = {
+  title: string,
+  dataIndex: string,
+  key: string,
+}
 export type SelectOptionItem = {
   type: OptionMode;
   data?: OptionItem[];
   subappId?: string;
   fieldName?: string;
   apiConfig?: DataConfig;
+};
+
+export type SelectColumnsItem = {
+  type: OptionSource;
+  columns?: string[];
+  fieldName?: string[];
+  formKeyId?: string;
 };
 
 export type FormFieldMap = {

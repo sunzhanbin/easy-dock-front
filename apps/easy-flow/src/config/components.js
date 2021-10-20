@@ -98,6 +98,31 @@ export const dataSource = {
   required: true,
   isProps: false,
 };
+const flows = {
+  key: 'flows',
+  label: 'flowsData',
+  defaultValue: {
+      type: 'fromData',
+      data: [
+        {key: 'key1', value: '字段1'},
+        {key: 'key2', value: '字段2'},
+        {key: 'key3', value: '字段3'},
+      ],
+    },
+  type: 'selectColumns',
+  direction: 'vertical',
+  required: true,
+  isProps: false,
+}
+const page = {
+  key: 'page',
+  label: '是否分页',
+  defaultValue: false,
+  type: 'pageOption',
+  direction: 'vertical',
+  required: false,
+  isProps: false,
+}
 const apiConfig = {
   key: 'apiConfig',
   label: '失焦时选项内容',
@@ -300,6 +325,16 @@ const components = {
     },
     config: [fieldName, getLabel('标签页'), desc, fieldManage, colSpace],
   },
+  Table: {
+    baseInfo: {
+      name: '表格',
+      icon: 'xiangqing',
+      category: '高级控件',
+      version: '1.0',
+      type: 'Table',
+    },
+    config: [fieldName, getLabel('表格'), flows, colSpace],
+  }
 };
 
 export default components;
