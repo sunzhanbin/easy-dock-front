@@ -6,17 +6,18 @@ import SelectDefaultOption from '../select-default-option';
 import DefaultDate from '../default-date';
 import Editor from '../rich-text';
 import FieldManage from '../field-manage';
-import { FormField, rangeItem, SchemaConfigItem } from '@/type';
-import { Store } from 'antd/lib/form/interface';
+import {FormField, rangeItem, SchemaConfigItem} from '@/type';
+import {Store} from 'antd/lib/form/interface';
 import styles from './index.module.scss';
-import { useAppSelector } from '@/app/hooks';
-import { errorSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
-import { Icon } from '@common/components';
-import { Rule } from 'antd/lib/form';
+import {useAppSelector} from '@/app/hooks';
+import {errorSelector} from '@/features/bpm-editor/form-design/formzone-reducer';
+import {Icon} from '@common/components';
+import {Rule} from 'antd/lib/form';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import { debounce } from 'lodash';
+import {debounce} from 'lodash';
+import SelectColumns from "../select-columns";
 
-const { Option } = Select;
+const {Option} = Select;
 
 interface CompAttrEditorProps {
   config: SchemaConfigItem[];
@@ -24,6 +25,7 @@ interface CompAttrEditorProps {
   componentId: string;
   onSave: Function;
 }
+
 interface ComponentProps {
   id: string;
   label: string;
@@ -57,6 +59,7 @@ const componentMap: { [k: string]: (props: { [k: string]: any }) => ReactNode } 
   ColSpace: () => <Radio.Group options={options} optionType="button"/>,
   Checkbox: (props) => <Checkbox>{props.label}</Checkbox>,
   Switch: () => <Switch/>,
+  selectColumns: (props) => <SelectColumns id={props.componentId}/>,
   SelectOptionList: (props) => <SelectOptionList id={props.componentId}/>,
   apiOptionList: (props) => <ApiOptionList id={props.componentId}/>,
   SelectDefaultOption: (props) => <SelectDefaultOption id={props.componentId}/>,
