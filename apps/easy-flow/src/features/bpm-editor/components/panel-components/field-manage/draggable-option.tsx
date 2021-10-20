@@ -1,3 +1,4 @@
+import { CompConfig } from '@/type';
 import { Icon } from '@common/components';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { Tooltip } from 'antd';
@@ -5,21 +6,15 @@ import { memo, useEffect, useRef, useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import styles from './index.module.scss';
 
-export interface CompConfig {
-  type: string;
-  name: string;
-  config: any;
-}
-
 interface DragProps {
   data: CompConfig;
   index: number;
   onDelete(index: this['index']): void;
-  onChange(value: this['data'], index: this['index']): void;
+  onEdit(value: this['data'], index: this['index']): void;
   onDrop(sourceIndex: number, targetIndex: number): void;
 }
 
-const DraggableOption = ({ data, index, onChange, onDelete, onDrop }: DragProps) => {
+const DraggableOption = ({ data, index, onEdit, onDelete, onDrop }: DragProps) => {
   const dragWrapperRef = useRef<HTMLDivElement>(null);
   const [canMove, setCanMove] = useState<boolean>(false);
   const [, drag] = useDrag(
@@ -57,9 +52,12 @@ const DraggableOption = ({ data, index, onChange, onDelete, onDrop }: DragProps)
   const handleMouseLeave = useMemoCallback(() => {
     setCanMove(false);
   });
+  const handleClick = useMemoCallback(() => {
+    onEdit(data, index);
+  });
 
   return (
-    <div ref={dragWrapperRef} className={styles.draggable}>
+    <div ref={dragWrapperRef} className={styles.draggable} onClick={handleClick}>
       <div className={styles.name}>{data.name}</div>
       <div className={styles.operation}>
         <div className={styles.delete} onClick={handleDelete}>

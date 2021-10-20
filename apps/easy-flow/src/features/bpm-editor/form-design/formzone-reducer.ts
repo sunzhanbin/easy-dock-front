@@ -12,6 +12,7 @@ import {
   TConfigMap,
 } from '@type';
 import { RootState } from '@/app/store';
+import formDesign from '.';
 
 function locateById(target: string, layout: Array<string[]>): [number, number] {
   let res: [number, number] = [-1, -1];
@@ -49,6 +50,7 @@ const reducers = {
       }
       state.isDirty = true;
       state.selectedField = com.id;
+      state.subComponentConfig = null;
       return state;
     },
     prepare: (com: FormField, rowIndex: number) => {
@@ -140,6 +142,7 @@ const reducers = {
   },
   selectField(state: FormDesign, action: PayloadAction<{ id: string }>) {
     const { id } = action.payload;
+    state.subComponentConfig = null;
     state.selectedField = id;
     return state;
   },
@@ -225,6 +228,21 @@ const reducers = {
     state.isDirty = true;
     return state;
   },
+  setSubComponentConfig(state: FormDesign, action: PayloadAction<{ config: FormFieldMap | null }>) {
+    const { config } = action.payload;
+    state.subComponentConfig = config;
+    return state;
+  },
+  editSubComponentProps(state: FormDesign, action: PayloadAction<{ parentId: string; config: FormFieldMap }>) {
+    const { parentId, config } = action.payload;
+    (state.byId[parentId] as any).fields = (state.byId[parentId] as any).fields.map((field: any) => {
+      if (field.config.id === config.id) {
+        return { ...field, config };
+      }
+      return field;
+    });
+    return state;
+  },
 };
 export const formDesignSelector = createSelector([(state: RootState) => state.formDesign], (formDesign) => {
   return formDesign;
@@ -299,6 +317,10 @@ export const formRulesSelector = createSelector([(state: RootState) => state.for
 export const fieldRulesSelector = createSelector([(state: RootState) => state.formDesign], (formDesign) => {
   return formDesign.fieldRules;
 });
+export const subComponentConfigSelector = createSelector(
+  [(state: RootState) => state.formDesign],
+  (formDesign) => formDesign.subComponentConfig,
+);
 export const {
   comAdded,
   comDeleted,
@@ -316,4 +338,6 @@ export const {
   setErrors,
   setFormRules,
   setFieldRules,
+  setSubComponentConfig,
+  editSubComponentProps,
 } = reducers;

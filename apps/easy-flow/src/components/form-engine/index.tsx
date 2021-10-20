@@ -1,17 +1,17 @@
-import React, {memo, useEffect, useState, useMemo} from 'react';
-import {Form, Row, Col, FormInstance} from 'antd';
+import React, { memo, useEffect, useState, useMemo } from 'react';
+import { Form, Row, Col, FormInstance } from 'antd';
 import classNames from 'classnames';
-import {Rule} from 'antd/lib/form';
+import { Rule } from 'antd/lib/form';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import useLoadComponents from '@/hooks/use-load-components';
-import {AllComponentType, Datasource, fieldRule, FormChangeRule} from '@type';
-import {FieldAuthsMap, AuthType} from '@type/flow';
-import {FormMeta, FormValue} from '@type/detail';
-import {analysisFormChangeRule, runtimeAxios} from '@/utils';
+import { AllComponentType, Datasource, fieldRule, FormChangeRule } from '@type';
+import { FieldAuthsMap, AuthType } from '@type/flow';
+import { FormMeta, FormValue } from '@type/detail';
+import { analysisFormChangeRule, runtimeAxios } from '@/utils';
 import LabelContent from '../label-content';
 import styles from './index.module.scss';
-import {Loading} from '@common/components';
-import {DataConfig, ParamSchem} from '@/type/api';
+import { Loading } from '@common/components';
+import { DataConfig, ParamSchem } from '@/type/api';
 import _ from 'lodash';
 
 type FieldsVisible = { [fieldId: string]: boolean };
@@ -48,7 +48,7 @@ const FormDetail = React.forwardRef(function FormDetail(
     return data.formRules
       .filter((rule) => rule.type === 'change')
       .map((rule) => rule.formChangeRule)
-      .map((rule) => Object.assign({}, rule, {hasChanged: false}));
+      .map((rule) => Object.assign({}, rule, { hasChanged: false }));
   }, [data.formRules]);
   const initRuleList = useMemo<DataConfig[]>(() => {
     if (!data.formRules) {
@@ -57,13 +57,11 @@ const FormDetail = React.forwardRef(function FormDetail(
     return data.formRules.filter((rule) => rule.type === 'init').map((rule) => rule.formInitRule as DataConfig);
   }, [data.formRules]);
   const changeFieldRuleList = useMemo(() => {
-    console.log(data)
     if (!data.fieldRules) {
       return [];
     }
-    return data.fieldRules
-      .map((rule) => rule.formChangeRule)
-  }, [data.fieldRules])
+    return data.fieldRules.map((rule) => rule.formChangeRule);
+  }, [data.fieldRules]);
   // 缓存之前的表单控件显隐状态
   const cacheFieldsVisibleMap = useMemo(() => {
     const map: { [k: number]: FieldsVisible } = {};
@@ -77,7 +75,6 @@ const FormDetail = React.forwardRef(function FormDetail(
   const componentTypes = useMemo(() => {
     return data.components.map((comp) => comp.config.type);
   }, [data]);
-
   // 获取组件源码
   const compSources = useLoadComponents(componentTypes);
   // 收集单个规则的控件依赖
@@ -90,9 +87,7 @@ const FormDetail = React.forwardRef(function FormDetail(
     return Array.from(set);
   });
   const collectFieldList = useMemoCallback((rule: fieldRule[][]) => {
-    const list = rule
-      .filter((v) => v)
-      .flat(2)
+    const list = rule.filter((v) => v).flat(2);
     const set = new Set(list);
     return Array.from(set);
   });
@@ -101,8 +96,8 @@ const FormDetail = React.forwardRef(function FormDetail(
     if (data.events && data.events.onchange) {
       // 处理响应表单事件，响应绑定的visible和reset
       data.events.onchange.forEach((event) => {
-        const {fieldId, listeners, value} = event;
-        const {visible, reset} = listeners;
+        const { fieldId, listeners, value } = event;
+        const { visible, reset } = listeners;
 
         // 处理visible
         if (fieldId in changedValues && visible && visible.length) {
@@ -176,45 +171,49 @@ const FormDetail = React.forwardRef(function FormDetail(
 
   // 处理日期规则联动校验
   const handleDisabledDate = useMemoCallback((current, props) => {
-    const {id} = props.props
-    if (!id || !current) return false
+    const { id } = props.props;
+    if (!id || !current) return false;
     const formValues = form.getFieldsValue();
     if (changeFieldRuleList.length && Object.keys(formValues).length) {
-      const fieldRules = _.uniqWith(changeFieldRuleList.map((rule) => {
-        return rule && collectFieldList(rule.fieldRule);
-      }).flat(2), _.isEqual)
+      const fieldRules = _.uniqWith(
+        changeFieldRuleList
+          .map((rule) => {
+            return rule && collectFieldList(rule.fieldRule);
+          })
+          .flat(2),
+        _.isEqual,
+      );
       // 去重
-      const filterRules = fieldRules.filter(item => item && (item.fieldName === id || item.value === id))
+      const filterRules = fieldRules.filter((item) => item && (item.fieldName === id || item.value === id));
       let rules1, rules2, rules3, rules4;
-      filterRules.forEach(item => {
+      filterRules.forEach((item) => {
         if (item?.symbol === 'earlier') {
           if (item.fieldName === id) {
-            rules1 = current.valueOf() >= formValues[item.value as string]
+            rules1 = current.valueOf() >= formValues[item.value as string];
           }
           if (item.value === id && item.fieldName) {
-            rules2 = current.valueOf() <= formValues[item.fieldName]
+            rules2 = current.valueOf() <= formValues[item.fieldName];
           }
         }
         if (item?.symbol === 'latter') {
           if (item.fieldName === id) {
-            rules3 = current.valueOf() <= formValues[item.value as string]
+            rules3 = current.valueOf() <= formValues[item.value as string];
           }
           if (item.value === id && item.fieldName) {
-            rules4 = current.valueOf() >= formValues[item.fieldName]
+            rules4 = current.valueOf() >= formValues[item.fieldName];
           }
         }
-      })
-      return rules2 || rules4 || rules1 || rules3
+      });
+      return rules2 || rules4 || rules1 || rules3;
     }
-  })
+  });
 
   useEffect(() => {
     const visbles: FieldsVisible = {};
     const comMaps: { [key: string]: FormMeta['components'][number] } = {};
     const formValues: FormProps['initialValue'] = {};
-
     data.components.forEach((com) => {
-      const {fieldName, id} = com.config;
+      const { fieldName, id } = com.config;
 
       if (initialValue && initialValue[fieldName] !== undefined) {
         formValues[fieldName] = initialValue[fieldName];
@@ -358,7 +357,7 @@ const FormDetail = React.forwardRef(function FormDetail(
                           readonly ||
                           !(fieldsAuths[fieldName] || fieldsAuths[fieldId]) ||
                           fieldsAuths[fieldName] === AuthType.View,
-                        disabledDate: (v: any) => handleDisabledDate(v, compMaps[fieldId])
+                        disabledDate: (v: any) => handleDisabledDate(v, compMaps[fieldId]),
                       }),
                       datasource && (datasource[fieldName] || datasource[fieldId]),
                       projectId,
@@ -384,10 +383,10 @@ function compRender(
   projectId?: number,
 ) {
   if ((type === 'Select' || type === 'Radio' || type === 'Checkbox') && datasource) {
-    return <Component {...props} options={datasource}/>;
+    return <Component {...props} options={datasource} />;
   }
   if (type === 'Member') {
-    return <Component {...props} projectid={projectId}/>;
+    return <Component {...props} projectid={projectId} />;
   }
   return <Component {...props} />;
 }

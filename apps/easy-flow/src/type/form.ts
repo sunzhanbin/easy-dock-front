@@ -89,6 +89,17 @@ export type MemberField = {
   showSearch: boolean;
 } & BaseField;
 
+export type CompConfig = {
+  type: FormField['type'];
+  name: string;
+  config: any;
+};
+
+export type Tabs = {
+  type: 'Tabs';
+  fieldManage: CompConfig[];
+} & BaseField;
+
 export type FormField =
   | InputField
   | InputNumberField
@@ -100,4 +111,5 @@ export type FormField =
   | DescTextField
   | ImageField
   | AttachmentField
-  | MemberField;
+  | MemberField
+  | Tabs;

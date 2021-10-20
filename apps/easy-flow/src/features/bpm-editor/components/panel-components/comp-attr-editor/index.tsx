@@ -70,7 +70,7 @@ const componentMap: { [k: string]: (props: { [k: string]: any }) => ReactNode } 
   ),
   DefaultDate: (props) => <DefaultDate id={props.componentId} />,
   Editor: () => <Editor />,
-  FieldManage: () => <FieldManage />,
+  FieldManage: (props) => <FieldManage parentId={props.parentId} />,
 };
 
 const FormItemWrap = (props: ComponentProps) => {
@@ -134,7 +134,7 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
       >
         {config.map(
           ({ key, label, type, range, placeholder, required, requiredMessage, rules, max, min, precision }) => {
-            const props = { placeholder, range, label, componentId, max, min, precision };
+            const props = { placeholder, range, label, componentId, max, min, precision, parentId: componentId };
             const component = componentMap[type](props);
             return (
               <Fragment key={key}>

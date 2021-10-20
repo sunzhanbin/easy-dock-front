@@ -16,6 +16,8 @@ import {
   setErrors as setErrorsReducer,
   setFormRules as setFormRulesReducer,
   setFieldRules as setFieldRulesReducer,
+  setSubComponentConfig as setSubComponentConfigReducer,
+  editSubComponentProps as editSubComponentPropsReducer,
 } from './formzone-reducer';
 import { ConfigItem, ErrorItem, FieldType, FormDesign, FormField, FormMeta } from '@/type';
 import { loadComponents } from './toolbox/toolbox-reducer';
@@ -24,7 +26,7 @@ import { RootState } from '@/app/store';
 import { axios } from '@/utils';
 import { message } from 'antd';
 
-let initialState: FormDesign = {} as FormDesign;
+let initialState: FormDesign = { subComponentConfig: null } as FormDesign;
 
 const formDesign = createSlice({
   name: 'formDesign',
@@ -47,6 +49,8 @@ const formDesign = createSlice({
     setErrors: setErrorsReducer,
     setFormRules: setFormRulesReducer,
     setFieldRules: setFieldRulesReducer,
+    setSubComponentConfig: setSubComponentConfigReducer,
+    editSubComponentProps: editSubComponentPropsReducer,
   },
   extraReducers: (builder) => {
     builder.addCase(loadComponents.fulfilled, (state, action) => {
@@ -73,7 +77,9 @@ export const {
   setIsDirty,
   setErrors,
   setFormRules,
-  setFieldRules
+  setFieldRules,
+  setSubComponentConfig,
+  editSubComponentProps,
 } = formDesign.actions;
 
 export default formDesign.reducer;
@@ -100,8 +106,8 @@ type Key = keyof FormField;
 export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>(
   'form/save',
   async ({ subAppId, isShowTip, isShowErrorTip }, { getState, dispatch }) => {
-    const {formDesign} = getState();
-    const {layout = [], schema = {}, isDirty = false, byId = {}, formRules, fieldRules} = formDesign;
+    const { formDesign } = getState();
+    const { layout = [], schema = {}, isDirty = false, byId = {}, formRules, fieldRules } = formDesign;
     const formMeta: FormMeta = {
       components: [],
       layout: layout,

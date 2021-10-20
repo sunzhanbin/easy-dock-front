@@ -1,8 +1,10 @@
-import { memo, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import { Tabs as TabList, Modal, Form, Input } from 'antd';
 import { Icon } from '@common/components';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import styles from './index.module.scss';
+import { CompConfig } from '@/type';
+import FormList from './form-list';
 
 const { TabPane } = TabList;
 type PaneType = {
@@ -11,9 +13,18 @@ type PaneType = {
   key: string;
 };
 
-const Tabs = () => {
+interface TabProps {
+  fields?: CompConfig[];
+  value?: any;
+  onChange?: (value: this['value']) => void;
+}
+
+const Tabs = ({ fields = [], value, onChange }: TabProps) => {
   const [form] = Form.useForm();
-  const [panes, setPanes] = useState<PaneType[]>([{ title: 'tab', content: '1', key: '1' }]);
+  const content = useMemoCallback(() => {
+    return <FormList fields={fields} />;
+  });
+  const [panes, setPanes] = useState<PaneType[]>([{ title: 'tab', content, key: '1' }]);
   const [activeKey, setActiveKey] = useState<string>('1');
   const [showModal, setShowModal] = useState<boolean>(false);
   const handleAdd = useMemoCallback(() => {
@@ -44,7 +55,7 @@ const Tabs = () => {
       const { title } = values;
       const list = [...panes];
       const key = Date.now().toString();
-      list.push({ key, title, content: '1111' });
+      list.push({ key, title, content });
       setPanes(list);
       setActiveKey(key);
       handleClose();
@@ -65,12 +76,12 @@ const Tabs = () => {
         {panes.map(({ title, content, key }) => {
           return (
             <TabPane tab={title} key={key}>
-              {content}
+              {content()}
             </TabPane>
           );
         })}
       </TabList>
-      <Modal visible={showModal} title={null} closable={false} onCancel={handleClose} onOk={handleOk}>
+      <Modal visible={showModal} title="标题" closable={false} onCancel={handleClose} onOk={handleOk}>
         <Form form={form}>
           <Form.Item label="标题" name="title" required rules={[{ required: true, message: '请输入标题' }]}>
             <Input />

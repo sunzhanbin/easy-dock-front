@@ -1,0 +1,6 @@
+.row {
+  & > .col {
+    flex-shrink: 1;
+    padding-left: 20px;
+  }
+}

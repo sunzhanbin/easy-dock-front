@@ -118,8 +118,8 @@ export type FormChangeRule = {
 };
 
 export type FieldChangeRule = {
-  fieldRule: fieldRule[][]
-}
+  fieldRule: fieldRule[][];
+};
 
 export type FormRuleItem = {
   type: 'change' | 'init';
@@ -130,7 +130,7 @@ export type FormRuleItem = {
 export type FieldRuleItem = {
   type: 'change' | 'init';
   formChangeRule?: FieldChangeRule;
-}
+};
 
 export type FormDesign = {
   formId?: string;
@@ -147,6 +147,7 @@ export type FormDesign = {
     id: number | string;
     appId: number | string;
   };
+  subComponentConfig?: any;
 };
 
 export type TConfigItem = {
