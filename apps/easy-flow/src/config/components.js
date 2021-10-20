@@ -98,6 +98,15 @@ export const dataSource = {
   required: true,
   isProps: false,
 };
+const apiConfig = {
+  key: 'apiConfig',
+  label: '失焦时选项内容',
+  defaultValue: '',
+  type: 'apiOptionList',
+  direction: 'vertical',
+  required: false,
+  isProps: false,
+}
 const format = {
   key: 'format',
   defaultValue: 'YYYY-MM-DD',
@@ -170,7 +179,8 @@ const components = {
       version: '1.0',
       type: 'Input',
     },
-    config: [fieldName, getLabel('单行文本'), desc, getDefaultValue('Input'), unique, colSpace],
+    config: [fieldName, getLabel('单行文本'), desc, getDefaultValue('Input'), unique, 
+    apiConfig, colSpace],
   },
   Textarea: {
     baseInfo: {
