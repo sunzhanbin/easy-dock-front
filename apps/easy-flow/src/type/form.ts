@@ -1,3 +1,4 @@
+import { ConfigItem } from '.';
 import { DataConfig } from './api';
 
 export type FieldType = FormField['type'];
@@ -90,9 +91,8 @@ export type MemberField = {
 } & BaseField;
 
 export type CompConfig = {
-  type: FormField['type'];
-  name: string;
-  config: any;
+  config: ConfigItem;
+  props: { [k: string]: any };
 };
 
 export type Tabs = {

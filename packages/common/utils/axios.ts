@@ -21,8 +21,9 @@ function createAxios(config?: AxiosRequestConfig) {
       if (status === 500) {
         errMsg = '服务异常';
       } else if (status === 403) {
-        // window.location.replace(window.COMMON_LOGIN_URL + `?redirect=${encodeURIComponent(window.location.href)}`);
-        if (window.Auth?.getToken) {
+        if (window.Auth) {
+          // window.Auth.logout();
+          window.localStorage.removeItem('auth');
           const token = await window.Auth.getToken(true, window.EASY_DOCK_BASE_SERVICE_ENDPOINT);
           if (token) {
             cookie.set('token', token, { expires: 1 });

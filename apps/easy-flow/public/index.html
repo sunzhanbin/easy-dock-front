@@ -18,6 +18,38 @@
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <!-- 项目相关服务地址配置，方便部署人员配置config.js -->
     <script src="%PUBLIC_URL%/config.js"></script>
+    <script>
+      function loadScript(url, callback, dataName, dataDeps){
+         var script = document.createElement('script');
+         script.type = 'text/javascript';
+         if(dataName){
+             script.setAttribute("data-name",dataName);
+         }
+         if(dataDeps){
+             script.setAttribute("data-deps",dataDeps);
+         }
+         if(typeof callback === 'function'){
+           if(script.readyState){//IE
+               script.onreadystatechange = function(){
+                   if(script.readyState == 'loaded' || script.readyState == 'complete'){
+                       script.onreadystatechange = null;
+                       callback()
+                   }
+               }
+           }else{//Other
+               script.onload = function(){
+                  callback();    
+               }
+           }
+         }
+         script.src = url;
+         document.getElementsByTagName('head')[0].appendChild(script);
+     }
+     console.info(window.SSO_LOGIN_URL,'SSO_LOGIN_URL');
+    if(window.SSO_LOGIN_URL){
+      loadScript(`${window.SSO_LOGIN_URL}/sso/js/sso.js`)
+    }
+    </script>
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -43,36 +75,5 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
   </body>
-  <script>
-    function loadScript(url, callback, dataName, dataDeps){
-       var script = document.createElement('script');
-       script.type = 'text/javascript';
-       if(dataName){
-           script.setAttribute("data-name",dataName);
-       }
-       if(dataDeps){
-           script.setAttribute("data-deps",dataDeps);
-       }
-       if(typeof callback === 'function'){
-         if(script.readyState){//IE
-             script.onreadystatechange = function(){
-                 if(script.readyState == 'loaded' || script.readyState == 'complete'){
-                     script.onreadystatechange = null;
-                     callback()
-                 }
-             }
-         }else{//Other
-             script.onload = function(){
-                callback();    
-             }
-         }
-       }
-       script.src = url;
-       document.getElementsByTagName('head')[0].appendChild(script);
-   }
-   console.info(window.SSO_LOGIN_URL,'SSO_LOGIN_URL');
-  if(window.SSO_LOGIN_URL){
-    loadScript(`${window.SSO_LOGIN_URL}/sso/js/sso.js`)
-  }
-  </script>
+  
 </html>

@@ -102,18 +102,18 @@ const flows = {
   key: 'flows',
   label: 'flowsData',
   defaultValue: {
-      type: 'fromData',
-      data: [
-        {key: 'key1', value: '字段1'},
-        {key: 'key2', value: '字段2'},
-        {key: 'key3', value: '字段3'},
-      ],
-    },
+    type: 'fromData',
+    data: [
+      { key: 'key1', value: '字段1' },
+      { key: 'key2', value: '字段2' },
+      { key: 'key3', value: '字段3' },
+    ],
+  },
   type: 'selectColumns',
   direction: 'vertical',
   required: true,
   isProps: false,
-}
+};
 const page = {
   key: 'page',
   label: '是否分页',
@@ -122,7 +122,7 @@ const page = {
   direction: 'vertical',
   required: false,
   isProps: false,
-}
+};
 const apiConfig = {
   key: 'apiConfig',
   label: '失焦时选项内容',
@@ -131,7 +131,7 @@ const apiConfig = {
   direction: 'vertical',
   required: false,
   isProps: false,
-}
+};
 const format = {
   key: 'format',
   defaultValue: 'YYYY-MM-DD',
@@ -188,7 +188,7 @@ const getMaxCount = (max, min, defaultValue) => {
 };
 
 const fieldManage = {
-  key: 'fields',
+  key: 'components',
   label: '字段管理',
   type: 'FieldManage',
   required: false,
@@ -204,8 +204,7 @@ const components = {
       version: '1.0',
       type: 'Input',
     },
-    config: [fieldName, getLabel('单行文本'), desc, getDefaultValue('Input'), unique, 
-    apiConfig, colSpace],
+    config: [fieldName, getLabel('单行文本'), desc, getDefaultValue('Input'), unique, apiConfig, colSpace],
   },
   Textarea: {
     baseInfo: {
@@ -334,7 +333,7 @@ const components = {
       type: 'Table',
     },
     config: [fieldName, getLabel('表格'), flows, colSpace],
-  }
+  },
 };
 
 export default components;

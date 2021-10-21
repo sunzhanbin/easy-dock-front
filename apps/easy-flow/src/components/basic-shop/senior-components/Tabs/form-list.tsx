@@ -1,6 +1,6 @@
 import { memo, useEffect, useMemo, useState } from 'react';
 import { Form, Row, Col } from 'antd';
-import { AllComponentType, CompConfig, Datasource } from '@/type';
+import { AllComponentType, CompConfig, ConfigItem, Datasource, RadioField } from '@/type';
 import useLoadComponents from '@/hooks/use-load-components';
 import { fetchDataSource } from '@/apis/detail';
 import { useSubAppDetail } from '@/app/app';
@@ -15,10 +15,10 @@ interface FormListProps {
 
 const FormList = ({ fields, id, parentId }: FormListProps) => {
   const componentTypes = useMemo(() => {
-    return fields.map((v) => v.type);
+    return fields.map((v) => v.config.type);
   }, [fields]);
   const optionComponents = useMemo(() => {
-    return fields.filter((v) => ['Select', 'Radio', 'Checkbox'].includes(v.type)).map((v) => v.config);
+    return fields.filter((v) => ['Select', 'Radio', 'Checkbox'].includes(v.config.type)).map((v) => v.config);
   }, [fields]);
   const subAppDetail = useSubAppDetail();
   const projectId = useMemo(() => {
@@ -30,7 +30,7 @@ const FormList = ({ fields, id, parentId }: FormListProps) => {
   const [dataSourceMap, setDataSourceMap] = useState<Datasource>({});
   useEffect(() => {
     if (optionComponents.length > 0) {
-      fetchDataSource(optionComponents).then((res) => {
+      fetchDataSource(optionComponents as any).then((res) => {
         setDataSourceMap(res);
       });
     }
@@ -41,8 +41,8 @@ const FormList = ({ fields, id, parentId }: FormListProps) => {
         return (
           <Row className={styles.row}>
             {fields.map((field) => {
-              const { type, config = {} } = field;
-              const { fieldName = '', label = '', colSpace = '4', desc = '' } = config;
+              const { config } = field;
+              const { fieldName = '', label = '', colSpace = '4', desc = '', type } = config;
               const Component = compSources ? compSources[type] : null;
               const dataSource = dataSourceMap[fieldName] || [];
               const propsKey = ['defaultValue', 'showSearch', 'multiple', 'format', 'notSelectPassed', 'maxCount'];

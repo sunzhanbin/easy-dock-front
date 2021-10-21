@@ -59,7 +59,10 @@ const DraggableOption = ({ data, index, onEdit, onDelete, onDrop }: DragProps) =
 
   return (
     <div ref={dragWrapperRef} className={styles.draggable} onClick={handleClick}>
-      <div className={styles.name}>{data.name}</div>
+      <div className={styles.name}>
+        <Icon type={data.config.icon} className={styles.icon} />
+        <div className={styles.text}>{data.config.label}</div>
+      </div>
       <div className={styles.operation}>
         <div className={styles.delete} onClick={handleDelete}>
           <Tooltip title="删除">

@@ -14,20 +14,25 @@ type PaneType = {
 };
 
 interface TabProps {
-  fields?: CompConfig[];
+  components?: CompConfig[];
   fieldName: string;
   value?: any;
   onChange?: (value: this['value']) => void;
 }
 
-const Tabs = ({ fields = [], fieldName, value, onChange }: TabProps) => {
+const Tabs = ({ components = [], fieldName, value, onChange }: TabProps) => {
   const [form] = Form.useForm();
   const tabRef = useRef<HTMLDivElement>(null);
   const content = useMemoCallback((key) => {
-    return <FormList fields={fields} id={key} parentId={fieldName} />;
+    return <FormList fields={components} id={key} parentId={fieldName} />;
   });
   const [panes, setPanes] = useState<PaneType[]>([]);
-  const [activeKey, setActiveKey] = useState<string>('1');
+  const [activeKey, setActiveKey] = useState<string>(() => {
+    if (panes.length > 0) {
+      return panes[0].key;
+    }
+    return '1';
+  });
   const [showModal, setShowModal] = useState<boolean>(false);
   const handleAdd = useMemoCallback(() => {
     setShowModal(true);
@@ -37,6 +42,7 @@ const Tabs = ({ fields = [], fieldName, value, onChange }: TabProps) => {
     const index = list.findIndex((pane) => pane.key === key);
     const paneList = list.filter((v) => v.key !== key);
     setPanes(paneList);
+    onChange && onChange(paneList);
     if (activeKey === list[index].key) {
       index > 0 ? setActiveKey(list[index - 1].key) : setActiveKey(list[0].key);
     }
@@ -59,6 +65,7 @@ const Tabs = ({ fields = [], fieldName, value, onChange }: TabProps) => {
       const key = String(list.length);
       list.push({ key, title, content });
       setPanes(list);
+      onChange && onChange(list);
       setActiveKey(key);
       handleClose();
     });
@@ -66,13 +73,18 @@ const Tabs = ({ fields = [], fieldName, value, onChange }: TabProps) => {
   const handleChange = useMemoCallback((key) => {
     setActiveKey(key);
   });
+  useEffect(() => {
+    const list = typeof value === 'string' ? JSON.parse(value) : Array.isArray(value) ? [...value] : [];
+    setPanes(list);
+  }, []);
   // 编辑态默认有个tab,用于展示编辑的控件
   useEffect(() => {
     const el = document.getElementById('edit-form');
     if (el?.contains(tabRef.current)) {
       setPanes([{ title: 'tab', content, key: '1' }]);
     }
-  }, [tabRef, fieldName, content]);
+  }, [tabRef, content]);
+
   return (
     <div className={styles.tabs} ref={tabRef}>
       <TabList
@@ -82,7 +94,7 @@ const Tabs = ({ fields = [], fieldName, value, onChange }: TabProps) => {
         onEdit={handleEdit}
         onChange={handleChange}
       >
-        {panes.map(({ title, content, key }) => {
+        {(panes || []).map(({ title, content, key }) => {
           return (
             <TabPane tab={title} key={key}>
               {content(key)}

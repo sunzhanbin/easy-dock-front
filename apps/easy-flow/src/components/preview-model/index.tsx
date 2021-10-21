@@ -28,7 +28,7 @@ const propsKey = [
   'format',
   'notSelectPassed',
   'maxCount',
-  'fields',
+  'components',
   'fieldName',
 ];
 type Key = keyof FormField;

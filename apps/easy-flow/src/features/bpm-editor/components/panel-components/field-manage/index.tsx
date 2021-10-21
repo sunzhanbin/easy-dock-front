@@ -17,17 +17,18 @@ interface ComProps {
 }
 
 const componentList = Object.values(componentSchema)
-  .map((com) => com.baseInfo)
+  .map((v) => v.baseInfo)
   .filter((com) => com.type !== 'Tabs');
 
 const FieldManage = ({ parentId, value, onChange }: ComProps) => {
   const dispatch = useAppDispatch();
-  const config = useAppSelector(configSelector);
+  const configMap = useAppSelector(configSelector);
   const handleAddComponent = useMemoCallback((type: FormField['type']) => {
-    const com = componentList.find((com) => com.type === type);
     const list = value ? [...value] : [];
     const id = uniqueId(`${type}_`);
-    list.push({ type, name: com!.name, config: { ...config[type], id, fieldName: id, parentId } });
+    const baseInfo = componentList.find((v) => v.type === type);
+    const config = { ...configMap[type], id, fieldName: id, parentId, type, icon: baseInfo?.icon };
+    list.push({ config, props: {} });
     onChange && onChange(list);
   });
   const overlay = useMemo(() => {
