@@ -321,10 +321,10 @@ const FormDetail = React.forwardRef(function FormDetail(
         return (
           <Row key={index} className={styles.row}>
             {formRow.map((fieldId) => {
-              const { config = {}, props = {} } = compMaps[fieldId];
-              const { fieldName = '', colSpace = '', label = '', desc = '', type = '' } = config;
+              const {config = {}, props = {}} = compMaps[fieldId];
+              const {fieldName = '', colSpace = '', label = '', desc = '', type = '', flows = {}} = config;
               const isRequired = fieldsAuths && fieldsAuths[fieldName] === AuthType.Required;
-              const compProps = { ...props };
+              const compProps = {...props};
               const Component = compSources[config?.type as AllComponentType['type']];
 
               if (!fieldsVisible[fieldName || fieldId] || !Component) return null;
@@ -357,6 +357,7 @@ const FormDetail = React.forwardRef(function FormDetail(
                           readonly ||
                           !(fieldsAuths[fieldName] || fieldsAuths[fieldId]) ||
                           fieldsAuths[fieldName] === AuthType.View,
+                        flows,
                         disabledDate: (v: any) => handleDisabledDate(v, compMaps[fieldId]),
                       }),
                       datasource && (datasource[fieldName] || datasource[fieldId]),

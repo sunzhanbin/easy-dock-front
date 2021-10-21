@@ -19,9 +19,10 @@ interface editProps {
 }
 
 const SelectColumns = (props: editProps) => {
-  const {value, onChange} = props;
+  console.log(props, 'flowData')
+  const {id, value, onChange} = props;
   const {appId, id: subAppId} = useAppSelector(subAppSelector);
-  const [type, setType] = useState<OptionSource>(value?.type || 'custom');
+  const [type, setType] = useState<OptionSource>(value?.type || 'fromData');
   const [formList, setFormList] = useState<(OptionItem & { versionId: number })[]>([]);
   const [formKey, setFormKey] = useState<string>(value?.formKeyId || '');
   const [fieldList, setFieldList] = useState<OptionItem[]>([]);
