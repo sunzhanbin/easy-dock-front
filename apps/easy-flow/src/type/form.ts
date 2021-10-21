@@ -117,4 +117,6 @@ export type FormField =
   | ImageField
   | AttachmentField
   | MemberField
-  | Tabs;
+  | Tabs
+  | TableField
+  ;
