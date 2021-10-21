@@ -104,7 +104,7 @@ export type SelectOptionItem = {
 
 export type SelectColumnsItem = {
   type: OptionSource;
-  columns?: string[];
+  columns?: ColumnsItem[];
   fieldName?: string[];
   formKeyId?: string;
 };

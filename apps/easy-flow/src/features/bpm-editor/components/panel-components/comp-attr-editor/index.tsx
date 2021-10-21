@@ -16,6 +16,7 @@ import {Rule} from 'antd/lib/form';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import {debounce} from 'lodash';
 import SelectColumns from "../select-columns";
+import PageOption from "../page-option";
 
 const {Option} = Select;
 
@@ -59,6 +60,7 @@ const componentMap: { [k: string]: (props: { [k: string]: any }) => ReactNode } 
   ColSpace: () => <Radio.Group options={options} optionType="button"/>,
   Checkbox: (props) => <Checkbox>{props.label}</Checkbox>,
   Switch: () => <Switch/>,
+  pageOption: () => <PageOption/>,
   selectColumns: (props) => <SelectColumns id={props.componentId}/>,
   SelectOptionList: (props) => <SelectOptionList id={props.componentId}/>,
   apiOptionList: (props) => <ApiOptionList id={props.componentId}/>,

@@ -1,6 +1,5 @@
 import {memo, useState, useEffect, useRef} from "react";
 import {Table} from "antd";
-import styles from './index.module.scss';
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import {debounce} from "lodash";
 import {SelectColumnsItem} from "@type";
@@ -48,7 +47,7 @@ const TableComponent = (props: TableComponentType) => {
   return (
     <div>
       <div ref={containerRef}>
-        <Table {...newProps} />
+        <Table {...newProps}/>
       </div>
     </div>
   )
