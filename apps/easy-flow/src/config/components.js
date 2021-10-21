@@ -113,16 +113,19 @@ const flows = {
   direction: 'vertical',
   required: true,
   isProps: false,
-};
-const page = {
-  key: 'page',
+}
+const showPage = {
+  key: 'showPage',
   label: '是否分页',
   defaultValue: false,
-  type: 'pageOption',
+  type: 'Switch',
   direction: 'vertical',
   required: false,
   isProps: false,
-};
+}
+
+const pageParams = {
+}
 const apiConfig = {
   key: 'apiConfig',
   label: '失焦时选项内容',
@@ -332,8 +335,8 @@ const components = {
       version: '1.0',
       type: 'Table',
     },
-    config: [fieldName, getLabel('表格'), flows, colSpace],
-  },
+    config: [fieldName, getLabel('表格'), flows, colSpace, showPage],
+  }
 };
 
 export default components;
