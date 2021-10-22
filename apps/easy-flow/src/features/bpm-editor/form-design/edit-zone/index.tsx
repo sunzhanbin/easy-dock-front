@@ -57,8 +57,19 @@ const EditZone = () => {
   }, [selectedField]);
   const onSave = useMemoCallback((values, isValidate) => {
     if (subComponentConfig) {
+      const props: { [k: string]: any } = {};
+      const keys = Object.keys(subComponentConfig);
+      Object.keys(values).forEach((key) => {
+        if (!keys.includes(key)) {
+          props[key] = values[key];
+        }
+      });
       dispatch(
-        editSubComponentProps({ parentId: subComponentConfig.parentId, config: { ...subComponentConfig, ...values } }),
+        editSubComponentProps({
+          parentId: subComponentConfig.parentId,
+          config: { ...subComponentConfig, ...values },
+          props,
+        }),
       );
       return;
     }

@@ -6,7 +6,7 @@ import useMemoCallback from '@common/hooks/use-memo-callback';
 import componentSchema from '@/config/components';
 import DraggableOption from './draggable-option';
 import styles from './index.module.scss';
-import { CompConfig, FormField } from '@/type';
+import { CompConfig, ConfigItem, FormField, SchemaItem } from '@/type';
 import { useAppSelector, useAppDispatch } from '@/app/hooks';
 import { configSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 import { setSubComponentConfig } from '@/features/bpm-editor/form-design/formdesign-slice';
@@ -16,9 +16,7 @@ interface ComProps {
   onChange?: (value: this['value']) => void;
 }
 
-const componentList = Object.values(componentSchema)
-  .map((v) => v.baseInfo)
-  .filter((com) => com.type !== 'Tabs');
+const componentList = Object.values(componentSchema).filter((com) => com.baseInfo.type !== 'Tabs');
 
 const FieldManage = ({ parentId, value, onChange }: ComProps) => {
   const dispatch = useAppDispatch();
@@ -26,23 +24,28 @@ const FieldManage = ({ parentId, value, onChange }: ComProps) => {
   const handleAddComponent = useMemoCallback((type: FormField['type']) => {
     const list = value ? [...value] : [];
     const id = uniqueId(`${type}_`);
-    const baseInfo = componentList.find((v) => v.type === type);
-    const config = { ...configMap[type], id, fieldName: id, parentId, type, icon: baseInfo?.icon };
-    list.push({ config, props: {} });
+    const { baseInfo, config: schema } = componentList.find((v) => v.baseInfo.type === type) as SchemaItem;
+    const config: ConfigItem = { id, parentId, type, icon: baseInfo?.icon };
+    const props: ConfigItem = { type, id };
+    schema.forEach((item) => {
+      item.isProps ? (props[item.key] = item.defaultValue) : (config[item.key] = item.defaultValue);
+    });
+    config.fieldName = id;
+    list.push({ config, props });
     onChange && onChange(list);
   });
   const overlay = useMemo(() => {
     return (
       <Menu>
-        {componentList.map(({ type, name }) => (
+        {componentList.map(({ baseInfo }) => (
           <Menu.Item
-            key={type}
+            key={baseInfo.type}
             className={styles.item}
             onClick={() => {
-              handleAddComponent(type as FormField['type']);
+              handleAddComponent(baseInfo.type as FormField['type']);
             }}
           >
-            {name}
+            {baseInfo.name}
           </Menu.Item>
         ))}
       </Menu>
@@ -62,7 +65,7 @@ const FieldManage = ({ parentId, value, onChange }: ComProps) => {
     onChange && onChange(list);
   });
   const handleEdit = useMemoCallback((value) => {
-    dispatch(setSubComponentConfig({ config: value.config }));
+    dispatch(setSubComponentConfig({ config: { ...value.config, ...value.props } }));
   });
 
   return (

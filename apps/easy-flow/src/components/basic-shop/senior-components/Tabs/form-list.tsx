@@ -41,17 +41,10 @@ const FormList = ({ fields, id, parentId }: FormListProps) => {
         return (
           <Row className={styles.row}>
             {fields.map((field) => {
-              const { config } = field;
+              const { config, props } = field;
               const { fieldName = '', label = '', colSpace = '4', desc = '', type } = config;
               const Component = compSources ? compSources[type] : null;
               const dataSource = dataSourceMap[fieldName] || [];
-              const propsKey = ['defaultValue', 'showSearch', 'multiple', 'format', 'notSelectPassed', 'maxCount'];
-              const props: { [k: string]: string | boolean | number } = {};
-              Object.keys(config).forEach((key) => {
-                if (propsKey.includes(key)) {
-                  props[key] = config[key];
-                }
-              });
               return (
                 <Col span={Number(colSpace) * 6} className={styles.col} key={fieldName}>
                   <Form.Item

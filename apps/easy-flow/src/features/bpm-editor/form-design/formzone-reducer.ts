@@ -233,11 +233,14 @@ const reducers = {
     state.subComponentConfig = config;
     return state;
   },
-  editSubComponentProps(state: FormDesign, action: PayloadAction<{ parentId: string; config: FormFieldMap }>) {
-    const { parentId, config } = action.payload;
+  editSubComponentProps(
+    state: FormDesign,
+    action: PayloadAction<{ parentId: string; config: FormFieldMap; props: FormFieldMap }>,
+  ) {
+    const { parentId, config, props } = action.payload;
     (state.byId[parentId] as any).components = (state.byId[parentId] as any).components.map((field: any) => {
       if (field.config.id === config.id) {
-        return { props: { ...field.props }, config: { ...field.config, ...config } };
+        return { props: { ...field.props, ...props }, config: { ...field.config, ...config } };
       }
       return field;
     });

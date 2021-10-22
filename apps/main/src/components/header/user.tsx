@@ -10,23 +10,17 @@ import { ROUTES } from '@consts';
 import { RoleEnum } from '@/schema/app';
 import styles from './index.module.scss';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import cookie from 'js-cookie';
 
 function HeaderUser() {
   const history = useHistory();
   const dispatch = useDispatch();
   const handleLogin = useMemoCallback(async () => {
-    let token = await window.Auth.getToken(true, window.EASY_DOCK_BASE_SERVICE_ENDPOINT);
-    if (token) {
-      cookie.set('token', token, { expires: 1 });
-      Promise.resolve().then(() => {
-        window.location.reload();
-      });
+    if (window.Auth) {
+      await window.Auth.getToken(true, window.EASY_DOCK_BASE_SERVICE_ENDPOINT);
     }
   });
   const handleLogout = useCallback(() => {
     dispatch(logout());
-    // history.replace(ROUTES.LOGIN + `?redirect=${encodeURIComponent(window.location.href)}`);
   }, [history, dispatch]);
 
   const user = useSelector(userSelector);

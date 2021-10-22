@@ -41,14 +41,16 @@ const DefaultDate = (props: editProps) => {
         return current && current < moment().endOf('second');
       };
     }
-    if (value) {
+    if (typeof value === 'number') {
       props.value = moment(value);
     }
     return props;
   }, [formatType, notSelectPassed, value]);
   const handleChange = useCallback(
     (e) => {
-      onChange && onChange(e.valueOf());
+      if (e.valueOf()) {
+        onChange && onChange(e.valueOf());
+      }
     },
     [onChange],
   );
