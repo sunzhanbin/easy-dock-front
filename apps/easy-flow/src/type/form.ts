@@ -90,6 +90,11 @@ export type MemberField = {
   showSearch: boolean;
 } & BaseField;
 
+export type TableField = {
+  type: 'Table',
+  flows: any
+} & BaseField
+
 export type CompConfig = {
   config: ConfigItem;
   props: { [k: string]: any };
@@ -112,4 +117,6 @@ export type FormField =
   | ImageField
   | AttachmentField
   | MemberField
-  | Tabs;
+  | Tabs
+  | TableField
+  ;
