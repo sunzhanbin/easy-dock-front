@@ -6,19 +6,19 @@ import SelectDefaultOption from '../select-default-option';
 import DefaultDate from '../default-date';
 import Editor from '../rich-text';
 import FieldManage from '../field-manage';
-import {FormField, rangeItem, SchemaConfigItem} from '@/type';
-import {Store} from 'antd/lib/form/interface';
+import { FormField, rangeItem, SchemaConfigItem } from '@/type';
+import { Store } from 'antd/lib/form/interface';
 import styles from './index.module.scss';
-import {useAppSelector} from '@/app/hooks';
-import {errorSelector} from '@/features/bpm-editor/form-design/formzone-reducer';
-import {Icon} from '@common/components';
-import {Rule} from 'antd/lib/form';
+import { useAppSelector } from '@/app/hooks';
+import { errorSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
+import { Icon } from '@common/components';
+import { Rule } from 'antd/lib/form';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import {debounce} from 'lodash';
-import SelectColumns from "../select-columns";
-import PageOption from "../page-option";
+import { debounce, reverse } from 'lodash';
+import SelectColumns from '../select-columns';
+import PageOption from '../page-option';
 
-const {Option} = Select;
+const { Option } = Select;
 
 interface CompAttrEditorProps {
   config: SchemaConfigItem[];
@@ -48,23 +48,23 @@ const componentMap: { [k: string]: (props: { [k: string]: any }) => ReactNode } 
   Input: (props) => <Input placeholder={props.placeholder} size="large" />,
   Textarea: (props) => <Input.TextArea placeholder={props.placeholder} rows={4} size="large" />,
   Select: (props) => (
-    <Select placeholder={props.placeholder || '请选择'} size="large" suffixIcon={<Icon type="xiala"/>}>
+    <Select placeholder={props.placeholder || '请选择'} size="large" suffixIcon={<Icon type="xiala" />}>
       {props.range &&
-      (props.range as rangeItem[]).map((v) => (
-        <Option value={v.key} key={v.key}>
-          {v.value}
-        </Option>
-      ))}
+        (props.range as rangeItem[]).map((v) => (
+          <Option value={v.key} key={v.key}>
+            {v.value}
+          </Option>
+        ))}
     </Select>
   ),
-  ColSpace: () => <Radio.Group options={options} optionType="button"/>,
+  ColSpace: () => <Radio.Group options={options} optionType="button" />,
   Checkbox: (props) => <Checkbox>{props.label}</Checkbox>,
-  Switch: () => <Switch/>,
-  pageOption: () => <PageOption/>,
-  selectColumns: (props) => <SelectColumns id={props.componentId}/>,
-  SelectOptionList: (props) => <SelectOptionList id={props.componentId}/>,
-  apiOptionList: (props) => <ApiOptionList id={props.componentId}/>,
-  SelectDefaultOption: (props) => <SelectDefaultOption id={props.componentId}/>,
+  Switch: () => <Switch />,
+  pageOption: () => <PageOption />,
+  selectColumns: (props) => <SelectColumns id={props.componentId} />,
+  SelectOptionList: (props) => <SelectOptionList id={props.componentId} />,
+  apiOptionList: (props) => <ApiOptionList id={props.componentId} />,
+  SelectDefaultOption: (props) => <SelectDefaultOption id={props.componentId} />,
   InputNumber: (props) => (
     <InputNumber
       size="large"
@@ -72,7 +72,7 @@ const componentMap: { [k: string]: (props: { [k: string]: any }) => ReactNode } 
       min={props.min}
       max={props.max}
       placeholder={props.placeholder}
-      {...(props.precision === undefined ? {} : {precision: props.precision})}
+      {...(props.precision === undefined ? {} : { precision: props.precision })}
     />
   ),
   DefaultDate: (props) => <DefaultDate id={props.componentId} />,
@@ -164,4 +164,4 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
   );
 };
 
-export default memo(CompAttrEditor);
+export default memo(CompAttrEditor, (prev, current) => prev.initValues === current.initValues);

@@ -34,7 +34,7 @@ const EditZone = () => {
       // 编辑子控件
       if (subComponentConfig) {
         const { parentId, type } = subComponentConfig;
-        const { label: parentLabel } = byId[parentId];
+        const { label: parentLabel } = byId[parentId] || {};
         const editConfig = formDesign.schema[type as FieldType]?.config;
         const baseInfo = formDesign.schema[type as FieldType]?.baseInfo;
         setEditList(editConfig as SchemaConfigItem[]);

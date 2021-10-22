@@ -1,12 +1,11 @@
 import { message } from 'antd';
 import Axios, { AxiosRequestConfig } from 'axios';
-import cookie from 'js-cookie';
 
 function createAxios(config?: AxiosRequestConfig) {
   const instance = Axios.create({
     ...config,
     headers: {
-      auth: cookie.get('token'),
+      auth: window.localStorage.getItem('auth'),
       ...(config ? config.headers : {}),
     },
   });
@@ -22,15 +21,7 @@ function createAxios(config?: AxiosRequestConfig) {
         errMsg = '服务异常';
       } else if (status === 403) {
         if (window.Auth) {
-          // window.Auth.logout();
-          window.localStorage.removeItem('auth');
-          const token = await window.Auth.getToken(true, window.EASY_DOCK_BASE_SERVICE_ENDPOINT);
-          if (token) {
-            cookie.set('token', token, { expires: 1 });
-            Promise.resolve().then(() => {
-              window.location.reload();
-            });
-          }
+          window.Auth.logout();
         }
 
         return Promise.reject({
