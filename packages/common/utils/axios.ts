@@ -20,7 +20,7 @@ function createAxios(config?: AxiosRequestConfig) {
       if (status === 500) {
         errMsg = '服务异常';
       } else if (status === 403) {
-        if (window.Auth) {
+        if (window.Auth && window.localStorage.getItem('auth')) {
           window.Auth.logout();
         }
 
