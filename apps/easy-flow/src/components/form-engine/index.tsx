@@ -1,18 +1,20 @@
-import React, { memo, useEffect, useState, useMemo } from 'react';
-import { Form, Row, Col, FormInstance } from 'antd';
+import React, {memo, useEffect, useMemo, useState} from 'react';
+import {Col, Form, FormInstance, Row} from 'antd';
 import classNames from 'classnames';
-import { Rule } from 'antd/lib/form';
+import {Rule} from 'antd/lib/form';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import useLoadComponents from '@/hooks/use-load-components';
-import { AllComponentType, Datasource, fieldRule, FormChangeRule } from '@type';
-import { FieldAuthsMap, AuthType } from '@type/flow';
-import { FormMeta, FormValue } from '@type/detail';
-import { analysisFormChangeRule, runtimeAxios } from '@/utils';
+import {AllComponentType, Datasource, fieldRule, FormChangeRule} from '@type';
+import {AuthType, FieldAuthsMap} from '@type/flow';
+import {FormMeta, FormValue} from '@type/detail';
+import {analysisFormChangeRule, runtimeAxios} from '@/utils';
 import LabelContent from '../label-content';
 import styles from './index.module.scss';
-import { Loading } from '@common/components';
-import { DataConfig, ParamSchem } from '@/type/api';
+import {Loading} from '@common/components';
+import {DataConfig, ParamSchem} from '@/type/api';
+import FormContainer from './form-container'
 import _ from 'lodash';
+import {getFlowData} from "@apis/detail";
 
 type FieldsVisible = { [fieldId: string]: boolean };
 
@@ -30,16 +32,25 @@ type CompMaps = {
   [componentId: string]: FormMeta['components'][number];
 };
 
+export type ConfigMap = {
+  [key: string]: {
+    [key: string]: any
+    name?: string
+    tableData?: { [key: string]: any }[]
+  }
+}
+
 const FormDetail = React.forwardRef(function FormDetail(
   props: FormProps,
   ref: React.ForwardedRef<FormInstance<FormValue>>,
 ) {
-  const { data, fieldsAuths, datasource, initialValue, readonly, className, projectId } = props;
+  const {data, fieldsAuths, datasource, initialValue, readonly, className, projectId} = props;
   const [form] = Form.useForm<FormValue>();
   const [loading, setLoading] = useState<boolean>(false);
   const [fieldsVisible, setFieldsVisible] = useState<FieldsVisible>({});
   const [compMaps, setCompMaps] = useState<CompMaps>({});
   const [showForm, setShowForm] = useState(false);
+  const [configMap, setConfigMap] = useState<ConfigMap>({})
 
   const changeRuleList = useMemo<(FormChangeRule & { hasChanged: boolean })[]>(() => {
     if (!data.formRules) {
@@ -48,7 +59,7 @@ const FormDetail = React.forwardRef(function FormDetail(
     return data.formRules
       .filter((rule) => rule.type === 'change')
       .map((rule) => rule.formChangeRule)
-      .map((rule) => Object.assign({}, rule, { hasChanged: false }));
+      .map((rule) => Object.assign({}, rule, {hasChanged: false}));
   }, [data.formRules]);
   const initRuleList = useMemo<DataConfig[]>(() => {
     if (!data.formRules) {
@@ -91,34 +102,28 @@ const FormDetail = React.forwardRef(function FormDetail(
     const set = new Set(list);
     return Array.from(set);
   });
-  const formValuesChange = useMemoCallback((changedValues: FormValue) => {
+  const formValuesChange = useMemoCallback(async (changedValues: FormValue) => {
     // 处理单个控件绑定的事件
     if (data.events && data.events.onchange) {
       // 处理响应表单事件，响应绑定的visible和reset
       data.events.onchange.forEach((event) => {
-        const { fieldId, listeners, value } = event;
-        const { visible, reset } = listeners;
-
+        const {fieldId, listeners, value} = event;
+        const {visible, reset} = listeners;
         // 处理visible
         if (fieldId in changedValues && visible && visible.length) {
           const fieldsVisible: FieldsVisible = {};
-
           visible.forEach((id) => {
             fieldsVisible[id] = changedValues[fieldId] === value;
           });
-
           setFieldsVisible((oldVisible) => Object.assign({}, oldVisible, fieldsVisible));
         }
-
         // 处理reset
         if (changedValues[fieldId] === value) {
           if (reset && reset.length) {
             const fiieldsResetValues: { [key: string]: undefined } = {};
-
             reset.forEach((id) => {
               fiieldsResetValues[id] = undefined;
             });
-
             form.setFieldsValue(fiieldsResetValues);
           }
         }
@@ -126,7 +131,9 @@ const FormDetail = React.forwardRef(function FormDetail(
     }
     const formValues = form.getFieldsValue();
     const changedFieldName = Object.keys(changedValues).length > 0 ? Object.keys(changedValues)[0] : '';
+    const fieldChangedValue = Object.values(changedValues).length > 0 ? Object.values(changedValues)[0] : '';
     // 处理表单属性值改变时事件
+    // console.log(formValues, changedValues, compMaps, 'filedName')
     if (changeRuleList.length > 0 && Object.keys(formValues).length > 0) {
       changeRuleList.forEach((rule, index) => {
         const fieldNameList = collectFieldNameList(rule.fieldRule);
@@ -166,12 +173,48 @@ const FormDetail = React.forwardRef(function FormDetail(
           }
         }
       });
+
+
     }
+
+    // 处理基础控件失焦时关联表格控件的数据联动
+    const fieldConfig = compMaps[changedFieldName]
+    const filledName: string = fieldConfig?.config.dataSource?.apiConfig.filledName?.key
+    // filledName
+    const tempMap = _.cloneDeep(configMap)
+    if (filledName && tempMap) {
+      // @ts-ignore
+      tempMap.name = filledName
+
+      tempMap[filledName] = {
+        ...tempMap[filledName],
+        [changedFieldName]: fieldChangedValue
+      }
+      try {
+        // todo
+        // const ret = await getFlowData(tempMap)
+        // const {data} = ret
+        // if(!data) return
+        tempMap[filledName].tableData = [{
+          key1: 'cxx' + fieldChangedValue,
+          key2: 12 + filledName
+        }]
+        setConfigMap(tempMap)
+      } catch (e) {
+        console.log(e)
+      }
+    }
+    console.log(tempMap, 'ffff')
   });
+
+  const handleConfigMap = useMemoCallback((value: any) => {
+    console.log(value, 'rrrcxzc')
+    return value
+  })
 
   // 处理日期规则联动校验
   const handleDisabledDate = useMemoCallback((current, props) => {
-    const { id } = props.props;
+    const {id} = props.props;
     if (!id || !current) return false;
     const formValues = form.getFieldsValue();
     if (changeFieldRuleList.length && Object.keys(formValues).length) {
@@ -313,11 +356,10 @@ const FormDetail = React.forwardRef(function FormDetail(
       autoComplete="off"
       onValuesChange={formValuesChange}
     >
-      {loading && <Loading />}
+      {loading && <Loading/>}
       {data.layout.map((formRow, index) => {
         // 空行或者所用组件未加载不渲染
         if (!formRow.length || !showForm || !compSources) return null;
-
         return (
           <Row key={index} className={styles.row}>
             {formRow.map((fieldId) => {
@@ -326,11 +368,9 @@ const FormDetail = React.forwardRef(function FormDetail(
               const isRequired = fieldsAuths && fieldsAuths[fieldName] === AuthType.Required;
               const compProps = {...props};
               const Component = compSources[config?.type as AllComponentType['type']];
-
               if (!fieldsVisible[fieldName || fieldId] || !Component) return null;
-
               delete compProps['defaultValue'];
-
+              delete compProps['apiConfig'];
               let rules: Rule[] = [];
               if (isRequired) {
                 rules = [
@@ -342,28 +382,34 @@ const FormDetail = React.forwardRef(function FormDetail(
               }
               return (
                 <Col span={colSpace * 6} key={fieldId} className={styles.col}>
-                  <Form.Item
+                  <FormContainer
                     key={fieldId}
-                    name={fieldName || fieldId}
-                    label={type !== 'DescText' ? <LabelContent label={label} desc={desc} /> : null}
-                    required={isRequired}
-                    rules={rules}
+                    onChange={formValuesChange}
                   >
-                    {compRender(
-                      config.type,
-                      Component,
-                      Object.assign({}, compProps, {
-                        disabled:
-                          readonly ||
-                          !(fieldsAuths[fieldName] || fieldsAuths[fieldId]) ||
-                          fieldsAuths[fieldName] === AuthType.View,
-                        flows,
-                        disabledDate: (v: any) => handleDisabledDate(v, compMaps[fieldId]),
-                      }),
-                      datasource && (datasource[fieldName] || datasource[fieldId]),
-                      projectId,
-                    )}
-                  </Form.Item>
+                    <Form.Item
+                      key={fieldId}
+                      name={fieldName || fieldId}
+                      label={type !== 'DescText' ? <LabelContent label={label} desc={desc}/> : null}
+                      required={isRequired}
+                      rules={rules}
+                    >
+                      {compRender(
+                        config.type,
+                        Component,
+                        Object.assign({}, compProps, {
+                          disabled:
+                            readonly ||
+                            !(fieldsAuths[fieldName] || fieldsAuths[fieldId]) ||
+                            fieldsAuths[fieldName] === AuthType.View,
+                          flows,
+                          configMap,
+                          disabledDate: (v: any) => handleDisabledDate(v, compMaps[fieldId]),
+                        }),
+                        datasource && (datasource[fieldName] || datasource[fieldId]),
+                        projectId,
+                      )}
+                    </Form.Item>
+                  </FormContainer>
                 </Col>
               );
             })}

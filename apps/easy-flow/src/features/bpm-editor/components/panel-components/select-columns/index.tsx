@@ -19,7 +19,6 @@ interface editProps {
 }
 
 const SelectColumns = (props: editProps) => {
-  console.log(props, 'flowData')
   const {id, value, onChange} = props;
   const {appId, id: subAppId} = useAppSelector(subAppSelector);
   const [type, setType] = useState<OptionSource>(value?.type || 'fromData');
@@ -39,7 +38,7 @@ const SelectColumns = (props: editProps) => {
     setColumns(list);
     setAddDisable(!filterItem)
     onChange && onChange({
-      type: 'fromData', formKeyId: formKey, fieldName: fieldKey, columns: list
+      type: 'fromData', id, formKeyId: formKey, fieldName: fieldKey, columns: list
     });
   }, [columns, onChange]);
 
@@ -49,7 +48,7 @@ const SelectColumns = (props: editProps) => {
     list.splice(index, 1);
     setColumns(list);
     setAddDisable(false)
-    onChange && onChange({type: 'fromData', formKeyId: formKey, fieldName: fieldKey, columns: list});
+    onChange && onChange({type: 'fromData', id, formKeyId: formKey, fieldName: fieldKey, columns: list});
   });
 
   // 拖拽列
@@ -59,7 +58,7 @@ const SelectColumns = (props: editProps) => {
     list[sourceIndex] = list[targetIndex];
     list[targetIndex] = tmp;
     setColumns(list);
-    onChange && onChange({type: 'fromData', formKeyId: formKey, fieldName: fieldKey, columns: list});
+    onChange && onChange({type: 'fromData', id, formKeyId: formKey, fieldName: fieldKey, columns: list});
   });
 
   // 修改表头对应的字段和字段名称
@@ -79,7 +78,7 @@ const SelectColumns = (props: editProps) => {
       }
     }
     setColumns(list)
-    onChange && onChange({type: 'fromData', formKeyId: formKey, fieldName: fieldKey, columns: list});
+    onChange && onChange({type: 'fromData', id, formKeyId: formKey, fieldName: fieldKey, columns: list});
   });
 
   const fetchFieldNames = useCallback((formList, selectedKey: string) => {
@@ -112,15 +111,14 @@ const SelectColumns = (props: editProps) => {
   }, []);
 
   // 切换接口
-  const handleChangeApi = useCallback(
+  const handleChangeApi = useMemoCallback(
     (e) => {
       setFormKey(e as string);
       setFieldKey([]);
       setColumns([])
       fetchFieldNames(formList, e);
-    },
-    [formList, fetchFieldNames],
-  );
+      onChange && onChange({type, id, formKeyId: e, fieldName: [], columns: []});
+    });
 
   // 切换接口下对应的字段
   const handleChangeField = useMemoCallback((e) => {
@@ -131,7 +129,7 @@ const SelectColumns = (props: editProps) => {
       list.splice(index, 1);
       setColumns(list);
     }
-    onChange && onChange({type, formKeyId: formKey, fieldName: e, columns: list});
+    onChange && onChange({type, id, formKeyId: formKey, fieldName: e, columns: list});
   });
 
   // 切换数据来源
@@ -141,7 +139,7 @@ const SelectColumns = (props: editProps) => {
       // todo
       // onChange && onChange({type, columns: content});
     } else if (type === 'fromData' && formKey && fieldKey) {
-      onChange && onChange({type, formKeyId: formKey, fieldName: fieldKey, columns});
+      onChange && onChange({type, id, formKeyId: formKey, fieldName: fieldKey, columns});
     }
   });
 
