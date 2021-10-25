@@ -1,58 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <!-- 禁用fetch缓存 -->
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Expires" content="0" />
 
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!--
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <!-- 禁用fetch缓存 -->
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Expires" content="0" />
+
+  <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+  <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!-- 项目相关服务地址配置，方便部署人员配置config.js -->
-    <script src="%PUBLIC_URL%/config.js"></script>
-    <script>
-      function loadScript(url, callback, dataName, dataDeps){
-         var script = document.createElement('script');
-         script.type = 'text/javascript';
-         if(dataName){
-             script.setAttribute("data-name",dataName);
-         }
-         if(dataDeps){
-             script.setAttribute("data-deps",dataDeps);
-         }
-         if(typeof callback === 'function'){
-           if(script.readyState){//IE
-               script.onreadystatechange = function(){
-                   if(script.readyState == 'loaded' || script.readyState == 'complete'){
-                       script.onreadystatechange = null;
-                       callback()
-                   }
-               }
-           }else{//Other
-               script.onload = function(){
-                  callback();    
-               }
-           }
-         }
-         script.src = url;
-         document.getElementsByTagName('head')[0].appendChild(script);
-     }
-     console.info(window.SSO_LOGIN_URL,'SSO_LOGIN_URL');
-    if(window.SSO_LOGIN_URL){
-      loadScript(`${window.SSO_LOGIN_URL}/sso/js/sso.js`,async()=>{
-        await window.Auth.getToken(true,window.EASY_DOCK_BASE_SERVICE_ENDPOINT);
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  <!-- 项目相关服务地址配置，方便部署人员配置config.js -->
+  <script src="%PUBLIC_URL%/config.js"></script>
+  <script>
+    function loadScript(url, callback, dataName, dataDeps) {
+      var script = document.createElement('script');
+      script.type = 'text/javascript';
+      if (dataName) {
+        script.setAttribute("data-name", dataName);
+      }
+      if (dataDeps) {
+        script.setAttribute("data-deps", dataDeps);
+      }
+      if (typeof callback === 'function') {
+        if (script.readyState) {//IE
+          script.onreadystatechange = function () {
+            if (script.readyState == 'loaded' || script.readyState == 'complete') {
+              script.onreadystatechange = null;
+              callback()
+            }
+          }
+        } else {//Other
+          script.onload = function () {
+            callback();
+          }
+        }
+      }
+      script.src = url;
+      document.getElementsByTagName('head')[0].appendChild(script);
+    }
+    console.info(window.SSO_LOGIN_URL, 'SSO_LOGIN_URL');
+    if (window.SSO_LOGIN_URL) {
+      loadScript(`${window.SSO_LOGIN_URL}/sso/js/sso.js`, async () => {
+        await window.Auth.getToken(true, window.EASY_DOCK_BASE_SERVICE_ENDPOINT);
       })
     }
-    </script>
-    <!--
+  </script>
+  <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
       Only files inside the `public` folder can be referenced from the HTML.
@@ -61,12 +62,13 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>React Redux App</title>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="easy-flow-root"></div>
-    <!--
+  <title>React Redux App</title>
+</head>
+
+<body>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="easy-flow-root"></div>
+  <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
 
@@ -76,6 +78,6 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
-  </body>
-  
+</body>
+
 </html>
