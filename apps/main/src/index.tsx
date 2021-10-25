@@ -5,6 +5,9 @@ import App from './main';
 import { Provider } from 'react-redux';
 import { store } from './store';
 
+(async () => {
+  await window.Auth.getToken(true, window.EASY_DOCK_BASE_SERVICE_ENDPOINT);
+})();
 ReactDOM.render(
   <Provider store={store}>
     <Router history={history}>

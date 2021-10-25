@@ -25,7 +25,13 @@ const FieldManage = ({ parentId, value, onChange }: ComProps) => {
     const list = value ? [...value] : [];
     const id = uniqueId(`${type}_`);
     const { baseInfo, config: schema } = componentList.find((v) => v.baseInfo.type === type) as SchemaItem;
-    const config: ConfigItem = { id, parentId, type, icon: baseInfo?.icon };
+    const config: ConfigItem = {
+      id,
+      parentId,
+      type,
+      icon: baseInfo?.icon,
+      canSubmit: type === 'DescText' ? false : true,
+    };
     const props: ConfigItem = { type, id };
     schema.forEach((item) => {
       item.isProps ? (props[item.key] = item.defaultValue) : (config[item.key] = item.defaultValue);
