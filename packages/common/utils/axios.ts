@@ -24,7 +24,9 @@ function createAxios(config?: AxiosRequestConfig) {
           // window.Auth.logout();
           window.localStorage.removeItem('auth');
           const token = await window.Auth.getToken(true, window.EASY_DOCK_BASE_SERVICE_ENDPOINT);
-          console.info(token);
+          Promise.resolve().then(() => {
+            window.location.reload();
+          });
         }
 
         return Promise.reject({
