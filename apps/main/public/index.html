@@ -46,7 +46,7 @@
     console.info(window.SSO_LOGIN_URL, 'SSO_LOGIN_URL');
     if (window.SSO_LOGIN_URL) {
       loadScript(`${window.SSO_LOGIN_URL}/sso/js/sso.js`, async () => {
-        await window.Auth.getToken(true, window.EASY_DOCK_BASE_SERVICE_ENDPOINT);
+        // await window.Auth.getToken(true, window.EASY_DOCK_BASE_SERVICE_ENDPOINT);
       })
     }
   </script>

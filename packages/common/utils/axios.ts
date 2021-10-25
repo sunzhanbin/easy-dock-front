@@ -21,7 +21,10 @@ function createAxios(config?: AxiosRequestConfig) {
         errMsg = '服务异常';
       } else if (status === 403) {
         if (window.Auth) {
-          window.Auth.logout();
+          // window.Auth.logout();
+          window.localStorage.removeItem('auth');
+          const token = await window.Auth.getToken(true, window.EASY_DOCK_BASE_SERVICE_ENDPOINT);
+          console.info(token);
         }
 
         return Promise.reject({
