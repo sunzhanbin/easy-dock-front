@@ -20,7 +20,6 @@ const componentList = Object.values(componentSchema).filter((com) => com.baseInf
 
 const FieldManage = ({ parentId, value, onChange }: ComProps) => {
   const dispatch = useAppDispatch();
-  const configMap = useAppSelector(configSelector);
   const handleAddComponent = useMemoCallback((type: FormField['type']) => {
     const list = value ? [...value] : [];
     const id = uniqueId(`${type}_`);
