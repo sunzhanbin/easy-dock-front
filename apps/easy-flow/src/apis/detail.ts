@@ -128,3 +128,7 @@ export async function fetchDataSource(
 export const deleteDraft = async (draftId: number | string) => {
   await runtimeAxios.delete(`task/draft/${draftId}`);
 };
+
+export const getFlowData = (params: any) => {
+  return runtimeAxios.post('', params)
+}

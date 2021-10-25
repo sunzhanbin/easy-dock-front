@@ -103,6 +103,7 @@ export type SelectOptionItem = {
 };
 
 export type SelectColumnsItem = {
+  id: string | undefined;
   type: OptionSource;
   columns?: ColumnsItem[];
   fieldName?: string[];

@@ -18,6 +18,7 @@ interface editProps {
 const ApiOptionList = (props: editProps) => {
   const {id, value, onChange} = props;
   const byId = useAppSelector(componentPropsSelector);
+  console.log(byId, 'propddddd')
   const [type] = useState<OptionMode>(value?.type || 'custom');
 
   const fields = useMemo<{ id: string; name: string }[]>(() => {
@@ -26,6 +27,14 @@ const ApiOptionList = (props: editProps) => {
       .filter((com) => com.type !== 'DescText' && com.id !== id)
       .map((com) => ({id: com.fieldName, name: com.label}));
   }, [byId, id]);
+
+  const fieldTables = useMemo<{ key: string; value: string }[]>(() => {
+    const componentList = Object.values(byId).map((item: FormField) => item) || [];
+    return componentList
+      .filter((com) => com.type === 'Table')
+      .map((com) => ({key: com.fieldName, value: com.label}));
+  }, [byId, id]);
+  
   const handleApiChange = useMemoCallback((apiConfig) => {
     onChange && onChange({type, apiConfig});
   });
@@ -42,7 +51,7 @@ const ApiOptionList = (props: editProps) => {
           onChange={handleApiChange}
         >
           <ResponseNoMap label="选择返回参数"/>
-          <FillComponent label="选择回填的控件"/>
+          <FillComponent label="选择回填的控件" options={fieldTables}/>
         </DataApiConfig>
       </Form.Item>
     );
