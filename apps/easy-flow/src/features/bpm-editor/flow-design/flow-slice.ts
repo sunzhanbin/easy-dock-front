@@ -429,8 +429,31 @@ export default flow;
 export const flowDataSelector = createSelector([(state: RootState) => state.flow], (flow) => flow);
 
 export const fieldsTemplateSelector = createSelector(
-  (state: RootState) => state.flow.fieldsTemplate,
-  (fieldsTemplate) => fieldsTemplate,
+  (state: RootState) => state.flow,
+  (flow) => {
+    const fieldsTemplate = flow.fieldsTemplate;
+    const form = flow.form;
+    const res: FieldTemplate[] = [];
+    fieldsTemplate.forEach(({ id, type, name }) => {
+      if (type === 'Tabs') {
+        const component = (form?.components || []).find((item) => item.props.id === id);
+        if (component?.props?.components && component.props.components.length > 0) {
+          const list = component.props.components.map((com: any) => {
+            const config = com.config;
+            return {
+              id: config.id,
+              type: config.type,
+              name: `${name}·${config.label}`,
+            };
+          });
+          res.push(...list);
+        }
+      } else {
+        res.push({ id, type, name });
+      }
+    });
+    return res;
+  },
 );
 
 export const formMetaSelector = createSelector(
