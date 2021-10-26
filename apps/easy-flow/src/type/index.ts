@@ -89,6 +89,12 @@ export type OptionItem = {
   key: string;
   value: string;
 };
+
+export type LabelMap = {
+  key: string
+  label: string | number | undefined,
+  value: string
+}
 export type ColumnsItem = {
   title: string,
   dataIndex: string,
@@ -106,7 +112,7 @@ export type SelectColumnsItem = {
   id: string | undefined;
   type: OptionSource;
   columns?: ColumnsItem[];
-  fieldName?: string[];
+  fieldName?: LabelMap[];
   formKeyId?: string;
 };
 

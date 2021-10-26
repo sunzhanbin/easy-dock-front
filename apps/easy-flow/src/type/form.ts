@@ -91,7 +91,7 @@ export type MemberField = {
 } & BaseField;
 
 export type TableField = {
-  type: 'Table',
+  type: 'FlowData',
   flows: any
 } & BaseField
 

@@ -12,9 +12,7 @@ import LabelContent from '../label-content';
 import styles from './index.module.scss';
 import {Loading} from '@common/components';
 import {DataConfig, ParamSchem} from '@/type/api';
-import FormContainer from './form-container'
 import _ from 'lodash';
-import {getFlowData} from "@apis/detail";
 
 type FieldsVisible = { [fieldId: string]: boolean };
 
@@ -173,14 +171,11 @@ const FormDetail = React.forwardRef(function FormDetail(
           }
         }
       });
-
-
     }
 
     // 处理基础控件失焦时关联表格控件的数据联动
     const fieldConfig = compMaps[changedFieldName]
     const filledName: string = fieldConfig?.config.dataSource?.apiConfig.filledName?.key
-    // filledName
     const tempMap = _.cloneDeep(configMap)
     if (filledName && tempMap) {
       // @ts-ignore
@@ -204,7 +199,6 @@ const FormDetail = React.forwardRef(function FormDetail(
         console.log(e)
       }
     }
-    console.log(tempMap, 'ffff')
   });
 
   const handleConfigMap = useMemoCallback((value: any) => {
@@ -382,10 +376,6 @@ const FormDetail = React.forwardRef(function FormDetail(
               }
               return (
                 <Col span={colSpace * 6} key={fieldId} className={styles.col}>
-                  <FormContainer
-                    key={fieldId}
-                    onChange={formValuesChange}
-                  >
                     <Form.Item
                       key={fieldId}
                       name={fieldName || fieldId}
@@ -409,7 +399,6 @@ const FormDetail = React.forwardRef(function FormDetail(
                         projectId,
                       )}
                     </Form.Item>
-                  </FormContainer>
                 </Col>
               );
             })}

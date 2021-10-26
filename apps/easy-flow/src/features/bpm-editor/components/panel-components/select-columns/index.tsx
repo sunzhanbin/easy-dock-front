@@ -32,9 +32,10 @@ const SelectColumns = (props: editProps) => {
   // 新增列
   const addItem = useCallback(() => {
     const list: ColumnsItem[] = [...columns];
-    const filterItem = fieldKey?.find((item) => !list.find(cur => cur.key === item));
-    if (!filterItem) return
-    list.push({title: '', dataIndex: filterItem, key: filterItem})
+    const filterItem = fieldKey?.find((item) => !list.find(cur => cur.key === item.key));
+    if (!filterItem || typeof filterItem !== 'object') return
+    const {key} = filterItem
+    list.push({title: '', dataIndex: key, key})
     setColumns(list);
     setAddDisable(!filterItem)
     onChange && onChange({
@@ -124,7 +125,7 @@ const SelectColumns = (props: editProps) => {
   const handleChangeField = useMemoCallback((e) => {
     setFieldKey(e);
     const list: ColumnsItem[] = [...columns];
-    if (!columns.every(item => e.includes(item.key))) {
+    if (!columns.every(item => e.find((cur: { key: string; }) => cur.key === item.key))) {
       const index = list.findIndex(item => !e.includes(item.key))
       list.splice(index, 1);
       setColumns(list);
@@ -169,6 +170,7 @@ const SelectColumns = (props: editProps) => {
             <Select
               placeholder="选择字段"
               mode="multiple"
+              labelInValue={true}
               className={styles.dict_content}
               size="large"
               suffixIcon={<Icon type="xiala"/>}

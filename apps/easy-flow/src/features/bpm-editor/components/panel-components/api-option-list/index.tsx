@@ -18,7 +18,6 @@ interface editProps {
 const ApiOptionList = (props: editProps) => {
   const {id, value, onChange} = props;
   const byId = useAppSelector(componentPropsSelector);
-  console.log(byId, 'propddddd')
   const [type] = useState<OptionMode>(value?.type || 'custom');
 
   const fields = useMemo<{ id: string; name: string }[]>(() => {
@@ -31,7 +30,7 @@ const ApiOptionList = (props: editProps) => {
   const fieldTables = useMemo<{ key: string; value: string }[]>(() => {
     const componentList = Object.values(byId).map((item: FormField) => item) || [];
     return componentList
-      .filter((com) => com.type === 'Table')
+      .filter((com) => com.type === 'FlowData')
       .map((com) => ({key: com.fieldName, value: com.label}));
   }, [byId, id]);
   
