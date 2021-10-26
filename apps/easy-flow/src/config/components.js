@@ -327,15 +327,15 @@ const components = {
     },
     config: [fieldName, getLabel('标签页'), desc, fieldManage, colSpace],
   },
-  Table: {
+  FlowData: {
     baseInfo: {
-      name: '表格',
+      name: '关联流程数据',
       icon: 'xiangqing',
       category: '高级控件',
       version: '1.0',
-      type: 'Table',
+      type: 'FlowData',
     },
-    config: [fieldName, getLabel('表格'), flows, colSpace, showPage],
+    config: [fieldName, getLabel('关联流程数据'), flows, colSpace, showPage],
   }
 };
 

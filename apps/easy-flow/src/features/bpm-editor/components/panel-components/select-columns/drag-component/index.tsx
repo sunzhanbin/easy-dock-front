@@ -4,13 +4,13 @@ import useMemoCallback from "@common/hooks/use-memo-callback";
 import styles from "@/features/bpm-editor/components/panel-components/select-columns/index.module.scss";
 import {Input, Select, Tooltip} from "antd";
 import {Icon} from "@common/components";
-
+import {LabelMap} from '@type'
 const {Option} = Select;
 
 interface DraggableOptionProps {
   data: { [key: string]: string };
 
-  columns: string[];
+  columns: any;
 
   onDelete(index: this['index']): void;
 
@@ -23,6 +23,7 @@ interface DraggableOptionProps {
 
 function DraggableOption(props: DraggableOptionProps) {
   const {onDelete, data, onChange, onDrag, index, columns} = props;
+  console.log(columns, data, 'rrrr')
   const dragWrapperRef = useRef<HTMLDivElement>(null);
   const [canMove, setCanMove] = useState<boolean>(false);
   const [, drag] = useDrag(
@@ -95,9 +96,9 @@ function DraggableOption(props: DraggableOptionProps) {
           {...(data.key ? {defaultValue: data.key} : null)}
         >
 
-          {columns?.map((key) => (
-            <Option value={key} key={key}>
-              {key}
+          {(columns as LabelMap[])?.map((item) => (
+            <Option value={item.key} key={item.key}>
+              {item.label}
             </Option>
           ))}
         </Select>
