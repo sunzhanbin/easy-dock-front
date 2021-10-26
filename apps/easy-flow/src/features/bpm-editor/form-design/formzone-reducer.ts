@@ -244,6 +244,7 @@ const reducers = {
       }
       return field;
     });
+    state.isDirty = true;
     return state;
   },
 };

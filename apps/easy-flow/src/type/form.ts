@@ -100,7 +100,7 @@ export type CompConfig = {
   props: { [k: string]: any };
 };
 
-export type Tabs = {
+export type TabsField = {
   type: 'Tabs';
   fieldManage: CompConfig[];
 } & BaseField;
@@ -117,6 +117,6 @@ export type FormField =
   | ImageField
   | AttachmentField
   | MemberField
-  | Tabs
+  | TabsField
   | TableField
   ;
