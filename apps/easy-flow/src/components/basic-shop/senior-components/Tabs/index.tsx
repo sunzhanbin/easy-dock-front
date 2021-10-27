@@ -9,7 +9,7 @@ import { FieldAuthsMap } from '@/type/flow';
 
 const { TabPane } = TabList;
 type PaneType = {
-  title: string;
+  __title__: string; //为了防止用户输入的数据库字段名为title与这个重复，故使用__title__
   content: (key: string) => JSX.Element;
   key: string;
 };
@@ -53,15 +53,15 @@ const Tabs = ({ components = [], fieldName, auth, value, readonly, onChange }: T
     }
   });
   const handleClose = useMemoCallback(() => {
-    form.setFieldsValue({ title: '' });
+    form.setFieldsValue({ __title__: '' });
     setShowModal(false);
   });
   const handleOk = useMemoCallback(() => {
     form.validateFields().then((values) => {
-      const { title } = values;
+      const { __title__ } = values;
       const list = [...panes];
       const key = String(list.length);
-      list.push({ key, title, content });
+      list.push({ key, __title__, content });
       setPanes(list);
       onChange && onChange(list);
       setActiveKey(key);
@@ -73,16 +73,22 @@ const Tabs = ({ components = [], fieldName, auth, value, readonly, onChange }: T
   });
   useEffect(() => {
     const list = typeof value === 'string' ? JSON.parse(value) : Array.isArray(value) ? [...value] : [];
-    setPanes(list);
+    const panes = list.map((pane: any) => {
+      if (!pane.content) {
+        return { ...pane, content };
+      }
+      return pane;
+    });
+    setPanes(panes);
     if (list.length > 0) {
       setActiveKey(list[0].key);
     }
-  }, []);
+  }, [content]);
   // 编辑态默认有个tab,用于展示编辑的控件
   useEffect(() => {
     const el = document.getElementById('edit-form');
     if (el?.contains(tabRef.current)) {
-      setPanes([{ title: 'tab', content, key: 'edit' }]);
+      setPanes([{ __title__: 'tab', content, key: 'edit' }]);
       setActiveKey('edit');
     }
   }, [tabRef, content]);
@@ -96,9 +102,9 @@ const Tabs = ({ components = [], fieldName, auth, value, readonly, onChange }: T
         onEdit={handleEdit}
         onChange={handleChange}
       >
-        {(panes || []).map(({ title, content, key }) => {
+        {(panes || []).map(({ __title__, key, content }) => {
           return (
-            <TabPane tab={title} key={key}>
+            <TabPane tab={__title__} key={key}>
               {typeof content === 'function' && content(key)}
             </TabPane>
           );
@@ -106,7 +112,7 @@ const Tabs = ({ components = [], fieldName, auth, value, readonly, onChange }: T
       </TabList>
       <Modal visible={showModal} title="标题" closable={false} onCancel={handleClose} onOk={handleOk}>
         <Form form={form}>
-          <Form.Item label="标题" name="title" required rules={[{ required: true, message: '请输入标题' }]}>
+          <Form.Item label="标题" name="__title__" required rules={[{ required: true, message: '请输入标题' }]}>
             <Input />
           </Form.Item>
         </Form>
