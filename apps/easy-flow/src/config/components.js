@@ -113,7 +113,7 @@ const flows = {
   direction: 'vertical',
   required: true,
   isProps: false,
-}
+};
 const showPage = {
   key: 'showPage',
   label: '是否分页',
@@ -122,10 +122,9 @@ const showPage = {
   direction: 'vertical',
   required: false,
   isProps: false,
-}
+};
 
-const pageParams = {
-}
+const pageParams = {};
 const apiConfig = {
   key: 'apiConfig',
   label: '失焦时选项内容',
@@ -325,18 +324,18 @@ const components = {
       version: '1.0',
       type: 'Tabs',
     },
-    config: [fieldName, getLabel('标签页'), desc, fieldManage, colSpace],
+    config: [fieldName, getLabel('标签页'), desc, fieldManage],
   },
   FlowData: {
     baseInfo: {
-      name: '关联流程数据',
+      name: '关联流程',
       icon: 'xiangqing',
       category: '高级控件',
       version: '1.0',
       type: 'FlowData',
     },
-    config: [fieldName, getLabel('关联流程数据'), flows, colSpace, showPage],
-  }
+    config: [fieldName, getLabel('关联流程'), flows, colSpace, showPage],
+  },
 };
 
 export default components;
