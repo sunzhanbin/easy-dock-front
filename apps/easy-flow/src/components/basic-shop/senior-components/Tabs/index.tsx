@@ -5,34 +5,32 @@ import useMemoCallback from '@common/hooks/use-memo-callback';
 import styles from './index.module.scss';
 import { CompConfig } from '@/type';
 import FormList from './form-list';
+import { FieldAuthsMap } from '@/type/flow';
 
 const { TabPane } = TabList;
 type PaneType = {
   title: string;
-  content: any;
+  content: (key: string) => JSX.Element;
   key: string;
 };
 
 interface TabProps {
-  components?: CompConfig[];
   fieldName: string;
+  auth: FieldAuthsMap;
+  components?: CompConfig[];
+  readonly?: boolean;
   value?: any;
   onChange?: (value: this['value']) => void;
 }
 
-const Tabs = ({ components = [], fieldName, value, onChange }: TabProps) => {
+const Tabs = ({ components = [], fieldName, auth, value, readonly, onChange }: TabProps) => {
   const [form] = Form.useForm();
   const tabRef = useRef<HTMLDivElement>(null);
-  const content = useMemoCallback((key) => {
-    return <FormList fields={components} id={key} parentId={fieldName} />;
+  const content = useMemoCallback((key: string) => {
+    return <FormList fields={components} id={key} parentId={fieldName} auth={auth} readonly={readonly} />;
   });
   const [panes, setPanes] = useState<PaneType[]>([]);
-  const [activeKey, setActiveKey] = useState<string>(() => {
-    if (panes.length > 0) {
-      return panes[0].key;
-    }
-    return '1';
-  });
+  const [activeKey, setActiveKey] = useState<string>();
   const [showModal, setShowModal] = useState<boolean>(false);
   const handleAdd = useMemoCallback(() => {
     setShowModal(true);
@@ -76,12 +74,16 @@ const Tabs = ({ components = [], fieldName, value, onChange }: TabProps) => {
   useEffect(() => {
     const list = typeof value === 'string' ? JSON.parse(value) : Array.isArray(value) ? [...value] : [];
     setPanes(list);
+    if (list.length > 0) {
+      setActiveKey(list[0].key);
+    }
   }, []);
   // 编辑态默认有个tab,用于展示编辑的控件
   useEffect(() => {
     const el = document.getElementById('edit-form');
     if (el?.contains(tabRef.current)) {
-      setPanes([{ title: 'tab', content, key: '1' }]);
+      setPanes([{ title: 'tab', content, key: 'edit' }]);
+      setActiveKey('edit');
     }
   }, [tabRef, content]);
 
@@ -97,7 +99,7 @@ const Tabs = ({ components = [], fieldName, value, onChange }: TabProps) => {
         {(panes || []).map(({ title, content, key }) => {
           return (
             <TabPane tab={title} key={key}>
-              {content(key)}
+              {typeof content === 'function' && content(key)}
             </TabPane>
           );
         })}

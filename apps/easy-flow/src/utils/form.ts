@@ -1,6 +1,7 @@
 import { batchUpload, downloadFile as download } from '@/apis/file';
 import { ImageValue } from '@/components/basic-shop/basic-components/Image';
-import { DateField, fieldRule, FormField, SelectOptionItem } from '@/type';
+import { AllComponentType, Datasource, DateField, fieldRule, FormField, SelectOptionItem } from '@/type';
+import { FieldAuthsMap } from '@/type/flow';
 import moment from 'moment';
 import { runtimeAxios } from './axios';
 
@@ -554,3 +555,24 @@ export const loadFieldDatasource = async (config: SelectOptionItem): Promise<any
 
   return Promise.resolve([]);
 };
+
+type ExtendProps = {
+  datasource: Datasource[keyof Datasource];
+  fieldName: string;
+  fieldsAuths: FieldAuthsMap;
+  projectId?: number;
+  readonly?: boolean;
+};
+// export function compRender(type: AllComponentType['type'], Component: any, props: any, extendProps: ExtendProps) {
+//   const { datasource, projectId, fieldName, fieldsAuths, readonly } = extendProps;
+//   if ((type === 'Select' || type === 'Radio' || type === 'Checkbox') && datasource) {
+//     return <Component {...props} options={datasource} />;
+//   }
+//   if (type === 'Member') {
+//     return <Component {...props} projectid={projectId} />;
+//   }
+//   if (type === 'Tabs') {
+//     return <Component {...props} fieldName={fieldName} auth={fieldsAuths} readonly={readonly} />;
+//   }
+//   return <Component {...props} />;
+// }

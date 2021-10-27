@@ -1,19 +1,23 @@
 import { memo, useEffect, useMemo, useState } from 'react';
 import { Form, Row, Col } from 'antd';
+import { Rule } from 'antd/lib/form';
 import { AllComponentType, CompConfig, ConfigItem, Datasource, RadioField } from '@/type';
 import useLoadComponents from '@/hooks/use-load-components';
 import { fetchDataSource } from '@/apis/detail';
 import { useSubAppDetail } from '@/app/app';
 import LabelContent from '../../../label-content';
 import styles from './index.module.scss';
+import { AuthType, FieldAuthsMap } from '@/type/flow';
 
 interface FormListProps {
   fields: CompConfig[];
   id: string;
   parentId: string;
+  auth: FieldAuthsMap;
+  readonly: boolean | undefined;
 }
 
-const FormList = ({ fields, id, parentId }: FormListProps) => {
+const FormList = ({ fields, id, parentId, auth = {}, readonly }: FormListProps) => {
   const componentTypes = useMemo(() => {
     return fields.map((v) => v.config.type);
   }, [fields]);
@@ -42,16 +46,28 @@ const FormList = ({ fields, id, parentId }: FormListProps) => {
           <Row className={styles.row}>
             {fields.map((field) => {
               const { config, props } = field;
-              const { fieldName = '', label = '', colSpace = '4', desc = '', type } = config;
+              const { fieldName = '', label = '', colSpace = '4', desc = '', type, id: componentId } = config;
               const Component = compSources ? compSources[type] : null;
               const dataSource = dataSourceMap[fieldName] || [];
+              const fieldAuth = id === 'edit' ? AuthType.View : auth[componentId] ?? 0;
+              if (fieldAuth === AuthType.Denied || !Component) {
+                return null;
+              }
+              const isRequired = fieldAuth === AuthType.Required;
+              const rules: Rule[] = [];
+              if (isRequired) {
+                rules.push({ required: true, message: `${label}不能为空` });
+              }
+              const comProps = Object.assign({}, props, { disabled: fieldAuth === AuthType.View || readonly });
               return (
                 <Col span={Number(colSpace) * 6} className={styles.col} key={fieldName}>
                   <Form.Item
                     name={fieldName}
                     label={type !== 'DescText' ? <LabelContent label={label} desc={desc} /> : null}
+                    required={isRequired}
+                    rules={rules}
                   >
-                    {Component && compRender(type, Component, props, dataSource, projectId)}
+                    {Component && compRender(type, Component, comProps, dataSource, projectId)}
                   </Form.Item>
                 </Col>
               );
