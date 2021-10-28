@@ -114,15 +114,15 @@ const flows = {
   required: true,
   isProps: false,
 };
-const showPage = {
-  key: 'showPage',
-  label: '是否分页',
-  defaultValue: false,
-  type: 'Switch',
-  direction: 'vertical',
-  required: false,
-  isProps: false,
-};
+// const showPage = {
+//   key: 'showPage',
+//   label: '是否分页',
+//   defaultValue: false,
+//   type: 'Switch',
+//   direction: 'vertical',
+//   required: false,
+//   isProps: false,
+// };
 
 const pageParams = {};
 const apiConfig = {
@@ -134,6 +134,43 @@ const apiConfig = {
   required: false,
   isProps: false,
 };
+
+// 编号规则
+const serialRules = {
+  key: 'serialRules',
+  label: '编号规则',
+  defaultValue: {
+    type: 'custom',
+    rules: [{
+      digitsNum: 5,
+      startValue: 0,
+      resetDuration: 'none',
+      type: "incNumber"
+    }]
+  },
+  type: 'serialRules',
+  direction: 'vertical',
+  required: true,
+  isProps: false,
+}
+
+// 0
+// digitsNum: 5
+// fixedLength: true
+// resetDuration: "none"
+// startValue: 12
+// type: "incNumber"
+// 1: {type: "createTime", format: "yyyyMMdd", formatType: "preset"}
+// format: "yyyyMMdd"
+// formatType: "preset"
+// type: "createTime"
+// 2: {type: "fixedChars", chars: "CC"}
+// chars: "CC"
+// type: "fixedChars"
+// 3: {type: "widget", widgetName: "_widget_1504835294416"}
+// type: "widget"
+// widgetName: "_widget_1504835294416"
+
 const format = {
   key: 'format',
   defaultValue: 'YYYY-MM-DD',
@@ -334,8 +371,18 @@ const components = {
       version: '1.0',
       type: 'FlowData',
     },
-    config: [fieldName, getLabel('关联流程'), flows, colSpace, showPage, colSpace],
+    config: [fieldName, getLabel('关联流程'), flows, colSpace],
   },
+  SerialNum: {
+     baseInfo: {
+          name: '编号',
+          icon: 'tupiancaidan',
+          category: '高级控件',
+          version: '1.0',
+          type: 'SerialNum',
+        },
+     config: [fieldName, getLabel('编号'), colSpace, serialRules ]
+  }
 };
 
 export default components;

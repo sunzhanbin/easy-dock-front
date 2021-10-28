@@ -116,6 +116,18 @@ export type SelectColumnsItem = {
   formKeyId?: string;
 };
 
+export type ruleType = 'custom' | 'inject';
+
+export type serialRulesItem = {
+  id: string | undefined;
+  type: ruleType;
+  rules?: RuleOption[]
+}
+
+export type RuleOption = {
+  type: keyof typeof SerialNumType
+} & { [key: string]: string | number | undefined }
+
 export type FormFieldMap = {
   [k: string]: FormField;
 };
@@ -238,3 +250,10 @@ export type FormMeta = {
 export type Datasource = {
   [key: string]: { key: string; value: string }[];
 };
+
+export enum SerialNumType {
+  incNumber = '自动计数',
+  createTime = '提交日期',
+  fixedChars = '固定字符',
+  fieldName = '表单字段',
+}

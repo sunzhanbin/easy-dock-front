@@ -144,17 +144,18 @@ const SelectColumns = (props: editProps) => {
     }
   });
 
-  const renderContent = useMemoCallback(() => {
-    if (type === 'custom') {
-      return (
-        <Input/>
-      );
-    } else if (type === 'fromData') {
-      return (
-        <>
-          <Select
-            placeholder="选择接口"
-            className={styles.dict_content}
+  const
+    renderContent = useMemoCallback(() => {
+      if (type === 'custom') {
+        return (
+          <Input/>
+        );
+      } else if (type === 'fromData') {
+        return (
+          <>
+            <Select
+              placeholder="选择接口"
+              className={styles.dict_content}
             size="large"
             suffixIcon={<Icon type="xiala"/>}
             onChange={handleChangeApi}

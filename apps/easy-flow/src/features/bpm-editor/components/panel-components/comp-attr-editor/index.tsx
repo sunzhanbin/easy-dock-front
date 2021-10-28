@@ -16,7 +16,7 @@ import { Rule } from 'antd/lib/form';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { debounce, reverse } from 'lodash';
 import SelectColumns from '../select-columns';
-import PageOption from '../page-option';
+import SerialRules from '../serial-rules';
 
 const { Option } = Select;
 
@@ -56,21 +56,21 @@ const componentMap: { [k: string]: (props: { [k: string]: any }) => ReactNode } 
   Select: (props) => (
     <Select placeholder={props.placeholder || '请选择'} size="large" suffixIcon={<Icon type="xiala" />}>
       {props.range &&
-        (props.range as rangeItem[]).map((v) => (
-          <Option value={v.key} key={v.key}>
-            {v.value}
-          </Option>
-        ))}
+      (props.range as rangeItem[]).map((v) => (
+        <Option value={v.key} key={v.key}>
+          {v.value}
+        </Option>
+      ))}
     </Select>
   ),
-  ColSpace: (props) => <Radio.Group options={props.options} optionType="button" />,
+  ColSpace: (props) => <Radio.Group options={props.options} optionType="button"/>,
   Checkbox: (props) => <Checkbox>{props.label}</Checkbox>,
-  Switch: () => <Switch />,
-  pageOption: () => <PageOption />,
-  selectColumns: (props) => <SelectColumns id={props.componentId} />,
-  SelectOptionList: (props) => <SelectOptionList id={props.componentId} />,
-  apiOptionList: (props) => <ApiOptionList id={props.componentId} />,
-  SelectDefaultOption: (props) => <SelectDefaultOption id={props.componentId} />,
+  Switch: () => <Switch/>,
+  serialRules: (props) => <SerialRules id={props.componentId}/>,
+  selectColumns: (props) => <SelectColumns id={props.componentId}/>,
+  SelectOptionList: (props) => <SelectOptionList id={props.componentId}/>,
+  apiOptionList: (props) => <ApiOptionList id={props.componentId}/>,
+  SelectDefaultOption: (props) => <SelectDefaultOption id={props.componentId}/>,
   InputNumber: (props) => (
     <InputNumber
       size="large"

@@ -90,7 +90,7 @@ export type MemberField = {
   showSearch: boolean;
 } & BaseField;
 
-export type TableField = {
+export type FlowField = {
   type: 'FlowData',
   flows: any
 } & BaseField
@@ -103,6 +103,11 @@ export type CompConfig = {
 export type TabsField = {
   type: 'Tabs';
   fieldManage: CompConfig[];
+} & BaseField;
+
+export type SerialNumField = {
+  type: 'SerialNum',
+  serialRule: any
 } & BaseField;
 
 export type FormField =
@@ -118,5 +123,6 @@ export type FormField =
   | AttachmentField
   | MemberField
   | TabsField
-  | TableField
+  | FlowField
+  | SerialNumField
   ;
