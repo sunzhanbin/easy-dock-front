@@ -49,7 +49,7 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly }: FormListProps) 
               const { fieldName = '', label = '', colSpace = '4', desc = '', type, id: componentId } = config;
               const Component = compSources ? compSources[type] : null;
               const dataSource = dataSourceMap[fieldName] || [];
-              const fieldAuth = id === 'edit' ? AuthType.View : auth[componentId] ?? 0;
+              const fieldAuth = auth[componentId] ?? AuthType.Edit;
               if (fieldAuth === AuthType.Denied || !Component) {
                 return null;
               }

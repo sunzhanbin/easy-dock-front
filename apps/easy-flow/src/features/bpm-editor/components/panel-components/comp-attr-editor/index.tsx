@@ -43,6 +43,12 @@ const options = [
   { label: '3/4', value: '3' },
   { label: '1', value: '4' },
 ];
+const rowOptions = [
+  { label: '1/4', value: '1', disabled: true },
+  { label: '1/2', value: '2', disabled: true },
+  { label: '3/4', value: '3', disabled: true },
+  { label: '1', value: '4' },
+];
 
 const componentMap: { [k: string]: (props: { [k: string]: any }) => ReactNode } = {
   Input: (props) => <Input placeholder={props.placeholder} size="large" />,
@@ -57,7 +63,7 @@ const componentMap: { [k: string]: (props: { [k: string]: any }) => ReactNode } 
         ))}
     </Select>
   ),
-  ColSpace: () => <Radio.Group options={options} optionType="button" />,
+  ColSpace: (props) => <Radio.Group options={props.options} optionType="button" />,
   Checkbox: (props) => <Checkbox>{props.label}</Checkbox>,
   Switch: () => <Switch />,
   pageOption: () => <PageOption />,
@@ -141,7 +147,18 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
       >
         {config.map(
           ({ key, label, type, range, placeholder, required, requiredMessage, rules, max, min, precision }) => {
-            const props = { placeholder, range, label, componentId, max, min, precision, parentId: componentId };
+            const props: { [k: string]: any } = {
+              placeholder,
+              range,
+              label,
+              componentId,
+              max,
+              min,
+              precision,
+              parentId: componentId,
+            };
+            const componentType = componentId.split('_')[0];
+            props.options = componentType === 'Tabs' || 'FlowData' ? rowOptions : options;
             const component = componentMap[type](props);
             return (
               <Fragment key={key}>

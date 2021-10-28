@@ -108,7 +108,7 @@ const FormDetail = React.forwardRef(function FormDetail(
     const set = new Set(list);
     return Array.from(set);
   });
-  const formValuesChange = useMemoCallback(async (changedValues: FormValue) => {
+  const formValuesChange = useMemoCallback(async (changedValues: FormValue, allValues?) => {
     // 处理单个控件绑定的事件
     if (data.events && data.events.onchange) {
       // 处理响应表单事件，响应绑定的visible和reset

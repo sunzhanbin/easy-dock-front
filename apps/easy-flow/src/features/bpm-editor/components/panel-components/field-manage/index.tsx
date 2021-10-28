@@ -30,6 +30,7 @@ const FieldManage = ({ parentId, value, onChange }: ComProps) => {
       type,
       icon: baseInfo?.icon,
       canSubmit: type === 'DescText' ? false : true,
+      multiple: type === 'Checkbox',
     };
     const props: ConfigItem = { type, id };
     schema.forEach((item) => {
