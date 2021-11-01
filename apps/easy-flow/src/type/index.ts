@@ -126,7 +126,7 @@ export type serialRulesItem = {
 
 export type RuleOption = {
   type: keyof typeof SerialNumType
-} & { [key: string]: string | number | undefined }
+} & { [key: string]: any }
 
 export type FormFieldMap = {
   [k: string]: FormField;
@@ -256,4 +256,12 @@ export enum SerialNumType {
   createTime = '提交日期',
   fixedChars = '固定字符',
   fieldName = '表单字段',
+}
+
+export enum CountResetRules {
+  none = '不自动重置',
+  day = '每日重置',
+  week = '每周重置',
+  month = '每月重置',
+  year = '每年重置',
 }

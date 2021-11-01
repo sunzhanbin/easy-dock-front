@@ -1,9 +1,10 @@
-import { batchUpload, downloadFile as download } from '@/apis/file';
-import { ImageValue } from '@/components/basic-shop/basic-components/Image';
-import { AllComponentType, Datasource, DateField, fieldRule, FormField, SelectOptionItem } from '@/type';
-import { FieldAuthsMap } from '@/type/flow';
+import {batchUpload, downloadFile as download} from '@/apis/file';
+import {ImageValue} from '@/components/basic-shop/basic-components/Image';
+import {AllComponentType, Datasource, DateField, fieldRule, FormField, SelectOptionItem} from '@/type';
+import {FieldAuthsMap} from '@/type/flow';
 import moment from 'moment';
-import { runtimeAxios } from './axios';
+import {runtimeAxios} from './axios';
+import {DATE_DEFAULT_FORMAT} from "@utils/const";
 
 // 格式化单个条件value
 export function formatRuleValue(
@@ -11,7 +12,7 @@ export function formatRuleValue(
   field: FormField,
   fieldNext?: FormField
 ): { name: string | undefined; symbol: string; value?: string } {
-  const { symbol, value } = rule;
+  const {symbol, value} = rule;
   const name = field.label;
   const fieldType = field.type as string;
   const label = (rule.symbol && symbolMap[rule.symbol].label) || '';
@@ -576,3 +577,18 @@ type ExtendProps = {
 //   }
 //   return <Component {...props} />;
 // }
+
+export function getFieldValue(values: {
+  key: 'createTime' | 'fieldName' | 'fixedChars',
+  fieldValue?: string
+}) {
+  let tmp = {}
+  if (values.key === 'createTime') {
+    tmp = {format: DATE_DEFAULT_FORMAT}
+  } else if (values.key === 'fieldName') {
+    tmp = {fieldValue: values?.fieldValue}
+  } else if (values.key === 'fixedChars') {
+    tmp = {chars: ''}
+  }
+  return {...tmp, type: values?.key}
+}

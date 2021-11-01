@@ -143,7 +143,7 @@ const serialRules = {
     type: 'custom',
     rules: [{
       digitsNum: 5,
-      startValue: 0,
+      startValue: 1,
       resetDuration: 'none',
       type: "incNumber"
     }]
