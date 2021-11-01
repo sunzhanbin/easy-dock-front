@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useMemo, useState } from 'react';
+import React, { memo, useEffect, useMemo, useState, useCallback } from 'react';
 import { Col, Form, FormInstance, Row } from 'antd';
 import classNames from 'classnames';
 import { Rule } from 'antd/lib/form';
@@ -13,6 +13,10 @@ import styles from './index.module.scss';
 import { Loading } from '@common/components';
 import { DataConfig, ParamSchem } from '@/type/api';
 import _ from 'lodash';
+import PubSub from 'pubsub-js';
+import Container from './container';
+import {useContainerContext} from './context';
+import {convertFormRules, convertFieldRules} from './utils';
 
 type FieldsVisible = { [fieldId: string]: boolean };
 
@@ -57,6 +61,15 @@ const FormDetail = React.forwardRef(function FormDetail(
   const [compMaps, setCompMaps] = useState<CompMaps>({});
   const [showForm, setShowForm] = useState(false);
   const [configMap, setConfigMap] = useState<ConfigMap>({});
+
+  const comRules = useMemo(() => {
+    const formRules = convertFormRules(data.formRules);
+    const fieldRules = convertFieldRules(data.fieldRules);
+    return {
+      formRules,
+      fieldRules
+    }
+  }, [data.formRules, data.fieldRules]);
 
   const changeRuleList = useMemo<(FormChangeRule & { hasChanged: boolean })[]>(() => {
     if (!data.formRules) {
@@ -351,6 +364,13 @@ const FormDetail = React.forwardRef(function FormDetail(
     }
   }, [form, initRuleList, initialValue]);
 
+  const onValuesChange = useCallback((changeValue: any) => {
+    // formValuesChange(changeValue);
+    Object.entries(changeValue).map(([key, value]: any,) => {
+      PubSub.publish(key, value);
+    })
+  }, [])
+
   return (
     <Form
       className={classNames(styles.form, className)}
@@ -358,7 +378,7 @@ const FormDetail = React.forwardRef(function FormDetail(
       form={form}
       layout="vertical"
       autoComplete="off"
-      onValuesChange={formValuesChange}
+      onValuesChange={onValuesChange}
     >
       {loading && <Loading />}
       {data.layout.map((formRow, index) => {
@@ -386,34 +406,39 @@ const FormDetail = React.forwardRef(function FormDetail(
               }
               return (
                 <Col span={colSpace * 6} key={fieldId} className={styles.col}>
-                  <Form.Item
-                    key={fieldId}
-                    name={fieldName || fieldId}
-                    label={type !== 'DescText' ? <LabelContent label={label} desc={desc} /> : null}
-                    required={isRequired}
-                    rules={rules}
+                                    <Container 
+                    type={config.type} 
+                    name={fieldName} 
+                    form={form} 
+                    rules={{
+                      formRules: comRules.formRules[fieldName],
+                      fieldRules: comRules.fieldRules[fieldName]
+                    }}
                   >
-                    {compRender(
-                      config.type,
-                      Component,
-                      Object.assign({}, compProps, {
-                        disabled:
-                          readonly ||
-                          !(fieldsAuths[fieldName] || fieldsAuths[fieldId]) ||
-                          fieldsAuths[fieldName] === AuthType.View,
-                        flows,
-                        configMap,
-                        disabledDate: (v: any) => handleDisabledDate(v, compMaps[fieldId]),
-                      }),
-                      {
-                        datasource: datasource && (datasource[fieldName] || datasource[fieldId]),
-                        projectId,
-                        fieldName,
-                        fieldsAuths,
-                        readonly,
-                      },
-                    )}
-                  </Form.Item>
+                    <Form.Item
+                      key={fieldId}
+                      name={fieldName || fieldId}
+                      label={type !== 'DescText' ? <LabelContent label={label} desc={desc}/> : null}
+                      required={isRequired}
+                      rules={rules}
+                    >
+                      <CompRender 
+                        type={config.type}
+                        Component={Component}
+                        props={
+                          Object.assign({}, compProps, {
+                            disabled:
+                              readonly ||
+                              !(fieldsAuths[fieldName] || fieldsAuths[fieldId]) ||
+                              fieldsAuths[fieldName] === AuthType.View,
+                            flows,
+                          })
+                        }
+                        datasource={datasource && (datasource[fieldName] || datasource[fieldId])}
+                        projectId={projectId}
+                      />
+                    </Form.Item>
+                  </Container>
                 </Col>
               );
             })}
@@ -426,16 +451,36 @@ const FormDetail = React.forwardRef(function FormDetail(
 
 export default memo(FormDetail);
 
-function compRender(type: AllComponentType['type'], Component: any, props: any, extendProps: ExtendProps) {
-  const { datasource, projectId, fieldName, fieldsAuths, readonly } = extendProps;
-  if ((type === 'Select' || type === 'Radio' || type === 'Checkbox') && datasource) {
-    return <Component {...props} options={datasource} />;
-  }
-  if (type === 'Member') {
-    return <Component {...props} projectid={projectId} />;
-  }
-  if (type === 'Tabs') {
-    return <Component {...props} fieldName={fieldName} auth={fieldsAuths} readonly={readonly} />;
-  }
-  return <Component {...props} />;
+
+const CompRender = ({type, Component, props, datasource, projectId, ...rest}: 
+  { 
+    type: AllComponentType['type'],
+    Component: any,
+    props: any,
+    datasource?: Datasource[keyof Datasource],
+    projectId?: number,
+  }) => {
+
+  const containerContext = useContainerContext();
+
+  const componentProps = {
+    ...props,
+    ...containerContext
+  };
+
+  return(
+    <>
+     {
+      (() => {
+        if ((type === 'Select' || type === 'Radio' || type === 'Checkbox') && datasource) {
+          return <Component {...componentProps} {...rest} options={datasource} />;
+        }
+        if (type === 'Member') {
+          return <Component {...componentProps} {...rest} projectid={projectId} />;
+        }
+        return <Component {...componentProps} {...rest}/>;
+       })()
+     }
+    </>
+  )
 }
