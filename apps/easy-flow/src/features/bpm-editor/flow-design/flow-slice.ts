@@ -166,9 +166,9 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
           const list = component.props.components.map((com: any) => {
             const config = com.config;
             return {
-              id: config.id,
+              name: <string>`${item.config.label}·${config.label}`,
+              id: <string>item.config.fieldName || item.config.id,
               type: config.type,
-              name: `${item.config.label}·${config.label}`,
             };
           });
           fieldsTemplate.push(...list);

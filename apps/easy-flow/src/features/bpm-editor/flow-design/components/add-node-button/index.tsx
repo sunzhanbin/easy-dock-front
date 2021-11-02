@@ -18,12 +18,39 @@ function AddNodeButton(props: AddNodeButtonProps) {
   const { prevId, className } = props;
   const dispatch = useAppDispatch();
   const [showAddPopover, setShowAddPopover] = useState(false);
+  const [showAutoNode, setShowAutoNode] = useState<boolean>(false);
 
   const handleAddNode = useMemoCallback((type: AddableNode['type']) => {
     // 将业务逻辑放在redux里处理
     dispatch(addNode({ prevId, type }));
     setShowAddPopover(false);
+    showAutoNode && setShowAutoNode(false);
   });
+
+  const autoNodePopoverContent = useMemo(() => {
+    return (
+      <div className={styles['node-list']}>
+        <div
+          className={styles['push-data']}
+          onClick={() => {
+            handleAddNode(NodeType.AutoNode);
+          }}
+        >
+          <Icon type="geshiyouhua" />
+          <span>数据推送</span>
+        </div>
+        <div
+          className={styles['trigger-flow']}
+          onClick={() => {
+            handleAddNode(NodeType.AutoNode);
+          }}
+        >
+          <Icon type="geshiyouhua" />
+          <span>流程触发</span>
+        </div>
+      </div>
+    );
+  }, [handleAddNode]);
 
   const addPopoverContent = useMemo(() => {
     return (
@@ -47,13 +74,23 @@ function AddNodeButton(props: AddNodeButtonProps) {
           <span>添加抄送节点</span>
         </div>
 
-        <div onClick={() => handleAddNode(NodeType.AutoNode)}>
-          <Icon type="geshiyouhua" />
-          <span>添加自动节点</span>
-        </div>
+        <Popover
+          className={styles['auto-node']}
+          getPopupContainer={getPopupContainer}
+          placement="rightTop"
+          arrowContent={null}
+          visible={showAutoNode}
+          onVisibleChange={setShowAutoNode}
+          content={autoNodePopoverContent}
+        >
+          <div>
+            <Icon type="geshiyouhua" />
+            <span>添加自动节点</span>
+          </div>
+        </Popover>
       </div>
     );
-  }, [handleAddNode]);
+  }, [showAutoNode, autoNodePopoverContent, handleAddNode, getPopupContainer, setShowAutoNode]);
 
   return (
     <Popover

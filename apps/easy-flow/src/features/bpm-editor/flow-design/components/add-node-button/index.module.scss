@@ -51,6 +51,54 @@
         margin-right: 4px;
       }
     }
+    .auto-node {
+      position: relative;
+
+      & > div {
+        @include center('flex');
+
+        margin-bottom: 4px;
+        padding: 5px 8px;
+        line-height: 22px;
+        color: #181f43;
+        font-size: 14px;
+        font-weight: 400;
+        white-space: nowrap;
+        cursor: pointer;
+
+        &:hover {
+          background-color: rgba(#181f43, 0.04);
+        }
+      }
+      .node-list {
+        width: 100px;
+        & > div {
+          @include center('flex');
+
+          margin-bottom: 4px;
+          padding: 5px 8px;
+          line-height: 22px;
+          color: #181f43;
+          font-size: 14px;
+          font-weight: 400;
+          white-space: nowrap;
+          cursor: pointer;
+
+          &:hover {
+            background-color: rgba(#181f43, 0.04);
+          }
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+
+          svg {
+            font-size: 16px;
+            margin-right: 4px;
+          }
+        }
+      }
+    }
   }
 
   :global {
