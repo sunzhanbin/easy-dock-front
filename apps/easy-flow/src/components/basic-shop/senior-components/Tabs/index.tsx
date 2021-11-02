@@ -1,5 +1,5 @@
 import { memo, useState, useRef, useEffect } from 'react';
-import { Tabs as TabList, Modal, Form, Input } from 'antd';
+import { Tabs as TabList, Modal, Form, Input, FormInstance } from 'antd';
 import { Icon } from '@common/components';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import styles from './index.module.scss';
@@ -17,13 +17,14 @@ type PaneType = {
 interface TabProps {
   fieldName: string;
   auth: FieldAuthsMap;
+  formInstance?: FormInstance;
   components?: CompConfig[];
   readonly?: boolean;
   value?: any;
   onChange?: (value: this['value']) => void;
 }
 
-const Tabs = ({ components = [], fieldName, auth, value, readonly, onChange }: TabProps) => {
+const Tabs = ({ components = [], fieldName, auth, formInstance, value, readonly, onChange }: TabProps) => {
   const [form] = Form.useForm();
   const tabRef = useRef<HTMLDivElement>(null);
   const content = useMemoCallback((key: string) => {
@@ -36,9 +37,9 @@ const Tabs = ({ components = [], fieldName, auth, value, readonly, onChange }: T
     setShowModal(true);
   });
   const handleRemove = useMemoCallback((key: string) => {
-    const list = [...panes];
-    const index = list.findIndex((pane) => pane.key === key);
-    const paneList = list.filter((v) => v.key !== key);
+    const list = formInstance?.getFieldsValue()[fieldName] || [...panes];
+    const index = list.findIndex((pane: any) => pane.key === key);
+    const paneList = list.filter((v: any) => v.key !== key);
     setPanes(paneList);
     onChange && onChange(paneList);
     if (activeKey === list[index].key) {
@@ -59,7 +60,8 @@ const Tabs = ({ components = [], fieldName, auth, value, readonly, onChange }: T
   const handleOk = useMemoCallback(() => {
     form.validateFields().then((values) => {
       const { __title__ } = values;
-      const list = [...panes];
+      // 为了解决tabs回显问题,所以使用了formInstance
+      const list = formInstance?.getFieldsValue()[fieldName] || [...panes];
       const key = String(list.length);
       list.push({ key, __title__, content });
       setPanes(list);

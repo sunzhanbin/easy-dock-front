@@ -7,8 +7,7 @@ import componentSchema from '@/config/components';
 import DraggableOption from './draggable-option';
 import styles from './index.module.scss';
 import { CompConfig, ConfigItem, FormField, SchemaItem } from '@/type';
-import { useAppSelector, useAppDispatch } from '@/app/hooks';
-import { configSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
+import { useAppDispatch } from '@/app/hooks';
 import { setSubComponentConfig } from '@/features/bpm-editor/form-design/formdesign-slice';
 interface ComProps {
   parentId: string;
@@ -22,7 +21,7 @@ const FieldManage = ({ parentId, value, onChange }: ComProps) => {
   const dispatch = useAppDispatch();
   const handleAddComponent = useMemoCallback((type: FormField['type']) => {
     const list = value ? [...value] : [];
-    const id = uniqueId(`${type}_`);
+    const id = uniqueId(`${parentId}·${type}_`);
     const { baseInfo, config: schema } = componentList.find((v) => v.baseInfo.type === type) as SchemaItem;
     const config: ConfigItem = {
       id,

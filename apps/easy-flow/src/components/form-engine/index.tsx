@@ -34,6 +34,7 @@ type ExtendProps = {
   datasource: Datasource[keyof Datasource];
   fieldName: string;
   fieldsAuths: FieldAuthsMap;
+  formInstance?: FormInstance;
   projectId?: number;
   readonly?: boolean;
 };
@@ -407,6 +408,7 @@ const FormDetail = React.forwardRef(function FormDetail(
                       }),
                       {
                         datasource: datasource && (datasource[fieldName] || datasource[fieldId]),
+                        formInstance: form,
                         projectId,
                         fieldName,
                         fieldsAuths,
@@ -427,7 +429,7 @@ const FormDetail = React.forwardRef(function FormDetail(
 export default memo(FormDetail);
 
 function compRender(type: AllComponentType['type'], Component: any, props: any, extendProps: ExtendProps) {
-  const { datasource, projectId, fieldName, fieldsAuths, readonly } = extendProps;
+  const { datasource, projectId, fieldName, formInstance, fieldsAuths, readonly } = extendProps;
   if ((type === 'Select' || type === 'Radio' || type === 'Checkbox') && datasource) {
     return <Component {...props} options={datasource} />;
   }
@@ -435,7 +437,9 @@ function compRender(type: AllComponentType['type'], Component: any, props: any, 
     return <Component {...props} projectid={projectId} />;
   }
   if (type === 'Tabs') {
-    return <Component {...props} fieldName={fieldName} auth={fieldsAuths} readonly={readonly} />;
+    return (
+      <Component {...props} fieldName={fieldName} auth={fieldsAuths} readonly={readonly} formInstance={formInstance} />
+    );
   }
   return <Component {...props} />;
 }
