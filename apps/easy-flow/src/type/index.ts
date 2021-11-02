@@ -84,7 +84,6 @@ export type DataBaseField = {
 };
 
 export type OptionMode = 'custom' | 'subapp' | 'interface';
-export type OptionSource = 'custom' | 'fromData';
 export type OptionItem = {
   key: string;
   value: string;
@@ -92,7 +91,7 @@ export type OptionItem = {
 
 export type LabelMap = {
   key: string
-  label: string | number | undefined,
+  label: string,
   value: string
 }
 export type ColumnsItem = {
@@ -110,9 +109,7 @@ export type SelectOptionItem = {
 
 export type SelectColumnsItem = {
   id: string | undefined;
-  type: OptionSource;
   columns?: ColumnsItem[];
-  fieldName?: LabelMap[];
   formKeyId?: string;
 };
 

@@ -1,7 +1,7 @@
 import {memo, useCallback, useState, useEffect, Fragment} from 'react';
 import {Select, Input, Form, Button} from 'antd';
 import {axios} from '@utils';
-import {ColumnsItem, OptionItem, OptionSource, SelectColumnsItem} from '@/type';
+import {ColumnsItem, LabelMap, OptionItem, SelectColumnsItem} from '@/type';
 import {Icon} from '@common/components';
 import {useAppSelector} from '@/app/hooks';
 import {subAppSelector} from '@/features/bpm-editor/form-design/formzone-reducer';
@@ -21,26 +21,23 @@ interface editProps {
 const SelectColumns = (props: editProps) => {
   const {id, value, onChange} = props;
   const {appId, id: subAppId} = useAppSelector(subAppSelector);
-  const [type, setType] = useState<OptionSource>(value?.type || 'fromData');
   const [formList, setFormList] = useState<(OptionItem & { versionId: number })[]>([]);
   const [formKey, setFormKey] = useState<string>(value?.formKeyId || '');
-  const [fieldList, setFieldList] = useState<OptionItem[]>([]);
-  const [fieldKey, setFieldKey] = useState(value?.fieldName);
+  const [fieldList, setFieldList] = useState<LabelMap[]>([]);
   const [columns, setColumns] = useState<ColumnsItem[]>(value?.columns || []);
   const [addDisable, setAddDisable] = useState(false);
 
   // 新增列
   const addItem = useCallback(() => {
     const list: ColumnsItem[] = [...columns];
-    const filterItem = fieldKey?.find((item) => !list.find(cur => cur.key === item.key));
-    if (!filterItem || typeof filterItem !== 'object') return
-    const {key} = filterItem
-    list.push({title: '', dataIndex: key, key})
+    list.push({title: '', dataIndex: '', key: new Date().getTime() + ''})
     setColumns(list);
-    setAddDisable(!filterItem)
     onChange && onChange({
-      type: 'fromData', id, formKeyId: formKey, fieldName: fieldKey, columns: list
+      id, formKeyId: formKey, columns: list
     });
+    if (list.length === fieldList.length) {
+      setAddDisable(true)
+    }
   }, [columns, onChange]);
 
   // 删除列
@@ -49,7 +46,7 @@ const SelectColumns = (props: editProps) => {
     list.splice(index, 1);
     setColumns(list);
     setAddDisable(false)
-    onChange && onChange({type: 'fromData', id, formKeyId: formKey, fieldName: fieldKey, columns: list});
+    onChange && onChange({id, formKeyId: formKey, columns: list});
   });
 
   // 拖拽列
@@ -59,203 +56,113 @@ const SelectColumns = (props: editProps) => {
     list[sourceIndex] = list[targetIndex];
     list[targetIndex] = tmp;
     setColumns(list);
-    onChange && onChange({type: 'fromData', id, formKeyId: formKey, fieldName: fieldKey, columns: list});
+    onChange && onChange({id, formKeyId: formKey, columns: list});
   });
 
   // 修改表头对应的字段和字段名称
-  const handleChangeColumn = useMemoCallback((type: string, value: string, index: number) => {
+  const handleChangeColumn = useMemoCallback((type: string, value: { key: string, label: string }, index: number) => {
     const list = [...columns]
     if (type === 'select') {
       list[index] = {
-        title: list[index].title,
-        dataIndex: value,
-        key: value,
+        title: value?.label,
+        dataIndex: value?.key,
+        key: value.key,
       }
     } else if (type === 'blur') {
-      list[index] = {
-        title: value,
-        dataIndex: list[index].dataIndex,
-        key: list[index].key,
-      }
+      // list[index] = {
+      //   title: value,
+      //   dataIndex: list[index].dataIndex,
+      //   key: list[index].key,
+      // }
     }
     setColumns(list)
-    onChange && onChange({type: 'fromData', id, formKeyId: formKey, fieldName: fieldKey, columns: list});
+    onChange && onChange({id, formKeyId: formKey, columns: list});
   });
 
   const fetchFieldNames = useCallback((formList, selectedKey: string) => {
-    // todo 
-    // let versionId: number = 0;
-    // for (let i = 0, len = formList.length; i < len; i++) {
-    //   if (formList[i].key === selectedKey) {
-    //     versionId = formList[i].versionId;
-    //     break;
-    //   }
-    // }
-    // if (versionId) {
-    //   axios
-    //     .get(`/form/version/${versionId}/components`)
-    //     .then((res) => {
-    //       const list = res.data
-    //         .filter((item: { unique: boolean }) => item.unique)
-    //         .map((item: { field: string; name: string }) => ({key: item.field, value: item.name}));
-    //       setFieldList(list);
-    //     })
-    //     .catch(() => {
-    //       setFieldList([]);
-    //     });
-    // }
     setFieldList([
-      {key: 'key1', value: '字段1'},
-      {key: 'key2', value: '字段2'},
-      {key: 'key3', value: '字段3'},
+      {key: 'key1', value: 'key1', label: '字段1'},
+      {key: 'key2', value: 'key2', label: '字段2'},
+      {key: 'key3', value: 'key3', label: '字段3'},
     ])
   }, []);
 
   // 切换接口
   const handleChangeApi = useMemoCallback(
-    (e) => {
-      setFormKey(e as string);
-      setFieldKey([]);
+    (selectedKey: string) => {
+      setFormKey(selectedKey);
       setColumns([])
-      fetchFieldNames(formList, e);
-      onChange && onChange({type, id, formKeyId: e, fieldName: [], columns: []});
+      fetchFieldNames(formList, selectedKey);
+      onChange && onChange({id, formKeyId: selectedKey, columns: []});
     });
 
-  // 切换接口下对应的字段
-  const handleChangeField = useMemoCallback((e) => {
-    setFieldKey(e);
-    const list: ColumnsItem[] = [...columns];
-    if (!columns.every(item => e.find((cur: { key: string; }) => cur.key === item.key))) {
-      const index = list.findIndex(item => !e.includes(item.key))
-      list.splice(index, 1);
-      setColumns(list);
-    }
-    onChange && onChange({type, id, formKeyId: formKey, fieldName: e, columns: list});
-  });
-
-  // 切换数据来源
-  const handleChangeType = useMemoCallback((type: OptionSource) => {
-    setType(type);
-    if (type === 'custom' && columns.length > 0) {
-      // todo
-      // onChange && onChange({type, columns: content});
-    } else if (type === 'fromData' && formKey && fieldKey) {
-      onChange && onChange({type, id, formKeyId: formKey, fieldName: fieldKey, columns});
-    }
-  });
-
-  const
-    renderContent = useMemoCallback(() => {
-      if (type === 'custom') {
-        return (
-          <Input/>
-        );
-      } else if (type === 'fromData') {
-        return (
-          <>
-            <Select
-              placeholder="选择接口"
-              className={styles.dict_content}
-            size="large"
-            suffixIcon={<Icon type="xiala"/>}
-            onChange={handleChangeApi}
-            {...(formKey ? {defaultValue: formKey} : null)}
-          >
-            {formList.map(({key, value}) => (
-              <Option value={key} key={key}>
-                {value}
-              </Option>
-            ))}
-          </Select>
-          {formKey && (
-            <Select
-              placeholder="选择字段"
-              mode="multiple"
-              labelInValue={true}
-              className={styles.dict_content}
-              size="large"
-              suffixIcon={<Icon type="xiala"/>}
-              value={fieldKey}
-              onChange={handleChangeField}
-            >
-              {fieldList.map(({key, value}) => (
-                <Option value={key} key={key}>
-                  {value}
-                </Option>
+  const renderContent = useMemoCallback(() => {
+    return (
+      <>
+        <Select
+          placeholder="选择流程类型"
+          className={styles.dict_content}
+          size="large"
+          suffixIcon={<Icon type="xiala"/>}
+          onChange={handleChangeApi}
+          {...(formKey ? {defaultValue: formKey} : null)}
+        >
+          {formList.map(({key, value}) => (
+            <Option value={key} key={key}>
+              {value}
+            </Option>
+          ))}
+        </Select>
+        {formKey &&
+        <div>
+          <Form.Item className={styles.form} name="columns" label="显示字段">
+            <div className={styles.custom_list}>
+              {columns?.map((item, index: number) => (
+                <Fragment key={item.key}>
+                  <DraggableOption
+                    index={index}
+                    data={item}
+                    columns={columns}
+                    fieldList={fieldList}
+                    onChange={handleChangeColumn}
+                    onDrag={handleDrag}
+                    onDelete={deleteItem}
+                  />
+                </Fragment>
               ))}
-            </Select>
-          )}
-          {fieldKey &&
-          <div>
-            <Form.Item className={styles.form} name="columns" label="自定义表头字段">
-              <div className={styles.custom_list}>
-                {columns?.map((item, index: number) => (
-                  <Fragment key={item.key}>
-                    <DraggableOption
-                      index={index}
-                      data={item}
-                      columns={fieldKey}
-                      onChange={handleChangeColumn}
-                      onDrag={handleDrag}
-                      onDelete={deleteItem}
-                    />
-                  </Fragment>
-                ))}
-                <Button className={styles.add_custom} onClick={addItem} disabled={addDisable}>
-                  <Icon className={styles.iconfont} type="xinzengjiacu"/>
-                  <span>添加表头</span>
-                </Button>
-              </div>
-            </Form.Item>
-          </div>
-          }
-        </>
-      );
-    }
-    return null;
+              <Button className={styles.add_custom} onClick={addItem} disabled={addDisable}>
+                <Icon className={styles.iconfont} type="xinzengjiacu"/>
+                <span>添加表头</span>
+              </Button>
+            </div>
+          </Form.Item>
+        </div>
+        }
+      </>
+    );
   });
 
   useEffect(() => {
-    if (type === 'fromData') {
-      axios
-        .get(`/subapp/${appId}/list/all/deployed`)
-        .then((res) => {
-          const list = res.data
-            .filter((app: { id: number }) => app.id !== subAppId)
-            .map((app: { name: string; id: number; version: { id: number } }) => ({
-              key: app.id,
-              value: app.name,
-              versionId: app.version.id,
-            }));
-          setFormList(list);
-          return Promise.resolve(list);
-        })
-        .then((list) => {
-          fetchFieldNames(list, formKey);
-        });
-    }
-  }, [appId, subAppId, type, formKey, fetchFieldNames]);
+    axios
+      .get(`/subapp/${appId}/list/all/deployed`)
+      .then((res) => {
+        const list = res.data
+          .filter((app: { id: number }) => app.id !== subAppId)
+          .map((app: { name: string; id: number; version: { id: number } }) => ({
+            key: app.id,
+            value: app.name,
+            versionId: app.version.id,
+          }));
+        setFormList(list);
+        return Promise.resolve(list);
+      })
+      .then((list) => {
+        fetchFieldNames(list, formKey);
+      });
+  }, [appId, subAppId, formKey, fetchFieldNames]);
 
   return (
     <div className={styles.container}>
-      <div className={styles.title}>
-        <div
-          className={classNames(styles.custom, type === 'custom' ? styles.active : '')}
-          onClick={() => {
-            handleChangeType('custom');
-          }}
-        >
-          自定义数据
-        </div>
-        <div
-          className={classNames(styles.subapp, type === 'fromData' ? styles.active : '')}
-          onClick={() => {
-            handleChangeType('fromData');
-          }}
-        >
-          从XXX获取数据
-        </div>
-      </div>
       <div className={styles.content}>{renderContent()}</div>
     </div>
   );

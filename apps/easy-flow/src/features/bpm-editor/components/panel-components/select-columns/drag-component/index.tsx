@@ -4,17 +4,18 @@ import useMemoCallback from "@common/hooks/use-memo-callback";
 import styles from "@/features/bpm-editor/components/panel-components/select-columns/index.module.scss";
 import {Input, Select, Tooltip} from "antd";
 import {Icon} from "@common/components";
-import {LabelMap} from '@type'
+import {LabelMap, OptionItem} from '@type'
 const {Option} = Select;
 
 interface DraggableOptionProps {
   data: { [key: string]: string };
 
   columns: any;
+  fieldList: LabelMap[];
 
   onDelete(index: this['index']): void;
 
-  onChange(type: string, value: string, index: this['index']): void;
+  onChange(type: string, value: any, index: this['index']): void;
 
   onDrag(sourceIndex: number, targetIndex: number): void;
 
@@ -22,9 +23,16 @@ interface DraggableOptionProps {
 }
 
 function DraggableOption(props: DraggableOptionProps) {
-  const {onDelete, data, onChange, onDrag, index, columns} = props;
+  const {onDelete, data, onChange, onDrag, index, columns, fieldList} = props;
   const dragWrapperRef = useRef<HTMLDivElement>(null);
   const [canMove, setCanMove] = useState<boolean>(false);
+
+  // const columnsKey = columns.map((item: { key: string; }) => item.key)
+  // const filterList = fieldList.filter((item) => !columnsKey.includes(item.key))
+
+  useEffect(() => {
+    console.log(data, 'data----------------')
+  }, [data])
   const [, drag] = useDrag(
     () => ({
       type: 'option',
@@ -91,15 +99,16 @@ function DraggableOption(props: DraggableOptionProps) {
         <Select
           className={styles.columns_select}
           suffixIcon={<Icon type="xiala"/>}
+          labelInValue
           onChange={handleChange}
-          {...(data.key ? {defaultValue: data.key} : null)}
         >
-
-          {(columns as LabelMap[])?.map((item) => (
-            <Option value={item.key} key={item.key}>
-              {item.label}
-            </Option>
-          ))}
+          {/*{(fieldList as LabelMap[])?.map((item) => (*/}
+          {/*  <Option key={item.key} value={item.value}>*/}
+          {/*    {item.label}*/}
+          {/*  </Option>*/}
+          {/*))}*/}
+          <Option value="jack">Jack (100)</Option>
+          <Option value="lucy">Lucy (101)</Option>
         </Select>
         <Input className={styles.columns_name} size={'middle'} defaultValue={data.title} onChange={handleInputBlur}/>
       </div>

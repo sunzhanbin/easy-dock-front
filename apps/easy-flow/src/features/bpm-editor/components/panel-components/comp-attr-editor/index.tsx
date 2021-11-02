@@ -1,7 +1,6 @@
 import { memo, useEffect, Fragment, useMemo, ReactNode } from 'react';
 import { Form, Select, Input, Switch, Radio, Checkbox, InputNumber } from 'antd';
 import SelectOptionList from '../select-option-list';
-import ApiOptionList from '../api-option-list';
 import SelectDefaultOption from '../select-default-option';
 import DefaultDate from '../default-date';
 import Editor from '../rich-text';
@@ -69,7 +68,6 @@ const componentMap: { [k: string]: (props: { [k: string]: any }) => ReactNode } 
   serialRules: (props) => <SerialRules id={props.componentId}/>,
   selectColumns: (props) => <SelectColumns id={props.componentId}/>,
   SelectOptionList: (props) => <SelectOptionList id={props.componentId}/>,
-  apiOptionList: (props) => <ApiOptionList id={props.componentId}/>,
   SelectDefaultOption: (props) => <SelectDefaultOption id={props.componentId}/>,
   InputNumber: (props) => (
     <InputNumber

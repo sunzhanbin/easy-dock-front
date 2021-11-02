@@ -102,7 +102,6 @@ const flows = {
   key: 'flows',
   label: 'flowsData',
   defaultValue: {
-    type: 'fromData',
     data: [
       { key: 'key1', value: '字段1' },
       { key: 'key2', value: '字段2' },
@@ -112,26 +111,6 @@ const flows = {
   type: 'selectColumns',
   direction: 'vertical',
   required: true,
-  isProps: false,
-};
-// const showPage = {
-//   key: 'showPage',
-//   label: '是否分页',
-//   defaultValue: false,
-//   type: 'Switch',
-//   direction: 'vertical',
-//   required: false,
-//   isProps: false,
-// };
-
-const pageParams = {};
-const apiConfig = {
-  key: 'apiConfig',
-  label: '失焦时选项内容',
-  defaultValue: '',
-  type: 'apiOptionList',
-  direction: 'vertical',
-  required: false,
   isProps: false,
 };
 
@@ -243,7 +222,7 @@ const components = {
       version: '1.0',
       type: 'Input',
     },
-    config: [fieldName, getLabel('单行文本'), desc, getDefaultValue('Input'), unique, apiConfig, colSpace],
+    config: [fieldName, getLabel('单行文本'), desc, getDefaultValue('Input'), unique, colSpace],
   },
   Textarea: {
     baseInfo: {

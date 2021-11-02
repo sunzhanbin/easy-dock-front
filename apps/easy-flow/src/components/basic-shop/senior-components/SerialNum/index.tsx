@@ -9,6 +9,7 @@ const SerialNumComponent = (props: InputProps & { unique: boolean }) => {
       size: 'large',
       placeholder: '自动生成无需填写',
       onChange: onChange,
+      disabled: true
     };
     if (defaultValue) {
       prop.defaultValue = defaultValue as string;
@@ -16,9 +17,10 @@ const SerialNumComponent = (props: InputProps & { unique: boolean }) => {
     const result = Object.assign({}, props, prop);
     delete result.fieldName;
     delete result.colSpace;
+    delete result.serialRules;
     return result;
   }, [defaultValue, unique, props, onChange]);
-  return <Input key={defaultValue as string} disabled={true}/>;
+  return <Input key={defaultValue as string} {...propList}/>;
 };
 
 export default memo(SerialNumComponent);
