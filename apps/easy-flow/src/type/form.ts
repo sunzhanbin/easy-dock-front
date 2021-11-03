@@ -54,6 +54,13 @@ export type SelectOptionItem = {
   apiconfig?: DataConfig;
 };
 
+export type NumberDefaultOption = {
+  id: string | undefined,
+  type: string,
+  customData?: string,
+  calculateData?: any
+}
+
 export type RadioField = {
   type: 'Radio';
   dataSource: SelectOptionItem;

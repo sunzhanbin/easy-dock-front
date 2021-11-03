@@ -20,6 +20,7 @@ const TextareaComponent = (props: InputNumberProps) => {
     const result = Object.assign({}, props, prop);
     delete result.fieldName;
     delete result.colSpace;
+    delete result.defaultNumber;
     return result;
   }, [defaultValue, props, onChange]);
 

@@ -16,6 +16,7 @@ import useMemoCallback from '@common/hooks/use-memo-callback';
 import { debounce, reverse } from 'lodash';
 import SelectColumns from '../select-columns';
 import SerialRules from '../serial-rules';
+import NumberOption from '../number-options';
 
 const { Option } = Select;
 
@@ -65,6 +66,7 @@ const componentMap: { [k: string]: (props: { [k: string]: any }) => ReactNode } 
   ColSpace: (props) => <Radio.Group options={props.options} optionType="button"/>,
   Checkbox: (props) => <Checkbox>{props.label}</Checkbox>,
   Switch: () => <Switch/>,
+  NumberOption: (props) => <NumberOption id={props.componentId}/>,
   serialRules: (props) => <SerialRules id={props.componentId}/>,
   selectColumns: (props) => <SelectColumns id={props.componentId}/>,
   SelectOptionList: (props) => <SelectOptionList id={props.componentId}/>,
@@ -116,6 +118,8 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
   });
   const handleChange = useMemoCallback(
     debounce(() => {
+      console.log(form.getFieldsValue(), 'form.getFieldsValue()')
+
       onFinish(form.getFieldsValue());
     }, 66),
   );
