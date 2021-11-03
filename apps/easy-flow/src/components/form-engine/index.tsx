@@ -18,7 +18,7 @@ type FieldsVisible = { [fieldId: string]: boolean };
 
 interface FormProps {
   data: FormMeta;
-  fieldsAuths: FieldAuthsMap;
+  fieldsAuths: any;
   initialValue: { [key: string]: any };
   readonly?: boolean;
   className?: string;
@@ -411,7 +411,7 @@ const FormDetail = React.forwardRef(function FormDetail(
                         formInstance: form,
                         projectId,
                         fieldName,
-                        fieldsAuths,
+                        fieldsAuths: fieldsAuths[fieldName],
                         readonly,
                       },
                     )}

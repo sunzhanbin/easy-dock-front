@@ -255,17 +255,29 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
           }
 
           const fieldsAuths: FieldAuthsMap = {};
-          console.info(fieldsTemplate, 'fieldsTemplate');
           // 舍弃冗余字段
           fieldsTemplate.forEach((field) => {
-            
-            if (node.fieldsAuths && node.fieldsAuths[field.id] !== undefined) {
-              fieldsAuths[field.id] = node.fieldsAuths[field.id];
+            const { id, parentId } = field;
+            // Tabs等有子组件的权限需要有层级区分,为以下这种形式{fieldsAuths:{Input_1:1,Tabs_2:{Radio:2,Checkbox:1}}}
+            if (parentId) {
+              fieldsAuths[parentId] = fieldsAuths[parentId] || {};
+              if (node.fieldsAuths && node.fieldsAuths[parentId]) {
+                if ((node.fieldsAuths[parentId] as FieldAuthsMap)[id] !== undefined) {
+                  (fieldsAuths[parentId] as FieldAuthsMap)[id] = (node.fieldsAuths[parentId] as FieldAuthsMap)[id];
+                } else {
+                  (fieldsAuths[parentId] as FieldAuthsMap)[id] = AuthType.View;
+                }
+              } else {
+                (fieldsAuths[parentId] as FieldAuthsMap)[id] = AuthType.View;
+              }
+              return;
+            }
+            if (node.fieldsAuths && node.fieldsAuths[id] !== undefined) {
+              fieldsAuths[id] = node.fieldsAuths[id];
             } else {
-              fieldsAuths[field.id] = AuthType.View;
+              fieldsAuths[id] = AuthType.View;
             }
           });
-
           node.fieldsAuths = fieldsAuths;
         } else if (node.type === NodeType.BranchNode) {
           node.branches = node.branches.map((branch) => {

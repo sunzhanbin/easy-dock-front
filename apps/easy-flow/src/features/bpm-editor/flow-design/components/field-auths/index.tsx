@@ -107,7 +107,6 @@ function FieldAuths(props: FieldAuthsProps) {
     let totalAuth: FieldAuth['auth'] = 0;
     // 统计只能有AuthType.View的字段总数
     let viewTypeNum = 0;
-
     templates.forEach((field) => {
       let fieldauth: AuthType;
 
@@ -115,8 +114,8 @@ function FieldAuths(props: FieldAuthsProps) {
         viewTypeNum++;
       }
 
-      if (value && value[field.id] in AuthType) {
-        fieldauth = value[field.id];
+      if (value && (value[field.id] as AuthType) in AuthType) {
+        fieldauth = value[field.id] as AuthType;
       } else {
         fieldauth = AuthType.View;
       }
@@ -170,7 +169,13 @@ function FieldAuths(props: FieldAuthsProps) {
 
   const handleFieldChange = useMemoCallback((field: FieldAuth) => {
     if (!onChange) return;
-
+    const template = templates.find((v) => v.id === field.id);
+    const parentId = template?.parentId;
+    if (parentId && value) {
+      const parentAuth = Object.assign({}, value[parentId], { [field.id]: field.auth });
+      onChange(Object.assign({}, value, { [parentId]: parentAuth }));
+      return;
+    }
     onChange(Object.assign({}, value, { [field.id]: field.auth }));
   });
 
@@ -179,7 +184,6 @@ function FieldAuths(props: FieldAuthsProps) {
   const handleTotalChange = useMemoCallback((field: FieldAuth) => {
     const { auth } = field;
     const newValue = { ...value };
-
     templates.forEach((field) => {
       if (field.type === 'DescText') {
         newValue[field.id] = Math.min(auth, AuthType.View);
@@ -187,7 +191,6 @@ function FieldAuths(props: FieldAuthsProps) {
         newValue[field.id] = auth;
       }
     });
-
     if (onChange) {
       onChange(newValue);
     }
@@ -205,6 +208,13 @@ function FieldAuths(props: FieldAuthsProps) {
       />
 
       {templates.map((field) => {
+        const { id, parentId } = field;
+        let fieldAuth: FieldAuth = valueMaps[id];
+        if (parentId && value && value[parentId] !== undefined) {
+          fieldAuth = { id, auth: (value[parentId] as FieldAuthsMap)[id] as AuthType };
+        } else {
+          fieldAuth = valueMaps[id];
+        }
         return (
           <FieldRow
             label={field.name || '描述文字'}
@@ -215,7 +225,7 @@ function FieldAuths(props: FieldAuthsProps) {
             })}
             max={field.type === 'DescText' ? 1 : max}
             key={field.id}
-            value={valueMaps[field.id]}
+            value={fieldAuth}
             onChange={handleFieldChange}
           />
         );
