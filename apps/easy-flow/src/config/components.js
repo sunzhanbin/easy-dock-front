@@ -133,23 +133,6 @@ const serialRules = {
   isProps: false,
 }
 
-// 0
-// digitsNum: 5
-// fixedLength: true
-// resetDuration: "none"
-// startValue: 12
-// type: "incNumber"
-// 1: {type: "createTime", format: "yyyyMMdd", formatType: "preset"}
-// format: "yyyyMMdd"
-// formatType: "preset"
-// type: "createTime"
-// 2: {type: "fixedChars", chars: "CC"}
-// chars: "CC"
-// type: "fixedChars"
-// 3: {type: "widget", widgetName: "_widget_1504835294416"}
-// type: "widget"
-// widgetName: "_widget_1504835294416"
-
 const format = {
   key: 'format',
   defaultValue: 'YYYY-MM-DD',
@@ -212,6 +195,19 @@ const fieldManage = {
   required: false,
   isProps: true,
 };
+
+const numberOption = {
+  key: 'defaultNumber',
+  label: '默认值',
+  defaultValue: {
+      type: 'custom',
+      data: ''
+    },
+    type: 'NumberOption',
+    direction: 'vertical',
+    required: false,
+    isProps: false,
+}
 
 const components = {
   Input: {
@@ -277,7 +273,7 @@ const components = {
       getLabel('日期'),
       desc,
       format,
-      notSelectPassed,
+//       notSelectPassed,
       getDefaultValue('DefaultDate', '选择日期'),
       colSpace,
     ],
@@ -290,7 +286,7 @@ const components = {
       version: '1.0',
       type: 'InputNumber',
     },
-    config: [fieldName, getLabel('数字'), desc, getDefaultValue('InputNumber'), colSpace],
+    config: [fieldName, getLabel('数字'), numberOption, desc, getDefaultValue('InputNumber'), colSpace],
   },
   DescText: {
     baseInfo: {
