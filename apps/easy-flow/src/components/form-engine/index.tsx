@@ -15,8 +15,7 @@ import { DataConfig, ParamSchem } from '@/type/api';
 import _ from 'lodash';
 import PubSub from 'pubsub-js';
 import Container from './container';
-import {useContainerContext} from './context';
-import {convertFormRules, convertFieldRules} from './utils';
+import {convertFormRules} from './utils';
 
 type FieldsVisible = { [fieldId: string]: boolean };
 
@@ -64,10 +63,9 @@ const FormDetail = React.forwardRef(function FormDetail(
 
   const comRules = useMemo(() => {
     const formRules = convertFormRules(data.formRules);
-    const fieldRules = convertFieldRules(data.fieldRules);
+    console.log('formRules', formRules)
     return {
       formRules,
-      fieldRules
     }
   }, [data.formRules, data.fieldRules]);
 
@@ -367,7 +365,7 @@ const FormDetail = React.forwardRef(function FormDetail(
   const onValuesChange = useCallback((changeValue: any) => {
     // formValuesChange(changeValue);
     Object.entries(changeValue).map(([key, value]: any,) => {
-      PubSub.publish(key, value);
+      PubSub.publish(`${key}-change`, value);
     })
   }, [])
 
@@ -406,14 +404,11 @@ const FormDetail = React.forwardRef(function FormDetail(
               }
               return (
                 <Col span={colSpace * 6} key={fieldId} className={styles.col}>
-                                    <Container 
+                  <Container 
                     type={config.type} 
-                    name={fieldName} 
+                    fieldName={fieldName} 
                     form={form} 
-                    rules={{
-                      formRules: comRules.formRules[fieldName],
-                      fieldRules: comRules.fieldRules[fieldName]
-                    }}
+                    rules={comRules.formRules[fieldName]}
                   >
                     <Form.Item
                       key={fieldId}
@@ -452,7 +447,7 @@ const FormDetail = React.forwardRef(function FormDetail(
 export default memo(FormDetail);
 
 
-const CompRender = ({type, Component, props, datasource, projectId, ...rest}: 
+const CompRender = React.memo(({type, Component, props, datasource, projectId, ...rest}: 
   { 
     type: AllComponentType['type'],
     Component: any,
@@ -461,26 +456,19 @@ const CompRender = ({type, Component, props, datasource, projectId, ...rest}:
     projectId?: number,
   }) => {
 
-  const containerContext = useContainerContext();
-
-  const componentProps = {
-    ...props,
-    ...containerContext
-  };
-
   return(
     <>
      {
       (() => {
         if ((type === 'Select' || type === 'Radio' || type === 'Checkbox') && datasource) {
-          return <Component {...componentProps} {...rest} options={datasource} />;
+          return <Component {...props} {...rest} options={datasource} />;
         }
         if (type === 'Member') {
-          return <Component {...componentProps} {...rest} projectid={projectId} />;
+          return <Component {...props} {...rest} projectid={projectId} />;
         }
-        return <Component {...componentProps} {...rest}/>;
+        return <Component {...props} {...rest}/>;
        })()
      }
     </>
   )
-}
+})
