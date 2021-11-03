@@ -120,18 +120,20 @@ const serialRules = {
   label: '编号规则',
   defaultValue: {
     type: 'custom',
-    rules: [{
-      digitsNum: 5,
-      startValue: 1,
-      resetDuration: 'none',
-      type: "incNumber"
-    }]
+    rules: [
+      {
+        digitsNum: 5,
+        startValue: 1,
+        resetDuration: 'none',
+        type: 'incNumber',
+      },
+    ],
   },
   type: 'serialRules',
   direction: 'vertical',
   required: true,
   isProps: false,
-}
+};
 
 const format = {
   key: 'format',
@@ -200,14 +202,14 @@ const numberOption = {
   key: 'defaultNumber',
   label: '默认值',
   defaultValue: {
-      type: 'custom',
-      data: ''
-    },
-    type: 'NumberOption',
-    direction: 'vertical',
-    required: false,
-    isProps: false,
-}
+    type: 'custom',
+    data: '',
+  },
+  type: 'NumberOption',
+  direction: 'vertical',
+  required: false,
+  isProps: false,
+};
 
 const components = {
   Input: {
@@ -273,7 +275,6 @@ const components = {
       getLabel('日期'),
       desc,
       format,
-//       notSelectPassed,
       getDefaultValue('DefaultDate', '选择日期'),
       colSpace,
     ],
@@ -330,13 +331,13 @@ const components = {
   },
   Tabs: {
     baseInfo: {
-      name: '标签页',
+      name: 'tab页',
       icon: 'renwu',
       category: '高级控件',
       version: '1.0',
       type: 'Tabs',
     },
-    config: [fieldName, getLabel('标签页'), desc, fieldManage, colSpace],
+    config: [fieldName, getLabel('tab页'), desc, fieldManage, colSpace],
   },
   FlowData: {
     baseInfo: {
@@ -349,15 +350,15 @@ const components = {
     config: [fieldName, getLabel('关联流程'), flows, colSpace],
   },
   SerialNum: {
-     baseInfo: {
-          name: '编号',
-          icon: 'tupiancaidan',
-          category: '高级控件',
-          version: '1.0',
-          type: 'SerialNum',
-        },
-     config: [fieldName, getLabel('编号'), colSpace, serialRules ]
-  }
+    baseInfo: {
+      name: '编号',
+      icon: 'tupiancaidan',
+      category: '高级控件',
+      version: '1.0',
+      type: 'SerialNum',
+    },
+    config: [fieldName, getLabel('编号'), colSpace, serialRules],
+  },
 };
 
 export default components;

@@ -56,21 +56,26 @@ const componentMap: { [k: string]: (props: { [k: string]: any }) => ReactNode } 
   Select: (props) => (
     <Select placeholder={props.placeholder || '请选择'} size="large" suffixIcon={<Icon type="xiala" />}>
       {props.range &&
-      (props.range as rangeItem[]).map((v) => (
-        <Option value={v.key} key={v.key}>
-          {v.value}
-        </Option>
-      ))}
+        (props.range as rangeItem[]).map((v) => (
+          <Option value={v.key} key={v.key}>
+            {v.value}
+          </Option>
+        ))}
     </Select>
   ),
-  ColSpace: (props) => <Radio.Group options={props.options} optionType="button"/>,
+  ColSpace: (props) => (
+    <Radio.Group
+      options={props.componentType === 'Tabs' || props.componentType === 'FlowData' ? rowOptions : options}
+      optionType="button"
+    />
+  ),
   Checkbox: (props) => <Checkbox>{props.label}</Checkbox>,
-  Switch: () => <Switch/>,
-  NumberOption: (props) => <NumberOption id={props.componentId}/>,
-  serialRules: (props) => <SerialRules id={props.componentId}/>,
-  selectColumns: (props) => <SelectColumns id={props.componentId}/>,
-  SelectOptionList: (props) => <SelectOptionList id={props.componentId}/>,
-  SelectDefaultOption: (props) => <SelectDefaultOption id={props.componentId}/>,
+  Switch: () => <Switch />,
+  NumberOption: (props) => <NumberOption id={props.componentId} />,
+  serialRules: (props) => <SerialRules id={props.componentId} />,
+  selectColumns: (props) => <SelectColumns id={props.componentId} />,
+  SelectOptionList: (props) => <SelectOptionList id={props.componentId} />,
+  SelectDefaultOption: (props) => <SelectDefaultOption id={props.componentId} />,
   InputNumber: (props) => (
     <InputNumber
       size="large"
@@ -118,8 +123,6 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
   });
   const handleChange = useMemoCallback(
     debounce(() => {
-      console.log(form.getFieldsValue(), 'form.getFieldsValue()')
-
       onFinish(form.getFieldsValue());
     }, 66),
   );
@@ -160,7 +163,7 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
               parentId: componentId,
             };
             const componentType = componentId.split('_')[0];
-            props.options = componentType === 'Tabs' || 'FlowData' ? rowOptions : options;
+            props.componentType = componentType;
             const component = componentMap[type](props);
             return (
               <Fragment key={key}>
