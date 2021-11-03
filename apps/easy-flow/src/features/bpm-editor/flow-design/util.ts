@@ -356,6 +356,7 @@ export const findPrevNodes = (flow: AllNode[], targetId: string): PrevNodeType[]
 };
 
 export function formatFieldsAuths(fieldsTemplate: FieldTemplate[]) {
+  console.info(fieldsTemplate, 'fieldsTemplate');
   return fieldsTemplate.reduce((fieldsAuths, item) => {
     fieldsAuths[item.id] = AuthType.View;
 

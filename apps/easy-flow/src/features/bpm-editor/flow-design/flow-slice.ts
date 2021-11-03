@@ -167,7 +167,8 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
             const config = com.config;
             return {
               name: <string>`${item.config.label}·${config.label}`,
-              id: <string>item.config.fieldName || item.config.id,
+              id: <string>config.fieldName || config.id,
+              parentId: <string>item.config.fieldName || item.config.id,
               type: config.type,
             };
           });
@@ -254,9 +255,10 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
           }
 
           const fieldsAuths: FieldAuthsMap = {};
-
+          console.info(fieldsTemplate, 'fieldsTemplate');
           // 舍弃冗余字段
           fieldsTemplate.forEach((field) => {
+            
             if (node.fieldsAuths && node.fieldsAuths[field.id] !== undefined) {
               fieldsAuths[field.id] = node.fieldsAuths[field.id];
             } else {

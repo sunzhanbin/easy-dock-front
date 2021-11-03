@@ -45,7 +45,7 @@ export enum RevertType {
 }
 
 export type FieldAuthsMap = {
-  [fieldId: string]: AuthType;
+  [fieldId: string]: AuthType | FieldAuthsMap;
 };
 
 export type CorrelationMemberConfigKey = string | number;
@@ -164,6 +164,6 @@ export type AllNode = StartNode | AuditNode | FillNode | BranchNode | FinishNode
 
 export type Flow = AllNode[];
 
-export type FieldTemplate = { id: string; name: string; type: FieldType };
+export type FieldTemplate = { id: string; name: string; type: FieldType; parentId?: string };
 
 export type AddableNode = AuditNode | FillNode | BranchNode | CCNode | SubBranch | AutoNode;
