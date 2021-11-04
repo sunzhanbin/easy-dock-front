@@ -8,9 +8,9 @@ const EventHoc = ({children}: {children: React.ReactNode}) => {
 
   const handleBlur = useCallback((event) => {
     const { type, target} = event;
-    PubSub.publish(`${fieldName}-${type }`, target.value);
+    PubSub.publish(`${fieldName}-${type}`, target.value);
 
-    console.log('eventHoc::', `${fieldName}-${type }`, event.type, event.target.value);
+    console.log('eventHoc::', `${fieldName}-${type}`, event.type, event.target.value);
   }, [])
 
   return (

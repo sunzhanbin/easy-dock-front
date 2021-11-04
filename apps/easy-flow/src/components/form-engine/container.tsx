@@ -26,9 +26,9 @@ const Container = React.memo(({ children, rules, fieldName, form, type }: Contai
       const formValues = form.getFieldsValue();
       return analysisFormChangeRule(condition, formValues);
     });
-    if(isMatchArr?.length) {
+    if (isMatchArr?.length) {
       const current = isMatchArr[isMatchArr.length - 1];
-      const { visible } = current;
+      const {visible} = current;
       setVisible(visible as boolean)
     } else {
       setVisible(true);
@@ -39,7 +39,7 @@ const Container = React.memo(({ children, rules, fieldName, form, type }: Contai
     return [
       ...new Set(
         rules.reduce((a, b) => {
-          const { type, watch } = b;
+          const {type, watch} = b;
           const watchType = watch.map((item) => `${item}-${type}`);
           return a.concat(watchType);
         }, [] as any),

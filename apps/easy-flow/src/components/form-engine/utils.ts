@@ -45,10 +45,10 @@ export const convertFormRules = (data: FormRuleItem[] =  []) => {
     }
   }
   data?.map((item: any) => {
-    var { formChangeRule, type, subtype = 0 } = item;
+    const {formChangeRule, type, subtype = 0} = item;
     if (type == 'change' && subtype == 0) {
-      var { hideComponents, showComponents, fieldRule } = formChangeRule;
-      var watchList = [
+      const {hideComponents, showComponents, fieldRule} = formChangeRule;
+      const watchList = [
         ...(new Set(
           fieldRule
             .flat(2)
@@ -61,7 +61,7 @@ export const convertFormRules = (data: FormRuleItem[] =  []) => {
         const obj = {
           watch: watchList,
           condition: fieldRule,
-          visible: index == 1 ? false : true,
+          visible: index !== 1,
           subtype: 0,
           type
         };
@@ -74,7 +74,7 @@ export const convertFormRules = (data: FormRuleItem[] =  []) => {
         });
       });
     } else if(type == 'change' && subtype == 1) {
-      var { fieldRule } = formChangeRule;
+      const {fieldRule} = formChangeRule;
       fieldRule
       .flat(2)
       .filter(Boolean)

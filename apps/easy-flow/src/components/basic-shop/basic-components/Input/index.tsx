@@ -9,13 +9,13 @@ const InputComponent = (props: InputProps & { unique: boolean } & { [key: string
 
   useEffect(() => {
     if (!form) return;
-    var formValue = form.getFieldsValue();
+    const formValue = form.getFieldsValue();
     console.log({ formValue, rules, fieldName, type });
   });
 
   return (
     <EventHoc>
-      <BaseInput {...props}></BaseInput>
+      <BaseInput {...props}/>
     </EventHoc>
   );
 };
