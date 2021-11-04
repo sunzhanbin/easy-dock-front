@@ -18,7 +18,6 @@ const Container = React.memo(({ children, rules, fieldName, form, type }: Contai
   const visibleRules = useMemo(() => rules?.filter((item) => item?.subtype == 0), [rules]);
   const [visible, setVisible] = useState<boolean>(true);
   const [reFreshKey, setReFreshKey] = useState<Number>(0);
-  const currentCondition = useMemo(() => visibleRules && visibleRules[visibleRules.length - 1], [visibleRules]);
 
   const setComponentValueAndVisible = useCallback(() => {
     const isMatchArr = rules?.filter((item) => {
@@ -33,7 +32,7 @@ const Container = React.memo(({ children, rules, fieldName, form, type }: Contai
     } else {
       setVisible(true);
     }
-  }, [currentCondition]);
+  }, [visibleRules]);
 
   const watchFn = useCallback((rules: formRulesItem[]) => {
     return [
