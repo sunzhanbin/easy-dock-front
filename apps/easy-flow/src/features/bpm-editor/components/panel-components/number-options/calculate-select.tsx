@@ -17,10 +17,9 @@ interface CalculateProps {
 }
 
 const CalculateSelect = (props: CalculateProps) => {
-
   const {calcType, id, onChange, calculateData} = props
-
   const byId = useAppSelector(componentPropsSelector);
+  // 公式计算加减法筛选过滤
   const fieldMulti = useMemo<{
     type: string;
     id: string;
@@ -29,41 +28,39 @@ const CalculateSelect = (props: CalculateProps) => {
   }[]>(() => {
     const componentList = Object.values(byId).map((item: FormField) => item) || [];
     return componentList
-      .filter((com) => (com.type === 'InputNumber' || com.type === 'Date') && com.id !== id)
+      .filter((com) => {
+        if (calcType === 'add') {
+          return (com.type === 'InputNumber') && com.id !== id
+        } else if (calcType === 'minus') {
+          return (com.type === 'InputNumber' || com.type === 'Date') && com.id !== id
+        }
+      })
       .map((com) => ({
         id: com.fieldName,
         name: com.label,
         type: com.type,
         format: com.type === 'Date' ? com.format : ''
       }));
+
   }, [byId, id]);
 
-  const field = useMemo<{ id: string; name: string }[]>(() => {
+  // 除加减法筛选计算
+  const field = useMemo(() => {
     const componentList = Object.values(byId).map((item: FormField) => item) || [];
-    console.log(componentList, 'componentList')
-
     return componentList
       .filter((com) => (com.type === 'Tabs') && com.id !== id)
       .map((com) => {
-        // console.log(com?.components, 'ddd')
-        // return {}
-        // {id: com.fieldName, name: com.label}
         if (com.type === 'Tabs' && com.components) {
-
-          com.components.map(item => {
-
+          return com.components.map(item => {
             const {config} = item
-            return {
-              id: config.parentId + config.id,
+            return config.type === 'InputNumber' && {
+              id: config.parentId,
+              subId: config.id,
               name: `${com.label} · ${config.label}`
             }
           })
         }
-        return {
-          id: '',
-          name: ''
-        }
-      });
+      }).flat(2).filter(item => !!item);
   }, [byId, id]);
 
   // 处理加减法多选联动
@@ -83,15 +80,22 @@ const CalculateSelect = (props: CalculateProps) => {
     }
     return true
   })
-  const filterMultiFields = calculateData?.map((item: string) => {
-    const field = fieldMulti.find(field => field.id === item)
-    return field?.name
-  }).filter((item: string) => !!item)
 
+  // 加减法tips展示
+  const filterMultiFields = useMemo(() => {
+    if (!Array.isArray(calculateData) || !calculateData.length) return []
+    return calculateData?.map((item: string) => {
+      const field = fieldMulti.find(field => field.id === item)
+      return field?.name
+    }).filter((item: string | undefined) => !!item)
+  }, [calculateData])
+
+  // 多选下拉
   const handleMultiChange = useMemoCallback((values) => {
     onChange && onChange(values)
   })
 
+  // 单选下拉
   const handleChangeField = useMemoCallback((values) => {
     onChange && onChange(values)
   })
@@ -129,9 +133,9 @@ const CalculateSelect = (props: CalculateProps) => {
               value={calculateData}
               onChange={handleChangeField}
             >
-              {field.map(({id, name}) => (
-                <Option value={id} key={id}>
-                  {name}
+              {field.map((item: any) => (
+                <Option value={`${item.id}.${item.subId}`} key={item.subId}>
+                  {item.name}
                 </Option>
               ))}
             </Select>

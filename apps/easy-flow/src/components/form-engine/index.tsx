@@ -1,18 +1,20 @@
-import React, { memo, useEffect, useMemo, useState } from 'react';
+import React, { memo, useEffect, useMemo, useState, useCallback } from 'react';
 import { Col, Form, FormInstance, Row } from 'antd';
 import classNames from 'classnames';
 import { Rule } from 'antd/lib/form';
-import useMemoCallback from '@common/hooks/use-memo-callback';
 import useLoadComponents from '@/hooks/use-load-components';
-import { AllComponentType, Datasource, fieldRule, FormChangeRule } from '@type';
+import { AllComponentType, Datasource } from '@type';
 import { AuthType, FieldAuthsMap } from '@type/flow';
 import { FormMeta, FormValue } from '@type/detail';
-import { analysisFormChangeRule, runtimeAxios } from '@/utils';
+import { runtimeAxios } from '@/utils';
 import LabelContent from '../label-content';
 import styles from './index.module.scss';
 import { Loading } from '@common/components';
 import { DataConfig, ParamSchem } from '@/type/api';
 import _ from 'lodash';
+import PubSub from 'pubsub-js';
+import Container from './container';
+import {convertFormRules} from './utils';
 
 type FieldsVisible = { [fieldId: string]: boolean };
 
@@ -57,37 +59,21 @@ const FormDetail = React.forwardRef(function FormDetail(
   const [fieldsVisible, setFieldsVisible] = useState<FieldsVisible>({});
   const [compMaps, setCompMaps] = useState<CompMaps>({});
   const [showForm, setShowForm] = useState(false);
-  const [configMap, setConfigMap] = useState<ConfigMap>({});
 
-  const changeRuleList = useMemo<(FormChangeRule & { hasChanged: boolean })[]>(() => {
-    if (!data.formRules) {
-      return [];
+  const comRules = useMemo(() => {
+    const formRules = convertFormRules(data.formRules);
+    console.log('formRules', formRules)
+    return {
+      formRules,
     }
-    return data.formRules
-      .filter((rule) => rule.type === 'change')
-      .map((rule) => rule.formChangeRule)
-      .map((rule) => Object.assign({}, rule, { hasChanged: false }));
-  }, [data.formRules]);
+  }, [data.formRules, data.fieldRules]);
+
   const initRuleList = useMemo<DataConfig[]>(() => {
     if (!data.formRules) {
       return [];
     }
     return data.formRules.filter((rule) => rule.type === 'init').map((rule) => rule.formInitRule as DataConfig);
   }, [data.formRules]);
-  const changeFieldRuleList = useMemo(() => {
-    if (!data.fieldRules) {
-      return [];
-    }
-    return data.fieldRules.map((rule) => rule.formChangeRule);
-  }, [data]);
-  // 缓存之前的表单控件显隐状态
-  const cacheFieldsVisibleMap = useMemo(() => {
-    const map: { [k: number]: FieldsVisible } = {};
-    changeRuleList.forEach((rule, index) => {
-      map[index] = {};
-    });
-    return map;
-  }, [changeRuleList]);
 
   // 提取所有组件类型
   const componentTypes = useMemo(() => {
@@ -95,166 +81,6 @@ const FormDetail = React.forwardRef(function FormDetail(
   }, [data]);
   // 获取组件源码
   const compSources = useLoadComponents(componentTypes);
-  // 收集单个规则的控件依赖
-  const collectFieldNameList = useMemoCallback((rule: fieldRule[][]) => {
-    const list = rule
-      .filter((v) => v)
-      .flat(2)
-      .map((rule) => rule.fieldName as string);
-    const set = new Set(list);
-    return Array.from(set);
-  });
-  const collectFieldList = useMemoCallback((rule: fieldRule[][]) => {
-    const list = rule.filter((v) => v).flat(2);
-    const set = new Set(list);
-    return Array.from(set);
-  });
-  const formValuesChange = useMemoCallback(async (changedValues: FormValue, allValues?) => {
-    // 处理单个控件绑定的事件
-    if (data.events && data.events.onchange) {
-      // 处理响应表单事件，响应绑定的visible和reset
-      data.events.onchange.forEach((event) => {
-        const { fieldId, listeners, value } = event;
-        const { visible, reset } = listeners;
-        // 处理visible
-        if (fieldId in changedValues && visible && visible.length) {
-          const fieldsVisible: FieldsVisible = {};
-          visible.forEach((id) => {
-            fieldsVisible[id] = changedValues[fieldId] === value;
-          });
-          setFieldsVisible((oldVisible) => Object.assign({}, oldVisible, fieldsVisible));
-        }
-        // 处理reset
-        if (changedValues[fieldId] === value) {
-          if (reset && reset.length) {
-            const fiieldsResetValues: { [key: string]: undefined } = {};
-            reset.forEach((id) => {
-              fiieldsResetValues[id] = undefined;
-            });
-            form.setFieldsValue(fiieldsResetValues);
-          }
-        }
-      });
-    }
-    const formValues = form.getFieldsValue();
-    const changedFieldName = Object.keys(changedValues).length > 0 ? Object.keys(changedValues)[0] : '';
-    const fieldChangedValue = Object.values(changedValues).length > 0 ? Object.values(changedValues)[0] : '';
-    // 处理表单属性值改变时事件
-    // console.log(formValues, changedValues, compMaps, 'filedName')
-    if (changeRuleList.length > 0 && Object.keys(formValues).length > 0) {
-      changeRuleList.forEach((rule, index) => {
-        const fieldNameList = collectFieldNameList(rule.fieldRule);
-        // 此次改变的表单控件不在这个规则的依赖字段中,直接返回
-        if (!fieldNameList.includes(changedFieldName)) {
-          return;
-        }
-        const result = analysisFormChangeRule(rule.fieldRule, formValues);
-        const showComponents = rule?.showComponents || [];
-        const hideComponents = rule?.hideComponents || [];
-        if (result) {
-          const fieldVisible: FieldsVisible = {};
-          showComponents.forEach((fieldName) => {
-            fieldVisible[fieldName] = true;
-          });
-          hideComponents.forEach((fieldName) => {
-            fieldVisible[fieldName] = false;
-          });
-          setFieldsVisible((oldVisible) => {
-            const visible: FieldsVisible = {};
-            Object.keys(fieldVisible).forEach((key) => {
-              visible[key] = !fieldVisible[key];
-            });
-            cacheFieldsVisibleMap[index] = { ...visible };
-            const result = Object.assign({}, oldVisible, fieldVisible);
-            return result;
-          });
-          rule.hasChanged = true;
-        } else {
-          if (rule.hasChanged) {
-            setFieldsVisible((oldVisible) => {
-              const cacheFieldVisible = cacheFieldsVisibleMap[index];
-              const result = Object.assign({}, oldVisible, cacheFieldVisible);
-              return result;
-            });
-            rule.hasChanged = false;
-          }
-        }
-      });
-    }
-
-    // 处理基础控件失焦时关联表格控件的数据联动
-    const fieldConfig = compMaps[changedFieldName];
-    const filledName: string = fieldConfig?.config.dataSource?.apiConfig.filledName?.key;
-    const tempMap = _.cloneDeep(configMap);
-    if (filledName && tempMap) {
-      // @ts-ignore
-      tempMap.name = filledName;
-
-      tempMap[filledName] = {
-        ...tempMap[filledName],
-        [changedFieldName]: fieldChangedValue,
-      };
-      try {
-        // todo
-        // const ret = await getFlowData(tempMap)
-        // const {data} = ret
-        // if(!data) return
-        tempMap[filledName].tableData = [
-          {
-            key1: 'cxx' + fieldChangedValue,
-            key2: 12 + filledName,
-          },
-        ];
-        setConfigMap(tempMap);
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  });
-
-  const handleConfigMap = useMemoCallback((value: any) => {
-    console.log(value, 'rrrcxzc');
-    return value;
-  });
-
-  // 处理日期规则联动校验
-  const handleDisabledDate = useMemoCallback((current, props) => {
-    const { id } = props.props;
-    if (!id || !current) return false;
-    const formValues = form.getFieldsValue();
-    if (changeFieldRuleList.length && Object.keys(formValues).length) {
-      const fieldRules = _.uniqWith(
-        changeFieldRuleList
-          .map((rule) => {
-            return rule && collectFieldList(rule.fieldRule);
-          })
-          .flat(2),
-        _.isEqual,
-      );
-      // 去重
-      const filterRules = fieldRules.filter((item) => item && (item.fieldName === id || item.value === id));
-      let rules1, rules2, rules3, rules4;
-      filterRules.forEach((item) => {
-        if (item?.symbol === 'earlier') {
-          if (item.fieldName === id) {
-            rules1 = current.valueOf() >= formValues[item.value as string];
-          }
-          if (item.value === id && item.fieldName) {
-            rules2 = current.valueOf() <= formValues[item.fieldName];
-          }
-        }
-        if (item?.symbol === 'latter') {
-          if (item.fieldName === id) {
-            rules3 = current.valueOf() <= formValues[item.value as string];
-          }
-          if (item.value === id && item.fieldName) {
-            rules4 = current.valueOf() >= formValues[item.fieldName];
-          }
-        }
-      });
-      return rules2 || rules4 || rules1 || rules3;
-    }
-  });
 
   useEffect(() => {
     const visbles: FieldsVisible = {};
@@ -285,11 +111,9 @@ const FormDetail = React.forwardRef(function FormDetail(
     setFieldsVisible(visbles);
 
     setCompMaps(comMaps);
-    // 设置完初始值后设置当前字段可见状态
-    formValuesChange(formValues);
 
     setShowForm(true);
-  }, [data, fieldsAuths, initialValue, form, formValuesChange]);
+  }, [data, fieldsAuths, initialValue, form]);
 
   useEffect(() => {
     // 进入表单时请求接口
@@ -352,6 +176,13 @@ const FormDetail = React.forwardRef(function FormDetail(
     }
   }, [form, initRuleList, initialValue]);
 
+  const onValuesChange = useCallback((changeValue: any) => {
+    // formValuesChange(changeValue);
+    Object.entries(changeValue).map(([key, value]: any,) => {
+      PubSub.publish(`${key}-change`, value);
+    })
+  }, [])
+
   return (
     <Form
       className={classNames(styles.form, className)}
@@ -359,7 +190,7 @@ const FormDetail = React.forwardRef(function FormDetail(
       form={form}
       layout="vertical"
       autoComplete="off"
-      onValuesChange={formValuesChange}
+      onValuesChange={onValuesChange}
     >
       {loading && <Loading />}
       {data.layout.map((formRow, index) => {
@@ -387,35 +218,40 @@ const FormDetail = React.forwardRef(function FormDetail(
               }
               return (
                 <Col span={colSpace * 6} key={fieldId} className={styles.col}>
-                  <Form.Item
-                    key={fieldId}
-                    name={fieldName || fieldId}
-                    label={type !== 'DescText' ? <LabelContent label={label} desc={desc} /> : null}
-                    required={isRequired}
-                    rules={rules}
+                  <Container 
+                    type={config.type} 
+                    fieldName={fieldName} 
+                    form={form} 
+                    rules={comRules.formRules[fieldName]}
                   >
-                    {compRender(
-                      config.type,
-                      Component,
-                      Object.assign({}, compProps, {
-                        disabled:
-                          readonly ||
-                          !(fieldsAuths[fieldName] || fieldsAuths[fieldId]) ||
-                          fieldsAuths[fieldName] === AuthType.View,
-                        flows,
-                        configMap,
-                        disabledDate: (v: any) => handleDisabledDate(v, compMaps[fieldId]),
-                      }),
-                      {
-                        datasource: datasource && (datasource[fieldName] || datasource[fieldId]),
-                        formInstance: form,
-                        projectId,
-                        fieldName,
-                        fieldsAuths: fieldsAuths[fieldName],
-                        readonly,
-                      },
-                    )}
-                  </Form.Item>
+                    <Form.Item
+                      key={fieldId}
+                      name={fieldName || fieldId}
+                      label={type !== 'DescText' ? <LabelContent label={label} desc={desc}/> : null}
+                      required={isRequired}
+                      rules={rules}
+                    >
+                      {compRender(
+                        config.type,
+                        Component,
+                        Object.assign({}, compProps, {
+                          disabled:
+                            readonly ||
+                            !(fieldsAuths[fieldName] || fieldsAuths[fieldId]) ||
+                            fieldsAuths[fieldName] === AuthType.View,
+                          flows,
+                        }),
+                        {
+                          datasource: datasource && (datasource[fieldName] || datasource[fieldId]),
+                          formInstance: form,
+                          projectId,
+                          fieldName,
+                          fieldsAuths: fieldsAuths[fieldName],
+                          readonly,
+                        },
+                      )}
+                    </Form.Item>
+                  </Container>
                 </Col>
               );
             })}
