@@ -152,6 +152,7 @@ export type FieldChangeRule = {
 
 export type FormRuleItem = {
   type: 'change' | 'init';
+  subtype?: number;
   formChangeRule?: FormChangeRule;
   formInitRule?: DataConfig;
 };
