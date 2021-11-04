@@ -168,8 +168,8 @@ export enum StarterEnum {
 }
 
 export interface TriggerConfig {
-  processId: number; //自动触发流程id
-  processName: string; //自动触发流程名称
+  processId: number|undefined; //自动触发流程id
+  processName: string|undefined; //自动触发流程名称
   // 发起人
   starter: {
     type: StarterEnum;
@@ -181,7 +181,7 @@ export interface TriggerConfig {
 
 export interface AutoNodeTriggerProcess extends BaseNode {
   type: NodeType.AutoNodeTriggerProcess;
-  dataConfig: TriggerConfig[];
+  triggerConfig: TriggerConfig[];
 }
 
 export type AllNode =

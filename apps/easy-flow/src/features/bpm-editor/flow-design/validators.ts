@@ -1,5 +1,5 @@
 import { Rule } from 'antd/lib/form';
-import { CorrelationMemberConfig, AuditNode, RevertType } from '@type/flow';
+import { CorrelationMemberConfig, AuditNode, RevertType, TriggerConfig } from '@type/flow';
 import { DataConfig } from '@type/api';
 import { validName } from '@common/rule';
 import { dynamicIsEmpty } from './util';
@@ -36,7 +36,7 @@ const dataPushConfig = (value: DataConfig): string => {
   if (isInvalid) {
     return message;
   }
-  
+
   return '';
 };
 
@@ -48,10 +48,22 @@ const revert = (value: AuditNode['revert']) => {
   return '';
 };
 
+const triggerConfig = (value: TriggerConfig[]): string => {
+  if (!value || value.length < 1) {
+    return '请选择触发流程';
+  }
+  const lackProcessId = value.some((v) => !v.processId);
+  if (lackProcessId) {
+    return '请选择触发流程';
+  }
+  return '';
+};
+
 export const validators = {
   member,
   name: validName,
   data: dataPushConfig,
+  config: triggerConfig,
   revert: revert,
 };
 

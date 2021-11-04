@@ -1,9 +1,7 @@
 import { memo, useMemo } from 'react';
-import { useSelector } from 'react-redux';
 import { Icon } from '@common/components';
 import BaseNode from '../base-node';
 import { AutoNodeTriggerProcess as AutoNodeType } from '@type/flow';
-import { apisSelector } from '../../flow-slice';
 import styles from './index.module.scss';
 
 interface AutoNodeProps {
@@ -12,13 +10,13 @@ interface AutoNodeProps {
 
 function AutoNodeTriggerProcess(props: AutoNodeProps) {
   const { node } = props;
-  const { dataConfig } = node;
+  const { triggerConfig } = node;
   const flowNames = useMemo(() => {
-    if (!dataConfig || !dataConfig.length) {
+    if (!triggerConfig || !triggerConfig.length) {
       return '';
     }
-    return dataConfig.map((v) => v.processName).join('、');
-  }, [dataConfig]);
+    return triggerConfig.map((v) => v.processName).join('、');
+  }, [triggerConfig]);
 
   return (
     <BaseNode node={node} icon={<Icon type="zidongjiediandise" />}>

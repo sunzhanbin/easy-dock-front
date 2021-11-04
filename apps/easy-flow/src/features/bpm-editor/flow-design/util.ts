@@ -92,7 +92,8 @@ export function createNode(type: NodeType, name?: string) {
       id: fielduuid(),
       name,
       type,
-      dataConfig: [],
+      // triggerConfig: [{ processId: undefined, processName: undefined, starter: { type: 1 }, mapping: [] }],
+      triggerConfig: [],
     };
   }
 
@@ -295,6 +296,11 @@ export function valid(data: AllNode[], validRes: ValidResultType) {
 
       if (dataPushValidMessage) {
         errors.push(dataPushValidMessage);
+      }
+    } else if (node.type === NodeType.AutoNodeTriggerProcess) {
+      const triggerConfigValidMessage = validators.config(node.triggerConfig);
+      if (triggerConfigValidMessage) {
+        errors.push(triggerConfigValidMessage);
       }
     }
 

@@ -1,0 +1,56 @@
+.container {
+  .process-item {
+    background-color: #f5f5f5;
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+  .add-process {
+    width: 100%;
+  }
+}
+
+.mapping {
+  display: flex;
+  flex-direction: column;
+  .header {
+    display: flex;
+    .current,
+    .target,
+    .symbol {
+      flex: 1;
+      height: 40px;
+      display: flex;
+      justify-content: start;
+      align-items: center;
+    }
+    .symbol,
+    .delete {
+      flex: 0 0 40px;
+      justify-content: center;
+    }
+  }
+  .content {
+    display: flex;
+    flex-direction: column;
+    .item {
+      display: flex;
+    }
+    .current,
+    .target,
+    .delete,
+    .symbol {
+      flex: 1;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .symbol {
+      flex: 0 0 40px;
+    }
+    .delete {
+      flex: 0 0 40px;
+      cursor: pointer;
+    }
+  }
+}
