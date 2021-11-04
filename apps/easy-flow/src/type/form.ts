@@ -57,7 +57,8 @@ export type SelectOptionItem = {
 export type NumberDefaultOption = {
   id: string | undefined,
   type: string,
-  customData?: string,
+  customData?: number,
+  calcType?: string,
   calculateData?: any
 }
 
@@ -110,6 +111,7 @@ export type CompConfig = {
 export type TabsField = {
   type: 'Tabs';
   fieldManage: CompConfig[];
+  components?: CompConfig[]
 } & BaseField;
 
 export type SerialNumField = {
