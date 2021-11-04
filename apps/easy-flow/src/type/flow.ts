@@ -16,8 +16,10 @@ export enum NodeType {
   CCNode = 6,
   // 分支
   SubBranch = 7,
-  // 自动节点
-  AutoNode = 8,
+  // 自动节点_数据推送
+  AutoNodePushData = 8,
+  // 自动节点_触发流程
+  AutoNodeTriggerProcess = 9,
 }
 
 export enum AuthType {
@@ -155,15 +157,52 @@ export interface CCNode extends BaseNode {
   fieldsAuths: FieldAuthsMap;
 }
 
-export interface AutoNode extends BaseNode {
-  type: NodeType.AutoNode;
+export interface AutoNodePushData extends BaseNode {
+  type: NodeType.AutoNodePushData;
   dataConfig: DataConfig;
 }
 
-export type AllNode = StartNode | AuditNode | FillNode | BranchNode | FinishNode | CCNode | AutoNode;
+export enum StarterEnum {
+  FlowStarter = 1, //当前流程发起人
+  Admin = 2, //系统发起
+}
+
+export interface TriggerConfig {
+  processId: number; //自动触发流程id
+  processName: string; //自动触发流程名称
+  // 发起人
+  starter: {
+    type: StarterEnum;
+    data?: any; //预留字段
+  };
+  // 字段映射
+  mapping: { current: string; target: string }[];
+}
+
+export interface AutoNodeTriggerProcess extends BaseNode {
+  type: NodeType.AutoNodeTriggerProcess;
+  dataConfig: TriggerConfig[];
+}
+
+export type AllNode =
+  | StartNode
+  | AuditNode
+  | FillNode
+  | BranchNode
+  | FinishNode
+  | CCNode
+  | AutoNodePushData
+  | AutoNodeTriggerProcess;
 
 export type Flow = AllNode[];
 
 export type FieldTemplate = { id: string; name: string; type: FieldType; parentId?: string };
 
-export type AddableNode = AuditNode | FillNode | BranchNode | CCNode | SubBranch | AutoNode;
+export type AddableNode =
+  | AuditNode
+  | FillNode
+  | BranchNode
+  | CCNode
+  | SubBranch
+  | AutoNodePushData
+  | AutoNodeTriggerProcess;

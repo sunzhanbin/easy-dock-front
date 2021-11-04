@@ -2,7 +2,7 @@ import { memo, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Icon } from '@common/components';
 import BaseNode from '../base-node';
-import { AutoNode as AutoNodeType } from '@type/flow';
+import { AutoNodePushData as AutoNodeType } from '@type/flow';
 import { apisSelector } from '../../flow-slice';
 import styles from './index.module.scss';
 
@@ -10,7 +10,7 @@ interface AutoNodeProps {
   node: AutoNodeType;
 }
 
-function AutoNode(props: AutoNodeProps) {
+function AutoNodePushData(props: AutoNodeProps) {
   const { node } = props;
   const apis = useSelector(apisSelector);
   const api = node.dataConfig?.api;
@@ -41,4 +41,4 @@ function AutoNode(props: AutoNodeProps) {
   );
 }
 
-export default memo(AutoNode);
+export default memo(AutoNodePushData);

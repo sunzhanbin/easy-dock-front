@@ -11,7 +11,8 @@ import {
   CCNodeEditor,
   FinishNodeEditor,
   SubBranchEditor,
-  AutoNodeEditor,
+  AutoNodePushDataEditor,
+  AutoNodeTriggerProcess,
 } from './editor';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { load, flowDataSelector, save, setChoosedNode } from './flow-slice';
@@ -92,10 +93,16 @@ function FlowDesign() {
           抄送节点
         </CardHeader>
       );
-    } else if (choosedNode.type === NodeType.AutoNode) {
+    } else if (choosedNode.type === NodeType.AutoNodePushData) {
       return (
         <CardHeader icon={<Icon type="zidongjiediandise" />} type={choosedNode.type}>
-          自动节点
+          自动节点_数据推送
+        </CardHeader>
+      );
+    } else if (choosedNode.type === NodeType.AutoNodeTriggerProcess) {
+      return (
+        <CardHeader icon={<Icon type="zidongjiediandise" />} type={choosedNode.type}>
+          自动节点_触发流程
         </CardHeader>
       );
     }
@@ -141,7 +148,12 @@ function FlowDesign() {
 
           {choosedNode && choosedNode.type === NodeType.SubBranch && <SubBranchEditor branch={choosedNode} />}
 
-          {choosedNode && choosedNode.type === NodeType.AutoNode && <AutoNodeEditor node={choosedNode} />}
+          {choosedNode && choosedNode.type === NodeType.AutoNodePushData && (
+            <AutoNodePushDataEditor node={choosedNode} />
+          )}
+          {choosedNode && choosedNode.type === NodeType.AutoNodeTriggerProcess && (
+            <AutoNodeTriggerProcess node={choosedNode} />
+          )}
         </div>
       </Drawer>
     </div>

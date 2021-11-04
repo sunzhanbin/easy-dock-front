@@ -33,7 +33,7 @@ function AddNodeButton(props: AddNodeButtonProps) {
         <div
           className={styles['push-data']}
           onClick={() => {
-            handleAddNode(NodeType.AutoNode);
+            handleAddNode(NodeType.AutoNodePushData);
           }}
         >
           <Icon type="geshiyouhua" />
@@ -42,7 +42,7 @@ function AddNodeButton(props: AddNodeButtonProps) {
         <div
           className={styles['trigger-flow']}
           onClick={() => {
-            handleAddNode(NodeType.AutoNode);
+            handleAddNode(NodeType.AutoNodeTriggerProcess);
           }}
         >
           <Icon type="geshiyouhua" />

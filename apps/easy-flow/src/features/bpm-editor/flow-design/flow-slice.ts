@@ -288,7 +288,7 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
               }),
             };
           });
-        } else if (node.type === NodeType.AutoNode && !hasAutoNode) {
+        } else if (node.type === NodeType.AutoNodePushData && !hasAutoNode) {
           hasAutoNode = true;
         }
       });
@@ -426,13 +426,15 @@ export const addNode = createAsyncThunk<void, { prevId: string; type: AddableNod
 
     if (type === NodeType.BranchNode) {
       tmpNode = createNode(type);
-    } else if (type === NodeType.AutoNode) {
-      tmpNode = createNode(type, '自动节点');
+    } else if (type === NodeType.AutoNodePushData) {
+      tmpNode = createNode(type, '自动节点-数据推送');
 
       // 如果添加了自动节点判断下服务编排里的接口有没有被加载进来
       if (flow.apis.length === 0) {
         dispatch(loadApis());
       }
+    } else if (type === NodeType.AutoNodeTriggerProcess) {
+      tmpNode = createNode(type, '自动节点-触发流程');
     } else {
       if (type === NodeType.AuditNode) {
         tmpNode = createNode(type, '审批节点');

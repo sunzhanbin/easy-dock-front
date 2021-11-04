@@ -8,7 +8,8 @@ import {
   CCNode,
   BranchNode,
   SubBranch,
-  AutoNode,
+  AutoNodePushData,
+  AutoNodeTriggerProcess,
   RevertType,
   AuthType,
   FieldAuthsMap,
@@ -41,7 +42,8 @@ export function branchuuid(group: number = 3) {
 export function createNode(type: NodeType.AuditNode, name: string): AuditNode;
 export function createNode(type: NodeType.FillNode, name: string): FillNode;
 export function createNode(type: NodeType.CCNode, name: string): CCNode;
-export function createNode(type: NodeType.AutoNode, name: string): AutoNode;
+export function createNode(type: NodeType.AutoNodePushData, name: string): AutoNodePushData;
+export function createNode(type: NodeType.AutoNodeTriggerProcess, name: string): AutoNodeTriggerProcess;
 export function createNode(type: NodeType.BranchNode): BranchNode;
 export function createNode(type: NodeType.SubBranch): SubBranch;
 export function createNode(type: NodeType, name?: string) {
@@ -72,8 +74,8 @@ export function createNode(type: NodeType, name?: string) {
         },
       ],
     };
-  } else if (type === NodeType.AutoNode) {
-    return <AutoNode>{
+  } else if (type === NodeType.AutoNodePushData) {
+    return <AutoNodePushData>{
       id: fielduuid(),
       name,
       type,
@@ -84,6 +86,13 @@ export function createNode(type: NodeType, name?: string) {
           customize: [],
         },
       },
+    };
+  } else if (type === NodeType.AutoNodeTriggerProcess) {
+    return <AutoNodeTriggerProcess>{
+      id: fielduuid(),
+      name,
+      type,
+      dataConfig: [],
     };
   }
 
@@ -281,7 +290,7 @@ export function valid(data: AllNode[], validRes: ValidResultType) {
       if (memberValidMessage) {
         errors.push(memberValidMessage);
       }
-    } else if (node.type === NodeType.AutoNode) {
+    } else if (node.type === NodeType.AutoNodePushData) {
       const dataPushValidMessage = validators.data(node.dataConfig);
 
       if (dataPushValidMessage) {
