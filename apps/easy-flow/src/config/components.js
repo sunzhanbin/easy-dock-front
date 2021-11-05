@@ -287,7 +287,7 @@ const components = {
       version: '1.0',
       type: 'InputNumber',
     },
-    config: [fieldName, getLabel('数字'), numberOption, desc, getDefaultValue('InputNumber'), colSpace],
+    config: [fieldName, getLabel('数字'), numberOption, desc, colSpace],
   },
   DescText: {
     baseInfo: {

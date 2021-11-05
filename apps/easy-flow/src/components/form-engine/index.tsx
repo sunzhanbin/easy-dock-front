@@ -61,12 +61,11 @@ const FormDetail = React.forwardRef(function FormDetail(
   const [showForm, setShowForm] = useState(false);
 
   const comRules = useMemo(() => {
-    const formRules = convertFormRules(data.formRules);
-    console.log('formRules', formRules)
+    const formRules = convertFormRules(data.formRules, data.components);
     return {
-      formRules,
+      formRules
     }
-  }, [data.formRules, data.fieldRules]);
+  }, [data.formRules, data.components]);
 
   const initRuleList = useMemo<DataConfig[]>(() => {
     if (!data.formRules) {
@@ -178,6 +177,7 @@ const FormDetail = React.forwardRef(function FormDetail(
 
   const onValuesChange = useCallback((changeValue: any) => {
     // formValuesChange(changeValue);
+    console.log(changeValue, 'change')
     Object.entries(changeValue).map(([key, value]: any,) => {
       PubSub.publish(`${key}-change`, value);
     })
@@ -225,6 +225,7 @@ const FormDetail = React.forwardRef(function FormDetail(
                     rules={comRules.formRules[fieldName]}
                   >
                     <Form.Item
+
                       key={fieldId}
                       name={fieldName || fieldId}
                       label={type !== 'DescText' ? <LabelContent label={label} desc={desc}/> : null}
