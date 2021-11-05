@@ -56,6 +56,15 @@ const triggerConfig = (value: TriggerConfig[]): string => {
   if (lackProcessId) {
     return '请选择触发流程';
   }
+  const lackFields = value.some((v) => {
+    if (v.mapping?.length > 0) {
+      return v.mapping.some((k) => !k.current || !k.target);
+    }
+    return false;
+  });
+  if (lackFields) {
+    return '请选择对应字段';
+  }
   return '';
 };
 

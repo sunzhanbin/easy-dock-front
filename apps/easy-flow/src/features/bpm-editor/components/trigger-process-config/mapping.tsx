@@ -1,5 +1,5 @@
 import { memo, useEffect, useState, useMemo } from 'react';
-import { Button, Form, Select } from 'antd';
+import { Button, Form, Select, Tooltip } from 'antd';
 import { runtimeAxios } from '@utils';
 import styles from './index.module.scss';
 import { Icon } from '@common/components';
@@ -43,12 +43,6 @@ const Mapping = ({ name, targetVersionId }: MappingProps) => {
   }, [targetVersionId]);
   return (
     <div className={styles.mapping}>
-      <div className={styles.header}>
-        <div className={styles.current}>当前流程</div>
-        <div className={styles.symbol}> 》 </div>
-        <div className={styles.target}>所选流程</div>
-        <div className={styles.delete}></div>
-      </div>
       <div className={styles.content}>
         <Form.List name={[...name]}>
           {(fields, { add, remove }) => {
@@ -57,8 +51,12 @@ const Mapping = ({ name, targetVersionId }: MappingProps) => {
                 {fields.map((field, index) => {
                   return (
                     <div className={styles.item} key={index}>
-                      <Form.Item name={[field.name, 'current']} className={styles.current}>
-                        <Select size="large" placeholder="请选择控件">
+                      <Form.Item
+                        name={[field.name, 'current']}
+                        className={styles.current}
+                        rules={[{ required: true, message: '请选择当前流程字段' }]}
+                      >
+                        <Select size="large" placeholder="当前流程">
                           {currentComponents.map((v) => {
                             return (
                               <Option key={v.id} value={v.fieldName}>
@@ -68,9 +66,13 @@ const Mapping = ({ name, targetVersionId }: MappingProps) => {
                           })}
                         </Select>
                       </Form.Item>
-                      <div className={styles.symbol}> 》 </div>
-                      <Form.Item name={[field.name, 'target']} className={styles.target}>
-                        <Select size="large" placeholder="请选择控件">
+                      <div className={styles.symbol}> 对应 </div>
+                      <Form.Item
+                        name={[field.name, 'target']}
+                        className={styles.target}
+                        rules={[{ required: true, message: '请选择所选流程字段' }]}
+                      >
+                        <Select size="large" placeholder="所选流程">
                           {targetComponents.map((v) => {
                             return (
                               <Option key={v.id} value={v.fieldName}>
@@ -81,13 +83,17 @@ const Mapping = ({ name, targetVersionId }: MappingProps) => {
                         </Select>
                       </Form.Item>
                       <div className={styles.delete} onClick={() => remove(index)}>
-                        <Icon type="shanchu" className={styles.icon} />
+                        <Tooltip title="删除对应字段" placement="left">
+                          <span>
+                            <Icon type="shanchu" className={styles.icon} />
+                          </span>
+                        </Tooltip>
                       </div>
                     </div>
                   );
                 })}
-                <Button icon={<Icon type="xinzeng" />} onClick={() => add()}>
-                  添加字段
+                <Button icon={<Icon type="xinzeng" />} className={styles['add-field']} onClick={() => add()}>
+                  对应字段
                 </Button>
               </>
             );

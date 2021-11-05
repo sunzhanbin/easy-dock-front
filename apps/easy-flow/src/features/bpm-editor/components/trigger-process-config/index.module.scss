@@ -1,11 +1,42 @@
+@import '@common/styles/var.scss';
 .container {
   .process-item {
-    background-color: #f5f5f5;
+    position: relative;
+    border-radius: 3px;
+    border: 1px solid rgba(24, 31, 67, 0.12);
     padding: 12px;
-    margin-bottom: 12px;
+    margin-top: 32px;
+    .delete-process {
+      position: absolute;
+      top: -32px;
+      right: 0;
+      width: 24px;
+      height: 32px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      .icon {
+        font-size: 16px;
+        &:hover {
+          color: $primary-color;
+        }
+      }
+      &.disabled {
+        cursor: not-allowed;
+      }
+    }
+    .mapping-wrap {
+      margin-bottom: 0;
+    }
   }
   .add-process {
+    margin-top: 12px;
+    border: 1px dashed rgba(24, 31, 67, 0.3);
     width: 100%;
+    &:hover {
+      border-color: $primary-color;
+    }
   }
 }
 
@@ -34,23 +65,38 @@
     flex-direction: column;
     .item {
       display: flex;
+      .current,
+      .target,
+      .delete,
+      .symbol {
+        flex: 1;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .symbol {
+        flex: 0 0 40px;
+      }
+      .delete {
+        flex: 0 0 36px;
+        cursor: pointer;
+        .icon {
+          font-size: 16px;
+          &:hover {
+            color: $primary-color;
+          }
+        }
+      }
+      :global {
+        .ant-form-item {
+          margin-bottom: 8px;
+        }
+      }
     }
-    .current,
-    .target,
-    .delete,
-    .symbol {
-      flex: 1;
-      height: 40px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .symbol {
-      flex: 0 0 40px;
-    }
-    .delete {
-      flex: 0 0 40px;
-      cursor: pointer;
+    .add-field {
+      margin-top: 12px;
+      width: 108px;
     }
   }
 }

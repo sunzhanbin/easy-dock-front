@@ -54,7 +54,7 @@ function AutoNodeTriggerProcessEditor(props: AutoNodeEditorProps) {
       <Form.Item label="节点名称" name="name" rules={nameRules} getValueFromEvent={trimInputValue} required>
         <Input size="large" placeholder="请输入节点名称" />
       </Form.Item>
-      <Form.Item label="流程触发" name="triggerConfig" required>
+      <Form.Item noStyle name="triggerConfig">
         <TriggerProcessConfig name="triggerConfig" />
       </Form.Item>
     </Form>

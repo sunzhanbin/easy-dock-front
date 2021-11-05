@@ -37,7 +37,7 @@ function AddNodeButton(props: AddNodeButtonProps) {
           }}
         >
           <Icon type="geshiyouhua" />
-          <span>数据推送</span>
+          <span>数据连接</span>
         </div>
         <div
           className={styles['trigger-flow']}

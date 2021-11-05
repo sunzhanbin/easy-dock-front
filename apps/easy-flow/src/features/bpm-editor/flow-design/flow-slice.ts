@@ -427,14 +427,14 @@ export const addNode = createAsyncThunk<void, { prevId: string; type: AddableNod
     if (type === NodeType.BranchNode) {
       tmpNode = createNode(type);
     } else if (type === NodeType.AutoNodePushData) {
-      tmpNode = createNode(type, '自动节点-数据推送');
+      tmpNode = createNode(type, '自动节点_数据连接');
 
       // 如果添加了自动节点判断下服务编排里的接口有没有被加载进来
       if (flow.apis.length === 0) {
         dispatch(loadApis());
       }
     } else if (type === NodeType.AutoNodeTriggerProcess) {
-      tmpNode = createNode(type, '自动节点-触发流程');
+      tmpNode = createNode(type, '自动节点_触发流程');
     } else {
       if (type === NodeType.AuditNode) {
         tmpNode = createNode(type, '审批节点');

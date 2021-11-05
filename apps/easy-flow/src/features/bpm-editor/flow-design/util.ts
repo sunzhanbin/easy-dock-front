@@ -92,8 +92,7 @@ export function createNode(type: NodeType, name?: string) {
       id: fielduuid(),
       name,
       type,
-      // triggerConfig: [{ processId: undefined, processName: undefined, starter: { type: 1 }, mapping: [] }],
-      triggerConfig: [],
+      triggerConfig: [{ processId: undefined, processName: undefined, starter: { type: 1 }, mapping: [] }],
     };
   }
 

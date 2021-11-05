@@ -1,5 +1,6 @@
 import { memo, useEffect, useMemo, useState } from 'react';
-import { Button, Form, Select, Radio, Input } from 'antd';
+import { Button, Form, Select, Radio, Input, Tooltip } from 'antd';
+import classNames from 'classnames';
 import { Icon } from '@common/components';
 import { TriggerConfig } from '@/type/flow';
 import { builderAxios } from '@utils';
@@ -76,15 +77,31 @@ const TriggerProcessConfig = (props: TriggerProps) => {
                     {fields.map((field, index) => {
                       return (
                         <div className={styles['process-item']} key={field.name}>
+                          <Tooltip title="删除触发流程" placement="left">
+                            <div
+                              className={classNames(
+                                styles['delete-process'],
+                                fields.length <= 1 ? styles.disabled : '',
+                              )}
+                              onClick={() => {
+                                if (fields.length <= 1) {
+                                  return;
+                                }
+                                remove(index);
+                              }}
+                            >
+                              <Icon type="shanchu" className={styles.icon} />
+                            </div>
+                          </Tooltip>
                           <Form.Item
                             required
-                            label="选择流程"
+                            label="选择要被触发的流程"
                             name={[field.name, 'processId']}
                             className={styles.process}
-                            rules={[{ required: true, message: '请选择触发流程!' }]}
+                            rules={[{ required: true, message: '请选择要被触发的流程!' }]}
                           >
                             <Select
-                              placeholder="请选择触发流程"
+                              placeholder="请选择"
                               size="large"
                               virtual={false}
                               className={styles['process-select']}
@@ -99,7 +116,7 @@ const TriggerProcessConfig = (props: TriggerProps) => {
                               ))}
                             </Select>
                           </Form.Item>
-                          <Form.Item name={[field.name, 'processName']} style={{ height: 0, marginBottom: 0 }}>
+                          <Form.Item name={[field.name, 'processName']} noStyle>
                             <Input type="hidden" />
                           </Form.Item>
                           <Form.Item label="发起人设置" name={[field.name, 'starter', 'type']}>
@@ -108,15 +125,16 @@ const TriggerProcessConfig = (props: TriggerProps) => {
                               <Radio value={2}>系统发起</Radio>
                             </Radio.Group>
                           </Form.Item>
-                          <Form.Item label="数据关系对应设置" name={[field.name, 'mapping']}>
+                          <Form.Item
+                            label="字段对应关系设置"
+                            name={[field.name, 'mapping']}
+                            className={styles['mapping-wrap']}
+                          >
                             <Mapping
                               name={[field.name, 'mapping']}
                               targetVersionId={targetVersionId || versionIdList[index]}
                             />
                           </Form.Item>
-                          <Button size="large" onClick={() => remove(index)}>
-                            删除流程
-                          </Button>
                         </div>
                       );
                     })}
@@ -126,7 +144,7 @@ const TriggerProcessConfig = (props: TriggerProps) => {
                       icon={<Icon type="xinzeng" />}
                       onClick={() => add({ starter: { type: 1 } })}
                     >
-                      添加流程
+                      触发流程
                     </Button>
                   </>
                 );

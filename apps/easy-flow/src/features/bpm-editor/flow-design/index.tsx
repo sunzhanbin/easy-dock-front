@@ -96,7 +96,7 @@ function FlowDesign() {
     } else if (choosedNode.type === NodeType.AutoNodePushData) {
       return (
         <CardHeader icon={<Icon type="zidongjiediandise" />} type={choosedNode.type}>
-          自动节点_数据推送
+          自动节点_数据连接
         </CardHeader>
       );
     } else if (choosedNode.type === NodeType.AutoNodeTriggerProcess) {

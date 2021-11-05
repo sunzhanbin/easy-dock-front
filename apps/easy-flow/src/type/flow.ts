@@ -16,7 +16,7 @@ export enum NodeType {
   CCNode = 6,
   // 分支
   SubBranch = 7,
-  // 自动节点_数据推送
+  // 自动节点_数据连接
   AutoNodePushData = 8,
   // 自动节点_触发流程
   AutoNodeTriggerProcess = 9,
@@ -168,8 +168,8 @@ export enum StarterEnum {
 }
 
 export interface TriggerConfig {
-  processId: number|undefined; //自动触发流程id
-  processName: string|undefined; //自动触发流程名称
+  processId: number | undefined; //自动触发流程id
+  processName: string | undefined; //自动触发流程名称
   // 发起人
   starter: {
     type: StarterEnum;
