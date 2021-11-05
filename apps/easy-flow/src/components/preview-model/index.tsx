@@ -155,7 +155,7 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
                 fieldsAuths={auths}
                 className={styles['form-engine']}
                 projectId={projectId}
-              ></FormEngine>
+              />
             </div>
           </div>
         </div>
