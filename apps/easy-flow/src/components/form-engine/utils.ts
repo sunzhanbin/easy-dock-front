@@ -6,12 +6,12 @@ export interface fieldRulesItem {
 }
 
 export interface formRulesItem {
-  condition: fieldRule[][];
+  condition: fieldRule[][] & { [key: string]: any };
   watch: string[];
   visible?: boolean;
   value?: null | string | number | Date;
   subtype?: number; // 0 | 1 | 2 => 显隐 | 启停 | 联动；  
-  type?: string; // init | change | blur
+  type?: string; // init | change | blur | panelChange
 }
 
 export interface formRulesReturn {
@@ -26,14 +26,14 @@ export interface fieldRulesReturn {
   [k: string]: fieldRulesItem;
 }
 
-export const convertFormRules = (data: FormRuleItem[] =  []) => {
+export const convertFormRules = (data: FormRuleItem[] = [], components: { config: any; props: any }[]) => {
   const fieldRulesObj: formRulesReturn = {};
 
-  function setFieldRules(fieldName: string, value: any, item: any, type: string) {
+  function setFieldRules(fieldName: string, value: any, item: any, type: string, subtype: number) {
     const obj = {
-      watch: [value],
+      watch: [].concat(value),
       condition: item,
-      subtype: 1,
+      subtype,
       type
     }
     if (fieldRulesObj?.[fieldName as string]) {
@@ -76,15 +76,23 @@ export const convertFormRules = (data: FormRuleItem[] =  []) => {
     } else if(type == 'change' && subtype == 1) {
       const {fieldRule} = formChangeRule;
       fieldRule
-      .flat(2)
-      .filter(Boolean)
-      .map((item: any) => {
-        const { fieldName, value } = item;
-        setFieldRules(fieldName, value, item, type);
-        setFieldRules(value, fieldName, item, type);
-      });
+        .flat(2)
+        .filter(Boolean)
+        .map((item: any) => {
+          const {fieldName, value} = item;
+          setFieldRules(fieldName, value, item, type, 1);
+          setFieldRules(value, fieldName, item, type, 1);
+        });
     }
   });
+  // panel配置公式计算
+  components?.map(com => {
+    const {config} = com
+    if (!config?.defaultNumber) return
+    const fieldName = config.id
+    const value = config?.defaultNumber.calculateData
+    setFieldRules(fieldName, value, config?.defaultNumber, 'panelChange', 2)
+  })
   return fieldRulesObj;
 };
 

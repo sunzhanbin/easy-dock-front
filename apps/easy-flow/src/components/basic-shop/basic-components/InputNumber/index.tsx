@@ -1,39 +1,29 @@
-import { memo, useMemo } from 'react';
-import { InputNumber } from 'antd';
-import { Icon } from '@common/components';
-import { InputNumberProps } from 'antd/lib/input-number';
-import styles from './index.module.scss';
+import {memo, useEffect, useState} from 'react';
+import BaseInputNumber from './base-input-number';
+import {InputNumberProps} from 'antd/lib/input-number';
+import EventHoc from '@/components/form-engine/eventHoc';
+import {useContainerContext} from '@/components/form-engine/context';
 
-const TextareaComponent = (props: InputNumberProps) => {
-  const { defaultValue, onChange } = props;
-  const propList = useMemo(() => {
-    const prop: { [k: string]: string | number | boolean | undefined | Function } = {
-      size: 'large',
-      placeholder: '请输入',
-      max: Number.MAX_SAFE_INTEGER,
-      min: Number.MIN_SAFE_INTEGER,
-      onChange: onChange,
-    };
-    if (defaultValue) {
-      prop.defaultValue = defaultValue;
-    }
-    const result = Object.assign({}, props, prop);
-    delete result.fieldName;
-    delete result.colSpace;
-    delete result.defaultNumber;
-    return result;
-  }, [defaultValue, props, onChange]);
+const InputNumberComponent = (props: InputNumberProps & { unique: boolean } & { [key: string]: any }) => {
+  const {form, rules, fieldName, type} = useContainerContext();
+
+  const [value, setValue] = useState<number | undefined>(undefined)
+
+  useEffect(() => {
+    if (!form) return;
+    const formValue = form.getFieldsValue();
+    rules.map(rule => {
+      if (!rule?.condition?.calcType) return
+      const {calcType} = rule?.condition
+    })
+    console.log({formValue, rules, fieldName, type});
+  });
 
   return (
-    <div className={styles.container}>
-      <div className={styles.number_container}>
-        <div className={styles.icon}>
-          <Icon className={styles.iconfont} type="shuzi123" />
-        </div>
-        <InputNumber {...propList} key={String(defaultValue)} />
-      </div>
-    </div>
+    <EventHoc>
+      <BaseInputNumber {...props} value={value}/>
+    </EventHoc>
   );
 };
 
-export default memo(TextareaComponent);
+export default memo(InputNumberComponent);
