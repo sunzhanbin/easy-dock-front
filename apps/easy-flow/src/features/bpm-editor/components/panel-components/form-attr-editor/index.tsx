@@ -207,7 +207,7 @@ const FormAttrEditor = () => {
                     <span>当</span>
                     <span className={styles.fieldName}>进入表单时</span>
                     <span>读取接口</span>
-                    <span className={styles.fieldName}>{item.formInitRule?.api}</span>
+                    <span className={styles.fieldName}>{item.formInitRule?.id || item.formInitRule?.url}</span>
                     <span>数据</span>
                   </div>
                   <div className={styles.operation}>

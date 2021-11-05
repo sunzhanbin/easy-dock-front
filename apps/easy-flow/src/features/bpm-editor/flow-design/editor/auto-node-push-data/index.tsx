@@ -3,6 +3,7 @@ import { Form, Input } from 'antd';
 import { Rule } from 'antd/lib/form';
 import debounce from 'lodash/debounce';
 import useMemoCallback from '@common/hooks/use-memo-callback';
+import ResponseWithMap from '@/features/bpm-editor/components/data-api-config/response-with-map';
 import { AutoNodePushData } from '@type/flow';
 import { useAppDispatch } from '@/app/hooks';
 import { updateNode } from '../../flow-slice';
@@ -61,7 +62,9 @@ function AutoNodeEditor(props: AutoNodeEditorProps) {
         <Input size="large" placeholder="请输入节点名称" />
       </Form.Item>
       <Form.Item name="dataConfig" label="选择要推送数据的接口" required>
-        <DataApiConfig name="dataConfig" label="选择接口的推送参数" fields={fields} />
+        <DataApiConfig name="dataConfig" label="推送参数" fields={fields}>
+          <ResponseWithMap label="返回参数" />
+        </DataApiConfig>
       </Form.Item>
     </Form>
   );
