@@ -59,6 +59,7 @@ const FormDetail = React.forwardRef(function FormDetail(
   const [fieldsVisible, setFieldsVisible] = useState<FieldsVisible>({});
   const [compMaps, setCompMaps] = useState<CompMaps>({});
   const [showForm, setShowForm] = useState(false);
+  const [changeKey, setChangeKey] = useState('');
 
   const comRules = useMemo(() => {
     const formRules = convertFormRules(data.formRules, data.components);
@@ -176,10 +177,20 @@ const FormDetail = React.forwardRef(function FormDetail(
   }, [form, initRuleList, initialValue]);
 
   const onValuesChange = useCallback((changeValue: any) => {
-    // formValuesChange(changeValue);
-    console.log(changeValue, 'change')
     Object.entries(changeValue).map(([key, value]: any,) => {
-      PubSub.publish(`${key}-change`, value);
+      if (typeof value === 'object' && Object.values(value).length) {
+        const field = Object.values(value)[0]
+        if (typeof field === 'object' && field) {
+          const changeKey = Object.keys(field)[0]
+          const changeValue = Object.values(field)[0]
+          if (!changeKey) return
+          setChangeKey(changeKey)
+          PubSub.publish(`${changeKey}-change`, changeValue);
+        }
+      } else {
+        setChangeKey(key)
+        PubSub.publish(`${key}-change`, value);
+      }
     })
   }, [])
 
@@ -218,14 +229,14 @@ const FormDetail = React.forwardRef(function FormDetail(
               }
               return (
                 <Col span={colSpace * 6} key={fieldId} className={styles.col}>
-                  <Container 
-                    type={config.type} 
-                    fieldName={fieldName} 
-                    form={form} 
+                  <Container
+                    type={config.type}
+                    fieldName={fieldName}
+                    form={form}
                     rules={comRules.formRules[fieldName]}
+                    changeType={changeKey}
                   >
                     <Form.Item
-
                       key={fieldId}
                       name={fieldName || fieldId}
                       label={type !== 'DescText' ? <LabelContent label={label} desc={desc}/> : null}
