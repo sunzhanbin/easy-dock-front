@@ -137,7 +137,13 @@ const DataManage = () => {
       if (fieldResponse) {
         shouldReFetchFormFields.current = false;
         currentFields = (fieldResponse.data || []).filter((field) => {
-          return field.type !== 'Attachment' && field.type !== 'DescText' && field.type !== 'Image';
+          return (
+            field.type !== 'Attachment' &&
+            field.type !== 'DescText' &&
+            field.type !== 'Image' &&
+            field.type !== 'Tabs' &&
+            field.type !== 'FlowData'
+          );
         });
 
         const dynamicColumns: TableProps<TableDataBase>['columns'] = currentFields.map((field) => {
