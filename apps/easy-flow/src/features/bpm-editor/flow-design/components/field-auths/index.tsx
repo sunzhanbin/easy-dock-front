@@ -37,7 +37,7 @@ const FieldRow = memo(function FieldRow(props: FieldRowProps) {
 
       <div className={styles.cell}>
         <Checkbox
-          checked={value.auth > 0 && !extra?.view.indeterminate}
+          checked={value.auth > AuthType.Denied && !extra?.view.indeterminate}
           indeterminate={extra?.view.indeterminate}
           onChange={(event) => handleAuthChange(event.target.checked ? 1 : 0)}
         >
@@ -48,7 +48,7 @@ const FieldRow = memo(function FieldRow(props: FieldRowProps) {
       {max > 1 && (
         <div className={styles.cell}>
           <Checkbox
-            checked={value.auth > 1}
+            checked={value.auth > AuthType.View}
             indeterminate={extra?.edit.indeterminate}
             onChange={(event) => handleAuthChange(event.target.checked ? 2 : 1)}
           >
@@ -59,7 +59,7 @@ const FieldRow = memo(function FieldRow(props: FieldRowProps) {
       {max > 2 && (
         <div className={styles.cell}>
           <Checkbox
-            checked={value.auth === 3}
+            checked={value.auth > AuthType.Edit}
             indeterminate={extra?.required.indeterminate}
             onChange={(event) => handleAuthChange(event.target.checked ? 3 : 2)}
           >
@@ -108,24 +108,26 @@ function FieldAuths(props: FieldAuthsProps) {
     // 统计只能有AuthType.View的字段总数
     let viewTypeNum = 0;
     templates.forEach((field) => {
-      let fieldauth: AuthType;
+      const { type, id, parentId } = field;
 
-      if (field.type === 'DescText') {
+      if (type === 'DescText') {
         viewTypeNum++;
       }
-
-      if (value && (value[field.id] as AuthType) in AuthType) {
-        fieldauth = value[field.id] as AuthType;
+      let auth: AuthType = AuthType.View;
+      if (parentId) {
+        if (value && ((value[parentId] as FieldAuthsMap)[id] as AuthType) in AuthType) {
+          auth = ((value[parentId] as FieldAuthsMap)[id] as AuthType) ?? AuthType.View;
+        }
       } else {
-        fieldauth = AuthType.View;
+        if (value && (value[id] as AuthType) in AuthType) {
+          auth = (value[id] as AuthType) ?? AuthType.View;
+        }
       }
 
-      valueMaps[field.id] = {
-        id: field.id,
-        auth: fieldauth,
+      valueMaps[id] = {
+        id,
+        auth,
       };
-
-      const auth = valueMaps[field.id].auth;
 
       if (auth === AuthType.View) {
         viewAuthNum++;
@@ -185,10 +187,18 @@ function FieldAuths(props: FieldAuthsProps) {
     const { auth } = field;
     const newValue = { ...value };
     templates.forEach((field) => {
-      if (field.type === 'DescText') {
-        newValue[field.id] = Math.min(auth, AuthType.View);
+      const { id, parentId, type } = field;
+      if (parentId) {
+        const parentAuth = Object.assign({}, newValue[parentId], {
+          [id]: type === 'DescText' ? Math.min(auth, AuthType.View) : auth,
+        });
+        newValue[parentId] = Object.assign({}, newValue[parentId], parentAuth);
+        return;
+      }
+      if (type === 'DescText') {
+        newValue[id] = Math.min(auth, AuthType.View);
       } else {
-        newValue[field.id] = auth;
+        newValue[id] = auth;
       }
     });
     if (onChange) {
