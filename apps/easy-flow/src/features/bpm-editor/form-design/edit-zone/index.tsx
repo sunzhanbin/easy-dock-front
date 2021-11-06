@@ -27,6 +27,7 @@ const EditZone = () => {
   const [title, setTitle] = useState<string>('');
   const [editList, setEditList] = useState<SchemaConfigItem[]>([]);
   const [activeKey, setActiveKey] = useState<string>('1');
+  const [componentId, setComponentId] = useState<string>(selectedField);
   const [initValues, setInitValues] = useState({});
   useEffect(() => {
     setTimeout(() => {
@@ -40,6 +41,7 @@ const EditZone = () => {
         setEditList(editConfig as SchemaConfigItem[]);
         setTitle(`${parentLabel} · ${baseInfo?.name}`);
         setInitValues(subComponentConfig);
+        setComponentId(subComponentConfig.id);
         return;
       }
       // 编辑控件
@@ -49,9 +51,10 @@ const EditZone = () => {
         setEditList(editConfig as SchemaConfigItem[]);
         setTitle(baseInfo?.name as string);
         setInitValues(byId[selectedField]);
+        setComponentId(selectedField);
       }
     }, 0);
-  }, [byId, formDesign, subComponentConfig]);
+  }, [byId, formDesign, subComponentConfig, selectedField]);
   useEffect(() => {
     selectedField ? setActiveKey('1') : setActiveKey('2');
   }, [selectedField]);
@@ -116,7 +119,7 @@ const EditZone = () => {
             config={editList}
             initValues={initValues as FormField}
             onSave={onSave}
-            componentId={selectedField}
+            componentId={componentId}
           />
         </TabPane>
         <TabPane tab="表单属性" key="2">

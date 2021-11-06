@@ -63,12 +63,14 @@ const componentMap: { [k: string]: (props: { [k: string]: any }) => ReactNode } 
         ))}
     </Select>
   ),
-  ColSpace: (props) => (
-    <Radio.Group
-      options={props.componentType === 'Tabs' || props.componentType === 'FlowData' ? rowOptions : options}
-      optionType="button"
-    />
-  ),
+  ColSpace: (props) => {
+    return (
+      <Radio.Group
+        options={props.componentType === 'Tabs' || props.componentType === 'FlowData' ? rowOptions : options}
+        optionType="button"
+      />
+    );
+  },
   Checkbox: (props) => <Checkbox>{props.label}</Checkbox>,
   Switch: () => <Switch />,
   NumberOption: (props) => <NumberOption id={props.componentId} />,
@@ -146,7 +148,6 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
         key={componentId}
         name="form_editor"
         autoComplete="off"
-        layout="vertical"
         initialValues={initValues}
         onFinish={onFinish}
         onValuesChange={handleChange}
@@ -187,4 +188,7 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
   );
 };
 
-export default memo(CompAttrEditor, (prev, current) => prev.initValues === current.initValues);
+export default memo(
+  CompAttrEditor,
+  (prev, current) => prev.initValues === current.initValues && prev.componentId === current.componentId,
+);

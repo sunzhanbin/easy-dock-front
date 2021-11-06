@@ -98,6 +98,7 @@
   }
   .content {
     .form {
+      flex-direction: column;
       margin-top: 24px;
       margin-bottom: 0;
       .apiConfig {
@@ -105,6 +106,12 @@
           &:last-child {
             margin-bottom: 0;
           }
+        }
+      }
+      :global {
+        .ant-form-item-label {
+          text-align: left;
+          margin-bottom: 4px;
         }
       }
     }
