@@ -45,10 +45,7 @@ const symbolListMap = {
     symbolMap.null,
     symbolMap.notNull,
   ],
-  dateFilter: [
-    symbolMap.latter,
-    symbolMap.earlier,
-  ],
+  dateFilter: [symbolMap.latter, symbolMap.earlier],
   option: [
     symbolMap.equal,
     symbolMap.unequal,
@@ -74,16 +71,16 @@ type RuleFormProps = {
   loadDataSource?: (id: string) => Promise<{ key: string; value: string }[] | { data: { data: string[] } }>;
 };
 const FormList = ({
-                    components,
-                    className,
-                    rule,
-                    name,
-                    isFormRule,
-                    blockIndex,
-                    ruleIndex,
-                    onChange,
-                    loadDataSource,
-                  }: RuleFormProps) => {
+  components,
+  className,
+  rule,
+  name,
+  isFormRule,
+  blockIndex,
+  ruleIndex,
+  onChange,
+  loadDataSource,
+}: RuleFormProps) => {
   const [fieldName, setFieldName] = useState<string | undefined>(undefined);
   const [symbol, setSymbol] = useState<string | undefined>(undefined);
   const [value, setValue] = useState<string | number | string[] | [number, number] | undefined>(undefined);
@@ -94,23 +91,53 @@ const FormList = ({
   }, [blockIndex, ruleIndex, name]);
   const componentList = useMemo(() => {
     if (components && components?.length > 0) {
-      const list = [...components];
-      return (
-        list
+      const list: any[] = [];
+      if (!fieldName) {
+        components
           .filter((item: { type: string }) => item.type !== 'DescText')
-          .map((item: FormField) => ({
-            label: item.label,
-            id: item.id,
-            type: item.type,
-            format: (item as DateField).format,
-            sourceType: (item as SelectField).dataSource?.type || '',
-            fieldName: item.fieldName,
-            multiple: (item as SelectField)?.multiple || false,
-          })) || []
-      );
+          .forEach((item) => {
+            if (item.type === 'Tabs') {
+              if (Array.isArray(item.components)) {
+                item.components.forEach((v: any) => {
+                  list.push(Object.assign({}, v.config, v.props, { label: `${item.label}·${v.config.label}` }));
+                });
+              }
+            } else {
+              list.push(item);
+            }
+          });
+      } else {
+        if (fieldName.includes('__')) {
+          components
+            .filter((item: { type: string }) => item.type === 'Tabs')
+            .forEach((item) => {
+              item.components.forEach((v: any) => {
+                list.push(Object.assign({}, v.config, v.props, { label: `${item.label}·${v.config.label}` }));
+              });
+            });
+        } else {
+          components.filter((item: { type: string }) => item.type !== 'DescText' && item.type !== 'Tabs');
+        }
+      }
+      return list;
+      // const list = [...components];
+      // console.info(fieldName, components);
+      // return (
+      //   list
+      //     .filter((item: { type: string }) => item.type !== 'DescText')
+      //     .map((item: FormField) => ({
+      //       label: item.label,
+      //       id: item.id,
+      //       type: item.type,
+      //       format: (item as DateField).format,
+      //       sourceType: (item as SelectField).dataSource?.type || '',
+      //       fieldName: item.fieldName,
+      //       multiple: (item as SelectField)?.multiple || false,
+      //     })) || []
+      // );
     }
     return [];
-  }, [components]);
+  }, [components, fieldName]);
   const setDataSource = useMemoCallback((fieldName, fieldType) => {
     if (loadDataSource && (fieldType === 'Select' || fieldType === 'Radio' || fieldType === 'Checkbox')) {
       setLoading(true);
@@ -201,7 +228,7 @@ const FormList = ({
           symbolList = symbolListMap.number;
           break;
         case 'Date':
-          symbolList = isFormRule ? symbolListMap.date : symbolListMap.dateFilter
+          symbolList = isFormRule ? symbolListMap.date : symbolListMap.dateFilter;
           break;
         case 'Select':
         case 'Radio':
@@ -319,7 +346,7 @@ const FormList = ({
       const showTime = format === 'YYYY-MM-DD HH:mm:ss';
       if (symbol === 'range') {
         return (
-          <Form.Item name="value" className={styles.valueWrapper} rules={[{required: true, message: '请选择!'}]}>
+          <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: '请选择!' }]}>
             <DateRange
               format={format}
               showTime={showTime}
@@ -332,7 +359,7 @@ const FormList = ({
       }
       if (symbol === 'latter' || symbol === 'earlier') {
         return (
-          <Form.Item name="value" className={styles.valueWrapper} rules={[{required: true, message: '请选择!'}]}>
+          <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: '请选择!' }]}>
             <Select
               placeholder="请选择"
               size="large"
@@ -340,18 +367,20 @@ const FormList = ({
               value={value as string}
               getPopupContainer={getPopupContainer}
             >
-              {componentList.filter((item) => item.fieldName !== fieldName).map(({fieldName, label}) => (
-                <Option key={fieldName} value={fieldName} label={label}>
-                  {label}
-                </Option>
-              ))}
+              {componentList
+                .filter((item) => item.fieldName !== fieldName)
+                .map(({ fieldName, label }) => (
+                  <Option key={fieldName} value={fieldName} label={label}>
+                    {label}
+                  </Option>
+                ))}
             </Select>
           </Form.Item>
-        )
+        );
       }
       if (symbol) {
         return (
-          <Form.Item name="value" className={styles.valueWrapper} rules={[{required: true, message: '请选择!'}]}>
+          <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: '请选择!' }]}>
             <TimesDatePicker
               className={styles.value}
               format={format}
