@@ -15,21 +15,22 @@ interface ContainerProps {
   changeType?: string;
 }
 
-const Container = React.memo(({children, rules, fieldName, form, type, changeType}: ContainerProps) => {
+const Container = React.memo(({ children, rules, fieldName, form, type }: ContainerProps) => {
   const visibleRules = useMemo(() => rules?.filter((item) => item?.subtype == 0), [rules]);
   const [visible, setVisible] = useState<boolean>(true);
-  const [reFreshKey, setReFreshKey] = useState<Number>(0);
+  const [reFreshKey, setReFreshKey] = useState<number>(0);
+  const [changeType, setChangeType] = useState<string>('');
 
   const setComponentValueAndVisible = useCallback(() => {
     const isMatchArr = rules?.filter((item) => {
-      const {condition} = item;
+      const { condition } = item;
       const formValues = form.getFieldsValue();
       return analysisFormChangeRule(condition, formValues);
     });
     if (isMatchArr?.length) {
       const current = isMatchArr[isMatchArr.length - 1];
-      const {visible} = current;
-      setVisible(visible as boolean)
+      const { visible } = current;
+      setVisible(visible as boolean);
     } else {
       setVisible(true);
     }
@@ -38,7 +39,7 @@ const Container = React.memo(({children, rules, fieldName, form, type, changeTyp
     return [
       ...new Set(
         rules.reduce((a, b) => {
-          const {type, watch} = b;
+          const { type, watch } = b;
           const watchType = watch.map((item) => `${item}-${type}`);
           return a.concat(watchType);
         }, [] as any),
@@ -49,8 +50,7 @@ const Container = React.memo(({children, rules, fieldName, form, type, changeTyp
   useEffect(() => {
     if (!rules) return;
     const watchs = watchFn(rules);
-    const visibleWatchs = watchFn(visibleRules)
-    console.log(watchs, 'watchs')
+    const visibleWatchs = watchFn(visibleRules);
     // @Todo: watchs 需要再次过滤，因为 value 可能不是依赖项，需要从当前表单里筛选；
     watchs?.map((item: any) => {
       console.log('sub::', item);
@@ -59,6 +59,8 @@ const Container = React.memo(({children, rules, fieldName, form, type, changeTyp
           setComponentValueAndVisible();
         } else {
           setReFreshKey(Date.now());
+          const changeType = item.split('-')[0];
+          setChangeType(changeType);
         }
       });
     });
@@ -68,11 +70,16 @@ const Container = React.memo(({children, rules, fieldName, form, type, changeTyp
         PubSub.unsubscribe(item);
       });
     };
-  }, [rules, form, changeType]);
+  }, [rules, form]);
 
   return (
-    <ContainerProvider value={{rules, form, fieldName, type, changeType}}>
-      {visible ? React.cloneElement(children as React.ReactElement<any>, {refresh: reFreshKey}) : null}
+    <ContainerProvider value={{ rules, form, fieldName, type, changeType }}>
+      {visible
+        ? React.cloneElement(children as React.ReactElement<any>, {
+            refresh: reFreshKey,
+            changetype: changeType,
+          })
+        : null}
     </ContainerProvider>
   );
 });

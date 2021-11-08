@@ -14,7 +14,7 @@ import { DataConfig, ParamSchem } from '@/type/api';
 import _ from 'lodash';
 import PubSub from 'pubsub-js';
 import Container from './container';
-import {convertFormRules} from './utils';
+import { convertFormRules } from './utils';
 
 type FieldsVisible = { [fieldId: string]: boolean };
 
@@ -59,13 +59,12 @@ const FormDetail = React.forwardRef(function FormDetail(
   const [fieldsVisible, setFieldsVisible] = useState<FieldsVisible>({});
   const [compMaps, setCompMaps] = useState<CompMaps>({});
   const [showForm, setShowForm] = useState(false);
-  const [changeKey, setChangeKey] = useState('');
 
   const comRules = useMemo(() => {
     const formRules = convertFormRules(data.formRules, data.components);
     return {
-      formRules
-    }
+      formRules,
+    };
   }, [data.formRules, data.components]);
 
   const initRuleList = useMemo<DataConfig[]>(() => {
@@ -109,9 +108,7 @@ const FormDetail = React.forwardRef(function FormDetail(
     });
     // 设置字段可见性, 不能和下面代码交互执行顺序
     setFieldsVisible(visbles);
-
     setCompMaps(comMaps);
-
     setShowForm(true);
   }, [data, fieldsAuths, initialValue, form]);
 
@@ -177,22 +174,21 @@ const FormDetail = React.forwardRef(function FormDetail(
   }, [form, initRuleList, initialValue]);
 
   const onValuesChange = useCallback((changeValue: any) => {
-    Object.entries(changeValue).map(([key, value]: any,) => {
+    // 此处不要进行setState操作   避免重复更新
+    Object.entries(changeValue).map(([key, value]: any) => {
       if (typeof value === 'object' && Object.values(value).length) {
-        const field = Object.values(value)[0]
+        const field = Object.values(value)[0];
         if (typeof field === 'object' && field) {
-          const changeKey = Object.keys(field)[0]
-          const changeValue = Object.values(field)[0]
-          if (!changeKey) return
-          setChangeKey(changeKey)
+          const changeKey = Object.keys(field)[0];
+          const changeValue = Object.values(field)[0];
+          if (!changeKey) return;
           PubSub.publish(`${changeKey}-change`, changeValue);
         }
       } else {
-        setChangeKey(key)
         PubSub.publish(`${key}-change`, value);
       }
-    })
-  }, [])
+    });
+  }, []);
 
   return (
     <Form
@@ -229,17 +225,11 @@ const FormDetail = React.forwardRef(function FormDetail(
               }
               return (
                 <Col span={colSpace * 6} key={fieldId} className={styles.col}>
-                  <Container
-                    type={config.type}
-                    fieldName={fieldName}
-                    form={form}
-                    rules={comRules.formRules[fieldName]}
-                    changeType={changeKey}
-                  >
+                  <Container type={config.type} fieldName={fieldName} form={form} rules={comRules.formRules[fieldName]}>
                     <Form.Item
                       key={fieldId}
                       name={fieldName || fieldId}
-                      label={type !== 'DescText' ? <LabelContent label={label} desc={desc}/> : null}
+                      label={type !== 'DescText' ? <LabelContent label={label} desc={desc} /> : null}
                       required={isRequired}
                       rules={rules}
                     >
