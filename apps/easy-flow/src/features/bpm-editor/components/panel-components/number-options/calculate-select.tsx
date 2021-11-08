@@ -1,5 +1,5 @@
 import {memo, useMemo, useEffect} from 'react'
-import {Select} from "antd";
+import {message, Select} from "antd";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import {useAppSelector} from "@app/hooks";
 import {componentPropsSelector} from "@/features/bpm-editor/form-design/formzone-reducer";
@@ -56,7 +56,7 @@ const CalculateSelect = (props: CalculateProps) => {
             return config.type === 'InputNumber' && {
               id: config.parentId,
               subId: config.id,
-              name: `${com.label} · ${config.label}`
+              name: `${com.label}.${config.label}`
             }
           })
         }
@@ -92,11 +92,15 @@ const CalculateSelect = (props: CalculateProps) => {
 
   // 多选下拉
   const handleMultiChange = useMemoCallback((values) => {
+    if (values.length > 2 && values.find((item: string) => item.includes('Date'))) {
+      return message.warning('最多支持选择2个日期控件 !')
+    }
     onChange && onChange(values)
   })
 
   // 单选下拉
   const handleChangeField = useMemoCallback((values) => {
+    debugger
     onChange && onChange(values)
   })
   return (
@@ -134,7 +138,7 @@ const CalculateSelect = (props: CalculateProps) => {
               onChange={handleChangeField}
             >
               {field.map((item: any) => (
-                <Option value={`${item.id}.${item.subId}`} key={item.subId}>
+                <Option value={item.subId} key={item.subId}>
                   {item.name}
                 </Option>
               ))}

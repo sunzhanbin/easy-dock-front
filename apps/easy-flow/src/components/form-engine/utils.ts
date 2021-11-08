@@ -91,8 +91,9 @@ export const convertFormRules = (data: FormRuleItem[] = [], components: { config
     if (!config?.defaultNumber) return
     const fieldName = config.id
     const value = config?.defaultNumber.calculateData
-    setFieldRules(fieldName, value, config?.defaultNumber, 'panelChange', 2)
+    value && setFieldRules(fieldName, value, config?.defaultNumber, 'change', 2)
   })
+  console.log(fieldRulesObj, 'field*******************')
   return fieldRulesObj;
 };
 

@@ -12,16 +12,17 @@ interface ContainerProps {
   fieldName: string;
   form: FormInstance<FormValue>;
   type: string;
+  changeType?: string;
 }
 
-const Container = React.memo(({ children, rules, fieldName, form, type }: ContainerProps) => {
+const Container = React.memo(({children, rules, fieldName, form, type, changeType}: ContainerProps) => {
   const visibleRules = useMemo(() => rules?.filter((item) => item?.subtype == 0), [rules]);
   const [visible, setVisible] = useState<boolean>(true);
   const [reFreshKey, setReFreshKey] = useState<Number>(0);
 
   const setComponentValueAndVisible = useCallback(() => {
     const isMatchArr = rules?.filter((item) => {
-      const { condition } = item;
+      const {condition} = item;
       const formValues = form.getFieldsValue();
       return analysisFormChangeRule(condition, formValues);
     });
@@ -33,7 +34,6 @@ const Container = React.memo(({ children, rules, fieldName, form, type }: Contai
       setVisible(true);
     }
   }, [visibleRules]);
-
   const watchFn = useCallback((rules: formRulesItem[]) => {
     return [
       ...new Set(
@@ -48,11 +48,9 @@ const Container = React.memo(({ children, rules, fieldName, form, type }: Contai
 
   useEffect(() => {
     if (!rules) return;
-
     const watchs = watchFn(rules);
-
-    const visibleWatchs = watchFn(visibleRules);
-
+    const visibleWatchs = watchFn(visibleRules)
+    console.log(watchs, 'watchs')
     // @Todo: watchs 需要再次过滤，因为 value 可能不是依赖项，需要从当前表单里筛选；
     watchs?.map((item: any) => {
       console.log('sub::', item);
@@ -70,11 +68,11 @@ const Container = React.memo(({ children, rules, fieldName, form, type }: Contai
         PubSub.unsubscribe(item);
       });
     };
-  }, []);
+  }, [rules, form, changeType]);
 
   return (
-    <ContainerProvider value={{ rules, form, fieldName, type }}>
-      {visible ? React.cloneElement(children as React.ReactElement<any>, { refresh: reFreshKey }) : null}
+    <ContainerProvider value={{rules, form, fieldName, type, changeType}}>
+      {visible ? React.cloneElement(children as React.ReactElement<any>, {refresh: reFreshKey}) : null}
     </ContainerProvider>
   );
 });

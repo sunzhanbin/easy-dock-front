@@ -1,6 +1,6 @@
 import { Rule } from 'antd/lib/form';
 import { CorrelationMemberConfig, AuditNode, RevertType, TriggerConfig } from '@type/flow';
-import { DataConfig } from '@type/api';
+import { ApiType, DataConfig } from '@type/api';
 import { validName } from '@common/rule';
 import { dynamicIsEmpty } from './util';
 
@@ -15,10 +15,23 @@ const member = (value: CorrelationMemberConfig): string => {
 };
 
 const dataPushConfig = (value: DataConfig): string => {
-  const { api, request: { required = [], customize = [] } = {} } = value || {};
+  const { type, id, url, method, request: { required = [], customize = [] } = {} } = value || {};
 
-  if (!api) {
+  if (type !== ApiType.CUSTOM && !id) {
     return '推送数据的接口的不能为空';
+  }
+
+  if (type === ApiType.CUSTOM) {
+    if (!url) {
+      return '推送数据的接口地址的不能为空';
+    }
+    const urlRegex = /(^(http|https):\/\/([\w\-]+\.)+[\w\-]+(\/[\w\u4e00-\u9fa5\-\.\/?\@\%\!\&=\+\~\:\#\;\,]*)?)/;
+    if (urlRegex.test(url)) {
+      return '请输入正确的接口地址';
+    }
+    if (!method) {
+      return '请选择请求方式';
+    }
   }
 
   let message = '';

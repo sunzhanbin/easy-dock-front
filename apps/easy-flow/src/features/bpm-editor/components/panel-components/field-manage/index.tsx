@@ -21,7 +21,7 @@ const FieldManage = ({ parentId, value, onChange }: ComProps) => {
   const dispatch = useAppDispatch();
   const handleAddComponent = useMemoCallback((type: FormField['type']) => {
     const list = value ? [...value] : [];
-    const id = uniqueId(`${type}_`);
+    const id = uniqueId(`${type}_`).concat(`__${parentId}`);
     const { baseInfo, config: schema } = componentList.find((v) => v.baseInfo.type === type) as SchemaItem;
     const config: ConfigItem = {
       id,

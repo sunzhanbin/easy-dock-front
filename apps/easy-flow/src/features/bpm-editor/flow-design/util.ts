@@ -18,6 +18,7 @@ import {
 } from '@type/flow';
 import { FormMeta } from '@type';
 import { validators } from './validators';
+import { ApiType } from '@/type/api';
 
 function randomString() {
   return Math.random().toString(36).slice(2);
@@ -79,13 +80,6 @@ export function createNode(type: NodeType, name?: string) {
       id: fielduuid(),
       name,
       type,
-      dataConfig: {
-        api: undefined,
-        request: {
-          required: [],
-          customize: [],
-        },
-      },
     };
   } else if (type === NodeType.AutoNodeTriggerProcess) {
     return <AutoNodeTriggerProcess>{
