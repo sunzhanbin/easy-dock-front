@@ -15,7 +15,10 @@ interface ComProps {
   onChange?: (value: this['value']) => void;
 }
 
-const componentList = Object.values(componentSchema).filter((com) => com.baseInfo.type !== 'Tabs');
+// 不能添加到Tabs,Table里的控件
+const excludeTypes = ['Tabs', 'SerialNum'];
+
+const componentList = Object.values(componentSchema).filter((com) => !excludeTypes.includes(com.baseInfo.type));
 
 const FieldManage = ({ parentId, value, onChange }: ComProps) => {
   const dispatch = useAppDispatch();

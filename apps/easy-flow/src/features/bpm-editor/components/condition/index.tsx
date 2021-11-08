@@ -17,6 +17,9 @@ interface EditProps {
   loadDataSource?: (id: string) => Promise<{ key: string; value: string }[] | { data: { data: string[] } }>;
 }
 
+// 不能作为条件的控件类型
+const excludeTypes = ['DescText', 'SerialNum', 'FlowData'];
+
 const Condition = ({
   className,
   data,
@@ -39,14 +42,15 @@ const Condition = ({
     }
     const componentList: any[] = [];
     if (!showTabs) {
-      data.filter((v) => v.type !== 'Tabs' && v.type !== 'DescText').forEach((item) => componentList.push(item));
+      excludeTypes.push('Tabs');
+      data.filter((v) => !excludeTypes.includes(v.type)).forEach((item) => componentList.push(item));
       return componentList;
     }
     const list = ruleList.flat(2).filter((v) => v.fieldName);
     if (list.length < 1) {
       // 还没有选择控件
       data
-        .filter((item) => item.type !== 'DescText')
+        .filter((item) => !excludeTypes.includes(item.type))
         .forEach((item) => {
           if (item.type === 'Tabs') {
             (item?.components || []).forEach((v) => {
@@ -68,8 +72,9 @@ const Condition = ({
           }
         });
       } else {
+        excludeTypes.push('Tabs');
         // 选择了tabs外的控件
-        data.filter((v) => v.type !== 'Tabs' && v.type !== 'DescText').forEach((item) => componentList.push(item));
+        data.filter((v) => !excludeTypes.includes(v.type)).forEach((item) => componentList.push(item));
       }
     }
     return componentList;
