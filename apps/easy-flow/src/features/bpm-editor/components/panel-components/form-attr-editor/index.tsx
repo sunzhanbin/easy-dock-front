@@ -1,6 +1,6 @@
 import { memo, useState, useCallback, useEffect } from 'react';
 import { Button, Tooltip, message } from 'antd';
-import { FormField, FormRuleItem } from '@/type';
+import { FormField, FormRuleItem, TabsField } from '@/type';
 import { formatRuleValue } from '@/utils';
 import { Icon } from '@common/components';
 import FormAttrModal from '../form-attr-modal';
@@ -108,16 +108,34 @@ const FormAttrEditor = () => {
               const condition = item.formChangeRule!.fieldRule;
               const showComponentList = item.formChangeRule!.showComponents || [];
               const hideComponentList = item.formChangeRule!.hideComponents || [];
-              const showComponents = showComponentList.map((fieldName) => {
+              let showComponents = showComponentList.map((fieldName) => {
                 const component = Object.values(byId).find((comp) => comp.fieldName === fieldName);
                 return component?.label || fieldName;
               });
-              const hideComponents = hideComponentList.map((fieldName) => {
+              let hideComponents = hideComponentList.map((fieldName) => {
                 const component = Object.values(byId).find((comp) => comp.fieldName === fieldName);
                 return component?.label || fieldName;
               });
-              if (!condition) {
+              if (!condition || condition.length < 1 || condition[0].length < 1) {
                 return null;
+              }
+              const parentId = condition.flat(2).filter((v) => v.fieldName)[0].parentId;
+              if (parentId) {
+                const parent = Object.values(byId).find((v) => v.id === parentId);
+                if (parent) {
+                  showComponents = showComponentList.map((fieldName) => {
+                    const component = ((parent as TabsField).components || []).find(
+                      (v) => v.config.fieldName === fieldName,
+                    );
+                    return component ? `${parent?.label}·${component?.config.label}` : fieldName;
+                  });
+                  hideComponents = hideComponentList.map((fieldName) => {
+                    const component = ((parent as TabsField).components || []).find(
+                      (v) => v.config.fieldName === fieldName,
+                    );
+                    return component ? `${parent?.label}·${component?.config.label}` : fieldName;
+                  });
+                }
               }
               return (
                 <div className={styles.ruleItem} key={index}>
@@ -128,9 +146,18 @@ const FormAttrEditor = () => {
                         <span key={blockIndex}>
                           <span>
                             {ruleBlock.map((rule, ruleIndex) => {
-                              const component =
+                              let component =
                                 Object.values(byId).find((component) => component.fieldName === rule.fieldName) ||
                                 ({} as FormField);
+                              if (rule?.parentId) {
+                                const parent = Object.values(byId).find((comp) => comp.id === rule.parentId);
+                                const sub = (parent as TabsField).components?.find(
+                                  (v) => v.config.fieldName === rule.fieldName,
+                                );
+                                component = Object.assign({}, sub?.config, sub?.props, {
+                                  label: `${parent?.label}·${sub?.config.label}`,
+                                }) as FormField;
+                              }
                               const formatRule = formatRuleValue(rule, component);
                               return (
                                 <span key={ruleIndex}>

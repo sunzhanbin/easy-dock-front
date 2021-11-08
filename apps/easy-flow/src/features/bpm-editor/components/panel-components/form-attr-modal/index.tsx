@@ -144,12 +144,7 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
                   </Select>
                 </Form.Item>
                 <Form.Item label="流转条件" name="ruleValue" className={styles.condition}>
-                  <Condition
-                    data={Object.values(byId)}
-                    loadDataSource={loadDataSource}
-                    name="ruleValue"
-                    isFormRule={true}
-                  />
+                  <Condition data={Object.values(byId)} loadDataSource={loadDataSource} name="ruleValue" />
                 </Form.Item>
                 <Form.Item
                   noStyle
@@ -163,13 +158,39 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
                     const hideComponents = getFieldValue('hideComponents') || [];
                     // 规则中选中的组件fieldName列表
                     const ruleComponentFieldIdList = ruleValue.flat(1).map((item) => item.fieldName);
-                    const set = new Set(ruleComponentFieldIdList.concat(hideComponents));
-                    const selectFieldIdList = Array.from(set);
                     // 显示控件的列表要排除规则中已有的组件列表和已选择的隐藏控件
-                    let options = [...componentList];
-                    selectFieldIdList.forEach((fieldName) => {
-                      options = options.filter((option) => option.fieldName !== fieldName);
-                    });
+                    let options: any[] = [];
+                    if (ruleComponentFieldIdList.length > 0) {
+                      const parentId = ruleValue.flat(1)[0].parentId;
+                      const set = new Set(ruleComponentFieldIdList.concat(hideComponents));
+                      const selectFieldIdList = Array.from(set);
+                      const components = [...componentList];
+                      // 选择了tabs内的控件,则控制的控件也是tabs内的控件
+                      if (parentId) {
+                        components.forEach((item) => {
+                          if (item.type === 'Tabs') {
+                            item.components?.forEach((v) => {
+                              options.push(
+                                Object.assign({}, v.config, v.props, { label: `${item.label}·${v.config.label}` }),
+                              );
+                            });
+                          }
+                        });
+                      } else {
+                        // 选择的是tabs外的控件，则控制的也是tabs外的控件
+                        components
+                          .filter((item) => item.type !== 'Tabs')
+                          .forEach((v) => {
+                            options.push(v);
+                          });
+                      }
+                      selectFieldIdList.forEach((fieldName) => {
+                        options = options.filter((option) => option.fieldName !== fieldName);
+                      });
+                    } else {
+                      // 条件组件中没有选中条件,不允许选择显示或隐藏的控件
+                      options = [];
+                    }
                     return (
                       <>
                         <Form.Item label="显示控件" name="showComponents" className={styles.showComponents}>
@@ -201,13 +222,41 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
                             // 规则中选中的组件fieldName列表
                             const ruleComponentFieldIdList =
                               ruleValue && ruleValue.flat(1).map((item) => item.fieldName);
-                            const set = new Set(ruleComponentFieldIdList.concat(showComponents));
-                            const selectFieldIdList = Array.from(set);
-                            // 隐藏控件的列表要排除规则中已有的组件列表和已选择的显示控件
-                            let options = [...componentList];
-                            selectFieldIdList.forEach((fieldName) => {
-                              options = options.filter((option) => option.fieldName !== fieldName);
-                            });
+                            // 显示控件的列表要排除规则中已有的组件列表和已选择的隐藏控件
+                            let options: any[] = [];
+                            if (ruleComponentFieldIdList.length > 0) {
+                              const parentId = ruleValue.flat(1)[0].parentId;
+                              const set = new Set(ruleComponentFieldIdList.concat(showComponents));
+                              const selectFieldIdList = Array.from(set);
+                              const components = [...componentList];
+                              // 选择了tabs内的控件,则控制的控件也是tabs内的控件
+                              if (parentId) {
+                                components.forEach((item) => {
+                                  if (item.type === 'Tabs') {
+                                    item.components?.forEach((v) => {
+                                      options.push(
+                                        Object.assign({}, v.config, v.props, {
+                                          label: `${item.label}·${v.config.label}`,
+                                        }),
+                                      );
+                                    });
+                                  }
+                                });
+                              } else {
+                                // 选择的是tabs外的控件，则控制的也是tabs外的控件
+                                components
+                                  .filter((item) => item.type !== 'Tabs')
+                                  .forEach((v) => {
+                                    options.push(v);
+                                  });
+                              }
+                              selectFieldIdList.forEach((fieldName) => {
+                                options = options.filter((option) => option.fieldName !== fieldName);
+                              });
+                            } else {
+                              // 条件组件中没有选中条件,不允许选择显示或隐藏的控件
+                              options = [];
+                            }
                             return (
                               <Form.Item label="隐藏控件" name="hideComponents" className={styles.hideComponents}>
                                 <Select

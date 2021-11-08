@@ -90,15 +90,15 @@ export type OptionItem = {
 };
 
 export type LabelMap = {
-  key: string
-  label: string,
-  value: string
-}
+  key: string;
+  label: string;
+  value: string;
+};
 export type ColumnsItem = {
-  title: string,
-  dataIndex: string,
-  key: string,
-}
+  title: string;
+  dataIndex: string;
+  key: string;
+};
 export type SelectOptionItem = {
   type: OptionMode;
   data?: OptionItem[];
@@ -118,12 +118,12 @@ export type ruleType = 'custom' | 'inject';
 export type serialRulesItem = {
   id: string | undefined;
   type: ruleType;
-  rules?: RuleOption[]
-}
+  rules?: RuleOption[];
+};
 
 export type RuleOption = {
-  type: keyof typeof SerialNumType
-} & { [key: string]: any }
+  type: keyof typeof SerialNumType;
+} & { [key: string]: any };
 
 export type FormFieldMap = {
   [k: string]: FormField;
@@ -135,6 +135,7 @@ export type ErrorItem = {
 
 export type fieldRule = {
   fieldName: string | undefined;
+  parentId?: string;
   symbol?: string;
   fieldType?: string;
   value?: string | number | string[] | [number, number];

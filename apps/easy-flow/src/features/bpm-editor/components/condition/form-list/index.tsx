@@ -91,50 +91,7 @@ const FormList = ({
   }, [blockIndex, ruleIndex, name]);
   const componentList = useMemo(() => {
     if (components && components?.length > 0) {
-      const list: any[] = [];
-      if (!fieldName) {
-        components
-          .filter((item: { type: string }) => item.type !== 'DescText')
-          .forEach((item) => {
-            if (item.type === 'Tabs') {
-              if (Array.isArray(item.components)) {
-                item.components.forEach((v: any) => {
-                  list.push(Object.assign({}, v.config, v.props, { label: `${item.label}·${v.config.label}` }));
-                });
-              }
-            } else {
-              list.push(item);
-            }
-          });
-      } else {
-        if (fieldName.includes('__')) {
-          components
-            .filter((item: { type: string }) => item.type === 'Tabs')
-            .forEach((item) => {
-              item.components.forEach((v: any) => {
-                list.push(Object.assign({}, v.config, v.props, { label: `${item.label}·${v.config.label}` }));
-              });
-            });
-        } else {
-          components.filter((item: { type: string }) => item.type !== 'DescText' && item.type !== 'Tabs');
-        }
-      }
-      return list;
-      // const list = [...components];
-      // console.info(fieldName, components);
-      // return (
-      //   list
-      //     .filter((item: { type: string }) => item.type !== 'DescText')
-      //     .map((item: FormField) => ({
-      //       label: item.label,
-      //       id: item.id,
-      //       type: item.type,
-      //       format: (item as DateField).format,
-      //       sourceType: (item as SelectField).dataSource?.type || '',
-      //       fieldName: item.fieldName,
-      //       multiple: (item as SelectField)?.multiple || false,
-      //     })) || []
-      // );
+      return components;
     }
     return [];
   }, [components, fieldName]);
@@ -169,6 +126,7 @@ const FormList = ({
     const fieldRule = {
       fieldName: fieldName,
       fieldType: component?.type || rule.fieldType,
+      parentId: component?.parentId || rule.parentId,
     };
     onChange && onChange(blockIndex, ruleIndex, fieldRule);
   });
@@ -180,6 +138,7 @@ const FormList = ({
       fieldName: fieldName,
       symbol: symbol,
       fieldType: selectComponent?.type || rule.fieldType,
+      parentId: selectComponent?.parentId || rule.parentId,
     };
     onChange && onChange(blockIndex, ruleIndex, fieldRule);
   });
@@ -191,6 +150,7 @@ const FormList = ({
       symbol: symbol,
       value: value,
       fieldType: selectComponent?.type || rule.fieldType,
+      parentId: selectComponent?.parentId || rule.parentId,
     };
     onChange && onChange(blockIndex, ruleIndex, fieldRule);
   });

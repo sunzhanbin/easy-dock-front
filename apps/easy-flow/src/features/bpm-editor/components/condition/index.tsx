@@ -9,6 +9,7 @@ import styles from './index.module.scss';
 interface EditProps {
   data: Array<FormField>;
   name: string;
+  showTabs?: boolean; // 是否显示Tabs子控件
   className?: string;
   value?: fieldRule[][];
   onChange?: (value: fieldRule[][]) => void;
@@ -16,16 +17,63 @@ interface EditProps {
   loadDataSource?: (id: string) => Promise<{ key: string; value: string }[] | { data: { data: string[] } }>;
 }
 
-const Condition = ({className, data, value, name, onChange, loadDataSource, isFormRule}: EditProps) => {
+const Condition = ({
+  className,
+  data,
+  value,
+  name,
+  showTabs = true,
+  onChange,
+  loadDataSource,
+  isFormRule = true,
+}: EditProps) => {
   const ruleList = useMemo(() => {
     if (value && value.length > 0) {
       return value;
     }
-    return [[{fieldName: undefined, symbol: undefined}]];
+    return [[{ fieldName: undefined, symbol: undefined }]];
   }, [value]);
   const components = useMemo(() => {
-    return data || [];
-  }, [data]);
+    if (!Array.isArray(data) || data.length < 1) {
+      return [];
+    }
+    const componentList: any[] = [];
+    if (!showTabs) {
+      data.filter((v) => v.type !== 'Tabs' && v.type !== 'DescText').forEach((item) => componentList.push(item));
+      return componentList;
+    }
+    const list = ruleList.flat(2).filter((v) => v.fieldName);
+    if (list.length < 1) {
+      // 还没有选择控件
+      data
+        .filter((item) => item.type !== 'DescText')
+        .forEach((item) => {
+          if (item.type === 'Tabs') {
+            (item?.components || []).forEach((v) => {
+              componentList.push(Object.assign({}, v.config, v.props, { label: `${item.label}·${v.config.label}` }));
+            });
+          } else {
+            componentList.push(item);
+          }
+        });
+    } else {
+      const parentId = list[0].parentId;
+      // 选择了tabs内的控件
+      if (parentId) {
+        data.forEach((item) => {
+          if (item.type === 'Tabs') {
+            (item?.components || []).forEach((v) => {
+              componentList.push(Object.assign({}, v.config, v.props, { label: `${item.label}·${v.config.label}` }));
+            });
+          }
+        });
+      } else {
+        // 选择了tabs外的控件
+        data.filter((v) => v.type !== 'Tabs' && v.type !== 'DescText').forEach((item) => componentList.push(item));
+      }
+    }
+    return componentList;
+  }, [data, ruleList, showTabs]);
   const addRule = useCallback(
     (index: number) => {
       const list = [...ruleList];
@@ -129,10 +177,11 @@ const Condition = ({className, data, value, name, onChange, loadDataSource, isFo
             </div>
           );
         })}
-        {isFormRule &&
-        <Button className={styles.addOr} type="default" icon={<Icon type="xinzeng"/>} onClick={addRuleBlock}>
-          或条件
-        </Button>}
+        {isFormRule && (
+          <Button className={styles.addOr} type="default" icon={<Icon type="xinzeng" />} onClick={addRuleBlock}>
+            或条件
+          </Button>
+        )}
       </div>
     </div>
   );
