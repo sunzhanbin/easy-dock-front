@@ -2,13 +2,16 @@ import React, {useEffect, useRef, useState, memo} from "react";
 import {useDrag, useDrop} from "react-dnd";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import styles from "../index.module.scss";
-import {Tooltip, Input} from "antd";
+import {Tooltip, Input, Select} from "antd";
 import {Icon} from "@common/components";
 import {RuleOption, SerialNumType, CountResetRules} from "@type";
 import IncNumModal from '../components/modal-increase-num';
 import DateModal from '../components/modal-date';
 import classNames from "classnames";
 import {DateOptions} from "@utils/const";
+import {getPopupContainer} from "@utils";
+
+const {Option} = Select
 
 interface DraggableOptionProps {
   data?: RuleOption;
@@ -55,6 +58,10 @@ function DraggableOption(props: DraggableOptionProps) {
     onChange({type: 'fixedChars', chars: event.target.value, index});
   });
 
+  const handleSelectChange = useMemoCallback((value) => {
+    onChange({type: 'createTime', format: value, index});
+  })
+
   const handleDelete = useMemoCallback(() => {
     onDelete(index);
   });
@@ -72,7 +79,6 @@ function DraggableOption(props: DraggableOptionProps) {
   }, [drag, drop]);
 
   const handleSubmit = useMemoCallback((values) => {
-    type === 'createTime' && setShowDateModal(false)
     type === 'incNumber' && setShowIncModal(false)
     onChange && onChange(values)
   })
@@ -89,8 +95,22 @@ function DraggableOption(props: DraggableOptionProps) {
       case 'createTime':
         const date = DateOptions.find(item => item.key === data?.format)?.value
         return (
-          <div className={styles.label} onClick={() => setShowDateModal(true)}>
-            <span className={styles.labelStr}>格式：{date}</span>
+          <div className={styles.label}>
+            <Select
+              placeholder="请选择"
+              size="large"
+              className={styles.formItem}
+              value={`格式：${date}`}
+              showArrow={true}
+              onChange={handleSelectChange}
+              getPopupContainer={getPopupContainer}
+            >
+              {DateOptions.map(({key, value}) => (
+                <Option key={key} value={key} label={value}>
+                  {value}
+                </Option>
+              ))}
+            </Select>
           </div>
         )
       case 'fixedChars':
@@ -138,13 +158,12 @@ function DraggableOption(props: DraggableOptionProps) {
           onSubmit={handleSubmit}
           data={data}
         />
-        <DateModal
-          showDateModal={showDateModal}
-          onCancel={() => setShowDateModal(false)}
-          onSubmit={handleSubmit}
-          data={data}
-        />
-
+        {/*<DateModal*/}
+        {/*  showDateModal={showDateModal}*/}
+        {/*  onCancel={() => setShowDateModal(false)}*/}
+        {/*  onSubmit={handleSubmit}*/}
+        {/*  data={data}*/}
+        {/*/>*/}
       </>
       }
     </div>

@@ -1,5 +1,5 @@
-import {Fragment, memo, useMemo, useState} from 'react'
-import {Button, Form, Radio, Menu, Dropdown} from 'antd'
+import React, {Fragment, memo, useMemo, useState} from 'react'
+import {Button, Form, Radio, Menu, Dropdown, Input} from 'antd'
 import {FormField, OptionItem, RuleOption, ruleType, serialRulesItem} from "@type";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import styles from "./index.module.scss";
@@ -8,6 +8,7 @@ import {Icon} from "@common/components";
 import {getFieldValue} from "@utils";
 import {useAppSelector} from "@app/hooks";
 import {componentPropsSelector} from "@/features/bpm-editor/form-design/formzone-reducer";
+import classNames from "classnames";
 
 interface RulesProps {
   id: string;
@@ -77,10 +78,16 @@ const SerialRules = (props: RulesProps) => {
     let list: RuleOption[] = [...rules];
     if (ruleData.type === 'fixedChars') {
       const {index, chars} = ruleData
-      console.log(ruleData, 'fff')
       list[index] = {
         type: 'fixedChars',
         chars: chars
+      };
+    }
+    if (ruleData.type === 'createTime') {
+      const {index, format} = ruleData
+      list[index] = {
+        type: 'createTime',
+        format
       };
     } else {
       list = list?.map(item => {
@@ -90,7 +97,6 @@ const SerialRules = (props: RulesProps) => {
         return item
       })
     }
-
     setRules(list)
     onChange && onChange({id, type, rules: list})
   })
@@ -108,7 +114,10 @@ const SerialRules = (props: RulesProps) => {
         <>
           {type &&
           <>
-            <Form.Item className={styles.form} name="rules" label="">
+            <Form.Item name="ruleName" label="规则名称">
+              <Input/>
+            </Form.Item>
+            <Form.Item className={styles.form} name="rules" label="规则配置">
               <div className={styles.custom_list}>
                 {rules?.map((item, index: number) => (
                   <Fragment key={index}>
@@ -131,6 +140,7 @@ const SerialRules = (props: RulesProps) => {
               </div>
             </Form.Item>
           </>
+
           }
         </>
       )
@@ -143,12 +153,23 @@ const SerialRules = (props: RulesProps) => {
   })
   return (
     <div>
-      <Radio.Group onChange={(e) => {
-        handleRadioChange(e.target.value);
-      }} value={type}>
-        <Radio value='custom'>自定义规则</Radio>
-        <Radio value='inject'>引用规则</Radio>
-      </Radio.Group>
+      <div className={styles.container}>
+        <div className={styles.title}>
+          <div className={classNames(styles.custom, type === 'custom' ? styles.active : '')}
+               onClick={() => {
+                 handleRadioChange('custom')
+               }}
+          >自定义规则
+          </div>
+          <div
+            className={classNames(styles.subapp, type === 'inject' ? styles.active : '')}
+            onClick={() => {
+              handleRadioChange('inject')
+            }}>
+            使用已有规则
+          </div>
+        </div>
+      </div>
       <div className={styles.content}>{renderContent()}</div>
     </div>
   )
