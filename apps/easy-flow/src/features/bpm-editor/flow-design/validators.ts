@@ -26,7 +26,7 @@ const dataPushConfig = (value: DataConfig): string => {
       return '推送数据的接口地址的不能为空';
     }
     const urlRegex = /(^(http|https):\/\/([\w\-]+\.)+[\w\-]+(\/[\w\u4e00-\u9fa5\-\.\/?\@\%\!\&=\+\~\:\#\;\,]*)?)/;
-    if (urlRegex.test(url)) {
+    if (!urlRegex.test(url)) {
       return '请输入正确的接口地址';
     }
     if (!method) {

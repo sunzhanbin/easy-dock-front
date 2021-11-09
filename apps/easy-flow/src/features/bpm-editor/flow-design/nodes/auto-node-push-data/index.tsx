@@ -13,7 +13,7 @@ interface AutoNodeProps {
 function AutoNodePushData(props: AutoNodeProps) {
   const { node } = props;
   const apis = useSelector(apisSelector);
-  const api = node.dataConfig?.api;
+  const api = node.dataConfig?.id;
 
   const apiName = useMemo(() => {
     const target = apis.find((item) => {

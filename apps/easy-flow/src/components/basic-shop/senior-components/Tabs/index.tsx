@@ -37,7 +37,13 @@ const Tabs = ({ components = [], fieldName, auth, formInstance, value, readonly,
     setShowModal(true);
   });
   const handleRemove = useMemoCallback((key: string) => {
-    const list = formInstance?.getFieldsValue()[fieldName] || [...panes];
+    // 为了解决tabs回显问题,所以使用了formInstance
+    const fieldsValue = formInstance?.getFieldsValue()[fieldName];
+    const list = fieldsValue
+      ? Array.isArray(fieldsValue)
+        ? fieldsValue
+        : Object.values({ ...fieldsValue, ...panes })
+      : [...panes];
     const index = list.findIndex((pane: any) => pane.key === key);
     const paneList = list.filter((v: any) => v.key !== key);
     setPanes(paneList);
@@ -61,7 +67,12 @@ const Tabs = ({ components = [], fieldName, auth, formInstance, value, readonly,
     form.validateFields().then((values) => {
       const { __title__ } = values;
       // 为了解决tabs回显问题,所以使用了formInstance
-      const list = formInstance?.getFieldsValue()[fieldName] || [...panes];
+      const fieldsValue = formInstance?.getFieldsValue()[fieldName];
+      const list = fieldsValue
+        ? Array.isArray(fieldsValue)
+          ? fieldsValue
+          : Object.values({ ...fieldsValue, ...panes })
+        : [...panes];
       const key = String(list.length);
       list.push({ key, __title__, content });
       setPanes(list);

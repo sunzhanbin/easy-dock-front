@@ -10,7 +10,7 @@ export interface formRulesItem {
   watch: string[];
   visible?: boolean;
   value?: null | string | number | Date;
-  subtype?: number; // 0 | 1 | 2 => 显隐 | 启停 | 联动；  
+  subtype?: number; // 0 | 1 | 2 => 显隐 | 启停 | 联动；
   type?: string; // init | change | blur | panelChange
 }
 
@@ -28,26 +28,23 @@ export interface fieldRulesReturn {
 
 export const convertFormRules = (data: FormRuleItem[] = [], components: { config: any; props: any }[]) => {
   const fieldRulesObj: formRulesReturn = {};
-
   function setFieldRules(fieldName: string, value: any, item: any, type: string, subtype: number) {
     const obj = {
       watch: [].concat(value),
       condition: item,
       subtype,
-      type
-    }
+      type,
+    };
     if (fieldRulesObj?.[fieldName as string]) {
       fieldRulesObj[fieldName as string].push(obj);
     } else {
-      fieldRulesObj[fieldName] = [
-        obj
-      ];
+      fieldRulesObj[fieldName] = [obj];
     }
   }
   data?.map((item: any) => {
-    const {formChangeRule, type, subtype = 0} = item;
+    const { formChangeRule, type, subtype = 0 } = item;
     if (type == 'change' && subtype == 0) {
-      const {hideComponents, showComponents, fieldRule} = formChangeRule;
+      const { hideComponents, showComponents, fieldRule } = formChangeRule;
       const watchList = [
         ...(new Set(
           fieldRule
@@ -63,7 +60,7 @@ export const convertFormRules = (data: FormRuleItem[] = [], components: { config
           condition: fieldRule,
           visible: index !== 1,
           subtype: 0,
-          type
+          type,
         };
         components.map((field: any) => {
           if (fieldRulesObj?.[field]) {
@@ -73,27 +70,25 @@ export const convertFormRules = (data: FormRuleItem[] = [], components: { config
           }
         });
       });
-    } else if(type == 'change' && subtype == 1) {
-      const {fieldRule} = formChangeRule;
+    } else if (type == 'change' && subtype == 1) {
+      const { fieldRule } = formChangeRule;
       fieldRule
         .flat(2)
         .filter(Boolean)
         .map((item: any) => {
-          const {fieldName, value} = item;
+          const { fieldName, value } = item;
           setFieldRules(fieldName, value, item, type, 1);
           setFieldRules(value, fieldName, item, type, 1);
         });
     }
   });
   // panel配置公式计算
-  components?.map(com => {
-    const {config} = com
-    if (!config?.defaultNumber) return
-    const fieldName = config.id
-    const value = config?.defaultNumber.calculateData
-    value && setFieldRules(fieldName, value, config?.defaultNumber, 'change', 2)
-  })
-  console.log(fieldRulesObj, 'field*******************')
+  components?.map((com) => {
+    const { config } = com;
+    if (!config?.defaultNumber) return;
+    const fieldName = config.id;
+    const value = config?.defaultNumber.calculateData;
+    value && setFieldRules(fieldName, value, config?.defaultNumber, 'change', 2);
+  });
   return fieldRulesObj;
 };
-
