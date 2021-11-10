@@ -25,7 +25,6 @@ export const getCalculateNum = (
       // formListMap
     }
   });
-  debugger;
   const filterList = Object.values(formListMap).filter((item) => !!item);
   if (calcType === 'minus') {
     if (changeType.includes('Date')) {
@@ -38,10 +37,8 @@ export const getCalculateNum = (
   } else if (calcType === 'add') {
     returnNum = math.sum(filterList);
   } else if (calcType === 'sum') {
-    debugger;
     returnNum = math.sum(filterList);
   } else if (calcType === 'average') {
-    debugger;
     returnNum = math.mean(filterList);
   } else if (calcType === 'count') {
     returnNum = filterList.join(',');

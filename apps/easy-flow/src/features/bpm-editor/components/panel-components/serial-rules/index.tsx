@@ -1,14 +1,14 @@
-import React, {Fragment, memo, useMemo, useState} from 'react'
-import {Button, Form, Radio, Menu, Dropdown, Input} from 'antd'
-import {FormField, OptionItem, RuleOption, ruleType, serialRulesItem} from "@type";
-import useMemoCallback from "@common/hooks/use-memo-callback";
-import styles from "./index.module.scss";
-import DraggableOption from "./drag-options";
-import {Icon} from "@common/components";
-import {getFieldValue} from "@utils";
-import {useAppSelector} from "@app/hooks";
-import {componentPropsSelector} from "@/features/bpm-editor/form-design/formzone-reducer";
-import classNames from "classnames";
+import React, { useEffect, memo, useMemo, useState } from 'react';
+import { RuleOption, serialRulesItem } from '@type';
+import useMemoCallback from '@common/hooks/use-memo-callback';
+import styles from './index.module.scss';
+import classNames from 'classnames';
+import RuleComponent from './components/rule-component';
+import { Icon } from '@common/components';
+import { Button, Form } from 'antd';
+import RuleModal from './components/modal-rule';
+import { saveSerialRules } from '@apis/form';
+import { useSubAppDetail } from '@app/app';
 
 interface RulesProps {
   id: string;
@@ -16,163 +16,206 @@ interface RulesProps {
   onChange?: (v: serialRulesItem) => void;
 }
 
-const {SubMenu} = Menu;
-
 const SerialRules = (props: RulesProps) => {
-  const {id, value, onChange} = props
-  const [type, setType] = useState<ruleType>(value?.type || 'custom')
-  const [rules, setRules] = useState<RuleOption[]>(value?.rules || [])
-  const byId = useAppSelector(componentPropsSelector);
+  const { id, value, onChange } = props;
+  console.log(value, 'value');
+  const serialMata = value?.serialMata;
+  const [type, setType] = useState<string>('custom');
+  const [ruleModal, setRuleModal] = useState<boolean>(false);
+  const [rules, setRules] = useState<RuleOption[]>(serialMata?.rules || []);
+  const [changeRules, setChangeRules] = useState<RuleOption[]>(serialMata?.changeRules || []);
+  const [ruleName, setRuleName] = useState<string>(serialMata?.ruleName || '');
+  const [changeRuleName, setChangeRuleName] = useState<string>(serialMata?.changeRuleName || '');
+  const [showChangeSerial, setShowChangeSerial] = useState<boolean>(false);
+  const [editStatus, setEditStatus] = useState<boolean>(false);
+  const [ruleStatus, setRuleStatus] = useState<number>(1);
+  const [serialId, setSerialId] = useState<number>(value?.serialId || 0);
+  const [formSerial] = Form.useForm();
+  const { data } = useSubAppDetail();
 
-  const fields = useMemo<{ id: string; name: string }[]>(() => {
-    const componentList = Object.values(byId).map((item: FormField) => item) || [];
-    return componentList
-      .filter((com) => com.id !== id)
-      .map((com) => ({id: com.fieldName, name: com.label}));
-  }, [byId, id]);
+  useEffect(() => {
+    setType(serialId ? 'inject' : 'custom');
+  }, [serialId]);
+
   // 自定义规则/引用规则
-  const handleRadioChange = useMemoCallback((type) => {
-    setType(type)
-    onChange && onChange({id, type})
-  })
+  const handleTypeChange = useMemoCallback((type) => {
+    setType(type);
+    onChange && onChange({ serialId, serialMata: { type } });
+  });
 
-  // 添加规则下拉
-  const menu = useMemoCallback(() => {
-    const disabledMenu = rules.findIndex(item => item.type === 'createTime') !== -1
-    const children = fields.map((item) => (<Menu.Item key={item.id}>{item.name}</Menu.Item>))
-    return (
-      <Menu onClick={handleAdd}>
-        <Menu.Item key="createTime" disabled={disabledMenu}>提交日期</Menu.Item>
-        <Menu.Item key="fixedChars">固定字符</Menu.Item>
-        <SubMenu title="表单字段" key="fieldName">
-          {children}
-        </SubMenu>
-      </Menu>
-    )
-  })
-  const handleAdd = useMemoCallback((addItem) => {
-    const {key, keyPath} = addItem
-    const list = [...rules]
-    let ruleItem: RuleOption;
-    if (keyPath.length > 1) {
-      const type: 'fixedChars' = keyPath.find((item: any) => item !== key)
-      ruleItem = getFieldValue({key: type, fieldValue: key})
+  const handleRuleShow = useMemoCallback(() => {
+    setRuleModal(true);
+  });
+
+  const handleCancelRuleModal = useMemoCallback(() => {
+    setRuleModal(false);
+  });
+  const handleConfirmRule = useMemoCallback((selectedSerial) => {
+    setRuleModal(false);
+    setShowChangeSerial(true);
+    setSerialId(selectedSerial.id);
+    setChangeRuleName(selectedSerial.name);
+    setChangeRules(selectedSerial.mata);
+    setRuleStatus(selectedSerial.status);
+    onChange &&
+      onChange({
+        serialId,
+        serialMata: {
+          type,
+          ruleName: selectedSerial?.name,
+          changeRules: selectedSerial?.mata,
+        },
+      });
+    // todo
+    console.log(selectedSerial, 'selectedSerial');
+  });
+
+  const handleOnChange = useMemoCallback((serialItem) => {
+    const { type, rules, ruleName } = serialItem;
+    if (type === 'custom') {
+      onChange && onChange({ serialId, serialMata: { type, ruleName, rules: rules } });
     } else {
-      ruleItem = getFieldValue({key})
+      onChange &&
+        onChange({
+          serialId,
+          serialMata: {
+            type,
+            ruleName,
+            changeRules: rules,
+          },
+        });
     }
-    list?.push(ruleItem)
-    setRules(list)
-    onChange && onChange({id, type, rules: list})
-  })
+  });
 
-  const handleDrag = useMemoCallback((sourceIndex: number, targetIndex: number) => {
-    const list: RuleOption[] = [...rules];
-    let tmp = list[sourceIndex];
-    list[sourceIndex] = list[targetIndex];
-    list[targetIndex] = tmp;
-    setRules(list);
-    onChange && onChange({id, type, rules: list})
-  })
+  const handleEditRule = useMemoCallback(() => {
+    setEditStatus(true);
+  });
 
-  const handleChangeRule = useMemoCallback((ruleData) => {
-    let list: RuleOption[] = [...rules];
-    if (ruleData.type === 'fixedChars') {
-      const {index, chars} = ruleData
-      list[index] = {
-        type: 'fixedChars',
-        chars: chars
-      };
+  const handleSaveRules = async () => {
+    try {
+      const values = await formSerial.validateFields();
+      if (values.errorFields || !data) return;
+      const { app } = data;
+      const params = { appId: app?.id, name: values.name, rules };
+      const ret = await saveSerialRules(params);
+      console.log(ret, 'ret');
+      if (!ret || !ret.data) return;
+      const { data: serialMap } = ret;
+      setEditStatus(false);
+      setSerialId(serialMap.id);
+      setChangeRules(serialMap.mata);
+      handleTypeChange && handleTypeChange('inject');
+      console.log(ret, 'ret');
+    } catch (e) {
+      console.log(e);
     }
-    if (ruleData.type === 'createTime') {
-      const {index, format} = ruleData
-      list[index] = {
-        type: 'createTime',
-        format
-      };
-    } else {
-      list = list?.map(item => {
-        if (item.type === ruleData.type) {
-          item = {...ruleData}
-        }
-        return item
-      })
-    }
-    setRules(list)
-    onChange && onChange({id, type, rules: list})
-  })
+  };
 
-  const handleDelete = useMemoCallback((index) => {
-    const list: RuleOption[] = [...rules];
-    list.splice(index, 1);
-    setRules(list);
-    onChange && onChange({id, type, rules: list});
-  })
+  const handleCancelEdit = useMemoCallback(() => {
+    setEditStatus(false);
+  });
 
   const renderContent = useMemoCallback(() => {
     if (type === 'custom') {
       return (
         <>
-          {type &&
-          <>
-            <Form.Item name="ruleName" label="规则名称">
-              <Input/>
-            </Form.Item>
-            <Form.Item className={styles.form} name="rules" label="规则配置">
-              <div className={styles.custom_list}>
-                {rules?.map((item, index: number) => (
-                  <Fragment key={index}>
-                    <DraggableOption
-                      index={index}
-                      key={index}
-                      data={item}
-                      onChange={handleChangeRule}
-                      onDrag={handleDrag}
-                      onDelete={handleDelete}
-                    />
-                  </Fragment>
-                ))}
-                <Dropdown overlay={menu}>
-                  <Button className={styles.add_custom}>
-                    <Icon className={styles.iconfont} type="xinzengjiacu"/>
-                    <span>添加</span>
-                  </Button>
-                </Dropdown>
-              </div>
-            </Form.Item>
-          </>
-
-          }
+          <RuleComponent
+            rules={rules}
+            form={formSerial}
+            setRules={setRules}
+            ruleName={ruleName}
+            setRuleName={setRuleName}
+            type="custom"
+            handleTypeChange={handleTypeChange}
+            onChange={handleOnChange}
+            id={id}
+          />
+          <Form.Item>
+            <Button className={styles.add_custom} size="large" onClick={handleSaveRules}>
+              <span>保存并应用</span>
+            </Button>
+          </Form.Item>
         </>
-      )
+      );
     } else if (type === 'inject') {
-      return <>
-        333
-      </>
+      return (
+        <>
+          {!serialId ? (
+            <Button className={styles.add_inject} size="large" onClick={handleRuleShow}>
+              <Icon className={styles.iconfont} type="xinzengjiacu" />
+              <span>选择规则</span>
+            </Button>
+          ) : (
+            <div className={styles.content}>
+              <Button className={styles.add_inject} size="large" onClick={handleRuleShow}>
+                <Icon className={styles.iconfont} type="xinzengjiacu" />
+                <span>更换规则</span>
+              </Button>
+              <RuleComponent
+                id={id}
+                rules={changeRules}
+                setRules={setChangeRules}
+                ruleName={ruleName}
+                setRuleName={setRuleName}
+                onChange={handleOnChange}
+                ruleStatus={ruleStatus}
+                editStatus={editStatus}
+                serialId={serialId}
+                type="inject"
+              />
+              {!editStatus ? (
+                <Form.Item>
+                  <Button className={styles.add_custom} size="large" onClick={handleEditRule}>
+                    <span>编辑规则</span>
+                  </Button>
+                </Form.Item>
+              ) : (
+                <div>
+                  <Form.Item>
+                    <Button className={styles.add_custom} size="large" onClick={handleCancelEdit}>
+                      <span>取 消</span>
+                    </Button>
+                  </Form.Item>
+                  <Form.Item>
+                    <Button className={styles.add_custom} size="large" onClick={handleSaveRules}>
+                      <span>保 存</span>
+                    </Button>
+                  </Form.Item>
+                </div>
+              )}
+            </div>
+          )}
+          <RuleModal showRuleModal={ruleModal} onCancel={handleCancelRuleModal} onSubmit={handleConfirmRule} />
+        </>
+      );
     }
-    return null
-  })
+    return null;
+  });
   return (
     <div>
       <div className={styles.container}>
         <div className={styles.title}>
-          <div className={classNames(styles.custom, type === 'custom' ? styles.active : '')}
-               onClick={() => {
-                 handleRadioChange('custom')
-               }}
-          >自定义规则
+          <div
+            className={classNames(styles.custom, type === 'custom' ? styles.active : '')}
+            onClick={() => {
+              handleTypeChange('custom');
+            }}
+          >
+            自定义规则
           </div>
           <div
             className={classNames(styles.subapp, type === 'inject' ? styles.active : '')}
             onClick={() => {
-              handleRadioChange('inject')
-            }}>
+              handleTypeChange('inject');
+            }}
+          >
             使用已有规则
           </div>
         </div>
       </div>
       <div className={styles.content}>{renderContent()}</div>
     </div>
-  )
-}
+  );
+};
 
-export default memo(SerialRules)
+export default memo(SerialRules);
