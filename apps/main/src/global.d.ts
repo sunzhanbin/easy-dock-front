@@ -24,3 +24,5 @@ interface MicroApp {
   title: string;
   description?: string;
 }
+
+declare module 'theme-scheme/dist/utils.esm';

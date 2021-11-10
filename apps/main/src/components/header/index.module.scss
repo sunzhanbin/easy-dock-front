@@ -1,3 +1,4 @@
+@import '@common/styles/var.scss';
 @import '@common/styles/mixin.scss';
 
 .container {
@@ -36,9 +37,9 @@
         color: rgba(0, 0, 0, 0.85);
       }
       &:hover {
-        border-color: #4c5cdb;
+        border-color: $primary-color;
         .text {
-          color: #4c5cdb;
+          color: $primary-color;
         }
       }
       &.active {

@@ -37,7 +37,8 @@
   &.ant-btn-background-ghost {
     color: $primary-color;
     border-radius: 3px;
-    border-color: rgba($primary-color, 0.8);
+    border-color: $primary-color;
+    opacity: 0.8;
 
     &:focus {
       border-color: $primary-color;
@@ -45,24 +46,28 @@
     }
 
     &:hover {
-      border-color: rgba($primary-color, 0.5);
-      color: rgba($primary-color, 0.8);
+      border-color: $primary-color;
+      color: $primary-color;
+      opacity: 0.5;
     }
 
     &.disabled {
-      border-color: rgba(#a6ace2, 0.5);
-      color: rgba($primary-color, 0.5);
+      border-color: r$primary-color;
+      color: $primary-color;
+      opacity: 0.5;
     }
   }
 
   &.disabled {
-    background-color: #a6ace2;
+    background-color: $primary-color;
+    opacity: 0.5;
   }
 
   &[disabled] {
-    background-color: #a6ace2;
+    background-color: $primary-color;
+    opacity: 0.5;
     &:hover {
-      background-color: #a6ace2;
+      background-color: $primary-color;
     }
   }
 

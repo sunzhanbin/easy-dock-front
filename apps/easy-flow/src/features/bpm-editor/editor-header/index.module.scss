@@ -1,3 +1,4 @@
+@import '@common/styles/var.scss';
 .header_container {
   display: flex;
   align-items: center;
@@ -29,7 +30,7 @@
         }
         &.active {
           color: rgba(24, 31, 67, 0.95);
-          border-bottom: 5px solid #4c5cdb;
+          border-bottom: 5px solid $primary-color;
         }
       }
       .separator {

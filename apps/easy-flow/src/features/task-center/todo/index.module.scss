@@ -1,3 +1,4 @@
+@import '@common/styles/var.scss';
 .container {
   .header {
     .search {
@@ -31,7 +32,7 @@
           border: 1px solid rgba(76, 92, 219, 0.85);
           font-size: 14px;
           font-weight: 400;
-          color: #4c5cdb;
+          color: $primary-color;
           margin-right: 12px;
           &:hover {
             border: 1px solid rgba(76, 92, 219, 0.5);
@@ -75,7 +76,7 @@
     .name {
       cursor: pointer;
       &:hover {
-        color: #4c5cdb;
+        color: $primary-color;
       }
     }
   }

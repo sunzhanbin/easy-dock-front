@@ -1,3 +1,4 @@
+@import '@common/styles/var.scss';
 .container {
   :global {
     .ant-form-item-label {
@@ -27,14 +28,14 @@
         color: rgba(24, 31, 67, 0.95);
         box-shadow: none !important;
         &:hover {
-          color: #4c5cdb;
+          color: $primary-color;
         }
       }
       .ant-radio-button-wrapper:not(:first-child)::before {
         display: none;
       }
       .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
-        color: #4c5cdb;
+        color: $primary-color;
         background-image: url(~@/assets/selected.png);
         background-position: top right;
         background-repeat: no-repeat;

@@ -1,3 +1,4 @@
+@import '@common/styles/var.scss';
 .container {
   flex: 0 0 354px;
   height: calc(100vh - 64px);
@@ -53,7 +54,7 @@
     .ant-tabs-top > div > .ant-tabs-nav .ant-tabs-ink-bar,
     .ant-tabs-bottom > div > .ant-tabs-nav .ant-tabs-ink-bar {
       height: 5px;
-      background: #4c5cdb;
+      background: $primary-color;
     }
   }
 }

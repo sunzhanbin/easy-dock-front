@@ -1,3 +1,4 @@
+@import '@common/styles/var.scss';
 .muliText {
   position: relative;
   display: flex;
@@ -36,7 +37,7 @@
           cursor: pointer;
           &:hover {
             & > svg {
-              color: #4c5cdb;
+              color: $primary-color;
             }
           }
         }

@@ -71,9 +71,9 @@
           font-weight: 400;
         }
         &:hover {
-          color: #4c5cdb;
+          color: $primary-color;
           .icon {
-            color: #4c5cdb;
+            color: $primary-color;
           }
         }
       }

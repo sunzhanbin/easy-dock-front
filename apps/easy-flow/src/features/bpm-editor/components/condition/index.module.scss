@@ -1,3 +1,4 @@
+@import '@common/styles/var.scss';
 .condition {
   .title {
     height: 32px;
@@ -27,7 +28,7 @@
             line-height: 20px;
             font-size: 20px;
             &:hover {
-              color: #4c5cdb;
+              color: $primary-color;
             }
           }
         }

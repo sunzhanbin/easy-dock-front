@@ -60,7 +60,7 @@ const CardContainer = styled.div`
           width: 20px;
           height: 20px;
           &:hover {
-            color: #4c5cdb;
+            color: $primary-color;
           }
         }
       }
