@@ -16,6 +16,17 @@ import styles from './index.module.scss';
 import { Icon } from '@common/components';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 
+const defaultNumberConfig = {
+  key: 'defaultNumber',
+  placeholder: '请输入',
+  label: '默认值',
+  defaultValue: '',
+  type: 'InputNumber',
+  direction: 'vertical',
+  required: false,
+  isProps: false,
+};
+
 const { TabPane } = Tabs;
 
 const EditZone = () => {
@@ -36,11 +47,20 @@ const EditZone = () => {
       if (subComponentConfig) {
         const { parentId, type } = subComponentConfig;
         const { label: parentLabel } = byId[parentId] || {};
-        const editConfig = formDesign.schema[type as FieldType]?.config;
+        let editConfig = formDesign.schema[type as FieldType]?.config;
+        editConfig = editConfig ? [...editConfig] : [];
+        let newConfig = { ...subComponentConfig };
+        if (type === 'InputNumber' && editConfig[2]) {
+          editConfig.splice(2, 1, defaultNumberConfig as SchemaConfigItem);
+          newConfig = {
+            ...newConfig,
+            defaultNumber: typeof newConfig.defaultNumber === 'number' ? newConfig.defaultNumber : undefined,
+          };
+        }
         const baseInfo = formDesign.schema[type as FieldType]?.baseInfo;
         setEditList(editConfig as SchemaConfigItem[]);
         setTitle(`${parentLabel} · ${baseInfo?.name}`);
-        setInitValues(subComponentConfig);
+        setInitValues(newConfig);
         setComponentId(subComponentConfig.id);
         return;
       }
@@ -61,7 +81,7 @@ const EditZone = () => {
   const onSave = useMemoCallback((values, isValidate) => {
     if (subComponentConfig) {
       const props: { [k: string]: any } = {};
-      const keys = Object.keys(subComponentConfig);
+      const keys = Object.keys(subComponentConfig).filter((v) => v !== 'defaultNumber');
       Object.keys(values).forEach((key) => {
         if (!keys.includes(key)) {
           props[key] = values[key];
