@@ -124,7 +124,7 @@ const Tabs = ({ components = [], fieldName, auth, formInstance, value, readonly,
         })}
       </TabList>
       <Modal visible={showModal} title="标题" closable={false} onCancel={handleClose} onOk={handleOk}>
-        <Form form={form}>
+        <Form form={form} autoComplete="off">
           <Form.Item label="标题" name="__title__" required rules={[{ required: true, message: '请输入标题' }]}>
             <Input />
           </Form.Item>

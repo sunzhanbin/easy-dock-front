@@ -173,7 +173,7 @@ const FormDetail = React.forwardRef(function FormDetail(
     }
   }, [form, initRuleList, initialValue]);
 
-  const onValuesChange = useCallback((changeValue: any) => {
+  const onValuesChange = useCallback((changeValue: any, all: any) => {
     // 此处不要进行setState操作   避免重复更新
     Object.entries(changeValue).map(([key, value]: any) => {
       if (typeof value === 'object' && Object.values(value).length) {

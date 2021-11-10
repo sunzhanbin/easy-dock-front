@@ -27,7 +27,7 @@ export interface fieldRulesReturn {
 }
 
 export const convertFormRules = (data: FormRuleItem[] = [], components: { config: any; props: any }[]) => {
-  const fieldRulesObj: formRulesReturn = {};
+  const fieldRulesObj: any = {};
   function setFieldRules(fieldName: string, value: any, item: any, type: string, subtype: number) {
     const obj = {
       watch: [].concat(value),
@@ -53,6 +53,8 @@ export const convertFormRules = (data: FormRuleItem[] = [], components: { config
             .map((item: any) => item.fieldName),
         ) as any),
       ];
+      const { parentId } = fieldRule.flat(2).find((item: {[key: string]: any}) => !!item.parentId);
+      
       [showComponents, hideComponents].map((components, index) => {
         if (!components) return;
         const obj = {
@@ -63,12 +65,21 @@ export const convertFormRules = (data: FormRuleItem[] = [], components: { config
           type,
         };
         components.map((field: any) => {
+          if(parentId) {
+            fieldRulesObj[parentId] = {
+              [field]: []
+            }
+            fieldRulesObj[parentId][field].push(obj)
+            return;
+          }
           if (fieldRulesObj?.[field]) {
             fieldRulesObj[field].push(obj);
           } else {
             fieldRulesObj[field] = [obj];
           }
         });
+        
+
       });
     } else if (type == 'change' && subtype == 1) {
       const { fieldRule } = formChangeRule;
