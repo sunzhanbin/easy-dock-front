@@ -116,9 +116,14 @@ export type SelectColumnsItem = {
 export type ruleType = 'custom' | 'inject';
 
 export type serialRulesItem = {
-  id: string | undefined;
-  type: ruleType;
-  rules?: RuleOption[];
+  serialId: number | undefined;
+  serialMata?: {
+    type: string;
+    rules?: RuleOption[];
+    changeRules?: RuleOption[];
+    ruleName?: string | undefined;
+    changeRuleName?: string | undefined;
+  };
 };
 
 export type RuleOption = {
