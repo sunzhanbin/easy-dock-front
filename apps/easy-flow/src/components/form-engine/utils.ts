@@ -28,6 +28,7 @@ export interface fieldRulesReturn {
 
 export const convertFormRules = (data: FormRuleItem[] = [], components: { config: any; props: any }[]) => {
   const fieldRulesObj: any = {};
+  const componentList = components.map((v) => v.config);
   function setFieldRules(fieldName: string, value: any, item: any, type: string, subtype: number) {
     const obj = {
       watch: [].concat(value),
@@ -53,8 +54,10 @@ export const convertFormRules = (data: FormRuleItem[] = [], components: { config
             .map((item: any) => item.fieldName),
         ) as any),
       ];
-      const { parentId } = fieldRule.flat(2).find((item: {[key: string]: any}) => !!item.parentId);
-      
+      const { parentId } = fieldRule.flat(2).find((item: { [key: string]: any }) => !!item.parentId);
+      const component = componentList.find((v) => v.id === parentId);
+      const parentFieldName = component?.fieldName || '';
+
       [showComponents, hideComponents].map((components, index) => {
         if (!components) return;
         const obj = {
@@ -65,11 +68,14 @@ export const convertFormRules = (data: FormRuleItem[] = [], components: { config
           type,
         };
         components.map((field: any) => {
-          if(parentId) {
-            fieldRulesObj[parentId] = {
-              [field]: []
+          if (parentId) {
+            if (fieldRulesObj?.[parentFieldName]?.[field]) {
+              fieldRulesObj[parentFieldName][field].push(obj);
+            } else {
+              fieldRulesObj[parentFieldName] = Object.assign({}, fieldRulesObj?.[parentFieldName], {
+                [field]: [obj],
+              });
             }
-            fieldRulesObj[parentId][field].push(obj)
             return;
           }
           if (fieldRulesObj?.[field]) {
@@ -78,8 +84,6 @@ export const convertFormRules = (data: FormRuleItem[] = [], components: { config
             fieldRulesObj[field] = [obj];
           }
         });
-        
-
       });
     } else if (type == 'change' && subtype == 1) {
       const { fieldRule } = formChangeRule;

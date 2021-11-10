@@ -1,7 +1,7 @@
 import { memo, useMemo, useState, useEffect } from 'react';
 import { Form, Select, Input, InputNumber } from 'antd';
 import classnames from 'classnames';
-import { DateField, fieldRule, FormField, SelectField } from '@/type';
+import { fieldRule } from '@/type';
 import { symbolMap, dynamicMap } from '@/utils';
 import { Icon, Loading } from '@common/components';
 import useMemoCallback from '@common/hooks/use-memo-callback';

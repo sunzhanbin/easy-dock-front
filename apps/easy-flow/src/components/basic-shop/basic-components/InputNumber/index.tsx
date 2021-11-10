@@ -14,7 +14,7 @@ const InputNumberComponent = (props: InputNumberProps & { unique: boolean } & { 
     if (!form || !rules) return;
     console.log(props, 'rules---------number');
     const formValue = form.getFieldsValue();
-    const rule = rules?.find((rule) => rule?.condition?.calcType);
+    const rule = (Array.isArray(rules) ? rules : []).find((rule) => rule?.condition?.calcType);
     if (!rule?.condition?.calcType) return;
     const {
       condition: { calcType },
