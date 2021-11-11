@@ -99,6 +99,7 @@ function StartFlow() {
   const handleSubmit = useMemoCallback(async () => {
     if (!formRef.current || !subApp) return;
     const res = formRef.current.validateFields();
+    // 校验并提示tabs内控件错误
     res.catch((error) => {
       const { errorFields = [], values } = error;
       if (errorFields.length > 0) {
@@ -108,25 +109,28 @@ function StartFlow() {
           .forEach((name, index) => {
             tabsNameMapIndex[name] = index;
           });
-        const list = errorFields
+        const errorTabList = errorFields
           .filter((field: { name: string[] }) => field.name.length === 3)
           .map((v: { name: string[] }) => v.name)
           .map((name: [string, string, string]) => `${name[0]},${name[1]}`);
-        const errorTabs = errorFields
-          .filter((field: { name: string[] }) => field.name.length === 3)
-          .map((v: { name: string[] }) => v.name)
-          .map((name: [string, string, string]) => {
-            return {
-              tabIndex: tabsNameMapIndex[name[0]],
-              panelIndex: Number(name[1]),
-            };
-          });
-        console.info({ errorTabs });
+        const errorTabs = Array.from(new Set(errorTabList)).map((name) => {
+          const [tabName, paneKey] = (name as string).split(',');
+          return {
+            tabIndex: tabsNameMapIndex[tabName],
+            paneIndex: Number(paneKey),
+          };
+        });
         if (errorTabs.length < 1) {
           return;
         }
-
-        message.error('数据填写错误');
+        errorTabs.forEach((item) => {
+          const { tabIndex, paneIndex } = item;
+          const selector = `.ant-form .ant-tabs:nth-child(${tabIndex + 1})  .ant-tabs-tab:nth-child(${paneIndex + 1})`;
+          const el = document.querySelector(selector);
+          if (el) {
+            (el as HTMLDivElement).style.borderColor = '#ff5568';
+          }
+        });
       }
     });
     const values = await formRef.current.validateFields();
