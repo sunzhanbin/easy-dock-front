@@ -1,4 +1,4 @@
-import { ReactNode, useCallback, useMemo, useState } from 'react';
+import { ReactNode, useMemo } from 'react';
 import { Link, useRouteMatch } from 'react-router-dom';
 import classnames from 'classnames';
 import logo from '@assets/logo.png';
@@ -9,9 +9,6 @@ import { useAppSelector } from '@/hooks/use-redux';
 import { userSelector } from '@/store/user';
 import { RoleEnum } from '@/schema/app';
 import { ROUTES } from '@consts';
-import ColorPicker from '@/components/color-picker'
-import {registerTheme} from 'theme-scheme/dist/utils.esm'
-import cookie from 'js-cookie';
 
 interface AppHeaderProps {
   children?: ReactNode;
@@ -33,15 +30,6 @@ export default function AppHeader({ children }: AppHeaderProps) {
     return false;
   }, [user]);
 
-  const [color, setColor] = useState(cookie.get('theme') || '#4c5cdb')
-
-  const handleColorChange = useCallback((color: any) => {
-    registerTheme({
-      '--ant-primary-color': color
-    });
-    setColor(color);
-    cookie.set('theme', color);
-  }, []);
 
   // 是否有权限跳转到应用端,只有正常项目租户才有权限
   const canGoApp = useMemo(() => {
@@ -58,31 +46,6 @@ export default function AppHeader({ children }: AppHeaderProps) {
         <Link to="/" className={styles.logo}>
           <img src={logo} alt="logo" />
         </Link>
-
-        <div style={{display: 'flex', flexDirection: 'row'}}>
-          <ColorPicker
-            type="sketch"
-            small
-            color={color}
-            position={'right'}
-            presetColors={[
-              '#F5222D',
-              '#FA541C',
-              '#FA8C16',
-              '#FAAD14',
-              '#FADB14',
-              '#A0D911',
-              '#52C41A',
-              '#13C2C2',
-              '#1890FF',
-              '#2F54EB',
-              '#722ED1',
-              '#EB2F96'
-            ]}
-            onChangeComplete={ handleColorChange}
-          />
-          <strong style={{ margin: '0 10px'}}>Dynamic Theme</strong>
-        </div>
 
         {children}
 

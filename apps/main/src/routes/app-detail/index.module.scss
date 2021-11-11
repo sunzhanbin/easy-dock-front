@@ -109,7 +109,7 @@
         align-items: center;
         justify-content: center;
         height: 92px;
-        background: #fff;
+        background: var(--custom-card-background, #fff);
         border-radius: 3px;
         line-height: 22px;
         color: #181f43;

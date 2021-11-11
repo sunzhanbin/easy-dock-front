@@ -8,7 +8,7 @@
   padding: 0;
   // border-bottom: 1px solid rgba(24, 31, 67, 0.12);
   box-shadow: var(--custom-nav-menu-shadow, 0px 2px 8px 0px rgba(24, 31, 67, 0.08));
-  background-color: var(--custom-nav-menu-bg, #fff) ;
+  background: var(--custom-nav-menu-bg, #fff) ;
 
   .header {
     display: flex;

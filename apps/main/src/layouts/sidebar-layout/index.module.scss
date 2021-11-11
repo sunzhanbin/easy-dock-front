@@ -10,7 +10,7 @@
     width: 240px;
     border-right: 1px solid rgba(#181f43, 0.12);
     box-shadow: var(--custom-side-menu-shadow);
-    background-color: var(--custom-side-menu-bg, rgba(#182743, 0.04));
+    background: var(--custom-side-menu-bg, rgba(#182743, 0.04));
 
     .info {
       min-height: 162px;
@@ -58,7 +58,7 @@
         &.active {
           border-right: 5px solid $primary-color;
           color: var(--custom-side-menu-highlight-color, $primary-color);
-          background-color: var(--custom-side-menu-item-active-bg, #fff);
+          background: var(--custom-side-menu-item-active-bg, #fff);
 
           .icon {
             color: inherit;

@@ -608,7 +608,8 @@
       & > th {
         font-weight: 600;
         border-top: 1px solid rgba(24, 31, 67, 0.12);
-        background-color: #fff;
+        color: var(--custom-table-header-color, #fff);
+        background: var(--custom-table-header-bg, var(--custom-table-bg, #fff));
         &:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
           display: none;
         }
@@ -617,15 +618,16 @@
   }
   // 表格本身
   .ant-table-tbody {
+    background: var(--custom-table-body-bg, var(--custom-table-bg, #fff));
     & > tr.ant-table-row:hover {
       & > td {
-        background-color: #f1f2fd;
+        background-color: var(--custom-table-selected-row-hover-bg, #f1f2fd);
       }
     }
   }
 
   td.ant-table-column-sort {
-    background-color: #fff;
+    background: var(--custom-table-body-bg, var(--custom-table-bg, #fff));
   }
 
   .ant-table-column-sorter-up.active,

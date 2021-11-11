@@ -12,7 +12,7 @@
 
   .active {
     color: var(--custom-nav-menu-highlight-color);
-    background-color: var(--custom-nav-menu-item-active-bg, #f0f0f6);
+    background: var(--custom-nav-menu-item-active-bg, #f0f0f6);
     font-weight: 500;
   }
 }
