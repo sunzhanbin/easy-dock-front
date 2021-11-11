@@ -17,20 +17,17 @@ const labelCol = { span: 24 };
 interface RuleComponentProps {
   id: string;
   type: string;
-  onChange?: (v: serialRulesItem) => void;
-  handleTypeChange?: (v: string) => void;
+  onChange?: (v: any) => void;
   rules: RuleOption[];
-  setRules: (v: any) => void;
   ruleName: string;
-  setRuleName: (v: any) => void;
   ruleStatus?: number;
   editStatus?: boolean;
   form?: any;
-  serialId?: number;
+  serialId?: string;
 }
 
 const RuleComponent = (props: RuleComponentProps) => {
-  const { id, onChange, type, handleTypeChange, serialId, rules, setRules, ruleName, setRuleName, form } = props;
+  const { id, onChange, type, editStatus, ruleStatus, rules, ruleName, form } = props;
   const byId = useAppSelector(componentPropsSelector);
   const handleAdd = useMemoCallback((addItem) => {
     const { key, keyPath } = addItem;
@@ -43,16 +40,7 @@ const RuleComponent = (props: RuleComponentProps) => {
       ruleItem = getFieldValue({ key });
     }
     list?.push(ruleItem);
-    setRules(list);
-    onChange &&
-      onChange({
-        serialId,
-        serialMata: {
-          type,
-          ruleName,
-          rules: list,
-        },
-      });
+    onChange && onChange({ type, ruleName, rules: list });
   });
 
   const fields = useMemo<{ id: string; name: string }[]>(() => {
@@ -86,16 +74,7 @@ const RuleComponent = (props: RuleComponentProps) => {
     let tmp = list[sourceIndex];
     list[sourceIndex] = list[targetIndex];
     list[targetIndex] = tmp;
-    setRules(list);
-    onChange &&
-      onChange({
-        serialId,
-        serialMata: {
-          type,
-          ruleName,
-          rules: list,
-        },
-      });
+    onChange && onChange({ type, ruleName, rules: list });
   });
 
   const handleChangeRule = useMemoCallback((ruleData) => {
@@ -127,52 +106,22 @@ const RuleComponent = (props: RuleComponentProps) => {
         return item;
       });
     }
-    setRules(list);
-    onChange &&
-      onChange({
-        serialId,
-        serialMata: {
-          type,
-          ruleName,
-          rules: list,
-        },
-      });
+    onChange && onChange({ type, ruleName, rules: list });
   });
 
   const handleDelete = useMemoCallback((index) => {
     const list: RuleOption[] = [...rules];
     list.splice(index, 1);
-    setRules(list);
-    onChange &&
-      onChange({
-        serialId,
-        serialMata: {
-          type,
-          ruleName,
-          rules: list,
-        },
-      });
+    onChange && onChange({ type, ruleName, rules: list });
   });
 
   const handleChangeName = useMemoCallback((e) => {
-    setRuleName(e.target.value);
-    onChange &&
-      onChange({
-        serialId,
-        serialMata: {
-          type,
-          ruleName,
-          rules,
-        },
-      });
+    const name = e.target.value;
+    onChange && onChange({ type, ruleName: name, rules });
   });
 
-  useEffect(() => {
-    console.log(rules, ruleName);
-  }, [rules, ruleName]);
-
   return (
-    <Form component="div" form={form}>
+    <Form component="div" form={form} initialValues={{ name: ruleName }}>
       <Fragment>
         <Form.Item
           name="name"
@@ -180,7 +129,7 @@ const RuleComponent = (props: RuleComponentProps) => {
           labelCol={labelCol}
           rules={[{ required: true, message: '请输入规则名称!' }]}
         >
-          <Input size="large" value={ruleName} onChange={handleChangeName} />
+          <Input size="large" onChange={handleChangeName} disabled={type === 'inject' && editStatus} />
         </Form.Item>
         <Form.Item className={styles.form} name="rules" label="规则配置" labelCol={labelCol}>
           <div className={styles.custom_list}>
@@ -194,15 +143,18 @@ const RuleComponent = (props: RuleComponentProps) => {
                   onChange={handleChangeRule}
                   onDrag={handleDrag}
                   onDelete={handleDelete}
+                  disabled={type === 'inject' && (editStatus || ruleStatus === 1)}
                 />
               </Fragment>
             ))}
-            <Dropdown overlay={menu}>
-              <Button className={styles.add_custom} size="large">
-                <Icon className={styles.iconfont} type="xinzengjiacu" />
-                <span>添加</span>
-              </Button>
-            </Dropdown>
+            {!(type === 'inject' && (editStatus || ruleStatus === 1)) && (
+              <Dropdown overlay={menu}>
+                <Button className={styles.add_custom} size="large">
+                  <Icon className={styles.iconfont} type="xinzengjiacu" />
+                  <span>添加</span>
+                </Button>
+              </Dropdown>
+            )}
           </div>
         </Form.Item>
       </Fragment>

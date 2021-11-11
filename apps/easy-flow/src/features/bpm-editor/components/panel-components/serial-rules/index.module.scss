@@ -30,6 +30,7 @@
       font-size: 14px;
       font-weight: 400;
       color: rgba(24, 31, 67, 0.95);
+      cursor: pointer;
 
       .labelStr {
         display: inline-block;
@@ -77,9 +78,17 @@
       font-size: 14px;
       font-weight: 400;
       color: rgba(24, 31, 67, 0.95);
+      cursor: pointer;
+
       .labelStr {
         display: inline-block;
       }
+
+      &.labelDisable {
+        color: #ccc;
+        cursor: not-allowed;
+      }
+
       input {
         background: #fff;
       }
@@ -173,19 +182,22 @@
       }
     }
   }
-
 }
 
 .custom_list {
   padding-top: 10px;
 }
 
-.add_custom, .add_inject {
+.add_custom, .add_inject, .add_change {
   width: 100%;
 }
 
-.add_inject {
+.add_inject, .add_change {
   border: 1px dashed;
+}
+
+.add_change {
+  margin-bottom: 10px;
 }
 
 .custom_list .ant-select.ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
@@ -194,6 +206,15 @@
 
 .content {
   margin: 20px 0;
+
+  .flexbox {
+    display: flex;
+  }
+
+  .flexItem {
+    flex: 1;
+    margin-right: 10px;
+  }
 }
 
 
