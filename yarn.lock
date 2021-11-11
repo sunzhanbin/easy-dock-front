@@ -15592,10 +15592,10 @@ text-table@0.2.0, text-table@^0.2.0:
   resolved "https://registry.npm.taobao.org/text-table/download/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
 
-theme-scheme@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.npmmirror.com/theme-scheme/download/theme-scheme-0.0.2.tgz#1d27f0b8247693178d7813f890773a7c47f0ab5d"
-  integrity sha512-GKOT6FdTZAKmOo/JHCQGTzRQINVDAXfGJefiO4NrzWZCuFK4j6EsG8K6rXYupEWzhW+8UYCQwuUFTK1/Sq+oxw==
+theme-scheme@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.npmmirror.com/theme-scheme/download/theme-scheme-0.0.1.tgz#395343191c6ffcd671450961166c30bf651478a7"
+  integrity sha1-OVNDGRxv/NZxRQlhFmwwv2UUeKc=
   dependencies:
     "@ant-design/colors" "^6.0.0"
     "@ctrl/tinycolor" "^3.4.0"

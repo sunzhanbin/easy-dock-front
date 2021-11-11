@@ -165,15 +165,16 @@ export interface AutoNodePushData extends BaseNode {
 export enum StarterEnum {
   FlowStarter = 1, //当前流程发起人
   Admin = 2, //系统发起
+  FormComponent = 3, //表单中人员控件的值
 }
 
 export interface TriggerConfig {
-  processId: number | undefined; //自动触发流程id
-  processName: string | undefined; //自动触发流程名称
+  id: number | undefined; //自动触发流程id
+  name: string | undefined; //自动触发流程名称
   // 发起人
   starter: {
     type: StarterEnum;
-    data?: any; //预留字段
+    value?: string; //表单中人员控件的值
   };
   // 字段映射
   mapping: { current: string; target: string }[];
@@ -181,7 +182,10 @@ export interface TriggerConfig {
 
 export interface AutoNodeTriggerProcess extends BaseNode {
   type: NodeType.AutoNodeTriggerProcess;
-  triggerConfig: TriggerConfig[];
+  triggerConfig: {
+    isWait: boolean;
+    subapps: TriggerConfig[];
+  };
 }
 
 export type AllNode =

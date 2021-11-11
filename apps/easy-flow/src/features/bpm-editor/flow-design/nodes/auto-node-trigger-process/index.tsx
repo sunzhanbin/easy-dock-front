@@ -12,10 +12,10 @@ function AutoNodeTriggerProcess(props: AutoNodeProps) {
   const { node } = props;
   const { triggerConfig } = node;
   const flowNames = useMemo(() => {
-    if (!triggerConfig || !triggerConfig.length) {
+    if (!triggerConfig.subapps || !triggerConfig.subapps.length) {
       return '';
     }
-    return triggerConfig.map((v) => v.processName).join('、');
+    return triggerConfig.subapps.map((v) => v.name).join('、');
   }, [triggerConfig]);
 
   return (

@@ -1,5 +1,5 @@
 import { memo, useMemo } from 'react';
-import { Form, Input } from 'antd';
+import { Form, Input, Switch } from 'antd';
 import { Rule } from 'antd/lib/form';
 import debounce from 'lodash/debounce';
 import useMemoCallback from '@common/hooks/use-memo-callback';
@@ -54,8 +54,11 @@ function AutoNodeTriggerProcessEditor(props: AutoNodeEditorProps) {
       <Form.Item label="节点名称" name="name" rules={nameRules} getValueFromEvent={trimInputValue} required>
         <Input size="large" placeholder="请输入节点名称" />
       </Form.Item>
-      <Form.Item noStyle name="triggerConfig">
-        <TriggerProcessConfig name="triggerConfig" />
+      <Form.Item label="是否等待" name={['triggerConfig', 'isWait']}>
+        <Switch checkedChildren="开启" unCheckedChildren="关闭" />
+      </Form.Item>
+      <Form.Item label="触发流程" name={['triggerConfig', 'subapps']}>
+        <TriggerProcessConfig name={['triggerConfig', 'subapps']} />
       </Form.Item>
     </Form>
   );
