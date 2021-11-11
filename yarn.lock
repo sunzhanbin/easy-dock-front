@@ -1439,6 +1439,15 @@
   resolved "https://registry.nlark.com/@emotion/unitless/download/@emotion/unitless-0.7.5.tgz#77211291c1900a700b8a78cfafda3160d76949ed"
   integrity sha1-dyESkcGQCnALinjPr9oxYNdpSe0=
 
+"@enc/theme-scheme@^0.0.1":
+  version "0.0.1"
+  resolved "http://10.39.39.153:4837/@enc%2ftheme-scheme/-/theme-scheme-0.0.1.tgz#a727afaab1be2222ce8f47aaea31fb8e909703ac"
+  integrity sha512-yOCdbZFCOU7KvB1zRfpWhy3fGhtyqaPzLYK9f1bpk9LadB81Het+nH41Usqkn2lAD39q286wvUoEsnSvZvh5og==
+  dependencies:
+    "@ant-design/colors" "^6.0.0"
+    "@ctrl/tinycolor" "^3.4.0"
+    css-vars-ponyfill "^2.3.1"
+
 "@eslint/eslintrc@^0.4.0", "@eslint/eslintrc@^0.4.2":
   version "0.4.2"
   resolved "https://registry.nlark.com/@eslint/eslintrc/download/@eslint/eslintrc-0.4.2.tgz?cache=0&sync_timestamp=1622844991204&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40eslint%2Feslintrc%2Fdownload%2F%40eslint%2Feslintrc-0.4.2.tgz#f63d0ef06f5c0c57d76c4ab5f63d3835c51b0179"
@@ -15591,15 +15600,6 @@ text-table@0.2.0, text-table@^0.2.0:
   version "0.2.0"
   resolved "https://registry.npm.taobao.org/text-table/download/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
-
-theme-scheme@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.npmmirror.com/theme-scheme/download/theme-scheme-0.0.2.tgz#1d27f0b8247693178d7813f890773a7c47f0ab5d"
-  integrity sha512-GKOT6FdTZAKmOo/JHCQGTzRQINVDAXfGJefiO4NrzWZCuFK4j6EsG8K6rXYupEWzhW+8UYCQwuUFTK1/Sq+oxw==
-  dependencies:
-    "@ant-design/colors" "^6.0.0"
-    "@ctrl/tinycolor" "^3.4.0"
-    css-vars-ponyfill "^2.3.1"
 
 throat@^5.0.0:
   version "5.0.0"
