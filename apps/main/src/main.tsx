@@ -1,7 +1,7 @@
 // import 'antd/dist/antd.css';
-import 'theme-scheme/dist/react/antd/antd.4.17-alpha.6.min.css'
+import '@enc/theme-scheme/dist/react/antd/antd.4.17-alpha.6.min.css'
 import './styles/base.scss';
-import 'theme-scheme/dist/variable.css';
+import '@enc/theme-scheme/dist/variable.css';
 
 import { memo } from 'react';
 import { Switch, Route } from 'react-router-dom';
@@ -12,7 +12,7 @@ import BuilderLayout from '@/layouts/builder-layout';
 import RuntimeLayout from '@/layouts/runtime-layout';
 import { ROUTES } from '@consts';
 import cookie from 'js-cookie';
-import {registerTheme} from 'theme-scheme/dist/utils.esm'
+import {registerTheme} from '@enc/theme-scheme/dist/utils.esm'
 
 const query = decodeURIComponent(window.location.href.split("?")[1])
 const theme = (new URLSearchParams(query)).get('theme');

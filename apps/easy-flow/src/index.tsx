@@ -1,9 +1,9 @@
 // import 'antd/dist/antd.css';
 // import './styles/base.scss';
 
-import 'theme-scheme/dist/react/antd/antd.4.17-alpha.6.min.css'
+import '@enc/theme-scheme/dist/react/antd/antd.4.17-alpha.6.min.css'
 import './styles/base.scss';
-import 'theme-scheme/dist/variable.css';
+import '@enc/theme-scheme/dist/variable.css';
 
 import appConfig from './init';
 import ReactDOM from 'react-dom';
@@ -15,7 +15,7 @@ import AntdProvider from '@common/components/antd-provider';
 import App from './App';
 import cookie from 'js-cookie';
 // @ts-ignore
-import {registerTheme} from 'theme-scheme/dist/utils.esm';
+import {registerTheme} from '@enc/theme-scheme/dist/utils.esm';
 
 const APP_CONTAINER_ID = '#easy-flow-root';
 
