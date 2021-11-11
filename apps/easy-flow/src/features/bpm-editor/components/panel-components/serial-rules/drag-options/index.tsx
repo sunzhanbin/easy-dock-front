@@ -6,7 +6,6 @@ import { Tooltip, Input, Select } from 'antd';
 import { Icon } from '@common/components';
 import { RuleOption, SerialNumType, CountResetRules } from '@type';
 import IncNumModal from '../components/modal-increase-num';
-import DateModal from '../components/modal-rule';
 import classNames from 'classnames';
 import { DateOptions } from '@utils/const';
 import { getPopupContainer } from '@utils';
@@ -18,6 +17,7 @@ interface DraggableOptionProps {
   index: number;
   key: number;
   fields: { id: string; name: string }[];
+  disabled?: boolean;
 
   onDelete(index: this['index']): void;
 
@@ -27,7 +27,7 @@ interface DraggableOptionProps {
 }
 
 function DraggableOption(props: DraggableOptionProps) {
-  const { onDelete, data, onChange, onDrag, index, fields } = props;
+  const { onDelete, data, onChange, onDrag, index, fields, disabled } = props;
   const type = data?.type || 'incNumber'; // 自定义编号规则
   const dragWrapperRef = useRef<HTMLDivElement>(null);
   const [canMove, setCanMove] = useState<boolean>(false);
@@ -91,7 +91,10 @@ function DraggableOption(props: DraggableOptionProps) {
         const resetDuration = data?.resetDuration as keyof typeof CountResetRules;
         const labelStr = `${data?.digitsNum}位数字，${CountResetRules[resetDuration]}`;
         return (
-          <div className={styles.label} onClick={() => setShowIncModal(true)}>
+          <div
+            className={classNames(styles.label, disabled ? styles.labelDisable : '')}
+            onClick={() => !disabled && setShowIncModal(true)}
+          >
             <span className={styles.labelStr}>{labelStr}</span>
           </div>
         );
@@ -105,6 +108,7 @@ function DraggableOption(props: DraggableOptionProps) {
               className={styles.formItem}
               value={`格式：${date}`}
               showArrow={true}
+              disabled={disabled}
               onChange={handleSelectChange}
               getPopupContainer={getPopupContainer}
             >
@@ -119,7 +123,7 @@ function DraggableOption(props: DraggableOptionProps) {
       case 'fixedChars':
         return (
           <div className={styles.label}>
-            <Input onChange={handleInputBlur} value={data?.chars} />
+            <Input onChange={handleInputBlur} value={data?.chars} disabled={disabled} />
           </div>
         );
       case 'fieldName':
@@ -131,6 +135,7 @@ function DraggableOption(props: DraggableOptionProps) {
               className={styles.formItem}
               value={data?.fieldValue}
               showArrow={true}
+              disabled={disabled}
               onChange={handleChangeField}
               getPopupContainer={getPopupContainer}
             >
@@ -151,7 +156,7 @@ function DraggableOption(props: DraggableOptionProps) {
         {renderLabel()}
       </div>
       <div className={styles.operation}>
-        {type !== 'incNumber' && (
+        {type !== 'incNumber' && !disabled && (
           <div className={styles.delete} onClick={handleDelete}>
             <Tooltip title="删除">
               <span>
@@ -160,17 +165,19 @@ function DraggableOption(props: DraggableOptionProps) {
             </Tooltip>
           </div>
         )}
-        <div
-          className={classNames(styles.move, type === 'incNumber' ? styles.incNumber : '')}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-        >
-          <Tooltip title="拖动换行">
-            <span>
-              <Icon className={styles.iconfont} type="caidan" />
-            </span>
-          </Tooltip>
-        </div>
+        {!disabled && (
+          <div
+            className={classNames(styles.move, type === 'incNumber' ? styles.incNumber : '')}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+          >
+            <Tooltip title="拖动换行">
+              <span>
+                <Icon className={styles.iconfont} type="caidan" />
+              </span>
+            </Tooltip>
+          </div>
+        )}
       </div>
       {data?.type && (
         <>

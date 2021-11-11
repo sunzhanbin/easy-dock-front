@@ -1,5 +1,5 @@
 import React, { Fragment, memo, useState, useEffect } from 'react';
-import { Modal, Tooltip } from 'antd';
+import { message, Modal, Tooltip } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import styles from '../index.module.scss';
 import { deleteSerialId, getSerialList } from '@apis/form';
@@ -21,7 +21,6 @@ const RuleModal = (props: DateProps) => {
   const [rule, setRule] = useState({});
   const [activeIndex, setActiveIndex] = useState(-1);
   const handleSubmit = useMemoCallback(() => {
-    console.log(activeIndex);
     if (activeIndex === -1) return;
     onSubmit && onSubmit(rule);
   });
@@ -43,6 +42,7 @@ const RuleModal = (props: DateProps) => {
       const ruleId = rule.id;
       const ret = await deleteSerialId(ruleId);
       if (!ret) return;
+      message.success('删除成功');
       const list = [...ruleList];
       list.splice(index, 1);
       setRuleList(list);
@@ -58,7 +58,6 @@ const RuleModal = (props: DateProps) => {
   const renderLabel = useMemoCallback(() => {});
 
   const handleSelectRule = useMemoCallback((rule, index) => {
-    console.log(rule, 'rrr');
     setActiveIndex(index);
     setRule(rule);
   });
