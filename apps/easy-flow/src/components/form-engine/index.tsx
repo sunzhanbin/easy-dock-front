@@ -176,7 +176,7 @@ const FormDetail = React.forwardRef(function FormDetail(
   const onValuesChange = useCallback((changeValue: any, all: any) => {
     // 此处不要进行setState操作   避免重复更新
     Object.entries(changeValue).map(([key, value]: any) => {
-      if (typeof value === 'object' && Object.values(value).length) {
+      if (value && typeof value === 'object' && Object.values(value).length) {
         const field = Object.values(value)[0];
         if (typeof field === 'object' && field) {
           const changeKey = Object.keys(field)[0];
