@@ -123,11 +123,9 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
     const isValidate = form.isFieldsTouched(['fieldName', 'label']);
     onSave && onSave(values, isValidate);
   });
-  const handleChange = useMemoCallback(
-    debounce(() => {
-      onFinish(form.getFieldsValue());
-    }, 66),
-  );
+  const handleChange = useMemoCallback(() => {
+    onFinish(form.getFieldsValue());
+  });
 
   useEffect(() => {
     if (errorIdList.includes(componentId)) {

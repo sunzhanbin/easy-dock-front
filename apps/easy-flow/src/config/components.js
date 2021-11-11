@@ -115,19 +115,21 @@ const flows = {
 };
 
 // 编号规则
-const serialRules = {
-  key: 'serialRules',
+const serialRule = {
+  key: 'serialRule',
   label: '编号规则',
   defaultValue: {
-    type: 'custom',
-    rules: [
-      {
-        digitsNum: 5,
-        startValue: 1,
-        resetDuration: 'none',
-        type: 'incNumber',
-      },
-    ],
+    serialId: '',
+    serialMata: {
+      rules: [
+        {
+          digitsNum: 5,
+          startValue: 1,
+          resetDuration: 'none',
+          type: 'incNumber',
+        },
+      ],
+    },
   },
   type: 'serialRules',
   direction: 'vertical',
@@ -270,14 +272,7 @@ const components = {
       version: '1.0',
       type: 'Date',
     },
-    config: [
-      fieldName,
-      getLabel('日期'),
-      desc,
-      format,
-      getDefaultValue('DefaultDate', '选择日期'),
-      colSpace,
-    ],
+    config: [fieldName, getLabel('日期'), desc, format, getDefaultValue('DefaultDate', '选择日期'), colSpace],
   },
   InputNumber: {
     baseInfo: {
@@ -357,7 +352,7 @@ const components = {
       version: '1.0',
       type: 'SerialNum',
     },
-    config: [fieldName, getLabel('编号'), colSpace, serialRules],
+    config: [fieldName, getLabel('编号'), desc, serialRule, colSpace],
   },
 };
 

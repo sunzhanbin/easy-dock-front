@@ -15,7 +15,7 @@ interface ContainerProps {
   changeType?: string;
 }
 
-const Container = React.memo(({ children, rules, fieldName, form, type }: ContainerProps) => {
+export const Container = React.memo(({ children, rules, fieldName, form, type }: ContainerProps) => {
   const visibleRules = useMemo(() => rules?.filter((item) => item?.subtype == 0), [rules]);
   const [visible, setVisible] = useState<boolean>(true);
   const [reFreshKey, setReFreshKey] = useState<number>(0);
@@ -83,4 +83,21 @@ const Container = React.memo(({ children, rules, fieldName, form, type }: Contai
     </ContainerProvider>
   );
 });
-export default Container;
+
+const wrapContainer = React.memo(({ children, rules, fieldName, form, type }: ContainerProps) => {
+  const isLeaf = Array.isArray(rules);
+
+  return (
+    <>
+      {isLeaf ? (
+        <Container rules={rules} fieldName={fieldName} form={form} type={type}>
+          {children}
+        </Container>
+      ) : (
+        <ContainerProvider value={{ rules, form, fieldName, type }}>{children}</ContainerProvider>
+      )}
+    </>
+  );
+});
+
+export default wrapContainer;

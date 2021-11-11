@@ -244,6 +244,7 @@ const reducers = {
       }
       return field;
     });
+    state.subComponentConfig = { ...config, ...props };
     state.isDirty = true;
     return state;
   },

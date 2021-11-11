@@ -98,6 +98,41 @@ function StartFlow() {
 
   const handleSubmit = useMemoCallback(async () => {
     if (!formRef.current || !subApp) return;
+    const res = formRef.current.validateFields();
+    // 校验并提示tabs内控件错误
+    res.catch((error) => {
+      const { errorFields = [], values } = error;
+      if (errorFields.length > 0) {
+        const tabsNameMapIndex: { [k: string]: number } = {};
+        Object.keys(values)
+          .filter((name) => Array.isArray(values[name]))
+          .forEach((name, index) => {
+            tabsNameMapIndex[name] = index;
+          });
+        const errorTabList = errorFields
+          .filter((field: { name: string[] }) => field.name.length === 3)
+          .map((v: { name: string[] }) => v.name)
+          .map((name: [string, string, string]) => `${name[0]},${name[1]}`);
+        const errorTabs = Array.from(new Set(errorTabList)).map((name) => {
+          const [tabName, paneKey] = (name as string).split(',');
+          return {
+            tabIndex: tabsNameMapIndex[tabName],
+            paneIndex: Number(paneKey),
+          };
+        });
+        if (errorTabs.length < 1) {
+          return;
+        }
+        errorTabs.forEach((item) => {
+          const { tabIndex, paneIndex } = item;
+          const selector = `.ant-form .ant-tabs:nth-child(${tabIndex + 1})  .ant-tabs-tab:nth-child(${paneIndex + 1})`;
+          const el = document.querySelector(selector);
+          if (el) {
+            (el as HTMLDivElement).style.borderColor = '#ff5568';
+          }
+        });
+      }
+    });
     const values = await formRef.current.validateFields();
     const formValues = await uploadFile(values);
     // 上传文件成功之后再提交表单
