@@ -98,6 +98,37 @@ function StartFlow() {
 
   const handleSubmit = useMemoCallback(async () => {
     if (!formRef.current || !subApp) return;
+    const res = formRef.current.validateFields();
+    res.catch((error) => {
+      const { errorFields = [], values } = error;
+      if (errorFields.length > 0) {
+        const tabsNameMapIndex: { [k: string]: number } = {};
+        Object.keys(values)
+          .filter((name) => Array.isArray(values[name]))
+          .forEach((name, index) => {
+            tabsNameMapIndex[name] = index;
+          });
+        const list = errorFields
+          .filter((field: { name: string[] }) => field.name.length === 3)
+          .map((v: { name: string[] }) => v.name)
+          .map((name: [string, string, string]) => `${name[0]},${name[1]}`);
+        const errorTabs = errorFields
+          .filter((field: { name: string[] }) => field.name.length === 3)
+          .map((v: { name: string[] }) => v.name)
+          .map((name: [string, string, string]) => {
+            return {
+              tabIndex: tabsNameMapIndex[name[0]],
+              panelIndex: Number(name[1]),
+            };
+          });
+        console.info({ errorTabs });
+        if (errorTabs.length < 1) {
+          return;
+        }
+
+        message.error('数据填写错误');
+      }
+    });
     const values = await formRef.current.validateFields();
     const formValues = await uploadFile(values);
     // 上传文件成功之后再提交表单

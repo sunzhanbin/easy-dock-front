@@ -54,7 +54,7 @@ export const convertFormRules = (data: FormRuleItem[] = [], components: { config
             .map((item: any) => item.fieldName),
         ) as any),
       ];
-      const { parentId } = fieldRule.flat(2).find((item: { [key: string]: any }) => !!item.parentId);
+      const { parentId = '' } = fieldRule.flat(2).find((item: { [key: string]: any }) => !!item.parentId) || {};
       const component = componentList.find((v) => v.id === parentId);
       const parentFieldName = component?.fieldName || '';
 
