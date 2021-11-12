@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.base.json",
+  "include": [
+    "./src/**/*"
+, "test"  ],
+  "buildOptions": {
+    "output": "/dist",
+    "verbose": true
+  },
+  "compilerOptions": {
+    "target": "es5",
+    "moduleResolution": "node"
+  }
+}
+
