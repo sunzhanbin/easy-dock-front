@@ -100,10 +100,11 @@ export const convertFormRules = (data: FormRuleItem[] = [], components: { config
   // panel配置公式计算
   components?.map((com) => {
     const { config } = com;
-    if (!config?.defaultNumber) return;
-    const fieldName = config.id;
-    const value = config?.defaultNumber.calculateData;
-    value && setFieldRules(fieldName, value, config?.defaultNumber, 'change', 2);
+    if (config.type === 'InputNumber' && config.defaultNumber) {
+      const { fieldName, defaultNumber } = config;
+      const value = defaultNumber.calculateData;
+      value && setFieldRules(fieldName, value, defaultNumber, 'change', 2);
+    }
   });
   return fieldRulesObj;
 };
