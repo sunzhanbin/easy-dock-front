@@ -27,23 +27,6 @@ function __awaiter(thisArg, _arguments, P, generator) {
 
 const AUTH_ATTR = 'auth';
 const CODE_ATTR = 'code';
-const currentScript = document.currentScript;
-let appId = currentScript === null || currentScript === void 0 ? void 0 : currentScript.getAttribute('appId');
-if (!appId) {
-    console.warn('SSO: appId not specified in script tag attribute.');
-}
-appId = window.SSO_LOGIN_APPID;
-if (!appId) {
-    console.warn('SSO: appId not specified in window.SSO_LOGIN_APPID.');
-}
-let server = (currentScript === null || currentScript === void 0 ? void 0 : currentScript.src) && new URL(currentScript.src).origin;
-if (!server) {
-    console.warn('SSO: server not specified in currentScript.src.origin.');
-}
-server = window.SSO_LOGIN_URL;
-if (!server) {
-    console.warn('SSO: server not specified in window.SSO_LOGIN_URL.');
-}
 const getParams = () => {
     let result = {};
     let searchStr = location.search;
@@ -89,56 +72,92 @@ const fetchToken = (host, code) => __awaiter(void 0, void 0, void 0, function* (
         return null;
     }
 });
-const Auth = {
-    getToken: (needAutoLogin, host) => __awaiter(void 0, void 0, void 0, function* () {
-        if (Auth.getAuth()) {
-            return Auth.getAuth();
+class Auth {
+    constructor(server) {
+        const currentScript = document.currentScript;
+        let appId = currentScript === null || currentScript === void 0 ? void 0 : currentScript.getAttribute('appId');
+        if (!appId) {
+            console.warn('SSO: appId not specified in script tag attribute.');
+            appId = window.SSO_LOGIN_APPID;
+            if (!appId) {
+                console.warn('SSO: appId not specified in window.SSO_LOGIN_APPID.');
+            }
+        }
+        this.appId = appId;
+        if (server) {
+            this.server = server;
         }
         else {
-            let code = getParams()[CODE_ATTR];
-            if (code) {
-                let token = yield fetchToken(host, code);
-                if (token) {
-                    window.localStorage.setItem(AUTH_ATTR, token);
-                    resetUrl();
-                }
-                return token;
+            console.warn('SSO new Auth(server): server is null or undefined.');
+            let src = window.SSO_LOGIN_URL;
+            if (src) {
+                this.server = src;
             }
             else {
-                if (needAutoLogin) {
-                    if (!server) {
-                        console.error('请在 window.SSO_LOGIN_URL 中配置登陆服务器地址');
-                        return;
-                    }
-                    let ssoUrl = `${server}/login?redirectUri=${encodeURIComponent(location.href)}`;
-                    if (appId) {
-                        ssoUrl += `&appId=${appId}`;
-                    }
-                    window.location.href = ssoUrl;
-                }
-                else {
-                    console.error('用户未登录，无法获取 Token');
-                    return null;
+                console.warn('SSO: server not specified in window.SSO_LOGIN_URL.');
+                src = (currentScript === null || currentScript === void 0 ? void 0 : currentScript.src) && new URL(currentScript.src).origin;
+                if (src && `${src}`.indexOf('localhost') < 0) {
+                    this.server = src;
                 }
             }
         }
-    }),
-    getAuth: () => {
+    }
+    getToken(needAutoLogin, host) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (this.getAuth()) {
+                return this.getAuth();
+            }
+            else {
+                let code = getParams()[CODE_ATTR];
+                if (code) {
+                    let token = yield fetchToken(host, code);
+                    if (token) {
+                        window.localStorage.setItem(AUTH_ATTR, token);
+                        resetUrl();
+                    }
+                    return token;
+                }
+                else {
+                    if (needAutoLogin) {
+                        const { server, appId } = this;
+                        if (!server) {
+                            console.error('请在 window.SSO_LOGIN_URL 中配置登陆服务器地址');
+                            return;
+                        }
+                        let ssoUrl = `${server}/login?redirectUri=${encodeURIComponent(location.href)}`;
+                        if (appId) {
+                            ssoUrl += `&appId=${appId}`;
+                        }
+                        window.location.href = ssoUrl;
+                    }
+                    else {
+                        console.error('用户未登录，无法获取 Token');
+                        return null;
+                    }
+                }
+            }
+        });
+    }
+    setLoginServer(server) {
+        this.server = server;
+    }
+    getAuth() {
         return window.localStorage.getItem(AUTH_ATTR);
-    },
-    removeAuth: () => {
+    }
+    removeAuth() {
         window.localStorage.removeItem(AUTH_ATTR);
-    },
-    logout: (redirect) => {
-        let auth = Auth.getAuth();
+    }
+    logout(redirect) {
+        let auth = this.getAuth();
         if (auth) {
-            Auth.removeAuth();
+            this.removeAuth();
             if (!redirect) {
                 redirect = window.location.href;
             }
-            window.location.href = `${server}/logout?${AUTH_ATTR}=${auth}&redirectUri=${encodeURIComponent(redirect)}`;
+            window.location.href = `${this.server}/logout?${AUTH_ATTR}=${auth}&redirectUri=${encodeURIComponent(redirect)}`;
         }
-    },
-};
+    }
+}
+var index = new Auth();
 
-export { Auth as default };
+export { index as default };
