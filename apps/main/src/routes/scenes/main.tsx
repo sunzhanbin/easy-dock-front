@@ -256,7 +256,7 @@ export default memo(function Main() {
             })}
           </div>
           <div className={styles['actions-group']}>
-            <div className={styles.mask}></div>
+            {/* <div className={styles.mask}></div> */}
             {/* 超管才有权限新增项目 */}
             {isAdmin && (
               <>

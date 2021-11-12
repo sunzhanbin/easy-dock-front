@@ -15,4 +15,4 @@ declare global {
   
 }
 
-declare module 'theme-scheme/dist/utils.esm';
+declare module '@enc/theme-scheme/dist/utils.esm';
