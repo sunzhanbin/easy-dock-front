@@ -1,0 +1,14 @@
+/src
+/dist
+
+build.sh
+
+rollup.*
+
+tsconfig.*
+
+.eslintrc.js
+.prettierrc
+tslint.json
+
+/coverage
