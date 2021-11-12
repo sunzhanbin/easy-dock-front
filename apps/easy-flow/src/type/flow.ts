@@ -68,6 +68,14 @@ export interface UserNode extends BaseNode {
   fieldsAuths: FieldAuthsMap;
 }
 
+export interface FieldAuth {
+  type: string;
+  field: string;
+  name: string;
+  auth: AuthType | null;
+  components: FieldAuth[] | null;
+}
+
 export interface AuditNode extends UserNode {
   type: NodeType.AuditNode;
   btnText: {
@@ -177,7 +185,7 @@ export interface TriggerConfig {
     value?: string; //表单中人员控件的值
   };
   // 字段映射
-  mapping: { current: string; target: string }[];
+  mapping: { current: string; target: string; required?: boolean }[];
 }
 
 export interface AutoNodeTriggerProcess extends BaseNode {
