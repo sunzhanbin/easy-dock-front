@@ -3,6 +3,8 @@ import resolve from 'rollup-plugin-node-resolve';
 import replace from '@rollup/plugin-replace';
 import typescript from 'rollup-plugin-typescript2';
 
+const outputName = 'Auth';
+
 const plugins = [
     //  Toggle the booleans here to enable / disable Phaser 3 features:
     replace({
@@ -42,8 +44,8 @@ export default {
     sourcemap: true,
     intro: 'var global = window;',
     output: [
-        { file: './dist/index.iife.js', format: 'iife', name: 'ChnRarefy' },
-        { file: './dist/index.umd.js', format: 'umd', name: 'ChnRarefy' },
+        { file: './dist/index.iife.js', format: 'iife', name: outputName },
+        { file: './dist/sso.js', format: 'umd', name: outputName },
         { file: './dist/index.cjs.min.js', format: 'cjs', exports: 'default' },
         { file: './dist/index.esm.js', format: 'esm', intro: 'var global = window;' },
     ],

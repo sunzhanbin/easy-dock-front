@@ -4,6 +4,8 @@ import replace from '@rollup/plugin-replace';
 import { terser } from 'rollup-plugin-terser';
 import typescript from 'rollup-plugin-typescript2';
 
+const outputName = 'Auth';
+
 const plugins = [
     //  Toggle the booleans here to enable / disable Phaser 3 features:
     replace({
@@ -43,8 +45,8 @@ export default {
     //  You can also use 'umd' if you need to ingest your game into another system.
     //  The 'intro' property can be removed if using Phaser 3.21 or above. Keep it for earlier versions.
     output: [
-        { file: './dist/index.iife.js', format: 'iife', name: 'ChnRarefy' },
-        { file: './dist/index.umd.js', format: 'umd', name: 'ChnRarefy' },
+        { file: './dist/index.iife.js', format: 'iife', name: outputName },
+        { file: './dist/sso.js', format: 'umd', name: outputName, intro: 'var global = window;' },
         { file: './dist/index.cjs.min.js', format: 'cjs', exports: 'default' },
         { file: './dist/index.esm.js', format: 'esm', intro: 'var global = window;' },
     ],

@@ -4,6 +4,6 @@ module.exports = {
         browser: true,
         node: true,
     },
-    plugin: ['mocha'],
+    plugins: ['mocha'],
     extends: ['eslint:recommended', 'airbnb-base', 'prettier'],
 };
