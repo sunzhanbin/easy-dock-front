@@ -1,21 +1,17 @@
-import React, { Fragment, memo, useMemo, useEffect, useState } from 'react';
+import React, { Fragment, memo } from 'react';
 import styles from '@/features/bpm-editor/components/panel-components/serial-rules/index.module.scss';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { Button, Dropdown, Form, Input, Menu } from 'antd';
 import DraggableOption from '@/features/bpm-editor/components/panel-components/serial-rules/drag-options';
 import { Icon } from '@common/components';
-import { FormField, RuleOption, serialRulesItem } from '@type';
-import { saveSerialRules } from '@apis/form';
+import { RuleOption } from '@type';
 import { getFieldValue } from '@utils';
-import { useSubAppDetail } from '@app/app';
-import { useAppSelector } from '@app/hooks';
-import { componentPropsSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 
 const { SubMenu } = Menu;
 const labelCol = { span: 24 };
 
 interface RuleComponentProps {
-  id: string;
+  fields: { id: string; name: string }[];
   type: string;
   onChange?: (v: any) => void;
   rules: RuleOption[];
@@ -27,8 +23,7 @@ interface RuleComponentProps {
 }
 
 const RuleComponent = (props: RuleComponentProps) => {
-  const { id, onChange, type, editStatus, ruleStatus, rules, ruleName, form } = props;
-  const byId = useAppSelector(componentPropsSelector);
+  const { onChange, type, editStatus, ruleStatus, rules, ruleName, form, fields } = props;
   const handleAdd = useMemoCallback((addItem) => {
     const { key, keyPath } = addItem;
     const list = [...rules];
@@ -42,16 +37,6 @@ const RuleComponent = (props: RuleComponentProps) => {
     list?.push(ruleItem);
     onChange && onChange({ type, ruleName, rules: list });
   });
-
-  const fields = useMemo<{ id: string; name: string }[]>(() => {
-    const componentList = Object.values(byId).map((item: FormField) => item) || [];
-    return componentList
-      .filter((com) => com.type !== 'Tabs' && com.id !== id)
-      .map((com) => ({
-        id: com.fieldName,
-        name: com.label,
-      }));
-  }, [byId, id]);
 
   // 添加规则下拉
   const menu = useMemoCallback(() => {
