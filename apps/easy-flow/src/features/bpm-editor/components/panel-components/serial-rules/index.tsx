@@ -1,29 +1,23 @@
 import React, { useEffect, memo, useMemo, useState } from 'react';
-import { RuleOption, serialRulesItem } from '@type';
+import { FormField, RuleOption, serialRulesItem } from '@type';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import styles from './index.module.scss';
 import classNames from 'classnames';
 import RuleComponent from './components/rule-component';
 import { Icon } from '@common/components';
-import { Button, Form, message, Row } from 'antd';
+import { Button, Form, message } from 'antd';
 import RuleModal from './components/modal-rule';
 import { getSerialId, saveSerialRules } from '@apis/form';
 import { useSubAppDetail } from '@app/app';
+import { useAppSelector } from '@app/hooks';
+import { initialRules } from '@utils/const';
+import { componentPropsSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 
 interface RulesProps {
   id: string;
   value?: serialRulesItem;
   onChange?: (v: serialRulesItem) => void;
 }
-
-const initialRules: RuleOption[] = [
-  {
-    digitsNum: 5,
-    startValue: 1,
-    resetDuration: 'none',
-    type: 'incNumber',
-  },
-];
 
 const SerialRules = (props: RulesProps) => {
   const { id, value, onChange } = props;
@@ -45,18 +39,28 @@ const SerialRules = (props: RulesProps) => {
   const [formSerial] = Form.useForm();
   const [formChangeSerial] = Form.useForm();
   const { data } = useSubAppDetail();
+  const byId = useAppSelector(componentPropsSelector);
+
+  const fields = useMemo<{ id: string; name: string }[]>(() => {
+    const componentList = Object.values(byId).map((item: FormField) => item) || [];
+    const compType = ['Date', 'Input', 'Radio', 'InputNumber'];
+    return componentList
+      .filter((com) => compType.includes(com.type) && com.id !== id)
+      .map((com) => ({
+        id: com.fieldName,
+        name: com.label,
+      }));
+  }, [byId, id]);
 
   // 获取已有编号下的规则配置
   const getSerial = useMemoCallback(async () => {
     try {
       if (!value?.serialId) return;
       const ret = await getSerialId(value?.serialId);
-      if (!ret || !ret.data) return;
       const { status, mata, name } = ret.data;
       setRuleStatus(status);
       setResetRules(mata);
       setResetRuleName(name);
-      // setChangeRuleName(name);
       formChangeSerial.setFieldsValue({ name });
       setEditStatus(false);
       setChangeRules(mata);
@@ -81,14 +85,13 @@ const SerialRules = (props: RulesProps) => {
     const { id, name, mata, status } = selectedSerial;
     setRuleModal(false);
     setSerialId(id);
-    // setChangeRuleName(name);
     setChangeRules(mata);
     setRuleStatus(status);
     setResetRules(mata);
     setResetRuleName(name);
     formChangeSerial.setFieldsValue({ name });
     setEditStatus(false);
-    onChange && onChange({ serialId, serialMata: { type, changeRuleName: name, changeRules: mata } });
+    onChange && onChange({ serialId: id, serialMata: { type, changeRuleName: name, changeRules: mata } });
   });
   const handleResetCustom = useMemoCallback(() => {
     setRuleName('');
@@ -170,7 +173,7 @@ const SerialRules = (props: RulesProps) => {
             ruleName={ruleName}
             type="custom"
             onChange={handleOnChange}
-            id={id}
+            fields={fields}
           />
           <Form.Item>
             <Button className={styles.add_custom} size="large" onClick={handleSaveRules}>
@@ -194,7 +197,7 @@ const SerialRules = (props: RulesProps) => {
                 <span>更换规则</span>
               </Button>
               <RuleComponent
-                id={id}
+                fields={fields}
                 form={formChangeSerial}
                 rules={changeRules}
                 ruleName={changeRuleName}
@@ -227,7 +230,12 @@ const SerialRules = (props: RulesProps) => {
             </div>
           )}
           {ruleModal && (
-            <RuleModal showRuleModal={ruleModal} onCancel={handleCancelRuleModal} onSubmit={handleConfirmRule} />
+            <RuleModal
+              showRuleModal={ruleModal}
+              fields={fields}
+              onCancel={handleCancelRuleModal}
+              onSubmit={handleConfirmRule}
+            />
           )}
         </>
       );
