@@ -1,3 +1,4 @@
+@import '@common/styles/var.scss';
 .container {
   padding: 12px 16px;
   cursor: move;
@@ -51,7 +52,7 @@
     text-align: center;
     background: #ffffff;
     border-radius: 3px;
-    border: 1px solid #4c5cdb;
+    border: 1px solid $primary-color;
     cursor: pointer;
     .iconfont {
       position: absolute;
@@ -61,7 +62,7 @@
       height: 10px;
       line-height: 10px;
       font-size: 10px;
-      color: #4c5cdb;
+      color: $primary-color;
       transform: translate(-50%, -50%);
     }
   }

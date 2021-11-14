@@ -151,7 +151,7 @@ const FormAttrEditor = () => {
                                 ({} as FormField);
                               if (rule?.parentId) {
                                 const parent = Object.values(byId).find((comp) => comp.id === rule.parentId);
-                                const sub = (parent as TabsField).components?.find(
+                                const sub = ((parent as TabsField)?.components || []).find(
                                   (v) => v.config.fieldName === rule.fieldName,
                                 );
                                 component = Object.assign({}, sub?.config, sub?.props, {

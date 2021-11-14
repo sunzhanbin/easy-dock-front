@@ -15,11 +15,10 @@ interface ContainerProps {
   changeType?: string;
 }
 
-const Container = React.memo(({ children, rules, fieldName, form, type }: ContainerProps) => {
+export const Container = React.memo(({ children, rules, fieldName, form, type }: ContainerProps) => {
   const visibleRules = useMemo(() => rules?.filter((item) => item?.subtype == 0), [rules]);
   const [visible, setVisible] = useState<boolean>(true);
   const [reFreshKey, setReFreshKey] = useState<number>(0);
-  const [changeType, setChangeType] = useState<string>('');
 
   const setComponentValueAndVisible = useCallback(() => {
     const isMatchArr = rules?.filter((item) => {
@@ -48,6 +47,7 @@ const Container = React.memo(({ children, rules, fieldName, form, type }: Contai
   }, []);
 
   useEffect(() => {
+    console.log(fieldName, 'fieldName');
     if (!rules) return;
     const watchs = watchFn(rules);
     const visibleWatchs = watchFn(visibleRules);
@@ -59,8 +59,6 @@ const Container = React.memo(({ children, rules, fieldName, form, type }: Contai
           setComponentValueAndVisible();
         } else {
           setReFreshKey(Date.now());
-          const changeType = item.split('-')[0];
-          setChangeType(changeType);
         }
       });
     });
@@ -73,14 +71,30 @@ const Container = React.memo(({ children, rules, fieldName, form, type }: Contai
   }, [rules, form]);
 
   return (
-    <ContainerProvider value={{ rules, form, fieldName, type, changeType }}>
+    <ContainerProvider value={{ rules, form, fieldName, type, refresh: reFreshKey }}>
       {visible
         ? React.cloneElement(children as React.ReactElement<any>, {
             refresh: reFreshKey,
-            changetype: changeType,
           })
         : null}
     </ContainerProvider>
   );
 });
-export default Container;
+
+const wrapContainer = React.memo(({ children, rules, fieldName, form, type }: ContainerProps) => {
+  const isLeaf = Array.isArray(rules);
+
+  return (
+    <>
+      {isLeaf ? (
+        <Container rules={rules} fieldName={fieldName} form={form} type={type}>
+          {children}
+        </Container>
+      ) : (
+        <ContainerProvider value={{ rules, form, fieldName, type }}>{children}</ContainerProvider>
+      )}
+    </>
+  );
+});
+
+export default wrapContainer;

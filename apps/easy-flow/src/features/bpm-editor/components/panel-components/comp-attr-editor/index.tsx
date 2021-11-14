@@ -100,7 +100,7 @@ const FormItemWrap = (props: ComponentProps) => {
       label={label}
       name={id}
       valuePropName={type === 'Switch' || type === 'Checkbox' ? 'checked' : 'value'}
-      labelCol={{ span: type === 'Switch' || type === 'Checkbox' ? 0 : 24 }}
+      labelCol={{ span: type === 'Switch' || type === 'Checkbox' ? 12 : 24 }}
       labelAlign="left"
       required={required}
       rules={
@@ -123,11 +123,9 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
     const isValidate = form.isFieldsTouched(['fieldName', 'label']);
     onSave && onSave(values, isValidate);
   });
-  const handleChange = useMemoCallback(
-    debounce(() => {
-      onFinish(form.getFieldsValue());
-    }, 66),
-  );
+  const handleChange = useMemoCallback(() => {
+    onFinish(form.getFieldsValue());
+  });
 
   useEffect(() => {
     if (errorIdList.includes(componentId)) {

@@ -173,16 +173,16 @@ const FormDetail = React.forwardRef(function FormDetail(
     }
   }, [form, initRuleList, initialValue]);
 
-  const onValuesChange = useCallback((changeValue: any) => {
+  const onValuesChange = useCallback((changeValue: any, all: any) => {
     // 此处不要进行setState操作   避免重复更新
     Object.entries(changeValue).map(([key, value]: any) => {
-      if (typeof value === 'object' && Object.values(value).length) {
+      if (!Array.isArray(value) && Object.values(value).length) {
         const field = Object.values(value)[0];
         if (typeof field === 'object' && field) {
           const changeKey = Object.keys(field)[0];
           const changeValue = Object.values(field)[0];
           if (!changeKey) return;
-          PubSub.publish(`${changeKey}-change`, changeValue);
+          PubSub.publish(`${key}.${changeKey}-change`, changeValue);
         }
       } else {
         PubSub.publish(`${key}-change`, value);
@@ -207,7 +207,7 @@ const FormDetail = React.forwardRef(function FormDetail(
           <Row key={index} className={styles.row}>
             {formRow.map((fieldId) => {
               const { config = {}, props = {} } = compMaps[fieldId];
-              const { fieldName = '', colSpace = '', label = '', desc = '', type = '', flows = {} } = config;
+              const { fieldName = '', colSpace = '', label = '', desc = '', type = '' } = config;
               const isRequired = fieldsAuths && fieldsAuths[fieldName] === AuthType.Required;
               const compProps = { ...props };
               const Component = compSources[config?.type as AllComponentType['type']];
@@ -241,7 +241,6 @@ const FormDetail = React.forwardRef(function FormDetail(
                             readonly ||
                             !(fieldsAuths[fieldName] || fieldsAuths[fieldId]) ||
                             fieldsAuths[fieldName] === AuthType.View,
-                          flows,
                         }),
                         {
                           datasource: datasource && (datasource[fieldName] || datasource[fieldId]),

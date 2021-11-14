@@ -1,3 +1,4 @@
+@import '@common/styles/var.scss';
 .container {
   .title {
     font-size: 16px;
@@ -45,7 +46,7 @@
             margin: 0 8px;
             cursor: pointer;
             &:hover {
-              color: #4c5cdb;
+              color: $primary-color;
             }
           }
           .edit {

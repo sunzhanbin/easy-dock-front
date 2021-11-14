@@ -9,7 +9,8 @@
   .sidebar {
     width: 240px;
     border-right: 1px solid rgba(#181f43, 0.12);
-    background-color: rgba(#182743, 0.04);
+    box-shadow: var(--custom-side-menu-shadow);
+    background: var(--custom-side-menu-bg, rgba(#182743, 0.04));
 
     .info {
       min-height: 162px;
@@ -40,7 +41,7 @@
         display: flex;
         align-items: center;
         padding: 13px 24px;
-        color: rgba(#181f43, 0.95);
+        color: var(--custom-side-menu-item-color, rgba(#181f43, 0.95));
 
         .icon {
           flex-shrink: 0;
@@ -56,8 +57,8 @@
 
         &.active {
           border-right: 5px solid $primary-color;
-          color: $primary-color;
-          background-color: #fff;
+          color: var(--custom-side-menu-highlight-color, $primary-color);
+          background: var(--custom-side-menu-item-active-bg, #fff);
 
           .icon {
             color: inherit;

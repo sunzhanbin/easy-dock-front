@@ -1,4 +1,5 @@
-.container {
+@import '@common/styles/var.scss';
+container {
   display: flex;
   width: 100%;
   .loading {
@@ -86,11 +87,12 @@
               cursor: pointer;
               .icon {
                 font-size: 12px;
-                color: #4c5cdb;
+                color: $primary-color;
               }
               &:hover {
                 .icon {
-                  color: rgba(#4c5cdb, 0.8);
+                  color: $primary-color;
+                  opacity: 0.8;
                 }
               }
             }

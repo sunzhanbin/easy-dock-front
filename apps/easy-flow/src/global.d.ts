@@ -12,4 +12,7 @@ declare global {
     EASY_DOCK_BASE_SERVICE_ENDPOINT: string;
     ORCH_SERVICE_ENDPOINT: string;
   }
+  
 }
+
+declare module '@enc/theme-scheme/dist/utils.esm';

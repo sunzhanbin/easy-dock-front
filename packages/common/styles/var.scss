@@ -1,4 +1,4 @@
-$primary-color: #4c5cdb;
+$primary-color: var(--ant-primary-color, #4c5cdb);
 $main-content-min-height: calc(100vh - 65px);
 $primary-text-color: #181f43;
 $title-text-color: rgba($primary-text-color, 1);

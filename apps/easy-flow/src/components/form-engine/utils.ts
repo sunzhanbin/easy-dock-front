@@ -27,7 +27,8 @@ export interface fieldRulesReturn {
 }
 
 export const convertFormRules = (data: FormRuleItem[] = [], components: { config: any; props: any }[]) => {
-  const fieldRulesObj: formRulesReturn = {};
+  const fieldRulesObj: any = {};
+  const componentList = components.map((v) => v.config);
   function setFieldRules(fieldName: string, value: any, item: any, type: string, subtype: number) {
     const obj = {
       watch: [].concat(value),
@@ -53,6 +54,10 @@ export const convertFormRules = (data: FormRuleItem[] = [], components: { config
             .map((item: any) => item.fieldName),
         ) as any),
       ];
+      const { parentId = '' } = fieldRule.flat(2).find((item: { [key: string]: any }) => !!item.parentId) || {};
+      const component = componentList.find((v) => v.id === parentId);
+      const parentFieldName = component?.fieldName || '';
+
       [showComponents, hideComponents].map((components, index) => {
         if (!components) return;
         const obj = {
@@ -63,6 +68,16 @@ export const convertFormRules = (data: FormRuleItem[] = [], components: { config
           type,
         };
         components.map((field: any) => {
+          if (parentId) {
+            if (fieldRulesObj?.[parentFieldName]?.[field]) {
+              fieldRulesObj[parentFieldName][field].push(obj);
+            } else {
+              fieldRulesObj[parentFieldName] = Object.assign({}, fieldRulesObj?.[parentFieldName], {
+                [field]: [obj],
+              });
+            }
+            return;
+          }
           if (fieldRulesObj?.[field]) {
             fieldRulesObj[field].push(obj);
           } else {
@@ -85,10 +100,11 @@ export const convertFormRules = (data: FormRuleItem[] = [], components: { config
   // panel配置公式计算
   components?.map((com) => {
     const { config } = com;
-    if (!config?.defaultNumber) return;
-    const fieldName = config.id;
-    const value = config?.defaultNumber.calculateData;
-    value && setFieldRules(fieldName, value, config?.defaultNumber, 'change', 2);
+    if (config.type === 'InputNumber' && config.defaultNumber) {
+      const { fieldName, defaultNumber } = config;
+      const value = defaultNumber.calculateData;
+      value && setFieldRules(fieldName, value, defaultNumber, 'change', 2);
+    }
   });
   return fieldRulesObj;
 };

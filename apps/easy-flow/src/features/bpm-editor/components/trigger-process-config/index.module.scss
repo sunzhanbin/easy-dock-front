@@ -65,6 +65,8 @@
     flex-direction: column;
     .item {
       display: flex;
+      max-width: 100%;
+      margin-bottom: 12px;
       .current,
       .target,
       .delete,
@@ -86,6 +88,10 @@
           &:hover {
             color: $primary-color;
           }
+          &.disabled {
+            cursor: not-allowed;
+            color: #818a9e;
+          }
         }
       }
       :global {
@@ -95,8 +101,15 @@
       }
     }
     .add-field {
-      margin-top: 12px;
       width: 108px;
+    }
+  }
+}
+
+.space {
+  :global {
+    .ant-radio-wrapper {
+      margin-bottom: 0 !important;
     }
   }
 }

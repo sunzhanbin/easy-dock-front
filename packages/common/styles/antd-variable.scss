@@ -1,0 +1,55 @@
+.ant-btn {
+  color: var();
+  background: var();
+  box-shadow: var();
+
+  &:hover {
+    color: var();
+    background: var();
+    box-shadow: var();
+  }
+  &:active {
+    color: var();
+    background: var();
+    box-shadow: var();
+  }
+
+  &[disabled] {
+    color: var();
+    background: var();
+    box-shadow: var();
+    &:hover {
+      color: var();
+      background: var();
+      box-shadow: var();
+    }
+  }
+}
+
+.ant-btn-primary {
+  color: var();
+  background: var();
+  box-shadow: var();
+
+  &:hover {
+    color: var();
+    background: var();
+    box-shadow: var();
+  }
+  &:active {
+    color: var();
+    background: var();
+    box-shadow: var();
+  }
+
+  &[disabled] {
+    color: var();
+    background: var();
+    box-shadow: var();
+    &:hover {
+      color: var();
+      background: var();
+      box-shadow: var();
+    }
+  }
+}

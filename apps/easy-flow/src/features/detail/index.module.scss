@@ -104,7 +104,7 @@
 
 .start-form-wrapper {
   flex: 1 1 0;
-  background-color: #fff;
+  background-color: var(--custom-body-background, #fff);
   // margin-top: 36px;
 
   .form {
@@ -115,7 +115,7 @@
     width: 68%;
     margin: 0 16% 24px 16%;
     padding: 32px 0 0 32px;
-    background-color: #fff;
+    background: var(--custom-component-background, #fff);
     box-shadow: 0px -32px 32px 0px rgba(24, 31, 67, 0.12);
     border-radius: 2px;
     border-top: 5px solid #06c498;
