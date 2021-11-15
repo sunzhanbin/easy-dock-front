@@ -1,6 +1,8 @@
 import { message } from 'antd';
 import Axios, { AxiosRequestConfig, AxiosInstance } from 'axios';
 
+import Auth from '@enc/sso';
+
 function createAxios(config?: AxiosRequestConfig): AxiosInstance {
   const instance = Axios.create({
     ...config,
@@ -22,6 +24,8 @@ function createAxios(config?: AxiosRequestConfig): AxiosInstance {
       } else if (status === 403) {
         if (window.Auth && window.localStorage.getItem('auth')) {
           window.Auth.logout();
+        } else {
+          Auth.logout(undefined);
         }
 
         return Promise.reject({
