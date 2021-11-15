@@ -4,6 +4,8 @@
 
 ## Usage
 
+[API 文档](https://confluence.enncloud.cn/pages/viewpage.action?pageId=708182467)
+
 ### script 标签方式：
 
 ```html
