@@ -76,6 +76,33 @@ export interface FieldAuth {
   components: FieldAuth[] | null;
 }
 
+export enum TimeUnit {
+  Day = 'day',
+  Hour = 'hour',
+  Minute = 'minute',
+}
+
+export interface IDueConfig {
+  enable: boolean;
+  timeout: {
+    num?: number;
+    unit: TimeUnit;
+  };
+  cycle: {
+    enable: boolean;
+    num?: number;
+    unit: TimeUnit;
+  };
+  notice: {
+    starter: boolean;
+    assign: boolean;
+    admin: boolean;
+    other: boolean;
+    users?: number[];
+  };
+  action?: 'submit' | 'back' | null;
+}
+
 export interface AuditNode extends UserNode {
   type: NodeType.AuditNode;
   btnText: {
@@ -95,10 +122,12 @@ export interface AuditNode extends UserNode {
     count: number;
     percent: number;
   };
+  dueConfig: IDueConfig;
 }
 
 export interface FillNode extends UserNode {
   type: NodeType.FillNode;
+  dueConfig?: IDueConfig;
   btnText: {
     submit: ButtonAuth;
     save: ButtonAuth;

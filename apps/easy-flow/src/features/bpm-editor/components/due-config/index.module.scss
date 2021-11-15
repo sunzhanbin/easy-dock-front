@@ -1,0 +1,37 @@
+.timeout,
+.cycle {
+  display: flex;
+  height: 40px;
+  align-items: center;
+  margin-bottom: 12px;
+  .text {
+    font-size: 14px;
+    font-weight: 500;
+    color: #181f43;
+    margin-right: 8px;
+  }
+  .checkbox {
+    margin-right: 8px;
+  }
+  .num {
+    flex: 0 0 80px;
+    margin-right: 8px;
+  }
+  .unit {
+    width: 72px;
+    flex: 0 0 72px;
+    margin-right: 8px;
+  }
+}
+
+.cycle {
+  margin-top: 24px;
+}
+
+.tip {
+  margin-bottom: 8px;
+}
+
+.notice {
+  margin-bottom: 8px;
+}
