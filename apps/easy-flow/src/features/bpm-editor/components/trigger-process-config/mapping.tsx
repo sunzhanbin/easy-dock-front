@@ -17,7 +17,7 @@ interface MappingProps {
   subAppId?: number;
   currentFields?: any;
   targetFields?: any;
-  value?: any;
+  value?: { current?: string; target: string; required?: boolean }[];
   onChange?: (val: this['value']) => void;
 }
 interface Component {
@@ -26,7 +26,7 @@ interface Component {
   auth: AuthType | null;
 }
 
-const Mapping = ({ name, parentName, subAppId, onChange }: MappingProps) => {
+const Mapping = ({ name, parentName, subAppId, value, onChange }: MappingProps) => {
   const formMeta = useAppSelector(formMetaSelector);
   const [targetComponents, setTargetComponents] = useState<Component[]>([]);
   const currentComponents = useMemo(() => {
@@ -40,15 +40,25 @@ const Mapping = ({ name, parentName, subAppId, onChange }: MappingProps) => {
       builderAxios.get<{ data: FieldAuth[] }>(`/process/list/fields/${subAppId}`).then((res) => {
         const components = res.data.filter((v) => !['Tabs', 'FlowData', 'SerialNum'].includes(v.type));
         const requiredList = components.filter((v) => v.auth === AuthType.Required);
-        const requiredConfig = requiredList.map((v) => ({ target: v.name, required: true }));
-        const options = components.filter((v) => v.auth !== AuthType.Required);
+        const requiredConfig = requiredList.map((v) => ({ target: v.field, required: true }));
         if (requiredConfig.length) {
           onChange && onChange(requiredConfig);
         }
-        setTargetComponents(options);
+        setTargetComponents(components);
       });
     }
   }, [subAppId]);
+
+  // 所选流程的控件过滤已选择的控件
+  useEffect(() => {
+    const list = (Array.isArray(value) ? [...value] : []).filter((v) => v?.target);
+    if (list.length > 0) {
+      const fieldList = list.map((v) => v.target);
+      setTargetComponents((components) => {
+        return components.filter((v) => !fieldList.includes(v.field));
+      });
+    }
+  }, [value]);
   return (
     <div className={styles.mapping}>
       <div className={styles.header}>

@@ -12,6 +12,7 @@ import classNames from 'classnames';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import DataApiConfig from '@/features/bpm-editor/components/data-api-config';
 import ResponseNoMap from '@/features/bpm-editor/components/data-api-config/response-no-map';
+import { DataConfig } from '@/type/api';
 
 const { Option } = Select;
 interface editProps {
@@ -122,7 +123,11 @@ const SelectOptionList = (props: editProps) => {
     } else if (type === 'subapp' && subAppKey && componentKey) {
       onChange && onChange({ type, subappId: subAppKey, fieldName: componentKey });
     } else if (type === 'interface') {
-      onChange && onChange({ type, apiConfig: value?.apiConfig });
+      let apiConfig: DataConfig = { type: 1, request: { required: [], customize: [] } };
+      if (value?.apiConfig) {
+        apiConfig = Object.assign({}, apiConfig, value.apiConfig);
+      }
+      onChange && onChange({ type, apiConfig });
     }
   });
   const handleApiChange = useMemoCallback((apiConfig) => {

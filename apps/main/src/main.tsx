@@ -1,4 +1,4 @@
-// import 'antd/dist/antd.css';
+import 'antd/dist/antd.css';
 import '@enc/theme-scheme/dist/react/antd/antd.4.17-alpha.6.min.css'
 import './styles/base.scss';
 import '@enc/theme-scheme/dist/variable.css';
