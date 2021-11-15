@@ -213,6 +213,27 @@ const numberOption = {
   isProps: false,
 };
 
+const allowDecimal = {
+  key: 'decimal',
+  label: '允许小数',
+  defaultValue: false,
+  type: 'AllowDecimal',
+  direction: 'vertical',
+  required: false,
+  isProps: false,
+  checked: true,
+};
+const limitRange = {
+  key: 'limit',
+  label: '限制数值范围',
+  defaultValue: '',
+  type: 'LimitRange',
+  direction: 'vertical',
+  required: false,
+  isProps: false,
+  checked: false,
+};
+
 const components = {
   Input: {
     baseInfo: {
@@ -282,7 +303,7 @@ const components = {
       version: '1.0',
       type: 'InputNumber',
     },
-    config: [fieldName, getLabel('数字'), numberOption, desc, colSpace],
+    config: [fieldName, getLabel('数字'), desc, numberOption, allowDecimal, limitRange, colSpace],
   },
   DescText: {
     baseInfo: {

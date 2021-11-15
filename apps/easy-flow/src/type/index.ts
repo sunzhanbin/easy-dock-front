@@ -18,6 +18,7 @@ export type SchemaConfigItem = {
   direction?: 'vertical' | 'horizontal';
   range?: rangeItem[];
   isProps: boolean;
+  checked?: boolean;
   max?: number;
   min?: number;
   precision?: number;
