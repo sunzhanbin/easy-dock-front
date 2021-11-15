@@ -98,13 +98,14 @@ const componentMap: { [k: string]: (props: { [k: string]: any }) => ReactNode } 
 
 const FormItemWrap = (props: ComponentProps) => {
   const { id, label, required, type, requiredMessage, rules, children } = props;
+  console.log(id, 'id');
   if (type === 'AllowDecimal') {
     return (
       <>
         <Form.Item name={id} valuePropName="checked">
           <Checkbox>{label}</Checkbox>
         </Form.Item>
-        <Form.Item noStyle>
+        <Form.Item noStyle shouldUpdate>
           {(form) => {
             const isChecked = form.getFieldValue(id);
             console.log(isChecked, 'isChecked');
@@ -114,7 +115,13 @@ const FormItemWrap = (props: ComponentProps) => {
             return (
               <>
                 <span>限制</span>
-                <InputNumber size="large" style={{ width: '50%', margin: '0 10px' }} min={1} max={10} placeholder="" />
+                <InputNumber
+                  size="large"
+                  style={{ width: '50%', margin: '0 10px' }}
+                  min={1}
+                  max={10}
+                  placeholder="请输入"
+                />
                 <span>位</span>
               </>
             );

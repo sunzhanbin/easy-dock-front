@@ -216,7 +216,7 @@ const numberOption = {
 const allowDecimal = {
   key: 'decimal',
   label: '允许小数',
-  defaultValue: '',
+  defaultValue: false,
   type: 'AllowDecimal',
   direction: 'vertical',
   required: false,
