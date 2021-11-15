@@ -1,11 +1,11 @@
 {
     "name": "@enc/sso",
-    "version": "0.2.0-beta.0",
+    "version": "0.2.0-beta.5",
     "description": "sso login library",
     "author": "卫徕 <weilaib@enn.cn>",
     "homepage": "",
     "license": "ISC",
-    "main": "dist/index.umd.js",
+    "main": "dist/index.esm.js",
     "exports": {
         "require": "./dist/index.cjs.min.js",
         "import": "./dist/index.esm.js"
@@ -30,8 +30,7 @@
         "prepublishOnly": "npm run build",
         "watch": "rollup --watch --config rollup.config.dev.js"
     },
-    "dependencies": {
-        "@microsoft/tsdoc": "^0.13.2",
+    "devDependencies": {
         "@rollup/plugin-replace": "^3.0.0",
         "@typescript-eslint/parser": "^4.33.0",
         "eslint": "^7.32.0",

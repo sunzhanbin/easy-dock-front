@@ -1,6 +1,7 @@
 import cookie from 'js-cookie';
 import { createSlice, PayloadAction, createAsyncThunk, createSelector } from '@reduxjs/toolkit';
 import { runtimeAxios } from '@utils';
+import Auth from '@enc/sso';
 
 import type { RootState } from './index';
 
@@ -44,7 +45,11 @@ export const logout = createAsyncThunk<void, string | undefined, { state: RootSt
   'main-app-user/logout',
   async (url, { dispatch }) => {
     // await runtimeAxios.delete('/auth/logout');
-    window.Auth.logout(url ? url : undefined);
+    if (window.Auth) {
+      window.Auth.logout(url ? url : undefined);
+    } else {
+      Auth.logout(url ? url : undefined);
+    }
 
     // 删除请求头里的auth
     delete runtimeAxios.defaults.headers.auth;
