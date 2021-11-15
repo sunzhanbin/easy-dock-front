@@ -1,6 +1,8 @@
 // import 方式加载 sso.js
 import Auth from '@enc/sso';
 
+Auth.setConfig({ server: window.SSO_LOGIN_URL, cookieKey: 'easydockAuthCookie' });
+
 (async () => {
   // script tag 方式加载 sso.js
   // if (!window.Auth) {

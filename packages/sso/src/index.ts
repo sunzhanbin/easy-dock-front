@@ -172,7 +172,7 @@ class Auth implements IAuth {
      * @param {object} config
      *  server: 登陆接口地址, appId: appId, codeAttr: 在localStorage设置code使用的Key , authAttr: 在localStorage设置auth使用的Key
      */
-    public setConfig({ server, appId, codeAttr, authAttr, cookieAttr }: { server?: string; appId?: string; codeAttr?: string; authAttr?: string; cookieAttr?: string }) {
+    public setConfig({ server, appId, codeKey, authAttr, cookieKey }: { server?: string; appId?: string; codeKey?: string; authAttr?: string; cookieKey?: string }) {
         if (server) {
             this.setLoginServer(server);
         }
@@ -181,16 +181,16 @@ class Auth implements IAuth {
             this.appId = appId;
         }
 
-        if (codeAttr) {
-            this.codeAttr = codeAttr;
+        if (codeKey) {
+            this.codeAttr = codeKey;
         }
 
         if (authAttr) {
             this.authAttr = authAttr;
         }
 
-        if (cookieAttr) {
-            this.cookieAttr = cookieAttr;
+        if (cookieKey) {
+            this.cookieAttr = cookieKey;
         }
     }
 
@@ -203,6 +203,10 @@ class Auth implements IAuth {
     }
 
     public getAuth() {
+        if (this.cookieAttr) {
+            Cookies.get(this.cookieAttr);
+        }
+
         return window.localStorage.getItem(this.authAttr);
     }
 
