@@ -18,7 +18,8 @@
 	},
 	"source":
 	{
-		"includePattern": "(\\.d)?\\.ts$"
+		"includePattern": "(\\.d)?\\index.ts$",
+		"excludePattern": "src\\@types\\index.d.ts"
 	},
 	"markdown"  : {
 		"parser"   : "gfm",
