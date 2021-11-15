@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie';
 
-/** @ignore */ 
+/** @ignore */
 interface IAuth {
     /** */
     getToken: (needAutoLogin: boolean, host: string) => Promise<unknown>;
@@ -103,6 +103,10 @@ class Auth implements IAuth {
 
         if (codeAttr) {
             this.codeAttr = codeAttr;
+        }
+
+        if (!window.Auth) {
+            window.Auth = this;
         }
     }
 
@@ -210,7 +214,7 @@ class Auth implements IAuth {
         }
     }
 
-    public logout(redirect: string) {
+    public logout(redirect: string | undefined) {
         let auth = this.getAuth();
         if (auth) {
             this.removeAuth();
