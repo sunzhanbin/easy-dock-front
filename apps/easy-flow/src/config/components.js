@@ -218,20 +218,35 @@ const allowDecimal = {
   label: '允许小数',
   defaultValue: false,
   type: 'AllowDecimal',
-  direction: 'vertical',
   required: false,
   isProps: false,
-  checked: true,
+};
+
+const decimalCount = {
+  key: 'precision',
+  defaultValue: 0,
+  type: 'precision',
+  required: false,
+  isProps: false,
 };
 const limitRange = {
   key: 'limit',
   label: '限制数值范围',
-  defaultValue: '',
+  defaultValue: false,
   type: 'LimitRange',
-  direction: 'vertical',
   required: false,
   isProps: false,
-  checked: false,
+};
+
+const rangeNum = {
+  key: 'scope',
+  defaultValue: {
+    min: 0,
+    max: 0,
+  },
+  type: 'limit',
+  required: false,
+  isProps: false,
 };
 
 const components = {
@@ -303,7 +318,17 @@ const components = {
       version: '1.0',
       type: 'InputNumber',
     },
-    config: [fieldName, getLabel('数字'), desc, numberOption, allowDecimal, limitRange, colSpace],
+    config: [
+      fieldName,
+      getLabel('数字'),
+      desc,
+      numberOption,
+      allowDecimal,
+      decimalCount,
+      limitRange,
+      rangeNum,
+      colSpace,
+    ],
   },
   DescText: {
     baseInfo: {

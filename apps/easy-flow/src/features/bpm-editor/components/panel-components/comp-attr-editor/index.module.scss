@@ -46,11 +46,46 @@
       height: 32px;
       line-height: 32px;
     }
+
     .ant-switch {
       float: right;
     }
+
     .input_number {
       width: 100%;
+    }
+  }
+
+  .limitRange, .allowDecimal {
+    display: flex;
+
+    .Item {
+      flex: 1;
+
+      :global {
+        .ant-input-number {
+          width: 100%;
+          font-size: 14px;
+        }
+      }
+    }
+
+    .formItem {
+      flex: 0 0 160px;
+      margin-left: 10px;
+
+      :global {
+        .ant-input-number {
+          width: 100%;
+          font-size: 14px;
+        }
+      }
+    }
+
+    .text {
+      flex: 0 0 30px;
+      line-height: 40px;
+      text-align: center;
     }
   }
 }

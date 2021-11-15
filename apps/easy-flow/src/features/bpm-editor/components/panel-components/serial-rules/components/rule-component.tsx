@@ -70,8 +70,7 @@ const RuleComponent = (props: RuleComponentProps) => {
         type: 'fixedChars',
         chars: chars,
       };
-    }
-    if (ruleData.type === 'createTime') {
+    } else if (ruleData.type === 'createTime') {
       const { index, format } = ruleData;
       list[index] = {
         type: 'createTime',

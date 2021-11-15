@@ -17,7 +17,7 @@ import SelectColumns from '../select-columns';
 import SerialRules from '../serial-rules';
 import NumberOption from '../number-options';
 import AllowDecimal from '../allow-decimal';
-import PanelLabelContent from './label-content';
+import LimitRange from '../limit-range';
 
 const { Option } = Select;
 
@@ -74,8 +74,6 @@ const componentMap: { [k: string]: (props: { [k: string]: any }) => ReactNode } 
   },
   Checkbox: (props) => <Checkbox>{props.label}</Checkbox>,
   Switch: () => <Switch />,
-  LimitRange: () => <>111</>,
-  AllowDecimal: (props) => <AllowDecimal checked={props.checked} />,
   NumberOption: (props) => <NumberOption id={props.componentId} />,
   serialRules: (props) => <SerialRules id={props.componentId} />,
   selectColumns: (props) => <SelectColumns id={props.componentId} />,
@@ -98,37 +96,19 @@ const componentMap: { [k: string]: (props: { [k: string]: any }) => ReactNode } 
 
 const FormItemWrap = (props: ComponentProps) => {
   const { id, label, required, type, requiredMessage, rules, children } = props;
-  console.log(id, 'id');
-  if (type === 'AllowDecimal') {
+  if (type === 'AllowDecimal' || type === 'LimitRange') {
     return (
-      <>
-        <Form.Item name={id} valuePropName="checked">
-          <Checkbox>{label}</Checkbox>
-        </Form.Item>
-        <Form.Item noStyle shouldUpdate>
-          {(form) => {
-            const isChecked = form.getFieldValue(id);
-            console.log(isChecked, 'isChecked');
-            if (!isChecked) {
-              return null;
-            }
-            return (
-              <>
-                <span>限制</span>
-                <InputNumber
-                  size="large"
-                  style={{ width: '50%', margin: '0 10px' }}
-                  min={1}
-                  max={10}
-                  placeholder="请输入"
-                />
-                <span>位</span>
-              </>
-            );
-          }}
-        </Form.Item>
-      </>
+      <Form.Item name={id} valuePropName="checked">
+        <Checkbox>{label}</Checkbox>
+      </Form.Item>
     );
+  }
+  if (type === 'precision') {
+    return <AllowDecimal id={id} />;
+  }
+
+  if (type === 'limit') {
+    return <LimitRange id={id} />;
   }
   return (
     <Form.Item
@@ -213,16 +193,18 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
               parentId: componentId,
             };
             props.componentType = componentId.split('_')[0];
-            const component = componentMap[type](props);
+            const component =
+              type !== 'AllowDecimal' &&
+              type !== 'precision' &&
+              type !== 'LimitRange' &&
+              type !== 'limit' &&
+              componentMap[type](props);
 
-            const handleChangeCheck = (value: any) => {
-              props.checked = value;
-            };
             return (
               <Fragment key={key}>
                 <FormItemWrap
                   id={key}
-                  label={<PanelLabelContent {...props} onChange={handleChangeCheck} />}
+                  label={label}
                   type={type}
                   required={required}
                   requiredMessage={requiredMessage}
