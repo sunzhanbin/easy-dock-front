@@ -15,7 +15,7 @@ import { ROUTES } from '@consts';
 import cookie from 'js-cookie';
 import { registerTheme } from '@enc/theme-scheme/dist/utils.esm';
 
-Auth.setConfig({ server: window.SSO_LOGIN_URL, cookieKey: 'easydockAuthCookie' });
+Auth.setConfig({ server: window.SSO_LOGIN_URL });
 const query = decodeURIComponent(window.location.href.split('?')[1]);
 const theme = new URLSearchParams(query).get('theme');
 

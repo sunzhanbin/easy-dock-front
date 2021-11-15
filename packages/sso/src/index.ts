@@ -1,6 +1,5 @@
 import Cookies from 'js-cookie';
 
-/** @ignore */
 interface IAuth {
     /** */
     getToken: (needAutoLogin: boolean, host: string) => Promise<unknown>;
@@ -63,15 +62,23 @@ const fetchToken: (host: string, code: string) => Promise<string> = async (host,
 };
 
 /**
- * @class
+ * @public
  */
 class Auth implements IAuth {
+    /** */
     appId: string;
+    /** */
     server: string | undefined;
+    /** */
     codeAttr: string = DEFAULT_CODE_ATTR;
+    /** */
     authAttr: string = DEFAULT_AUTH_ATTR;
+    /** */
     cookieAttr?: string;
 
+    /**
+     * @public
+     */
     constructor(server?: string, codeAttr?: string) {
         const currentScript: HTMLOrSVGScriptElementExt | null = document.currentScript as HTMLOrSVGScriptElementExt;
 
@@ -170,9 +177,9 @@ class Auth implements IAuth {
     /**
      *
      * @param {object} config
-     *  server: 登陆接口地址, appId: appId, codeAttr: 在localStorage设置code使用的Key , authAttr: 在localStorage设置auth使用的Key
+     *  server: 登陆接口地址, appId: appId, codeKey: 在localStorage设置code使用的Key, authKey: 在localStorage设置auth使用的Key, cookieKey: 设置之后会将token放进cookie中
      */
-    public setConfig({ server, appId, codeKey, authAttr, cookieKey }: { server?: string; appId?: string; codeKey?: string; authAttr?: string; cookieKey?: string }) {
+    public setConfig({ server, appId, codeKey, authKey, cookieKey }: { server?: string; appId?: string; codeKey?: string; authKey?: string; cookieKey?: string }) {
         if (server) {
             this.setLoginServer(server);
         }
@@ -185,8 +192,8 @@ class Auth implements IAuth {
             this.codeAttr = codeKey;
         }
 
-        if (authAttr) {
-            this.authAttr = authAttr;
+        if (authKey) {
+            this.authAttr = authKey;
         }
 
         if (cookieKey) {
@@ -218,7 +225,7 @@ class Auth implements IAuth {
         }
     }
 
-    public logout(redirect: string | undefined) {
+    public logout(redirect?: string | undefined) {
         let auth = this.getAuth();
         if (auth) {
             this.removeAuth();
