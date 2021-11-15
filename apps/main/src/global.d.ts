@@ -6,6 +6,8 @@ declare type User = {
   name?: string;
 };
 
+declare const REACT_APP_SSO_LOGIN_URL: string;
+
 interface Window {
   COMMON_LOGIN_DOMAIN: string;
   ALGOR_ORCH_BASE_SERVICE_ENDPOINT: string;

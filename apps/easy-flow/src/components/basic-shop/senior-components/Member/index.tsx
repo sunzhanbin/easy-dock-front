@@ -41,10 +41,18 @@ const Member = (
       prop.mode = 'multiple';
     }
     if (value) {
-      prop.value = Number(value);
+      if (Array.isArray(value)) {
+        prop.value = value.map((v) => Number(v));
+      } else {
+        prop.value = Number(value);
+      }
     }
     if (defaultValue) {
-      prop.defaultValue = Number(value);
+      if (Array.isArray(defaultValue)) {
+        prop.value = defaultValue.map((v) => Number(v));
+      } else {
+        prop.defaultValue = Number(defaultValue);
+      }
     }
     if (showSearch) {
       prop.onSearch = handleSearch;

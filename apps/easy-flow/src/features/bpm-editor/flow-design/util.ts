@@ -86,7 +86,10 @@ export function createNode(type: NodeType, name?: string) {
       id: fielduuid(),
       name,
       type,
-      triggerConfig: [{ processId: undefined, processName: undefined, starter: { type: 1 }, mapping: [] }],
+      triggerConfig: {
+        isWait: false,
+        subapps: [{ id: undefined, name: undefined, starter: { type: 1 }, mapping: [] }],
+      },
     };
   }
 
@@ -291,7 +294,7 @@ export function valid(data: AllNode[], validRes: ValidResultType) {
         errors.push(dataPushValidMessage);
       }
     } else if (node.type === NodeType.AutoNodeTriggerProcess) {
-      const triggerConfigValidMessage = validators.config(node.triggerConfig);
+      const triggerConfigValidMessage = validators.config(node.triggerConfig.subapps);
       if (triggerConfigValidMessage) {
         errors.push(triggerConfigValidMessage);
       }

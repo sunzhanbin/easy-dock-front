@@ -65,7 +65,7 @@ const triggerConfig = (value: TriggerConfig[]): string => {
   if (!value || value.length < 1) {
     return '请选择触发流程';
   }
-  const lackProcessId = value.some((v) => !v.processId);
+  const lackProcessId = value.some((v) => !v.id);
   if (lackProcessId) {
     return '请选择触发流程';
   }
@@ -77,6 +77,14 @@ const triggerConfig = (value: TriggerConfig[]): string => {
   });
   if (lackFields) {
     return '请选择对应字段';
+  }
+  const lackMember = value.some((v) => {
+    if (v.starter.type === 3) {
+      return !v.starter.value;
+    }
+  });
+  if (lackMember) {
+    return '请选择表单内人员控件';
   }
   return '';
 };

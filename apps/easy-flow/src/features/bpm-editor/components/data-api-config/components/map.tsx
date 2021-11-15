@@ -1,24 +1,28 @@
 import { memo, useContext, useMemo } from 'react';
-import { Form, Input, Dropdown, Menu } from 'antd';
+import { Form, Input, Dropdown, Menu, Select } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import DataContext from '../context';
 import styles from './index.module.scss';
 
 interface FieldMapProps {
   name: (string | number)[];
+  isAutoSelect?: boolean; // 是否可输可选,默认为true
 }
 
 function FieldMap(props: FieldMapProps) {
-  const { name } = props;
+  const { name, isAutoSelect = true } = props;
   const { fields } = useContext(DataContext)!;
   const options = useMemo(() => {
     return fields.map((item) => {
-      return {
-        name: item.name,
-        id: `\${${item.id}}`,
-      };
+      if (isAutoSelect) {
+        return {
+          name: item.name,
+          id: `\${${item.id}}`,
+        };
+      }
+      return item;
     });
-  }, [fields]);
+  }, [fields, isAutoSelect]);
   return (
     <Form.Item
       name={name}
@@ -37,7 +41,19 @@ function FieldMap(props: FieldMapProps) {
       ]}
       trigger="onChange"
     >
-      <AutoSelector options={options} />
+      {isAutoSelect ? (
+        <AutoSelector options={options} />
+      ) : (
+        <Select size="large" placeholder="请选择" getPopupContainer={(node) => node} dropdownMatchSelectWidth={false}>
+          {options.map((v) => {
+            return (
+              <Select.Option key={v.id} value={v.id}>
+                {v.name}
+              </Select.Option>
+            );
+          })}
+        </Select>
+      )}
     </Form.Item>
   );
 }
