@@ -10,6 +10,8 @@ import { trimInputValue } from '../../util';
 import { rules } from '../../validators';
 import useValidateForm from '../../hooks/use-validate-form';
 import TriggerProcessConfig from '../../../components/trigger-process-config';
+import Checkbox from '../../../components/checkbox-wrapper';
+import styles from './index.module.scss';
 
 interface AutoNodeEditorProps {
   node: AutoNodeTriggerProcess;
@@ -54,8 +56,14 @@ function AutoNodeTriggerProcessEditor(props: AutoNodeEditorProps) {
       <Form.Item label="节点名称" name="name" rules={nameRules} getValueFromEvent={trimInputValue} required>
         <Input size="large" placeholder="请输入节点名称" />
       </Form.Item>
-      <Form.Item noStyle name="triggerConfig">
-        <TriggerProcessConfig name="triggerConfig" />
+      <Form.Item noStyle name={['triggerConfig', 'isWait']}>
+        <Checkbox label="流转等待" />
+      </Form.Item>
+      <Form.Item noStyle>
+        <div className={styles.tip}>被触发流程完成后，该流程才可进行流转</div>
+      </Form.Item>
+      <Form.Item noStyle name={['triggerConfig', 'subapps']}>
+        <TriggerProcessConfig name={['triggerConfig', 'subapps']} />
       </Form.Item>
     </Form>
   );

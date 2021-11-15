@@ -1,4 +1,4 @@
-import React, { Fragment, memo, useState, useEffect } from 'react';
+import React, { memo, useState, useEffect } from 'react';
 import { message, Modal, Tooltip } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import styles from '../index.module.scss';
@@ -8,14 +8,15 @@ import { Icon } from '@common/components';
 import classNames from 'classnames';
 import { RuleOption } from '@type';
 
-interface DateProps {
+interface RuleProps {
+  fields: { id: string; name: string }[];
   showRuleModal: boolean;
   onCancel: () => void;
   onSubmit: (fieldsValue: any) => void;
 }
 
-const RuleModal = (props: DateProps) => {
-  const { showRuleModal, onCancel, onSubmit } = props;
+const RuleModal = (props: RuleProps) => {
+  const { showRuleModal, onCancel, onSubmit, fields } = props;
   const { data } = useSubAppDetail();
   const [ruleList, setRuleList] = useState([]);
   const [rule, setRule] = useState({});
@@ -30,8 +31,7 @@ const RuleModal = (props: DateProps) => {
       const appId = data?.app?.id;
       if (!appId) return;
       const ret = await getSerialList(appId);
-      if (!ret || !ret.data) return;
-      setRuleList(ret?.data);
+      setRuleList(ret?.data || []);
     } catch (e) {
       console.log(e);
     }
@@ -40,8 +40,7 @@ const RuleModal = (props: DateProps) => {
   const handleDelete = useMemoCallback(async (rule, index) => {
     try {
       const ruleId = rule.id;
-      const ret = await deleteSerialId(ruleId);
-      if (!ret) return;
+      await deleteSerialId(ruleId);
       message.success('删除成功');
       const list = [...ruleList];
       list.splice(index, 1);
@@ -55,7 +54,24 @@ const RuleModal = (props: DateProps) => {
     getRuleList();
   }, []);
 
-  const renderLabel = useMemoCallback(() => {});
+  const renderLabel = useMemoCallback((rule) => {
+    // console.log(rule, 'rule');
+    return rule.mata.map((item: RuleOption) => {
+      if (item.type === 'incNumber') {
+        return <span>{Math.pow(10, item.digitsNum)}</span>;
+      }
+      if (item.type === 'createTime') {
+        return <span>{item.format}</span>;
+      }
+      if (item.type === 'fixedChars') {
+        return <span>{item.chars}</span>;
+      }
+      if (item.type === 'fieldName') {
+        console.log(fields, 'field');
+        return <span>{fields.find((field) => field.id === item.fieldValue)?.name}</span>;
+      }
+    });
+  });
 
   const handleSelectRule = useMemoCallback((rule, index) => {
     setActiveIndex(index);
@@ -74,6 +90,7 @@ const RuleModal = (props: DateProps) => {
       okButtonProps={{ size: 'large' }}
       destroyOnClose={true}
       maskClosable={false}
+      getContainer={false}
     >
       <div className={styles.ruleModal}>
         {ruleList.map((rule: any, index) => (
@@ -83,7 +100,7 @@ const RuleModal = (props: DateProps) => {
               onClick={() => handleSelectRule(rule, index)}
             >
               <div className={styles.text}>{rule.name}</div>
-              {renderLabel()}
+              <span className={styles.ruleTips}>{renderLabel(rule)}</span>
             </div>
             <div className={styles.operation}>
               {rule.status === 0 && (

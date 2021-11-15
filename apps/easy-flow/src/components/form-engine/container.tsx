@@ -19,7 +19,6 @@ export const Container = React.memo(({ children, rules, fieldName, form, type }:
   const visibleRules = useMemo(() => rules?.filter((item) => item?.subtype == 0), [rules]);
   const [visible, setVisible] = useState<boolean>(true);
   const [reFreshKey, setReFreshKey] = useState<number>(0);
-  const [changeType, setChangeType] = useState<string>('');
 
   const setComponentValueAndVisible = useCallback(() => {
     const isMatchArr = rules?.filter((item) => {
@@ -48,6 +47,7 @@ export const Container = React.memo(({ children, rules, fieldName, form, type }:
   }, []);
 
   useEffect(() => {
+    console.log(fieldName, 'fieldName');
     if (!rules) return;
     const watchs = watchFn(rules);
     const visibleWatchs = watchFn(visibleRules);
@@ -59,8 +59,6 @@ export const Container = React.memo(({ children, rules, fieldName, form, type }:
           setComponentValueAndVisible();
         } else {
           setReFreshKey(Date.now());
-          const changeType = item.split('-')[0];
-          setChangeType(changeType);
         }
       });
     });
@@ -73,11 +71,10 @@ export const Container = React.memo(({ children, rules, fieldName, form, type }:
   }, [rules, form]);
 
   return (
-    <ContainerProvider value={{ rules, form, fieldName, type, changeType }}>
+    <ContainerProvider value={{ rules, form, fieldName, type, refresh: reFreshKey }}>
       {visible
         ? React.cloneElement(children as React.ReactElement<any>, {
             refresh: reFreshKey,
-            changetype: changeType,
           })
         : null}
     </ContainerProvider>

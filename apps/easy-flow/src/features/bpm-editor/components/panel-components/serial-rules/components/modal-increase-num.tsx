@@ -42,6 +42,7 @@ const IncNumModal = (props: IncNumProps) => {
       okButtonProps={{ size: 'large' }}
       destroyOnClose={true}
       maskClosable={false}
+      getContainer={false}
     >
       <Form form={form} layout="vertical" autoComplete="off" initialValues={props.data}>
         <Form.Item label="计数位数" name="digitsNum">

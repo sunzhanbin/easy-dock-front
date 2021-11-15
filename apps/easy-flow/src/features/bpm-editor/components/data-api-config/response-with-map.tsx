@@ -64,7 +64,7 @@ function ResponseWithMap(props: ResponseWithMapProps) {
                     </Form.Item>
 
                     <span className={styles.map}>对应</span>
-                    <FieldMap name={[field.name, 'map']} />
+                    <FieldMap name={[field.name, 'map']} isAutoSelect={false} />
                   </div>
                   <Button className={styles.del} icon={<Icon type="shanchu" />} onClick={() => remove(index)} />
                 </div>
