@@ -1,12 +1,19 @@
+import Cookies from 'js-cookie';
+
+/** @ignore */ 
 interface IAuth {
+    /** */
     getToken: (needAutoLogin: boolean, host: string) => Promise<unknown>;
+    /** */
     getAuth: () => string | null;
+    /** */
     removeAuth: () => void;
+    /** */
     logout: (redirect: string) => void;
 }
 
-const AUTH_ATTR = 'auth';
-const CODE_ATTR = 'code';
+const DEFAULT_AUTH_ATTR = 'auth';
+const DEFAULT_CODE_ATTR = 'code';
 
 const getParams = () => {
     let result: Record<string, string | null> = {};
@@ -23,10 +30,10 @@ const getParams = () => {
     return result;
 };
 
-const resetUrl = () => {
+const resetUrl = (codeAttr: string) => {
     let params = getParams();
     let search = '';
-    params[CODE_ATTR] = null;
+    params[codeAttr] = null;
     Object.keys(params).forEach((attr) => {
         if (params[attr]) {
             search += `${attr}=${params[attr]}&`;
@@ -55,11 +62,17 @@ const fetchToken: (host: string, code: string) => Promise<string> = async (host,
     }
 };
 
+/**
+ * @class
+ */
 class Auth implements IAuth {
     appId: string;
     server: string | undefined;
+    codeAttr: string = DEFAULT_CODE_ATTR;
+    authAttr: string = DEFAULT_AUTH_ATTR;
+    cookieAttr?: string;
 
-    constructor(server?: string) {
+    constructor(server?: string, codeAttr?: string) {
         const currentScript: HTMLOrSVGScriptElementExt | null = document.currentScript as HTMLOrSVGScriptElementExt;
 
         let appId = currentScript?.getAttribute('appId');
@@ -75,7 +88,7 @@ class Auth implements IAuth {
         if (server) {
             this.server = server;
         } else {
-            console.warn('SSO new Auth(server): server is null or undefined.');
+            // console.warn('SSO new Auth(server): server is null or undefined.');
             let src: string | undefined = window.SSO_LOGIN_URL;
             if (src) {
                 this.server = src;
@@ -87,18 +100,37 @@ class Auth implements IAuth {
                 }
             }
         }
+
+        if (codeAttr) {
+            this.codeAttr = codeAttr;
+        }
     }
 
-    async getToken(needAutoLogin: boolean, host: string) {
+    private setAuth(token: string) {
+        if (this.cookieAttr) {
+            Cookies.set(this.cookieAttr, token);
+        }
+
+        window.localStorage.setItem(this.authAttr, token);
+    }
+
+    /**
+     * @description 获取Token
+     * @param {boolean} needAutoLogin
+     * @param {string} host BASE_SERVICE_ENDPOINT
+     * @returns Promise<null>
+     */
+    public async getToken(needAutoLogin: boolean, host: string) {
         if (this.getAuth()) {
             return this.getAuth();
         } else {
-            let code = getParams()[CODE_ATTR];
+            let code = getParams()[this.codeAttr];
             if (code) {
                 let token = await fetchToken(host, code);
                 if (token) {
-                    window.localStorage.setItem(AUTH_ATTR, token);
-                    resetUrl();
+                    // window.localStorage.setItem(this.authAttr, token);
+                    this.setAuth(token);
+                    resetUrl(this.codeAttr);
                 }
                 return token;
             } else {
@@ -123,24 +155,69 @@ class Auth implements IAuth {
         }
     }
 
-    setLoginServer(server: string) {
+    /**
+     *
+     * @param server {string} 登陆接口地址
+     */
+    public setLoginServer(server: string) {
         this.server = server;
     }
 
-    getAuth() {
-        return window.localStorage.getItem(AUTH_ATTR);
+    /**
+     *
+     * @param {object} config
+     *  server: 登陆接口地址, appId: appId, codeAttr: 在localStorage设置code使用的Key , authAttr: 在localStorage设置auth使用的Key
+     */
+    public setConfig({ server, appId, codeAttr, authAttr, cookieAttr }: { server?: string; appId?: string; codeAttr?: string; authAttr?: string; cookieAttr?: string }) {
+        if (server) {
+            this.setLoginServer(server);
+        }
+
+        if (appId) {
+            this.appId = appId;
+        }
+
+        if (codeAttr) {
+            this.codeAttr = codeAttr;
+        }
+
+        if (authAttr) {
+            this.authAttr = authAttr;
+        }
+
+        if (cookieAttr) {
+            this.cookieAttr = cookieAttr;
+        }
     }
-    removeAuth() {
-        window.localStorage.removeItem(AUTH_ATTR);
+
+    public getAuthFromCookie() {
+        if (this.cookieAttr) {
+            return Cookies.get(this.cookieAttr);
+        }
+
+        return null;
     }
-    logout(redirect: string) {
+
+    public getAuth() {
+        return window.localStorage.getItem(this.authAttr);
+    }
+
+    public removeAuth() {
+        window.localStorage.removeItem(this.authAttr);
+
+        if (this.cookieAttr) {
+            Cookies.remove(this.cookieAttr);
+        }
+    }
+
+    public logout(redirect: string) {
         let auth = this.getAuth();
         if (auth) {
             this.removeAuth();
             if (!redirect) {
                 redirect = window.location.href;
             }
-            window.location.href = `${this.server}/logout?${AUTH_ATTR}=${auth}&redirectUri=${encodeURIComponent(redirect)}`;
+            window.location.href = `${this.server}/logout?${this.authAttr}=${auth}&redirectUri=${encodeURIComponent(redirect)}`;
         }
     }
 }

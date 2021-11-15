@@ -1439,6 +1439,11 @@
   resolved "https://registry.nlark.com/@emotion/unitless/download/@emotion/unitless-0.7.5.tgz#77211291c1900a700b8a78cfafda3160d76949ed"
   integrity sha1-dyESkcGQCnALinjPr9oxYNdpSe0=
 
+"@enc/sso@^0.2.0-beta.5":
+  version "0.2.0-beta.5"
+  resolved "http://10.39.39.153:4837/@enc%2fsso/-/sso-0.2.0-beta.5.tgz#f2cfa2b0aac704cd265c5e54475a12998f048748"
+  integrity sha512-JtryMB+ZfJ85QkmODRJJ7b7MQkgPisJEB6zZPSbPLERzcSv7eZ4GNcGXGUDdImgI7MqTs3lWYuBd2kp67yRLoA==
+
 "@enc/theme-scheme@^0.0.1":
   version "0.0.1"
   resolved "http://10.39.39.153:4837/@enc%2ftheme-scheme/-/theme-scheme-0.0.1.tgz#a727afaab1be2222ce8f47aaea31fb8e909703ac"
