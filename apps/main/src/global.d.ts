@@ -28,3 +28,4 @@ interface MicroApp {
 }
 
 declare module '@enc/theme-scheme/dist/utils.esm';
+declare module '@enc/sso';
