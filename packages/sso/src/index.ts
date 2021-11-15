@@ -5,8 +5,8 @@ interface IAuth {
     logout: (redirect: string) => void;
 }
 
-const AUTH_ATTR = 'auth';
-const CODE_ATTR = 'code';
+const DEFAULT_AUTH_ATTR = 'auth';
+const DEFAULT_CODE_ATTR = 'code';
 
 const getParams = () => {
     let result: Record<string, string | null> = {};
@@ -23,10 +23,10 @@ const getParams = () => {
     return result;
 };
 
-const resetUrl = () => {
+const resetUrl = (codeAttr: string) => {
     let params = getParams();
     let search = '';
-    params[CODE_ATTR] = null;
+    params[codeAttr] = null;
     Object.keys(params).forEach((attr) => {
         if (params[attr]) {
             search += `${attr}=${params[attr]}&`;
@@ -58,8 +58,10 @@ const fetchToken: (host: string, code: string) => Promise<string> = async (host,
 class Auth implements IAuth {
     appId: string;
     server: string | undefined;
+    coodAttr: string = DEFAULT_CODE_ATTR;
+    authAttr: string = DEFAULT_AUTH_ATTR;
 
-    constructor(server?: string) {
+    constructor(server?: string, coodAttr?: string) {
         const currentScript: HTMLOrSVGScriptElementExt | null = document.currentScript as HTMLOrSVGScriptElementExt;
 
         let appId = currentScript?.getAttribute('appId');
@@ -75,7 +77,7 @@ class Auth implements IAuth {
         if (server) {
             this.server = server;
         } else {
-            console.warn('SSO new Auth(server): server is null or undefined.');
+            // console.warn('SSO new Auth(server): server is null or undefined.');
             let src: string | undefined = window.SSO_LOGIN_URL;
             if (src) {
                 this.server = src;
@@ -87,18 +89,22 @@ class Auth implements IAuth {
                 }
             }
         }
+
+        if (coodAttr) {
+            this.coodAttr = coodAttr;
+        }
     }
 
     async getToken(needAutoLogin: boolean, host: string) {
         if (this.getAuth()) {
             return this.getAuth();
         } else {
-            let code = getParams()[CODE_ATTR];
+            let code = getParams()[this.coodAttr];
             if (code) {
                 let token = await fetchToken(host, code);
                 if (token) {
-                    window.localStorage.setItem(AUTH_ATTR, token);
-                    resetUrl();
+                    window.localStorage.setItem(this.authAttr, token);
+                    resetUrl(this.coodAttr);
                 }
                 return token;
             } else {
@@ -127,12 +133,32 @@ class Auth implements IAuth {
         this.server = server;
     }
 
+    setConfig({ server, appId, coodAttr, authAttr }: { server?: string; appId?: string; coodAttr?: string; authAttr?: string }) {
+        if (server) {
+            this.server = server;
+        }
+
+        if (appId) {
+            this.appId = appId;
+        }
+
+        if (coodAttr) {
+            this.coodAttr = coodAttr;
+        }
+
+        if (authAttr) {
+            this.authAttr = authAttr;
+        }
+    }
+
     getAuth() {
-        return window.localStorage.getItem(AUTH_ATTR);
+        return window.localStorage.getItem(this.authAttr);
     }
+
     removeAuth() {
-        window.localStorage.removeItem(AUTH_ATTR);
+        window.localStorage.removeItem(this.authAttr);
     }
+    
     logout(redirect: string) {
         let auth = this.getAuth();
         if (auth) {
@@ -140,7 +166,7 @@ class Auth implements IAuth {
             if (!redirect) {
                 redirect = window.location.href;
             }
-            window.location.href = `${this.server}/logout?${AUTH_ATTR}=${auth}&redirectUri=${encodeURIComponent(redirect)}`;
+            window.location.href = `${this.server}/logout?${this.authAttr}=${auth}&redirectUri=${encodeURIComponent(redirect)}`;
         }
     }
 }
