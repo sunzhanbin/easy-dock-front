@@ -8,6 +8,7 @@ import styles from './index.module.scss';
 import { useAppSelector, useAppDispatch } from '@/app/hooks';
 import { componentPropsSelector, formRulesSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 import { setFormRules } from '@/features/bpm-editor/form-design/formdesign-slice';
+import FieldAttrEditor from '@/features/bpm-editor/components/panel-components/field-attr-editor';
 
 const FormAttrEditor = () => {
   const byId = useAppSelector(componentPropsSelector);
@@ -271,6 +272,7 @@ const FormAttrEditor = () => {
           添加
         </Button>
       </div>
+      <FieldAttrEditor />
       {showModal && (
         <FormAttrModal type={type} rule={currentRule} editIndex={editIndex} onClose={handleClose} onOk={handleOk} />
       )}

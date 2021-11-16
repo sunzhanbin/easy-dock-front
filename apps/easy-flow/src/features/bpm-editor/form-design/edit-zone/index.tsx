@@ -1,7 +1,6 @@
 import { memo, useEffect, useState, useMemo, useCallback } from 'react';
 import CompAttrEditor from '@/features/bpm-editor/components/panel-components/comp-attr-editor';
 import FormAttrEditor from '@/features/bpm-editor/components/panel-components/form-attr-editor';
-import FieldAttrEditor from '@/features/bpm-editor/components/panel-components/field-attr-editor';
 import { editProps, editSubComponentProps, setSubComponentConfig } from '../formdesign-slice';
 import { FieldType, FormField, SchemaConfigItem } from '@/type';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
@@ -144,9 +143,6 @@ const EditZone = () => {
         </TabPane>
         <TabPane tab="表单属性" key="2">
           <FormAttrEditor />
-        </TabPane>
-        <TabPane tab="日期规则" key="3">
-          <FieldAttrEditor />
         </TabPane>
       </Tabs>
     </div>
