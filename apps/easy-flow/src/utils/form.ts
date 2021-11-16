@@ -107,6 +107,18 @@ export const dynamicMap: { [k in string]: { value: string; label: string } } = {
   last30days: { value: 'last30days', label: '最近30天' },
   last90days: { value: 'last90days', label: '最近90天' },
 };
+
+export const datePropertyMap: { [k in string]: { value: string; label: string } } = {
+  flowVars: { value: 'flowVars', label: '流程变量' },
+  other: { value: 'other', label: '其他控件' },
+};
+
+export const flowVarsMap: { [k in string]: { value: string; label: string } } = {
+  currentMonth: { value: 'currentMonth', label: '当前月' },
+  currentYear: { value: 'currentYear', label: '当前年' },
+  currentTime: { value: 'currentTime', label: '当前时间' },
+};
+
 // 解析文本类型规则
 function analysisTextRule(symbol: string, value: string | string[], formValue: string): boolean {
   let result = false;
