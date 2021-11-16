@@ -1,5 +1,9 @@
 import Cookies from 'js-cookie';
 
+/**
+ * @interface
+ * @ignore
+ */
 interface IAuth {
     /** */
     getToken: (needAutoLogin: boolean, host: string) => Promise<unknown>;
@@ -63,6 +67,14 @@ const fetchToken: (host: string, code: string) => Promise<string> = async (host,
 
 /**
  * @public
+ * 
+ * Code blocks are great for examples
+ *
+ * ```typescript
+ * // run typedoc --help for a list of supported languages
+ * const instance = new MyClass();
+ * 
+ * @implements {IAuth} 
  */
 class Auth implements IAuth {
     /** */
@@ -237,4 +249,5 @@ class Auth implements IAuth {
     }
 }
 
+/** @module @enc/sso */
 export default new Auth();
