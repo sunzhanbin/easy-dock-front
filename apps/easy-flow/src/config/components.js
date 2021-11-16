@@ -229,11 +229,11 @@ const decimalCount = {
   required: false,
   isProps: false,
 };
-const limitRange = {
+const limitNum = {
   key: 'limit',
   label: '限制数值范围',
   defaultValue: false,
-  type: 'LimitRange',
+  type: 'LimitNum',
   required: false,
   isProps: false,
 };
@@ -245,6 +245,26 @@ const rangeNum = {
     max: 0,
   },
   type: 'limit',
+  required: false,
+  isProps: false,
+};
+
+const limitDate = {
+  key: 'datelimit',
+  label: '限制日期范围',
+  defaultValue: false,
+  type: 'limitDate',
+  required: false,
+  isProps: false,
+};
+
+const rangeDate = {
+  key: 'daterange',
+  defaultValue: {
+    min: 0,
+    max: 0,
+  },
+  type: 'daterange',
   required: false,
   isProps: false,
 };
@@ -308,7 +328,16 @@ const components = {
       version: '1.0',
       type: 'Date',
     },
-    config: [fieldName, getLabel('日期'), desc, format, getDefaultValue('DefaultDate', '选择日期'), colSpace],
+    config: [
+      fieldName,
+      getLabel('日期'),
+      desc,
+      format,
+      getDefaultValue('DefaultDate', '选择日期'),
+      limitDate,
+      rangeDate,
+      colSpace,
+    ],
   },
   InputNumber: {
     baseInfo: {
@@ -318,17 +347,7 @@ const components = {
       version: '1.0',
       type: 'InputNumber',
     },
-    config: [
-      fieldName,
-      getLabel('数字'),
-      desc,
-      numberOption,
-      allowDecimal,
-      decimalCount,
-      limitRange,
-      rangeNum,
-      colSpace,
-    ],
+    config: [fieldName, getLabel('数字'), desc, numberOption, allowDecimal, decimalCount, limitNum, rangeNum, colSpace],
   },
   DescText: {
     baseInfo: {

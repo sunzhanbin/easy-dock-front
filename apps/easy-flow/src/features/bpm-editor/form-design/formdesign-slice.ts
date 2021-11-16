@@ -15,7 +15,7 @@ import {
   setIsDirty as setIsDirtyReducer,
   setErrors as setErrorsReducer,
   setFormRules as setFormRulesReducer,
-  setFieldRules as setFieldRulesReducer,
+  setPropertyRules as setFieldRulesReducer,
   setSubComponentConfig as setSubComponentConfigReducer,
   editSubComponentProps as editSubComponentPropsReducer,
 } from './formzone-reducer';
@@ -48,7 +48,7 @@ const formDesign = createSlice({
     setIsDirty: setIsDirtyReducer,
     setErrors: setErrorsReducer,
     setFormRules: setFormRulesReducer,
-    setFieldRules: setFieldRulesReducer,
+    setPropertyRules: setFieldRulesReducer,
     setSubComponentConfig: setSubComponentConfigReducer,
     editSubComponentProps: editSubComponentPropsReducer,
   },
@@ -77,7 +77,7 @@ export const {
   setIsDirty,
   setErrors,
   setFormRules,
-  setFieldRules,
+  setPropertyRules,
   setSubComponentConfig,
   editSubComponentProps,
 } = formDesign.actions;
@@ -107,13 +107,13 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
   'form/save',
   async ({ subAppId, isShowTip, isShowErrorTip }, { getState, dispatch }) => {
     const { formDesign } = getState();
-    const { layout = [], schema = {}, isDirty = false, byId = {}, formRules, fieldRules } = formDesign;
+    const { layout = [], schema = {}, isDirty = false, byId = {}, formRules, propertyRules } = formDesign;
     const formMeta: FormMeta = {
       components: [],
       layout: layout,
       schema: schema,
       formRules,
-      fieldRules,
+      propertyRules,
     };
     const errors: ErrorItem[] = [];
     // 组装控件属性
