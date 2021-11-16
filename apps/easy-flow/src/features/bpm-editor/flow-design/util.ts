@@ -116,6 +116,22 @@ export function createNode(type: NodeType, name?: string) {
       revert: {
         type: RevertType.Start,
       },
+      dueConfig: {
+        enable: false,
+        timeout: {
+          unit: 'day',
+        },
+        notice: {
+          starter: false,
+          assign: false,
+          admin: false,
+          other: false,
+        },
+        cycle: {
+          enable: false,
+          unit: 'day',
+        },
+      },
     };
   } else if (type === NodeType.FillNode) {
     return <FillNode>{
@@ -123,6 +139,22 @@ export function createNode(type: NodeType, name?: string) {
       btnText: {
         submit: { enable: true },
         save: { enable: true },
+      },
+      dueConfig: {
+        enable: false,
+        timeout: {
+          unit: 'day',
+        },
+        notice: {
+          starter: false,
+          assign: false,
+          admin: false,
+          other: false,
+        },
+        cycle: {
+          enable: false,
+          unit: 'day',
+        },
       },
     };
   } else if (type === NodeType.CCNode) {

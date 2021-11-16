@@ -15,6 +15,8 @@ interface Window {
   ALGOR_ORCH_FRONTEND_ENTRY: string;
   EASY_FLOW_FRONTEND_ENTRY: string;
   EASY_CHART_FRONTEND_ENTRY: string;
+
+  SSO_LOGIN_URL: string;
   COMMON_LOGIN_URL: string;
   setImmediate(): void;
 }
@@ -28,3 +30,4 @@ interface MicroApp {
 }
 
 declare module '@enc/theme-scheme/dist/utils.esm';
+declare module '@enc/sso';

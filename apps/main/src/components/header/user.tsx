@@ -1,5 +1,6 @@
 import { memo, useMemo, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
+import Auth from '@enc/sso';
 import { useSelector, useDispatch } from 'react-redux';
 import { Dropdown, Menu } from 'antd';
 import classNames from 'classnames';
@@ -17,6 +18,8 @@ function HeaderUser() {
   const handleLogin = useMemoCallback(async () => {
     if (window.Auth) {
       await window.Auth.getToken(true, window.EASY_DOCK_BASE_SERVICE_ENDPOINT);
+    } else {
+      await Auth.getToken(true, window.EASY_DOCK_BASE_SERVICE_ENDPOINT);
     }
   });
   const handleLogout = useCallback(() => {

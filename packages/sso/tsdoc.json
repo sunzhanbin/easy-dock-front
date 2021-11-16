@@ -1,0 +1,38 @@
+{
+	"tags":
+	{
+		"allowUnknownTags" : true
+	},
+	"plugins":[
+		 "plugins/markdown"
+		,"/Users/weilai/.npm/_npx/39334eb8977a914a/node_modules/tsdoc/template/plugins/TSDoc.js"
+	],
+	"opts":
+	{
+		"template"	:"/Users/weilai/.npm/_npx/39334eb8977a914a/node_modules/tsdoc/template",
+		"recurse"	:"true"
+	},
+	"templates" : {
+		"cleverLinks"     : false,
+		"monospaceLinks"  : false
+	},
+	"source":
+	{
+		"includePattern": "(\\.d)?\\index.ts$",
+		"excludePattern": "src\\@types\\index.d.ts"
+	},
+	"markdown"  : {
+		"parser"   : "gfm",
+		"hardwrap" : true
+	},
+	"tsdoc":{
+		"source"		:"/Users/weilai/Source/work/easy-dock-front/packages/sso/src/",
+		"destination"	:"/Users/weilai/Source/work/easy-dock-front/packages/sso/docs",
+		"tutorials"		:"",
+		"systemName"	: "sso",
+		"footer"		: "",
+		"copyright"		: "sso Copyright © 2021 weilai.",
+		"outputSourceFiles" : true,
+		"commentsOnly": true
+	}
+}

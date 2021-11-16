@@ -16,6 +16,7 @@ import usePrevNodes from '../../hooks/use-prev-nodes';
 import RevertCascader from './revert-cascader';
 import { rules } from '../../validators';
 import styles from './index.module.scss';
+import DueConfig from '@/features/bpm-editor/components/due-config';
 
 interface AuditNodeEditorProps {
   node: AuditNode;
@@ -50,6 +51,7 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
       },
       fieldsAuths: node.fieldsAuths,
       countersign: node.countersign,
+      dueConfig: node.dueConfig,
     };
   }, [node]);
 
@@ -155,11 +157,10 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
       <Form.Item>
         <Form.Item
           name={['countersign', 'enable']}
-          label="会签设置"
           className={styles['countersign-checkbox__wrapper']}
           valuePropName="checked"
         >
-          <Checkbox />
+          <Checkbox>会签设置</Checkbox>
         </Form.Item>
         <Form.Item noStyle shouldUpdate>
           {(form) => {
@@ -217,6 +218,9 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
       </Form.Item>
       <Form.Item label="字段权限" name="fieldsAuths">
         <FieldAuths />
+      </Form.Item>
+      <Form.Item name="dueConfig">
+        <DueConfig name="dueConfig" />
       </Form.Item>
     </Form>
   );

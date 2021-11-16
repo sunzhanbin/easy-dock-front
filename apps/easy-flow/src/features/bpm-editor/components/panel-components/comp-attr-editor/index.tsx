@@ -1,5 +1,5 @@
-import { memo, useEffect, Fragment, useMemo, ReactNode } from 'react';
-import { Form, Select, Input, Switch, Radio, Checkbox, InputNumber } from 'antd';
+import { Fragment, memo, ReactNode, useEffect, useMemo } from 'react';
+import { Checkbox, Form, Input, InputNumber, Radio, Select, Switch } from 'antd';
 import SelectOptionList from '../select-option-list';
 import SelectDefaultOption from '../select-default-option';
 import DefaultDate from '../default-date';
@@ -13,10 +13,11 @@ import { errorSelector } from '@/features/bpm-editor/form-design/formzone-reduce
 import { Icon } from '@common/components';
 import { Rule } from 'antd/lib/form';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import { debounce, reverse } from 'lodash';
 import SelectColumns from '../select-columns';
 import SerialRules from '../serial-rules';
 import NumberOption from '../number-options';
+import AllowDecimal from '../allow-decimal';
+import LimitRange from '../limit-range';
 
 const { Option } = Select;
 
@@ -29,7 +30,7 @@ interface CompAttrEditorProps {
 
 interface ComponentProps {
   id: string;
-  label: string;
+  label?: string | ReactNode;
   type: string;
   required?: boolean;
   requiredMessage?: string;
@@ -95,6 +96,20 @@ const componentMap: { [k: string]: (props: { [k: string]: any }) => ReactNode } 
 
 const FormItemWrap = (props: ComponentProps) => {
   const { id, label, required, type, requiredMessage, rules, children } = props;
+  if (type === 'AllowDecimal' || type === 'LimitRange') {
+    return (
+      <Form.Item name={id} valuePropName="checked">
+        <Checkbox>{label}</Checkbox>
+      </Form.Item>
+    );
+  }
+  if (type === 'precision') {
+    return <AllowDecimal id={id} />;
+  }
+
+  if (type === 'limit') {
+    return <LimitRange id={id} />;
+  }
   return (
     <Form.Item
       label={label}
@@ -151,7 +166,20 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
         onValuesChange={handleChange}
       >
         {config.map(
-          ({ key, label, type, range, placeholder, required, requiredMessage, rules, max, min, precision }) => {
+          ({
+            key,
+            label,
+            type,
+            range,
+            placeholder,
+            required,
+            requiredMessage,
+            rules,
+            max,
+            min,
+            precision,
+            checked,
+          }) => {
             const props: { [k: string]: any } = {
               placeholder,
               range,
@@ -160,16 +188,23 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
               max,
               min,
               precision,
+              type,
+              checked,
               parentId: componentId,
             };
-            const componentType = componentId.split('_')[0];
-            props.componentType = componentType;
-            const component = componentMap[type](props);
+            props.componentType = componentId.split('_')[0];
+            const component =
+              type !== 'AllowDecimal' &&
+              type !== 'precision' &&
+              type !== 'LimitRange' &&
+              type !== 'limit' &&
+              componentMap[type](props);
+
             return (
               <Fragment key={key}>
                 <FormItemWrap
                   id={key}
-                  label={label as string}
+                  label={label}
                   type={type}
                   required={required}
                   requiredMessage={requiredMessage}

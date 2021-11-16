@@ -9,6 +9,7 @@ import MemberSelector from '../../components/member-selector';
 import { updateNode } from '../../flow-slice';
 import ButtonEditor from '../../components/button-editor';
 import FieldAuths from '../../components/field-auths';
+import DueConfig from '@/features/bpm-editor/components/due-config';
 import { trimInputValue } from '../../util';
 import { rules } from '../../validators';
 import useValidateForm from '../../hooks/use-validate-form';
@@ -38,6 +39,7 @@ function FillNodeEditor(props: FillNodeEditorProps) {
       correlationMemberConfig: node.correlationMemberConfig,
       btnText: node.btnText,
       fieldsAuths: node.fieldsAuths,
+      dueConfig: node.dueConfig,
     };
   }, [node]);
 
@@ -84,6 +86,9 @@ function FillNodeEditor(props: FillNodeEditorProps) {
 
       <Form.Item label="字段权限" name="fieldsAuths">
         <FieldAuths />
+      </Form.Item>
+      <Form.Item label="" name="dueConfig">
+        <DueConfig name="dueConfig" />
       </Form.Item>
     </Form>
   );

@@ -123,7 +123,7 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
         const version = schema[type]?.baseInfo.version || '';
         const componentConfig =
           type === 'DescText'
-            ? schema[type]?.config.concat([{ key: 'fieldName', type: 'Input', isProps: false }]) //富文本也要保存fieldName
+            ? schema[type]?.config.concat([{ key: 'fieldName', type: 'Input', isProps: false, checked: false }]) //富文本也要保存fieldName
             : schema[type]?.config;
         const config: ConfigItem = {
           id,

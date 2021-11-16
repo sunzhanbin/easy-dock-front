@@ -8,6 +8,7 @@
 
   .type {
     display: flex;
+    max-width: 320px;
     :global {
       .ant-radio-button-wrapper {
         flex: 1;
@@ -15,6 +16,7 @@
         border-radius: 3px;
         border-color: transparent;
         background-image: none !important;
+        text-align: center;
         &:hover {
           color: rgba(76, 92, 219, 1);
         }
