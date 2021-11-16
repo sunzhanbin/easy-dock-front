@@ -87,7 +87,7 @@ function FillNodeEditor(props: FillNodeEditorProps) {
       <Form.Item label="字段权限" name="fieldsAuths">
         <FieldAuths />
       </Form.Item>
-      <Form.Item label="" name="dueConfig">
+      <Form.Item name="dueConfig">
         <DueConfig name="dueConfig" />
       </Form.Item>
     </Form>

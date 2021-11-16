@@ -80,10 +80,6 @@ const MemberSelector = ({ children, value, onChange }: MemberSelectorProps) => {
     window.dispatchEvent(new Event('resize'));
   }, [value]);
 
-  useEffect(() => {
-    console.info({ showValue });
-  }, [showValue]);
-
   return (
     <div ref={containerRef}>
       <MemberList className={styles.members} members={members} editable={true} onDelete={handleDelete}>

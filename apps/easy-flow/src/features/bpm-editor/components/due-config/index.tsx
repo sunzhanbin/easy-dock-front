@@ -1,8 +1,9 @@
 import { memo } from 'react';
 import { Form, Checkbox, InputNumber, Select } from 'antd';
 import { Icon } from '@common/components';
-import { IDueConfig } from '@/type/flow';
+import { AuthType, IDueConfig } from '@/type/flow';
 import MemberSelector from '../member-selector';
+import TimeoutAction from '../timeout-action';
 import styles from './index.module.scss';
 
 export interface DueConfigProps {
@@ -28,6 +29,8 @@ const DueConfig = ({ name, showAction = false }: DueConfigProps) => {
         {({ getFieldValue }) => {
           const enable = getFieldValue([name, 'enable']);
           if (enable) {
+            const fieldAuthList = getFieldValue('fieldsAuths');
+            const hasRequired = Object.values(fieldAuthList).some((v) => v === AuthType.Required); // 该节点是否有必填字段,如果有必填字段则不能选择超时自动通过
             return (
               <>
                 <div className={styles.timeout}>
@@ -107,7 +110,11 @@ const DueConfig = ({ name, showAction = false }: DueConfigProps) => {
                   </Form.Item>
                   <div className={styles.text}>再次通知</div>
                 </div>
-                {showAction && <div></div>}
+                {showAction && (
+                  <Form.Item noStyle shouldUpdate name={[name, 'action']}>
+                    <TimeoutAction hasRequired={hasRequired} />
+                  </Form.Item>
+                )}
               </>
             );
           }

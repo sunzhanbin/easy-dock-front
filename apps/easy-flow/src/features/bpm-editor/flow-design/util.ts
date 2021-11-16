@@ -131,6 +131,7 @@ export function createNode(type: NodeType, name?: string) {
           enable: false,
           unit: 'day',
         },
+        action: null,
       },
     };
   } else if (type === NodeType.FillNode) {
