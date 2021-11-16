@@ -1,20 +1,20 @@
-import {memo, useState, useCallback, useEffect} from 'react';
-import {Button, Tooltip, message} from 'antd';
-import {FormField, FieldRuleItem} from '@/type';
-import {formatRuleValue} from '@/utils';
-import {Icon} from '@common/components';
+import { memo, useState, useCallback, useEffect } from 'react';
+import { Button, Tooltip, message } from 'antd';
+import { FormField, PropertyRuleItem } from '@/type';
+import { formatRuleValue } from '@/utils';
+import { Icon } from '@common/components';
 import FieldAttrModal from '../field-attr-modal';
 import styles from './index.module.scss';
-import {useAppSelector, useAppDispatch} from '@/app/hooks';
-import {componentPropsSelector, fieldRulesSelector} from '@/features/bpm-editor/form-design/formzone-reducer';
-import {setFieldRules} from '@/features/bpm-editor/form-design/formdesign-slice';
+import { useAppSelector, useAppDispatch } from '@/app/hooks';
+import { componentPropsSelector, propertyRulesSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
+import { setPropertyRules } from '@/features/bpm-editor/form-design/formdesign-slice';
 
 const FieldAttrEditor = () => {
   const byId = useAppSelector(componentPropsSelector);
-  const fieldRules = useAppSelector(fieldRulesSelector);
+  const fieldRules = useAppSelector(propertyRulesSelector);
   const dispatch = useAppDispatch();
-  const [rules, setRules] = useState<FieldRuleItem[]>(fieldRules || []);
-  const [currentRule, setCurrentRule] = useState<FieldRuleItem | null>(null);
+  const [rules, setRules] = useState<PropertyRuleItem[]>(fieldRules || []);
+  const [currentRule, setCurrentRule] = useState<PropertyRuleItem | null>(null);
   const [editIndex, setEditIndex] = useState<number>(0);
   const [type, setType] = useState<'add' | 'edit'>('add');
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -30,8 +30,7 @@ const FieldAttrEditor = () => {
       } else {
         message.warning('配置条件不能为空');
       }
-    } catch {
-    }
+    } catch {}
 
     let rule: any;
     rule = {
@@ -80,7 +79,7 @@ const FieldAttrEditor = () => {
     [rules],
   );
   useEffect(() => {
-    dispatch(setFieldRules({fieldRules: rules}));
+    dispatch(setPropertyRules({ propertyRules: rules }));
   }, [rules, dispatch]);
   useEffect(() => {
     if (fieldRules && fieldRules.length > 0) {
@@ -90,9 +89,9 @@ const FieldAttrEditor = () => {
   return (
     <div className={styles.container}>
       <div className={styles.rules}>
-        <div className={styles.title}>日期逻辑规则</div>
+        <div className={styles.title}>表单静态规则</div>
         <div className={styles.content}>
-          {rules.map((item: FieldRuleItem, index: number) => {
+          {rules.map((item: PropertyRuleItem, index: number) => {
             if (item.type === 'change') {
               const condition = item.formChangeRule!.fieldRule;
               if (!condition) {
@@ -158,12 +157,12 @@ const FieldAttrEditor = () => {
             return null;
           })}
         </div>
-        <Button className={styles.add} size="large" icon={<Icon type="xinzeng"/>} onClick={handleAddRule}>
+        <Button className={styles.add} size="large" icon={<Icon type="xinzeng" />} onClick={handleAddRule}>
           添加
         </Button>
       </div>
       {showModal && (
-        <FieldAttrModal type={type} rule={currentRule} editIndex={editIndex} onClose={handleClose} onOk={handleOk}/>
+        <FieldAttrModal type={type} rule={currentRule} editIndex={editIndex} onClose={handleClose} onOk={handleOk} />
       )}
     </div>
   );

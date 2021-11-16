@@ -164,7 +164,7 @@ export type FormRuleItem = {
   formInitRule?: DataConfig;
 };
 
-export type FieldRuleItem = {
+export type PropertyRuleItem = {
   type: 'change' | 'init';
   formChangeRule?: FieldChangeRule;
 };
@@ -176,7 +176,7 @@ export type FormDesign = {
   layout: string[][];
   errors: ErrorItem[];
   formRules: FormRuleItem[];
-  fieldRules: FieldRuleItem[];
+  propertyRules: PropertyRuleItem[];
   schema: Schema;
   isDirty: boolean;
   subAppInfo: {
@@ -247,7 +247,7 @@ export type FormMeta = {
   events?: Events;
   schema: { [k: string]: SchemaItem };
   formRules: FormRuleItem[];
-  fieldRules: FieldRuleItem[];
+  propertyRules: PropertyRuleItem[];
   rules?: FormRule[];
   themes?: Theme[];
 };

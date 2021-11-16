@@ -18,6 +18,7 @@ import SerialRules from '../serial-rules';
 import NumberOption from '../number-options';
 import AllowDecimal from '../allow-decimal';
 import LimitRange from '../limit-range';
+import DateRange from '../date-range';
 
 const { Option } = Select;
 
@@ -30,6 +31,7 @@ interface CompAttrEditorProps {
 
 interface ComponentProps {
   id: string;
+  componentId?: string;
   label?: string | ReactNode;
   type: string;
   required?: boolean;
@@ -95,8 +97,8 @@ const componentMap: { [k: string]: (props: { [k: string]: any }) => ReactNode } 
 };
 
 const FormItemWrap = (props: ComponentProps) => {
-  const { id, label, required, type, requiredMessage, rules, children } = props;
-  if (type === 'AllowDecimal' || type === 'LimitRange') {
+  const { id, label, required, type, requiredMessage, rules, children, componentId } = props;
+  if (type === 'AllowDecimal' || type === 'LimitNum' || type === 'limitDate') {
     return (
       <Form.Item name={id} valuePropName="checked">
         <Checkbox>{label}</Checkbox>
@@ -109,6 +111,10 @@ const FormItemWrap = (props: ComponentProps) => {
 
   if (type === 'limit') {
     return <LimitRange id={id} />;
+  }
+  if (type === 'daterange' && componentId) {
+    console.log(props, '  console.log(props)\n');
+    return <DateRange id={id} componentId={componentId} />;
   }
   return (
     <Form.Item
@@ -196,8 +202,10 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
             const component =
               type !== 'AllowDecimal' &&
               type !== 'precision' &&
-              type !== 'LimitRange' &&
+              type !== 'LimitNum' &&
               type !== 'limit' &&
+              type !== 'limitDate' &&
+              type !== 'daterange' &&
               componentMap[type](props);
 
             return (
@@ -206,6 +214,7 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
                   id={key}
                   label={label}
                   type={type}
+                  componentId={componentId}
                   required={required}
                   requiredMessage={requiredMessage}
                   rules={rules}

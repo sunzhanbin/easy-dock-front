@@ -56,6 +56,18 @@
     }
   }
 
+
+  .dateRange {
+
+    margin-top: -15px;
+
+    .tips {
+      font-size: 12px;
+      color: #ccc;
+      margin-bottom: 10px;
+    }
+  }
+
   .limitRange, .allowDecimal {
     display: flex;
 
@@ -63,7 +75,7 @@
       flex: 1;
 
       :global {
-        .ant-input-number {
+        .ant-input-number, .ant-picker-large .ant-picker-input > input {
           width: 100%;
           font-size: 14px;
         }

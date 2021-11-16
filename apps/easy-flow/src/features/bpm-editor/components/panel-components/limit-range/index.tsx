@@ -2,7 +2,7 @@ import { memo } from 'react';
 import { Form, InputNumber } from 'antd';
 import styles from '../comp-attr-editor/index.module.scss';
 
-const LimitRange = ({ id }: { id: string }) => {
+const LimitNum = ({ id }: { id: string }) => {
   return (
     <Form.Item noStyle shouldUpdate>
       {(form) => {
@@ -27,4 +27,4 @@ const LimitRange = ({ id }: { id: string }) => {
   );
 };
 
-export default memo(LimitRange);
+export default memo(LimitNum);

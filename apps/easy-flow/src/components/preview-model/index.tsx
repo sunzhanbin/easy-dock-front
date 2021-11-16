@@ -4,7 +4,7 @@ import { Icon, Loading } from '@common/components';
 import { useAppSelector } from '@/app/hooks';
 import {
   componentPropsSelector,
-  fieldRulesSelector,
+  propertyRulesSelector,
   formRulesSelector,
   layoutSelector,
   subAppSelector,
@@ -38,7 +38,7 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
   const layout = useAppSelector(layoutSelector);
   const byId: FormFieldMap = useAppSelector(componentPropsSelector);
   const formRules = useAppSelector(formRulesSelector);
-  const fieldRules = useAppSelector(fieldRulesSelector);
+  const fieldRules = useAppSelector(propertyRulesSelector);
   const [dataSource, setDataSource] = useState<Datasource>({});
   const [loading, setLoading] = useState<boolean>(false);
   const subAppDetail = useSubAppDetail();
