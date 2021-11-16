@@ -44,6 +44,7 @@ const ToolBoxItem: FC<{ icon: string; displayName: string; type: FieldType }> = 
       className={styles.container}
       onClick={addComponent}
       ref={drag}
+      // eslint-disable-next-line
       role="toolItem"
       data-testid={`toolItem-${type}`}
     >

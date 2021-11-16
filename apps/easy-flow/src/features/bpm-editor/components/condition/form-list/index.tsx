@@ -94,7 +94,7 @@ const FormList = ({
       return components;
     }
     return [];
-  }, [components, fieldName]);
+  }, [components]);
   const setDataSource = useMemoCallback((fieldName, fieldType) => {
     if (loadDataSource && (fieldType === 'Select' || fieldType === 'Radio' || fieldType === 'Checkbox')) {
       setLoading(true);

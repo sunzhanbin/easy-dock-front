@@ -28,7 +28,7 @@ const InputNumberComponent = (props: InputNumberProps & { scope?: { min: number;
     delete result.defaultValue;
     delete result.defaultNumber;
     return result;
-  }, [defaultValue, props, onChange]);
+  }, [defaultValue, props, precision, scope, onChange]);
 
   return (
     <div className={styles.container}>

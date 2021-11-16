@@ -12,7 +12,6 @@ import {
   TConfigMap,
 } from '@type';
 import { RootState } from '@/app/store';
-import formDesign from '.';
 
 function locateById(target: string, layout: Array<string[]>): [number, number] {
   let res: [number, number] = [-1, -1];

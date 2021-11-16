@@ -28,7 +28,7 @@ const MemberSelector = ({ children, value, onChange }: MemberSelectorProps) => {
   }, [showValue]);
   const projectId = useMemo(() => {
     return subAppDetail?.app.project.id;
-  }, [members]);
+  }, [subAppDetail]);
   const fetchUser = useMemoCallback(async (data: { name: string; page: number }) => {
     const memberResponse = await runtimeAxios.post('/user/search', {
       index: data.page,
@@ -70,7 +70,7 @@ const MemberSelector = ({ children, value, onChange }: MemberSelectorProps) => {
         <Selector fetchUser={fetchUser} value={members} onChange={handleChange} />
       </SelectorContext.Provider>
     );
-  }, [value, members]);
+  }, [members, fetchUser, handleChange]);
 
   useEffect(() => {
     if (!containerRef || !containerRef.current) {

@@ -123,7 +123,7 @@ const EditZone = () => {
       );
     }
     return <div className={styles.edit_title}>{title}</div>;
-  }, [title, subComponentConfig]);
+  }, [title, subComponentConfig, handleBack]);
   const tabPanelProps = useMemo(() => {
     if (!selectedField) {
       return { disabled: true };

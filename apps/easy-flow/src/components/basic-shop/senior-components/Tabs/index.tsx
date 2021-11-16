@@ -96,7 +96,7 @@ const Tabs = ({ components = [], fieldName, auth, formInstance, value, readonly,
     if (list.length > 0) {
       setActiveKey(list[0].key);
     }
-  }, [content]);
+  }, [value, content]);
   // 编辑态默认有个tab,用于展示编辑的控件
   useEffect(() => {
     const el = document.getElementById('edit-form');

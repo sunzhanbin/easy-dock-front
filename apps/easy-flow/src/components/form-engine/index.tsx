@@ -159,6 +159,7 @@ const FormDetail = React.forwardRef(function FormDetail(
             respListMap[index].forEach(({ fieldName, name }) => {
               if (fieldName && name) {
                 // TODO 替换eval
+                // eslint-disable-next-line
                 formValues[fieldName] = eval(`res.${name}`);
               }
             });
@@ -176,7 +177,7 @@ const FormDetail = React.forwardRef(function FormDetail(
 
   const onValuesChange = useCallback((changeValue: any, all: any) => {
     // 此处不要进行setState操作   避免重复更新
-    Object.entries(changeValue).map(([key, value]: any) => {
+    Object.entries(changeValue).forEach(([key, value]: any) => {
       if (value && !Array.isArray(value) && Object.values(value).length) {
         const field = Object.values(value)[0];
         if (typeof field === 'object' && field) {

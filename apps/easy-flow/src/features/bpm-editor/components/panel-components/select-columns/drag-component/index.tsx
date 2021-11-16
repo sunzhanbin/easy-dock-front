@@ -4,7 +4,7 @@ import useMemoCallback from '@common/hooks/use-memo-callback';
 import styles from '@/features/bpm-editor/components/panel-components/select-columns/index.module.scss';
 import { Input, Select, Tooltip } from 'antd';
 import { Icon } from '@common/components';
-import { LabelMap, OptionItem } from '@type';
+import { LabelMap } from '@type';
 const { Option } = Select;
 
 interface DraggableOptionProps {
@@ -23,7 +23,7 @@ interface DraggableOptionProps {
 }
 
 function DraggableOption(props: DraggableOptionProps) {
-  const { onDelete, data, onChange, onDrag, index, columns, fieldList } = props;
+  const { onDelete, data, onChange, onDrag, index } = props;
   const dragWrapperRef = useRef<HTMLDivElement>(null);
   const [canMove, setCanMove] = useState<boolean>(false);
 

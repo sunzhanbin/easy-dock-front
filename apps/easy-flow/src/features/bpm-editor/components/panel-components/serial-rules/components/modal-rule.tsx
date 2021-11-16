@@ -52,7 +52,7 @@ const RuleModal = (props: RuleProps) => {
   });
   useEffect(() => {
     getRuleList();
-  }, []);
+  }, [getRuleList]);
 
   const renderLabel = useMemoCallback((rule) => {
     return rule.mata.map((item: RuleOption) => {
@@ -68,6 +68,7 @@ const RuleModal = (props: RuleProps) => {
       if (item.type === 'fieldName') {
         return <span>{fields.find((field) => field.id === item.fieldValue)?.name}</span>;
       }
+      return null;
     });
   });
 

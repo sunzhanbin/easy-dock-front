@@ -1,8 +1,7 @@
 import { memo, useEffect, useState } from 'react';
-import { Form, Switch } from 'antd';
+import { Switch } from 'antd';
 import styles from './index.module.scss';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import { AuthType } from '@/type/flow';
 
 interface TimeoutActionProps {
   hasRequired?: boolean;
@@ -43,7 +42,7 @@ const TimeoutAction = ({ hasRequired = false, value, onChange }: TimeoutActionPr
     if (hasRequired) {
       handleChangeSubmit(false);
     }
-  }, [hasRequired]);
+  }, [hasRequired, handleChangeSubmit]);
   return (
     <>
       <div className={styles.action}>

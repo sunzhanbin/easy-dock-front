@@ -157,15 +157,6 @@ const format = {
   required: false,
   isProps: true,
 };
-const notSelectPassed = {
-  key: 'notSelectPassed',
-  defaultValue: false,
-  label: '禁止选择已过去的时间',
-  type: 'Switch',
-  direction: 'horizontal',
-  required: false,
-  isProps: false,
-};
 const descTextValue = {
   key: 'value',
   defaultValue: '',

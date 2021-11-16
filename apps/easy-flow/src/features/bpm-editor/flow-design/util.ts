@@ -18,7 +18,6 @@ import {
 } from '@type/flow';
 import { FormMeta } from '@type';
 import { validators } from './validators';
-import { ApiType } from '@/type/api';
 
 function randomString() {
   return Math.random().toString(36).slice(2);

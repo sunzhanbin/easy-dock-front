@@ -24,7 +24,7 @@ function HeaderUser() {
   });
   const handleLogout = useCallback(() => {
     dispatch(logout());
-  }, [history, dispatch]);
+  }, [dispatch]);
 
   const user = useSelector(userSelector);
   const handleGoAuth = useCallback(() => {

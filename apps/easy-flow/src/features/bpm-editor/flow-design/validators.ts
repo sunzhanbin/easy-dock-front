@@ -25,6 +25,7 @@ const dataPushConfig = (value: DataConfig): string => {
     if (!url) {
       return '推送数据的接口地址的不能为空';
     }
+    // eslint-disable-next-line
     const urlRegex = /(^(http|https):\/\/([\w\-]+\.)+[\w\-]+(\/[\w\u4e00-\u9fa5\-\.\/?\@\%\!\&=\+\~\:\#\;\,]*)?)/;
     if (!urlRegex.test(url)) {
       return '请输入正确的接口地址';
@@ -82,6 +83,7 @@ const triggerConfig = (value: TriggerConfig[]): string => {
     if (v.starter.type === 3) {
       return !v.starter.value;
     }
+    return false;
   });
   if (lackMember) {
     return '请选择表单内人员控件';

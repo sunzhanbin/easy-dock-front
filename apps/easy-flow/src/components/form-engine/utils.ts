@@ -42,9 +42,9 @@ export const convertFormRules = (data: FormRuleItem[] = [], components: { config
       fieldRulesObj[fieldName] = [obj];
     }
   }
-  data?.map((item: any) => {
+  data?.forEach((item: any) => {
     const { formChangeRule, type, subtype = 0 } = item;
-    if (type == 'change' && subtype == 0) {
+    if (type === 'change' && subtype === 0) {
       const { hideComponents, showComponents, fieldRule } = formChangeRule;
       const watchList = [
         ...(new Set(
@@ -58,7 +58,7 @@ export const convertFormRules = (data: FormRuleItem[] = [], components: { config
       const component = componentList.find((v) => v.id === parentId);
       const parentFieldName = component?.fieldName || '';
 
-      [showComponents, hideComponents].map((components, index) => {
+      [showComponents, hideComponents].forEach((components, index) => {
         if (!components) return;
         const obj = {
           watch: watchList,
@@ -67,7 +67,7 @@ export const convertFormRules = (data: FormRuleItem[] = [], components: { config
           subtype: 0,
           type,
         };
-        components.map((field: any) => {
+        components.forEach((field: any) => {
           if (parentId) {
             if (fieldRulesObj?.[parentFieldName]?.[field]) {
               fieldRulesObj[parentFieldName][field].push(obj);
@@ -85,12 +85,12 @@ export const convertFormRules = (data: FormRuleItem[] = [], components: { config
           }
         });
       });
-    } else if (type == 'change' && subtype == 1) {
+    } else if (type === 'change' && subtype === 1) {
       const { fieldRule } = formChangeRule;
       fieldRule
         .flat(2)
         .filter(Boolean)
-        .map((item: any) => {
+        .forEach((item: any) => {
           const { fieldName, value } = item;
           setFieldRules(fieldName, value, item, type, 1);
           setFieldRules(value, fieldName, item, type, 1);
@@ -98,7 +98,7 @@ export const convertFormRules = (data: FormRuleItem[] = [], components: { config
     }
   });
   // panel配置公式计算
-  components?.map((com) => {
+  components?.forEach((com) => {
     const { config } = com;
     if (config.type === 'InputNumber' && config.defaultNumber) {
       const { fieldName, defaultNumber } = config;

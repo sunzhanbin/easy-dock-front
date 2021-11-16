@@ -3,7 +3,7 @@ import { Input } from 'antd';
 import { InputProps } from 'antd/lib/input';
 
 const SerialNumComponent = (props: InputProps & { unique: boolean }) => {
-  const { defaultValue, unique, onChange } = props;
+  const { defaultValue, onChange } = props;
   const propList = useMemo(() => {
     const prop: { [k: string]: string | boolean | number | undefined | null | Function } = {
       size: 'large',
@@ -19,7 +19,7 @@ const SerialNumComponent = (props: InputProps & { unique: boolean }) => {
     delete result.colSpace;
     delete result.serialRule;
     return result;
-  }, [defaultValue, unique, props, onChange]);
+  }, [defaultValue, props, onChange]);
   return <Input key={defaultValue as string} {...propList} />;
 };
 

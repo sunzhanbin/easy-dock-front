@@ -155,7 +155,7 @@ const SerialRules = (props: RulesProps) => {
     setType(value?.serialId ? 'inject' : 'custom');
     value?.serialId && setSerialId(value?.serialId);
     getSerial();
-  }, []);
+  }, [value?.serialId, getSerial]);
 
   const handleCancelEdit = useMemoCallback(() => {
     setEditStatus(false);
