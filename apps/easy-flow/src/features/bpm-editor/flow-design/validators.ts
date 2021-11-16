@@ -1,5 +1,5 @@
 import { Rule } from 'antd/lib/form';
-import { CorrelationMemberConfig, AuditNode, RevertType, TriggerConfig } from '@type/flow';
+import { CorrelationMemberConfig, AuditNode, RevertType, TriggerConfig, IDueConfig } from '@type/flow';
 import { ApiType, DataConfig } from '@type/api';
 import { validName } from '@common/rule';
 import { dynamicIsEmpty } from './util';
@@ -89,8 +89,25 @@ const triggerConfig = (value: TriggerConfig[]): string => {
   return '';
 };
 
+const timeoutConfig = (value: IDueConfig) => {
+  if (value.enable) {
+    if (!value.timeout.num) {
+      return '请输入超时时间';
+    }
+    if (value.cycle.enable && !value.cycle.num) {
+      return '请输入超时时间';
+    }
+    if (value.notice.other && (!value.notice.users || value.notice.users.length === 0)) {
+      return '请选择其他人员';
+    }
+    return '';
+  }
+  return '';
+};
+
 export const validators = {
   member,
+  timeoutConfig,
   name: validName,
   data: dataPushConfig,
   config: triggerConfig,

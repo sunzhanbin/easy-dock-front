@@ -35,8 +35,12 @@ const DueConfig = ({ name, showAction = false }: DueConfigProps) => {
               <>
                 <div className={styles.timeout}>
                   <div className={styles.text}>流程到达该节点</div>
-                  <Form.Item noStyle shouldUpdate name={[name, 'timeout', 'num']}>
-                    <InputNumber className={styles.num} placeholder="请输入" size="large" />
+                  <Form.Item
+                    name={[name, 'timeout', 'num']}
+                    rules={[{ required: true, message: '请输入' }]}
+                    style={{ marginBottom: '0', height: '32px', lineHeight: '32px' }}
+                  >
+                    <InputNumber className={styles.num} placeholder="请输入" size="large" min={1} precision={0} />
                   </Form.Item>
                   <Form.Item noStyle shouldUpdate name={[name, 'timeout', 'unit']}>
                     <Select
@@ -75,7 +79,24 @@ const DueConfig = ({ name, showAction = false }: DueConfigProps) => {
                       const other = getFieldValue([name, 'notice', 'other']);
                       if (other) {
                         return (
-                          <Form.Item name={[name, 'notice', 'users']} label="选择其他人员">
+                          <Form.Item
+                            name={[name, 'notice', 'users']}
+                            label="选择其他人员"
+                            rules={
+                              other
+                                ? [
+                                    {
+                                      validator(_, users: number[]) {
+                                        if (!users || users.length === 0) {
+                                          return Promise.reject(new Error('请选择其他人员'));
+                                        }
+                                        return Promise.resolve();
+                                      },
+                                    },
+                                  ]
+                                : []
+                            }
+                          >
                             <MemberSelector />
                           </Form.Item>
                         );
@@ -85,12 +106,23 @@ const DueConfig = ({ name, showAction = false }: DueConfigProps) => {
                   </Form.Item>
                 }
                 <div className={styles.cycle}>
-                  <Form.Item noStyle shouldUpdate name={[name, 'cycle', 'enable']}>
+                  <Form.Item noStyle shouldUpdate name={[name, 'cycle', 'enable']} valuePropName="checked">
                     <Checkbox className={styles.checkbox}></Checkbox>
                   </Form.Item>
                   <div className={styles.text}>每超过</div>
-                  <Form.Item noStyle shouldUpdate name={[name, 'cycle', 'num']}>
-                    <InputNumber className={styles.num} placeholder="请输入" size="large" />
+                  <Form.Item noStyle shouldUpdate>
+                    {({ getFieldValue }) => {
+                      const enableCycle = getFieldValue([name, 'cycle', 'enable']);
+                      return (
+                        <Form.Item
+                          name={[name, 'cycle', 'num']}
+                          rules={enableCycle ? [{ required: true, message: '请输入' }] : []}
+                          style={{ marginBottom: '0', height: '32px', lineHeight: '32px' }}
+                        >
+                          <InputNumber className={styles.num} placeholder="请输入" size="large" min={1} precision={0} />
+                        </Form.Item>
+                      );
+                    }}
                   </Form.Item>
                   <Form.Item noStyle shouldUpdate name={[name, 'cycle', 'unit']}>
                     <Select

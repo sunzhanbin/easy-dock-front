@@ -316,6 +316,13 @@ export function valid(data: AllNode[], validRes: ValidResultType) {
           }
         }
       }
+      // 审批节点和抄送节点需要进行超时配置
+      if (node.type !== NodeType.CCNode) {
+        const timeoutValidMessage = validators.timeoutConfig(node.dueConfig!);
+        if (timeoutValidMessage) {
+          errors.push(timeoutValidMessage);
+        }
+      }
 
       if (memberValidMessage) {
         errors.push(memberValidMessage);
