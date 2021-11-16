@@ -1,11 +1,11 @@
-import {memo, useMemo} from 'react';
-import {InputNumber} from 'antd';
-import {Icon} from '@common/components';
-import {InputNumberProps} from 'antd/lib/input-number';
+import { memo, useMemo } from 'react';
+import { InputNumber } from 'antd';
+import { Icon } from '@common/components';
+import { InputNumberProps } from 'antd/lib/input-number';
 import styles from './index.module.scss';
 
-const InputNumberComponent = (props: InputNumberProps) => {
-  const {defaultValue, onChange, value} = props;
+const InputNumberComponent = (props: InputNumberProps & { scope?: { min: number; max: number } }) => {
+  const { defaultValue, onChange, precision, scope } = props;
   const propList = useMemo(() => {
     const prop: { [k: string]: string | number | boolean | undefined | Function } = {
       size: 'large',
@@ -16,6 +16,11 @@ const InputNumberComponent = (props: InputNumberProps) => {
     };
     if (defaultValue) {
       prop.defaultValue = defaultValue;
+    }
+    precision && (prop.precision = precision);
+    if (scope) {
+      prop.min = scope.min;
+      prop.max = scope.max;
     }
     const result = Object.assign({}, props, prop);
     delete result.fieldName;
@@ -29,9 +34,9 @@ const InputNumberComponent = (props: InputNumberProps) => {
     <div className={styles.container}>
       <div className={styles.number_container}>
         <div className={styles.icon}>
-          <Icon className={styles.iconfont} type="shuzi123"/>
+          <Icon className={styles.iconfont} type="shuzi123" />
         </div>
-        <InputNumber {...propList} key={String(defaultValue)}/>
+        <InputNumber {...propList} key={String(defaultValue)} />
       </div>
     </div>
   );

@@ -4,7 +4,6 @@ import { InputProps } from 'antd/lib/input';
 
 const SerialNumComponent = (props: InputProps & { unique: boolean }) => {
   const { defaultValue, unique, onChange } = props;
-  console.log(props, 'props');
   const propList = useMemo(() => {
     const prop: { [k: string]: string | boolean | number | undefined | null | Function } = {
       size: 'large',

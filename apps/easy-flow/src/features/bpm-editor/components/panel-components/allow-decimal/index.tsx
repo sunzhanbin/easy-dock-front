@@ -1,24 +1,26 @@
 import { memo } from 'react';
-import { InputNumber } from 'antd';
+import { Form, InputNumber } from 'antd';
+import styles from '../comp-attr-editor/index.module.scss';
 
-interface DecimalProps {
-  checked?: boolean;
-  id?: string;
-  onChange?: (v: any) => void;
-}
-
-const AllowDecimal = (props: DecimalProps) => {
-  console.log(props.checked, 'checked');
+const AllowDecimal = ({ id }: { id: string }) => {
   return (
-    <>
-      {props.checked && (
-        <>
-          <span>限制</span>
-          <InputNumber size="large" style={{ width: '50%', margin: '0 10px' }} min={1} max={10} placeholder="" />
-          <span>位</span>
-        </>
-      )}
-    </>
+    <Form.Item noStyle shouldUpdate>
+      {(form) => {
+        const isChecked = form.getFieldValue('decimal');
+        if (!isChecked) {
+          return null;
+        }
+        return (
+          <div className={styles.allowDecimal}>
+            <span className={styles.text}>限制</span>
+            <Form.Item className={styles.formItem} name={id}>
+              <InputNumber size="large" min={1} max={10} placeholder="请输入" />
+            </Form.Item>
+            <span className={styles.text}>位</span>
+          </div>
+        );
+      }}
+    </Form.Item>
   );
 };
 
