@@ -60,6 +60,7 @@ const FormDetail = React.forwardRef(function FormDetail(
   const [showForm, setShowForm] = useState(false);
 
   const comRules = useMemo(() => {
+    console.log(data.propertyRules, 'ddd-------------');
     const formRules = convertFormRules(data.formRules, data.components);
     return {
       formRules,

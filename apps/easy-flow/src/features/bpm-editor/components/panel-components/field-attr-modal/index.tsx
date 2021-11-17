@@ -22,18 +22,15 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
     const list = Object.values(byId).map((item: FormField) => item) || [];
     return list.filter((com) => com.type === 'Date');
   }, [byId]);
-  console.log(componentList, 'comp');
   const initFormValues = useMemo(() => {
     // 添加规则
     if (!rule) {
       return {};
     }
-    if (rule.type === 'change') {
-      // 编辑值改变时规则
-      return {
-        propertyValue: rule.formChangeRule?.fieldRule,
-      };
-    }
+    // 编辑值改变时规则
+    return {
+      propertyValue: rule.formChangeRule?.fieldRule,
+    };
   }, [rule]);
 
   const handleOk = useCallback(async () => {
