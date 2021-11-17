@@ -10,7 +10,7 @@ import { DATE_DEFAULT_FORMAT } from '@utils/const';
 export function formatRuleValue(
   rule: fieldRule,
   field: FormField,
-  fieldNext?: FormField,
+  fieldNext?: { [key: string]: any },
 ): { name: string | undefined; symbol: string; value?: string } {
   const { symbol, value } = rule;
   const name = field.label;

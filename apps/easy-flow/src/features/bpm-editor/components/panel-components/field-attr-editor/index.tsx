@@ -1,7 +1,7 @@
 import { memo, useState, useCallback, useEffect } from 'react';
 import { Button, Tooltip, message } from 'antd';
 import { FormField, PropertyRuleItem } from '@/type';
-import { formatRuleValue } from '@/utils';
+import { flowVarsMap, formatRuleValue } from '@/utils';
 import { Icon } from '@common/components';
 import FieldAttrModal from '../field-attr-modal';
 import styles from '../form-attr-editor/index.module.scss';
@@ -108,9 +108,11 @@ const FieldAttrEditor = () => {
                               Object.values(byId).find((component) => component.fieldName === rule.fieldName) ||
                               ({} as FormField);
                             const componentNext =
-                              Object.values(byId).find((component) => component.fieldName === rule.value) ||
-                              ({} as FormField);
-
+                              rule.valueType === 'other'
+                                ? Object.values(byId).find((component) => component.fieldName === rule.value) ||
+                                  ({} as FormField)
+                                : Object.values(flowVarsMap).find((item) => item.value === rule.value) ||
+                                  ({} as FormField);
                             const formatRule = formatRuleValue(rule, componentPrev, componentNext);
                             return (
                               <span key={ruleIndex}>

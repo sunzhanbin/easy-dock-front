@@ -159,6 +159,7 @@ const FormList = ({
     onChange && onChange(blockIndex, ruleIndex, fieldRule);
   });
   const changeValue = useMemoCallback((value) => {
+    console.log(value, 'vvv');
     setValue(value);
     const selectComponent = componentList.find((item) => item.fieldName === fieldName);
     const fieldRule = {
@@ -172,10 +173,11 @@ const FormList = ({
     onChange && onChange(blockIndex, ruleIndex, fieldRule);
   });
   const init = useMemoCallback(() => {
-    const { fieldName, symbol, value, fieldType } = rule;
+    const { fieldName, symbol, value, fieldType, valueType } = rule;
     setFieldName(fieldName);
     setSymbol(symbol);
     setValue(value);
+    setValueType(valueType);
     if (fieldName) {
       const type = fieldType;
       setDataSource(fieldName, type);
