@@ -87,10 +87,10 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly }: FormListProps) 
       const { rules, form } = context;
       Object.keys(rules).forEach((key) => {
         const ruleList = ((rules as unknown) as formRulesReturn)[key];
-        const visibleRules = ruleList?.filter((item) => item?.subtype == 0);
+        const visibleRules = ruleList?.filter((item) => item?.subtype === 0);
         const watchList = watchFn(ruleList);
         const visibleWatchList = watchFn(visibleRules);
-        watchList.map((field) => {
+        watchList.forEach((field) => {
           PubSub.subscribe(field as string, (msg) => {
             if (visibleWatchList.includes(msg)) {
               setFieldVisible(visibleRules, form, key);
@@ -99,7 +99,7 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly }: FormListProps) 
         });
       });
     }
-  }, [context]);
+  }, [context, setFieldVisible, watchFn]);
   return (
     <Form.List name={[parentId, id]}>
       {() => {

@@ -2,7 +2,7 @@ import { memo, useMemo, useState, useEffect } from 'react';
 import { Form, Select, Input, InputNumber } from 'antd';
 import classnames from 'classnames';
 import { fieldRule } from '@/type';
-import { symbolMap, dynamicMap } from '@/utils';
+import { symbolMap, dynamicMap, datePropertyMap, flowVarsMap } from '@/utils';
 import { Icon, Loading } from '@common/components';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import MultiText from '@/features/bpm-editor/components/multi-text';
@@ -83,6 +83,7 @@ const FormList = ({
 }: RuleFormProps) => {
   const [fieldName, setFieldName] = useState<string | undefined>(undefined);
   const [symbol, setSymbol] = useState<string | undefined>(undefined);
+  const [valueType, setValueType] = useState<string | undefined>(undefined);
   const [value, setValue] = useState<string | number | string[] | [number, number] | undefined>(undefined);
   const [optionList, setOptionList] = useState<{ key: string; value: string }[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -94,7 +95,7 @@ const FormList = ({
       return components;
     }
     return [];
-  }, [components, fieldName]);
+  }, [components]);
   const setDataSource = useMemoCallback((fieldName, fieldType) => {
     if (loadDataSource && (fieldType === 'Select' || fieldType === 'Radio' || fieldType === 'Checkbox')) {
       setLoading(true);
@@ -133,32 +134,50 @@ const FormList = ({
   const changeSymbol = useMemoCallback((symbol) => {
     setSymbol(symbol);
     setValue(undefined);
+    setValueType(undefined);
     const selectComponent = componentList.find((item) => item.fieldName === fieldName);
     const fieldRule = {
       fieldName: fieldName,
       symbol: symbol,
+      fieldType: selectComponent?.type || rule.fieldType,
+      parentId: selectComponent?.parentId || rule.parentId,
+    };
+    onChange && onChange(blockIndex, ruleIndex, fieldRule);
+  });
+  const changeValueType = useMemoCallback((type) => {
+    setValue(undefined);
+    setValueType(type);
+    const selectComponent = componentList.find((item) => item.fieldName === fieldName);
+    const fieldRule = {
+      fieldName,
+      symbol,
+      value: undefined,
+      valueType: type,
       fieldType: selectComponent?.type || rule.fieldType,
       parentId: selectComponent?.parentId || rule.parentId,
     };
     onChange && onChange(blockIndex, ruleIndex, fieldRule);
   });
   const changeValue = useMemoCallback((value) => {
+    console.log(value, 'vvv');
     setValue(value);
     const selectComponent = componentList.find((item) => item.fieldName === fieldName);
     const fieldRule = {
-      fieldName: fieldName,
-      symbol: symbol,
+      fieldName,
+      symbol,
       value: value,
+      valueType,
       fieldType: selectComponent?.type || rule.fieldType,
       parentId: selectComponent?.parentId || rule.parentId,
     };
     onChange && onChange(blockIndex, ruleIndex, fieldRule);
   });
   const init = useMemoCallback(() => {
-    const { fieldName, symbol, value, fieldType } = rule;
+    const { fieldName, symbol, value, fieldType, valueType } = rule;
     setFieldName(fieldName);
     setSymbol(symbol);
     setValue(value);
+    setValueType(valueType);
     if (fieldName) {
       const type = fieldType;
       setDataSource(fieldName, type);
@@ -319,23 +338,56 @@ const FormList = ({
       }
       if (symbol === 'latter' || symbol === 'earlier') {
         return (
-          <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: '请选择!' }]}>
-            <Select
-              placeholder="请选择"
-              size="large"
-              className={styles.value}
-              value={value as string}
-              getPopupContainer={getPopupContainer}
+          <>
+            <Form.Item
+              name="valueType"
+              className={styles.valueType}
+              rules={[{ required: true, message: '请选择判断属性!' }]}
             >
-              {componentList
-                .filter((item) => item.fieldName !== fieldName)
-                .map(({ fieldName, label }) => (
-                  <Option key={fieldName} value={fieldName} label={label}>
+              <Select
+                placeholder="判断属性"
+                size="large"
+                value={valueType}
+                onChange={changeValueType}
+                getPopupContainer={getPopupContainer}
+              >
+                {Object.values(datePropertyMap).map(({ value, label }) => (
+                  <Option key={value} value={value} label={label}>
                     {label}
                   </Option>
                 ))}
-            </Select>
-          </Form.Item>
+              </Select>
+            </Form.Item>
+
+            <Form.Item
+              name="value"
+              className={styles.valueWrapper}
+              rules={[{ required: true, message: '请选择判断值!' }]}
+            >
+              <Select
+                placeholder="判断值"
+                size="large"
+                className={styles.value}
+                value={value as string}
+                onChange={changeValue}
+                getPopupContainer={getPopupContainer}
+              >
+                {valueType === 'other'
+                  ? componentList
+                      .filter((item) => item.fieldName !== fieldName)
+                      .map(({ fieldName, label }) => (
+                        <Option key={fieldName} value={fieldName} label={label}>
+                          {label}
+                        </Option>
+                      ))
+                  : Object.values(flowVarsMap).map(({ value, label }) => (
+                      <Option key={value} value={value} label={label}>
+                        {label}
+                      </Option>
+                    ))}
+              </Select>
+            </Form.Item>
+          </>
         );
       }
       if (symbol) {

@@ -199,12 +199,12 @@ const Card: FC<{
     axios.put('/subapp/status', { id, status: 1 }).then(() => {
       hideOperation('启用成功!');
     });
-  }, [id, onChange]);
+  }, [id, hideOperation]);
   const handleStop = useCallback(() => {
     axios.put('/subapp/status', { id, status: -1 }).then(() => {
       hideOperation('停用成功!');
     });
-  }, [id, onChange]);
+  }, [id, hideOperation]);
   const handleEdit = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
     setIsShowOperation(false);

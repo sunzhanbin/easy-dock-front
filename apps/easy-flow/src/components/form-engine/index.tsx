@@ -3,7 +3,7 @@ import { Col, Form, FormInstance, Row } from 'antd';
 import classNames from 'classnames';
 import { Rule } from 'antd/lib/form';
 import useLoadComponents from '@/hooks/use-load-components';
-import { AllComponentType, Datasource } from '@type';
+import { AllComponentType, Datasource, FormRuleItem } from '@type';
 import { AuthType, FieldAuthsMap } from '@type/flow';
 import { FormMeta, FormValue } from '@type/detail';
 import { runtimeAxios } from '@/utils';
@@ -11,7 +11,6 @@ import LabelContent from '../label-content';
 import styles from './index.module.scss';
 import { Loading } from '@common/components';
 import { DataConfig, ParamSchem } from '@/type/api';
-import _ from 'lodash';
 import PubSub from 'pubsub-js';
 import Container from './container';
 import { convertFormRules } from './utils';
@@ -61,11 +60,11 @@ const FormDetail = React.forwardRef(function FormDetail(
   const [showForm, setShowForm] = useState(false);
 
   const comRules = useMemo(() => {
-    const formRules = convertFormRules(data.formRules, data.components);
-    return {
-      formRules,
-    };
-  }, [data.formRules, data.components]);
+    const rules: FormRuleItem[] = data.formRules?.concat(data.propertyRules || []) || [];
+    const formRules = convertFormRules(rules, data.components);
+    console.log(formRules, '=--------------------');
+    return { formRules };
+  }, [data.formRules, data.propertyRules, data.components]);
 
   const initRuleList = useMemo<DataConfig[]>(() => {
     if (!data.formRules) {
@@ -86,7 +85,7 @@ const FormDetail = React.forwardRef(function FormDetail(
     const comMaps: { [key: string]: FormMeta['components'][number] } = {};
     const formValues: FormProps['initialValue'] = {};
     data.components.forEach((com) => {
-      const { fieldName, id } = com.config;
+      const { fieldName, id, precision, scope } = com.config;
 
       if (initialValue && initialValue[fieldName] !== undefined) {
         formValues[fieldName] = initialValue[fieldName];
@@ -94,6 +93,8 @@ const FormDetail = React.forwardRef(function FormDetail(
         formValues[fieldName || id] = com.props.defaultValue || com.config.value;
       }
 
+      precision && (com.props.precision = precision);
+      scope && (com.props.scope = scope);
       comMaps[id] = com;
       // 流程编排中没有配置fieldAuths这个字段默认可见
       visbles[fieldName || id] = fieldsAuths && fieldsAuths[fieldName || id] !== AuthType.Denied;
@@ -102,7 +103,7 @@ const FormDetail = React.forwardRef(function FormDetail(
     form.setFieldsValue(formValues);
     const hiddenFieldMap: FieldsVisible = {};
     Object.keys(visbles).forEach((key) => {
-      if (visbles[key] === false) {
+      if (!visbles[key]) {
         hiddenFieldMap[key] = false;
       }
     });
@@ -121,7 +122,7 @@ const FormDetail = React.forwardRef(function FormDetail(
       // 返回值映射列表
       const respListMap: { fieldName: string; name: string }[][] = [];
       const promiseList: Promise<any>[] = [];
-      initRuleList.forEach((rule, index) => {
+      initRuleList.forEach((rule) => {
         const requestMapList = rule.request.required
           .concat(rule.request.customize)
           .map((item) => {
@@ -143,8 +144,7 @@ const FormDetail = React.forwardRef(function FormDetail(
           if (!res) {
             return { fieldName: '', name: '' };
           }
-          const { name, map } = res;
-          const fieldName = String(map?.match(/(?<=\$\{).*?(?=\})/));
+          const { name, map: fieldName = '' } = res;
           return { fieldName, name };
         });
         respListMap.push(resMap);
@@ -158,6 +158,7 @@ const FormDetail = React.forwardRef(function FormDetail(
             respListMap[index].forEach(({ fieldName, name }) => {
               if (fieldName && name) {
                 // TODO 替换eval
+                // eslint-disable-next-line
                 formValues[fieldName] = eval(`res.${name}`);
               }
             });
@@ -175,8 +176,8 @@ const FormDetail = React.forwardRef(function FormDetail(
 
   const onValuesChange = useCallback((changeValue: any, all: any) => {
     // 此处不要进行setState操作   避免重复更新
-    Object.entries(changeValue).map(([key, value]: any) => {
-      if (!Array.isArray(value) && Object.values(value).length) {
+    Object.entries(changeValue).forEach(([key, value]: any) => {
+      if (value && !Array.isArray(value) && Object.values(value).length) {
         const field = Object.values(value)[0];
         if (typeof field === 'object' && field) {
           const changeKey = Object.keys(field)[0];

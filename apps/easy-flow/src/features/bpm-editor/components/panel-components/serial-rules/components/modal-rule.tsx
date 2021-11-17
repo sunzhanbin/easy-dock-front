@@ -52,10 +52,9 @@ const RuleModal = (props: RuleProps) => {
   });
   useEffect(() => {
     getRuleList();
-  }, []);
+  }, [getRuleList]);
 
   const renderLabel = useMemoCallback((rule) => {
-    // console.log(rule, 'rule');
     return rule.mata.map((item: RuleOption) => {
       if (item.type === 'incNumber') {
         return <span>{Math.pow(10, item.digitsNum)}</span>;
@@ -67,9 +66,9 @@ const RuleModal = (props: RuleProps) => {
         return <span>{item.chars}</span>;
       }
       if (item.type === 'fieldName') {
-        console.log(fields, 'field');
         return <span>{fields.find((field) => field.id === item.fieldValue)?.name}</span>;
       }
+      return null;
     });
   });
 

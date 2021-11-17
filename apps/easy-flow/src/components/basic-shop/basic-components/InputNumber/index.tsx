@@ -15,7 +15,7 @@ const InputNumberComponent = (props: InputNumberProps & { onChange: (v: any) => 
     setValue(inputValue);
     const { onChange } = props;
     onChange && onChange(inputValue);
-  }, [props.onChange]);
+  }, [form, props, refresh, rules]);
 
   return (
     <EventHoc>

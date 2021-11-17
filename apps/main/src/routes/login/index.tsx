@@ -60,7 +60,7 @@ export default function Login() {
         },
       },
     ];
-  }, []);
+  }, [validateRule]);
 
   const passwordRules = useMemo(() => {
     return [

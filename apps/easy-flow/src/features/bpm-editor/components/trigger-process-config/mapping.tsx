@@ -47,6 +47,7 @@ const Mapping = ({ name, parentName, subAppId, value, onChange }: MappingProps) 
         setTargetComponents(components);
       });
     }
+    // eslint-disable-next-line
   }, [subAppId]);
 
   // 所选流程的控件过滤已选择的控件
