@@ -19,7 +19,8 @@ if (!window.Auth) {
     return;
 }
 // window.SSO_LOGIN_URL 有值则可以省略 setLoginServer
-window.Auth.setLoginServer(window.SSO_LOGIN_URL);
+// window.Auth.setLoginServer('http://aaa/login'); 或者：
+window.Auth.setConfig({ server: 'http://aaa/login' });
 const token = await window.Auth.getToken(true, window.EASY_DOCK_BASE_SERVICE_ENDPOINT);
 ```
 
@@ -29,8 +30,7 @@ const token = await window.Auth.getToken(true, window.EASY_DOCK_BASE_SERVICE_END
 // import 方式加载 sso.js
 import Auth from '../dist/index.esm';
 
-// window.SSO_LOGIN_URL 有值则可以省略 setLoginServer
-Auth.setLoginServer(window.SSO_LOGIN_URL);
+Auth.setConfig({ server: 'http://aaa/login' });
 const token = await Auth.getToken(true, window.EASY_DOCK_BASE_SERVICE_ENDPOINT);
 ```
 
@@ -40,8 +40,7 @@ const token = await Auth.getToken(true, window.EASY_DOCK_BASE_SERVICE_ENDPOINT);
 // require 方式加载 sso.js
 const Auth = require('../dist/index.cjs.min');
 
-// window.SSO_LOGIN_URL 有值则可以省略 setLoginServer
-Auth.setLoginServer(window.SSO_LOGIN_URL);
+Auth.setConfig({ server: 'http://aaa/login' });
 const token = await Auth.getToken(true, window.EASY_DOCK_BASE_SERVICE_ENDPOINT);
 ```
 

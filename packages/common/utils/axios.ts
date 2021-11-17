@@ -7,7 +7,7 @@ function createAxios(config?: AxiosRequestConfig): AxiosInstance {
   const instance = Axios.create({
     ...config,
     headers: {
-      auth: window.localStorage.getItem('auth'),
+      auth: Auth.getAuth(),
       ...(config ? config.headers : {}),
     },
   });
@@ -22,11 +22,10 @@ function createAxios(config?: AxiosRequestConfig): AxiosInstance {
       if (status === 500) {
         errMsg = '服务异常';
       } else if (status === 403) {
-        if (window.Auth && window.localStorage.getItem('auth')) {
+        // import Auth 之后 Auth 的实例会放入 window.Auth 中
+        if (window.Auth && window.Auth.getAuth()) {
           window.Auth.logout();
-        } else {
-          Auth.logout(undefined);
-        }
+        } 
 
         return Promise.reject({
           code: -1,
