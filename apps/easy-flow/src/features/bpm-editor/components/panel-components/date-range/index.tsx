@@ -32,6 +32,8 @@ const DateRange = ({ id, componentId }: DateRangeProps) => {
     }
     return props;
   }, [formatType]);
+
+  console.log(propList, 'ppppp');
   return (
     <Form.Item noStyle shouldUpdate>
       {(form) => {

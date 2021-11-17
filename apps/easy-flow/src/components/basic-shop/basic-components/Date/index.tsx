@@ -1,38 +1,20 @@
-import { memo, useEffect, useMemo, useState } from 'react';
+import { memo, useMemo } from 'react';
 import BaseDate from './base-date';
 import EventHoc from '@components/form-engine/eventHoc';
 import { DatePickerProps } from 'antd/lib/date-picker';
 import { useContainerContext } from '@components/form-engine/context';
 import getDisabledDateRule from './utils';
-import moment from 'moment';
-import useMemoCallback from '@common/hooks/use-memo-callback';
+import { Moment } from 'moment';
 
 const Date = (props: DatePickerProps & { onChange: (v: any) => void } & { [key: string]: any }) => {
-  const { form, rules, refresh } = useContainerContext();
-  // const [disabledDate, setDisabledDate] = useState<boolean>(false);
-
-  // useEffect(() => {
-  //   if (!form || !rules) return;
-  //   const formValue = form.getFieldsValue();
-  //
-  //   const disabledDate = props?.value && props.value < moment().endOf('day');
-  //   // const disabledDate = getDisabledDateRule({ rules, formValue });
-  //   // disabledDate && setDisabledDate(disabledDate)
-  //   console.log(props, 'rules');
-  // }, [form, props, rules]);
-  // const handleDisabledDate = useMemoCallback((current) => {
-  //   console.log(rules, 'rules');
-  //   return current && current < moment().endOf('day');
-  // });
+  const { form, rules } = useContainerContext();
 
   const handleDisabledDate = useMemo(() => {
-    // return current && current < moment().endOf('day'); 
-    return () => {
-      console.info({ rules })
-      return false
+    return (current: Moment) => {
+      const formValue = form.getFieldsValue();
+      return getDisabledDateRule({ rules, current, formValue, id: props.id! });
     };
-  }, [rules])
-
+  }, [rules]);
 
   return (
     <EventHoc>
