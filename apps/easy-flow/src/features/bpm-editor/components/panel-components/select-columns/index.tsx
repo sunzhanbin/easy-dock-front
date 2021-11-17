@@ -148,7 +148,7 @@ const SelectColumns = (props: editProps) => {
       .get(`/subapp/${appId}/list/all/deployed`)
       .then((res) => {
         const list = res.data
-          .filter((app: { id: number }) => app.id !== subAppId)
+          .filter((app: { id: number; type: number }) => app.type === 2 && app.id !== subAppId)
           .map((app: { name: string; id: number; version: { id: number } }) => ({
             key: app.id,
             value: app.name,

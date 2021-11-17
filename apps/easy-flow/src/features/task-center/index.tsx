@@ -38,7 +38,7 @@ const TaskCenter: FC<{}> = () => {
   useEffect(() => {
     if (isShowDrawer && appId) {
       runtimeAxios.get(`/subapp/${appId}/list/all`).then((res) => {
-        const list = res.data || [];
+        const list = (res.data || []).filter((v: { type: number }) => v.type === 2);
         setSubAppList(list);
       });
     }
