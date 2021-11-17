@@ -9,5 +9,9 @@
         "target": "es2015",
         "declaration": true,
         "typeRoots": ["node_modules/@types", "src/@types", "stories/@types"]
+    },
+    "typedocOptions": {
+        "entryPoints": ["src/index.ts"],
+        "out": "docs"
     }
 }

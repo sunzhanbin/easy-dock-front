@@ -144,8 +144,7 @@ const FormDetail = React.forwardRef(function FormDetail(
           if (!res) {
             return { fieldName: '', name: '' };
           }
-          const { name, map } = res;
-          const fieldName = String(map?.match(/(?<=\$\{).*?(?=\})/));
+          const { name, map: fieldName = '' } = res;
           return { fieldName, name };
         });
         respListMap.push(resMap);

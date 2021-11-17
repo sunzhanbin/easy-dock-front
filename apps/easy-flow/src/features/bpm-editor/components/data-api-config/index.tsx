@@ -153,7 +153,7 @@ function DataApiConfig(props: DataApiConfigProps) {
         if (!urlRegex.test(val)) {
           return Promise.reject(new Error('请输入正确的接口地址'));
         }
-        Promise.resolve();
+        return Promise.resolve();
       },
     };
   }, []);

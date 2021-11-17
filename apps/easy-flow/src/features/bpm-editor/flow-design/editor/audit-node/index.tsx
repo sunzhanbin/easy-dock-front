@@ -34,6 +34,24 @@ type FormValuesType = {
   dueConfig: AuditNode['dueConfig'];
 };
 
+const defaultDueConfig = {
+  enable: false,
+  timeout: {
+    unit: 'day',
+  },
+  notice: {
+    starter: false,
+    assign: false,
+    admin: false,
+    other: false,
+  },
+  cycle: {
+    enable: false,
+    unit: 'day',
+  },
+  action: null,
+};
+
 function AuditNodeEditor(props: AuditNodeEditorProps) {
   const dispatch = useDispatch();
   const { node } = props;
@@ -52,7 +70,7 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
       },
       fieldsAuths: node.fieldsAuths,
       countersign: node.countersign,
-      dueConfig: node.dueConfig,
+      dueConfig: node.dueConfig || defaultDueConfig,
     };
   }, [node]);
 

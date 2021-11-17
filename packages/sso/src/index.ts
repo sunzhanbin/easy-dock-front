@@ -1,6 +1,9 @@
 import Cookies from 'js-cookie';
 
-/** @ignore */
+/**
+ * @interface
+ * @ignore
+ */
 interface IAuth {
     /** */
     getToken: (needAutoLogin: boolean, host: string) => Promise<unknown>;
@@ -63,15 +66,31 @@ const fetchToken: (host: string, code: string) => Promise<string> = async (host,
 };
 
 /**
- * @class
+ * @public
+ * 
+ * Code blocks are great for examples
+ *
+ * ```typescript
+ * // run typedoc --help for a list of supported languages
+ * const instance = new MyClass();
+ * 
+ * @implements {IAuth} 
  */
 class Auth implements IAuth {
+    /** */
     appId: string;
+    /** */
     server: string | undefined;
+    /** */
     codeAttr: string = DEFAULT_CODE_ATTR;
+    /** */
     authAttr: string = DEFAULT_AUTH_ATTR;
+    /** */
     cookieAttr?: string;
 
+    /**
+     * @public
+     */
     constructor(server?: string, codeAttr?: string) {
         const currentScript: HTMLOrSVGScriptElementExt | null = document.currentScript as HTMLOrSVGScriptElementExt;
 
@@ -170,9 +189,9 @@ class Auth implements IAuth {
     /**
      *
      * @param {object} config
-     *  server: 登陆接口地址, appId: appId, codeAttr: 在localStorage设置code使用的Key , authAttr: 在localStorage设置auth使用的Key
+     *  server: 登陆接口地址, appId: appId, codeKey: 在localStorage设置code使用的Key, authKey: 在localStorage设置auth使用的Key, cookieKey: 设置之后会将token放进cookie中
      */
-    public setConfig({ server, appId, codeAttr, authAttr, cookieAttr }: { server?: string; appId?: string; codeAttr?: string; authAttr?: string; cookieAttr?: string }) {
+    public setConfig({ server, appId, codeKey, authKey, cookieKey }: { server?: string; appId?: string; codeKey?: string; authKey?: string; cookieKey?: string }) {
         if (server) {
             this.setLoginServer(server);
         }
@@ -181,16 +200,16 @@ class Auth implements IAuth {
             this.appId = appId;
         }
 
-        if (codeAttr) {
-            this.codeAttr = codeAttr;
+        if (codeKey) {
+            this.codeAttr = codeKey;
         }
 
-        if (authAttr) {
-            this.authAttr = authAttr;
+        if (authKey) {
+            this.authAttr = authKey;
         }
 
-        if (cookieAttr) {
-            this.cookieAttr = cookieAttr;
+        if (cookieKey) {
+            this.cookieAttr = cookieKey;
         }
     }
 
@@ -203,6 +222,10 @@ class Auth implements IAuth {
     }
 
     public getAuth() {
+        if (this.cookieAttr) {
+            Cookies.get(this.cookieAttr);
+        }
+
         return window.localStorage.getItem(this.authAttr);
     }
 
@@ -214,7 +237,7 @@ class Auth implements IAuth {
         }
     }
 
-    public logout(redirect: string | undefined) {
+    public logout(redirect?: string | undefined) {
         let auth = this.getAuth();
         if (auth) {
             this.removeAuth();
@@ -226,4 +249,5 @@ class Auth implements IAuth {
     }
 }
 
+/** @module @enc/sso */
 export default new Auth();

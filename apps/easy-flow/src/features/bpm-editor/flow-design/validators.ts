@@ -92,7 +92,7 @@ const triggerConfig = (value: TriggerConfig[]): string => {
 };
 
 const timeoutConfig = (value: IDueConfig) => {
-  if (value.enable) {
+  if (value?.enable) {
     if (!value.timeout.num) {
       return '请输入超时时间';
     }
