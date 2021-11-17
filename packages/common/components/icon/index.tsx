@@ -1,6 +1,6 @@
 import React from 'react';
-import classnames from 'classnames';
-import './iconfont';
+import {createFromIconfontCN } from '@ant-design/icons';
+import classnames from "classnames";
 import styles from './index.module.scss';
 
 interface IconProps {
@@ -10,12 +10,15 @@ interface IconProps {
   onClick?(event: React.MouseEvent): void;
 }
 
-export default function Icon(props: IconProps) {
-  const { type, className, style, onClick } = props;
+
+const IconFont = createFromIconfontCN({
+  scriptUrl: '//at.alicdn.com/t/font_2473458_jxgstadh0h.js'
+});
+
+export default function EdIcon(props: IconProps) : React.ComponentElement<any, any> {
+  const { className, style, onClick, type } = props;
 
   return (
-    <svg className={classnames(styles.icon, className)} aria-hidden="true" style={style} onClick={onClick}>
-      <use xlinkHref={`#icon${type}`}></use>
-    </svg>
+    <IconFont className={classnames(styles.icon, className)} aria-hidden="true" style={style} onClick={onClick} type={`custom-icon-${type}`}/>
   );
 }
