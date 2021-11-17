@@ -38,7 +38,7 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
   const layout = useAppSelector(layoutSelector);
   const byId: FormFieldMap = useAppSelector(componentPropsSelector);
   const formRules = useAppSelector(formRulesSelector);
-  const fieldRules = useAppSelector(propertyRulesSelector);
+  const propertyRules = useAppSelector(propertyRulesSelector);
   const [dataSource, setDataSource] = useState<Datasource>({});
   const [loading, setLoading] = useState<boolean>(false);
   const subAppDetail = useSubAppDetail();
@@ -73,12 +73,12 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
       },
       rules: [],
       formRules,
-      fieldRules,
+      propertyRules,
       themes: [{}],
       components: components,
       selectedTheme: '',
     };
-  }, [layout, byId, formRules, fieldRules]);
+  }, [layout, byId, formRules, propertyRules]);
   const auths = useMemo(() => {
     const res: FieldAuthsMap = {};
     Object.keys(byId).forEach((id) => {

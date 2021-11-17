@@ -24,6 +24,7 @@ export const Container = React.memo(({ children, rules, fieldName, form, type }:
     const isMatchArr = rules?.filter((item) => {
       const { condition } = item;
       const formValues = form.getFieldsValue();
+      if (!Array.isArray(condition)) return null;
       return analysisFormChangeRule(condition, formValues);
     });
     if (isMatchArr?.length) {

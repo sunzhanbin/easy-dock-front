@@ -159,14 +159,15 @@ export type FieldChangeRule = {
 };
 
 export type FormRuleItem = {
-  type: 'change' | 'init';
+  type: string;
   subtype?: number;
   formChangeRule?: FormChangeRule;
   formInitRule?: DataConfig;
 };
 
 export type PropertyRuleItem = {
-  type: 'change' | 'init';
+  type: string;
+  subtype?: number;
   formChangeRule?: FieldChangeRule;
 };
 

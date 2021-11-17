@@ -28,7 +28,7 @@ const FormDesign: FC<{}> = () => {
     axios.get(`/form/${subAppId}`).then((res) => {
       const { meta } = res.data;
       if (meta) {
-        const { layout, components, formRules } = meta;
+        const { layout, components, formRules, propertyRules } = meta;
         const byId: { [k: string]: ConfigItem } = {};
         const selectFieldId = (layout.length > 0 && layout[0].length > 0 && layout[0][0]) || '';
         // 解析控件属性配置
@@ -47,9 +47,8 @@ const FormDesign: FC<{}> = () => {
           });
           byId[id] = componentConfig;
         });
-        dispatch(setFormRules({ formRules: formRules }));
-        // todo setPropertyRules
-        dispatch(setPropertyRules({ propertyRules: [] }));
+        dispatch(setFormRules({ formRules }));
+        dispatch(setPropertyRules({ propertyRules }));
         dispatch(setById({ byId: byId as FormFieldMap }));
         dispatch(setLayout({ layout }));
         selectFieldId && dispatch(selectField({ id: selectFieldId }));

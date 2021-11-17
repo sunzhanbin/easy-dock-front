@@ -3,7 +3,7 @@ import { Col, Form, FormInstance, Row } from 'antd';
 import classNames from 'classnames';
 import { Rule } from 'antd/lib/form';
 import useLoadComponents from '@/hooks/use-load-components';
-import { AllComponentType, Datasource } from '@type';
+import { AllComponentType, Datasource, FormRuleItem } from '@type';
 import { AuthType, FieldAuthsMap } from '@type/flow';
 import { FormMeta, FormValue } from '@type/detail';
 import { runtimeAxios } from '@/utils';
@@ -60,12 +60,11 @@ const FormDetail = React.forwardRef(function FormDetail(
   const [showForm, setShowForm] = useState(false);
 
   const comRules = useMemo(() => {
-    console.log(data.propertyRules, 'ddd-------------');
-    const formRules = convertFormRules(data.formRules, data.components);
-    return {
-      formRules,
-    };
-  }, [data.formRules, data.components]);
+    const rules: FormRuleItem[] = data.formRules?.concat(data.propertyRules || []) || [];
+    const formRules = convertFormRules(rules, data.components);
+    console.log(formRules, '=--------------------');
+    return { formRules };
+  }, [data.formRules, data.propertyRules, data.components]);
 
   const initRuleList = useMemo<DataConfig[]>(() => {
     if (!data.formRules) {

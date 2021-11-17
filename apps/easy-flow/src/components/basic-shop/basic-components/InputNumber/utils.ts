@@ -13,7 +13,7 @@ export const getCalculateNum = (
   } = rule;
   let returnNum = undefined;
   let formListMap: { [key: string]: any } = {};
-  watch.foreach((item: string) => {
+  watch?.map((item: string) => {
     if (item.includes('Tab')) {
       const parentName = item.split('.')[0];
       const fieldName = item.split('.')[1];

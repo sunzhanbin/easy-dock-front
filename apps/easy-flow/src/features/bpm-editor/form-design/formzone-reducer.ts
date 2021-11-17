@@ -320,6 +320,7 @@ export const formRulesSelector = createSelector([(state: RootState) => state.for
 });
 // 表单静态属性规则
 export const propertyRulesSelector = createSelector([(state: RootState) => state.formDesign], (formDesign) => {
+  console.log(formDesign.propertyRules, '222');
   return formDesign.propertyRules;
 });
 export const subComponentConfigSelector = createSelector(

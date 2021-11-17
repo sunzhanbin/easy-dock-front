@@ -35,6 +35,7 @@ const FieldAttrEditor = () => {
     let rule: any;
     rule = {
       type: 'change',
+      subtype: 2, // 运行端事件联动处理
       formChangeRule: {
         fieldRule: rules.propertyValue,
       },
