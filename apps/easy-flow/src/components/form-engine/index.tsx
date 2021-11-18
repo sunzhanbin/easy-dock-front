@@ -62,7 +62,6 @@ const FormDetail = React.forwardRef(function FormDetail(
   const comRules = useMemo(() => {
     const rules: FormRuleItem[] = data.formRules?.concat(data.propertyRules || []) || [];
     const formRules = convertFormRules(rules, data.components);
-    console.log(formRules, '=--------------------');
     return { formRules };
   }, [data.formRules, data.propertyRules, data.components]);
 
@@ -177,7 +176,8 @@ const FormDetail = React.forwardRef(function FormDetail(
   const onValuesChange = useCallback((changeValue: any, all: any) => {
     // 此处不要进行setState操作   避免重复更新
     Object.entries(changeValue).forEach(([key, value]: any) => {
-      if (value && !Array.isArray(value) && Object.values(value).length) {
+      // tab控件内数字计算
+      if (value && typeof value === 'object' && Object.values(value).length === 1) {
         const field = Object.values(value)[0];
         if (typeof field === 'object' && field) {
           const changeKey = Object.keys(field)[0];

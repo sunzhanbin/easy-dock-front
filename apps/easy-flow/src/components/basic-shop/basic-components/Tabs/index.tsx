@@ -93,7 +93,7 @@ const Tabs = ({ components = [], fieldName, auth, formInstance, value, readonly,
       return pane;
     });
     setPanes(panes);
-    if (list.length > 0) {
+    if (list.length === 1) {
       setActiveKey(list[0].key);
     }
   }, [value, content]);
