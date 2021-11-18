@@ -8,7 +8,7 @@ interface IAuth {
     /** */
     getToken: (needAutoLogin: boolean, host: string) => Promise<unknown>;
     /** */
-    getAuth: () => string | null;
+    getAuth: () => string | null | undefined;
     /** */
     removeAuth: () => void;
     /** */
@@ -57,24 +57,24 @@ const fetchToken: (host: string, code: string) => Promise<string> = async (host,
     })
         .then((result) => result.json())
         .catch((error) => console.error(error));
-    if (data.resultCode === 0) {
+    if (data && data.resultCode === 0) {
         return data.resultMessage;
     } else {
-        console.error(data.resultMessage);
+        console.error((data && data.resultMessage) || data);
         return null;
     }
 };
 
 /**
  * @public
- * 
+ *
  * Code blocks are great for examples
  *
  * ```typescript
  * // run typedoc --help for a list of supported languages
  * const instance = new MyClass();
- * 
- * @implements {IAuth} 
+ *
+ * @implements {IAuth}
  */
 class Auth implements IAuth {
     /** */
@@ -154,6 +154,8 @@ class Auth implements IAuth {
                     // window.localStorage.setItem(this.authAttr, token);
                     this.setAuth(token);
                     resetUrl(this.codeAttr);
+                } else {
+                    this.removeAuth();
                 }
                 return token;
             } else {
@@ -223,7 +225,7 @@ class Auth implements IAuth {
 
     public getAuth() {
         if (this.cookieAttr) {
-            Cookies.get(this.cookieAttr);
+            return Cookies.get(this.cookieAttr);
         }
 
         return window.localStorage.getItem(this.authAttr);
