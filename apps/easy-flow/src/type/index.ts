@@ -150,24 +150,31 @@ export type fieldRule = {
 // 值改变时规则
 export type FormChangeRule = {
   fieldRule: fieldRule[][];
-  showComponents: string[];
-  hideComponents: string[];
+  showComponents?: string[];
+  hideComponents?: string[];
+  interfaceConfig?: DataConfig;
 };
 
 export type FieldChangeRule = {
   fieldRule: fieldRule[][];
 };
 
+export enum EventType {
+  Visible = 1, // 显示隐藏
+  Union = 2, // 联动
+  Enable = 3, // 启用禁用
+}
+
 export type FormRuleItem = {
   type: string;
-  subtype?: number;
+  subtype?: EventType;
   formChangeRule?: FormChangeRule;
   formInitRule?: DataConfig;
 };
 
 export type PropertyRuleItem = {
   type: string;
-  subtype?: number;
+  subtype?: EventType;
   formChangeRule?: FieldChangeRule;
 };
 

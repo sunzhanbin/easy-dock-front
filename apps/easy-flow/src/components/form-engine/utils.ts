@@ -1,4 +1,4 @@
-import { FormRuleItem, fieldRule, PropertyRuleItem } from '@type';
+import { FormRuleItem, fieldRule, EventType } from '@type';
 import { flowVarsMap } from '@utils';
 
 export interface fieldRulesItem {
@@ -11,7 +11,7 @@ export interface formRulesItem {
   watch: string[];
   visible?: boolean;
   value?: null | string | number | Date;
-  subtype?: number; // 0 | 1 | 2 => 显隐 | 启禁 | 联动；
+  subtype?: EventType; // 1 | 2 | 3 => 显隐 | 联动 | 启用禁用
   type?: string; // init | change | blur | panelChange
 }
 
@@ -31,7 +31,7 @@ export const convertFormRules = (data: FormRuleItem[], components: { config: any
   const fieldRulesObj: any = {};
   const componentList = components.map((v) => v.config);
 
-  function setFieldRules(fieldName: string, value: any, item: any, type: string, subtype: number) {
+  function setFieldRules(fieldName: string, value: any, item: any, type: string, subtype: EventType) {
     const obj = {
       watch: [].concat(value),
       condition: item,
@@ -47,8 +47,8 @@ export const convertFormRules = (data: FormRuleItem[], components: { config: any
 
   // 表单规则配置
   data?.forEach((item: any) => {
-    const { formChangeRule, type, subtype = 0 } = item;
-    if (type === 'change' && subtype === 0) {
+    const { formChangeRule, type, subtype = EventType.Visible } = item;
+    if (type === 'change' && subtype === EventType.Visible) {
       // 显隐事件
       const { hideComponents, showComponents, fieldRule } = formChangeRule;
       const watchList = [
@@ -69,7 +69,7 @@ export const convertFormRules = (data: FormRuleItem[], components: { config: any
           watch: watchList,
           condition: fieldRule,
           visible: index !== 1,
-          subtype: 0,
+          subtype: EventType.Visible,
           type,
         };
         components.forEach((field: any) => {
@@ -90,7 +90,7 @@ export const convertFormRules = (data: FormRuleItem[], components: { config: any
           }
         });
       });
-    } else if (type === 'change' && subtype === 2) {
+    } else if (type === 'change' && subtype === EventType.Union) {
       // 联动事件
       const { fieldRule } = formChangeRule;
       fieldRule

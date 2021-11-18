@@ -5,6 +5,7 @@ import { FormValue } from '@type/detail';
 import { analysisFormChangeRule } from '@/utils';
 import { ContainerProvider } from './context';
 import { formRulesItem } from './utils';
+import { EventType } from '@/type';
 
 interface ContainerProps {
   rules: formRulesItem[];
@@ -16,7 +17,7 @@ interface ContainerProps {
 }
 
 export const Container = React.memo(({ children, rules, fieldName, form, type }: ContainerProps) => {
-  const visibleRules = useMemo(() => rules?.filter((item) => item?.subtype === 0), [rules]);
+  const visibleRules = useMemo(() => rules?.filter((item) => item?.subtype === EventType.Visible), [rules]);
   const [visible, setVisible] = useState<boolean>(true);
   const [reFreshKey, setReFreshKey] = useState<number>(0);
 
