@@ -1,6 +1,6 @@
 import { memo, useState, useCallback, useEffect } from 'react';
 import { Button, Tooltip, message } from 'antd';
-import { FormField, FormRuleItem, TabsField } from '@/type';
+import { EventType, FormChangeRule, FormField, FormRuleItem, TabsField } from '@/type';
 import { formatRuleValue } from '@/utils';
 import { Icon } from '@common/components';
 import FormAttrModal from '../form-attr-modal';
@@ -22,7 +22,6 @@ const FormAttrEditor = () => {
   const handleClose = useCallback(() => {
     setShowModal(false);
   }, []);
-  // TODO 这里禁止any，很难阅读，rules看起来是个数组却有mode属性
   const handleOk = useCallback((rules, type, editIndex) => {
     try {
       const subs: any[][] = rules.ruleValue || [];
@@ -36,19 +35,24 @@ const FormAttrEditor = () => {
 
     let rule: FormRuleItem;
     if (rules.mode === 1) {
+      const formChangeRule: FormChangeRule = { fieldRule: rules.ruleValue };
+      if (rules.subtype === EventType.Visible) {
+        formChangeRule.showComponents = rules.showComponents;
+        formChangeRule.hideComponents = rules.hideComponents;
+      } else if (rules.subtype === EventType.Union) {
+        formChangeRule.interfaceConfig = rules.interfaceConfig;
+      }
       // 值改变时
       rule = {
         type: 'change',
-        formChangeRule: {
-          fieldRule: rules.ruleValue,
-          showComponents: rules.showComponents,
-          hideComponents: rules.hideComponents,
-        },
+        subtype: rules.subtype,
+        formChangeRule,
       };
     } else if (rules.mode === 2) {
       //进入表单时
       rule = {
         type: 'init',
+        subtype: rules.subtype,
         formInitRule: rules.dataConfig,
       };
     }
@@ -107,127 +111,203 @@ const FormAttrEditor = () => {
           {rules.map((item: FormRuleItem, index: number) => {
             if (item.type === 'change') {
               const condition = item.formChangeRule!.fieldRule;
-              const showComponentList = item.formChangeRule!.showComponents || [];
-              const hideComponentList = item.formChangeRule!.hideComponents || [];
-              let showComponents = showComponentList.map((fieldName) => {
-                const component = Object.values(byId).find((comp) => comp.fieldName === fieldName);
-                return component?.label || fieldName;
-              });
-              let hideComponents = hideComponentList.map((fieldName) => {
-                const component = Object.values(byId).find((comp) => comp.fieldName === fieldName);
-                return component?.label || fieldName;
-              });
-              if (!condition || condition.length < 1 || condition[0].length < 1) {
-                return null;
-              }
-              const parentId = condition.flat(2).filter((v) => v.fieldName)[0].parentId;
-              if (parentId) {
-                const parent = Object.values(byId).find((v) => v.id === parentId);
-                if (parent) {
-                  showComponents = showComponentList.map((fieldName) => {
-                    const component = ((parent as TabsField).components || []).find(
-                      (v) => v.config.fieldName === fieldName,
-                    );
-                    return component ? `${parent?.label}·${component?.config.label}` : fieldName;
-                  });
-                  hideComponents = hideComponentList.map((fieldName) => {
-                    const component = ((parent as TabsField).components || []).find(
-                      (v) => v.config.fieldName === fieldName,
-                    );
-                    return component ? `${parent?.label}·${component?.config.label}` : fieldName;
-                  });
+              // 值改变时显示隐藏控件
+              if (item.subtype === EventType.Visible) {
+                const showComponentList = item.formChangeRule!.showComponents || [];
+                const hideComponentList = item.formChangeRule!.hideComponents || [];
+                let showComponents = showComponentList.map((fieldName) => {
+                  const component = Object.values(byId).find((comp) => comp.fieldName === fieldName);
+                  return component?.label || fieldName;
+                });
+                let hideComponents = hideComponentList.map((fieldName) => {
+                  const component = Object.values(byId).find((comp) => comp.fieldName === fieldName);
+                  return component?.label || fieldName;
+                });
+                if (!condition || condition.length < 1 || condition[0].length < 1) {
+                  return null;
                 }
-              }
-              return (
-                <div className={styles.ruleItem} key={index}>
-                  <div className={styles.content}>
-                    <span>当</span>
-                    {condition.map((ruleBlock, blockIndex) => {
-                      return (
-                        <span key={blockIndex}>
-                          <span>
-                            {ruleBlock.map((rule, ruleIndex) => {
-                              let component =
-                                Object.values(byId).find((component) => component.fieldName === rule.fieldName) ||
-                                ({} as FormField);
-                              if (rule?.parentId) {
-                                const parent = Object.values(byId).find((comp) => comp.id === rule.parentId);
-                                const sub = ((parent as TabsField)?.components || []).find(
-                                  (v) => v.config.fieldName === rule.fieldName,
-                                );
-                                component = Object.assign({}, sub?.config, sub?.props, {
-                                  label: `${parent?.label}·${sub?.config.label}`,
-                                }) as FormField;
-                              }
-                              const formatRule = formatRuleValue(rule, component);
-                              return (
-                                <span key={ruleIndex}>
-                                  <span className={styles.fieldName}>{formatRule?.name || ''}</span>
-                                  <span>{formatRule?.symbol || ''}</span>
-                                  <span className={styles.fieldName}>{formatRule?.value || ''}</span>
-                                  {ruleIndex !== ruleBlock.length - 1 && <span>且</span>}
-                                </span>
-                              );
-                            })}
-                          </span>
-                          {blockIndex !== condition.length - 1 && <span>或</span>}
-                        </span>
+                const parentId = condition.flat(2).filter((v) => v.fieldName)[0].parentId;
+                if (parentId) {
+                  const parent = Object.values(byId).find((v) => v.id === parentId);
+                  if (parent) {
+                    showComponents = showComponentList.map((fieldName) => {
+                      const component = ((parent as TabsField).components || []).find(
+                        (v) => v.config.fieldName === fieldName,
                       );
-                    })}
-                    <span className={styles.mr4}>时</span>
-                    {showComponents.length > 0 && (
-                      <span>
-                        <span>显示</span>
-                        <span className={styles.fieldName}>
-                          {showComponents.map((name, index) => (
-                            <span key={index}>
-                              {name}
-                              {index !== showComponents.length - 1 ? '、' : ''}
+                      return component ? `${parent?.label}·${component?.config.label}` : fieldName;
+                    });
+                    hideComponents = hideComponentList.map((fieldName) => {
+                      const component = ((parent as TabsField).components || []).find(
+                        (v) => v.config.fieldName === fieldName,
+                      );
+                      return component ? `${parent?.label}·${component?.config.label}` : fieldName;
+                    });
+                  }
+                }
+                return (
+                  <div className={styles.ruleItem} key={index}>
+                    <div className={styles.content}>
+                      <span>当</span>
+                      {condition.map((ruleBlock, blockIndex) => {
+                        return (
+                          <span key={blockIndex}>
+                            <span>
+                              {ruleBlock.map((rule, ruleIndex) => {
+                                let component =
+                                  Object.values(byId).find((component) => component.fieldName === rule.fieldName) ||
+                                  ({} as FormField);
+                                if (rule?.parentId) {
+                                  const parent = Object.values(byId).find((comp) => comp.id === rule.parentId);
+                                  const sub = ((parent as TabsField)?.components || []).find(
+                                    (v) => v.config.fieldName === rule.fieldName,
+                                  );
+                                  component = Object.assign({}, sub?.config, sub?.props, {
+                                    label: `${parent?.label}·${sub?.config.label}`,
+                                  }) as FormField;
+                                }
+                                const formatRule = formatRuleValue(rule, component);
+                                return (
+                                  <span key={ruleIndex}>
+                                    <span className={styles.fieldName}>{formatRule?.name || ''}</span>
+                                    <span>{formatRule?.symbol || ''}</span>
+                                    <span className={styles.fieldName}>{formatRule?.value || ''}</span>
+                                    {ruleIndex !== ruleBlock.length - 1 && <span>且</span>}
+                                  </span>
+                                );
+                              })}
                             </span>
-                          ))}
+                            {blockIndex !== condition.length - 1 && <span>或</span>}
+                          </span>
+                        );
+                      })}
+                      <span className={styles.mr4}>时</span>
+                      {showComponents.length > 0 && (
+                        <span>
+                          <span>显示</span>
+                          <span className={styles.fieldName}>
+                            {showComponents.map((name, index) => (
+                              <span key={index}>
+                                {name}
+                                {index !== showComponents.length - 1 ? '、' : ''}
+                              </span>
+                            ))}
+                          </span>
                         </span>
-                      </span>
-                    )}
-                    {hideComponents.length > 0 && (
-                      <span>
-                        <span>隐藏</span>
-                        <span className={styles.fieldName}>
-                          {hideComponents.map((name, index) => (
-                            <span key={index}>
-                              {name}
-                              {index !== hideComponents.length - 1 ? '、' : ''}
+                      )}
+                      {hideComponents.length > 0 && (
+                        <span>
+                          <span>隐藏</span>
+                          <span className={styles.fieldName}>
+                            {hideComponents.map((name, index) => (
+                              <span key={index}>
+                                {name}
+                                {index !== hideComponents.length - 1 ? '、' : ''}
+                              </span>
+                            ))}
+                          </span>
+                        </span>
+                      )}
+                    </div>
+                    <div className={styles.operation}>
+                      <Tooltip title="编辑">
+                        <span>
+                          <Icon
+                            type="bianji"
+                            className={styles.edit}
+                            onClick={() => {
+                              handleEditRule(index);
+                            }}
+                          />
+                        </span>
+                      </Tooltip>
+                      <Tooltip title="删除">
+                        <span>
+                          <Icon
+                            type="shanchu"
+                            className={styles.delete}
+                            onClick={() => {
+                              handleDeleteRule(index);
+                            }}
+                          />
+                        </span>
+                      </Tooltip>
+                    </div>
+                  </div>
+                );
+              }
+              // 值改变时调用接口
+              if (item.subtype === EventType.Union) {
+                const interfaceConfig = item.formChangeRule?.interfaceConfig;
+                const interfaceName = interfaceConfig?.id || interfaceConfig?.url || '';
+                return (
+                  <div className={styles.ruleItem} key={index}>
+                    <div className={styles.content}>
+                      <span>当</span>
+                      {condition.map((ruleBlock, blockIndex) => {
+                        return (
+                          <span key={blockIndex}>
+                            <span>
+                              {ruleBlock.map((rule, ruleIndex) => {
+                                let component =
+                                  Object.values(byId).find((component) => component.fieldName === rule.fieldName) ||
+                                  ({} as FormField);
+                                if (rule?.parentId) {
+                                  const parent = Object.values(byId).find((comp) => comp.id === rule.parentId);
+                                  const sub = ((parent as TabsField)?.components || []).find(
+                                    (v) => v.config.fieldName === rule.fieldName,
+                                  );
+                                  component = Object.assign({}, sub?.config, sub?.props, {
+                                    label: `${parent?.label}·${sub?.config.label}`,
+                                  }) as FormField;
+                                }
+                                const formatRule = formatRuleValue(rule, component);
+                                return (
+                                  <span key={ruleIndex}>
+                                    <span className={styles.fieldName}>{formatRule?.name || ''}</span>
+                                    <span>{formatRule?.symbol || ''}</span>
+                                    <span className={styles.fieldName}>{formatRule?.value || ''}</span>
+                                    {ruleIndex !== ruleBlock.length - 1 && <span>且</span>}
+                                  </span>
+                                );
+                              })}
                             </span>
-                          ))}
+                            {blockIndex !== condition.length - 1 && <span>或</span>}
+                          </span>
+                        );
+                      })}
+                      <span className={styles.mr4}>时</span>
+                      <span>读取接口</span>
+                      <span className={styles.fieldName}>{interfaceName}</span>
+                      <span>数据</span>
+                    </div>
+                    <div className={styles.operation}>
+                      <Tooltip title="编辑">
+                        <span>
+                          <Icon
+                            type="bianji"
+                            className={styles.edit}
+                            onClick={() => {
+                              handleEditRule(index);
+                            }}
+                          />
                         </span>
-                      </span>
-                    )}
+                      </Tooltip>
+                      <Tooltip title="删除">
+                        <span>
+                          <Icon
+                            type="shanchu"
+                            className={styles.delete}
+                            onClick={() => {
+                              handleDeleteRule(index);
+                            }}
+                          />
+                        </span>
+                      </Tooltip>
+                    </div>
                   </div>
-                  <div className={styles.operation}>
-                    <Tooltip title="编辑">
-                      <span>
-                        <Icon
-                          type="bianji"
-                          className={styles.edit}
-                          onClick={() => {
-                            handleEditRule(index);
-                          }}
-                        />
-                      </span>
-                    </Tooltip>
-                    <Tooltip title="删除">
-                      <span>
-                        <Icon
-                          type="shanchu"
-                          className={styles.delete}
-                          onClick={() => {
-                            handleDeleteRule(index);
-                          }}
-                        />
-                      </span>
-                    </Tooltip>
-                  </div>
-                </div>
-              );
+                );
+              }
+              return null;
             } else if (item.type === 'init') {
               return (
                 <div className={styles.ruleItem} key={index}>

@@ -18,6 +18,7 @@ export interface DataApiConfigProps {
   name: string | string[];
   children?: ReactNode;
   className?: string;
+  maxWidth?: string;
   label: string;
 }
 
@@ -30,7 +31,17 @@ const defaultValue: DataConfig = {
 };
 
 function DataApiConfig(props: DataApiConfigProps) {
-  const { value = defaultValue, onChange, layout = 'vertical', fields, name, children, label, className } = props;
+  const {
+    value = defaultValue,
+    onChange,
+    layout = 'vertical',
+    fields,
+    name,
+    children,
+    label,
+    className,
+    maxWidth,
+  } = props;
   const [apis, setApis] = useState<Api[]>([]);
   const [loading, setLoading] = useState(false);
   const [customConfig, setCustomConfig] = useState<DataConfig | undefined>(value);
@@ -170,6 +181,7 @@ function DataApiConfig(props: DataApiConfigProps) {
             size="large"
             options={typeOptions}
             className={styles.type}
+            style={{ maxWidth: maxWidth ? maxWidth : '100%' }}
             onChange={handleChangeType}
           ></Radio.Group>
         </Form.Item>
