@@ -1,46 +1,68 @@
-// const handleDisabledDate = useMemoCallback((current, props) => {
-//   const {id} = props.props
-//   if (!id || !current) return false
-//   const formValues = form.getFieldsValue();
-//   if (changeFieldRuleList.length && Object.keys(formValues).length) {
-//     const fieldRules = _.uniqWith(changeFieldRuleList.map((rule) => {
-//       return rule && collectFieldList(rule.fieldRule);
-//     }).flat(2), _.isEqual)
-//     // 去重
-//     const filterRules = fieldRules.filter(item => item && (item.fieldName === id || item.value === id))
-//     let rules1, rules2, rules3, rules4;
-//     filterRules.forEach(item => {
-//       if (item?.symbol === 'earlier') {
-//         if (item.fieldName === id) {
-//           rules1 = current.valueOf() >= formValues[item.value as string]
-//         }
-//         if (item.value === id && item.fieldName) {
-//           rules2 = current.valueOf() <= formValues[item.fieldName]
-//         }
-//       }
-//       if (item?.symbol === 'latter') {
-//         if (item.fieldName === id) {
-//           rules3 = current.valueOf() <= formValues[item.value as string]
-//         }
-//         if (item.value === id && item.fieldName) {
-//           rules4 = current.valueOf() >= formValues[item.fieldName]
-//         }
-//       }
-//     })
-//     return rules2 || rules4 || rules1 || rules3
-//   }
-// })
-
 import { flowVarsMap } from '@utils';
+import moment from 'moment';
 
 type RuleParams = {
   rules: { [key: string]: any }[];
   formValue: { [key: string]: any };
+  current: any;
+  id: string;
 };
-const getDisabledDateRule = ({ rules, formValue }: RuleParams): boolean | undefined => {
-  // console.log(rules, formValue);
-  rules.forEach((item) => {});
-  // Object.keys(flowVarsMap)
-  return;
+
+const getFlowVarsRule = (date: string) => {
+  switch (date) {
+    case 'currentMonth':
+      return moment().startOf('month').valueOf();
+    case 'currentYear':
+      return moment().startOf('year').valueOf();
+    case 'currentTime':
+      return moment().valueOf();
+  }
 };
+
+/**
+ * 获取当前日期禁用范围
+ * @param rules 当前日期规则list
+ * @param current 当前日期
+ * @param formValue
+ * @param id 当前选择的日期字段
+ */
+const getDisabledDateRule = ({ rules, current, formValue, id }: RuleParams): boolean => {
+  let rules1, rules2, rules3, rules4, rules5, rules6;
+  rules.forEach((item) => {
+    const { watch, condition } = item;
+    if (condition.symbol === 'earlier') {
+      if (Object.keys(flowVarsMap).includes(watch[0])) {
+        // 选择流程变量
+        rules1 = current.valueOf() > getFlowVarsRule(watch[0])!;
+      } else {
+        // 选择其他控件
+        if (id === condition.fieldName) {
+          rules3 = current.valueOf() > formValue[condition.value as string];
+        }
+
+        if (id === condition.value) {
+          rules5 = current.valueOf() < formValue[condition.fieldName as string];
+        }
+      }
+    }
+
+    if (condition.symbol === 'latter') {
+      if (Object.keys(flowVarsMap).includes(watch[0])) {
+        // 选择流程变量
+        rules2 = current.valueOf() < getFlowVarsRule(watch[0])!;
+      } else {
+        // 选择其他控件
+        if (id === condition.fieldName) {
+          rules4 = current.valueOf() < formValue[condition.value as string];
+        }
+        if (id === condition.value) {
+          rules6 = current.valueOf() > formValue[condition.fieldName as string];
+        }
+      }
+    }
+  });
+  // @ts-ignore
+  return rules1 || rules2 || rules4 || rules3 || rules5 || rules6;
+};
+
 export default getDisabledDateRule;
