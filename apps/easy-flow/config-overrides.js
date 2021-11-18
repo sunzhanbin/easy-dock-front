@@ -33,6 +33,7 @@ module.exports = {
     function overrideWebpackOutput(config) {
       config.output = {
         ...config.output,
+        publicPath: '/',
         globalObject: 'window',
         libraryTarget: 'umd',
         library: `${appPackageJson.name}-[name]`,
@@ -114,11 +115,18 @@ module.exports = {
     },
   ),
   devServer: overrideDevServer((config) =>
-    Object.assign({}, config, {
-      headers: {
-        ...config.headers,
-        'Access-Control-Allow-Origin': '*',
-      },
-    }),
+    Object.assign(
+      {},
+      config,
+      {
+        headers: {
+          ...config.headers,
+          'Access-Control-Allow-Origin': '*',
+        },
+      } /* ,
+      {
+        publicPath: '/easyflow/',
+      } */,
+    ),
   ),
 };
