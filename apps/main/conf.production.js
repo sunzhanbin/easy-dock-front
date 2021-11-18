@@ -1,5 +1,6 @@
 (function (conf) {
   conf.ALGOR_ORCH_BASE_SERVICE_ENDPOINT = 'http://10.19.146.121:12126'; //算法编排后端服务地址
+  conf.ALGOR_ORCH_FRONTEND_ENDPOINT = 'http://localhost:3000';
   conf.COMMON_LOGIN_DOMAIN = 'http://10.19.146.121:28201'; //对接统一用户的登录地址   已废弃
   conf.COMMON_LOGIN_URL = 'http://10.19.146.100:28303/login'; //EasyDock登录页地址 已废弃
   conf.EASY_DOCK_BASE_SERVICE_ENDPOINT = 'http://10.19.146.121:28300'; //EasyDock后端服务地址

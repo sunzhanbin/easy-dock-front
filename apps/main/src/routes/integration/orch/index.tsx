@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { loadMicroApp } from 'qiankun';
+
+import Auth from '@enc/sso';
+
 import Loading from '@components/loading';
 import classnames from 'classnames';
 import useMatchRoute from '@hooks/use-match-route';
@@ -14,6 +17,8 @@ export default function Orch() {
   useEffect(() => {
     if (!orchRef.current) return;
 
+    const token = Auth.getAuth();
+
     const orch = loadMicroApp(
       {
         name: 'orch',
@@ -21,6 +26,7 @@ export default function Orch() {
         container: orchRef.current,
         props: {
           basename: matchedRoute,
+          token,
         },
       },
       {

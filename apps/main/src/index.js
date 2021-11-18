@@ -5,6 +5,8 @@ import Auth from '@enc/sso';
 Auth.setConfig({ server: window.SSO_LOGIN_URL });
 
 (async () => {
+  // console.info('[SSO] Auth.getToken in easy-dock-main');
+
   // 使用 script tag 方式加载 sso.js
   // if (!window.Auth) {
   //   console.error('SSO login 加载失败.');
