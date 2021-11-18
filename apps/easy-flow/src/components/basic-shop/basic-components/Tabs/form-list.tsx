@@ -1,7 +1,7 @@
 import { memo, useEffect, useMemo, useState } from 'react';
 import { Form, Row, Col } from 'antd';
 import { Rule, FormInstance } from 'antd/lib/form';
-import { AllComponentType, CompConfig, Datasource } from '@/type';
+import { AllComponentType, CompConfig, Datasource, EventType } from '@/type';
 import useLoadComponents from '@/hooks/use-load-components';
 import { fetchDataSource } from '@/apis/detail';
 import { useSubAppDetail } from '@/app/app';
@@ -87,7 +87,7 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly }: FormListProps) 
       const { rules, form } = context;
       Object.keys(rules).forEach((key) => {
         const ruleList = ((rules as unknown) as formRulesReturn)[key];
-        const visibleRules = ruleList?.filter((item) => item?.subtype === 0);
+        const visibleRules = ruleList?.filter((item) => item?.subtype === EventType.Visible);
         const watchList = watchFn(ruleList);
         const visibleWatchList = watchFn(visibleRules);
         watchList.forEach((field) => {

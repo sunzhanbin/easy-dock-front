@@ -1,11 +1,12 @@
 import { memo, ReactNode, useMemo } from 'react';
-import { DatePicker, Form } from 'antd';
+import { Form } from 'antd';
 import styles from '../comp-attr-editor/index.module.scss';
 import { useAppSelector } from '@app/hooks';
 import { componentPropsSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 import { DateField } from '@type';
 import { Moment } from 'moment';
 import { Icon } from '@common/components';
+import DatePicker from '../../date-picker';
 
 interface DateRangeProps {
   id: string;
@@ -26,8 +27,10 @@ const DateRange = ({ id, componentId }: DateRangeProps) => {
       props.showTime = true;
       props.format = 'YYYY-MM-DD HH:mm:ss';
     } else if (formatType === 'YYYY-MM-DD') {
+      props.showTime = false;
       props.format = 'YYYY-MM-DD';
     } else {
+      props.showTime = false;
       props.format = 'YYYY-MM-DD';
     }
     return props;
