@@ -28,7 +28,7 @@ const getFlowVarsRule = (date: string) => {
  */
 const getDisabledDateRule = ({ rules, current, formValue, id }: RuleParams): boolean => {
   let rules1, rules2, rules3, rules4, rules5, rules6;
-  rules.forEach((item) => {
+  (rules ?? []).forEach((item) => {
     const { watch, condition } = item;
     if (condition.symbol === 'earlier') {
       if (Object.keys(flowVarsMap).includes(watch[0])) {
