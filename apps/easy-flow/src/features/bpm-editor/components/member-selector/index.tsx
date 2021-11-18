@@ -28,7 +28,7 @@ const MemberSelector = ({ children, value, onChange }: MemberSelectorProps) => {
   }, [showValue]);
   const projectId = useMemo(() => {
     return subAppDetail?.app.project.id;
-  }, [members]);
+  }, [subAppDetail]);
   const fetchUser = useMemoCallback(async (data: { name: string; page: number }) => {
     const memberResponse = await runtimeAxios.post('/user/search', {
       index: data.page,
@@ -70,7 +70,7 @@ const MemberSelector = ({ children, value, onChange }: MemberSelectorProps) => {
         <Selector fetchUser={fetchUser} value={members} onChange={handleChange} />
       </SelectorContext.Provider>
     );
-  }, [value, members]);
+  }, [members, fetchUser, handleChange]);
 
   useEffect(() => {
     if (!containerRef || !containerRef.current) {
@@ -79,10 +79,6 @@ const MemberSelector = ({ children, value, onChange }: MemberSelectorProps) => {
     // HACK: 用于更新Popover弹出层的位置
     window.dispatchEvent(new Event('resize'));
   }, [value]);
-
-  useEffect(() => {
-    console.info({ showValue });
-  }, [showValue]);
 
   return (
     <div ref={containerRef}>

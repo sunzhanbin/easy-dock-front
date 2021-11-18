@@ -104,8 +104,6 @@ const Copy: FC<{}> = () => {
           if (!currentNodes) return null;
 
           if (currentNodes.length > 1) {
-            console.log(currentNodes);
-
             return (
               <div className={styles.currentNode}>
                 <span className={styles.text}>{currentNodes[0].currentNode}</span>
@@ -360,6 +358,7 @@ const Copy: FC<{}> = () => {
           loading={loading}
           pagination={pagination}
           columns={columns}
+          rowKey="processInstanceId"
           dataSource={data}
           onChange={handleTableChange}
         ></Table>

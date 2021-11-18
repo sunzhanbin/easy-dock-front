@@ -144,6 +144,7 @@ export type fieldRule = {
   parentId?: string;
   symbol?: string;
   fieldType?: string;
+  valueType?: string;
   value?: string | number | string[] | [number, number];
 };
 // 值改变时规则
@@ -158,14 +159,15 @@ export type FieldChangeRule = {
 };
 
 export type FormRuleItem = {
-  type: 'change' | 'init';
+  type: string;
   subtype?: number;
   formChangeRule?: FormChangeRule;
   formInitRule?: DataConfig;
 };
 
-export type FieldRuleItem = {
-  type: 'change' | 'init';
+export type PropertyRuleItem = {
+  type: string;
+  subtype?: number;
   formChangeRule?: FieldChangeRule;
 };
 
@@ -176,7 +178,7 @@ export type FormDesign = {
   layout: string[][];
   errors: ErrorItem[];
   formRules: FormRuleItem[];
-  fieldRules: FieldRuleItem[];
+  propertyRules: PropertyRuleItem[];
   schema: Schema;
   isDirty: boolean;
   subAppInfo: {
@@ -247,7 +249,7 @@ export type FormMeta = {
   events?: Events;
   schema: { [k: string]: SchemaItem };
   formRules: FormRuleItem[];
-  fieldRules: FieldRuleItem[];
+  propertyRules: PropertyRuleItem[];
   rules?: FormRule[];
   themes?: Theme[];
 };

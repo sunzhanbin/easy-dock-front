@@ -1,8 +1,11 @@
 // import 方式加载 sso.js
 import Auth from '@enc/sso';
 
+// 引入Auth后，需要调用 Auth.setConfig 配置 server
+Auth.setConfig({ server: window.SSO_LOGIN_URL });
+
 (async () => {
-  // script tag 方式加载 sso.js
+  // 使用 script tag 方式加载 sso.js
   // if (!window.Auth) {
   //   console.error('SSO login 加载失败.');
   //   return;

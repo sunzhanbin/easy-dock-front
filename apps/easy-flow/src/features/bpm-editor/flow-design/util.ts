@@ -18,7 +18,6 @@ import {
 } from '@type/flow';
 import { FormMeta } from '@type';
 import { validators } from './validators';
-import { ApiType } from '@/type/api';
 
 function randomString() {
   return Math.random().toString(36).slice(2);
@@ -131,6 +130,7 @@ export function createNode(type: NodeType, name?: string) {
           enable: false,
           unit: 'day',
         },
+        action: null,
       },
     };
   } else if (type === NodeType.FillNode) {
@@ -313,6 +313,13 @@ export function valid(data: AllNode[], validRes: ValidResultType) {
           } else if (node.countersign.type === 2 && !node.countersign.count) {
             errors.push('会签人数不能为空');
           }
+        }
+      }
+      // 审批节点和抄送节点需要进行超时配置
+      if (node.type !== NodeType.CCNode) {
+        const timeoutValidMessage = validators.timeoutConfig(node.dueConfig!);
+        if (timeoutValidMessage) {
+          errors.push(timeoutValidMessage);
         }
       }
 

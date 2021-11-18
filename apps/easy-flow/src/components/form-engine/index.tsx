@@ -3,7 +3,7 @@ import { Col, Form, FormInstance, Row } from 'antd';
 import classNames from 'classnames';
 import { Rule } from 'antd/lib/form';
 import useLoadComponents from '@/hooks/use-load-components';
-import { AllComponentType, Datasource } from '@type';
+import { AllComponentType, Datasource, FormRuleItem } from '@type';
 import { AuthType, FieldAuthsMap } from '@type/flow';
 import { FormMeta, FormValue } from '@type/detail';
 import { runtimeAxios } from '@/utils';
@@ -60,11 +60,11 @@ const FormDetail = React.forwardRef(function FormDetail(
   const [showForm, setShowForm] = useState(false);
 
   const comRules = useMemo(() => {
-    const formRules = convertFormRules(data.formRules, data.components);
-    return {
-      formRules,
-    };
-  }, [data.formRules, data.components]);
+    const rules: FormRuleItem[] = data.formRules?.concat(data.propertyRules || []) || [];
+    const formRules = convertFormRules(rules, data.components);
+    console.log(formRules, '=--------------------');
+    return { formRules };
+  }, [data.formRules, data.propertyRules, data.components]);
 
   const initRuleList = useMemo<DataConfig[]>(() => {
     if (!data.formRules) {
@@ -144,8 +144,7 @@ const FormDetail = React.forwardRef(function FormDetail(
           if (!res) {
             return { fieldName: '', name: '' };
           }
-          const { name, map } = res;
-          const fieldName = String(map?.match(/(?<=\$\{).*?(?=\})/));
+          const { name, map: fieldName = '' } = res;
           return { fieldName, name };
         });
         respListMap.push(resMap);
@@ -159,6 +158,7 @@ const FormDetail = React.forwardRef(function FormDetail(
             respListMap[index].forEach(({ fieldName, name }) => {
               if (fieldName && name) {
                 // TODO 替换eval
+                // eslint-disable-next-line
                 formValues[fieldName] = eval(`res.${name}`);
               }
             });
@@ -176,7 +176,7 @@ const FormDetail = React.forwardRef(function FormDetail(
 
   const onValuesChange = useCallback((changeValue: any, all: any) => {
     // 此处不要进行setState操作   避免重复更新
-    Object.entries(changeValue).map(([key, value]: any) => {
+    Object.entries(changeValue).forEach(([key, value]: any) => {
       if (value && !Array.isArray(value) && Object.values(value).length) {
         const field = Object.values(value)[0];
         if (typeof field === 'object' && field) {

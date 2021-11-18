@@ -26,6 +26,24 @@ type FormValuesType = {
   fieldsAuths: FillNode['fieldsAuths'];
 };
 
+const defaultDueConfig = {
+  enable: false,
+  timeout: {
+    unit: 'day',
+  },
+  notice: {
+    starter: false,
+    assign: false,
+    admin: false,
+    other: false,
+  },
+  cycle: {
+    enable: false,
+    unit: 'day',
+  },
+  action: null,
+};
+
 function FillNodeEditor(props: FillNodeEditorProps) {
   const dispatch = useAppDispatch();
   const { node } = props;
@@ -39,7 +57,7 @@ function FillNodeEditor(props: FillNodeEditorProps) {
       correlationMemberConfig: node.correlationMemberConfig,
       btnText: node.btnText,
       fieldsAuths: node.fieldsAuths,
-      dueConfig: node.dueConfig,
+      dueConfig: node?.dueConfig || defaultDueConfig,
     };
   }, [node]);
 
@@ -87,7 +105,7 @@ function FillNodeEditor(props: FillNodeEditorProps) {
       <Form.Item label="字段权限" name="fieldsAuths">
         <FieldAuths />
       </Form.Item>
-      <Form.Item label="" name="dueConfig">
+      <Form.Item name="dueConfig">
         <DueConfig name="dueConfig" />
       </Form.Item>
     </Form>

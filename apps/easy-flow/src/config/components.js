@@ -157,15 +157,6 @@ const format = {
   required: false,
   isProps: true,
 };
-const notSelectPassed = {
-  key: 'notSelectPassed',
-  defaultValue: false,
-  label: '禁止选择已过去的时间',
-  type: 'Switch',
-  direction: 'horizontal',
-  required: false,
-  isProps: false,
-};
 const descTextValue = {
   key: 'value',
   defaultValue: '',
@@ -229,11 +220,11 @@ const decimalCount = {
   required: false,
   isProps: false,
 };
-const limitRange = {
+const limitNum = {
   key: 'limit',
   label: '限制数值范围',
   defaultValue: false,
-  type: 'LimitRange',
+  type: 'LimitNum',
   required: false,
   isProps: false,
 };
@@ -245,6 +236,26 @@ const rangeNum = {
     max: 0,
   },
   type: 'limit',
+  required: false,
+  isProps: false,
+};
+
+const limitDate = {
+  key: 'datelimit',
+  label: '限制日期范围',
+  defaultValue: false,
+  type: 'limitDate',
+  required: false,
+  isProps: false,
+};
+
+const rangeDate = {
+  key: 'daterange',
+  defaultValue: {
+    min: 0,
+    max: 0,
+  },
+  type: 'daterange',
   required: false,
   isProps: false,
 };
@@ -308,7 +319,16 @@ const components = {
       version: '1.0',
       type: 'Date',
     },
-    config: [fieldName, getLabel('日期'), desc, format, getDefaultValue('DefaultDate', '选择日期'), colSpace],
+    config: [
+      fieldName,
+      getLabel('日期'),
+      desc,
+      format,
+      getDefaultValue('DefaultDate', '选择日期'),
+      limitDate,
+      rangeDate,
+      colSpace,
+    ],
   },
   InputNumber: {
     baseInfo: {
@@ -318,17 +338,7 @@ const components = {
       version: '1.0',
       type: 'InputNumber',
     },
-    config: [
-      fieldName,
-      getLabel('数字'),
-      desc,
-      numberOption,
-      allowDecimal,
-      decimalCount,
-      limitRange,
-      rangeNum,
-      colSpace,
-    ],
+    config: [fieldName, getLabel('数字'), desc, numberOption, allowDecimal, decimalCount, limitNum, rangeNum, colSpace],
   },
   DescText: {
     baseInfo: {
@@ -339,6 +349,16 @@ const components = {
       type: 'DescText',
     },
     config: [getLabel('描述文字'), descTextValue, colSpace],
+  },
+  Tabs: {
+    baseInfo: {
+      name: 'tab',
+      icon: 'tabcaise',
+      category: '基础控件',
+      version: '1.0',
+      type: 'Tabs',
+    },
+    config: [fieldName, getLabel('tab页'), desc, fieldManage, colSpace],
   },
   Image: {
     baseInfo: {
@@ -360,6 +380,16 @@ const components = {
     },
     config: [fieldName, getLabel('附件'), desc, getMaxCount(5, 1, 5), colSpace],
   },
+  SerialNum: {
+    baseInfo: {
+      name: '编号',
+      icon: 'bianhaocaise',
+      category: '基础控件',
+      version: '1.0',
+      type: 'SerialNum',
+    },
+    config: [fieldName, getLabel('编号'), desc, serialRule, colSpace],
+  },
   Member: {
     baseInfo: {
       name: '人员',
@@ -370,35 +400,15 @@ const components = {
     },
     config: [fieldName, getLabel('人员'), desc, multiple, showSearch, colSpace],
   },
-  Tabs: {
-    baseInfo: {
-      name: 'tab页',
-      icon: 'renwu',
-      category: '高级控件',
-      version: '1.0',
-      type: 'Tabs',
-    },
-    config: [fieldName, getLabel('tab页'), desc, fieldManage, colSpace],
-  },
   FlowData: {
     baseInfo: {
       name: '关联流程',
-      icon: 'xiangqing',
+      icon: 'liuchengcaise',
       category: '高级控件',
       version: '1.0',
       type: 'FlowData',
     },
     config: [fieldName, getLabel('关联流程'), flows, colSpace],
-  },
-  SerialNum: {
-    baseInfo: {
-      name: '编号',
-      icon: 'tupiancaidan',
-      category: '高级控件',
-      version: '1.0',
-      type: 'SerialNum',
-    },
-    config: [fieldName, getLabel('编号'), desc, serialRule, colSpace],
   },
 };
 

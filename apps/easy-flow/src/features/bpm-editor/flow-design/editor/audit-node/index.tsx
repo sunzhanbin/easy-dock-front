@@ -31,6 +31,25 @@ type FormValuesType = {
   };
   fieldsAuths: AuditNode['fieldsAuths'];
   countersign: AuditNode['countersign'];
+  dueConfig: AuditNode['dueConfig'];
+};
+
+const defaultDueConfig = {
+  enable: false,
+  timeout: {
+    unit: 'day',
+  },
+  notice: {
+    starter: false,
+    assign: false,
+    admin: false,
+    other: false,
+  },
+  cycle: {
+    enable: false,
+    unit: 'day',
+  },
+  action: null,
 };
 
 function AuditNodeEditor(props: AuditNodeEditorProps) {
@@ -51,7 +70,7 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
       },
       fieldsAuths: node.fieldsAuths,
       countersign: node.countersign,
-      dueConfig: node.dueConfig,
+      dueConfig: node.dueConfig || defaultDueConfig,
     };
   }, [node]);
 
@@ -68,6 +87,7 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
           revert: allValues.btnConfigs.revert,
           fieldsAuths: allValues.fieldsAuths,
           countersign: allValues.countersign,
+          dueConfig: allValues.dueConfig,
         }),
       );
     }, 100),
@@ -220,7 +240,7 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
         <FieldAuths />
       </Form.Item>
       <Form.Item name="dueConfig">
-        <DueConfig name="dueConfig" />
+        <DueConfig name="dueConfig" showAction={true} />
       </Form.Item>
     </Form>
   );

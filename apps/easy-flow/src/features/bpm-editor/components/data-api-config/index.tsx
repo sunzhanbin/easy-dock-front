@@ -148,11 +148,12 @@ function DataApiConfig(props: DataApiConfigProps) {
         if (!val) {
           return Promise.reject(new Error('请输入接口地址'));
         }
+        // eslint-disable-next-line
         const urlRegex = /(^(http|https):\/\/([\w\-]+\.)+[\w\-]+(\/[\w\u4e00-\u9fa5\-\.\/?\@\%\!\&=\+\~\:\#\;\,]*)?)/;
         if (!urlRegex.test(val)) {
           return Promise.reject(new Error('请输入正确的接口地址'));
         }
-        Promise.resolve();
+        return Promise.resolve();
       },
     };
   }, []);
