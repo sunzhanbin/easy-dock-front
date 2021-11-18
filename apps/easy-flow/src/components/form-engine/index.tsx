@@ -62,7 +62,6 @@ const FormDetail = React.forwardRef(function FormDetail(
   const comRules = useMemo(() => {
     const rules: FormRuleItem[] = data.formRules?.concat(data.propertyRules || []) || [];
     const formRules = convertFormRules(rules, data.components);
-    console.log(formRules, '=--------------------');
     return { formRules };
   }, [data.formRules, data.propertyRules, data.components]);
 
@@ -85,7 +84,7 @@ const FormDetail = React.forwardRef(function FormDetail(
     const comMaps: { [key: string]: FormMeta['components'][number] } = {};
     const formValues: FormProps['initialValue'] = {};
     data.components.forEach((com) => {
-      const { fieldName, id, precision, scope } = com.config;
+      const { fieldName, id, precision, scope, daterange } = com.config;
 
       if (initialValue && initialValue[fieldName] !== undefined) {
         formValues[fieldName] = initialValue[fieldName];
@@ -95,6 +94,7 @@ const FormDetail = React.forwardRef(function FormDetail(
 
       precision && (com.props.precision = precision);
       scope && (com.props.scope = scope);
+      daterange && (com.props.daterange = daterange);
       comMaps[id] = com;
       // 流程编排中没有配置fieldAuths这个字段默认可见
       visbles[fieldName || id] = fieldsAuths && fieldsAuths[fieldName || id] !== AuthType.Denied;

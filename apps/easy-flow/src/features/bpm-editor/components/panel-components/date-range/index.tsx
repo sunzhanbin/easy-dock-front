@@ -22,6 +22,7 @@ const DateRange = ({ id, componentId }: DateRangeProps) => {
     const props: { [k: string]: string | boolean | Function | Moment | ReactNode } = {
       size: 'large',
       suffixIcon: <Icon type="riqi" />,
+      onChange: (v: Moment) => void 0,
     };
     if (formatType === 'YYYY-MM-DD HH:mm:ss') {
       props.showTime = true;
@@ -36,7 +37,6 @@ const DateRange = ({ id, componentId }: DateRangeProps) => {
     return props;
   }, [formatType]);
 
-  console.log(propList, 'ppppp');
   return (
     <Form.Item noStyle shouldUpdate>
       {(form) => {
@@ -49,11 +49,11 @@ const DateRange = ({ id, componentId }: DateRangeProps) => {
             <p className={styles.tips}>此处限制与表单静态规则冲突时，以表单静态规则为准。</p>
             <div className={styles.limitRange}>
               <Form.Item className={styles.Item} name={[id, 'min']}>
-                <DatePicker size="large" placeholder="最早日期" {...propList} />
+                <DatePicker size="large" placeholder="最早日期" {...propList} type="startTime" />
               </Form.Item>
               <span className={styles.text}>~</span>
               <Form.Item className={styles.Item} name={[id, 'max']}>
-                <DatePicker size="large" placeholder="最晚日期" {...propList} />
+                <DatePicker size="large" placeholder="最晚日期" {...propList} type="endTime" />
               </Form.Item>
             </div>
           </div>

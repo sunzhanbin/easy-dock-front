@@ -41,7 +41,10 @@ export type TextAreaField = {
 
 export type DateField = {
   type: 'Date';
-  notSelectPassed: boolean;
+  daterange: {
+    min: string;
+    max: string;
+  };
   format: 'YYYY-MM-DD' | 'YYYY-MM-DD HH:mm:ss';
   defaultValue: number;
 } & BaseField;

@@ -113,7 +113,6 @@ const FormItemWrap = (props: ComponentProps) => {
     return <LimitRange id={id} />;
   }
   if (type === 'daterange' && componentId) {
-    console.log(props, '  console.log(props)\n');
     return <DateRange id={id} componentId={componentId} />;
   }
   return (

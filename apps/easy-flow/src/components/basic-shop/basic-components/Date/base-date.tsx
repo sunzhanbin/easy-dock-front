@@ -25,11 +25,6 @@ const DateComponent = (props: DatePickerProps & { onChange: (value?: number) => 
       formatStr = 'YYYY-MM-DD';
     }
     prop.format = formatStr;
-    // if (notSelectPassed) {
-    //   prop.disabledDate = (current: Moment) => {
-    //     return current && current < moment().endOf('second');
-    //   };
-    // }
     if (defaultValue) {
       prop.defaultValue = typeof defaultValue === 'number' ? moment(defaultValue) : defaultValue;
     }

@@ -114,7 +114,6 @@ export const convertFormRules = (data: FormRuleItem[], components: { config: any
       const value = defaultNumber.calculateData;
       value && setFieldRules(fieldName, value, defaultNumber, 'change', 2);
     }
-    console.log(config, 'config');
   });
   return fieldRulesObj;
 };

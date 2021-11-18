@@ -12,7 +12,7 @@ const Date = (props: DatePickerProps & { onChange: (v: any) => void } & { [key: 
   const handleDisabledDate = useMemo(() => {
     return (current: Moment) => {
       const formValue = form.getFieldsValue();
-      return getDisabledDateRule({ rules, current, formValue, id: props.id! });
+      return getDisabledDateRule({ rules, current, formValue, id: props.id!, range: props.daterange! });
     };
   }, [rules]);
 
