@@ -45,7 +45,7 @@ export default {
         { file: './dist/index.iife.js', format: 'iife', name: outputName },
         { file: './dist/sso.js', format: 'umd', name: outputName, intro: 'var global = window;' },
         { file: './dist/index.cjs.min.js', format: 'cjs', exports: 'default' },
-        { file: './dist/index.esm.js', format: 'esm', intro: 'var global = window;' },
+        { file: './dist/index.js', format: 'esm', intro: 'var global = window;' },
     ],
 
     plugins,
