@@ -40,7 +40,7 @@ const FormChange = () => {
       <Form.Item label="选择规则" name="subtype" className={styles.subtype}>
         <Select suffixIcon={<Icon type="xiala" />} size="large" getPopupContainer={getPopupContainer}>
           <Option value={1}>显示隐藏规则</Option>
-          <Option value={2}>接口调用规则</Option>
+          <Option value={4}>接口调用规则</Option>
         </Select>
       </Form.Item>
 
@@ -174,7 +174,7 @@ const FormChange = () => {
               </>
             );
           }
-          if (subtype === 2) {
+          if (subtype === 4) {
             return (
               <>
                 <Form.Item label="流转条件" name="ruleValue" className={styles.condition}>

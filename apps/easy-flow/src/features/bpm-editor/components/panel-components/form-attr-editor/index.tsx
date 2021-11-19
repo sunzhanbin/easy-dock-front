@@ -39,7 +39,7 @@ const FormAttrEditor = () => {
       if (rules.subtype === EventType.Visible) {
         formChangeRule.showComponents = rules.showComponents;
         formChangeRule.hideComponents = rules.hideComponents;
-      } else if (rules.subtype === EventType.Union) {
+      } else if (rules.subtype === EventType.Interface) {
         formChangeRule.interfaceConfig = rules.interfaceConfig;
       }
       // 值改变时
@@ -236,7 +236,7 @@ const FormAttrEditor = () => {
                 );
               }
               // 值改变时调用接口
-              if (item.subtype === EventType.Union) {
+              if (item.subtype === EventType.Interface) {
                 const interfaceConfig = item.formChangeRule?.interfaceConfig;
                 const interfaceName = interfaceConfig?.id || interfaceConfig?.url || '';
                 return (

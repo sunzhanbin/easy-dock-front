@@ -160,10 +160,11 @@ export type FieldChangeRule = {
 };
 
 export enum EventType {
+  Available = 0, // 设值
   Visible = 1, // 显示隐藏
   Union = 2, // 联动
   Enable = 3, // 启用禁用
-  Available = 0, // 设值
+  Interface = 4, //调用接口
 }
 
 export type FormRuleItem = {
