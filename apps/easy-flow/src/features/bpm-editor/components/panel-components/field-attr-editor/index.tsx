@@ -21,7 +21,6 @@ const FieldAttrEditor = () => {
   const handleClose = useCallback(() => {
     setShowModal(false);
   }, []);
-  // TODO 这里禁止any，很难阅读，rules看起来是个数组却有mode属性
   const handleOk = useCallback((rules, type, editIndex) => {
     try {
       const subs: any[][] = rules.propertyValue || [];
@@ -32,8 +31,7 @@ const FieldAttrEditor = () => {
       }
     } catch {}
 
-    let rule: any;
-    rule = {
+    let rule = {
       type: 'change',
       subtype: 2, // 运行端事件联动处理
       formChangeRule: {

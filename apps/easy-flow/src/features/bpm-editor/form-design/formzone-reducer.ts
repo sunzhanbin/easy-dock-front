@@ -2,12 +2,12 @@ import { createSelector, PayloadAction } from '@reduxjs/toolkit';
 import { uniqueId } from 'lodash';
 import {
   ErrorItem,
-  PropertyRuleItem,
   FieldType,
   FormDesign,
   FormField,
   FormFieldMap,
   FormRuleItem,
+  PropertyRuleItem,
   TConfigItem,
   TConfigMap,
 } from '@type';
@@ -150,8 +150,7 @@ const reducers = {
     action: PayloadAction<{ id: string; config: FormField; isEdit?: boolean; isValidate?: boolean }>,
   ) {
     const { id, config, isEdit, isValidate } = action.payload;
-    const componentConfig = id.startsWith('DescText') ? Object.assign({}, config, { fieldName: config.id }) : config;
-    state.byId[id] = componentConfig;
+    state.byId[id] = id.startsWith('DescText') ? Object.assign({}, config, { fieldName: config.id }) : config;
     // 如果改变控件宽度后导致整行的宽度大于100%,则需要改变layout布局以实现换行
     if (isEdit) {
       const [rowIndex, colIndex] = locateById(id, state.layout);
@@ -320,7 +319,6 @@ export const formRulesSelector = createSelector([(state: RootState) => state.for
 });
 // 表单静态属性规则
 export const propertyRulesSelector = createSelector([(state: RootState) => state.formDesign], (formDesign) => {
-  console.log(formDesign.propertyRules, '222');
   return formDesign.propertyRules;
 });
 export const subComponentConfigSelector = createSelector(
