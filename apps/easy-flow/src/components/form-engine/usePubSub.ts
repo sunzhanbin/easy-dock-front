@@ -1,6 +1,7 @@
-import { useEffect } from "react";
+import { useEffect } from 'react';
 import PubSub from 'pubsub-js';
 import { useContainerContext } from './context';
+import { EventType } from '@/type';
 
 /* 
 
@@ -15,13 +16,12 @@ import { useContainerContext } from './context';
   const {rules, form, fieldName, type} = usePubSub({handleValue, handleVisible, handleRules});
 */
 const usePubSub = (props: any) => {
-
   const { rules, form, fieldName, type } = useContainerContext();
 
   const { handleValue, handleVisible, handleRules } = props;
 
   useEffect(() => {
-    if(!rules) return;
+    if (!rules) return;
 
     // @Todo:暂时放在这里，粗略实现，后期如果需要再使用该方案；
 
@@ -31,30 +31,33 @@ const usePubSub = (props: any) => {
 
     watchs?.map((item: any) => {
       PubSub.subscribe(item, (msg: string, data: any) => {
-        const {subtype} = item;
-        if(subtype == 0) {  // 隐藏；
+        const { subtype } = item;
+        if (subtype == EventType.Available) {
+          // 隐藏；
           handleValue(msg, data);
-        } else if (subtype == 1) {  // 显隐；
+        } else if (subtype == EventType.Visible) {
+          // 显隐；
           handleVisible(msg, data);
-        } else if (subtype == 2) {  // 规则处理；
+        } else if (subtype == EventType.Union) {
+          // 规则处理；
           handleRules(msg, data);
         }
-      })
-    })
+      });
+    });
 
     return () => {
       watchs?.map((item: any) => {
-        PubSub.unsubscribe(item)
-      })
-    }
+        PubSub.unsubscribe(item);
+      });
+    };
   }, []);
 
   return {
     rules,
     form,
     fieldName,
-    type
-  }
+    type,
+  };
 };
 
 export default usePubSub;

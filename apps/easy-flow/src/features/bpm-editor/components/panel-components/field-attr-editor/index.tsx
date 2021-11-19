@@ -1,6 +1,6 @@
 import { memo, useState, useCallback, useEffect } from 'react';
 import { Button, Tooltip, message } from 'antd';
-import { FormField, PropertyRuleItem } from '@/type';
+import { EventType, FormField, PropertyRuleItem } from '@/type';
 import { flowVarsMap, formatRuleValue } from '@/utils';
 import { Icon } from '@common/components';
 import FieldAttrModal from '../field-attr-modal';
@@ -35,7 +35,7 @@ const FieldAttrEditor = () => {
     let rule: any;
     rule = {
       type: 'change',
-      subtype: 2, // 运行端事件联动处理
+      subtype: EventType.Union, // 运行端事件联动处理
       formChangeRule: {
         fieldRule: rules.propertyValue,
       },
