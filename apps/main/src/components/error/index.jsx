@@ -1,6 +1,6 @@
-import React from 'react';
-import { Button } from 'antd';
-import styles from './index.module.scss';
+import React from "react";
+import { Button } from "antd";
+import styles from "./index.module.scss";
 
 export default class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -14,7 +14,7 @@ export default class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    if (process.env.NODE_ENV !== 'development') {
+    if (process.env.NODE_ENV !== "development") {
       console.log(error, errorInfo);
     }
   }

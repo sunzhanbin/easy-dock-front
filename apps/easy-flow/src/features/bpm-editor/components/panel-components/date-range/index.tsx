@@ -4,9 +4,10 @@ import styles from '../comp-attr-editor/index.module.scss';
 import { useAppSelector } from '@app/hooks';
 import { componentPropsSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 import { DateField } from '@type';
-import { Moment } from 'moment';
+import moment, { Moment } from 'moment';
 import { Icon } from '@common/components';
 import DatePicker from '../../date-picker';
+import { FormInstance } from 'antd/es';
 
 interface DateRangeProps {
   id: string;
@@ -22,6 +23,7 @@ const DateRange = ({ id, componentId }: DateRangeProps) => {
     const props: { [k: string]: string | boolean | Function | Moment | ReactNode } = {
       size: 'large',
       suffixIcon: <Icon type="riqi" />,
+      onChange: (v: Moment) => void 0,
     };
     if (formatType === 'YYYY-MM-DD HH:mm:ss') {
       props.showTime = true;
@@ -36,10 +38,19 @@ const DateRange = ({ id, componentId }: DateRangeProps) => {
     return props;
   }, [formatType]);
 
-  console.log(propList, 'ppppp');
+  const handleDisabledDate = (current: Moment, index: string, form: FormInstance) => {
+    const { daterange } = form.getFieldsValue();
+    if (index === 'prev') {
+      return current && current > daterange.max;
+    } else if (index === 'next') {
+      return current && current < daterange.min;
+    }
+    return false;
+  };
+
   return (
     <Form.Item noStyle shouldUpdate>
-      {(form) => {
+      {(form: FormInstance<any>) => {
         const isChecked = form.getFieldValue('datelimit');
         if (!isChecked) {
           return null;
@@ -49,11 +60,23 @@ const DateRange = ({ id, componentId }: DateRangeProps) => {
             <p className={styles.tips}>此处限制与表单静态规则冲突时，以表单静态规则为准。</p>
             <div className={styles.limitRange}>
               <Form.Item className={styles.Item} name={[id, 'min']}>
-                <DatePicker size="large" placeholder="最早日期" {...propList} />
+                <DatePicker
+                  size="large"
+                  placeholder="最早日期"
+                  {...propList}
+                  type="startTime"
+                  disabledDate={(v: Moment) => handleDisabledDate(v, 'prev', form)}
+                />
               </Form.Item>
               <span className={styles.text}>~</span>
               <Form.Item className={styles.Item} name={[id, 'max']}>
-                <DatePicker size="large" placeholder="最晚日期" {...propList} />
+                <DatePicker
+                  size="large"
+                  placeholder="最晚日期"
+                  {...propList}
+                  type="endTime"
+                  disabledDate={(v: Moment) => handleDisabledDate(v, 'next', form)}
+                />
               </Form.Item>
             </div>
           </div>

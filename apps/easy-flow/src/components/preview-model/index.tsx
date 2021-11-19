@@ -26,7 +26,7 @@ const propsKey = [
   'showSearch',
   'multiple',
   'format',
-  'notSelectPassed',
+  'daterange',
   'maxCount',
   'components',
   'fieldName',

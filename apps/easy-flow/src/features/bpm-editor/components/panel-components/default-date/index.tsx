@@ -20,9 +20,9 @@ const DefaultDate = (props: editProps) => {
   const formatType = useMemo(() => {
     return (byId[id] as DateField)?.format;
   }, [id, byId]);
-  const notSelectPassed = useMemo(() => {
-    return (byId[id] as DateField)?.notSelectPassed;
-  }, [id, byId]);
+  // const notSelectPassed = useMemo(() => {
+  //   return (byId[id] as DateField)?.notSelectPassed;
+  // }, [id, byId]);
   const propList = useMemo(() => {
     const props: { [k: string]: string | boolean | Function | Moment | ReactNode } = {
       size: 'large',
@@ -36,16 +36,16 @@ const DefaultDate = (props: editProps) => {
     } else {
       props.format = 'YYYY-MM-DD';
     }
-    if (notSelectPassed) {
-      props.disabledDate = (current: Moment) => {
-        return current && current < moment().endOf('second');
-      };
-    }
+    // if (notSelectPassed) {
+    //   props.disabledDate = (current: Moment) => {
+    //     return current && current < moment().endOf('second');
+    //   };
+    // }
     if (typeof value === 'number') {
       props.value = moment(value);
     }
     return props;
-  }, [formatType, notSelectPassed, value]);
+  }, [formatType, value]);
   const handleChange = useCallback(
     (e) => {
       if (e.valueOf()) {

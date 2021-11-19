@@ -16,8 +16,6 @@ function HeaderUser() {
   const history = useHistory();
   const dispatch = useDispatch();
   const handleLogin = useMemoCallback(async () => {
-    // console.info('[SSO] Auth.getToken in easy-dock-main');
-
     if (window.Auth) {
       await window.Auth.getToken(true, window.EASY_DOCK_BASE_SERVICE_ENDPOINT);
     } else {
