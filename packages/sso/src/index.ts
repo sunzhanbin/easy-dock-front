@@ -1,4 +1,5 @@
 import Cookies from 'js-cookie';
+import xss from 'xss';
 
 /**
  * @interface
@@ -26,7 +27,7 @@ const getParams = () => {
         if (params.length > 0) {
             for (let item of params) {
                 let kv = item.split('=');
-                result[kv[0]] = kv[1];
+                result[kv[0]] = xss(kv[1]);
             }
         }
     }
