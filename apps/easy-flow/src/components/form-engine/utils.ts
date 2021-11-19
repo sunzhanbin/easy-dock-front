@@ -11,7 +11,7 @@ export interface formRulesItem {
   watch: string[];
   visible?: boolean;
   value?: null | string | number | Date;
-  subtype?: EventType; // 1 | 2 | 3 => 显隐 | 联动 | 启用禁用
+  subtype?: EventType; //0| 1 | 2 | 3 =>设值| 显隐 | 联动 | 启用禁用
   type?: string; // init | change | blur | panelChange
 }
 

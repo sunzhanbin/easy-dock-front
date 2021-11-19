@@ -163,6 +163,7 @@ export enum EventType {
   Visible = 1, // 显示隐藏
   Union = 2, // 联动
   Enable = 3, // 启用禁用
+  Available = 0, // 设值
 }
 
 export type FormRuleItem = {
