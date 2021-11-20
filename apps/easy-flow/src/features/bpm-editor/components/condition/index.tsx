@@ -14,11 +14,14 @@ interface EditProps {
   value?: fieldRule[][];
   onChange?: (value: fieldRule[][]) => void;
   isFormRule?: boolean;
-  loadDataSource?: (id: string) => Promise<{ key: string; value: string }[] | { data: { data: string[] } }>;
+  loadDataSource?: (
+    id: string,
+    parentId?: string,
+  ) => Promise<{ key: string; value: string }[] | { data: { data: string[] } }>;
 }
 
 // 不能作为条件的控件类型
-const excludeTypes = ['DescText', 'SerialNum', 'FlowData'];
+let excludeTypes = ['DescText', 'SerialNum', 'FlowData'];
 
 const Condition = ({
   className,
@@ -47,6 +50,7 @@ const Condition = ({
       return componentList;
     }
     const list = ruleList.flat(2).filter((v) => v.fieldName);
+    excludeTypes = excludeTypes.filter((v) => v !== 'Tabs');
     if (list.length < 1) {
       // 还没有选择控件
       data

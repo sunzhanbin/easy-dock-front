@@ -95,6 +95,7 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
       onCancel={onClose}
       onOk={handelOk}
       width={660}
+      destroyOnClose={true}
       maskClosable={false}
     >
       <Form form={form} className={styles.form} layout="vertical" autoComplete="off" initialValues={initFormValues}>
