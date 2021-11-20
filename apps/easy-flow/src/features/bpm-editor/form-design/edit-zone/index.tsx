@@ -49,8 +49,10 @@ const EditZone = () => {
         let editConfig = formDesign.schema[type as FieldType]?.config;
         editConfig = editConfig ? [...editConfig] : [];
         let newConfig = { ...subComponentConfig };
-        if (type === 'InputNumber' && editConfig[2]) {
-          editConfig.splice(2, 1, defaultNumberConfig as SchemaConfigItem);
+        // tab内的数字控件默认值不需要公式计算
+        if (type === 'InputNumber') {
+          const index = editConfig.findIndex((v) => v.key === 'defaultNumber');
+          index > -1 && editConfig.splice(index, 1, defaultNumberConfig as SchemaConfigItem);
           newConfig = {
             ...newConfig,
             defaultNumber: typeof newConfig.defaultNumber === 'number' ? newConfig.defaultNumber : undefined,
@@ -79,10 +81,12 @@ const EditZone = () => {
   }, [selectedField]);
   const onSave = useMemoCallback((values, isValidate) => {
     if (subComponentConfig) {
+      const componentType: FieldType = subComponentConfig.type;
+      const editConfig = formDesign.schema[componentType]?.config || [];
+      const propKeyList = editConfig.filter((v) => v.isProps).map((v) => v.key);
       const props: { [k: string]: any } = {};
-      const keys = Object.keys(subComponentConfig).filter((v) => v !== 'defaultNumber');
       Object.keys(values).forEach((key) => {
-        if (!keys.includes(key)) {
+        if (propKeyList.includes(key)) {
           props[key] = values[key];
         }
       });

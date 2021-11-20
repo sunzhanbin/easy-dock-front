@@ -26,15 +26,16 @@ const FieldManage = ({ parentId, value, onChange }: ComProps) => {
     const list = value ? [...value] : [];
     const id = uniqueId(`${type}_`).concat(`__${parentId}`);
     const { baseInfo, config: schema } = componentList.find((v) => v.baseInfo.type === type) as SchemaItem;
+    const multiple = type === 'Checkbox';
     const config: ConfigItem = {
       id,
-      parentId,
       type,
+      parentId,
+      multiple,
       icon: baseInfo?.icon,
       canSubmit: type === 'DescText' ? false : true,
-      multiple: type === 'Checkbox',
     };
-    const props: ConfigItem = { type, id };
+    const props: ConfigItem = { type, id, multiple };
     schema.forEach((item) => {
       item.isProps ? (props[item.key] = item.defaultValue) : (config[item.key] = item.defaultValue);
     });
