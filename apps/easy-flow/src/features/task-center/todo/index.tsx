@@ -173,8 +173,8 @@ const ToDo: FC<{}> = () => {
         key: 'stay',
         width: '15%',
         render(_: string, record: TodoItem) {
-          const { startTime } = record;
-          return <div className={styles.stayTime}>{getStayTime(startTime)}</div>;
+          const { taskCreateTime } = record;
+          return <div className={styles.stayTime}>{getStayTime(taskCreateTime)}</div>;
         },
       },
       {
