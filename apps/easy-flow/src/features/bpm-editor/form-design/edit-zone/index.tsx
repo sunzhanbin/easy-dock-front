@@ -38,10 +38,16 @@ const EditZone = () => {
   const [editList, setEditList] = useState<SchemaConfigItem[]>([]);
   const [activeKey, setActiveKey] = useState<string>('1');
   const [componentId, setComponentId] = useState<string>(selectedField);
+  const [componentType, setComponentType] = useState<string>('');
   const [initValues, setInitValues] = useState({});
+  const fieldType = useMemo<string>(() => {
+    if (formDesign.selectedField && byId) {
+      return byId?.[formDesign.selectedField].type;
+    }
+    return '';
+  }, [formDesign.selectedField, byId]);
   useEffect(() => {
     setTimeout(() => {
-      const fieldType = formDesign.selectedField?.split('_')[0] || '';
       // 编辑子控件
       if (subComponentConfig) {
         const { parentId, type } = subComponentConfig;
@@ -63,6 +69,7 @@ const EditZone = () => {
         setTitle(`${parentLabel} · ${baseInfo?.name}`);
         setInitValues(newConfig);
         setComponentId(subComponentConfig.id);
+        setComponentType(subComponentConfig.type);
         return;
       }
       // 编辑控件
@@ -73,9 +80,10 @@ const EditZone = () => {
         setTitle(baseInfo?.name as string);
         setInitValues(byId[selectedField]);
         setComponentId(selectedField);
+        setComponentType(fieldType);
       }
     }, 0);
-  }, [byId, formDesign, subComponentConfig, selectedField]);
+  }, [byId, formDesign, subComponentConfig, selectedField, fieldType]);
   useEffect(() => {
     selectedField ? setActiveKey('1') : setActiveKey('2');
   }, [selectedField]);
@@ -102,7 +110,7 @@ const EditZone = () => {
     dispatch(
       editProps({
         id: selectedField,
-        config: { ...values, type: selectedField?.split('_')[0] || '', id: selectedField },
+        config: { ...values, type: fieldType, id: selectedField },
         isEdit: true,
         isValidate,
       }),
@@ -143,6 +151,7 @@ const EditZone = () => {
             initValues={initValues as FormField}
             onSave={onSave}
             componentId={componentId}
+            componentType={componentType}
           />
         </TabPane>
         <TabPane tab="表单属性" key="2">

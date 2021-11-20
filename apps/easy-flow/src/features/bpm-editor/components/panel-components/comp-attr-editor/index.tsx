@@ -26,6 +26,7 @@ interface CompAttrEditorProps {
   config: SchemaConfigItem[];
   initValues: FormField;
   componentId: string;
+  componentType: string;
   onSave: Function;
 }
 
@@ -135,7 +136,7 @@ const FormItemWrap = (props: ComponentProps) => {
 };
 
 const CompAttrEditor = (props: CompAttrEditorProps) => {
-  const { config, initValues, componentId, onSave } = props;
+  const { config, initValues, componentId, componentType, onSave } = props;
   const [form] = Form.useForm();
   const errors = useAppSelector(errorSelector);
   const errorIdList = useMemo(() => (errors || []).map(({ id }) => id), [errors]);
@@ -195,9 +196,9 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
               precision,
               type,
               checked,
+              componentType,
               parentId: componentId,
             };
-            props.componentType = componentId.split('_')[0];
             const component =
               type !== 'AllowDecimal' &&
               type !== 'precision' &&
