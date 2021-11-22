@@ -1,5 +1,5 @@
 import { Rule } from 'antd/lib/form';
-import { CorrelationMemberConfig, AuditNode, RevertType, TriggerConfig } from '@type/flow';
+import { CorrelationMemberConfig, AuditNode, RevertType, TriggerConfig, IDueConfig } from '@type/flow';
 import { ApiType, DataConfig } from '@type/api';
 import { validName } from '@common/rule';
 import { dynamicIsEmpty } from './util';
@@ -25,6 +25,7 @@ const dataPushConfig = (value: DataConfig): string => {
     if (!url) {
       return '推送数据的接口地址的不能为空';
     }
+    // eslint-disable-next-line
     const urlRegex = /(^(http|https):\/\/([\w\-]+\.)+[\w\-]+(\/[\w\u4e00-\u9fa5\-\.\/?\@\%\!\&=\+\~\:\#\;\,]*)?)/;
     if (!urlRegex.test(url)) {
       return '请输入正确的接口地址';
@@ -82,6 +83,7 @@ const triggerConfig = (value: TriggerConfig[]): string => {
     if (v.starter.type === 3) {
       return !v.starter.value;
     }
+    return false;
   });
   if (lackMember) {
     return '请选择表单内人员控件';
@@ -89,8 +91,25 @@ const triggerConfig = (value: TriggerConfig[]): string => {
   return '';
 };
 
+const timeoutConfig = (value: IDueConfig) => {
+  if (value?.enable) {
+    if (!value.timeout.num) {
+      return '请输入超时时间';
+    }
+    if (value.cycle.enable && !value.cycle.num) {
+      return '请输入超时时间';
+    }
+    if (value.notice.other && (!value.notice.users || value.notice.users.length === 0)) {
+      return '请选择其他人员';
+    }
+    return '';
+  }
+  return '';
+};
+
 export const validators = {
   member,
+  timeoutConfig,
   name: validName,
   data: dataPushConfig,
   config: triggerConfig,

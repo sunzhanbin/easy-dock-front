@@ -144,28 +144,39 @@ export type fieldRule = {
   parentId?: string;
   symbol?: string;
   fieldType?: string;
+  valueType?: string;
   value?: string | number | string[] | [number, number];
 };
 // 值改变时规则
 export type FormChangeRule = {
   fieldRule: fieldRule[][];
-  showComponents: string[];
-  hideComponents: string[];
+  showComponents?: string[];
+  hideComponents?: string[];
+  interfaceConfig?: DataConfig;
 };
 
 export type FieldChangeRule = {
   fieldRule: fieldRule[][];
 };
 
+export enum EventType {
+  Available = 0, // 设值
+  Visible = 1, // 显示隐藏
+  Union = 2, // 联动
+  Enable = 3, // 启用禁用
+  Interface = 4, //调用接口
+}
+
 export type FormRuleItem = {
-  type: 'change' | 'init';
-  subtype?: number;
+  type: string;
+  subtype?: EventType;
   formChangeRule?: FormChangeRule;
   formInitRule?: DataConfig;
 };
 
-export type FieldRuleItem = {
-  type: 'change' | 'init';
+export type PropertyRuleItem = {
+  type: string;
+  subtype?: EventType;
   formChangeRule?: FieldChangeRule;
 };
 
@@ -176,7 +187,7 @@ export type FormDesign = {
   layout: string[][];
   errors: ErrorItem[];
   formRules: FormRuleItem[];
-  fieldRules: FieldRuleItem[];
+  propertyRules: PropertyRuleItem[];
   schema: Schema;
   isDirty: boolean;
   subAppInfo: {
@@ -247,7 +258,7 @@ export type FormMeta = {
   events?: Events;
   schema: { [k: string]: SchemaItem };
   formRules: FormRuleItem[];
-  fieldRules: FieldRuleItem[];
+  propertyRules: PropertyRuleItem[];
   rules?: FormRule[];
   themes?: Theme[];
 };

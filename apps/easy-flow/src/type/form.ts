@@ -27,6 +27,11 @@ export type InputNumberField = {
   type: 'InputNumber';
   defaultValue: number;
   range?: [number, number];
+  scope?: {
+    min: number;
+    max: number;
+  };
+  precision?: number;
 } & BaseField;
 
 export type TextAreaField = {
@@ -36,7 +41,10 @@ export type TextAreaField = {
 
 export type DateField = {
   type: 'Date';
-  notSelectPassed: boolean;
+  daterange: {
+    min: string;
+    max: string;
+  };
   format: 'YYYY-MM-DD' | 'YYYY-MM-DD HH:mm:ss';
   defaultValue: number;
 } & BaseField;
@@ -55,12 +63,12 @@ export type SelectOptionItem = {
 };
 
 export type NumberDefaultOption = {
-  id: string | undefined,
-  type: string,
-  customData?: number,
-  calcType?: string,
-  calculateData?: any
-}
+  id: string | undefined;
+  type: string;
+  customData?: number;
+  calcType?: string;
+  calculateData?: any;
+};
 
 export type RadioField = {
   type: 'Radio';
@@ -99,9 +107,9 @@ export type MemberField = {
 } & BaseField;
 
 export type FlowField = {
-  type: 'FlowData',
-  flows: any
-} & BaseField
+  type: 'FlowData';
+  flows: any;
+} & BaseField;
 
 export type CompConfig = {
   config: ConfigItem;
@@ -111,12 +119,12 @@ export type CompConfig = {
 export type TabsField = {
   type: 'Tabs';
   fieldManage: CompConfig[];
-  components?: CompConfig[]
+  components?: CompConfig[];
 } & BaseField;
 
 export type SerialNumField = {
-  type: 'SerialNum',
-  serialRule: any
+  type: 'SerialNum';
+  serialRule: any;
 } & BaseField;
 
 export type FormField =
@@ -133,5 +141,4 @@ export type FormField =
   | MemberField
   | TabsField
   | FlowField
-  | SerialNumField
-  ;
+  | SerialNumField;

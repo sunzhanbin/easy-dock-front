@@ -1,4 +1,4 @@
-import { memo, useMemo, useEffect } from 'react';
+import { memo, useMemo } from 'react';
 import { message, Select } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { useAppSelector } from '@app/hooks';
@@ -35,6 +35,8 @@ const CalculateSelect = (props: CalculateProps) => {
           return com.type === 'InputNumber' && com.id !== id;
         } else if (calcType === 'minus') {
           return (com.type === 'InputNumber' || com.type === 'Date') && com.id !== id;
+        } else {
+          return false;
         }
       })
       .map((com) => ({
@@ -43,29 +45,32 @@ const CalculateSelect = (props: CalculateProps) => {
         type: com.type,
         format: com.type === 'Date' ? com.format : '',
       }));
-  }, [byId, id]);
+  }, [byId, id, calcType]);
 
   // 除加减法筛选计算
   const field = useMemo(() => {
     const componentList = Object.values(byId).map((item: FormField) => item) || [];
-    return componentList
-      .filter((com) => com.type === 'Tabs' && com.id !== id)
-      .map((com) => {
-        if (com.type === 'Tabs' && com.components) {
-          return com.components.map((item) => {
-            const { config } = item;
-            return (
-              config.type === 'InputNumber' && {
-                id: config.parentId,
-                subId: config.id,
-                name: `${com.label}.${config.label}`,
-              }
-            );
-          });
-        }
-      })
-      .flat(2)
-      .filter((item) => !!item);
+    return (
+      componentList
+        .filter((com) => com.type === 'Tabs' && com.id !== id)
+        // eslint-disable-next-line
+        .map((com) => {
+          if (com.type === 'Tabs' && com.components) {
+            return com.components.map((item) => {
+              const { config } = item;
+              return (
+                config.type === 'InputNumber' && {
+                  id: config.parentId,
+                  subId: config.id,
+                  name: `${com.label}.${config.label}`,
+                }
+              );
+            });
+          }
+        })
+        .flat(2)
+        .filter((item) => !!item)
+    );
   }, [byId, id]);
 
   // 处理加减法多选联动
@@ -95,7 +100,7 @@ const CalculateSelect = (props: CalculateProps) => {
         return field?.name;
       })
       .filter((item: string | undefined) => !!item);
-  }, [calculateData]);
+  }, [calculateData, fieldMulti]);
 
   // 多选下拉
   const handleMultiChange = useMemoCallback((values) => {

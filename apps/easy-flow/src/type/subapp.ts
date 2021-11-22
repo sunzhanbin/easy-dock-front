@@ -36,6 +36,7 @@ export type SubApp = {
     messageConfig: {
       enableTodo: boolean;
       enableDone: boolean;
+      enableDue: boolean;
       noticeChannels: TipType[];
     };
   };

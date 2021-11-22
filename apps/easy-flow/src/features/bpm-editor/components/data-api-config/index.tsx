@@ -18,6 +18,7 @@ export interface DataApiConfigProps {
   name: string | string[];
   children?: ReactNode;
   className?: string;
+  maxWidth?: string;
   label: string;
 }
 
@@ -30,7 +31,17 @@ const defaultValue: DataConfig = {
 };
 
 function DataApiConfig(props: DataApiConfigProps) {
-  const { value = defaultValue, onChange, layout = 'vertical', fields, name, children, label, className } = props;
+  const {
+    value = defaultValue,
+    onChange,
+    layout = 'vertical',
+    fields,
+    name,
+    children,
+    label,
+    className,
+    maxWidth,
+  } = props;
   const [apis, setApis] = useState<Api[]>([]);
   const [loading, setLoading] = useState(false);
   const [customConfig, setCustomConfig] = useState<DataConfig | undefined>(value);
@@ -148,11 +159,12 @@ function DataApiConfig(props: DataApiConfigProps) {
         if (!val) {
           return Promise.reject(new Error('请输入接口地址'));
         }
+        // eslint-disable-next-line
         const urlRegex = /(^(http|https):\/\/([\w\-]+\.)+[\w\-]+(\/[\w\u4e00-\u9fa5\-\.\/?\@\%\!\&=\+\~\:\#\;\,]*)?)/;
         if (!urlRegex.test(val)) {
           return Promise.reject(new Error('请输入正确的接口地址'));
         }
-        Promise.resolve();
+        return Promise.resolve();
       },
     };
   }, []);
@@ -169,6 +181,7 @@ function DataApiConfig(props: DataApiConfigProps) {
             size="large"
             options={typeOptions}
             className={styles.type}
+            style={{ maxWidth: maxWidth ? maxWidth : '100%' }}
             onChange={handleChangeType}
           ></Radio.Group>
         </Form.Item>

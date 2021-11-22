@@ -17,7 +17,10 @@ import SelectColumns from '../select-columns';
 import SerialRules from '../serial-rules';
 import NumberOption from '../number-options';
 import AllowDecimal from '../allow-decimal';
-import PanelLabelContent from './label-content';
+import LimitRange from '../limit-range';
+import DateRange from '../date-range';
+import { LABEL_INCLUDE_CHECKBOX, LABEL_LINKED_RULES } from '@utils/const';
+import FilesType from '@/features/bpm-editor/components/panel-components/files-type';
 
 const { Option } = Select;
 
@@ -25,11 +28,13 @@ interface CompAttrEditorProps {
   config: SchemaConfigItem[];
   initValues: FormField;
   componentId: string;
+  componentType: string;
   onSave: Function;
 }
 
 interface ComponentProps {
   id: string;
+  componentId?: string;
   label?: string | ReactNode;
   type: string;
   required?: boolean;
@@ -74,8 +79,6 @@ const componentMap: { [k: string]: (props: { [k: string]: any }) => ReactNode } 
   },
   Checkbox: (props) => <Checkbox>{props.label}</Checkbox>,
   Switch: () => <Switch />,
-  LimitRange: () => <>111</>,
-  AllowDecimal: (props) => <AllowDecimal checked={props.checked} />,
   NumberOption: (props) => <NumberOption id={props.componentId} />,
   serialRules: (props) => <SerialRules id={props.componentId} />,
   selectColumns: (props) => <SelectColumns id={props.componentId} />,
@@ -97,38 +100,28 @@ const componentMap: { [k: string]: (props: { [k: string]: any }) => ReactNode } 
 };
 
 const FormItemWrap = (props: ComponentProps) => {
-  const { id, label, required, type, requiredMessage, rules, children } = props;
-  console.log(id, 'id');
-  if (type === 'AllowDecimal') {
+  const { id, label, required, type, requiredMessage, rules, children, componentId } = props;
+
+  if (LABEL_INCLUDE_CHECKBOX.includes(type)) {
     return (
-      <>
-        <Form.Item name={id} valuePropName="checked">
-          <Checkbox>{label}</Checkbox>
-        </Form.Item>
-        <Form.Item noStyle shouldUpdate>
-          {(form) => {
-            const isChecked = form.getFieldValue(id);
-            console.log(isChecked, 'isChecked');
-            if (!isChecked) {
-              return null;
-            }
-            return (
-              <>
-                <span>限制</span>
-                <InputNumber
-                  size="large"
-                  style={{ width: '50%', margin: '0 10px' }}
-                  min={1}
-                  max={10}
-                  placeholder="请输入"
-                />
-                <span>位</span>
-              </>
-            );
-          }}
-        </Form.Item>
-      </>
+      <Form.Item name={[id, 'enable']} valuePropName="checked">
+        <Checkbox>{label}</Checkbox>
+      </Form.Item>
     );
+  }
+  if (type === 'precision') {
+    return <AllowDecimal id={id} />;
+  }
+
+  if (type === 'numrange') {
+    return <LimitRange id={id} />;
+  }
+  if (type === 'daterange' && componentId) {
+    return <DateRange id={id} componentId={componentId} />;
+  }
+
+  if (type === 'filetype' && componentId) {
+    return <FilesType id={id} componentId={componentId} />;
   }
   return (
     <Form.Item
@@ -150,7 +143,7 @@ const FormItemWrap = (props: ComponentProps) => {
 };
 
 const CompAttrEditor = (props: CompAttrEditorProps) => {
-  const { config, initValues, componentId, onSave } = props;
+  const { config, initValues, componentId, componentType, onSave } = props;
   const [form] = Form.useForm();
   const errors = useAppSelector(errorSelector);
   const errorIdList = useMemo(() => (errors || []).map(({ id }) => id), [errors]);
@@ -186,20 +179,7 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
         onValuesChange={handleChange}
       >
         {config.map(
-          ({
-            key,
-            label,
-            type,
-            range,
-            placeholder,
-            required,
-            requiredMessage,
-            rules,
-            max,
-            min,
-            precision,
-            checked,
-          }) => {
+          ({ key, label, type, range, placeholder, required, requiredMessage, rules, max, min, precision }) => {
             const props: { [k: string]: any } = {
               placeholder,
               range,
@@ -209,21 +189,19 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
               min,
               precision,
               type,
-              checked,
+              componentType,
               parentId: componentId,
             };
-            props.componentType = componentId.split('_')[0];
-            const component = componentMap[type](props);
+            const component =
+              ![...LABEL_INCLUDE_CHECKBOX, ...LABEL_LINKED_RULES].includes(type) && componentMap[type](props);
 
-            const handleChangeCheck = (value: any) => {
-              props.checked = value;
-            };
             return (
               <Fragment key={key}>
                 <FormItemWrap
                   id={key}
-                  label={<PanelLabelContent {...props} onChange={handleChangeCheck} />}
+                  label={label}
                   type={type}
+                  componentId={componentId}
                   required={required}
                   requiredMessage={requiredMessage}
                   rules={rules}

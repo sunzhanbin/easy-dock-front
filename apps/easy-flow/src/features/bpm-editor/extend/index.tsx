@@ -92,6 +92,17 @@ function SubAppExtend() {
       <p className={styles.help}>流程结束后，对申请发起人进行申请结果通知，包含：已通过、已拒绝</p>
 
       <Form.Item
+        className={styles['message-form-item']}
+        label="超时消息"
+        valuePropName="checked"
+        name={['config', 'meta', 'messageConfig', 'enableDue']}
+      >
+        <Switch />
+      </Form.Item>
+
+      <p className={styles.help}>待办任务超过审批时限时，对所设定的人员进行提示</p>
+
+      <Form.Item
         className={classnames(styles['message-form-item'], styles['tip-format'])}
         label="提示方式"
         name={['config', 'meta', 'messageConfig', 'noticeChannels']}

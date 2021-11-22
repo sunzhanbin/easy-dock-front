@@ -1,7 +1,6 @@
 import { memo, useEffect, useState, useMemo, useCallback } from 'react';
 import CompAttrEditor from '@/features/bpm-editor/components/panel-components/comp-attr-editor';
 import FormAttrEditor from '@/features/bpm-editor/components/panel-components/form-attr-editor';
-import FieldAttrEditor from '@/features/bpm-editor/components/panel-components/field-attr-editor';
 import { editProps, editSubComponentProps, setSubComponentConfig } from '../formdesign-slice';
 import { FieldType, FormField, SchemaConfigItem } from '@/type';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
@@ -39,10 +38,16 @@ const EditZone = () => {
   const [editList, setEditList] = useState<SchemaConfigItem[]>([]);
   const [activeKey, setActiveKey] = useState<string>('1');
   const [componentId, setComponentId] = useState<string>(selectedField);
+  const [componentType, setComponentType] = useState<string>('');
   const [initValues, setInitValues] = useState({});
+  const fieldType = useMemo<string>(() => {
+    if (formDesign.selectedField && byId) {
+      return byId?.[formDesign.selectedField]?.type || '';
+    }
+    return '';
+  }, [formDesign.selectedField, byId]);
   useEffect(() => {
     setTimeout(() => {
-      const fieldType = formDesign.selectedField?.split('_')[0] || '';
       // 编辑子控件
       if (subComponentConfig) {
         const { parentId, type } = subComponentConfig;
@@ -50,8 +55,10 @@ const EditZone = () => {
         let editConfig = formDesign.schema[type as FieldType]?.config;
         editConfig = editConfig ? [...editConfig] : [];
         let newConfig = { ...subComponentConfig };
-        if (type === 'InputNumber' && editConfig[2]) {
-          editConfig.splice(2, 1, defaultNumberConfig as SchemaConfigItem);
+        // tab内的数字控件默认值不需要公式计算
+        if (type === 'InputNumber') {
+          const index = editConfig.findIndex((v) => v.key === 'defaultNumber');
+          index > -1 && editConfig.splice(index, 1, defaultNumberConfig as SchemaConfigItem);
           newConfig = {
             ...newConfig,
             defaultNumber: typeof newConfig.defaultNumber === 'number' ? newConfig.defaultNumber : undefined,
@@ -62,6 +69,7 @@ const EditZone = () => {
         setTitle(`${parentLabel} · ${baseInfo?.name}`);
         setInitValues(newConfig);
         setComponentId(subComponentConfig.id);
+        setComponentType(subComponentConfig.type);
         return;
       }
       // 编辑控件
@@ -72,18 +80,21 @@ const EditZone = () => {
         setTitle(baseInfo?.name as string);
         setInitValues(byId[selectedField]);
         setComponentId(selectedField);
+        setComponentType(fieldType);
       }
     }, 0);
-  }, [byId, formDesign, subComponentConfig, selectedField]);
+  }, [byId, formDesign, subComponentConfig, selectedField, fieldType]);
   useEffect(() => {
     selectedField ? setActiveKey('1') : setActiveKey('2');
   }, [selectedField]);
   const onSave = useMemoCallback((values, isValidate) => {
     if (subComponentConfig) {
+      const componentType: FieldType = subComponentConfig.type;
+      const editConfig = formDesign.schema[componentType]?.config || [];
+      const propKeyList = editConfig.filter((v) => v.isProps).map((v) => v.key);
       const props: { [k: string]: any } = {};
-      const keys = Object.keys(subComponentConfig).filter((v) => v !== 'defaultNumber');
       Object.keys(values).forEach((key) => {
-        if (!keys.includes(key)) {
+        if (propKeyList.includes(key)) {
           props[key] = values[key];
         }
       });
@@ -99,7 +110,7 @@ const EditZone = () => {
     dispatch(
       editProps({
         id: selectedField,
-        config: { ...values, type: selectedField?.split('_')[0] || '', id: selectedField },
+        config: { ...values, type: fieldType, id: selectedField },
         isEdit: true,
         isValidate,
       }),
@@ -123,7 +134,7 @@ const EditZone = () => {
       );
     }
     return <div className={styles.edit_title}>{title}</div>;
-  }, [title, subComponentConfig]);
+  }, [title, subComponentConfig, handleBack]);
   const tabPanelProps = useMemo(() => {
     if (!selectedField) {
       return { disabled: true };
@@ -140,13 +151,11 @@ const EditZone = () => {
             initValues={initValues as FormField}
             onSave={onSave}
             componentId={componentId}
+            componentType={componentType}
           />
         </TabPane>
         <TabPane tab="表单属性" key="2">
           <FormAttrEditor />
-        </TabPane>
-        <TabPane tab="日期规则" key="3">
-          <FieldAttrEditor />
         </TabPane>
       </Tabs>
     </div>

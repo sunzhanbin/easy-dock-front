@@ -1,4 +1,5 @@
-import { FormRuleItem, fieldRule } from '@type';
+import { FormRuleItem, fieldRule, EventType } from '@type';
+import { flowVarsMap } from '@utils';
 
 export interface fieldRulesItem {
   condition: fieldRule[];
@@ -10,7 +11,7 @@ export interface formRulesItem {
   watch: string[];
   visible?: boolean;
   value?: null | string | number | Date;
-  subtype?: number; // 0 | 1 | 2 => 显隐 | 启停 | 联动；
+  subtype?: EventType; //0| 1 | 2 | 3 =>设值| 显隐 | 联动 | 启用禁用
   type?: string; // init | change | blur | panelChange
 }
 
@@ -26,10 +27,11 @@ export interface fieldRulesReturn {
   [k: string]: fieldRulesItem;
 }
 
-export const convertFormRules = (data: FormRuleItem[] = [], components: { config: any; props: any }[]) => {
+export const convertFormRules = (data: FormRuleItem[], components: { config: any; props: any }[]) => {
   const fieldRulesObj: any = {};
   const componentList = components.map((v) => v.config);
-  function setFieldRules(fieldName: string, value: any, item: any, type: string, subtype: number) {
+
+  function setFieldRules(fieldName: string, value: any, item: any, type: string, subtype: EventType) {
     const obj = {
       watch: [].concat(value),
       condition: item,
@@ -42,9 +44,12 @@ export const convertFormRules = (data: FormRuleItem[] = [], components: { config
       fieldRulesObj[fieldName] = [obj];
     }
   }
-  data?.map((item: any) => {
-    const { formChangeRule, type, subtype = 0 } = item;
-    if (type == 'change' && subtype == 0) {
+
+  // 表单规则配置
+  data?.forEach((item: any) => {
+    const { formChangeRule, type, subtype = EventType.Visible } = item;
+    if (type === 'change' && subtype === EventType.Visible) {
+      // 显隐事件
       const { hideComponents, showComponents, fieldRule } = formChangeRule;
       const watchList = [
         ...(new Set(
@@ -58,16 +63,16 @@ export const convertFormRules = (data: FormRuleItem[] = [], components: { config
       const component = componentList.find((v) => v.id === parentId);
       const parentFieldName = component?.fieldName || '';
 
-      [showComponents, hideComponents].map((components, index) => {
+      [showComponents, hideComponents].forEach((components, index) => {
         if (!components) return;
         const obj = {
           watch: watchList,
           condition: fieldRule,
           visible: index !== 1,
-          subtype: 0,
+          subtype: EventType.Visible,
           type,
         };
-        components.map((field: any) => {
+        components.forEach((field: any) => {
           if (parentId) {
             if (fieldRulesObj?.[parentFieldName]?.[field]) {
               fieldRulesObj[parentFieldName][field].push(obj);
@@ -85,22 +90,26 @@ export const convertFormRules = (data: FormRuleItem[] = [], components: { config
           }
         });
       });
-    } else if (type == 'change' && subtype == 1) {
+    } else if (type === 'change' && subtype === EventType.Union) {
+      // 联动事件
       const { fieldRule } = formChangeRule;
       fieldRule
         .flat(2)
         .filter(Boolean)
-        .map((item: any) => {
+        .forEach((item: any) => {
           const { fieldName, value } = item;
-          setFieldRules(fieldName, value, item, type, 1);
-          setFieldRules(value, fieldName, item, type, 1);
+          if (!Object.keys(flowVarsMap).includes(value)) {
+            setFieldRules(value, fieldName, item, type, 2);
+          }
+          setFieldRules(fieldName, value, item, type, 2);
         });
     }
   });
-  // panel配置公式计算
-  components?.map((com) => {
+  // 属性面板配置
+  components?.forEach((com) => {
     const { config } = com;
-    if (config.type === 'InputNumber' && config.defaultNumber) {
+    if (config.fieldName && config.type === 'InputNumber' && config.defaultNumber) {
+      // panel配置公式计算
       const { fieldName, defaultNumber } = config;
       const value = defaultNumber.calculateData;
       value && setFieldRules(fieldName, value, defaultNumber, 'change', 2);

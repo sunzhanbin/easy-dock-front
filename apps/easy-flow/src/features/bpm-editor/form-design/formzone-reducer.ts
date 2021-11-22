@@ -2,17 +2,16 @@ import { createSelector, PayloadAction } from '@reduxjs/toolkit';
 import { uniqueId } from 'lodash';
 import {
   ErrorItem,
-  FieldRuleItem,
   FieldType,
   FormDesign,
   FormField,
   FormFieldMap,
   FormRuleItem,
+  PropertyRuleItem,
   TConfigItem,
   TConfigMap,
 } from '@type';
 import { RootState } from '@/app/store';
-import formDesign from '.';
 
 function locateById(target: string, layout: Array<string[]>): [number, number] {
   let res: [number, number] = [-1, -1];
@@ -151,8 +150,7 @@ const reducers = {
     action: PayloadAction<{ id: string; config: FormField; isEdit?: boolean; isValidate?: boolean }>,
   ) {
     const { id, config, isEdit, isValidate } = action.payload;
-    const componentConfig = id.startsWith('DescText') ? Object.assign({}, config, { fieldName: config.id }) : config;
-    state.byId[id] = componentConfig;
+    state.byId[id] = id.startsWith('DescText') ? Object.assign({}, config, { fieldName: config.id }) : config;
     // 如果改变控件宽度后导致整行的宽度大于100%,则需要改变layout布局以实现换行
     if (isEdit) {
       const [rowIndex, colIndex] = locateById(id, state.layout);
@@ -222,9 +220,9 @@ const reducers = {
     state.isDirty = true;
     return state;
   },
-  setFieldRules(state: FormDesign, action: PayloadAction<{ fieldRules: FieldRuleItem[] }>) {
-    const { fieldRules } = action.payload;
-    state.fieldRules = fieldRules;
+  setPropertyRules(state: FormDesign, action: PayloadAction<{ propertyRules: PropertyRuleItem[] }>) {
+    const { propertyRules } = action.payload;
+    state.propertyRules = propertyRules;
     state.isDirty = true;
     return state;
   },
@@ -319,8 +317,9 @@ export const errorSelector = createSelector([(state: RootState) => state.formDes
 export const formRulesSelector = createSelector([(state: RootState) => state.formDesign], (formDesign) => {
   return formDesign.formRules;
 });
-export const fieldRulesSelector = createSelector([(state: RootState) => state.formDesign], (formDesign) => {
-  return formDesign.fieldRules;
+// 表单静态属性规则
+export const propertyRulesSelector = createSelector([(state: RootState) => state.formDesign], (formDesign) => {
+  return formDesign.propertyRules;
 });
 export const subComponentConfigSelector = createSelector(
   [(state: RootState) => state.formDesign],
@@ -342,7 +341,7 @@ export const {
   setIsDirty,
   setErrors,
   setFormRules,
-  setFieldRules,
+  setPropertyRules,
   setSubComponentConfig,
   editSubComponentProps,
 } = reducers;

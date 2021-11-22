@@ -37,7 +37,11 @@ export default function useLoadComponents(
 
     const compPromises = types.map(
       (type) =>
-        new Promise((resolve) => {
+        new Promise((resolve, reject) => {
+          if (!type) {
+            // reject(new Error('无效的控件类型'));
+            return;
+          }
           const categoryName = componentSchema[type].baseInfo.category;
           const categoryPath = categoryList.find((v) => v.key === categoryName)?.value;
           import(`../components/basic-shop/${categoryPath}/${type}/index`).then((comp) => {

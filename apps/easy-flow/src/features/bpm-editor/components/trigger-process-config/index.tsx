@@ -23,6 +23,7 @@ export interface TriggerProps {
 interface Process {
   id: number;
   name: string;
+  type?: number;
   version: { id: number };
 }
 
@@ -57,8 +58,8 @@ const TriggerProcessConfig = (props: TriggerProps) => {
     if (appId) {
       builderAxios.get<{ data: Process[] }>(`/subapp/${appId}/list/all/deployed`).then((res) => {
         const list = res.data
-          .map((v) => ({ id: v.id, name: v.name, version: v.version }))
-          .filter((v) => v.id !== currentSubAppId);
+          .filter((v) => v.type === 2 && v.id !== currentSubAppId)
+          .map((v) => ({ id: v.id, name: v.name, version: v.version }));
         setProcessList(list);
       });
     }

@@ -90,6 +90,7 @@ function AddNodeButton(props: AddNodeButtonProps) {
         </Popover>
       </div>
     );
+    // eslint-disable-next-line
   }, [showAutoNode, autoNodePopoverContent, handleAddNode, getPopupContainer, setShowAutoNode]);
 
   return (

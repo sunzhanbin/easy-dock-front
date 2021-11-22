@@ -22,11 +22,12 @@ interface RulesProps {
 const SerialRules = (props: RulesProps) => {
   const { id, value, onChange } = props;
   const serialMata = value?.serialMata;
+  console.log(value, 'seeee');
   // 编号规则类型
   const [type, setType] = useState<string>('custom');
   // 选择已有规则弹框
   const [ruleModal, setRuleModal] = useState<boolean>(false);
-  const [rules, setRules] = useState<RuleOption[]>(serialMata?.rules || []);
+  const [rules, setRules] = useState<RuleOption[]>(serialMata?.rules || initialRules);
   const [changeRules, setChangeRules] = useState<RuleOption[]>(serialMata?.changeRules || []);
   const [resetRules, setResetRules] = useState<RuleOption[]>([]);
   const [resetRuleName, setResetRuleName] = useState<string>('');
@@ -155,7 +156,7 @@ const SerialRules = (props: RulesProps) => {
     setType(value?.serialId ? 'inject' : 'custom');
     value?.serialId && setSerialId(value?.serialId);
     getSerial();
-  }, []);
+  }, [value?.serialId, getSerial]);
 
   const handleCancelEdit = useMemoCallback(() => {
     setEditStatus(false);

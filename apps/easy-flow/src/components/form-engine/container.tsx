@@ -5,6 +5,7 @@ import { FormValue } from '@type/detail';
 import { analysisFormChangeRule } from '@/utils';
 import { ContainerProvider } from './context';
 import { formRulesItem } from './utils';
+import { EventType } from '@/type';
 
 interface ContainerProps {
   rules: formRulesItem[];
@@ -16,7 +17,7 @@ interface ContainerProps {
 }
 
 export const Container = React.memo(({ children, rules, fieldName, form, type }: ContainerProps) => {
-  const visibleRules = useMemo(() => rules?.filter((item) => item?.subtype == 0), [rules]);
+  const visibleRules = useMemo(() => rules?.filter((item) => item?.subtype === EventType.Visible), [rules]);
   const [visible, setVisible] = useState<boolean>(true);
   const [reFreshKey, setReFreshKey] = useState<number>(0);
 
@@ -24,6 +25,7 @@ export const Container = React.memo(({ children, rules, fieldName, form, type }:
     const isMatchArr = rules?.filter((item) => {
       const { condition } = item;
       const formValues = form.getFieldsValue();
+      if (!Array.isArray(condition)) return null;
       return analysisFormChangeRule(condition, formValues);
     });
     if (isMatchArr?.length) {
@@ -33,7 +35,7 @@ export const Container = React.memo(({ children, rules, fieldName, form, type }:
     } else {
       setVisible(true);
     }
-  }, [visibleRules]);
+  }, [form, rules]);
   const watchFn = useCallback((rules: formRulesItem[]) => {
     return [
       ...new Set(
@@ -47,13 +49,11 @@ export const Container = React.memo(({ children, rules, fieldName, form, type }:
   }, []);
 
   useEffect(() => {
-    console.log(fieldName, 'fieldName');
     if (!rules) return;
     const watchs = watchFn(rules);
     const visibleWatchs = watchFn(visibleRules);
     // @Todo: watchs 需要再次过滤，因为 value 可能不是依赖项，需要从当前表单里筛选；
-    watchs?.map((item: any) => {
-      console.log('sub::', item);
+    watchs?.forEach((item: any) => {
       PubSub.subscribe(item, (msg: string) => {
         if (visibleWatchs.includes(msg)) {
           setComponentValueAndVisible();
@@ -64,11 +64,11 @@ export const Container = React.memo(({ children, rules, fieldName, form, type }:
     });
 
     return () => {
-      watchs?.map((item: any) => {
+      watchs?.forEach((item: any) => {
         PubSub.unsubscribe(item);
       });
     };
-  }, [rules, form]);
+  }, [rules, form, visibleRules, watchFn, setComponentValueAndVisible]);
 
   return (
     <ContainerProvider value={{ rules, form, fieldName, type, refresh: reFreshKey }}>

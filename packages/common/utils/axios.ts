@@ -1,11 +1,13 @@
 import { message } from 'antd';
 import Axios, { AxiosRequestConfig, AxiosInstance } from 'axios';
 
-function createAxios(config?: AxiosRequestConfig): any {
+import Auth from '@enc/sso';
+
+function createAxios(config?: AxiosRequestConfig): AxiosInstance {
   const instance = Axios.create({
     ...config,
     headers: {
-      auth: window.localStorage.getItem('auth'),
+      auth: Auth.getAuth(),
       ...(config ? config.headers : {}),
     },
   });
@@ -20,9 +22,10 @@ function createAxios(config?: AxiosRequestConfig): any {
       if (status === 500) {
         errMsg = '服务异常';
       } else if (status === 403) {
-        if (window.Auth && window.localStorage.getItem('auth')) {
+        // import Auth 之后 Auth 的实例会放入 window.Auth 中
+        if (window.Auth && window.Auth.getAuth()) {
           window.Auth.logout();
-        }
+        } 
 
         return Promise.reject({
           code: -1,

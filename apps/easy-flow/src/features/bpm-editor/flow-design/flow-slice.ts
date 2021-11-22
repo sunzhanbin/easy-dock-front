@@ -253,6 +253,9 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
                 roleIds.add(role);
               });
           }
+          if (node.type === NodeType.FillNode || node.type === NodeType.AuditNode) {
+            (node.dueConfig?.notice.users || []).forEach((v) => userIds.add(v));
+          }
 
           const fieldsAuths: FieldAuthsMap = {};
           // 舍弃冗余字段

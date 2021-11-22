@@ -15,7 +15,7 @@ const InputComponent = (props: InputProps & { unique: boolean } & { [key: string
 
   return (
     <EventHoc>
-      <BaseInput {...props}/>
+      <BaseInput {...props} />
     </EventHoc>
   );
 };
