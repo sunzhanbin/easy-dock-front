@@ -1,7 +1,7 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
-import appManagerSlice from '@/views/app-manager/index.slice';
-import appsOrchestrationApi from '@utils/fetch';
+import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import appManagerSlice from "@/views/app-manager/index.slice";
+import appsOrchestrationApi from "@utils/fetch";
 
 export const store = configureStore({
   reducer: {
@@ -9,7 +9,7 @@ export const store = configureStore({
     appManager: appManagerSlice,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(appsOrchestrationApi.middleware)
+    getDefaultMiddleware().concat(appsOrchestrationApi.middleware),
 });
 
 export type AppDispatch = typeof store.dispatch;
