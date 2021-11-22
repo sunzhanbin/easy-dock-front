@@ -198,8 +198,8 @@ const ToDo: FC<{}> = () => {
         defaultSortOrder: 'descend' as 'descend',
         sorter: true,
         render(_: string, record: TodoItem) {
-          const { taskCreateTime } = record;
-          return moment(taskCreateTime).format('YYYY-MM-DD HH:mm');
+          const { startTime } = record;
+          return moment(startTime).format('YYYY-MM-DD HH:mm');
         },
       },
     ];

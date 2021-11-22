@@ -177,7 +177,7 @@ export const Card: FC<CardProps> = ({ rowIndex, row, moveCard }) => {
               span={getColSpace(id)}
             >
               <SourceBox
-                type={id ? byId[id].type : ''}
+                type={id ? byId?.[id]?.type : ''}
                 config={byId[id]}
                 moveConfig={getMoveConfig(rowIndex, colIndex)}
                 id={id}

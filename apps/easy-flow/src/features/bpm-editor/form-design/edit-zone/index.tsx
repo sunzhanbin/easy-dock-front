@@ -42,7 +42,7 @@ const EditZone = () => {
   const [initValues, setInitValues] = useState({});
   const fieldType = useMemo<string>(() => {
     if (formDesign.selectedField && byId) {
-      return byId?.[formDesign.selectedField].type;
+      return byId?.[formDesign.selectedField]?.type || '';
     }
     return '';
   }, [formDesign.selectedField, byId]);

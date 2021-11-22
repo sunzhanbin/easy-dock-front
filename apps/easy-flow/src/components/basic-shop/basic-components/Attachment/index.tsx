@@ -44,6 +44,9 @@ const Attachment = (
   });
 
   useEffect(() => {
+    if (!typeRestrict) {
+      return;
+    }
     const { types } = typeRestrict;
     const exceptCustom: string[] = types?.filter((item) => item !== 'custom') || [];
     const fileTypeList =
@@ -57,8 +60,7 @@ const Attachment = (
         .flat(2)
         .filter(Boolean);
     setFileTypeList(fileTypeList);
-    console.log(fileTypeList, 'ggggg');
-  }, [fileMap]);
+  }, [fileMap, typeRestrict]);
 
   const handleChange = useMemoCallback(({ file }: UploadChangeParam) => {
     const list = [...fileList];
