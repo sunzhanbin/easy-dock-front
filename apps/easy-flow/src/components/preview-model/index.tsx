@@ -138,8 +138,8 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
       {loading && <Loading className={styles.loading} />}
       <div className="content">
         <div className={styles.background}>
-          <div className={styles.left} style={{ backgroundImage: `url(${leftImage})` }}></div>
-          <div className={styles.right} style={{ backgroundImage: `url(${rightImage})` }}></div>
+          <div className={styles.left} style={{ backgroundImage: `url(${leftImage})` }} />
+          <div className={styles.right} style={{ backgroundImage: `url(${rightImage})` }} />
         </div>
         <div className={styles['start-form-wrapper']}>
           <div className={classnames(styles.form)} style={{ height: `${document.body.clientHeight - 124}px` }}>
