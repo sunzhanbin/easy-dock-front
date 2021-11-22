@@ -12,15 +12,29 @@ type FileValue = {
   fileList?: UploadFile[];
 };
 
+type TypeRestrictProps = {
+  enable?: boolean;
+  types?: string[];
+  custom?: string[];
+};
+
 const Attachment = (
-  props: UploadProps & { colSpace?: string; value?: FileValue; onChange?: (value: FileValue) => void },
+  props: UploadProps & { colSpace?: string; value?: FileValue; onChange?: (value: FileValue) => void } & {
+    typeRestrict: TypeRestrictProps;
+  } & { fileMap: { [key: string]: string[] } },
 ) => {
-  const { maxCount = 5, colSpace = '4', value, disabled, onChange } = props;
+  const { maxCount = 5, colSpace = '4', value, disabled, onChange, fileMap, typeRestrict } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [fileTypeList, setFileTypeList] = useState<string[]>([]);
   // 校验文件类型和大小
   const checkoutFile = useMemoCallback((file: File) => {
-    const { size } = file;
+    const { size, name } = file;
+    const extension = name.replace(/.+\./, '.');
+    if (!name || !fileTypeList.includes(extension)) {
+      message.error('当前文件上传类型有误，请重新上传');
+      return false;
+    }
     const limitSize = 1024 * 1024 * 20; //20M
     if (size > limitSize) {
       message.error('您所上传的图片超过20M，请调整后上传');
@@ -28,6 +42,23 @@ const Attachment = (
     }
     return true;
   });
+
+  useEffect(() => {
+    const { types } = typeRestrict;
+    const exceptCustom: string[] = types?.filter((item) => item !== 'custom') || [];
+    const fileTypeList =
+      fileMap &&
+      Object.entries(fileMap)
+        ?.map(([key, value]: any) => {
+          if (exceptCustom.includes(key)) {
+            return value?.map((item: string) => `.${item}`);
+          }
+        })
+        .flat(2)
+        .filter(Boolean);
+    setFileTypeList(fileTypeList);
+    console.log(fileTypeList, 'ggggg');
+  }, [fileMap]);
 
   const handleChange = useMemoCallback(({ file }: UploadChangeParam) => {
     const list = [...fileList];
@@ -120,6 +151,7 @@ const Attachment = (
   return (
     <div className={styles.attachment} ref={containerRef}>
       <Upload
+        accept={fileTypeList?.join(',')}
         listType="picture"
         disabled={disabled}
         maxCount={maxCount}
@@ -129,7 +161,7 @@ const Attachment = (
         showUploadList={{
           showDownloadIcon: true,
           showRemoveIcon: true,
-          removeIcon:<Icon type="shanchu"/>
+          removeIcon: <Icon type="shanchu" />,
         }}
         beforeUpload={handleBeforeUpload}
         onChange={handleChange}

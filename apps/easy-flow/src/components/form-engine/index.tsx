@@ -16,6 +16,7 @@ import Container from './container';
 import { convertFormRules } from './utils';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { debounce } from 'lodash';
+import { getFilesType } from '@apis/form';
 
 type FieldsVisible = { [fieldId: string]: boolean };
 
@@ -81,10 +82,32 @@ const FormDetail = React.forwardRef(function FormDetail(
   // 获取组件源码
   const compSources = useLoadComponents(componentTypes);
 
-  useEffect(() => {
+  const getFilesTypeList = async () => {
+    try {
+      const ret = await getFilesType();
+      const fileMap: { [key: string]: string[] } = {};
+      ret.data.forEach((item: { code: string; suffixes: string[] }) => {
+        fileMap[item.code] = item.suffixes;
+      });
+      return fileMap;
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  // @ts-ignore
+  useEffect(async () => {
     const visbles: FieldsVisible = {};
     const comMaps: { [key: string]: FormMeta['components'][number] } = {};
     const formValues: FormProps['initialValue'] = {};
+    if (componentTypes.includes('Attachment')) {
+      const fileMap = await getFilesTypeList();
+      data.components.map((comp) => {
+        if (comp.config.type === 'Attachment') {
+          comp.props.fileMap = fileMap;
+        }
+      });
+    }
     data.components.forEach((com) => {
       const { fieldName, id, precision, scope, daterange } = com.config;
 

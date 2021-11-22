@@ -4,7 +4,7 @@ import styles from '../comp-attr-editor/index.module.scss';
 import { useAppSelector } from '@app/hooks';
 import { componentPropsSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 import { DateField } from '@type';
-import moment, { Moment } from 'moment';
+import { Moment } from 'moment';
 import { Icon } from '@common/components';
 import DatePicker from '../../date-picker';
 import { FormInstance } from 'antd/es';
@@ -39,7 +39,9 @@ const DateRange = ({ id, componentId }: DateRangeProps) => {
   }, [formatType]);
 
   const handleDisabledDate = (current: Moment, index: string, form: FormInstance) => {
-    const { daterange } = form.getFieldsValue();
+    const {
+      datelimit: { daterange },
+    } = form.getFieldsValue();
     if (index === 'prev') {
       return current && current > daterange.max;
     } else if (index === 'next') {
@@ -52,14 +54,14 @@ const DateRange = ({ id, componentId }: DateRangeProps) => {
     <Form.Item noStyle shouldUpdate>
       {(form: FormInstance<any>) => {
         const isChecked = form.getFieldValue('datelimit');
-        if (!isChecked) {
+        if (!isChecked || !isChecked.enable) {
           return null;
         }
         return (
           <div className={styles.dateRange}>
             <p className={styles.tips}>此处限制与表单静态规则冲突时，以表单静态规则为准。</p>
             <div className={styles.limitRange}>
-              <Form.Item className={styles.Item} name={[id, 'min']}>
+              <Form.Item className={styles.Item} name={['datelimit', id, 'min']}>
                 <DatePicker
                   size="large"
                   placeholder="最早日期"
@@ -69,7 +71,7 @@ const DateRange = ({ id, componentId }: DateRangeProps) => {
                 />
               </Form.Item>
               <span className={styles.text}>~</span>
-              <Form.Item className={styles.Item} name={[id, 'max']}>
+              <Form.Item className={styles.Item} name={['datelimit', id, 'max']}>
                 <DatePicker
                   size="large"
                   placeholder="最晚日期"

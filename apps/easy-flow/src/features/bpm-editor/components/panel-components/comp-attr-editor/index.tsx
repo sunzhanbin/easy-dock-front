@@ -19,6 +19,8 @@ import NumberOption from '../number-options';
 import AllowDecimal from '../allow-decimal';
 import LimitRange from '../limit-range';
 import DateRange from '../date-range';
+import { LABEL_INCLUDE_CHECKBOX, LABEL_LINKED_RULES } from '@utils/const';
+import FilesType from '@/features/bpm-editor/components/panel-components/files-type';
 
 const { Option } = Select;
 
@@ -99,9 +101,10 @@ const componentMap: { [k: string]: (props: { [k: string]: any }) => ReactNode } 
 
 const FormItemWrap = (props: ComponentProps) => {
   const { id, label, required, type, requiredMessage, rules, children, componentId } = props;
-  if (type === 'AllowDecimal' || type === 'LimitNum' || type === 'limitDate') {
+
+  if (LABEL_INCLUDE_CHECKBOX.includes(type)) {
     return (
-      <Form.Item name={id} valuePropName="checked">
+      <Form.Item name={[id, 'enable']} valuePropName="checked">
         <Checkbox>{label}</Checkbox>
       </Form.Item>
     );
@@ -115,6 +118,10 @@ const FormItemWrap = (props: ComponentProps) => {
   }
   if (type === 'daterange' && componentId) {
     return <DateRange id={id} componentId={componentId} />;
+  }
+
+  if (type === 'filetype' && componentId) {
+    return <FilesType id={id} componentId={componentId} />;
   }
   return (
     <Form.Item
@@ -172,20 +179,7 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
         onValuesChange={handleChange}
       >
         {config.map(
-          ({
-            key,
-            label,
-            type,
-            range,
-            placeholder,
-            required,
-            requiredMessage,
-            rules,
-            max,
-            min,
-            precision,
-            checked,
-          }) => {
+          ({ key, label, type, range, placeholder, required, requiredMessage, rules, max, min, precision }) => {
             const props: { [k: string]: any } = {
               placeholder,
               range,
@@ -195,18 +189,11 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
               min,
               precision,
               type,
-              checked,
               componentType,
               parentId: componentId,
             };
             const component =
-              type !== 'AllowDecimal' &&
-              type !== 'precision' &&
-              type !== 'LimitNum' &&
-              type !== 'limit' &&
-              type !== 'limitDate' &&
-              type !== 'daterange' &&
-              componentMap[type](props);
+              ![...LABEL_INCLUDE_CHECKBOX, ...LABEL_LINKED_RULES].includes(type) && componentMap[type](props);
 
             return (
               <Fragment key={key}>
