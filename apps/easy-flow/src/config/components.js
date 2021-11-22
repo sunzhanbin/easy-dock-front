@@ -133,7 +133,7 @@ const serialRule = {
   },
   type: 'serialRules',
   direction: 'vertical',
-  required: true,
+  required: false,
   isProps: false,
 };
 
@@ -207,7 +207,9 @@ const numberOption = {
 const allowDecimal = {
   key: 'decimal',
   label: '允许小数',
-  defaultValue: false,
+  defaultValue: {
+    enable: false,
+  },
   type: 'allowDecimal',
   required: false,
   isProps: true,
@@ -215,7 +217,7 @@ const allowDecimal = {
 
 const decimalCount = {
   key: 'precision',
-  defaultValue: 0,
+  defaultValue: 1,
   type: 'precision',
   required: false,
   isProps: true,

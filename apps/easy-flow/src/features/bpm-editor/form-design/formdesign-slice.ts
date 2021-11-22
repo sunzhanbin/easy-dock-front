@@ -21,7 +21,7 @@ import {
 } from './formzone-reducer';
 import { ConfigItem, ErrorItem, FieldType, FormDesign, FormField, FormMeta } from '@/type';
 import { loadComponents } from './toolbox/toolbox-reducer';
-import { validateFieldName, validateLabel } from './validate';
+import { validateFieldName, validateHasChecked, validateLabel } from './validate';
 import { RootState } from '@/app/store';
 import { axios } from '@/utils';
 import { message } from 'antd';
@@ -84,17 +84,16 @@ export const {
 
 export default formDesign.reducer;
 
-const validComponentConfig = (config: ConfigItem) => {
+const validComponentConfig = (config: ConfigItem, props: ConfigItem) => {
   const { id, label = '', fieldName = '' } = config;
+  debugger;
   const errorItem: ErrorItem = { id, content: [] };
   const nameError = validateFieldName(fieldName);
   const labelError = validateLabel(label);
-  if (nameError) {
-    errorItem.content.push(nameError);
-  }
-  if (labelError) {
-    errorItem.content.push(labelError);
-  }
+  const propsError = validateHasChecked(props);
+  nameError && errorItem.content.push(nameError);
+  labelError && errorItem.content.push(labelError);
+  propsError && errorItem.content.push(propsError);
   return errorItem.content.length > 0 ? errorItem : null;
 };
 type SaveParams = {
@@ -133,6 +132,7 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
           canSubmit: type !== 'DescText',
           multiple: type === 'Checkbox' || (['Select', 'Member'].includes(type) && byId[id].multiple),
         };
+        debugger;
 
         const props: ConfigItem = { type, id, multiple: type === 'Checkbox' };
         componentConfig?.forEach(({ isProps, key }) => {
@@ -146,7 +146,9 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
           }
         });
         // 校验编辑的控件属性
-        const errorItem = validComponentConfig(config);
+        const errorItem = validComponentConfig(config, props);
+        // 校验props中label带勾选控件属性
+
         if (errorItem) {
           errors.push(errorItem);
         }

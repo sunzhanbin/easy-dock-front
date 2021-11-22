@@ -10,6 +10,15 @@ const AllowDecimal = ({ id }: { id: string }) => {
         if (!isChecked || !isChecked.enable) {
           return null;
         }
+        if (!isChecked?.[id]) {
+          form.setFieldsValue({
+            decimal: {
+              ...isChecked,
+              precision: 1,
+            },
+          });
+        }
+
         return (
           <div className={styles.allowDecimal}>
             <span className={styles.text}>限制</span>
