@@ -12,7 +12,7 @@ import {
 import FormEngine from '@components/form-engine';
 import { Datasource, FormMeta } from '@type/detail';
 import { AuthType, FieldAuthsMap } from '@type/flow';
-import { ComponentConfig, FieldType, FormField, FormFieldMap, InputField, InputNumberField, RadioField } from '@/type';
+import { ComponentConfig, FormField, FormFieldMap, InputField, InputNumberField, RadioField } from '@/type';
 import { fetchDataSource } from '@/apis/detail';
 import { useSubAppDetail } from '@/app/app';
 import styles from './index.module.scss';

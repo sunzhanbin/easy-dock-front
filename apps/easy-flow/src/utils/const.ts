@@ -30,4 +30,4 @@ export const initialRules: RuleOption[] = [
 // 属性面板panel定义label是否带checkbox
 export const LABEL_INCLUDE_CHECKBOX = ['allowDecimal', 'limitNum', 'limitDate', 'files'];
 
-export const LABEL_LINKED_RULES = ['precision', 'limit', 'daterange', 'filetype'];
+export const LABEL_LINKED_RULES = ['precision', 'numrange', 'daterange', 'filetype'];

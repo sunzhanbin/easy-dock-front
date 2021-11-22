@@ -113,7 +113,7 @@ const FormItemWrap = (props: ComponentProps) => {
     return <AllowDecimal id={id} />;
   }
 
-  if (type === 'limit') {
+  if (type === 'numrange') {
     return <LimitRange id={id} />;
   }
   if (type === 'daterange' && componentId) {
