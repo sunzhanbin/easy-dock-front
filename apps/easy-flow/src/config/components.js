@@ -370,13 +370,13 @@ const components = {
   },
   Tabs: {
     baseInfo: {
-      name: 'tab',
+      name: '标签页 ',
       icon: 'tabcaise',
       category: '基础控件',
       version: '1.0',
       type: 'Tabs',
     },
-    config: [fieldName, getLabel('tab页'), desc, fieldManage, colSpace],
+    config: [fieldName, getLabel('标签页 '), desc, fieldManage, colSpace],
   },
   Image: {
     baseInfo: {

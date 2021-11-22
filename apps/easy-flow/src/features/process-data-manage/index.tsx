@@ -1,7 +1,7 @@
 import { memo, useState, useEffect, useRef, useMemo } from 'react';
 import moment from 'moment';
 import { debounce } from 'lodash';
-import { Select, Form, Checkbox, Table, Tooltip, message } from 'antd';
+import { Select, Form, Checkbox, Table, Tooltip, message, Popover } from 'antd';
 import type { TablePaginationConfig, TableProps } from 'antd/lib/table';
 import { SorterResult } from 'antd/lib/table/interface';
 import { SubappShort, AppStatus, SubAppType } from '@type/subapp';
@@ -12,6 +12,7 @@ import { FieldType } from '@type/form';
 import { exportFile, runtimeAxios } from '@utils';
 import { Icon } from '@common/components';
 import StateTag from '@/features/bpm-editor/components/state-tag';
+import { omit } from 'lodash';
 import styles from './index.module.scss';
 
 const useMock = false;
@@ -102,6 +103,36 @@ const DataManage = () => {
 
   const [tableColumns, setTableColumns] = useState(baseColumns);
 
+  const renderContent = useMemoCallback((data: { [k: string]: any }[], keyList: string[]) => {
+    const nameMap = data.shift();
+    if (!nameMap) {
+      return <div>暂无数据</div>;
+    }
+    return (
+      <div className={styles['pop-container']}>
+        <div className={styles.header}>
+          {keyList.map((key) => (
+            <div className={styles.cell}>{nameMap[key]}</div>
+          ))}
+        </div>
+        <div className={styles.content}>
+          {data.map((field, index) => {
+            if (!field) {
+              return null;
+            }
+            return (
+              <div className={styles.row}>
+                {keyList.map((key) => {
+                  return <div>{field[key]}</div>;
+                })}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  });
+
   const fetchDatasource = useMemoCallback(async () => {
     setLoading(true);
 
@@ -136,15 +167,9 @@ const DataManage = () => {
 
       if (fieldResponse) {
         shouldReFetchFormFields.current = false;
-        currentFields = (fieldResponse.data || []).filter((field) => {
-          return (
-            field.type !== 'Attachment' &&
-            field.type !== 'DescText' &&
-            field.type !== 'Image' &&
-            field.type !== 'Tabs' &&
-            field.type !== 'FlowData'
-          );
-        });
+        // 不展示的控件类型
+        const excludeTypeList: string[] = ['Attachment', 'DescText', 'Image', 'FlowData'];
+        currentFields = (fieldResponse.data || []).filter((field) => !excludeTypeList.includes(field.type));
 
         const dynamicColumns: TableProps<TableDataBase>['columns'] = currentFields.map((field) => {
           let tableKey = `formData.${field.field}`;
@@ -154,8 +179,35 @@ const DataManage = () => {
             dataIndex: tableKey,
             width: 150,
           };
-
-          if (field.type === 'Member') {
+          if (field.type === 'Tabs') {
+            tableColumn.render = (_: string, data: TableDataBase) => {
+              const components = (field as any).components;
+              if (!components || components?.length === 0) {
+                return;
+              }
+              const tabData: any[] = [];
+              const nameMap: { [k: string]: string } = {};
+              const keyList: string[] = [];
+              components.forEach((com: any) => {
+                nameMap[com.field] = com.name;
+                keyList.push(com.field);
+              });
+              tabData.push(nameMap);
+              const compData = (data.formData[field.field] as any[]).map((item) => omit(item, ['__title__', 'key']));
+              tabData.push(...compData);
+              return (
+                <Popover
+                  placement="bottom"
+                  trigger="click"
+                  title={null}
+                  content={renderContent(tabData, keyList)}
+                  getPopupContainer={(node) => node}
+                >
+                  <div className={styles['tab-detail']}>查看详情</div>
+                </Popover>
+              );
+            };
+          } else if (field.type === 'Member') {
             tableColumn.render = (_: string, data: TableDataBase) => {
               const member = data.formData[field.field] || field.defaultValue;
               if (!member) return null;
