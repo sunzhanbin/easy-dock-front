@@ -1,7 +1,7 @@
 import { message } from 'antd';
 import Axios, { AxiosRequestConfig, AxiosInstance } from 'axios';
 
-function createAxios(config?: AxiosRequestConfig): AxiosInstance {
+function createAxios(config?: AxiosRequestConfig): any {
   const instance = Axios.create({
     ...config,
     headers: {
