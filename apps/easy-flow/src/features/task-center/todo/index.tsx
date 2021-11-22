@@ -12,6 +12,7 @@ import useAppId from '@/hooks/use-app-id';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { setTodoNum, appSelector } from '../taskcenter-slice';
 import { Icon } from '@common/components';
+import TimeoutState from '../components/timeout-state';
 import { debounce, throttle } from 'lodash';
 
 const { RangePicker } = DatePicker;
@@ -173,8 +174,13 @@ const ToDo: FC<{}> = () => {
         key: 'stay',
         width: '15%',
         render(_: string, record: TodoItem) {
-          const { taskCreateTime } = record;
-          return <div className={styles.stayTime}>{getStayTime(taskCreateTime)}</div>;
+          const { taskCreateTime, dueState } = record;
+          return (
+            <div className={styles.stayTime}>
+              <div className={styles.time}>{getStayTime(taskCreateTime)}</div>
+              {dueState === 1 && <TimeoutState className={styles.timeout} />}
+            </div>
+          );
         },
       },
       {
