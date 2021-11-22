@@ -1,12 +1,12 @@
-import React, { memo, useEffect, useMemo, useState, useCallback } from 'react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import { Col, Form, FormInstance, Row } from 'antd';
 import classNames from 'classnames';
 import { Rule } from 'antd/lib/form';
 import useLoadComponents from '@/hooks/use-load-components';
-import { AllComponentType, Datasource, FormRuleItem } from '@type';
+import { AllComponentType, Datasource, EventType, FormRuleItem } from '@type';
 import { AuthType, FieldAuthsMap } from '@type/flow';
 import { FormMeta, FormValue } from '@type/detail';
-import { runtimeAxios } from '@/utils';
+import { analysisFormChangeRule, runtimeAxios } from '@/utils';
 import LabelContent from '../label-content';
 import styles from './index.module.scss';
 import { Loading } from '@common/components';
@@ -14,6 +14,9 @@ import { DataConfig, ParamSchem } from '@/type/api';
 import PubSub from 'pubsub-js';
 import Container from './container';
 import { convertFormRules } from './utils';
+import useMemoCallback from '@common/hooks/use-memo-callback';
+import { debounce } from 'lodash';
+import { getFilesType } from '@apis/form';
 
 type FieldsVisible = { [fieldId: string]: boolean };
 
@@ -79,10 +82,32 @@ const FormDetail = React.forwardRef(function FormDetail(
   // 获取组件源码
   const compSources = useLoadComponents(componentTypes);
 
-  useEffect(() => {
+  const getFilesTypeList = async () => {
+    try {
+      const ret = await getFilesType();
+      const fileMap: { [key: string]: string[] } = {};
+      ret.data.forEach((item: { code: string; suffixes: string[] }) => {
+        fileMap[item.code] = item.suffixes;
+      });
+      return fileMap;
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  // @ts-ignore
+  useEffect(async () => {
     const visbles: FieldsVisible = {};
     const comMaps: { [key: string]: FormMeta['components'][number] } = {};
     const formValues: FormProps['initialValue'] = {};
+    if (componentTypes.includes('Attachment')) {
+      const fileMap = await getFilesTypeList();
+      data.components.map((comp) => {
+        if (comp.config.type === 'Attachment') {
+          comp.props.fileMap = fileMap;
+        }
+      });
+    }
     data.components.forEach((com) => {
       const { fieldName, id, precision, scope, daterange } = com.config;
 
@@ -113,68 +138,111 @@ const FormDetail = React.forwardRef(function FormDetail(
     setShowForm(true);
   }, [data, fieldsAuths, initialValue, form]);
 
+  const callInterfaceList = useMemoCallback((ruleList: DataConfig[], formValues: any) => {
+    const formDataList: { name: string; value: any }[] = (Object.keys(formValues) || [])
+      .filter((name) => formValues[name] !== undefined)
+      .map((name) => {
+        return { name, value: formValues[name] };
+      });
+    // 返回值映射列表
+    const respListMap: { fieldName: string; name: string }[][] = [];
+    const promiseList: Promise<any>[] = [];
+    ruleList.forEach((rule) => {
+      const requestMapList = rule.request.required
+        .concat(rule.request.customize)
+        .map((item) => {
+          const { map } = item;
+          if (!map) {
+            return '';
+          }
+          return String(map?.match(/(?<=\$\{).*?(?=\})/));
+        })
+        .filter((name) => name !== 'null' && name !== '');
+      // 只要接口关联表单值得参数中有一个没有值就不请求接口
+      const isEmpty = requestMapList.some((name) => {
+        return formValues[name] === undefined;
+      });
+      if (isEmpty) {
+        return;
+      }
+      const resMap = ((rule?.response as ParamSchem[]) || []).map((res) => {
+        if (!res) {
+          return { fieldName: '', name: '' };
+        }
+        const { name, map: fieldName = '' } = res;
+        return { fieldName, name };
+      });
+      respListMap.push(resMap);
+      promiseList.push(runtimeAxios.post('/common/doHttpJson', { meta: rule, formDataList }));
+    });
+    setLoading(true);
+    Promise.all(promiseList)
+      .then((resList) => {
+        const formValues: { [k: string]: any } = {};
+        resList.forEach((res, index) => {
+          respListMap[index].forEach(({ fieldName, name }) => {
+            if (fieldName && name) {
+              // TODO 替换eval
+              // eslint-disable-next-line
+              formValues[fieldName] = eval(`res.${name}`);
+            }
+          });
+        });
+        form.setFieldsValue(formValues);
+      })
+      .catch((err) => {
+        console.error(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  });
+
   useEffect(() => {
     // 进入表单时请求接口
     if (initRuleList.length > 0) {
-      const formDataList: { name: string; value: any }[] = (Object.keys(initialValue) || []).map((name) => {
-        return { name, value: initialValue[name] };
-      });
-      // 返回值映射列表
-      const respListMap: { fieldName: string; name: string }[][] = [];
-      const promiseList: Promise<any>[] = [];
-      initRuleList.forEach((rule) => {
-        const requestMapList = rule.request.required
-          .concat(rule.request.customize)
-          .map((item) => {
-            const { map } = item;
-            if (!map) {
-              return '';
-            }
-            return String(map?.match(/(?<=\$\{).*?(?=\})/));
-          })
-          .filter((name) => name !== 'null' && name !== '');
-        // 只要接口关联表单值得参数中有一个没有值就不请求接口
-        const isEmpty = requestMapList.some((name) => {
-          return initialValue[name] === undefined;
-        });
-        if (isEmpty) {
-          return;
-        }
-        const resMap = ((rule?.response as ParamSchem[]) || []).map((res) => {
-          if (!res) {
-            return { fieldName: '', name: '' };
-          }
-          const { name, map: fieldName = '' } = res;
-          return { fieldName, name };
-        });
-        respListMap.push(resMap);
-        promiseList.push(runtimeAxios.post('/common/doHttpJson', { jsonObject: rule, formDataList }));
-      });
-      setLoading(true);
-      Promise.all(promiseList)
-        .then((resList) => {
-          const formValues: { [k: string]: any } = {};
-          resList.forEach((res, index) => {
-            respListMap[index].forEach(({ fieldName, name }) => {
-              if (fieldName && name) {
-                // TODO 替换eval
-                // eslint-disable-next-line
-                formValues[fieldName] = eval(`res.${name}`);
-              }
-            });
-          });
-          form.setFieldsValue(formValues);
-        })
-        .catch((err) => {
-          console.error(err);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+      callInterfaceList(initRuleList, initialValue);
     }
-  }, [form, initRuleList, initialValue]);
+  }, [initRuleList, initialValue]);
 
-  const onValuesChange = useCallback((changeValue: any, all: any) => {
+  const interfaceRules = useMemo(() => {
+    return (data.formRules?.filter((v) => v.subtype === EventType.Interface) || []).map((v) => {
+      const condition = v.formChangeRule?.fieldRule || [];
+      const interfaceConfig = v.formChangeRule?.interfaceConfig;
+      const watchList = [
+        ...(new Set(
+          condition
+            .flat(2)
+            .filter(Boolean)
+            .map((item: any) => item.fieldName),
+        ) as any),
+      ];
+      return { condition, watchList, interfaceConfig };
+    });
+  }, [data.formRules]);
+
+  const handleCallInterface = useMemoCallback(
+    debounce((key: string) => {
+      if (interfaceRules.length === 0) {
+        return;
+      }
+      const formValues = form.getFieldsValue();
+      const interfaceList = interfaceRules
+        .filter(({ condition, watchList }) => {
+          if (watchList.includes(key)) {
+            if (!Array.isArray(condition)) return null;
+            return analysisFormChangeRule(condition, formValues);
+          }
+        })
+        .map((v) => v.interfaceConfig!);
+      if (interfaceList?.length === 0) {
+        return;
+      }
+      callInterfaceList(interfaceList, formValues);
+    }, 500),
+  );
+
+  const onValuesChange = useMemoCallback((changeValue: any, all: any) => {
     // 此处不要进行setState操作   避免重复更新
     Object.entries(changeValue).forEach(([key, value]: any) => {
       if (value && !Array.isArray(value) && Object.values(value).length) {
@@ -188,8 +256,9 @@ const FormDetail = React.forwardRef(function FormDetail(
       } else {
         PubSub.publish(`${key}-change`, value);
       }
+      handleCallInterface(key);
     });
-  }, []);
+  });
 
   return (
     <Form

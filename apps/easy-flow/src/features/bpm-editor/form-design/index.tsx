@@ -34,7 +34,7 @@ const FormDesign: FC<{}> = () => {
         // 解析控件属性配置
         components.forEach(({ config, props }: ComponentConfig) => {
           const { id } = config;
-          const type = id.split('_')[0] as FieldType;
+          const type = byId[id]?.type || '';
           const componentConfig: ConfigItem = { type, id };
           const excludeKeys = ['version', 'rules', 'canSubmit'];
           Object.keys(props).forEach((key) => {

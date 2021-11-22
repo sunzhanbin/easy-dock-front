@@ -7,13 +7,13 @@ const AllowDecimal = ({ id }: { id: string }) => {
     <Form.Item noStyle shouldUpdate>
       {(form) => {
         const isChecked = form.getFieldValue('decimal');
-        if (!isChecked) {
+        if (!isChecked || !isChecked.enable) {
           return null;
         }
         return (
           <div className={styles.allowDecimal}>
             <span className={styles.text}>限制</span>
-            <Form.Item className={styles.formItem} name={id}>
+            <Form.Item className={styles.formItem} name={['decimal', id]}>
               <InputNumber size="large" min={1} max={10} placeholder="请输入" />
             </Form.Item>
             <span className={styles.text}>位</span>

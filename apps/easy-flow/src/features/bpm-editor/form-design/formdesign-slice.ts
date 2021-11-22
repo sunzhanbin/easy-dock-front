@@ -119,7 +119,7 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
     // 组装控件属性
     layout.forEach((row) => {
       row.forEach((id: string) => {
-        const type = <FieldType>(id.split('_')[0] || '');
+        const type = <FieldType>formDesign.byId[id].type || '';
         const version = schema[type]?.baseInfo.version || '';
         const componentConfig =
           type === 'DescText'

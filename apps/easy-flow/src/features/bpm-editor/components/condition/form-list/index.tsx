@@ -68,7 +68,10 @@ type RuleFormProps = {
   ruleIndex: number;
   isFormRule: boolean | undefined;
   onChange?: (blockIndex: number, ruleIndex: number, rule: fieldRule) => void;
-  loadDataSource?: (id: string) => Promise<{ key: string; value: string }[] | { data: { data: string[] } }>;
+  loadDataSource?: (
+    id: string,
+    parentId?: string,
+  ) => Promise<{ key: string; value: string }[] | { data: { data: string[] } }>;
 };
 const FormList = ({
   components,
@@ -96,10 +99,10 @@ const FormList = ({
     }
     return [];
   }, [components]);
-  const setDataSource = useMemoCallback((fieldName, fieldType) => {
+  const setDataSource = useMemoCallback((fieldName, fieldType, parentId?) => {
     if (loadDataSource && (fieldType === 'Select' || fieldType === 'Radio' || fieldType === 'Checkbox')) {
       setLoading(true);
-      loadDataSource(fieldName)
+      loadDataSource(fieldName, parentId)
         .then((res) => {
           if (res) {
             // 如果返回的是一个key-value数组,直接赋值给下拉选项
@@ -122,13 +125,10 @@ const FormList = ({
     setSymbol(undefined);
     setValue(undefined);
     const component = componentList.find((item) => item.fieldName === fieldName);
-    const fieldType = component && (component.type as string);
-    setDataSource(fieldName, fieldType);
-    const fieldRule = {
-      fieldName: fieldName,
-      fieldType: component?.type || rule.fieldType,
-      parentId: component?.parentId || rule.parentId,
-    };
+    const fieldType = (component?.type as string) || rule.fieldType;
+    const parentId = component?.parentId || rule.parentId;
+    setDataSource(fieldName, fieldType, parentId);
+    const fieldRule = { fieldName, fieldType, parentId };
     onChange && onChange(blockIndex, ruleIndex, fieldRule);
   });
   const changeSymbol = useMemoCallback((symbol) => {
@@ -159,7 +159,6 @@ const FormList = ({
     onChange && onChange(blockIndex, ruleIndex, fieldRule);
   });
   const changeValue = useMemoCallback((value) => {
-    console.log(value, 'vvv');
     setValue(value);
     const selectComponent = componentList.find((item) => item.fieldName === fieldName);
     const fieldRule = {
@@ -173,14 +172,14 @@ const FormList = ({
     onChange && onChange(blockIndex, ruleIndex, fieldRule);
   });
   const init = useMemoCallback(() => {
-    const { fieldName, symbol, value, fieldType, valueType } = rule;
+    const { fieldName, symbol, value, fieldType, valueType, parentId } = rule;
     setFieldName(fieldName);
     setSymbol(symbol);
     setValue(value);
     setValueType(valueType);
     if (fieldName) {
       const type = fieldType;
-      setDataSource(fieldName, type);
+      setDataSource(fieldName, type, parentId);
     }
   });
 

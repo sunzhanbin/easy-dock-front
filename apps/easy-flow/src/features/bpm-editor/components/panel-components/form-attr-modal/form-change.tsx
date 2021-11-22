@@ -23,8 +23,15 @@ const FormChange = () => {
   }, []);
   // 加载选项数据源
   const loadDataSource = useCallback(
-    (fieldName) => {
-      const component = componentList.find((item) => item.fieldName === fieldName);
+    (fieldName, parentId) => {
+      if (parentId) {
+        const parentComponent = componentList.find((v) => v.id === parentId) || {};
+        const components = (parentComponent as any).components || (parentComponent as any).props.components;
+        const component = components?.find((v: any) => v.config.fieldName === fieldName);
+        const dataSource = component?.config?.dataSource;
+        return loadFieldDatasource(dataSource);
+      }
+      const component = componentList.find((item) => item.fieldName === fieldName) || {};
       const { dataSource } = component as SelectField;
       return loadFieldDatasource(dataSource);
     },
@@ -86,7 +93,12 @@ const FormChange = () => {
             return (
               <>
                 <Form.Item label="流转条件" name="ruleValue" className={styles.condition}>
-                  <Condition data={Object.values(byId)} loadDataSource={loadDataSource} name="ruleValue" />
+                  <Condition
+                    data={Object.values(byId)}
+                    loadDataSource={loadDataSource}
+                    name="ruleValue"
+                    showTabs={true}
+                  />
                 </Form.Item>
                 <Form.Item label="显示控件" name="showComponents" className={styles.showComponents}>
                   <Select

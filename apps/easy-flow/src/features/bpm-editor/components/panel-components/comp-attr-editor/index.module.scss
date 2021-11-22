@@ -68,6 +68,29 @@
     }
   }
 
+  .fileWrapper {
+
+    :global {
+      .ant-select-item-option-content {
+        span:nth-child(1) {
+          color: #181F43;
+        }
+
+        span:nth-child(2) {
+          padding-left: 10px;
+          font-size: 12px;
+          letter-spacing: 1px;
+          color: rgba(24, 31, 67, 0.5);
+        }
+      }
+    }
+
+    .customType {
+      margin-bottom: 10px;
+    }
+  }
+
+
   .limitRange, .allowDecimal {
     display: flex;
 

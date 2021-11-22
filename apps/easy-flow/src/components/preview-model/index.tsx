@@ -52,7 +52,7 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
     const components: ComponentConfig[] = [];
     Object.keys(byId).forEach((id) => {
       const object = byId[id];
-      const type = id.split('_')[0] as FieldType;
+      const type = object.type;
       const component: ComponentConfig = { config: { type, id }, props: { type, id } };
       Object.keys(object).forEach((key) => {
         if (propsKey.includes(key)) {

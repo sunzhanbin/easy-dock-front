@@ -208,7 +208,7 @@ const allowDecimal = {
   key: 'decimal',
   label: '允许小数',
   defaultValue: false,
-  type: 'AllowDecimal',
+  type: 'allowDecimal',
   required: false,
   isProps: false,
 };
@@ -224,7 +224,7 @@ const limitNum = {
   key: 'limit',
   label: '限制数值范围',
   defaultValue: false,
-  type: 'LimitNum',
+  type: 'limitNum',
   required: false,
   isProps: false,
 };
@@ -258,6 +258,24 @@ const rangeDate = {
   type: 'daterange',
   required: false,
   isProps: false,
+};
+
+// 限制文件类型
+const files = {
+  key: 'typeRestrict',
+  label: '限制文件类型',
+  defaultValue: false,
+  type: 'files',
+  required: false,
+  isProps: true,
+};
+
+const filetype = {
+  key: 'filetype',
+  defaultValue: {},
+  type: 'filetype',
+  required: false,
+  isProps: true,
 };
 
 const components = {
@@ -378,7 +396,7 @@ const components = {
       version: '1.0',
       type: 'Attachment',
     },
-    config: [fieldName, getLabel('附件'), desc, getMaxCount(5, 1, 5), colSpace],
+    config: [fieldName, getLabel('附件'), desc, getMaxCount(5, 1, 5), files, filetype, colSpace],
   },
   SerialNum: {
     baseInfo: {
