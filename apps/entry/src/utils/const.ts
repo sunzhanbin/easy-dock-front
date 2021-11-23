@@ -1,21 +1,21 @@
 export const NavMenu = [
-  { 
-    name: '开始',
-    route: '/'
+  {
+    name: "开始",
+    route: "/",
   },
   {
-    name: '资产中心',
-    route: '/app-manager'
+    name: "资产中心",
+    route: "/app-manager",
   },
   {
-    name: '应用管理',
-    route: '/app-manager'
+    name: "应用管理",
+    route: "/app-manager",
   },
   {
-    name: '模板商城',
-    route: '/template-mall'
-  }
-]
+    name: "模板商城",
+    route: "/template-mall",
+  },
+];
 
 export const SCENE_IAMGES = {
   scene1: `scene1`,

@@ -1,15 +1,15 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { RootState, AppThunk } from '@/store';
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState, AppThunk } from "@/store";
 // import { fetchUser } from '@utils/apis';
 
 export interface AppManagerState {
   value: number;
-  status: 'idle' | 'loading' | 'failed';
+  status: "idle" | "loading" | "failed";
 }
 
 const initialState: AppManagerState = {
   value: 0,
-  status: 'idle',
+  status: "idle",
 };
 
 // The function below is called a thunk and allows us to perform async logic. It
@@ -27,7 +27,7 @@ const initialState: AppManagerState = {
 // );
 
 export const appManagerSlice = createSlice({
-  name: 'appManager',
+  name: "appManager",
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
@@ -60,7 +60,11 @@ export const appManagerSlice = createSlice({
   // },
 });
 
-export const { increment, decrement, incrementByAmount } = appManagerSlice.actions;
+export const {
+  increment,
+  decrement,
+  incrementByAmount,
+} = appManagerSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of

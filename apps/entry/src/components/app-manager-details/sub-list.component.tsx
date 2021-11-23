@@ -1,8 +1,8 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { Tabs, Input } from 'antd';
-import { useSelector } from 'react-redux';
-import { useFetchsubAppListQuery } from '@/http/app-manager.hooks';
-import { selectCurrentWorkspaceId } from '@/views/app-manager/index.slice';
+import React, { useCallback, useMemo, useState } from "react";
+import { Tabs, Input } from "antd";
+import { useSelector } from "react-redux";
+import { useFetchsubAppListQuery } from "@/http/app-manager.hooks";
+import { selectCurrentWorkspaceId } from "@/views/app-manager/index.slice";
 
 const { TabPane } = Tabs;
 
@@ -17,20 +17,24 @@ const SubListComponent = () => {
 
   const handleTabSearch = useCallback((value, event) => {
     event.preventDefault();
-    console.log('value', value)
-  }, [])
+    console.log("value", value);
+  }, []);
 
   const renderExtra = useMemo(() => {
     return (
       <>
-        <Input.Search onSearch={handleTabSearch}/>
+        <Input.Search onSearch={handleTabSearch} />
       </>
-    )
+    );
   }, [handleTabSearch]);
 
   return (
     <>
-      <Tabs activeKey={activeKey} onChange={handleTabsChange} tabBarExtraContent={renderExtra}>
+      <Tabs
+        activeKey={activeKey}
+        onChange={handleTabsChange}
+        tabBarExtraContent={renderExtra}
+      >
         <TabPane tab="全部" key="1">
           Content of Tab Pane 1
         </TabPane>
@@ -38,7 +42,7 @@ const SubListComponent = () => {
           {subApps?.map((item: any) => (
             <React.Fragment key={item.id}>
               {item.name}
-              <br/>
+              <br />
             </React.Fragment>
           ))}
         </TabPane>
@@ -56,7 +60,7 @@ const SubListComponent = () => {
         </TabPane>
       </Tabs>
     </>
-  )
+  );
 };
 
 export default SubListComponent;
