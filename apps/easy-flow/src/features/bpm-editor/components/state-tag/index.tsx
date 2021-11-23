@@ -23,6 +23,10 @@ const stateMap: { [k: number]: { className: string; text: string } } = {
     className: 'reject',
     text: '已驳回',
   },
+  6: {
+    className: 'doing',
+    text: '等待中',
+  },
 };
 
 const StateTag: FC<{ state: number }> = ({ state }) => {

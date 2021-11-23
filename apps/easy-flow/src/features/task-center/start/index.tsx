@@ -10,31 +10,10 @@ import useMemoCallback from '@common/hooks/use-memo-callback';
 import useAppId from '@/hooks/use-app-id';
 import { Icon } from '@common/components';
 import StateTag from '@/features/bpm-editor/components/state-tag';
+import { TASK_STATE_LIST } from '@/utils/const';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
-const stateList: { key: number; value: string }[] = [
-  {
-    key: 1,
-    value: '进行中',
-  },
-  {
-    key: 2,
-    value: '已终止',
-  },
-  {
-    key: 5,
-    value: '已驳回',
-  },
-  {
-    key: 4,
-    value: '已办结',
-  },
-  {
-    key: 3,
-    value: '已撤回',
-  },
-];
 
 const Start: FC<{}> = () => {
   const [form] = Form.useForm();
@@ -188,22 +167,21 @@ const Start: FC<{}> = () => {
       if (timeRange && timeRange[1]) {
         endTime = moment(timeRange[1]._d).valueOf();
       }
-      const params: { [K: string]: string | number } = {
+      const params: { [K: string]: any } = {
         appId,
-        pageIndex,
-        pageSize,
         sortDirection,
-        processName: flowName,
       };
+      const filter: { [K: string]: string | number } = { pageIndex, pageSize, processName: flowName };
       if (state) {
         params.state = +state;
       }
       if (startTime) {
-        params.startTime = startTime;
+        filter.startTime = startTime;
       }
       if (endTime) {
-        params.endTime = endTime;
+        filter.endTime = endTime;
       }
+      params.filter = filter;
       runtimeAxios
         .post('/task/myStart', params)
         .then((res) => {
@@ -259,6 +237,7 @@ const Start: FC<{}> = () => {
             name="start_form"
             labelAlign="left"
             labelCol={{ span: 3.5 }}
+            autoComplete="off"
             initialValues={{}}
           >
             <Form.Item label="流程名称" name="flowName" className="flowName">
@@ -274,7 +253,7 @@ const Start: FC<{}> = () => {
                   fetchData();
                 }}
               >
-                {stateList.map(({ key, value }) => (
+                {TASK_STATE_LIST.map(({ key, value }) => (
                   <Option key={key} value={key}>
                     {value}
                   </Option>

@@ -12,6 +12,7 @@ import { FieldType } from '@type/form';
 import { exportFile, runtimeAxios } from '@utils';
 import { Icon } from '@common/components';
 import StateTag from '@/features/bpm-editor/components/state-tag';
+import { TASK_STATE_LIST } from '@/utils/const';
 import { omit } from 'lodash';
 import styles from './index.module.scss';
 
@@ -66,7 +67,7 @@ const DataManage = () => {
   const [dataSource, setDataSource] = useState<any[]>();
   const formInititalValue: Omit<FormValue, 'subappId'> = useMemo(() => {
     return {
-      stateList: [1, 2, 3, 4, 5],
+      stateList: [1, 2, 3, 4, 5, 6],
       table: {
         current: 1,
         pageSize: 10,
@@ -491,11 +492,11 @@ const DataManage = () => {
 
         <Form.Item name="stateList">
           <Checkbox.Group>
-            <Checkbox value={1}>进行中</Checkbox>
-            <Checkbox value={2}>已终止</Checkbox>
-            <Checkbox value={3}>已撤回</Checkbox>
-            <Checkbox value={4}>已办结</Checkbox>
-            <Checkbox value={5}>已驳回</Checkbox>
+            {TASK_STATE_LIST.map(({ key, value }) => (
+              <Checkbox key={key} value={key}>
+                {value}
+              </Checkbox>
+            ))}
           </Checkbox.Group>
         </Form.Item>
 

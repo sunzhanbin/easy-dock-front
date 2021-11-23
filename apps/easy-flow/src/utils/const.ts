@@ -31,3 +31,30 @@ export const initialRules: RuleOption[] = [
 export const LABEL_INCLUDE_CHECKBOX = ['allowDecimal', 'limitNum', 'limitDate', 'files'];
 
 export const LABEL_LINKED_RULES = ['precision', 'numrange', 'daterange', 'filetype'];
+
+export const TASK_STATE_LIST: { key: number; value: string }[] = [
+  {
+    key: 1,
+    value: '进行中',
+  },
+  {
+    key: 2,
+    value: '已终止',
+  },
+  {
+    key: 3,
+    value: '已撤回',
+  },
+  {
+    key: 4,
+    value: '已办结',
+  },
+  {
+    key: 5,
+    value: '已驳回',
+  },
+  {
+    key: 6,
+    value: '等待中',
+  },
+];
