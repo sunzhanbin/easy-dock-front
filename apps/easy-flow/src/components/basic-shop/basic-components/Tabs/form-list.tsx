@@ -19,6 +19,7 @@ interface FormListProps {
   id: string;
   parentId: string;
   auth: FieldAuthsMap;
+  projectId: number;
   readonly: boolean | undefined;
 }
 
@@ -26,7 +27,7 @@ interface VisibleMap {
   [k: string]: boolean;
 }
 
-const FormList = ({ fields, id, parentId, auth = {}, readonly }: FormListProps) => {
+const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId }: FormListProps) => {
   const context = useContainerContext();
   const [visibleMap, setVisibleMap] = useState<VisibleMap>({});
   const componentTypes = useMemo(() => {
@@ -35,12 +36,7 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly }: FormListProps) 
   const optionComponents = useMemo(() => {
     return fields.filter((v) => ['Select', 'Radio', 'Checkbox'].includes(v.config.type)).map((v) => v.config);
   }, [fields]);
-  const subAppDetail = useSubAppDetail();
-  const projectId = useMemo(() => {
-    if (subAppDetail && subAppDetail.data && subAppDetail.data.app) {
-      return subAppDetail.data.app.project.id;
-    }
-  }, [subAppDetail]);
+  // const subAppDetail = useSubAppDetail();
   const compSources = useLoadComponents(componentTypes);
   const [dataSourceMap, setDataSourceMap] = useState<Datasource>({});
   useEffect(() => {

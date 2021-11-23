@@ -17,6 +17,7 @@ type PaneType = {
 interface TabProps {
   fieldName: string;
   auth: FieldAuthsMap;
+  projectId: number;
   formInstance?: FormInstance;
   components?: CompConfig[];
   readonly?: boolean;
@@ -24,11 +25,20 @@ interface TabProps {
   onChange?: (value: this['value']) => void;
 }
 
-const Tabs = ({ components = [], fieldName, auth, formInstance, value, readonly, onChange }: TabProps) => {
+const Tabs = ({ components = [], fieldName, auth, projectId, formInstance, value, readonly, onChange }: TabProps) => {
   const [form] = Form.useForm();
   const tabRef = useRef<HTMLDivElement>(null);
   const content = useMemoCallback((key: string) => {
-    return <FormList fields={components} id={key} parentId={fieldName} auth={auth} readonly={readonly} />;
+    return (
+      <FormList
+        fields={components}
+        id={key}
+        parentId={fieldName}
+        auth={auth}
+        readonly={readonly}
+        projectId={projectId}
+      />
+    );
   });
   const [panes, setPanes] = useState<PaneType[]>([]);
   const [activeKey, setActiveKey] = useState<string>();
@@ -93,9 +103,9 @@ const Tabs = ({ components = [], fieldName, auth, formInstance, value, readonly,
       return pane;
     });
     setPanes(panes);
-    if (list.length > 0) {
-      setActiveKey(list[0].key);
-    }
+    // if (list.length > 0) {
+    //   setActiveKey(list[0].key);
+    // }
   }, [value, content]);
   // 编辑态默认有个tab,用于展示编辑的控件
   useEffect(() => {

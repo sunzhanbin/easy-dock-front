@@ -32,6 +32,14 @@ type FormValue = {
   };
 };
 
+interface TableColumn {
+  key: string;
+  dataIndex: string;
+  title: string;
+  width: number;
+  render: (_: any, data: any) => React.ReactNode;
+}
+
 export type TableDataBase = {
   processInstanceId: string;
   state: 1 | 2 | 3 | 4 | 5;
@@ -103,35 +111,76 @@ const DataManage = () => {
 
   const [tableColumns, setTableColumns] = useState(baseColumns);
 
-  const renderContent = useMemoCallback((data: { [k: string]: any }[], keyList: string[]) => {
-    const nameMap = data.shift();
-    if (!nameMap) {
-      return <div>暂无数据</div>;
+  const renderMember = useMemoCallback((member?: number | number[]) => {
+    if (!member) return null;
+    let text;
+    if (Array.isArray(member)) {
+      text = member.map((id) => membersCacheRef.current[id].name).join(',');
+    } else {
+      text = membersCacheRef.current[member]?.name || '';
     }
-    return (
-      <div className={styles['pop-container']}>
-        <div className={styles.header}>
-          {keyList.map((key) => (
-            <div className={styles.cell}>{nameMap[key]}</div>
-          ))}
-        </div>
-        <div className={styles.content}>
-          {data.map((field, index) => {
-            if (!field) {
-              return null;
-            }
-            return (
-              <div className={styles.row}>
-                {keyList.map((key) => {
-                  return <div>{field[key]}</div>;
-                })}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    );
+    return <Text className={styles['dynamic-cell']} text={String(text)} getContainer={false} />;
   });
+
+  const renderDate = useMemoCallback((date: number | [number, number], tableColumn?: any) => {
+    if (!date) return null;
+    if (tableColumn) {
+      tableColumn.width = 180;
+    }
+    if (Array.isArray(date)) {
+      if (tableColumn) {
+        tableColumn.width = 360;
+      }
+      return date.map((ts) => moment(ts).format('YYYY-MM-DD HH:mm:ss')).join('至');
+    }
+    return moment(date).format('YYYY-MM-DD HH:mm:ss');
+  });
+
+  const renderText = useMemoCallback((value: string | string[]) => {
+    if (!value) {
+      return null;
+    }
+    let text;
+    if (Array.isArray(value)) {
+      text = value.join(',');
+    } else {
+      text = value;
+    }
+    return <Text className={styles['dynamic-cell']} text={String(text)} getContainer={false} />;
+  });
+
+  const renderContent = useMemoCallback(
+    (data: { [k: string]: any }[], componentList: { field: string; type: string }[]) => {
+      const nameMap = data.shift() || {};
+      const dataSource = data;
+      const columns: TableColumn[] = [];
+      componentList.forEach(({ field, type }) => {
+        columns.push({
+          key: field,
+          dataIndex: field,
+          title: nameMap[field],
+          width: 120,
+          render(_, data) {
+            if (type === 'Member') {
+              const member = data[field];
+              return renderMember(member);
+            } else if (type === 'Date') {
+              const date = data[field];
+              return renderDate(date);
+            } else {
+              const value = data[field];
+              return renderText(value);
+            }
+          },
+        });
+      });
+      return (
+        <div className={styles['pop-container']}>
+          <Table dataSource={dataSource} columns={columns} rowKey="key" pagination={false}></Table>
+        </div>
+      );
+    },
+  );
 
   const fetchDatasource = useMemoCallback(async () => {
     setLoading(true);
@@ -183,25 +232,32 @@ const DataManage = () => {
             tableColumn.render = (_: string, data: TableDataBase) => {
               const components = (field as any).components;
               if (!components || components?.length === 0) {
-                return;
+                return null;
               }
               const tabData: any[] = [];
               const nameMap: { [k: string]: string } = {};
               const keyList: string[] = [];
+              const componentList: { field: string; type: string }[] = [];
               components.forEach((com: any) => {
                 nameMap[com.field] = com.name;
                 keyList.push(com.field);
+                componentList.push({ field: com.field, type: com.type });
               });
               tabData.push(nameMap);
-              const compData = (data.formData[field.field] as any[]).map((item) => omit(item, ['__title__', 'key']));
+              let fieldData = data.formData?.[field.field];
+              if (!fieldData) {
+                return null;
+              }
+              fieldData = Array.isArray(fieldData) ? fieldData : JSON.parse(fieldData as string);
+              const compData = ((fieldData as any[]) || []).map((item) => omit(item, ['__title__']));
               tabData.push(...compData);
               return (
                 <Popover
-                  placement="bottom"
+                  placement="topLeft"
                   trigger="click"
                   title={null}
-                  content={renderContent(tabData, keyList)}
-                  getPopupContainer={(node) => node}
+                  content={renderContent(tabData, componentList)}
+                  getPopupContainer={() => containerRef.current as HTMLDivElement}
                 >
                   <div className={styles['tab-detail']}>查看详情</div>
                 </Popover>
@@ -210,46 +266,17 @@ const DataManage = () => {
           } else if (field.type === 'Member') {
             tableColumn.render = (_: string, data: TableDataBase) => {
               const member = data.formData[field.field] || field.defaultValue;
-              if (!member) return null;
-
-              let text;
-
-              if (Array.isArray(member)) {
-                text = member.map((id) => membersCacheRef.current[id].name).join(',');
-              } else {
-                text = membersCacheRef.current[member].name;
-              }
-
-              return <Text className={styles['dynamic-cell']} text={String(text)} getContainer={false} />;
+              return renderMember(member as number | number[]);
             };
           } else if (field.type === 'Date') {
             tableColumn.render = (_: string, data: TableDataBase) => {
               const date = data.formData[field.field] || field.defaultValue || '';
-
-              tableColumn.width = 180;
-
-              if (!date) return null;
-
-              if (Array.isArray(date)) {
-                tableColumn.width = 360;
-
-                return date.map((ts) => moment(ts).format('YYYY-MM-DD HH:mm:ss')).join('至');
-              }
-
-              return moment(date).format('YYYY-MM-DD HH:mm:ss');
+              return renderDate(date as number | [number, number], tableColumn);
             };
           } else {
             tableColumn.render = (_: string, data: TableDataBase) => {
               const value = data.formData[field.field] || field.defaultValue || '';
-              let text;
-
-              if (Array.isArray(value)) {
-                text = value.join(',');
-              } else {
-                text = value;
-              }
-
-              return <Text className={styles['dynamic-cell']} text={String(text)} getContainer={false} />;
+              return renderText(value as string | string[]);
             };
           }
 
@@ -293,6 +320,29 @@ const DataManage = () => {
               if (!membersCacheRef.current[mValue]) {
                 ids.add(mValue);
               }
+            }
+          } else if (field.type === 'Tabs') {
+            const tabData = item.formData[key];
+            const memberKeys = (field as any).components
+              .filter((v: { type: string }) => v.type === 'Member')
+              .map((v: { field: string }) => v.field);
+            if (Array.isArray(tabData)) {
+              tabData.forEach((item) => {
+                memberKeys?.forEach((key: string) => {
+                  const mValue = (item as any)[key];
+                  if (Array.isArray(mValue)) {
+                    mValue.forEach((id) => {
+                      if (!membersCacheRef.current[id]) {
+                        ids.add(id);
+                      }
+                    });
+                  } else {
+                    if (!membersCacheRef.current[mValue]) {
+                      ids.add(mValue);
+                    }
+                  }
+                });
+              });
             }
           }
         });

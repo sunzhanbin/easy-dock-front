@@ -343,7 +343,14 @@ function compRender(type: AllComponentType['type'], Component: any, props: any, 
   }
   if (type === 'Tabs') {
     return (
-      <Component {...props} fieldName={fieldName} auth={fieldsAuths} readonly={readonly} formInstance={formInstance} />
+      <Component
+        {...props}
+        fieldName={fieldName}
+        auth={fieldsAuths}
+        readonly={readonly}
+        formInstance={formInstance}
+        projectId={projectId}
+      />
     );
   }
   return <Component {...props} />;

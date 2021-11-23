@@ -96,24 +96,29 @@
         color: $primary-color;
       }
     }
-    .pop-container {
-      .header {
-        display: flex;
-        .cell {
-          flex: 1;
-          padding: 4px;
-          font-size: 12px;
-          font-weight: 600;
-        }
+  }
+  .pop-container {
+    min-width: 100px;
+    max-width: 600px;
+    max-height: 400px;
+    .header {
+      display: flex;
+      height: 32px;
+      .cell {
+        font-weight: 600;
       }
-      .content{
+    }
+    .content {
+      .row {
         display: flex;
-        flex-direction: row;
         align-items: center;
-        .row{
-          
-        }
+        height: 32px;
       }
+    }
+    .cell {
+      flex: 1;
+      padding: 4px;
+      font-size: 12px;
     }
   }
 }
