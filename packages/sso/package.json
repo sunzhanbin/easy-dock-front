@@ -1,6 +1,6 @@
 {
     "name": "@enc/sso",
-    "version": "0.3.0-beta.0",
+    "version": "0.3.0",
     "description": "sso login library",
     "author": "卫徕 <weilaib@enn.cn>",
     "homepage": "",

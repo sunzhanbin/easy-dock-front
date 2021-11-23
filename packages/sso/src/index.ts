@@ -66,6 +66,8 @@ const fetchToken: (host: string, code: string) => Promise<string> = async (host,
     }
 };
 
+const isValidRedirectUrl: (url?: string) => boolean = (url?: string) => !!url && url.indexOf('/logout?') < 0 && url.indexOf('/login?') < 0 && url.indexOf('redirectUri=') < 0;
+
 /**
  * @public
  *
@@ -144,7 +146,7 @@ class Auth implements IAuth {
      * @param {string} host BASE_SERVICE_ENDPOINT
      * @returns Promise<null>
      */
-    public async getToken(needAutoLogin: boolean, host: string) {
+    public async getToken(needAutoLogin: boolean, host: string, redirect?: string) {
         if (this.getAuth()) {
             return this.getAuth();
         } else {
@@ -167,6 +169,11 @@ class Auth implements IAuth {
                     }
 
                     let ssoUrl = `${server}/login?redirectUri=${encodeURIComponent(location.href)}`;
+
+                    if (redirect && isValidRedirectUrl(redirect)) {
+                        ssoUrl = `${server}/login?redirectUri=${encodeURIComponent(redirect)}`;
+                    }
+
                     if (appId) {
                         ssoUrl += `&appId=${appId}`;
                     }
@@ -300,7 +307,7 @@ class Auth implements IAuth {
                 redirect = window.location.href;
             }
 
-            if (redirect && redirect.indexOf('/logout?') < 0 && redirect.indexOf('redirectUri=') < 0) {
+            if (isValidRedirectUrl(redirect)) {
                 window.location.href = `${this.server}/logout?auth=${auth}&redirectUri=${encodeURIComponent(redirect)}`;
             }
         }
