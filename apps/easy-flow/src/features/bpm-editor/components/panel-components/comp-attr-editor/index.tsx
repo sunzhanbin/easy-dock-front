@@ -1,4 +1,4 @@
-import { Fragment, memo, ReactNode, useEffect, useMemo } from 'react';
+import React, { Fragment, memo, ReactNode, useEffect, useMemo } from 'react';
 import { Checkbox, Form, Input, InputNumber, Radio, Select, Switch } from 'antd';
 import SelectOptionList from '../select-option-list';
 import SelectDefaultOption from '../select-default-option';
@@ -99,6 +99,10 @@ const componentMap: { [k: string]: (props: { [k: string]: any }) => ReactNode } 
   FieldManage: (props) => <FieldManage parentId={props.parentId} />,
 };
 
+const NumberContainer = ({ children, ...rest }: any) => {
+  return React.cloneElement(children, rest);
+};
+
 const FormItemWrap = (props: ComponentProps) => {
   const { id, label, required, type, requiredMessage, rules, children, componentId } = props;
 
@@ -110,7 +114,11 @@ const FormItemWrap = (props: ComponentProps) => {
     );
   }
   if (type === 'precision') {
-    return <AllowDecimal id={id} />;
+    return (
+      <NumberContainer>
+        <AllowDecimal id={id} />
+      </NumberContainer>
+    );
   }
 
   if (type === 'numrange') {
@@ -148,6 +156,7 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
   const errors = useAppSelector(errorSelector);
   const errorIdList = useMemo(() => (errors || []).map(({ id }) => id), [errors]);
   const onFinish = useMemoCallback((values: Store) => {
+    console.log(values, '---------------');
     const isValidate = form.isFieldsTouched(['fieldName', 'label']);
     onSave && onSave(values, isValidate);
   });

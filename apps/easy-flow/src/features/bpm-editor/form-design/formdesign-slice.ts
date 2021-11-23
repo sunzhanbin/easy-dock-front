@@ -132,8 +132,6 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
           canSubmit: type !== 'DescText',
           multiple: type === 'Checkbox' || (['Select', 'Member'].includes(type) && byId[id].multiple),
         };
-        debugger;
-
         const props: ConfigItem = { type, id, multiple: type === 'Checkbox' };
         componentConfig?.forEach(({ isProps, key }) => {
           if (isProps) {
@@ -159,6 +157,7 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
     if (errors.length > 0) {
       const id = errors[0].id || '';
       id && dispatch(selectField({ id }));
+      console.log(errors);
       dispatch(setErrors({ errors }));
       isShowErrorTip && message.error('您有内容未填写或填写错误，请检查');
       return Promise.reject(errors);
