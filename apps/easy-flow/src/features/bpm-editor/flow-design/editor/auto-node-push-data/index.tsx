@@ -47,7 +47,9 @@ function AutoNodeEditor(props: AutoNodeEditorProps) {
   }, []);
 
   const fields = useMemo(() => {
-    return fieldsTemplate.filter((item) => item.type !== 'DescText').map((item) => ({ name: item.name, id: item.id }));
+    return fieldsTemplate
+      .filter((item) => !['DescText', 'Tabs'].includes(item.type))
+      .map((item) => ({ name: item.name, id: item.id }));
   }, [fieldsTemplate]);
 
   return (

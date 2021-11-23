@@ -35,7 +35,7 @@ const SelectOptionList = (props: editProps) => {
   const fields = useMemo<{ id: string; name: string }[]>(() => {
     const componentList = Object.values(byId).map((item: FormField) => item) || [];
     return componentList
-      .filter((com) => com.type !== 'DescText' && com.id !== id)
+      .filter((com) => !['DescText', 'Tabs'].includes(com.type) && com.id !== id)
       .map((com) => ({ id: com.fieldName, name: com.label }));
   }, [byId, id]);
 
