@@ -1,5 +1,6 @@
 import { memo, useState, useRef, useEffect } from 'react';
 import { Tabs as TabList, Modal, Form, Input, FormInstance } from 'antd';
+import classNames from 'classnames';
 import { Icon } from '@common/components';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import styles from './index.module.scss';
@@ -18,6 +19,7 @@ interface TabProps {
   fieldName: string;
   auth: FieldAuthsMap;
   projectId: number;
+  disabled?: boolean;
   formInstance?: FormInstance;
   components?: CompConfig[];
   readonly?: boolean;
@@ -25,7 +27,17 @@ interface TabProps {
   onChange?: (value: this['value']) => void;
 }
 
-const Tabs = ({ components = [], fieldName, auth, projectId, formInstance, value, readonly, onChange }: TabProps) => {
+const Tabs = ({
+  components = [],
+  fieldName,
+  auth,
+  projectId,
+  disabled,
+  formInstance,
+  value,
+  readonly,
+  onChange,
+}: TabProps) => {
   const [form] = Form.useForm();
   const tabRef = useRef<HTMLDivElement>(null);
   const content = useMemoCallback((key: string) => {
@@ -63,6 +75,9 @@ const Tabs = ({ components = [], fieldName, auth, projectId, formInstance, value
     }
   });
   const handleEdit = useMemoCallback((targetKey, action) => {
+    if (disabled) {
+      return;
+    }
     if (action === 'add') {
       handleAdd();
     } else if (action === 'remove') {
@@ -117,7 +132,7 @@ const Tabs = ({ components = [], fieldName, auth, projectId, formInstance, value
   }, [tabRef, content]);
 
   return (
-    <div className={styles.tabs} ref={tabRef}>
+    <div className={classNames(styles.tabs, disabled ? styles.disabled : '')} ref={tabRef}>
       <TabList
         type="editable-card"
         activeKey={activeKey}
