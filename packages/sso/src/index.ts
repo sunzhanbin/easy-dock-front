@@ -1,4 +1,5 @@
 import Cookies from 'js-cookie';
+import xss from 'xss';
 
 /**
  * @interface
@@ -26,7 +27,7 @@ const getParams = () => {
         if (params.length > 0) {
             for (let item of params) {
                 let kv = item.split('=');
-                result[kv[0]] = kv[1];
+                result[kv[0]] = xss(kv[1]);
             }
         }
     }
@@ -65,16 +66,18 @@ const fetchToken: (host: string, code: string) => Promise<string> = async (host,
     }
 };
 
+const isValidRedirectUrl: (url?: string) => boolean = (url?: string) => !!url && url.indexOf('/logout?') < 0 && url.indexOf('/login?') < 0 && url.indexOf('redirectUri=') < 0;
+
 /**
  * @public
- * 
+ *
  * Code blocks are great for examples
  *
  * ```typescript
  * // run typedoc --help for a list of supported languages
  * const instance = new MyClass();
- * 
- * @implements {IAuth} 
+ *
+ * @implements {IAuth}
  */
 class Auth implements IAuth {
     /** */
@@ -143,7 +146,7 @@ class Auth implements IAuth {
      * @param {string} host BASE_SERVICE_ENDPOINT
      * @returns Promise<null>
      */
-    public async getToken(needAutoLogin: boolean, host: string) {
+    public async getToken(needAutoLogin: boolean, host: string, redirect?: string) {
         if (this.getAuth()) {
             return this.getAuth();
         } else {
@@ -166,6 +169,11 @@ class Auth implements IAuth {
                     }
 
                     let ssoUrl = `${server}/login?redirectUri=${encodeURIComponent(location.href)}`;
+
+                    if (redirect && isValidRedirectUrl(redirect)) {
+                        ssoUrl = `${server}/login?redirectUri=${encodeURIComponent(redirect)}`;
+                    }
+
                     if (appId) {
                         ssoUrl += `&appId=${appId}`;
                     }
@@ -237,14 +245,71 @@ class Auth implements IAuth {
         }
     }
 
+    /**
+     * fetch("http://10.19.248.238:28017/logout?auth=a4627209f60a42cd9727aaac9a233d21&redirectUri=http%3A%2F%2Flocalhost%3A3000%2F", {
+     *   "headers": {
+     *       "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*\/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+     *       "accept-language": "en-US,en;q=0.9",
+     *       "cache-control": "no-cache",
+     *       "pragma": "no-cache",
+     *       "upgrade-insecure-requests": "1"
+     *   },
+     *   "referrer": "http://localhost:3000/",
+     *   "referrerPolicy": "strict-origin-when-cross-origin",
+     *   "body": null,
+     *   "method": "GET",
+     *   "mode": "cors",
+     *   "credentials": "include"
+     *   });
+     *
+     * fetch("http://10.19.248.238:28017/logout?auth=a4627209f60a42cd9727aaac9a233d21&redirectUri=http%3A%2F%2Flocalhost%3A3000%2F", {
+     *  "headers": {
+     *      "accept": "*\/*",
+     *      "accept-language": "en-US,en;q=0.9",
+     *      "cache-control": "no-cache",
+     *      "pragma": "no-cache"
+     *  },
+     *  "referrer": "http://localhost:3000/",
+     *  "referrerPolicy": "strict-origin-when-cross-origin",
+     *  "body": null,
+     *  "method": "GET",
+     *  "mode": "cors",
+     *  "credentials": "omit"
+     *  });
+     *
+     *
+     * @param redirect
+     *
+     */
     public logout(redirect?: string | undefined) {
         let auth = this.getAuth();
         if (auth) {
             this.removeAuth();
+
+            // if (redirect) {
+            //     window.location.href = `${this.server}/logout?auth=${auth}&redirectUri=${encodeURIComponent(redirect)}`;
+            // } else {
+            //     console.info(`[SSO] logout fetch credentials: 'include'`);
+            //     redirect = window.location.href;
+
+            //     // fetch 不会发送 cookies。除非你使用了credentials 的初始化选项。（自 2017 年 8 月 25 日以后，默认的 credentials 政策变更为 same-origin。Firefox 也在 61.0b13 版本中进行了修改）
+            //     fetch(`${this.server}/logout?auth=${auth}&redirectUri`, {
+            //         credentials: 'include',
+            //     })
+            //         .then(
+            //             () => {},
+            //             () => {},
+            //         )
+            //         .catch();
+            // }
+
             if (!redirect) {
                 redirect = window.location.href;
             }
-            window.location.href = `${this.server}/logout?${this.authAttr}=${auth}&redirectUri=${encodeURIComponent(redirect)}`;
+
+            if (isValidRedirectUrl(redirect)) {
+                window.location.href = `${this.server}/logout?auth=${auth}&redirectUri=${encodeURIComponent(redirect)}`;
+            }
         }
     }
 }

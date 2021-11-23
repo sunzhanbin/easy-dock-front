@@ -41,13 +41,11 @@ export default {
     //  Most games being built for distribution can use iife as the module type.
     //  You can also use 'umd' if you need to ingest your game into another system.
     //  The 'intro' property can be removed if using Phaser 3.21 or above. Keep it for earlier versions.
-    sourcemap: true,
-    intro: 'var global = window;',
     output: [
         { file: './dist/index.iife.js', format: 'iife', name: outputName },
         { file: './dist/sso.js', format: 'umd', name: outputName, intro: 'var global = window;' },
         { file: './dist/index.cjs.min.js', format: 'cjs', exports: 'default' },
-        { file: './dist/index.esm.js', format: 'esm', intro: 'var global = window;' },
+        { file: './dist/index.js', format: 'esm', intro: 'var global = window;' },
     ],
 
     plugins,
