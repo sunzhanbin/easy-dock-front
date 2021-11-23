@@ -6,19 +6,29 @@ const LimitNum = ({ id }: { id: string }) => {
   return (
     <Form.Item noStyle shouldUpdate>
       {(form) => {
-        const isChecked = form.getFieldValue('limit');
-        const decimalCount = form.getFieldValue('decimalCount');
-        if (!isChecked) {
+        const isChecked = form.getFieldValue('numlimit');
+        const fieldValue = form.getFieldValue('decimal');
+        if (!isChecked || !isChecked.enable) {
           return null;
         }
         return (
           <div className={styles.limitRange}>
-            <Form.Item className={styles.Item} name={[id, 'min']}>
-              <InputNumber size="large" placeholder="最小值" {...(decimalCount ? { precision: decimalCount } : '')} />
+            <Form.Item className={styles.Item} name={['numlimit', id, 'min']}>
+              <InputNumber
+                size="large"
+                placeholder="最小值"
+                max={form.getFieldValue('numlimit')?.[id]?.max}
+                {...(fieldValue?.precision ? { precision: fieldValue.precision } : '')}
+              />
             </Form.Item>
             <span className={styles.text}>~</span>
-            <Form.Item className={styles.Item} name={[id, 'max']}>
-              <InputNumber size="large" placeholder="最大值" {...(decimalCount ? { precision: decimalCount } : '')} />
+            <Form.Item className={styles.Item} name={['numlimit', id, 'max']}>
+              <InputNumber
+                size="large"
+                placeholder="最大值"
+                min={form.getFieldValue('numlimit')?.[id]?.min}
+                {...(fieldValue?.precision ? { precision: fieldValue.precision } : '')}
+              />
             </Form.Item>
           </div>
         );

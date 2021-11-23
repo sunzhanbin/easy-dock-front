@@ -95,31 +95,28 @@ const FormDetail = React.forwardRef(function FormDetail(
     }
   };
 
-  // @ts-ignore
-  useEffect(async () => {
+  useEffect(() => {
     const visbles: FieldsVisible = {};
     const comMaps: { [key: string]: FormMeta['components'][number] } = {};
     const formValues: FormProps['initialValue'] = {};
-    if (componentTypes.includes('Attachment')) {
-      const fileMap = await getFilesTypeList();
-      data.components.map((comp) => {
-        if (comp.config.type === 'Attachment') {
-          comp.props.fileMap = fileMap;
-        }
-      });
-    }
+    (async () => {
+      if (componentTypes.includes('Attachment')) {
+        const fileMap = await getFilesTypeList();
+        data.components.forEach((comp) => {
+          if (comp.config.type === 'Attachment') {
+            comp.props.fileMap = fileMap;
+          }
+        });
+      }
+    })();
     data.components.forEach((com) => {
-      const { fieldName, id, precision, scope, daterange } = com.config;
+      const { fieldName, id } = com.config;
 
       if (initialValue && initialValue[fieldName] !== undefined) {
         formValues[fieldName] = initialValue[fieldName];
       } else {
         formValues[fieldName || id] = com.props.defaultValue || com.config.value;
       }
-
-      precision && (com.props.precision = precision);
-      scope && (com.props.scope = scope);
-      daterange && (com.props.daterange = daterange);
       comMaps[id] = com;
       // 流程编排中没有配置fieldAuths这个字段默认可见
       visbles[fieldName || id] = fieldsAuths && fieldsAuths[fieldName || id] !== AuthType.Denied;
@@ -136,7 +133,7 @@ const FormDetail = React.forwardRef(function FormDetail(
     setFieldsVisible(visbles);
     setCompMaps(comMaps);
     setShowForm(true);
-  }, [data, fieldsAuths, initialValue, form]);
+  }, [data, fieldsAuths, initialValue, form, componentTypes]);
 
   const callInterfaceList = useMemoCallback((ruleList: DataConfig[], formValues: any) => {
     const formDataList: { name: string; value: any }[] = (Object.keys(formValues) || [])
@@ -203,7 +200,7 @@ const FormDetail = React.forwardRef(function FormDetail(
     if (initRuleList.length > 0) {
       callInterfaceList(initRuleList, initialValue);
     }
-  }, [initRuleList, initialValue]);
+  }, [initRuleList, initialValue, callInterfaceList]);
 
   const interfaceRules = useMemo(() => {
     return (data.formRules?.filter((v) => v.subtype === EventType.Interface) || []).map((v) => {
@@ -233,6 +230,7 @@ const FormDetail = React.forwardRef(function FormDetail(
             if (!Array.isArray(condition)) return null;
             return analysisFormChangeRule(condition, formValues);
           }
+          return null;
         })
         .map((v) => v.interfaceConfig!);
       if (interfaceList?.length === 0) {

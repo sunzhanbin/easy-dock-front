@@ -133,7 +133,7 @@ const serialRule = {
   },
   type: 'serialRules',
   direction: 'vertical',
-  required: true,
+  required: false,
   isProps: false,
 };
 
@@ -207,37 +207,39 @@ const numberOption = {
 const allowDecimal = {
   key: 'decimal',
   label: '允许小数',
-  defaultValue: false,
+  defaultValue: {
+    enable: false,
+  },
   type: 'allowDecimal',
   required: false,
-  isProps: false,
+  isProps: true,
 };
 
 const decimalCount = {
   key: 'precision',
-  defaultValue: 0,
+  defaultValue: 1,
   type: 'precision',
   required: false,
-  isProps: false,
+  isProps: true,
 };
 const limitNum = {
-  key: 'limit',
+  key: 'numlimit',
   label: '限制数值范围',
   defaultValue: false,
   type: 'limitNum',
   required: false,
-  isProps: false,
+  isProps: true,
 };
 
 const rangeNum = {
-  key: 'scope',
+  key: 'numrange',
   defaultValue: {
     min: 0,
     max: 0,
   },
-  type: 'limit',
+  type: 'numrange',
   required: false,
-  isProps: false,
+  isProps: true,
 };
 
 const limitDate = {
@@ -246,7 +248,7 @@ const limitDate = {
   defaultValue: false,
   type: 'limitDate',
   required: false,
-  isProps: false,
+  isProps: true,
 };
 
 const rangeDate = {
@@ -257,7 +259,7 @@ const rangeDate = {
   },
   type: 'daterange',
   required: false,
-  isProps: false,
+  isProps: true,
 };
 
 // 限制文件类型

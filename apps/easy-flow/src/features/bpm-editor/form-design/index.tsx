@@ -12,7 +12,7 @@ import {
   setFormRules,
   setPropertyRules,
 } from './formdesign-slice';
-import { ComponentConfig, ConfigItem, FieldType, FormFieldMap } from '@/type';
+import { ComponentConfig, ConfigItem, FormFieldMap } from '@/type';
 import { useAppDispatch } from '@/app/hooks';
 import { axios } from '@/utils';
 import styles from './index.module.scss';

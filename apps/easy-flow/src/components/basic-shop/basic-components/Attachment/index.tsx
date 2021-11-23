@@ -56,6 +56,7 @@ const Attachment = (
           if (exceptCustom.includes(key)) {
             return value?.map((item: string) => `.${item}`);
           }
+          return undefined;
         })
         .flat(2)
         .filter(Boolean);

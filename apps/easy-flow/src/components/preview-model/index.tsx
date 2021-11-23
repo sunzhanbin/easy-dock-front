@@ -12,7 +12,7 @@ import {
 import FormEngine from '@components/form-engine';
 import { Datasource, FormMeta } from '@type/detail';
 import { AuthType, FieldAuthsMap } from '@type/flow';
-import { ComponentConfig, FieldType, FormField, FormFieldMap, InputField, InputNumberField, RadioField } from '@/type';
+import { ComponentConfig, FormField, FormFieldMap, InputField, InputNumberField, RadioField } from '@/type';
 import { fetchDataSource } from '@/apis/detail';
 import { useSubAppDetail } from '@/app/app';
 import styles from './index.module.scss';
@@ -138,8 +138,8 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
       {loading && <Loading className={styles.loading} />}
       <div className="content">
         <div className={styles.background}>
-          <div className={styles.left} style={{ backgroundImage: `url(${leftImage})` }}></div>
-          <div className={styles.right} style={{ backgroundImage: `url(${rightImage})` }}></div>
+          <div className={styles.left} style={{ backgroundImage: `url(${leftImage})` }} />
+          <div className={styles.right} style={{ backgroundImage: `url(${rightImage})` }} />
         </div>
         <div className={styles['start-form-wrapper']}>
           <div className={classnames(styles.form)} style={{ height: `${document.body.clientHeight - 124}px` }}>

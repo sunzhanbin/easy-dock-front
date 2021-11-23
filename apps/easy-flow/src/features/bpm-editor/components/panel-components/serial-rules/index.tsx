@@ -26,11 +26,11 @@ const SerialRules = (props: RulesProps) => {
   const [type, setType] = useState<string>('custom');
   // 选择已有规则弹框
   const [ruleModal, setRuleModal] = useState<boolean>(false);
-  const [rules, setRules] = useState<RuleOption[]>(serialMata?.rules || []);
+  const [rules, setRules] = useState<RuleOption[]>(serialMata?.rules || initialRules);
   const [changeRules, setChangeRules] = useState<RuleOption[]>(serialMata?.changeRules || []);
   const [resetRules, setResetRules] = useState<RuleOption[]>([]);
   const [resetRuleName, setResetRuleName] = useState<string>('');
-  const [ruleName, setRuleName] = useState<string>('');
+  const [ruleName, setRuleName] = useState<string>(serialMata?.ruleName || '');
   const [changeRuleName, setChangeRuleName] = useState<string>(serialMata?.changeRuleName || '');
   // 是否可编辑   默认不可编辑
   const [editStatus, setEditStatus] = useState<boolean>(false);
@@ -71,7 +71,17 @@ const SerialRules = (props: RulesProps) => {
   // 自定义规则/引用规则
   const handleTypeChange = useMemoCallback((type) => {
     setType(type);
-    onChange && onChange({ serialId, serialMata: { type } });
+    onChange &&
+      onChange({
+        serialId,
+        serialMata: {
+          type,
+          ruleName,
+          rules,
+          changeRules,
+          changeRuleName,
+        },
+      });
   });
 
   const handleRuleShow = useMemoCallback(() => {
@@ -91,7 +101,8 @@ const SerialRules = (props: RulesProps) => {
     setResetRuleName(name);
     formChangeSerial.setFieldsValue({ name });
     setEditStatus(false);
-    onChange && onChange({ serialId: id, serialMata: { type, changeRuleName: name, changeRules: mata } });
+    onChange &&
+      onChange({ serialId: id, serialMata: { type, ruleName, rules, changeRuleName: name, changeRules: mata } });
   });
   const handleResetCustom = useMemoCallback(() => {
     setRuleName('');
@@ -99,15 +110,29 @@ const SerialRules = (props: RulesProps) => {
   });
 
   const handleOnChange = useMemoCallback((serialItem) => {
-    const { type, rules, ruleName } = serialItem;
+    const { type, rules: formRule, ruleName: formName } = serialItem;
     if (type === 'custom') {
-      setRuleName(ruleName);
-      setRules(rules);
-      onChange && onChange({ serialId, serialMata: { type, ruleName, rules: rules } });
+      setRuleName(formName);
+      setRules(formRule);
+      onChange &&
+        onChange({
+          serialId,
+          serialMata: {
+            type,
+            ruleName: formName,
+            rules: formRule,
+            changeRuleName,
+            changeRules,
+          },
+        });
     } else {
-      setChangeRuleName(ruleName);
-      setChangeRules(rules);
-      onChange && onChange({ serialId, serialMata: { type, changeRuleName: ruleName, changeRules: rules } });
+      setChangeRuleName(formName);
+      setChangeRules(formRule);
+      onChange &&
+        onChange({
+          serialId,
+          serialMata: { type, ruleName, rules, changeRuleName: formName, changeRules: formRule },
+        });
     }
   });
 

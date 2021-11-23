@@ -10,7 +10,7 @@ const InputComponent = (props: InputProps & { unique: boolean } & { [key: string
   useEffect(() => {
     if (!form) return;
     const formValue = form.getFieldsValue();
-    // console.log({ formValue, rules, fieldName, type });
+    console.log({ formValue, rules, fieldName, type });
   });
 
   return (

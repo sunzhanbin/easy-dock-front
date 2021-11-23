@@ -28,7 +28,8 @@ const InputNumberComponent = (props: InputNumberProps & { scope?: { min: number;
     delete result.defaultValue;
     delete result.defaultNumber;
     delete result.decimal;
-    delete result.limit;
+    delete result.numlimit;
+    delete result.numrange;
     return result;
   }, [defaultValue, props, precision, scope, onChange]);
 
