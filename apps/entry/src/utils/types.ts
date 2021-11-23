@@ -1,5 +1,4 @@
-
-import {SCENE_IAMGES} from '@utils/const';
+import { SCENE_IAMGES } from "@utils/const";
 
 export interface workspaceShape {
   name: string;
@@ -29,7 +28,7 @@ export interface AppManagerState {
   value: number;
   projectId: number;
   currentWorkspaceId: number;
-  status: 'idle' | 'loading' | 'failed';
+  status: "idle" | "loading" | "failed";
   currentWorkspace: workspaceShape;
   workspaces: workspaceShape[];
   subApps: SubAppInfo[];

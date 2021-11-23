@@ -13,7 +13,11 @@ const LimitNum = ({ id }: { id: string }) => {
         }
         return (
           <div className={styles.limitRange}>
-            <Form.Item className={styles.Item} name={['numlimit', id, 'min']}>
+            <Form.Item
+              className={styles.Item}
+              name={['numlimit', id, 'min']}
+              rules={[{ required: true, message: '请输入!' }]}
+            >
               <InputNumber
                 size="large"
                 placeholder="最小值"
@@ -22,7 +26,11 @@ const LimitNum = ({ id }: { id: string }) => {
               />
             </Form.Item>
             <span className={styles.text}>~</span>
-            <Form.Item className={styles.Item} name={['numlimit', id, 'max']}>
+            <Form.Item
+              className={styles.Item}
+              name={['numlimit', id, 'max']}
+              rules={[{ required: true, message: '请输入!' }]}
+            >
               <InputNumber
                 size="large"
                 placeholder="最大值"

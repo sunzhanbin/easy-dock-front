@@ -1,0 +1,7 @@
+{
+  "extends": ["../../.eslintrc", "plugin:react/jsx-runtime"],
+  "plugins": ["prettier"],
+  "rules": {
+    "prettier/prettier": "error"
+  }
+}

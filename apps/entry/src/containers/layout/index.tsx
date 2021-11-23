@@ -1,24 +1,26 @@
-import { Outlet, NavLink } from "react-router-dom";
-import { Layout as LayoutWrap } from 'antd';
-import { Routes, Route } from "react-router-dom";
-import './index.style';
+import React from "react";
+import { Outlet, NavLink, Routes, Route } from "react-router-dom";
+import { Layout as LayoutWrap } from "antd";
+
+import "./index.style";
 
 const { Header, Content } = LayoutWrap;
 
-const HomeHeader = () => 
-{
-  let activeStyle = {
-    textDecoration: "underline"
+const HomeHeader = () => {
+  const activeStyle = {
+    textDecoration: "underline",
   };
   return (
-    <>
+    <React.Fragment>
       <nav className="menu">
         <ul>
           <li>
-            <NavLink 
-              to="/" 
-              style={({ isActive }) =>isActive ? activeStyle : {}}
-            >开始</NavLink>
+            <NavLink
+              to="/"
+              style={({ isActive }) => (isActive ? activeStyle : {})}
+            >
+              开始
+            </NavLink>
           </li>
           <li>
             <NavLink to="/asset-centre">资产中心</NavLink>
@@ -31,20 +33,15 @@ const HomeHeader = () =>
           </li>
         </ul>
       </nav>
-    </>
-    )
+    </React.Fragment>
+  );
 };
 
 const AppManager = () => {
-  return (
-    <>
-      这里是应用管理路由
-    </>
-  )
-}
+  return <>这里是应用管理路由</>;
+};
 
-const Layout = ( ) => {
-  
+const Layout = () => {
   return (
     <LayoutWrap>
       <Header>
@@ -57,9 +54,7 @@ const Layout = ( ) => {
         <Outlet />
       </Content>
     </LayoutWrap>
-
-
   );
-}
+};
 
 export default Layout;
