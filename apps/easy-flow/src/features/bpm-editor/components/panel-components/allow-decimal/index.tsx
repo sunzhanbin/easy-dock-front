@@ -14,12 +14,12 @@ const AllowDecimal = (props: { id: string; onChange?: (v: any) => void }) => {
             return null;
           }
           if (!isChecked?.[id]) {
-            // form.setFieldsValue({
-            //   decimal: {
-            //     ...isChecked,
-            //     precision: 1,
-            //   },
-            // });
+            form.setFieldsValue({
+              decimal: {
+                ...isChecked,
+                precision: 1,
+              },
+            });
             onChange &&
               onChange({
                 ...isChecked,

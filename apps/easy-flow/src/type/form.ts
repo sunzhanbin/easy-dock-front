@@ -26,12 +26,22 @@ export type InputField = {
 export type InputNumberField = {
   type: 'InputNumber';
   defaultValue: number;
-  range?: [number, number];
-  scope?: {
-    min: number;
-    max: number;
+  defaultNumber?: {
+    customData: any;
+    id: string;
+    type: string; // custom | inject
   };
-  precision?: number;
+  decimal?: {
+    enable: boolean;
+    precision?: number;
+  };
+  numlimit?: {
+    enable: boolean;
+    numrange?: {
+      min: number;
+      max: number;
+    };
+  };
 } & BaseField;
 
 export type TextAreaField = {
@@ -41,9 +51,11 @@ export type TextAreaField = {
 
 export type DateField = {
   type: 'Date';
-  daterange: {
-    min: string;
-    max: string;
+  datelimit?: {
+    daterange: {
+      min: string;
+      max: string;
+    };
   };
   format: 'YYYY-MM-DD' | 'YYYY-MM-DD HH:mm:ss';
   defaultValue: number;

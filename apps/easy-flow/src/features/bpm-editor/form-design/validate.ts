@@ -18,9 +18,17 @@ export const validateLabel = (label: string) => {
   return '';
 };
 
+export const validateSerial = (config: ConfigItem) => {
+  const { type } = config;
+  if (type === 'SerialNum' && !config.serialRule.serialId && !config.serialRule.serialMata.ruleName) {
+    return '请输入规则名称';
+  }
+
+  return '';
+};
+
 export const validateHasChecked = (props: ConfigItem) => {
   const { type } = props;
-  debugger;
   switch (type) {
     case 'InputNumber':
       const { decimal, numlimit } = props;

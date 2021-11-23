@@ -22,7 +22,7 @@ const LimitNum = ({ id }: { id: string }) => {
                 size="large"
                 placeholder="最小值"
                 max={form.getFieldValue('numlimit')?.[id]?.max}
-                {...(fieldValue?.precision ? { precision: fieldValue.precision } : '')}
+                {...(fieldValue?.enable ? { precision: fieldValue.precision } : '')}
               />
             </Form.Item>
             <span className={styles.text}>~</span>
@@ -35,7 +35,7 @@ const LimitNum = ({ id }: { id: string }) => {
                 size="large"
                 placeholder="最大值"
                 min={form.getFieldValue('numlimit')?.[id]?.min}
-                {...(fieldValue?.precision ? { precision: fieldValue.precision } : '')}
+                {...(fieldValue?.enable ? { precision: fieldValue.precision } : '')}
               />
             </Form.Item>
           </div>
