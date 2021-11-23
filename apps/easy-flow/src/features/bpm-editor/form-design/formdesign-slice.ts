@@ -21,7 +21,7 @@ import {
 } from './formzone-reducer';
 import { ConfigItem, ErrorItem, FieldType, FormDesign, FormField, FormMeta } from '@/type';
 import { loadComponents } from './toolbox/toolbox-reducer';
-import { validateFieldName, validateHasChecked, validateLabel } from './validate';
+import { validateFieldName, validateHasChecked, validateLabel, validateSerial } from './validate';
 import { RootState } from '@/app/store';
 import { axios } from '@/utils';
 import { message } from 'antd';
@@ -86,14 +86,15 @@ export default formDesign.reducer;
 
 const validComponentConfig = (config: ConfigItem, props: ConfigItem) => {
   const { id, label = '', fieldName = '' } = config;
-  debugger;
   const errorItem: ErrorItem = { id, content: [] };
   const nameError = validateFieldName(fieldName);
   const labelError = validateLabel(label);
+  const serialError = validateSerial(config);
   const propsError = validateHasChecked(props);
   nameError && errorItem.content.push(nameError);
   labelError && errorItem.content.push(labelError);
   propsError && errorItem.content.push(propsError);
+  serialError && errorItem.content.push(serialError);
   return errorItem.content.length > 0 ? errorItem : null;
 };
 type SaveParams = {
@@ -157,7 +158,6 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
     if (errors.length > 0) {
       const id = errors[0].id || '';
       id && dispatch(selectField({ id }));
-      console.log(errors);
       dispatch(setErrors({ errors }));
       isShowErrorTip && message.error('您有内容未填写或填写错误，请检查');
       return Promise.reject(errors);

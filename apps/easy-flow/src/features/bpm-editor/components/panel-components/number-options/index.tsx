@@ -39,25 +39,26 @@ const NumberOption = (props: NumberOptionProps) => {
   // 公式计算的表单字段
   const [calculateData, setCalculateData] = useState<string | string[]>(value?.calculateData);
   // 默认值的小数位数
-  const precision = useMemo(() => {
-    return (byId[id] as InputNumberField)?.precision;
+  const decimal = useMemo(() => {
+    return (byId[id] as InputNumberField)?.decimal;
   }, [id, byId]);
   // 默认值的数值范围
   const range = useMemo(() => {
-    return (byId[id] as InputNumberField)?.scope;
+    return (byId[id] as InputNumberField)?.numlimit?.numrange;
   }, [id, byId]);
 
   const defaultNumberProps = useMemo(() => {
     return {
-      precision,
+      precision: decimal?.enable ? decimal?.precision : 0,
       min: range?.min,
       max: range?.max,
     };
-  }, [precision, range]);
+  }, [decimal, range]);
 
   // 改变默认值类型
   const handleChange = useMemoCallback((value: string) => {
     setType(value);
+    onChange && onChange({ id, type: value });
   });
   const handleInputBlur = useMemoCallback((e) => {
     const value: number = e.target.value;

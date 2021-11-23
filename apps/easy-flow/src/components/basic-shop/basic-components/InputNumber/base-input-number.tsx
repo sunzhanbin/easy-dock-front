@@ -3,9 +3,15 @@ import { InputNumber } from 'antd';
 import { Icon } from '@common/components';
 import { InputNumberProps } from 'antd/lib/input-number';
 import styles from './index.module.scss';
+import { InputNumberField } from '@type';
 
-const InputNumberComponent = (props: InputNumberProps & { scope?: { min: number; max: number } }) => {
-  const { defaultValue, onChange, precision, scope } = props;
+const InputNumberComponent = (
+  props: InputNumberProps & {
+    decimal?: InputNumberField['decimal'];
+    numlimit?: InputNumberField['numlimit'];
+  },
+) => {
+  const { onChange, decimal, numlimit } = props;
   const propList = useMemo(() => {
     const prop: { [k: string]: string | number | boolean | undefined | Function } = {
       size: 'large',
@@ -14,24 +20,20 @@ const InputNumberComponent = (props: InputNumberProps & { scope?: { min: number;
       min: Number.MIN_SAFE_INTEGER,
       onChange: onChange,
     };
-    if (defaultValue) {
-      prop.defaultValue = defaultValue;
-    }
-    precision && (prop.precision = precision);
-    if (scope) {
-      prop.min = scope.min;
-      prop.max = scope.max;
+    decimal?.enable && (prop.precision = decimal.precision);
+    if (numlimit?.numrange) {
+      prop.min = numlimit.numrange.min;
+      prop.max = numlimit.numrange.max;
     }
     const result = Object.assign({}, props, prop);
     delete result.fieldName;
     delete result.colSpace;
-    delete result.defaultValue;
     delete result.defaultNumber;
     delete result.decimal;
     delete result.numlimit;
     delete result.numrange;
     return result;
-  }, [defaultValue, props, precision, scope, onChange]);
+  }, [props, decimal, numlimit, onChange]);
 
   return (
     <div className={styles.container}>
@@ -39,7 +41,7 @@ const InputNumberComponent = (props: InputNumberProps & { scope?: { min: number;
         <div className={styles.icon}>
           <Icon className={styles.iconfont} type="shuzi123" />
         </div>
-        <InputNumber {...propList} key={String(defaultValue)} />
+        <InputNumber {...propList} key={String(props.id)} />
       </div>
     </div>
   );
