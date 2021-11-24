@@ -86,7 +86,9 @@ const getDisabledDateRule = ({ rules, current, formValue, id, range }: RuleParam
   });
 
   if (!rules && range) {
-    rules5 = current.valueOf() < moment(range.min).valueOf() || current.valueOf() > moment(range.max).valueOf();
+    rules5 =
+      (range.min && current.valueOf() < moment(range.min).valueOf()) ||
+      (range.max && current.valueOf() > moment(range.max).valueOf());
   }
   // @ts-ignore
   return rules1 || rules2 || rules3 || rules4 || rules5;

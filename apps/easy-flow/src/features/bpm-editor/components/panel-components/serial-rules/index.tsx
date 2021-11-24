@@ -22,7 +22,6 @@ interface RulesProps {
 const SerialRules = (props: RulesProps) => {
   const { id, value, onChange } = props;
   const serialMata = value?.serialMata;
-  console.log(1111);
   // 编号规则类型
   const [type, setType] = useState<string>('custom');
   // 选择已有规则弹框

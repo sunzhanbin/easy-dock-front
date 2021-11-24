@@ -26,10 +26,12 @@ const propsKey = [
   'showSearch',
   'multiple',
   'format',
-  'daterange',
+  'datelimit',
+  'numlimit',
   'maxCount',
   'components',
   'fieldName',
+  'decimal',
 ];
 type Key = keyof FormField;
 
