@@ -185,7 +185,7 @@ const getMaxCount = (max, min, defaultValue) => {
 
 const fieldManage = {
   key: 'components',
-  label: '字段管理',
+  label: '子控件',
   type: 'FieldManage',
   required: false,
   isProps: true,
@@ -378,7 +378,7 @@ const components = {
       version: '1.0',
       type: 'Tabs',
     },
-    config: [fieldName, getLabel('标签页 '), desc, fieldManage, colSpace],
+    config: [fieldName, getLabel('标签页 '), desc, fieldManage],
   },
   Image: {
     baseInfo: {

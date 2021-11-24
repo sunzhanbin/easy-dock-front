@@ -49,12 +49,12 @@ const options = [
   { label: '3/4', value: '3' },
   { label: '1', value: '4' },
 ];
-const rowOptions = [
-  { label: '1/4', value: '1', disabled: true },
-  { label: '1/2', value: '2', disabled: true },
-  { label: '3/4', value: '3', disabled: true },
-  { label: '1', value: '4' },
-];
+// const rowOptions = [
+//   { label: '1/4', value: '1', disabled: true },
+//   { label: '1/2', value: '2', disabled: true },
+//   { label: '3/4', value: '3', disabled: true },
+//   { label: '1', value: '4' },
+// ];
 
 const componentMap: { [k: string]: (props: { [k: string]: any }) => ReactNode } = {
   Input: (props) => <Input placeholder={props.placeholder} size="large" />,
@@ -69,13 +69,8 @@ const componentMap: { [k: string]: (props: { [k: string]: any }) => ReactNode } 
         ))}
     </Select>
   ),
-  ColSpace: (props) => {
-    return (
-      <Radio.Group
-        options={props.componentType === 'Tabs' || props.componentType === 'FlowData' ? rowOptions : options}
-        optionType="button"
-      />
-    );
+  ColSpace: () => {
+    return <Radio.Group options={options} optionType="button" />;
   },
   Checkbox: (props) => <Checkbox>{props.label}</Checkbox>,
   Switch: () => <Switch />,
