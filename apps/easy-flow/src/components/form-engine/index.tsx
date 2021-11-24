@@ -275,7 +275,7 @@ const FormDetail = React.forwardRef(function FormDetail(
           <Row key={index} className={styles.row}>
             {formRow.map((fieldId) => {
               const { config = {}, props = {} } = compMaps[fieldId];
-              const { fieldName = '', colSpace = '', label = '', desc = '', type = '' } = config;
+              const { fieldName = '', colSpace = 4, label = '', desc = '', type = '' } = config;
               const isRequired = fieldsAuths && fieldsAuths[fieldName] === AuthType.Required;
               const compProps = { ...props };
               const Component = compSources[config?.type as AllComponentType['type']];

@@ -187,7 +187,8 @@ const fieldManage = {
   key: 'components',
   label: '子控件',
   type: 'FieldManage',
-  required: false,
+  required: true,
+  requiredMessage: '请选择子控件',
   isProps: true,
 };
 

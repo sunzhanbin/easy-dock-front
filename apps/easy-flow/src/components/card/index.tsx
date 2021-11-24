@@ -55,7 +55,7 @@ export const Card: FC<CardProps> = ({ rowIndex, row, moveCard }) => {
   );
   const getColSpace = useCallback(
     (id) => {
-      const space = byId[id]?.colSpace;
+      const space = byId[id]?.colSpace || 4;
       if (space) {
         return spaceMap[space];
       }

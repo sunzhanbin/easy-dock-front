@@ -27,6 +27,13 @@ export const validateSerial = (config: ConfigItem) => {
   return '';
 };
 
+export const validateFields = (components: any) => {
+  if (!components || !components?.length) {
+    return '请选择子控件';
+  }
+  return '';
+};
+
 export const validateHasChecked = (props: ConfigItem) => {
   const { type } = props;
   switch (type) {

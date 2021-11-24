@@ -183,6 +183,7 @@ const reducers = {
       }
     }
     state.isDirty = true;
+    state.errors = [];
     if (isValidate) {
       const index = (state.errors || []).findIndex((item) => item.id === id);
       index > -1 && state.errors.splice(index, 1);

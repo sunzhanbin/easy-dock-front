@@ -21,7 +21,7 @@ import {
 } from './formzone-reducer';
 import { ConfigItem, ErrorItem, FieldType, FormDesign, FormField, FormMeta } from '@/type';
 import { loadComponents } from './toolbox/toolbox-reducer';
-import { validateFieldName, validateHasChecked, validateLabel, validateSerial } from './validate';
+import { validateFieldName, validateFields, validateHasChecked, validateLabel, validateSerial } from './validate';
 import { RootState } from '@/app/store';
 import { axios } from '@/utils';
 import { message } from 'antd';
@@ -85,12 +85,16 @@ export const {
 export default formDesign.reducer;
 
 const validComponentConfig = (config: ConfigItem, props: ConfigItem) => {
-  const { id, label = '', fieldName = '' } = config;
+  const { id, label = '', fieldName = '', type } = config;
   const errorItem: ErrorItem = { id, content: [] };
   const nameError = validateFieldName(fieldName);
   const labelError = validateLabel(label);
   const serialError = validateSerial(config);
   const propsError = validateHasChecked(props);
+  if (type === 'Tabs') {
+    const fieldsError = validateFields(config.components);
+    fieldsError && errorItem.content.push(fieldsError);
+  }
   nameError && errorItem.content.push(nameError);
   labelError && errorItem.content.push(labelError);
   propsError && errorItem.content.push(propsError);

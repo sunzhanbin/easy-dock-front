@@ -87,7 +87,7 @@ const FieldManage = ({ parentId, value, onChange }: ComProps) => {
       <Dropdown placement="bottomLeft" trigger={['click']} overlay={overlay} getPopupContainer={(c) => c}>
         <div className={styles.add_custom}>
           <Icon className={styles.iconfont} type="xinzengjiacu" />
-          <span>添加字段</span>
+          <span>添加控件</span>
         </div>
       </Dropdown>
     </div>

@@ -124,6 +124,30 @@ const FormItemWrap = (props: ComponentProps) => {
     return CheckComponentType[type](id, componentId);
   }
 
+  if (type === 'FieldManage') {
+    return (
+      <Form.Item
+        label={label}
+        name={id}
+        labelCol={{ span: 24 }}
+        labelAlign="left"
+        required={true}
+        rules={[
+          {
+            validator(_: any, components: any) {
+              if (!components || !components.length) {
+                return Promise.reject(new Error('请选择子控件'));
+              }
+              return Promise.resolve();
+            },
+          },
+        ]}
+      >
+        {children ? children : null}
+      </Form.Item>
+    );
+  }
+
   return (
     <Form.Item
       label={label}
@@ -149,7 +173,6 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
   const errors = useAppSelector(errorSelector);
   const errorIdList = useMemo(() => (errors || []).map(({ id }) => id), [errors]);
   const onFinish = useMemoCallback((values: Store) => {
-    console.log(values, '---------------');
     const isValidate = form.isFieldsTouched(['fieldName', 'label']);
     onSave && onSave(values, isValidate);
   });
