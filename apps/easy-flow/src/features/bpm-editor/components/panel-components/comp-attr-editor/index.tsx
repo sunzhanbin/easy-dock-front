@@ -173,8 +173,7 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
   const errors = useAppSelector(errorSelector);
   const errorIdList = useMemo(() => (errors || []).map(({ id }) => id), [errors]);
   const onFinish = useMemoCallback((values: Store) => {
-    const isValidate = form.isFieldsTouched(['fieldName', 'label']);
-    onSave && onSave(values, isValidate);
+    onSave && onSave(values, true);
   });
   const handleChange = useMemoCallback(() => {
     onFinish(form.getFieldsValue());
