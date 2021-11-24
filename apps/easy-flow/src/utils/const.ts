@@ -27,6 +27,15 @@ export const initialRules: RuleOption[] = [
   },
 ];
 
+export const INCREASE_NUM_LIST: { [key: string]: any } = {
+  none: '仅当计数达到最大值时，从0开始重新计数',
+  day: '每日重置：每日00:00:00，自动从初始值重新开始计数。一天内如果计数达到最大值，从0开始重新计数',
+  week: '每周重置：每周一00:00:00，自动从初始值重新开始计数。一周内如果计数达到最大值，从0开始重新计数',
+  month:
+    '每月重置：每月首日00:00:00，自动从初始值重新开始计数。一月内如果计数达到最大值，从0开始重新计数计数达到最大值，从0开始重新计数',
+  year: '每年重置：每年首日00:00:00，自动从初始值重新开始计数。一年内如果计数达到最大值，从0开始重新计数',
+};
+
 // 属性面板panel定义label是否带checkbox
 export const LABEL_INCLUDE_CHECKBOX = ['allowDecimal', 'limitNum', 'limitDate', 'files'];
 

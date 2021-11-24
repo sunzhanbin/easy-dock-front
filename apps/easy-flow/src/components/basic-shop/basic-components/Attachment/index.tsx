@@ -31,7 +31,7 @@ const Attachment = (
   const checkoutFile = useMemoCallback((file: File) => {
     const { size, name } = file;
     const extension = name.replace(/.+\./, '.');
-    if (!name || !fileTypeList.includes(extension)) {
+    if (!name || (fileTypeList && !fileTypeList.includes(extension))) {
       message.error('当前文件上传类型有误，请重新上传');
       return false;
     }

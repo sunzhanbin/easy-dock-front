@@ -123,7 +123,7 @@ function DraggableOption(props: DraggableOptionProps) {
       case 'fixedChars':
         return (
           <div className={styles.label}>
-            <Input onChange={handleInputBlur} value={data?.chars} disabled={disabled} />
+            <Input onChange={handleInputBlur} value={data?.chars} disabled={disabled} maxLength={10} />
           </div>
         );
       case 'fieldName':
