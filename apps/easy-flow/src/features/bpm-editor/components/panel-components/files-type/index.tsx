@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useState } from 'react';
-import { Select, Form, Input } from 'antd';
+import { Select, Form } from 'antd';
 import { FormInstance } from 'antd/es';
 import { getFilesType } from '@apis/form';
 import styles from '../comp-attr-editor/index.module.scss';
@@ -7,7 +7,6 @@ import styles from '../comp-attr-editor/index.module.scss';
 const { Option } = Select;
 
 interface FilesProps {
-  id: string;
   componentId: string;
 }
 
@@ -17,7 +16,7 @@ type FileListType = {
   suffixes: string[];
 };
 
-const FilesType = ({ id }: FilesProps) => {
+const FilesType = (props: FilesProps) => {
   const [typeList, setTypeList] = useState<FileListType[]>([]);
 
   const getFilesTypeList = async () => {
@@ -27,11 +26,6 @@ const FilesType = ({ id }: FilesProps) => {
     } catch (e) {
       console.log(e);
     }
-  };
-
-  const getCustomValue = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    return value?.split(',') || [];
   };
 
   useEffect(() => {
@@ -71,8 +65,8 @@ const FilesType = ({ id }: FilesProps) => {
             {formValue?.types?.includes('custom') && (
               <div className={styles.custom}>
                 <p className={styles.customType}>自定义类型</p>
-                <Form.Item name={['typeRestrict', 'custom']} getValueFromEvent={getCustomValue}>
-                  <Input size="large" placeholder="如 pdf，多个以英文逗号分隔" />
+                <Form.Item name={['typeRestrict', 'custom']}>
+                  <Select mode="tags" tokenSeparators={[',']} size="large" placeholder="如 pdf，回车确定选择" />
                 </Form.Item>
               </div>
             )}

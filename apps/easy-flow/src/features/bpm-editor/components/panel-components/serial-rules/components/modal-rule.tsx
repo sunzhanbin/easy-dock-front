@@ -1,5 +1,5 @@
 import React, { memo, useState, useEffect } from 'react';
-import { message, Modal, Tooltip } from 'antd';
+import { message, Modal, Popconfirm } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import styles from '../index.module.scss';
 import { deleteSerialId, getSerialList } from '@apis/form';
@@ -22,7 +22,9 @@ const RuleModal = (props: RuleProps) => {
   const [rule, setRule] = useState({});
   const [activeIndex, setActiveIndex] = useState(-1);
   const handleSubmit = useMemoCallback(() => {
-    if (activeIndex === -1) return;
+    if (activeIndex === -1) {
+      return message.warning('请选择规则');
+    }
     onSubmit && onSubmit(rule);
   });
 
@@ -51,7 +53,7 @@ const RuleModal = (props: RuleProps) => {
     }
   });
   useEffect(() => {
-    getRuleList();
+    (() => getRuleList())();
   }, [getRuleList]);
 
   const renderLabel = useMemoCallback((rule) => {
@@ -103,13 +105,18 @@ const RuleModal = (props: RuleProps) => {
             </div>
             <div className={styles.operation}>
               {rule.status === 0 && (
-                <div className={styles.delete} onClick={() => handleDelete(rule, index)}>
-                  <Tooltip title="删除">
-                    <span>
-                      <Icon className={styles.iconfont} type="shanchu" />
-                    </span>
-                  </Tooltip>
-                </div>
+                <Popconfirm
+                  title="确定要删除此条规则吗?"
+                  okText="确 定"
+                  placement="right"
+                  icon={null}
+                  cancelText="取 消"
+                  onConfirm={() => handleDelete(rule, index)}
+                >
+                  <div className={styles.delete}>
+                    <Icon className={styles.iconfont} type="shanchu" />
+                  </div>
+                </Popconfirm>
               )}
             </div>
           </div>

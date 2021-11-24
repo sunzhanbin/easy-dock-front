@@ -1,4 +1,4 @@
-import React, { useEffect, memo, useMemo, useState } from 'react';
+import React, { useEffect, memo, useMemo, useState, useCallback } from 'react';
 import { FormField, RuleOption, serialRulesItem } from '@type';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import styles from './index.module.scss';
@@ -22,6 +22,7 @@ interface RulesProps {
 const SerialRules = (props: RulesProps) => {
   const { id, value, onChange } = props;
   const serialMata = value?.serialMata;
+  console.log(1111);
   // 编号规则类型
   const [type, setType] = useState<string>('custom');
   // 选择已有规则弹框
@@ -53,23 +54,21 @@ const SerialRules = (props: RulesProps) => {
   }, [byId, id]);
 
   // 获取已有编号下的规则配置
-  const getSerial = useMemoCallback(async () => {
-    try {
-      if (!value?.serialId) return;
-      const ret = await getSerialId(value?.serialId);
-      const { status, mata, name } = ret.data;
-      setRuleStatus(status);
-      setResetRules(mata);
-      setResetRuleName(name);
-      formChangeSerial.setFieldsValue({ name });
-      setEditStatus(false);
-      setChangeRules(mata);
-    } catch (e) {
-      console.log(e);
-    }
-  });
+  // const getSerial = useMemoCallback(async () => {
+  //   try {
+  //     if (!value?.serialId) return;
+  //     const ret = await getSerialId(value?.serialId);
+  //     const { status, mata, name } = ret.data;
+  //     // setRuleStatus(status);
+  //     setResetRules(mata);
+  //     setResetRuleName(name);
+  //     // setEditStatus(false);
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // });
   // 自定义规则/引用规则
-  const handleTypeChange = useMemoCallback((type) => {
+  const handleTypeChange = (type: string) => {
     setType(type);
     onChange &&
       onChange({
@@ -82,11 +81,11 @@ const SerialRules = (props: RulesProps) => {
           changeRuleName,
         },
       });
-  });
+  };
 
-  const handleRuleShow = useMemoCallback(() => {
+  const handleRuleShow = () => {
     setRuleModal(true);
-  });
+  };
 
   const handleCancelRuleModal = useMemoCallback(() => {
     setRuleModal(false);
@@ -109,7 +108,7 @@ const SerialRules = (props: RulesProps) => {
     setRules(initialRules);
   });
 
-  const handleOnChange = useMemoCallback((serialItem) => {
+  const handleOnChange = (serialItem: { type: string; rules: any; ruleName: string }) => {
     const { type, rules: formRule, ruleName: formName } = serialItem;
     if (type === 'custom') {
       setRuleName(formName);
@@ -134,11 +133,11 @@ const SerialRules = (props: RulesProps) => {
           serialMata: { type, ruleName, rules, changeRuleName: formName, changeRules: formRule },
         });
     }
-  });
+  };
 
-  const handleEditRule = useMemoCallback(() => {
+  const handleEditRule = () => {
     setEditStatus(true);
-  });
+  };
 
   const handleSaveRules = async () => {
     try {
@@ -155,15 +154,17 @@ const SerialRules = (props: RulesProps) => {
       if (!ret || !ret.data) return;
       message.success('保存成功');
       setEditStatus(false);
-      if (type === 'inject') return;
+
       const { data: serialMap } = ret;
       const { id, mata, status, name } = serialMap;
+      setResetRules(mata);
+      setResetRuleName(name);
+      if (type === 'inject') return;
       setSerialId(id);
       setChangeRules(mata);
       setRuleStatus(status);
-      setResetRules(mata);
-      setResetRuleName(name);
       setChangeRuleName(name);
+      formSerial.setFieldsValue({ name: '' });
       handleResetCustom();
       onChange &&
         onChange({
@@ -178,15 +179,31 @@ const SerialRules = (props: RulesProps) => {
 
   useEffect(() => {
     setType(value?.serialId ? 'inject' : 'custom');
-    value?.serialId && setSerialId(value?.serialId);
-    getSerial();
-  }, [value?.serialId, getSerial]);
+    if (value?.serialId) {
+      setSerialId(value?.serialId);
+      setResetRules(value?.serialMata?.changeRules!);
+      setResetRuleName(value?.serialMata?.changeRuleName!);
+    }
+  }, [value?.serialId]);
 
-  const handleCancelEdit = useMemoCallback(() => {
+  const handleCancelEdit = useCallback(() => {
     setEditStatus(false);
+    console.log(resetRuleName, 'rrr');
     setChangeRules(resetRules);
     setChangeRuleName(resetRuleName);
-  });
+    formChangeSerial.setFieldsValue({ name: resetRuleName });
+    onChange &&
+      onChange({
+        serialId,
+        serialMata: {
+          type,
+          ruleName,
+          rules,
+          changeRules: resetRules,
+          changeRuleName: resetRuleName,
+        },
+      });
+  }, [resetRules, resetRuleName]);
 
   const renderContent = useMemoCallback(() => {
     if (type === 'custom') {
@@ -200,8 +217,8 @@ const SerialRules = (props: RulesProps) => {
             onChange={handleOnChange}
             fields={fields}
           />
-          <Form.Item>
-            <Button className={styles.add_custom} size="large" onClick={handleSaveRules}>
+          <Form.Item noStyle>
+            <Button className={styles.save_custom} size="large" onClick={handleSaveRules}>
               <span>保存并应用</span>
             </Button>
           </Form.Item>
@@ -240,13 +257,13 @@ const SerialRules = (props: RulesProps) => {
                 </Form.Item>
               ) : (
                 <div className={styles.flexbox}>
-                  <Form.Item className={styles.flexItem}>
-                    <Button className={styles.add_custom} size="large" onClick={handleCancelEdit}>
+                  <Form.Item noStyle>
+                    <Button className={styles.change_btn} size="large" onClick={handleCancelEdit}>
                       <span>取 消</span>
                     </Button>
                   </Form.Item>
-                  <Form.Item className={styles.flexItem}>
-                    <Button className={styles.add_custom} size="large" onClick={handleSaveRules}>
+                  <Form.Item noStyle>
+                    <Button className={styles.change_btn} size="large" onClick={handleSaveRules}>
                       <span>保 存</span>
                     </Button>
                   </Form.Item>

@@ -103,6 +103,17 @@ const NumberContainer = ({ children, ...rest }: any) => {
   return React.cloneElement(children, rest);
 };
 
+const CheckComponentType: { [key: string]: (id: string, componentId?: string) => any } = {
+  precision: (id) => (
+    <NumberContainer>
+      <AllowDecimal id={id} />
+    </NumberContainer>
+  ),
+  numrange: (id) => <LimitRange id={id} />,
+  daterange: (id, componentId) => componentId && <DateRange id={id} componentId={componentId} />,
+  filetype: (componentId) => componentId && <FilesType componentId={componentId} />,
+};
+
 const FormItemWrap = (props: ComponentProps) => {
   const { id, label, required, type, requiredMessage, rules, children, componentId } = props;
 
@@ -113,24 +124,11 @@ const FormItemWrap = (props: ComponentProps) => {
       </Form.Item>
     );
   }
-  if (type === 'precision') {
-    return (
-      <NumberContainer>
-        <AllowDecimal id={id} />
-      </NumberContainer>
-    );
+
+  if (LABEL_LINKED_RULES.includes(type)) {
+    return CheckComponentType[type](id, componentId);
   }
 
-  if (type === 'numrange') {
-    return <LimitRange id={id} />;
-  }
-  if (type === 'daterange' && componentId) {
-    return <DateRange id={id} componentId={componentId} />;
-  }
-
-  if (type === 'filetype' && componentId) {
-    return <FilesType id={id} componentId={componentId} />;
-  }
   return (
     <Form.Item
       label={label}

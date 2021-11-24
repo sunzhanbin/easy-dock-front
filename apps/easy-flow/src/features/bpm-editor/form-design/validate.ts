@@ -47,7 +47,7 @@ export const validateHasChecked = (props: ConfigItem) => {
       break;
     case 'Attachment':
       const { typeRestrict } = props;
-      if (typeRestrict.enable && (!typeRestrict.types || !typeRestrict.length)) {
+      if (typeRestrict.enable && (!typeRestrict.types || !typeRestrict.types.length)) {
         return '请选择文件类型';
       }
       break;

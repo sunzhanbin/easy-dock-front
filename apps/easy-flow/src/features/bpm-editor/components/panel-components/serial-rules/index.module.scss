@@ -195,8 +195,12 @@
   padding-top: 10px;
 }
 
-.add_custom, .add_inject, .add_change {
+.add_custom, .add_inject, .add_change, .save_custom, .change_btn {
   width: 100%;
+}
+
+.change_btn:nth-child(1) {
+  margin-right: 10px;
 }
 
 .add_inject, .add_change {
@@ -212,7 +216,8 @@
 }
 
 .content {
-  margin: 20px 0;
+
+  margin-top: 20px;
 
   .flexbox {
     display: flex;
@@ -220,8 +225,18 @@
 
   .flexItem {
     flex: 1;
-    margin-right: 10px;
+    margin-right: 10px !important;
   }
 }
 
+:global {
+  .ant-popover-buttons {
+    display: flex;
+    justify-content: space-around;
+  }
+
+  .ant-popover-message-title {
+    padding-left: 0;
+  }
+}
 
