@@ -101,18 +101,13 @@ const NumberContainer = ({ children, ...rest }: any) => {
 };
 
 const CheckComponentType: { [key: string]: (id: string, componentId?: string) => any } = {
-  precision: (id, componentId) => (
-    <NumberContainer>
-      <AllowDecimal id={id}/>
-    </NumberContainer>
-  ),
   numrange: (id, componentId) => componentId && <LimitRange id={id} componentId={componentId}/>,
   daterange: (id, componentId) => componentId && <DateRange id={id} componentId={componentId} />,
   filetype: (id, componentId) => componentId && <FilesType componentId={componentId} />,
 };
 
 const FormItemWrap = (props: ComponentProps) => {
-  const { id, label, required, type, requiredMessage, rules, children, componentId } = props;
+  const { id, label, required, type, requiredMessage, rules, children, componentId, formInstance } = props;
 
   if (LABEL_INCLUDE_CHECKBOX.includes(type)) {
     return (
@@ -123,6 +118,11 @@ const FormItemWrap = (props: ComponentProps) => {
   }
   if (LABEL_LINKED_RULES.includes(type)) {
     return CheckComponentType[type](id, componentId);
+  }
+  if(type === 'precision' && formInstance) {
+    return <NumberContainer>
+      <AllowDecimal id={id} formInstance={formInstance}/>
+    </NumberContainer>
   }
   if (type === 'FieldManage') {
     return (
@@ -190,6 +190,7 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
   }, [componentId, form, errorIdList]);
   useEffect(() => {
     form.setFieldsValue(initValues);
+    console.log({initValues}, 'init0------------')
   }, [initValues, form]);
 
   return (
@@ -218,7 +219,7 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
               parentId: componentId,
             };
             const component =
-              ![...LABEL_INCLUDE_CHECKBOX, ...LABEL_LINKED_RULES].includes(type) && componentMap[type](props);
+              ![...LABEL_INCLUDE_CHECKBOX, ...LABEL_LINKED_RULES, 'precision'].includes(type) && componentMap[type](props);
 
             return (
               <Fragment key={key}>
