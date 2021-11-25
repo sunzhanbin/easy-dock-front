@@ -1,7 +1,6 @@
 import { memo } from 'react';
 import { Form, InputNumber } from 'antd';
 import styles from '../comp-attr-editor/index.module.scss';
-import { FormInstance } from 'antd/lib/form';
 
 interface LimitNumProps {
   id: string;
@@ -26,7 +25,7 @@ const LimitNum = ({ id }: LimitNumProps) => {
                   {
                     validator(_: any, value: number) {
                       if (!getFieldValue(['numlimit', id, 'max']) && (value === undefined || value === null)) {
-                        return Promise.reject(new Error('请输入取值范围!'));
+                        return Promise.reject(new Error('请输入取值范围'));
                       }
                       return Promise.resolve();
                     },
@@ -48,7 +47,7 @@ const LimitNum = ({ id }: LimitNumProps) => {
                   {
                     validator(_: any, value: number) {
                       if (!getFieldValue(['numlimit', id, 'min']) && (value === undefined || value === null)) {
-                        return Promise.reject(new Error('请输入取值范围!'));
+                        return Promise.reject(new Error('请输入取值范围'));
                       }
                       return Promise.resolve();
                     },

@@ -3,7 +3,7 @@ import { Select, Form } from 'antd';
 import { FormInstance } from 'antd/es';
 import { getFilesType } from '@apis/form';
 import styles from '../comp-attr-editor/index.module.scss';
-import useMemoCallback from '@common/hooks/use-memo-callback';
+// import useMemoCallback from '@common/hooks/use-memo-callback';
 
 const { Option } = Select;
 
@@ -20,22 +20,22 @@ type FileListType = {
 const FilesType = (props: FilesProps) => {
   const [typeList, setTypeList] = useState<FileListType[]>([]);
 
-  const getFilesTypeList = useMemoCallback(async () => {
-    try {
-      const ret = await getFilesType();
-      setTypeList(ret.data);
-      return
-    } catch (e) {
-      console.log(e);
-    }
-  });
+  // const getFilesTypeList = useMemoCallback(() => {
+  //   try {
+  //     getFilesType().then(res=>{
+  //       console.log({res}, 'res')
+  //       setTypeList(res.data);
+  //     })
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // })
   useEffect(() => {
-    (
-      async () => {
-        await getFilesTypeList()
-      }
-    )()
-  }, [getFilesTypeList]);
+    getFilesType().then(res=>{
+      console.log({res}, 'res')
+      setTypeList(res.data);
+    })
+  }, []);
   return (
     <Form.Item noStyle shouldUpdate>
       {(form: FormInstance<any>) => {
@@ -49,8 +49,8 @@ const FilesType = (props: FilesProps) => {
             <Form.Item name={['typeRestrict', 'types']} rules={[
               {
                 validator(_, value) {
-                  if (!value.length) {
-                    return Promise.reject(new Error('请选择文件类型!'));
+                  if (!value || !value.length) {
+                    return Promise.reject(new Error('请选择文件类型'));
                   }
                   return Promise.resolve();
                 },
@@ -82,8 +82,8 @@ const FilesType = (props: FilesProps) => {
                 <Form.Item name={['typeRestrict', 'custom']} rules={[
                   {
                     validator(_, value) {
-                      if (!value.length) {
-                        return Promise.reject(new Error('请选择自定义文件类型!'));
+                      if (!value || !value.length) {
+                        return Promise.reject(new Error('请选择自定义文件类型'));
                       }
                       return Promise.resolve();
                     },

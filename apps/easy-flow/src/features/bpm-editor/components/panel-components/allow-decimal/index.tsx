@@ -1,47 +1,45 @@
-import React, { memo } from 'react';
+import React, { memo, useEffect } from 'react';
 import { Form, InputNumber } from 'antd';
 import styles from '../comp-attr-editor/index.module.scss';
-import { FormInstance } from 'antd/es';
 
-const AllowDecimal = (props: { id: string; onChange?: (v: any) => void }) => {
-  const { id, onChange } = props;
+const DecimalComponent = (props: { id: string; formInstance: any;onChange?: (v: any) => void }) => {
+  const { id, onChange, formInstance } = props;
+  const isChecked = formInstance.getFieldValue('decimal');
+
+  useEffect(() => {
+    if (!isChecked?.[id]) {
+      formInstance.setFieldsValue({
+        decimal: {
+          ...isChecked,
+          precision: 1,
+        },
+      });
+    }
+  }, [formInstance, onChange]);
+
+  if (!isChecked || !isChecked.enable) {
+    return null;
+  }
+    return (
+      <div className={styles.allowDecimal}>
+        <span className={styles.text}>限制</span>
+        <Form.Item
+          className={styles.formItem}
+          name={['decimal', id]}
+          rules={[{ required: isChecked.enable, message: '请输入小数位数' }]}
+        >
+          <InputNumber size="large" min={1} max={10} placeholder="请输入" />
+        </Form.Item>
+        <span className={styles.text}>位</span>
+      </div>
+    );
+}
+
+const AllowDecimal = (props: { id: string; formInstance: any;onChange?: (v: any) => void }) => {
   return (
-    <Form.Item name="decimal" shouldUpdate noStyle>
-      <Form.Item noStyle shouldUpdate>
-        {(form: FormInstance) => {
-          const isChecked = form.getFieldValue('decimal');
-          if (!isChecked || !isChecked.enable) {
-            return null;
-          }
-          if (!isChecked?.[id]) {
-            form.setFieldsValue({
-              decimal: {
-                ...isChecked,
-                precision: 1,
-              },
-            });
-            onChange &&
-              onChange({
-                ...isChecked,
-                precision: 1,
-              });
-          }
-          return (
-            <div className={styles.allowDecimal}>
-              <span className={styles.text}>限制</span>
-              <Form.Item
-                className={styles.formItem}
-                name={['decimal', id]}
-                rules={[{ required: isChecked.enable, message: '请输入!' }]}
-              >
-                <InputNumber size="large" min={1} max={10} placeholder="请输入" />
-              </Form.Item>
-              <span className={styles.text}>位</span>
-            </div>
-          );
-        }}
+      <Form.Item name="decimal" noStyle>
+        <DecimalComponent {...props}/>
       </Form.Item>
-    </Form.Item>
   );
 };
 

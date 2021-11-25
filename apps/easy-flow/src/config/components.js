@@ -218,7 +218,6 @@ const allowDecimal = {
 
 const decimalCount = {
   key: 'precision',
-  defaultValue: 1,
   type: 'precision',
   required: false,
   isProps: true,
@@ -236,10 +235,6 @@ const limitNum = {
 
 const rangeNum = {
   key: 'numrange',
-  defaultValue: {
-    min: 0,
-    max: 0,
-  },
   type: 'numrange',
   required: false,
   isProps: true,
@@ -258,10 +253,6 @@ const limitDate = {
 
 const rangeDate = {
   key: 'daterange',
-  defaultValue: {
-    min: 0,
-    max: 0,
-  },
   type: 'daterange',
   required: false,
   isProps: true,
@@ -281,7 +272,6 @@ const files = {
 
 const filetype = {
   key: 'filetype',
-  defaultValue: [],
   type: 'filetype',
   required: false,
   isProps: true,
