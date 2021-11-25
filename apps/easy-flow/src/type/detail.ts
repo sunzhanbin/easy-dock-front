@@ -45,6 +45,7 @@ export enum NodeStatusType {
   Undo = 3,
   Finish = 4,
   Revert = 5,
+  Waiting = 6,
 }
 
 export type FlowInstance = {

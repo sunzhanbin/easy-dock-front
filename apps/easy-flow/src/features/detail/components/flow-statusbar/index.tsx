@@ -65,6 +65,9 @@ function StatusBar(props: StatusBarProps) {
     } else if (status === NodeStatusType.Finish) {
       image = `${publicPath}/images/flow-detail/finish.png`;
       styleName = styles.finish;
+    } else if (status === NodeStatusType.Waiting) {
+      image = `${publicPath}/images/flow-detail/processing.png`;
+      styleName = styles.processing;
     }
 
     return { image, styleName };
