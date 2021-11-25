@@ -30,7 +30,7 @@ export interface fieldRulesReturn {
 
 export const convertFormRules = (data: FormRuleItem[], components: { config: any; props: any }[]) => {
   const fieldRulesObj: any = {};
-  const componentList = components.map((v) => v.config);
+  const componentList = components.map((v) => Object.assign({}, v.config, v.props));
 
   function setFieldRules(fieldName: string, value: any, item: any, type: string, subtype: EventType) {
     const obj = {
@@ -133,15 +133,14 @@ export const validateRules = (isRequired: boolean, label: string, type: string, 
   }
   rules.push({
     validator(_, val) {
-      if(type === 'InputNumber' && props.numlimit?.enable) {
-        const {numrange} = props.numlimit
-        if(val<numrange?.min || val>numrange.max){
+      if (type === 'InputNumber' && props.numlimit?.enable) {
+        const { numrange } = props.numlimit;
+        if (val < numrange?.min || val > numrange.max) {
           return Promise.reject(new Error(`请设置数值范围内的数值！`));
         }
       }
       return Promise.resolve();
     },
-  })
-  return rules
-}
-
+  });
+  return rules;
+};

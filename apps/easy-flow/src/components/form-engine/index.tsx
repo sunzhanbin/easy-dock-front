@@ -250,6 +250,8 @@ const FormDetail = React.forwardRef(function FormDetail(
           const changeValue = Object.values(field)[0];
           if (!changeKey) return;
           PubSub.publish(`${key}.${changeKey}-change`, changeValue);
+          // emit tabs-sub-components visible event
+          PubSub.publish(`${changeKey}-change`, changeValue);
         }
       } else {
         PubSub.publish(`${key}-change`, value);
@@ -284,6 +286,7 @@ const FormDetail = React.forwardRef(function FormDetail(
               delete compProps['defaultValue'];
               delete compProps['apiConfig'];
               const rules: Rule[] = validateRules(isRequired, label, type, props);
+              console.info(comRules.formRules, '----', fieldName, id);
               return (
                 <Col span={colSpace * 6} key={fieldId} className={styles.col}>
                   {/* 由于预览时没有fieldName字段  此处统一用id*/}

@@ -4,7 +4,6 @@ import { Rule, FormInstance } from 'antd/lib/form';
 import { AllComponentType, CompConfig, Datasource, EventType } from '@/type';
 import useLoadComponents from '@/hooks/use-load-components';
 import { fetchDataSource } from '@/apis/detail';
-import { useSubAppDetail } from '@/app/app';
 import LabelContent from '../../../label-content';
 import styles from './index.module.scss';
 import { AuthType, FieldAuthsMap } from '@/type/flow';
@@ -36,7 +35,6 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId }: Form
   const optionComponents = useMemo(() => {
     return fields.filter((v) => ['Select', 'Radio', 'Checkbox'].includes(v.config.type)).map((v) => v.config);
   }, [fields]);
-  // const subAppDetail = useSubAppDetail();
   const compSources = useLoadComponents(componentTypes);
   const [dataSourceMap, setDataSourceMap] = useState<Datasource>({});
   useEffect(() => {
@@ -79,8 +77,10 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId }: Form
       });
   }, [fields, setVisibleMap]);
   useEffect(() => {
+    console.info(context, 'context');
     if (context && context?.rules) {
       const { rules, form } = context;
+      console.info({ rules });
       Object.keys(rules).forEach((key) => {
         const ruleList = ((rules as unknown) as formRulesReturn)[key];
         const visibleRules = ruleList?.filter((item) => item?.subtype === EventType.Visible);
