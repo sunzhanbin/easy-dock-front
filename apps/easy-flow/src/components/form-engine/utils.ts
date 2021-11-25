@@ -120,27 +120,37 @@ export const convertFormRules = (data: FormRuleItem[], components: { config: any
   return fieldRulesObj;
 };
 
-export const validateRules = (isRequired: boolean, label: string, type: string, props: any) => {
-  let rules: Rule[] = [];
+export const validateRules = (isRequired: boolean, label: string, type: string, props: any): Rule[] => {
+  const rules: Rule[] = [];
 
   if (isRequired) {
-    rules = [
-      {
+    // 图片和附件的必填校验特殊处理
+    if (['Image', 'Attachment'].includes(type)) {
+      rules.push({
+        validator(_, value) {
+          if (!value || (value?.fileList?.length === 0 && value?.fileIdList?.length === 0)) {
+            return Promise.reject(new Error(`请选择上传的${type === 'Image' ? '图片' : '附件'}`));
+          }
+          return Promise.resolve();
+        },
+      });
+    } else {
+      rules.push({
         required: true,
         message: `${label}不能为空`,
-      },
-    ];
+      });
+    }
   }
-  rules.push({
-    validator(_, val) {
-      if (type === 'InputNumber' && props.numlimit?.enable) {
-        const { numrange } = props.numlimit;
+  if (type === 'InputNumber' && props.numlimit?.enable) {
+    const { numrange } = props.numlimit;
+    rules.push({
+      validator(_, val) {
         if (val < numrange?.min || val > numrange.max) {
           return Promise.reject(new Error(`请设置数值范围内的数值！`));
         }
-      }
-      return Promise.resolve();
-    },
-  });
+        return Promise.resolve();
+      },
+    });
+  }
   return rules;
 };
