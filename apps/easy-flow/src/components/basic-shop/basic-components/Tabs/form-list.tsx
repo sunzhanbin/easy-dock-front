@@ -77,10 +77,8 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId }: Form
       });
   }, [fields, setVisibleMap]);
   useEffect(() => {
-    console.info(context, 'context');
     if (context && context?.rules) {
       const { rules, form } = context;
-      console.info({ rules });
       Object.keys(rules).forEach((key) => {
         const ruleList = ((rules as unknown) as formRulesReturn)[key];
         const visibleRules = ruleList?.filter((item) => item?.subtype === EventType.Visible);

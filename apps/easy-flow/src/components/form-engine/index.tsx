@@ -286,7 +286,6 @@ const FormDetail = React.forwardRef(function FormDetail(
               delete compProps['defaultValue'];
               delete compProps['apiConfig'];
               const rules: Rule[] = validateRules(isRequired, label, type, props);
-              console.info(comRules.formRules, '----', fieldName, id);
               return (
                 <Col span={colSpace * 6} key={fieldId} className={styles.col}>
                   {/* 由于预览时没有fieldName字段  此处统一用id*/}
