@@ -13,7 +13,7 @@ import { Loading } from '@common/components';
 import { DataConfig, ParamSchem } from '@/type/api';
 import PubSub from 'pubsub-js';
 import Container from './container';
-import { convertFormRules } from './utils';
+import {convertFormRules, validateRules} from './utils';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { debounce } from 'lodash';
 import { getFilesType } from '@apis/form';
@@ -275,25 +275,19 @@ const FormDetail = React.forwardRef(function FormDetail(
           <Row key={index} className={styles.row}>
             {formRow.map((fieldId) => {
               const { config = {}, props = {} } = compMaps[fieldId];
-              const { fieldName = '', colSpace = 4, label = '', desc = '', type = '' } = config;
+              const { fieldName = '', colSpace = 4, label = '', desc = '', type = '', id } = config;
               const isRequired = fieldsAuths && fieldsAuths[fieldName] === AuthType.Required;
               const compProps = { ...props };
               const Component = compSources[config?.type as AllComponentType['type']];
               if (!fieldsVisible[fieldName || fieldId] || !Component) return null;
               delete compProps['defaultValue'];
               delete compProps['apiConfig'];
-              let rules: Rule[] = [];
-              if (isRequired) {
-                rules = [
-                  {
-                    required: true,
-                    message: `${label}不能为空`,
-                  },
-                ];
-              }
+              const rules: Rule[] = validateRules(isRequired, label, type, props);
+              
               return (
                 <Col span={colSpace * 6} key={fieldId} className={styles.col}>
-                  <Container type={config.type} fieldName={fieldName} form={form} rules={comRules.formRules[fieldName]}>
+                  {/* 由于预览时没有fieldName字段  此处统一用id*/}
+                  <Container type={config.type} fieldName={fieldName || id} form={form} rules={comRules.formRules[fieldName || id]}>
                     <Form.Item
                       key={fieldId}
                       name={fieldName || fieldId}

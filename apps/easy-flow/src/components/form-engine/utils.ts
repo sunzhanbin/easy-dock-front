@@ -1,5 +1,6 @@
 import { FormRuleItem, fieldRule, EventType } from '@type';
 import { flowVarsMap } from '@utils';
+import { Rule } from 'antd/lib/form';
 
 export interface fieldRulesItem {
   condition: fieldRule[];
@@ -111,10 +112,36 @@ export const convertFormRules = (data: FormRuleItem[], components: { config: any
     // 此处不能用fieldName 预览时没有fieldName字段 统一用id作为key
     if (config.id && config.type === 'InputNumber' && config.defaultNumber) {
       // panel配置公式计算
-      const { id, defaultNumber } = config;
+      const { id, defaultNumber, fieldName } = config;
       const value = defaultNumber.calculateData;
-      value && setFieldRules(id, value, defaultNumber, 'change', 2);
+      value && setFieldRules(fieldName || id, value, defaultNumber, 'change', 2);
     }
   });
   return fieldRulesObj;
 };
+
+export const validateRules = (isRequired: boolean, label: string, type: string, props: any) => {
+  let rules: Rule[] = [];
+
+  if (isRequired) {
+    rules = [
+      {
+        required: true,
+        message: `${label}不能为空`,
+      },
+    ];
+  }
+  rules.push({
+    validator(_, val) {
+      if(type === 'InputNumber' && props.numlimit?.enable) {
+        const {numrange} = props.numlimit
+        if(val<numrange?.min || val>numrange.max){
+          return Promise.reject(new Error(`请设置数值范围内的数值！`));
+        }
+      }
+      return Promise.resolve();
+    },
+  })
+  return rules
+}
+

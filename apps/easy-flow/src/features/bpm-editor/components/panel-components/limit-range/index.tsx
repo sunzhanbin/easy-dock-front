@@ -1,14 +1,19 @@
 import { memo } from 'react';
 import { Form, InputNumber } from 'antd';
 import styles from '../comp-attr-editor/index.module.scss';
+import { FormInstance } from 'antd/lib/form';
 
-const LimitNum = ({ id }: { id: string }) => {
+interface LimitNumProps {
+  id: string;
+  componentId?: string;
+}
+
+const LimitNum = ({ id }: LimitNumProps) => {
   return (
-    <Form.Item noStyle shouldUpdate name="numlimit">
       <Form.Item noStyle shouldUpdate>
-        {(form) => {
-          const isChecked = form.getFieldValue('numlimit');
-          const fieldValue = form.getFieldValue('decimal');
+        {(({getFieldValue}) => {
+          const isChecked = getFieldValue('numlimit');
+          const fieldValue = getFieldValue('decimal');
           if (!isChecked || !isChecked.enable) {
             return null;
           }
@@ -20,7 +25,7 @@ const LimitNum = ({ id }: { id: string }) => {
                 rules={[
                   {
                     validator(_: any, value: number) {
-                      if (!form.getFieldValue(['numlimit', id, 'max']) && (value === undefined || value === null)) {
+                      if (!getFieldValue(['numlimit', id, 'max']) && (value === undefined || value === null)) {
                         return Promise.reject(new Error('请输入取值范围!'));
                       }
                       return Promise.resolve();
@@ -31,7 +36,7 @@ const LimitNum = ({ id }: { id: string }) => {
                 <InputNumber
                   size="large"
                   placeholder="最小值"
-                  max={form.getFieldValue('numlimit')?.[id]?.max}
+                  max={getFieldValue(['numlimit', id, 'max'])}
                   {...(fieldValue?.enable ? { precision: fieldValue.precision } : '')}
                 />
               </Form.Item>
@@ -42,7 +47,7 @@ const LimitNum = ({ id }: { id: string }) => {
                 rules={[
                   {
                     validator(_: any, value: number) {
-                      if (!form.getFieldValue(['numlimit', id, 'min']) && (value === undefined || value === null)) {
+                      if (!getFieldValue(['numlimit', id, 'min']) && (value === undefined || value === null)) {
                         return Promise.reject(new Error('请输入取值范围!'));
                       }
                       return Promise.resolve();
@@ -53,16 +58,15 @@ const LimitNum = ({ id }: { id: string }) => {
                 <InputNumber
                   size="large"
                   placeholder="最大值"
-                  min={form.getFieldValue('numlimit')?.[id]?.min}
+                  min={getFieldValue(['numlimit', id, 'min'])}
                   {...(fieldValue?.enable ? { precision: fieldValue.precision } : '')}
                 />
               </Form.Item>
             </div>
           );
-        }}
+        })}
       </Form.Item>
-    </Form.Item>
   );
 };
 
-export default memo(LimitNum);
+export default memo(LimitNum, (prev, next) => prev.componentId === next.componentId);

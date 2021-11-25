@@ -226,7 +226,9 @@ const decimalCount = {
 const limitNum = {
   key: 'numlimit',
   label: '限制数值范围',
-  defaultValue: false,
+  defaultValue: {
+    enable: false
+  },
   type: 'limitNum',
   required: false,
   isProps: true,
@@ -246,7 +248,9 @@ const rangeNum = {
 const limitDate = {
   key: 'datelimit',
   label: '限制日期范围',
-  defaultValue: false,
+  defaultValue: {
+    enable: false
+  },
   type: 'limitDate',
   required: false,
   isProps: true,
@@ -267,7 +271,9 @@ const rangeDate = {
 const files = {
   key: 'typeRestrict',
   label: '限制文件类型',
-  defaultValue: false,
+  defaultValue: {
+      enable: false
+  },
   type: 'files',
   required: false,
   isProps: true,
@@ -275,7 +281,7 @@ const files = {
 
 const filetype = {
   key: 'filetype',
-  defaultValue: {},
+  defaultValue: [],
   type: 'filetype',
   required: false,
   isProps: true,

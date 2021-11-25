@@ -39,6 +39,7 @@ export const validateHasChecked = (props: ConfigItem) => {
   switch (type) {
     case 'InputNumber':
       const { decimal, numlimit } = props;
+      console.log(numlimit, 'numli')
       if (decimal.enable && !decimal.precision) {
         return '请输入小数位数';
       }

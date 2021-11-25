@@ -21,6 +21,7 @@ import LimitRange from '../limit-range';
 import DateRange from '../date-range';
 import { LABEL_INCLUDE_CHECKBOX, LABEL_LINKED_RULES } from '@utils/const';
 import FilesType from '@/features/bpm-editor/components/panel-components/files-type';
+import { FormInstance } from 'antd/lib/form';
 
 const { Option } = Select;
 
@@ -41,6 +42,7 @@ interface ComponentProps {
   requiredMessage?: string;
   rules?: Rule[];
   children?: ReactNode;
+  formInstance: FormInstance<any>;
 }
 
 const options = [
@@ -99,14 +101,14 @@ const NumberContainer = ({ children, ...rest }: any) => {
 };
 
 const CheckComponentType: { [key: string]: (id: string, componentId?: string) => any } = {
-  precision: (id) => (
+  precision: (id, componentId) => (
     <NumberContainer>
-      <AllowDecimal id={id} />
+      <AllowDecimal id={id}/>
     </NumberContainer>
   ),
-  numrange: (id) => <LimitRange id={id} />,
+  numrange: (id, componentId) => componentId && <LimitRange id={id} componentId={componentId}/>,
   daterange: (id, componentId) => componentId && <DateRange id={id} componentId={componentId} />,
-  filetype: (componentId) => componentId && <FilesType componentId={componentId} />,
+  filetype: (id, componentId) => componentId && <FilesType componentId={componentId} />,
 };
 
 const FormItemWrap = (props: ComponentProps) => {
@@ -114,16 +116,14 @@ const FormItemWrap = (props: ComponentProps) => {
 
   if (LABEL_INCLUDE_CHECKBOX.includes(type)) {
     return (
-      <Form.Item name={[id, 'enable']} valuePropName="checked">
-        <Checkbox>{label}</Checkbox>
-      </Form.Item>
+        <Form.Item name={[id, 'enable']} valuePropName="checked">
+          <Checkbox>{label}</Checkbox>
+        </Form.Item>
     );
   }
-
   if (LABEL_LINKED_RULES.includes(type)) {
     return CheckComponentType[type](id, componentId);
   }
-
   if (type === 'FieldManage') {
     return (
       <Form.Item
@@ -184,7 +184,8 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
       form.validateFields();
     }
     return () => {
-      form.resetFields();
+      // 此处reset会触发form的shouldUpdate 暂先屏蔽
+      // form.resetFields();
     };
   }, [componentId, form, errorIdList]);
   useEffect(() => {
@@ -225,6 +226,7 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
                   id={key}
                   label={label}
                   type={type}
+                  formInstance={form}
                   componentId={componentId}
                   required={required}
                   requiredMessage={requiredMessage}
