@@ -103,10 +103,10 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId }: Form
           <Row className={styles.row}>
             {fields.map((field) => {
               const { config, props } = field;
-              const { fieldName = '', label = '', colSpace = '4', desc = '', type } = config;
+              const { fieldName = '', label = '', colSpace = 4, desc = '', type } = config;
               const Component = compSources ? compSources[type] : null;
               const dataSource = dataSourceMap[fieldName] || [];
-              let fieldAuth = auth[fieldName] ?? AuthType.View;
+              let fieldAuth = auth[fieldName] ?? AuthType.Edit;
               if (!visibleMap[fieldName]) {
                 fieldAuth = AuthType.Denied;
               }
