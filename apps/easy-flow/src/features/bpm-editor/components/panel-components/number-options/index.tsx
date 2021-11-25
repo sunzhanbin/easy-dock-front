@@ -1,7 +1,7 @@
-import { memo, useState, useMemo } from 'react';
+import { memo, useState, useMemo, useEffect } from 'react';
 import styles from './index.module.scss';
 import { Icon } from '@common/components';
-import { InputNumber, Select } from 'antd';
+import { InputNumber, Select, Form } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { InputNumberField, NumberDefaultOption } from '@type';
 import CalculateSelect from './calculate-select';
@@ -31,13 +31,14 @@ const calculateOptions = [
 ];
 const NumberOption = (props: NumberOptionProps) => {
   const { id, value, onChange } = props;
+  console.log(props, 'value');
   const byId = useAppSelector(componentPropsSelector);
   // 默认值类型选择
   const [type, setType] = useState<string>(value?.type);
   // 公式计算类型选择
-  const [calcType, setCalcType] = useState<string>(value?.calcType);
+  const [calcType, setCalcType] = useState<string>(value?.calcType || '');
   // 公式计算的表单字段
-  const [calculateData, setCalculateData] = useState<string | string[]>(value?.calculateData);
+  const [calculateData, setCalculateData] = useState<string | string[]>(value?.calculateData || []);
   // 默认值的小数位数
   const decimal = useMemo(() => {
     return (byId[id] as InputNumberField)?.decimal;
@@ -75,6 +76,10 @@ const NumberOption = (props: NumberOptionProps) => {
     setCalculateData(value);
     onChange && onChange({ id, type, calcType, calculateData: value });
   });
+
+  useEffect(() => {
+    console.log(value, 'calcType');
+  }, [value]);
 
   const renderContent = useMemoCallback(() => {
     if (type === 'custom') {
@@ -132,4 +137,4 @@ const NumberOption = (props: NumberOptionProps) => {
   );
 };
 
-export default memo(NumberOption);
+export default memo(NumberOption, (prev, next) => prev.id === next.id);
