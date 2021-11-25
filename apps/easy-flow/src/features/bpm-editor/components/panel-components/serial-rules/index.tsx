@@ -187,7 +187,6 @@ const SerialRules = (props: RulesProps) => {
 
   const handleCancelEdit = useCallback(() => {
     setEditStatus(false);
-    console.log(resetRuleName, 'rrr');
     setChangeRules(resetRules);
     setChangeRuleName(resetRuleName);
     formChangeSerial.setFieldsValue({ name: resetRuleName });
