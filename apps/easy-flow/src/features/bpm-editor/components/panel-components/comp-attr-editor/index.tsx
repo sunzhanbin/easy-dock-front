@@ -190,7 +190,6 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
   }, [componentId, form, errorIdList]);
   useEffect(() => {
     form.setFieldsValue(initValues);
-    console.log({initValues}, 'init0------------')
   }, [initValues, form]);
 
   return (

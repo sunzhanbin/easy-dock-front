@@ -3,7 +3,7 @@ import { Select, Form } from 'antd';
 import { FormInstance } from 'antd/es';
 import { getFilesType } from '@apis/form';
 import styles from '../comp-attr-editor/index.module.scss';
-// import useMemoCallback from '@common/hooks/use-memo-callback';
+import useMemoCallback from '@common/hooks/use-memo-callback';
 
 const { Option } = Select;
 
@@ -20,21 +20,22 @@ type FileListType = {
 const FilesType = (props: FilesProps) => {
   const [typeList, setTypeList] = useState<FileListType[]>([]);
 
-  // const getFilesTypeList = useMemoCallback(() => {
-  //   try {
-  //     getFilesType().then(res=>{
-  //       console.log({res}, 'res')
-  //       setTypeList(res.data);
-  //     })
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // })
+  const getFilesTypeList = useMemoCallback(async () => {
+      try {
+        const ret = await getFilesType();
+        setTypeList(ret.data);
+      } catch (e) {
+        console.log(e);
+      }
+    });
+  
   useEffect(() => {
-    getFilesType().then(res=>{
-      console.log({res}, 'res')
-      setTypeList(res.data);
-    })
+    (async () => {
+      await getFilesTypeList()
+    })()
+    return () => {
+      setTypeList([])
+    }
   }, []);
   return (
     <Form.Item noStyle shouldUpdate>

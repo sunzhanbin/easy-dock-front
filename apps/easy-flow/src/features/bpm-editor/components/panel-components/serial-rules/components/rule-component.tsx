@@ -1,4 +1,4 @@
-import React, { Fragment, memo } from 'react';
+import React, { Fragment, memo, useEffect } from 'react';
 import styles from '@/features/bpm-editor/components/panel-components/serial-rules/index.module.scss';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { Button, Dropdown, Form, Input, Menu } from 'antd';
@@ -104,6 +104,13 @@ const RuleComponent = (props: RuleComponentProps) => {
     onChange && onChange({ type, ruleName: name, rules });
   });
 
+  useEffect(() => {
+    // console.log(form, 'ffff')
+    return () => {
+      
+    };
+  }, [form]);
+  
   return (
     <Form component="div" form={form} initialValues={{ name: ruleName }}>
       <Fragment>

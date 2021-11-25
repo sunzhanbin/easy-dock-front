@@ -28,7 +28,7 @@ const Attachment = (
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [fileTypeList, setFileTypeList] = useState<string[]>([]);
   // 校验文件类型和大小
-  const checkoutFile = useMemoCallback((file: File) => {
+  const checkoutFile = useMemoCallback((file: File) =>  {
     const { size, name } = file;
     const extension = name.replace(/.+\./, '.');
     if (!name || (fileTypeList && !fileTypeList.includes(extension))) {

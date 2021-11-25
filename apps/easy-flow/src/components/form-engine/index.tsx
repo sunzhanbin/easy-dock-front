@@ -108,31 +108,32 @@ const FormDetail = React.forwardRef(function FormDetail(
           }
         });
       }
-    })();
-    data.components.forEach((com) => {
-      const { fieldName, id } = com.config;
+      data.components.forEach((com) => {
+        const { fieldName, id } = com.config;
 
-      if (initialValue && initialValue[fieldName] !== undefined) {
-        formValues[fieldName] = initialValue[fieldName];
-      } else {
-        formValues[fieldName || id] = com.props.defaultValue || com.config.value;
-      }
-      comMaps[id] = com;
-      // 流程编排中没有配置fieldAuths这个字段默认可见
-      visbles[fieldName || id] = fieldsAuths && fieldsAuths[fieldName || id] !== AuthType.Denied;
-    });
-    // 设置表单初始值
-    form.setFieldsValue(formValues);
-    const hiddenFieldMap: FieldsVisible = {};
-    Object.keys(visbles).forEach((key) => {
-      if (!visbles[key]) {
-        hiddenFieldMap[key] = false;
-      }
-    });
-    // 设置字段可见性, 不能和下面代码交互执行顺序
-    setFieldsVisible(visbles);
-    setCompMaps(comMaps);
-    setShowForm(true);
+        if (initialValue && initialValue[fieldName] !== undefined) {
+          formValues[fieldName] = initialValue[fieldName];
+        } else {
+          formValues[fieldName || id] = com.props.defaultValue || com.config.value;
+        }
+        comMaps[id] = com;
+        // 流程编排中没有配置fieldAuths这个字段默认可见
+        visbles[fieldName || id] = fieldsAuths && fieldsAuths[fieldName || id] !== AuthType.Denied;
+      });
+      // 设置表单初始值
+      form.setFieldsValue(formValues);
+      const hiddenFieldMap: FieldsVisible = {};
+      Object.keys(visbles).forEach((key) => {
+        if (!visbles[key]) {
+          hiddenFieldMap[key] = false;
+        }
+      });
+      // 设置字段可见性, 不能和下面代码交互执行顺序
+      setFieldsVisible(visbles);
+      setCompMaps(comMaps);
+      setShowForm(true);
+    })();
+    
   }, [data, fieldsAuths, initialValue, form, componentTypes]);
 
   const callInterfaceList = useMemoCallback((ruleList: DataConfig[], formValues: any) => {
