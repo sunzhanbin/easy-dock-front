@@ -133,7 +133,6 @@ const FormDetail = React.forwardRef(function FormDetail(
       setCompMaps(comMaps);
       setShowForm(true);
     })();
-    
   }, [data, fieldsAuths, initialValue, form, componentTypes]);
 
   const callInterfaceList = useMemoCallback((ruleList: DataConfig[], formValues: any) => {
@@ -244,7 +243,7 @@ const FormDetail = React.forwardRef(function FormDetail(
   const onValuesChange = useMemoCallback((changeValue: any, all: any) => {
     // 此处不要进行setState操作   避免重复更新
     Object.entries(changeValue).forEach(([key, value]: any) => {
-      if (value && !Array.isArray(value) && Object.values(value).length) {
+      if (value && typeof value === 'object' && !Array.isArray(value) && Object.values(value).length) {
         const field = Object.values(value)[0];
         if (typeof field === 'object' && field) {
           const changeKey = Object.keys(field)[0];
