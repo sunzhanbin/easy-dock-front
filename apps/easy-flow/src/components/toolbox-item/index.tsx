@@ -1,4 +1,5 @@
 import { FC, memo, useCallback } from 'react';
+import classNames from 'classnames';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { configSelector, formDesignSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 import { comAdded, comInserted } from '../../features/bpm-editor/form-design/formdesign-slice';
@@ -13,7 +14,12 @@ interface DropResult {
   id: string;
 }
 
-const ToolBoxItem: FC<{ icon: string; displayName: string; type: FieldType }> = ({ icon, displayName, type }) => {
+const ToolBoxItem: FC<{ icon: string; displayName: string; type: FieldType; disabled?: boolean }> = ({
+  icon,
+  displayName,
+  type,
+  disabled = false,
+}) => {
   const dispatch = useAppDispatch();
   const configMap = useAppSelector(configSelector);
   const formDesign = useAppSelector(formDesignSelector);
@@ -21,6 +27,9 @@ const ToolBoxItem: FC<{ icon: string; displayName: string; type: FieldType }> = 
     () => ({
       type: 'toolItem',
       item: { rowIndex: -1, id: type },
+      canDrag: () => {
+        return !disabled;
+      },
       end: (item, monitor) => {
         const dropResult = monitor.getDropResult<DropResult>();
         console.log(`dropResult`, dropResult);
@@ -32,16 +41,19 @@ const ToolBoxItem: FC<{ icon: string; displayName: string; type: FieldType }> = 
         handlerId: monitor.getHandlerId(),
       }),
     }),
-    [type],
+    [type, disabled],
   );
   const addComponent = useCallback(() => {
+    if (disabled) {
+      return;
+    }
     const com = { ...configMap[type], type };
     const rowIndex = formDesign?.layout?.length || -1;
     dispatch(comAdded(com as FormField, rowIndex + 1));
-  }, [type, configMap, formDesign, dispatch]);
+  }, [type, configMap, formDesign, disabled, dispatch]);
   return (
     <div
-      className={styles.container}
+      className={classNames(styles.container, disabled ? styles.disabled : '')}
       onClick={addComponent}
       ref={drag}
       // eslint-disable-next-line

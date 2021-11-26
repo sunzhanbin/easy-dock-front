@@ -30,4 +30,10 @@
     text-overflow: ellipsis;
     overflow: hidden;
   }
+  &.disabled {
+    cursor: not-allowed;
+    &:hover {
+      border: 1px solid rgba(24, 31, 67, 0.12);
+    }
+  }
 }

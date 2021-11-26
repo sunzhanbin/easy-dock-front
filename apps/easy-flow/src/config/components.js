@@ -368,6 +368,17 @@ const components = {
     },
     config: [getLabel('描述文字'), descTextValue, colSpace],
   },
+  Table: {
+    baseInfo: {
+      name: '表格 ',
+      icon: 'biaoge',
+      category: '基础控件',
+      version: '1.0',
+      type: 'Table',
+      disabled: true,
+    },
+    config: [fieldName, getLabel('表格 '), desc, fieldManage],
+  },
   Tabs: {
     baseInfo: {
       name: '标签页 ',
@@ -418,6 +429,17 @@ const components = {
     },
     config: [fieldName, getLabel('人员'), desc, multiple, showSearch, colSpace],
   },
+  Department: {
+    baseInfo: {
+      name: '部门',
+      icon: 'bumencaise',
+      category: '高级控件',
+      version: '1.0',
+      type: 'Department',
+      disabled: true,
+    },
+    config: [fieldName, getLabel('部门'), desc, multiple, showSearch, colSpace],
+  },
   FlowData: {
     baseInfo: {
       name: '关联流程',
@@ -425,6 +447,7 @@ const components = {
       category: '高级控件',
       version: '1.0',
       type: 'FlowData',
+      disabled: true,
     },
     config: [fieldName, getLabel('关联流程'), flows, colSpace],
   },
