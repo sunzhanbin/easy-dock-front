@@ -6,6 +6,8 @@ import DraggableOption from '@/features/bpm-editor/components/panel-components/s
 import { Icon } from '@common/components';
 import { RuleOption } from '@type';
 import { getFieldValue } from '@utils';
+import {useAppSelector} from "@app/hooks";
+import {errorSelector} from "@/features/bpm-editor/form-design/formzone-reducer";
 
 const { SubMenu } = Menu;
 const labelCol = { span: 24 };
@@ -19,11 +21,14 @@ interface RuleComponentProps {
   ruleStatus?: number;
   editStatus?: boolean;
   form?: any;
-  serialId?: string;
+  id: string;
+serialId?: string;
 }
 
 const RuleComponent = (props: RuleComponentProps) => {
-  const { onChange, type, editStatus, ruleStatus, rules, ruleName, form, fields } = props;
+  const { onChange, type, editStatus, ruleStatus, rules, ruleName, form, fields, id } = props;
+  const errors = useAppSelector(errorSelector);
+
   const handleAdd = useMemoCallback((addItem) => {
     const { key, keyPath } = addItem;
     const list = [...rules];
@@ -105,11 +110,10 @@ const RuleComponent = (props: RuleComponentProps) => {
   });
 
   useEffect(() => {
-    // console.log(form, 'ffff')
-    return () => {
-      
-    };
-  }, [form]);
+    if(errors.find(item => item.id === id)) {
+      form.validateFields()
+    }
+  }, [errors, id])
   
   return (
     <Form component="div" form={form} initialValues={{ name: ruleName }}>
@@ -118,7 +122,7 @@ const RuleComponent = (props: RuleComponentProps) => {
           name="name"
           label="规则名称"
           labelCol={labelCol}
-          rules={[{ required: true, message: '请输入规则名称!' }]}
+          rules={[{ required: true, message: '请输入规则名称' }]}
         >
           <Input size="large" onChange={handleChangeName} disabled={type === 'inject' && editStatus} />
         </Form.Item>

@@ -27,6 +27,11 @@ export const initialRules: RuleOption[] = [
   },
 ];
 
+export const RULE_TYPE = ['incNumber',
+  'createTime',
+  'fixedChars',
+  'fieldName']
+
 export const INCREASE_NUM_LIST: { [key: string]: any } = {
   none: '仅当计数达到最大值时，从0开始重新计数',
   day: '每日重置：每日00:00:00，自动从初始值重新开始计数。一天内如果计数达到最大值，从0开始重新计数',

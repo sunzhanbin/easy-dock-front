@@ -7,6 +7,7 @@ import { useSubAppDetail } from '@app/app';
 import { Icon } from '@common/components';
 import classNames from 'classnames';
 import { RuleOption } from '@type';
+import {RULE_TYPE} from "@utils/const";
 
 interface RuleProps {
   fields: { id: string; name: string }[];
@@ -56,21 +57,18 @@ const RuleModal = (props: RuleProps) => {
     (() => getRuleList())();
   }, [getRuleList]);
 
+  const formatComponent: { [key: string]: (props: any) => React.ReactNode } = {
+    'incNumber': (item) => <span>{Math.pow(10, item.digitsNum)}</span>,
+    'createTime': (item) => <span>{item.format}</span>,
+    'fixedChars': (item) => <span>{item.chars}</span>,
+    'fieldName': (item) => <span>{fields.find((field) => field.id === item.fieldValue)?.name}</span>,
+  }
+  
   const renderLabel = useMemoCallback((rule) => {
-    return rule.mata.map((item: RuleOption) => {
-      if (item.type === 'incNumber') {
-        return <span>{Math.pow(10, item.digitsNum)}</span>;
-      }
-      if (item.type === 'createTime') {
-        return <span>{item.format}</span>;
-      }
-      if (item.type === 'fixedChars') {
-        return <span>{item.chars}</span>;
-      }
-      if (item.type === 'fieldName') {
-        return <span>{fields.find((field) => field.id === item.fieldValue)?.name}</span>;
-      }
-      return null;
+    return rule.mata.map((item: RuleOption, index: number) => {
+      return <React.Fragment key={index}>
+        {RULE_TYPE.includes(item.type) && formatComponent[item.type](item)}
+      </React.Fragment>
     });
   });
 
@@ -95,7 +93,7 @@ const RuleModal = (props: RuleProps) => {
     >
       <div className={styles.ruleModal}>
         {ruleList.map((rule: any, index) => (
-          <div key={index} className={styles.ruleItem}>
+          <div key={rule.id} className={styles.ruleItem}>
             <div
               className={classNames(styles.name, activeIndex === index ? styles.active : '')}
               onClick={() => handleSelectRule(rule, index)}

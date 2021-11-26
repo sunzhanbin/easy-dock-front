@@ -195,10 +195,6 @@ const fieldManage = {
 const numberOption = {
   key: 'defaultNumber',
   label: '默认值',
-  defaultValue: {
-    type: 'custom',
-    data: '',
-  },
   type: 'NumberOption',
   direction: 'vertical',
   required: false,
@@ -226,7 +222,7 @@ const limitNum = {
   key: 'numlimit',
   label: '限制数值范围',
   defaultValue: {
-    enable: false
+    enable: false,
   },
   type: 'limitNum',
   required: false,
@@ -244,7 +240,7 @@ const limitDate = {
   key: 'datelimit',
   label: '限制日期范围',
   defaultValue: {
-    enable: false
+    enable: false,
   },
   type: 'limitDate',
   required: false,
@@ -263,7 +259,7 @@ const files = {
   key: 'typeRestrict',
   label: '限制文件类型',
   defaultValue: {
-      enable: false
+    enable: false,
   },
   type: 'files',
   required: false,
