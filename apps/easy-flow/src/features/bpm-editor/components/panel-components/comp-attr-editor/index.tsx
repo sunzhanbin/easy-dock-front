@@ -178,8 +178,6 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
     onSave && onSave(values, true);
   });
   const handleChange = useMemoCallback((values, _) => {
-    console.log('===', { values, _ });
-    console.log('===', 'getFieldsValues', form.getFieldsValue());
     onFinish(form.getFieldsValue());
   });
 

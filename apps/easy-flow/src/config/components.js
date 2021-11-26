@@ -195,6 +195,11 @@ const fieldManage = {
 const numberOption = {
   key: 'defaultNumber',
   label: '默认值',
+  defaultValue: {
+    type: 'custom',
+    id: '',
+    customData: '',
+  },
   type: 'NumberOption',
   direction: 'vertical',
   required: false,

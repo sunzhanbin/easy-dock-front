@@ -30,36 +30,45 @@ const calculateOptions = [
   { key: 'min', value: '最小值' },
 ];
 const NumberOption = (props: NumberOptionProps) => {
-  const { id, value, onChange } = props;
-  console.log(props, 'value');
   const byId = useAppSelector(componentPropsSelector);
-  // 默认值类型选择
-  const [type, setType] = useState<string>(value?.type);
-  // 公式计算类型选择
-  const [calcType, setCalcType] = useState<string>(value?.calcType || '');
-  // 公式计算的表单字段
-  const [calculateData, setCalculateData] = useState<string | string[]>(value?.calculateData || []);
-  // 默认值的小数位数
-  const decimal = useMemo(() => {
-    return (byId[id] as InputNumberField)?.decimal;
-  }, [id, byId]);
-  // 默认值的数值范围
-  const range = useMemo(() => {
-    return (byId[id] as InputNumberField)?.numlimit?.numrange;
-  }, [id, byId]);
+  const { id, value, onChange } = props;
 
+  const fieldNumber = useMemo(() => {
+    return byId[id] as InputNumberField;
+  }, [id, byId]);
+  if (!fieldNumber) return null;
+
+  // 默认值类型选择
+  const [type, setType] = useState<string>('');
+  // 公式计算类型选择
+  const [calcType, setCalcType] = useState<string>('');
+  // 自定义数值类型
+  const [customData, setCustomData] = useState<number | undefined>(undefined);
+  // 公式计算的表单字段
+  const [calculateData, setCalculateData] = useState<string | string[]>([]);
+
+  useEffect(() => {
+    const { defaultNumber } = fieldNumber;
+    setType(defaultNumber?.type || value?.type);
+    setCustomData(defaultNumber?.customData || value?.customData);
+    setCalcType(defaultNumber?.calcType || '');
+    setCalculateData(defaultNumber?.calculateData || []);
+  }, [fieldNumber]);
+
+  // 默认值的小数位数
+  // 默认值的数值范围
   const defaultNumberProps = useMemo(() => {
+    const { decimal, numlimit } = fieldNumber!;
     return {
       precision: decimal?.enable ? decimal?.precision : 0,
-      min: range?.min,
-      max: range?.max,
+      min: numlimit?.numrange?.min,
+      max: numlimit?.numrange?.max,
     };
-  }, [decimal, range]);
+  }, [fieldNumber]);
 
   // 改变默认值类型
   const handleChange = useMemoCallback((value: string) => {
-    setType(value);
-    onChange && onChange({ id, type: value });
+    onChange && onChange({ id, type: value, calculateData: undefined, calcType: '', customData: undefined });
   });
   const handleInputBlur = useMemoCallback((e) => {
     const value: number = e.target.value;
@@ -67,19 +76,12 @@ const NumberOption = (props: NumberOptionProps) => {
   });
   // 改变公式计算类型
   const handleChangeCalcType = useMemoCallback((value) => {
-    setCalcType(value);
-    setCalculateData([]);
-    onChange && onChange({ id, type, calcType: value });
+    onChange && onChange({ id, type, calcType: value, calculateData: [] });
   });
   // 改变公式计算表单控件
   const handleCalcChange = useMemoCallback((value) => {
-    setCalculateData(value);
     onChange && onChange({ id, type, calcType, calculateData: value });
   });
-
-  useEffect(() => {
-    console.log(value, 'calcType');
-  }, [value]);
 
   const renderContent = useMemoCallback(() => {
     if (type === 'custom') {
@@ -89,6 +91,7 @@ const NumberOption = (props: NumberOptionProps) => {
             size="large"
             className="input_number"
             placeholder="请选择"
+            value={customData}
             onBlur={handleInputBlur}
             {...defaultNumberProps}
           />
@@ -98,10 +101,10 @@ const NumberOption = (props: NumberOptionProps) => {
       return (
         <>
           <Select
-            placeholder="请选择"
             className={styles.dict_content}
             size="large"
             suffixIcon={<Icon type="xiala" />}
+            placeholder="请选择函数"
             value={calcType}
             onChange={handleChangeCalcType}
           >

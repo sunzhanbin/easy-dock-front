@@ -6,8 +6,8 @@ import DraggableOption from '@/features/bpm-editor/components/panel-components/s
 import { Icon } from '@common/components';
 import { RuleOption } from '@type';
 import { getFieldValue } from '@utils';
-import {useAppSelector} from "@app/hooks";
-import {errorSelector} from "@/features/bpm-editor/form-design/formzone-reducer";
+import { useAppSelector } from '@app/hooks';
+import { errorSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 
 const { SubMenu } = Menu;
 const labelCol = { span: 24 };
@@ -22,7 +22,7 @@ interface RuleComponentProps {
   editStatus?: boolean;
   form?: any;
   id: string;
-serialId?: string;
+  serialId?: string;
 }
 
 const RuleComponent = (props: RuleComponentProps) => {
@@ -110,11 +110,14 @@ const RuleComponent = (props: RuleComponentProps) => {
   });
 
   useEffect(() => {
-    if(errors.find(item => item.id === id)) {
-      form.validateFields()
+    if (errors.find((item) => item.id === id)) {
+      form.validateFields();
     }
-  }, [errors, id])
-  
+  }, [errors, id]);
+
+  useEffect(() => {
+    console.log(ruleName, 'ruleName');
+  }, []);
   return (
     <Form component="div" form={form} initialValues={{ name: ruleName }}>
       <Fragment>
