@@ -10,7 +10,7 @@ import { AuthType, FieldAuthsMap } from '@/type/flow';
 import { useContainerContext } from '@/components/form-engine/context';
 import PubSub from 'pubsub-js';
 import { analysisFormChangeRule } from '@/utils';
-import { formRulesItem, formRulesReturn } from '@/components/form-engine/utils';
+import { formRulesItem, formRulesReturn, validateRules } from '@/components/form-engine/utils';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 
 interface FormListProps {
@@ -112,11 +112,8 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId }: Form
                 return null;
               }
               const isRequired = fieldAuth === AuthType.Required;
-              const rules: Rule[] = [];
-              if (isRequired) {
-                rules.push({ required: true, message: `${label}不能为空` });
-              }
               const comProps = Object.assign({}, props, { disabled: fieldAuth === AuthType.View || readonly });
+              const rules: Rule[] = validateRules(isRequired, label, type, props);
               return (
                 <Col span={Number(colSpace) * 6} className={styles.col} key={fieldName}>
                   <Form.Item
