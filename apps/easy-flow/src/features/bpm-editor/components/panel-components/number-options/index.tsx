@@ -36,8 +36,6 @@ const NumberOption = (props: NumberOptionProps) => {
   const fieldNumber = useMemo(() => {
     return byId[id] as InputNumberField;
   }, [id, byId]);
-  if (!fieldNumber) return null;
-
   // 默认值类型选择
   const [type, setType] = useState<string>('');
   // 公式计算类型选择
