@@ -122,7 +122,19 @@ const RuleComponent = (props: RuleComponentProps) => {
           name="name"
           label="规则名称"
           labelCol={labelCol}
-          rules={[{ required: true, message: '请输入规则名称' }]}
+          rules={[
+            {
+              validator(_, value) {
+                if (!value) {
+                  return Promise.reject(new Error('请输入规则名称'));
+                }
+                if (!/^[\u4E00-\u9FA5a-zA-Z0-9_]{3,20}$/.test(value)) {
+                  return Promise.reject(new Error('规则名称格式有误，请重新输入'));
+                }
+                return Promise.resolve();
+              },
+            },
+          ]}
         >
           <Input size="large" onChange={handleChangeName} disabled={type === 'inject' && editStatus} />
         </Form.Item>
