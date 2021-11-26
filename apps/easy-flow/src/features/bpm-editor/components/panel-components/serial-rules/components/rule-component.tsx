@@ -113,11 +113,8 @@ const RuleComponent = (props: RuleComponentProps) => {
     if (errors.find((item) => item.id === id)) {
       form.validateFields();
     }
-  }, [errors, id]);
+  }, [errors, id, form]);
 
-  useEffect(() => {
-    console.log(ruleName, 'ruleName');
-  }, []);
   return (
     <Form component="div" form={form} initialValues={{ name: ruleName }}>
       <Fragment>
@@ -160,7 +157,4 @@ const RuleComponent = (props: RuleComponentProps) => {
   );
 };
 
-export default memo(RuleComponent, (prev, next) => {
-  console.log(prev, next);
-  return true;
-});
+export default memo(RuleComponent);

@@ -1,7 +1,7 @@
 import { memo, useState, useMemo, useEffect } from 'react';
 import styles from './index.module.scss';
 import { Icon } from '@common/components';
-import { InputNumber, Select, Form } from 'antd';
+import { InputNumber, Select } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { InputNumberField, NumberDefaultOption } from '@type';
 import CalculateSelect from './calculate-select';
@@ -31,7 +31,7 @@ const calculateOptions = [
 ];
 const NumberOption = (props: NumberOptionProps) => {
   const byId = useAppSelector(componentPropsSelector);
-  const { id, value, onChange } = props;
+  const { id, onChange } = props;
 
   const fieldNumber = useMemo(() => {
     return byId[id] as InputNumberField;
@@ -48,14 +48,13 @@ const NumberOption = (props: NumberOptionProps) => {
   useEffect(() => {
     if (!fieldNumber) return;
     const { defaultNumber } = fieldNumber;
-    setType(defaultNumber?.type || value?.type);
-    setCustomData(defaultNumber?.customData || value?.customData);
+    setType(defaultNumber?.type || 'custom');
+    setCustomData(defaultNumber?.customData || undefined);
     setCalcType(defaultNumber?.calcType);
     setCalculateData(defaultNumber?.calculateData || []);
   }, [fieldNumber]);
 
-  // 默认值的小数位数
-  // 默认值的数值范围
+  // 默认值的小数位数 默认值的数值范围
   const defaultNumberProps = useMemo(() => {
     if (!fieldNumber) return null;
     const { decimal, numlimit } = fieldNumber!;
@@ -103,7 +102,7 @@ const NumberOption = (props: NumberOptionProps) => {
       return (
         <>
           <Select
-            className={styles.dict_content}
+            className={styles.select_calc}
             size="large"
             suffixIcon={<Icon type="xiala" />}
             placeholder="请选择函数"

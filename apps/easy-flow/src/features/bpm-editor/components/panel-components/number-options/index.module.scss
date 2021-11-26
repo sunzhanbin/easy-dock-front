@@ -2,14 +2,16 @@
   padding: 12px 0;
 }
 
+.select_calc {
+  margin-bottom: 10px;
+}
+
 .custom_select {
   margin-top: 10px;
 
   .input_number {
     width: 100%;
-    
   }
- 
 }
 :global {
   .input_number .ant-input-number-input {
