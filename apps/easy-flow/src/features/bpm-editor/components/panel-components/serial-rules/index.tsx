@@ -289,4 +289,4 @@ const SerialRules = (props: RulesProps) => {
   );
 };
 
-export default memo(SerialRules);
+export default memo(SerialRules, (prev, next) => prev.id === next.id);

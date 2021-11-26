@@ -36,7 +36,7 @@ const FilesType = (props: FilesProps) => {
     return () => {
       setTypeList([]);
     };
-  }, []);
+  }, [getFilesTypeList]);
   return (
     <Form.Item noStyle shouldUpdate>
       {(form: FormInstance<any>) => {
