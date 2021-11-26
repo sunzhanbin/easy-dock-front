@@ -442,11 +442,6 @@ export function getBase64(file: File | Blob) {
     reader.onerror = (error) => reject(error);
   });
 }
-type FileValue = {
-  type: string;
-  fileList: File[];
-  fileIdList: { id: string; name: string }[];
-};
 // 批量上传文件
 export async function uploadFile(values: any) {
   // 需要上传的文件,图片和附件合并到一起
