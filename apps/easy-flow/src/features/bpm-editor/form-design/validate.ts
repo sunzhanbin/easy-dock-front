@@ -20,7 +20,11 @@ export const validateLabel = (label: string) => {
 
 export const validateSerial = (config: ConfigItem) => {
   const { type } = config;
-  if (type === 'SerialNum' && !config.serialRule.serialId && !config.serialRule.serialMata.ruleName) {
+  if (
+    type === 'SerialNum' &&
+    ((!config.serialRule.serialId && !config.serialRule.serialMata.ruleName) ||
+      (config.serialRule.serialId && !config.serialRule.serialMata.changeRuleName))
+  ) {
     return '请输入规则名称';
   }
 

@@ -32,6 +32,7 @@ const propsKey = [
   'components',
   'fieldName',
   'decimal',
+  'fileMap',
 ];
 type Key = keyof FormField;
 
@@ -68,6 +69,7 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
       });
       components.push(component);
     });
+    console.log(components, '--------------')
     return {
       layout,
       events: {

@@ -197,7 +197,8 @@ const numberOption = {
   label: '默认值',
   defaultValue: {
     type: 'custom',
-    data: '',
+    id: '',
+    customData: '',
   },
   type: 'NumberOption',
   direction: 'vertical',
@@ -218,7 +219,6 @@ const allowDecimal = {
 
 const decimalCount = {
   key: 'precision',
-  defaultValue: 1,
   type: 'precision',
   required: false,
   isProps: true,
@@ -226,7 +226,9 @@ const decimalCount = {
 const limitNum = {
   key: 'numlimit',
   label: '限制数值范围',
-  defaultValue: false,
+  defaultValue: {
+    enable: false,
+  },
   type: 'limitNum',
   required: false,
   isProps: true,
@@ -234,10 +236,6 @@ const limitNum = {
 
 const rangeNum = {
   key: 'numrange',
-  defaultValue: {
-    min: 0,
-    max: 0,
-  },
   type: 'numrange',
   required: false,
   isProps: true,
@@ -246,7 +244,9 @@ const rangeNum = {
 const limitDate = {
   key: 'datelimit',
   label: '限制日期范围',
-  defaultValue: false,
+  defaultValue: {
+    enable: false,
+  },
   type: 'limitDate',
   required: false,
   isProps: true,
@@ -254,10 +254,6 @@ const limitDate = {
 
 const rangeDate = {
   key: 'daterange',
-  defaultValue: {
-    min: 0,
-    max: 0,
-  },
   type: 'daterange',
   required: false,
   isProps: true,
@@ -267,7 +263,9 @@ const rangeDate = {
 const files = {
   key: 'typeRestrict',
   label: '限制文件类型',
-  defaultValue: false,
+  defaultValue: {
+    enable: false,
+  },
   type: 'files',
   required: false,
   isProps: true,
@@ -275,7 +273,6 @@ const files = {
 
 const filetype = {
   key: 'filetype',
-  defaultValue: {},
   type: 'filetype',
   required: false,
   isProps: true,

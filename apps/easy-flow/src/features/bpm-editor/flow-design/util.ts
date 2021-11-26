@@ -260,7 +260,7 @@ export function valid(data: AllNode[], validRes: ValidResultType) {
         const isInvalid = branch.conditions.some((row) => {
           return row.some((col) => {
             for (let key in col) {
-              if (!col[key as keyof typeof col]) {
+              if (!col[key as keyof typeof col] && !['parentId', 'valueType'].includes(key)) {
                 errors.push('条件配置不合法');
 
                 return true;

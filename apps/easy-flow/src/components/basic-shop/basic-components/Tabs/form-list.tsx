@@ -4,14 +4,13 @@ import { Rule, FormInstance } from 'antd/lib/form';
 import { AllComponentType, CompConfig, Datasource, EventType } from '@/type';
 import useLoadComponents from '@/hooks/use-load-components';
 import { fetchDataSource } from '@/apis/detail';
-import { useSubAppDetail } from '@/app/app';
 import LabelContent from '../../../label-content';
 import styles from './index.module.scss';
 import { AuthType, FieldAuthsMap } from '@/type/flow';
 import { useContainerContext } from '@/components/form-engine/context';
 import PubSub from 'pubsub-js';
 import { analysisFormChangeRule } from '@/utils';
-import { formRulesItem, formRulesReturn } from '@/components/form-engine/utils';
+import { formRulesItem, formRulesReturn, validateRules } from '@/components/form-engine/utils';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 
 interface FormListProps {
@@ -36,7 +35,6 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId }: Form
   const optionComponents = useMemo(() => {
     return fields.filter((v) => ['Select', 'Radio', 'Checkbox'].includes(v.config.type)).map((v) => v.config);
   }, [fields]);
-  // const subAppDetail = useSubAppDetail();
   const compSources = useLoadComponents(componentTypes);
   const [dataSourceMap, setDataSourceMap] = useState<Datasource>({});
   useEffect(() => {
@@ -103,10 +101,10 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId }: Form
           <Row className={styles.row}>
             {fields.map((field) => {
               const { config, props } = field;
-              const { fieldName = '', label = '', colSpace = '4', desc = '', type } = config;
+              const { fieldName = '', label = '', colSpace = 4, desc = '', type } = config;
               const Component = compSources ? compSources[type] : null;
               const dataSource = dataSourceMap[fieldName] || [];
-              let fieldAuth = auth[fieldName] ?? AuthType.View;
+              let fieldAuth = auth[fieldName] ?? AuthType.Edit;
               if (!visibleMap[fieldName]) {
                 fieldAuth = AuthType.Denied;
               }
@@ -114,11 +112,8 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId }: Form
                 return null;
               }
               const isRequired = fieldAuth === AuthType.Required;
-              const rules: Rule[] = [];
-              if (isRequired) {
-                rules.push({ required: true, message: `${label}不能为空` });
-              }
               const comProps = Object.assign({}, props, { disabled: fieldAuth === AuthType.View || readonly });
+              const rules: Rule[] = validateRules(isRequired, label, type, props);
               return (
                 <Col span={Number(colSpace) * 6} className={styles.col} key={fieldName}>
                   <Form.Item

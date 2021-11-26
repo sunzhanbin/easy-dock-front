@@ -23,24 +23,23 @@ const SerialRules = (props: RulesProps) => {
   const { id, value, onChange } = props;
   const serialMata = value?.serialMata;
   // 编号规则类型
-  const [type, setType] = useState<string>('custom');
+  const [type, setType] = useState<string>(value?.serialId ? 'inject' : 'custom');
   // 选择已有规则弹框
   const [ruleModal, setRuleModal] = useState<boolean>(false);
   const [rules, setRules] = useState<RuleOption[]>(serialMata?.rules || initialRules);
   const [changeRules, setChangeRules] = useState<RuleOption[]>(serialMata?.changeRules || []);
-  const [resetRules, setResetRules] = useState<RuleOption[]>([]);
-  const [resetRuleName, setResetRuleName] = useState<string>('');
+  const [resetRules, setResetRules] = useState<RuleOption[]>(serialMata?.changeRules || []);
+  const [resetRuleName, setResetRuleName] = useState<string>(serialMata?.changeRuleName || '');
   const [ruleName, setRuleName] = useState<string>(serialMata?.ruleName || '');
   const [changeRuleName, setChangeRuleName] = useState<string>(serialMata?.changeRuleName || '');
   // 是否可编辑   默认不可编辑
   const [editStatus, setEditStatus] = useState<boolean>(false);
   const [ruleStatus, setRuleStatus] = useState<number>(1);
-  const [serialId, setSerialId] = useState('');
+  const [serialId, setSerialId] = useState(value?.serialId || '');
   const [formSerial] = Form.useForm();
   const [formChangeSerial] = Form.useForm();
   const { data } = useSubAppDetail();
   const byId = useAppSelector(componentPropsSelector);
-
   const fields = useMemo<{ id: string; name: string }[]>(() => {
     const componentList = Object.values(byId).map((item: FormField) => item) || [];
     const compType = ['Date', 'Input', 'Radio', 'InputNumber'];
@@ -52,20 +51,6 @@ const SerialRules = (props: RulesProps) => {
       }));
   }, [byId, id]);
 
-  // 获取已有编号下的规则配置
-  // const getSerial = useMemoCallback(async () => {
-  //   try {
-  //     if (!value?.serialId) return;
-  //     const ret = await getSerialId(value?.serialId);
-  //     const { status, mata, name } = ret.data;
-  //     // setRuleStatus(status);
-  //     setResetRules(mata);
-  //     setResetRuleName(name);
-  //     // setEditStatus(false);
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // });
   // 自定义规则/引用规则
   const handleTypeChange = (type: string) => {
     setType(type);
@@ -156,38 +141,30 @@ const SerialRules = (props: RulesProps) => {
 
       const { data: serialMap } = ret;
       const { id, mata, status, name } = serialMap;
+      if (type === 'inject') return;
+      formSerial.setFieldsValue({ name: '' });
+      handleResetCustom();
+      setType('inject');
+
       setResetRules(mata);
       setResetRuleName(name);
-      if (type === 'inject') return;
       setSerialId(id);
       setChangeRules(mata);
       setRuleStatus(status);
       setChangeRuleName(name);
-      formSerial.setFieldsValue({ name: '' });
-      handleResetCustom();
+      formChangeSerial.setFieldsValue({ name });
       onChange &&
         onChange({
           serialId,
           serialMata: { type, ruleName: '', rules: initialRules, changeRuleName: name, changeRules: mata },
         });
-      handleTypeChange && handleTypeChange('inject');
     } catch (e) {
       console.log(e);
     }
   };
 
-  useEffect(() => {
-    setType(value?.serialId ? 'inject' : 'custom');
-    if (value?.serialId) {
-      setSerialId(value?.serialId);
-      setResetRules(value?.serialMata?.changeRules!);
-      setResetRuleName(value?.serialMata?.changeRuleName!);
-    }
-  }, [value?.serialId]);
-
   const handleCancelEdit = useCallback(() => {
     setEditStatus(false);
-    console.log(resetRuleName, 'rrr');
     setChangeRules(resetRules);
     setChangeRuleName(resetRuleName);
     formChangeSerial.setFieldsValue({ name: resetRuleName });
@@ -213,6 +190,7 @@ const SerialRules = (props: RulesProps) => {
             rules={rules}
             ruleName={ruleName}
             type="custom"
+            id={id}
             onChange={handleOnChange}
             fields={fields}
           />
@@ -239,6 +217,7 @@ const SerialRules = (props: RulesProps) => {
               </Button>
               <RuleComponent
                 fields={fields}
+                id={id}
                 form={formChangeSerial}
                 rules={changeRules}
                 ruleName={changeRuleName}
@@ -249,7 +228,7 @@ const SerialRules = (props: RulesProps) => {
                 type="inject"
               />
               {!editStatus ? (
-                <Form.Item>
+                <Form.Item noStyle>
                   <Button className={styles.add_custom} size="large" onClick={handleEditRule}>
                     <span>编辑规则</span>
                   </Button>
@@ -310,4 +289,4 @@ const SerialRules = (props: RulesProps) => {
   );
 };
 
-export default memo(SerialRules);
+export default memo(SerialRules, (prev, next) => prev.id === next.id);

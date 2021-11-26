@@ -22,6 +22,7 @@ interface editProps {
 }
 
 const SelectOptionList = (props: editProps) => {
+  console.log(props, 'props');
   const { id, value, onChange } = props;
   const { appId, id: subAppId } = useAppSelector(subAppSelector);
   const byId = useAppSelector(componentPropsSelector);

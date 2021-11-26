@@ -13,7 +13,7 @@ import { Loading } from '@common/components';
 import { DataConfig, ParamSchem } from '@/type/api';
 import PubSub from 'pubsub-js';
 import Container from './container';
-import { convertFormRules } from './utils';
+import { convertFormRules, validateRules } from './utils';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { debounce } from 'lodash';
 import { getFilesType } from '@apis/form';
@@ -108,31 +108,32 @@ const FormDetail = React.forwardRef(function FormDetail(
           }
         });
       }
-    })();
-    data.components.forEach((com) => {
-      const { fieldName, id } = com.config;
+      data.components.forEach((com) => {
+        const { fieldName, id } = com.config;
 
-      if (initialValue && initialValue[fieldName] !== undefined) {
-        formValues[fieldName] = initialValue[fieldName];
-      } else {
-        formValues[fieldName || id] = com.props.defaultValue || com.config.value;
-      }
-      comMaps[id] = com;
-      // 流程编排中没有配置fieldAuths这个字段默认可见
-      visbles[fieldName || id] = fieldsAuths && fieldsAuths[fieldName || id] !== AuthType.Denied;
-    });
-    // 设置表单初始值
-    form.setFieldsValue(formValues);
-    const hiddenFieldMap: FieldsVisible = {};
-    Object.keys(visbles).forEach((key) => {
-      if (!visbles[key]) {
-        hiddenFieldMap[key] = false;
-      }
-    });
-    // 设置字段可见性, 不能和下面代码交互执行顺序
-    setFieldsVisible(visbles);
-    setCompMaps(comMaps);
-    setShowForm(true);
+        if (initialValue && initialValue[fieldName] !== undefined) {
+          formValues[fieldName] = initialValue[fieldName];
+        } else {
+          formValues[fieldName || id] = com.props.defaultValue || com.config.value;
+        }
+        comMaps[id] = com;
+        // 流程编排中没有配置fieldAuths这个字段默认可见
+        visbles[fieldName || id] = fieldsAuths && fieldsAuths[fieldName || id] !== AuthType.Denied;
+      });
+      // 设置表单初始值
+      form.setFieldsValue(formValues);
+      const hiddenFieldMap: FieldsVisible = {};
+      Object.keys(visbles).forEach((key) => {
+        if (!visbles[key]) {
+          hiddenFieldMap[key] = false;
+        }
+      });
+      // 设置字段可见性, 不能和下面代码交互执行顺序
+      setFieldsVisible(visbles);
+      setCompMaps(comMaps);
+      setShowForm(true);
+    })();
+    
   }, [data, fieldsAuths, initialValue, form, componentTypes]);
 
   const callInterfaceList = useMemoCallback((ruleList: DataConfig[], formValues: any) => {
@@ -250,6 +251,8 @@ const FormDetail = React.forwardRef(function FormDetail(
           const changeValue = Object.values(field)[0];
           if (!changeKey) return;
           PubSub.publish(`${key}.${changeKey}-change`, changeValue);
+          // emit tabs-sub-components visible event
+          PubSub.publish(`${changeKey}-change`, changeValue);
         }
       } else {
         PubSub.publish(`${key}-change`, value);
@@ -275,25 +278,24 @@ const FormDetail = React.forwardRef(function FormDetail(
           <Row key={index} className={styles.row}>
             {formRow.map((fieldId) => {
               const { config = {}, props = {} } = compMaps[fieldId];
-              const { fieldName = '', colSpace = 4, label = '', desc = '', type = '' } = config;
+              const { colSpace = 4, label = '', desc = '', type = '', id } = config;
+              const fieldName = config.fieldName || props.fieldName || '';
               const isRequired = fieldsAuths && fieldsAuths[fieldName] === AuthType.Required;
               const compProps = { ...props };
               const Component = compSources[config?.type as AllComponentType['type']];
               if (!fieldsVisible[fieldName || fieldId] || !Component) return null;
               delete compProps['defaultValue'];
               delete compProps['apiConfig'];
-              let rules: Rule[] = [];
-              if (isRequired) {
-                rules = [
-                  {
-                    required: true,
-                    message: `${label}不能为空`,
-                  },
-                ];
-              }
+              const rules: Rule[] = validateRules(isRequired, label, type, props);
               return (
                 <Col span={colSpace * 6} key={fieldId} className={styles.col}>
-                  <Container type={config.type} fieldName={fieldName} form={form} rules={comRules.formRules[fieldName]}>
+                  {/* 由于预览时没有fieldName字段  此处统一用id*/}
+                  <Container
+                    type={config.type}
+                    fieldName={fieldName || id}
+                    form={form}
+                    rules={comRules.formRules[fieldName || id]}
+                  >
                     <Form.Item
                       key={fieldId}
                       name={fieldName || fieldId}

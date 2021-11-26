@@ -120,7 +120,7 @@ const CalculateSelect = (props: CalculateProps) => {
         <>
           <Select
             mode="multiple"
-            placeholder="请选择"
+            placeholder="请选择计算项"
             size="large"
             onChange={handleMultiChange}
             value={calculateData}
@@ -138,7 +138,7 @@ const CalculateSelect = (props: CalculateProps) => {
       ) : (
         <>
           <Select
-            placeholder="请选择"
+            placeholder="请选择计算项"
             className={styles.dict_content}
             size="large"
             suffixIcon={<Icon type="xiala" />}

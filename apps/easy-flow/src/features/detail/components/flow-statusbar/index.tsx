@@ -65,6 +65,9 @@ function StatusBar(props: StatusBarProps) {
     } else if (status === NodeStatusType.Finish) {
       image = `${publicPath}/images/flow-detail/finish.png`;
       styleName = styles.finish;
+    } else if (status === NodeStatusType.Waiting) {
+      image = `${publicPath}/images/flow-detail/waiting.png`;
+      styleName = styles.processing;
     }
 
     return { image, styleName };
@@ -100,6 +103,10 @@ function StatusBar(props: StatusBarProps) {
         desc={trackNode}
       />
     );
+
+    if (flowIns.state === NodeStatusType.Waiting) {
+      return null;
+    }
 
     // 显示当前处理人
     if (showCurrentProcessor && flowIns.state !== NodeStatusType.Terminated) {

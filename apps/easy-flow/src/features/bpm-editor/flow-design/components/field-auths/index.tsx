@@ -110,7 +110,7 @@ function FieldAuths(props: FieldAuthsProps) {
     templates.forEach((field) => {
       const { type, id, parentId } = field;
 
-      if (type === 'DescText') {
+      if (['DescText', 'SerialNum','FlowData'].includes(type)) {
         viewTypeNum++;
       }
       let auth: AuthType = AuthType.View;
@@ -190,12 +190,12 @@ function FieldAuths(props: FieldAuthsProps) {
       const { id, parentId, type } = field;
       if (parentId) {
         const parentAuth = Object.assign({}, newValue[parentId], {
-          [id]: type === 'DescText' ? Math.min(auth, AuthType.View) : auth,
+          [id]: ['DescText', 'SerialNum','FlowData'].includes(type) ? Math.min(auth, AuthType.View) : auth,
         });
         newValue[parentId] = Object.assign({}, newValue[parentId], parentAuth);
         return;
       }
-      if (type === 'DescText') {
+      if (['DescText', 'SerialNum','FlowData'].includes(type)) {
         newValue[id] = Math.min(auth, AuthType.View);
       } else {
         newValue[id] = auth;
@@ -231,9 +231,9 @@ function FieldAuths(props: FieldAuthsProps) {
             className={classnames({
               // 当字段是描述文字的时候并且字段列表可配编辑和必填时让描述文字的复选框显示only-view
               // 右侧会空出空间与其他字段对齐
-              [styles['only-view']]: field.type === 'DescText' && max === AuthType.Required,
+              [styles['only-view']]: ['DescText', 'SerialNum','FlowData'].includes(field.type) && max === AuthType.Required,
             })}
-            max={field.type === 'DescText' ? 1 : max}
+            max={['DescText', 'SerialNum','FlowData'].includes(field.type) ? 1 : max}
             key={field.id}
             value={fieldAuth}
             onChange={handleFieldChange}

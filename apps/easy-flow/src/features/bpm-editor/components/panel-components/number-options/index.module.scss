@@ -2,6 +2,10 @@
   padding: 12px 0;
 }
 
+.select_calc {
+  margin-bottom: 10px;
+}
+
 .custom_select {
   margin-top: 10px;
 
@@ -9,7 +13,11 @@
     width: 100%;
   }
 }
-
+:global {
+  .input_number .ant-input-number-input {
+    font-size: 14px !important;
+  }
+}
 .text_tips {
   color: #b9b2b2;
   display: inline-block;

@@ -5,6 +5,7 @@ import { DateField, fieldRule, FormField, SelectOptionItem } from '@/type';
 import moment from 'moment';
 import { runtimeAxios } from './axios';
 import { DATE_DEFAULT_FORMAT } from '@utils/const';
+import { cloneDeep } from 'lodash';
 
 // 格式化单个条件value
 export function formatRuleValue(
@@ -441,24 +442,18 @@ export function getBase64(file: File | Blob) {
     reader.onerror = (error) => reject(error);
   });
 }
-type FileValue = {
-  type: string;
-  fileList: File[];
-  fileIdList: { id: string; name: string }[];
-};
 // 批量上传文件
-// TODO 这里不要用any, 看不懂values的结构
 export async function uploadFile(values: any) {
   // 需要上传的文件,图片和附件合并到一起
   const imageFiles: { originFileObj: File }[] = [];
   const attachmentFiles: { originFileObj: File }[] = [];
-  const fileIndexLocationRecord: { [key: string]: [number, number] } = {};
-  const fileIdMap: { [k: string]: FileValue } = {};
+  const fileIndexLocationRecord: { [key: string]: any } = cloneDeep(values);
+  const fileIdMap: { [k: string]: any } = cloneDeep(values);
   // 找出需要上传的文件,只有图片和附件需要上传
   Object.keys(values).forEach((key) => {
     const componentType = values[key] && values[key]?.type;
 
-    if (componentType === 'Image' || componentType === 'Attachment') {
+    if (['Attachment', 'Image'].includes(componentType)) {
       const fileList = values[key].fileList.filter((file: { originFileObj: File }) => file.originFileObj);
 
       if (componentType === 'Image') {
@@ -468,6 +463,27 @@ export async function uploadFile(values: any) {
         fileIndexLocationRecord[key] = [attachmentFiles.length, attachmentFiles.length + fileList.length];
         attachmentFiles.push(...fileList);
       }
+    }
+    // 找出Tabs内的图片和附件控件
+    if (Array.isArray(values[key])) {
+      const tabsValue = values[key];
+      tabsValue.forEach((item: any, index: number) => {
+        Object.entries(item)
+          .filter(([k, v]: [string, any]) => ['Attachment', 'Image'].includes(v?.type))
+          .forEach(([k, v]: [string, any]) => {
+            const fileList = v?.fileList.filter((file: { originFileObj: File }) => file.originFileObj);
+            if (v.type === 'Image') {
+              fileIndexLocationRecord[key][index][k] = [imageFiles.length, imageFiles.length + fileList.length];
+              imageFiles.push(...fileList);
+            } else {
+              fileIndexLocationRecord[key][index][k] = [
+                attachmentFiles.length,
+                attachmentFiles.length + fileList.length,
+              ];
+              attachmentFiles.push(...fileList);
+            }
+          });
+      });
     }
   });
 
@@ -482,25 +498,47 @@ export async function uploadFile(values: any) {
   } else {
     promiseList.push(Promise.resolve());
   }
-
   const [imageRes, attachmentRes] = await Promise.all(promiseList);
 
-  Object.keys(fileIndexLocationRecord).forEach((key) => {
-    const oldValue = values[key];
-    let fileIdList;
+  Object.entries(fileIndexLocationRecord)
+    .filter(([, value]: [string, any]) => value)
+    .forEach(([key]) => {
+      const oldValue = values[key];
+      let fileIdList;
 
-    if (oldValue.type === 'Image') {
-      fileIdList = (imageRes?.data || []).slice(...fileIndexLocationRecord[key]);
-    } else if (oldValue.type === 'Attachment') {
-      fileIdList = (attachmentRes?.data || []).slice(...fileIndexLocationRecord[key]);
-    }
-
-    fileIdMap[key] = {
-      type: oldValue.type,
-      fileList: [],
-      fileIdList: (oldValue.fileIdList || []).concat(fileIdList),
-    };
-  });
+      if (['Image', 'Attachment'].includes(oldValue?.type)) {
+        if (oldValue?.type === 'Image') {
+          fileIdList = (imageRes?.data || []).slice(...fileIndexLocationRecord[key]);
+        } else if (oldValue?.type === 'Attachment') {
+          fileIdList = (attachmentRes?.data || []).slice(...fileIndexLocationRecord[key]);
+        }
+        fileIdMap[key] = {
+          type: oldValue?.type,
+          fileList: [],
+          fileIdList: (oldValue?.fileIdList || []).concat(fileIdList),
+        };
+      }
+      // 替换tabs内的图片和附件控件
+      if (Array.isArray(oldValue)) {
+        const tabsValue = values[key];
+        tabsValue.forEach((item: any, index: number) => {
+          Object.entries(item)
+            .filter(([k, v]: [string, any]) => ['Attachment', 'Image'].includes(v?.type))
+            .forEach(([k, v]: [string, any]) => {
+              if (v.type === 'Image') {
+                fileIdList = (imageRes?.data || []).slice(...fileIndexLocationRecord[key][index][k]);
+              } else {
+                fileIdList = (attachmentRes?.data || []).slice(...fileIndexLocationRecord[key][index][k]);
+              }
+              fileIdMap[key][index][k] = {
+                type: oldValue?.[index]?.[k]?.type,
+                fileList: [],
+                fileIdList: (oldValue?.[index]?.[k]?.fileIdList || []).concat(fileIdList),
+              };
+            });
+        });
+      }
+    });
   // 重新组装表单数据
   return Object.assign({}, values, fileIdMap);
 }

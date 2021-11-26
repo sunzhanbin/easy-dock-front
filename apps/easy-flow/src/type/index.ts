@@ -119,7 +119,7 @@ export type ruleType = 'custom' | 'inject';
 export type serialRulesItem = {
   serialId: string | undefined;
   serialMata?: {
-    type: string;
+    type?: string;
     rules?: RuleOption[];
     changeRules?: RuleOption[];
     ruleName?: string | undefined;
