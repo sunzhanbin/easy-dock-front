@@ -11,7 +11,7 @@ import { Icon } from '@common/components';
 interface editProps {
   id: string;
   value?: number;
-  onChange?: (v: string) => void;
+  onChange?: (v: this['value']) => void;
 }
 
 const DefaultDate = (props: editProps) => {
@@ -51,6 +51,8 @@ const DefaultDate = (props: editProps) => {
     (e) => {
       if (e?.valueOf()) {
         onChange && onChange(e.valueOf());
+      } else {
+        onChange && onChange(undefined);
       }
     },
     [onChange],
