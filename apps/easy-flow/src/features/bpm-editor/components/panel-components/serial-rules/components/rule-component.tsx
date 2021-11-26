@@ -160,4 +160,7 @@ const RuleComponent = (props: RuleComponentProps) => {
   );
 };
 
-export default memo(RuleComponent);
+export default memo(RuleComponent, (prev, next) => {
+  console.log(prev, next);
+  return true;
+});

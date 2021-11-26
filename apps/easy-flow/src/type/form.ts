@@ -28,7 +28,7 @@ export type InputNumberField = {
   defaultValue: number;
   defaultNumber?: {
     customData?: number | undefined;
-    calcType?: string;
+    calcType?: string | undefined;
     calculateData?: string | string[];
     id: string;
     type: string; // custom | inject

@@ -41,23 +41,25 @@ const NumberOption = (props: NumberOptionProps) => {
   // 默认值类型选择
   const [type, setType] = useState<string>('');
   // 公式计算类型选择
-  const [calcType, setCalcType] = useState<string>('');
+  const [calcType, setCalcType] = useState<string | undefined>(undefined);
   // 自定义数值类型
   const [customData, setCustomData] = useState<number | undefined>(undefined);
   // 公式计算的表单字段
   const [calculateData, setCalculateData] = useState<string | string[]>([]);
 
   useEffect(() => {
+    if (!fieldNumber) return;
     const { defaultNumber } = fieldNumber;
     setType(defaultNumber?.type || value?.type);
     setCustomData(defaultNumber?.customData || value?.customData);
-    setCalcType(defaultNumber?.calcType || '');
+    setCalcType(defaultNumber?.calcType);
     setCalculateData(defaultNumber?.calculateData || []);
   }, [fieldNumber]);
 
   // 默认值的小数位数
   // 默认值的数值范围
   const defaultNumberProps = useMemo(() => {
+    if (!fieldNumber) return null;
     const { decimal, numlimit } = fieldNumber!;
     return {
       precision: decimal?.enable ? decimal?.precision : 0,
@@ -68,7 +70,7 @@ const NumberOption = (props: NumberOptionProps) => {
 
   // 改变默认值类型
   const handleChange = useMemoCallback((value: string) => {
-    onChange && onChange({ id, type: value, calculateData: undefined, calcType: '', customData: undefined });
+    onChange && onChange({ id, type: value, calculateData: undefined, calcType: undefined, customData: undefined });
   });
   const handleInputBlur = useMemoCallback((e) => {
     const value: number = e.target.value;
@@ -84,13 +86,15 @@ const NumberOption = (props: NumberOptionProps) => {
   });
 
   const renderContent = useMemoCallback(() => {
+    if (!fieldNumber) return null;
+
     if (type === 'custom') {
       return (
         <div className={styles.custom_select}>
           <InputNumber
             size="large"
             className="input_number"
-            placeholder="请选择"
+            placeholder="请输入"
             value={customData}
             onBlur={handleInputBlur}
             {...defaultNumberProps}
