@@ -47,57 +47,57 @@ const EditZone = () => {
     return '';
   }, [formDesign.selectedField, byId]);
   useEffect(() => {
-    setTimeout(() => {
-      // 编辑子控件
-      if (subComponentConfig) {
-        const { parentId, type } = subComponentConfig;
-        const { label: parentLabel } = byId[parentId] || {};
-        let editConfig = formDesign.schema[type as FieldType]?.config;
-        editConfig = editConfig ? [...editConfig] : [];
-        let newConfig = { ...subComponentConfig };
-        // tab内的数字控件默认值不需要公式计算
-        if (type === 'InputNumber') {
-          const index = editConfig.findIndex((v) => v.key === 'defaultNumber');
-          if (subComponentConfig.decimal?.enable) {
-            const precision = subComponentConfig.decimal?.precision || 1;
-            (defaultNumberConfig as any).precision = precision;
-          } else {
-            (defaultNumberConfig as any).precision = undefined;
-          }
-          if (subComponentConfig.numlimit?.enable) {
-            const min = subComponentConfig.numlimit?.numrange?.min;
-            const max = subComponentConfig.numlimit?.numrange?.max;
-            (defaultNumberConfig as any).min = min;
-            (defaultNumberConfig as any).max = max;
-          } else {
-            (defaultNumberConfig as any).min = undefined;
-            (defaultNumberConfig as any).max = undefined;
-          }
-          index > -1 && editConfig.splice(index, 1, defaultNumberConfig as SchemaConfigItem);
-          newConfig = {
-            ...newConfig,
-            defaultNumber: typeof newConfig.defaultNumber === 'number' ? newConfig.defaultNumber : undefined,
-          };
+    // setTimeout(() => {
+    // 编辑子控件
+    if (subComponentConfig) {
+      const { parentId, type } = subComponentConfig;
+      const { label: parentLabel } = byId[parentId] || {};
+      let editConfig = formDesign.schema[type as FieldType]?.config;
+      editConfig = editConfig ? [...editConfig] : [];
+      let newConfig = { ...subComponentConfig };
+      // tab内的数字控件默认值不需要公式计算
+      if (type === 'InputNumber') {
+        const index = editConfig.findIndex((v) => v.key === 'defaultNumber');
+        if (subComponentConfig.decimal?.enable) {
+          const precision = subComponentConfig.decimal?.precision || 1;
+          (defaultNumberConfig as any).precision = precision;
+        } else {
+          (defaultNumberConfig as any).precision = undefined;
         }
-        const baseInfo = formDesign.schema[type as FieldType]?.baseInfo;
-        setEditList(editConfig as SchemaConfigItem[]);
-        setTitle(`${parentLabel} · ${baseInfo?.name}`);
-        setInitValues(newConfig);
-        setComponentId(subComponentConfig.id);
-        setComponentType(subComponentConfig.type);
-        return;
+        if (subComponentConfig.numlimit?.enable) {
+          const min = subComponentConfig.numlimit?.numrange?.min;
+          const max = subComponentConfig.numlimit?.numrange?.max;
+          (defaultNumberConfig as any).min = min;
+          (defaultNumberConfig as any).max = max;
+        } else {
+          (defaultNumberConfig as any).min = undefined;
+          (defaultNumberConfig as any).max = undefined;
+        }
+        index > -1 && editConfig.splice(index, 1, defaultNumberConfig as SchemaConfigItem);
+        newConfig = {
+          ...newConfig,
+          defaultNumber: typeof newConfig.defaultNumber === 'number' ? newConfig.defaultNumber : undefined,
+        };
       }
-      // 编辑控件
-      if (fieldType && formDesign.schema) {
-        const editConfig = formDesign.schema[fieldType as FieldType]?.config;
-        const baseInfo = formDesign.schema[fieldType as FieldType]?.baseInfo;
-        setEditList(editConfig as SchemaConfigItem[]);
-        setTitle(baseInfo?.name as string);
-        setInitValues(byId[selectedField]);
-        setComponentId(selectedField);
-        setComponentType(fieldType);
-      }
-    }, 0);
+      const baseInfo = formDesign.schema[type as FieldType]?.baseInfo;
+      setEditList(editConfig as SchemaConfigItem[]);
+      setTitle(`${parentLabel} · ${baseInfo?.name}`);
+      setInitValues(newConfig);
+      setComponentId(subComponentConfig.id);
+      setComponentType(subComponentConfig.type);
+      return;
+    }
+    // 编辑控件
+    if (fieldType && formDesign.schema) {
+      const editConfig = formDesign.schema[fieldType as FieldType]?.config;
+      const baseInfo = formDesign.schema[fieldType as FieldType]?.baseInfo;
+      setEditList(editConfig as SchemaConfigItem[]);
+      setTitle(baseInfo?.name as string);
+      setInitValues(byId[selectedField]);
+      setComponentId(selectedField);
+      setComponentType(fieldType);
+    }
+    // }, 0);
   }, [byId, formDesign, subComponentConfig, selectedField, fieldType]);
   useEffect(() => {
     selectedField ? setActiveKey('1') : setActiveKey('2');
