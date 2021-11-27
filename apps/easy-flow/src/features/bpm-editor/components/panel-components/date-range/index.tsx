@@ -61,16 +61,20 @@ const DateRange = ({ id, componentId }: DateRangeProps) => {
           <div className={styles.dateRange}>
             <p className={styles.tips}>此处限制与表单静态规则冲突时，以表单静态规则为准。</p>
             <div className={styles.limitRange}>
-              <Form.Item className={styles.Item} name={['datelimit', id, 'min']} rules={[
-                {
-                  validator(_: any, value: number) {
-                    if (!form.getFieldValue(['datelimit', id, 'max']) && (value === undefined || value === null)) {
-                      return Promise.reject(new Error('请选择日期范围'));
-                    }
-                    return Promise.resolve();
+              <Form.Item
+                className={styles.Item}
+                name={['datelimit', id, 'min']}
+                rules={[
+                  {
+                    validator(_: any, value: number) {
+                      if (!form.getFieldValue(['datelimit', id, 'max']) && !value) {
+                        return Promise.reject(new Error('请选择日期范围'));
+                      }
+                      return Promise.resolve();
+                    },
                   },
-                },
-              ]}>
+                ]}
+              >
                 <DatePicker
                   size="large"
                   placeholder="最早日期"
@@ -80,16 +84,20 @@ const DateRange = ({ id, componentId }: DateRangeProps) => {
                 />
               </Form.Item>
               <span className={styles.text}>~</span>
-              <Form.Item className={styles.Item} name={['datelimit', id, 'max']} rules={[
-                {
-                  validator(_: any, value: number) {
-                    if (!form.getFieldValue(['datelimit', id, 'min']) && (value === undefined || value === null)) {
-                      return Promise.reject(new Error('请选择日期范围'));
-                    }
-                    return Promise.resolve();
+              <Form.Item
+                className={styles.Item}
+                name={['datelimit', id, 'max']}
+                rules={[
+                  {
+                    validator(_: any, value: number) {
+                      if (!form.getFieldValue(['datelimit', id, 'min']) && !value) {
+                        return Promise.reject(new Error('请选择日期范围'));
+                      }
+                      return Promise.resolve();
+                    },
                   },
-                },
-              ]}>
+                ]}
+              >
                 <DatePicker
                   size="large"
                   placeholder="最晚日期"
