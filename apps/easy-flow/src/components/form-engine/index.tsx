@@ -274,7 +274,7 @@ const FormDetail = React.forwardRef(function FormDetail(
         }
       }, 10);
     })();
-  }, [data, fieldsAuths, initialValue, form, componentTypes, onValuesChange]);
+  }, [data, fieldsAuths, initialValue, form, componentTypes, nodeType, onValuesChange]);
 
   return (
     <Form
