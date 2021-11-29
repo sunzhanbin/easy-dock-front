@@ -4,13 +4,13 @@ import React, {
   useState,
   useImperativeHandle,
 } from "react";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "@/store";
 import { useAddWorkspaceMutation } from "@/http/app-manager.hooks";
 import { selectProjectId } from "@/views/app-manager/index.slice";
 import { Modal, Input } from "antd";
 
 const AddWorkspaceModal = React.forwardRef(function addWorkspace(_, ref) {
-  const projectId = useSelector(selectProjectId);
+  const projectId = useAppSelector(selectProjectId);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [addWorkspace] = useAddWorkspaceMutation();
   const inputRef = useRef<any>("");

@@ -33,3 +33,11 @@ export interface AppManagerState {
   workspaces: workspaceShape[];
   subApps: SubAppInfo[];
 }
+
+export interface appManagerInitialState {
+  theme: string;
+  navMode: number;
+  logo: { [key: string]: any };
+  basicForm: { [key: string]: any };
+  menuForm: { [key: string]: any };
+}
