@@ -13,7 +13,7 @@ const AppSetupConfig = () => {
   }, []);
 
   return (
-    <div className="app-setup-preview">
+    <div className="app-setup-config">
       <Tabs defaultActiveKey="1" onChange={handleTasChange}>
         <TabPane tab="应用设置" key="1">
           <BasicFormComponent />
