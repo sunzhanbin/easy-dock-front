@@ -1,4 +1,4 @@
-import baseFetch from "@/utils/fetch";
+import baseFetch from "@utils/fetch";
 
 export const appManager = baseFetch.injectEndpoints({
   endpoints: (build) => ({
@@ -26,6 +26,10 @@ export const appManager = baseFetch.injectEndpoints({
             ]
           : [{ type: "Workspace", id: "LIST" }],
     }),
+    // 工作区详情；
+    workspaceDetail: build.query({
+      query: (workspaceId: number) => `/app/${workspaceId}`,
+    }),
     // 添加子应用；
     addSubApp: build.mutation({
       query: (params: { appId: number; name: string; type: number }) =>
@@ -50,11 +54,28 @@ export const appManager = baseFetch.injectEndpoints({
             ]
           : [{ type: "SubApps", id: "LIST" }],
     }),
-    // 修改应用状态；
+    // 修改应用状态 & 发布应用配置；
     modifyAppStatus: build.mutation({
       query: (params: { status: number; id: number }) =>
         ({
           url: `/app/status`,
+          method: "put",
+          data: params,
+        } as any),
+    }),
+    // 保存应用配置；
+    saveAppSetup: build.mutation({
+      query: (params: {
+        id: number;
+        name: string;
+        icon: string;
+        meta: { [key: string]: any };
+        navMode: number;
+        remark: string;
+        theme: string;
+      }) =>
+        ({
+          url: "/app/extension",
           method: "put",
           data: params,
         } as any),
@@ -66,7 +87,9 @@ export const appManager = baseFetch.injectEndpoints({
 export const {
   useAddWorkspaceMutation,
   useFetchWorkspaceListQuery,
+  useWorkspaceDetailQuery,
   useAddSubAppMutation,
   useFetchsubAppListQuery,
   useModifyAppStatusMutation,
+  useSaveAppSetupMutation,
 } = appManager;
