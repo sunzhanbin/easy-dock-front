@@ -187,7 +187,7 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
     }
     return () => {
       // 此处reset会触发form的shouldUpdate 暂先屏蔽
-      // form.resetFields();
+      form.validateFields();
     };
   }, [componentId, form, errorIdList]);
   useEffect(() => {
