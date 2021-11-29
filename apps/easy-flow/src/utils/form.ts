@@ -388,6 +388,9 @@ function analysisMember(symbol: string, formValue: number | number[]): boolean {
 export function analysisRule(rule: fieldRule, formValues: { [k in string]: any }): boolean {
   const { fieldName, fieldType = '', symbol = '', value } = rule;
   const formValue = fieldName && formValues[fieldName];
+  if (formValue === undefined) {
+    return false;
+  }
   // 文本类型
   if (fieldType === 'Input' || fieldType === 'Textarea') {
     return analysisTextRule(symbol, value as string | string[], formValue as string);

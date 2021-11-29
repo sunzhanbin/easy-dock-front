@@ -74,6 +74,7 @@ const Detail = forwardRef(function Detail(props: DetailProps, ref: React.Forward
               projectId={flow.instance.subapp.app.project.id}
               initialValue={form.value}
               fieldsAuths={flow.node.fieldsAuths}
+              nodeType="detail"
             />
           )}
         </div>
