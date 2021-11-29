@@ -33,7 +33,7 @@ module.exports = {
     function overrideWebpackOutput(config) {
       config.output = {
         ...config.output,
-        publicPath: '/easyflow/',
+        publicPath: process.env.REACT_APP_IS_RELATIVE === 'true' ? '/easyflow/' : '/',
         globalObject: 'window',
         libraryTarget: 'umd',
         library: `${appPackageJson.name}-[name]`,
