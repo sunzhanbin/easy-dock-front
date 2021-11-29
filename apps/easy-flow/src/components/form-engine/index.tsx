@@ -24,10 +24,11 @@ interface FormProps {
   data: FormMeta;
   fieldsAuths: any;
   initialValue: { [key: string]: any };
+  datasource: Datasource;
   readonly?: boolean;
   className?: string;
   projectId?: number;
-  datasource: Datasource;
+  nodeType?: string;
 }
 
 type CompMaps = {
@@ -55,7 +56,7 @@ const FormDetail = React.forwardRef(function FormDetail(
   props: FormProps,
   ref: React.ForwardedRef<FormInstance<FormValue>>,
 ) {
-  const { data, fieldsAuths, datasource, initialValue, readonly, className, projectId } = props;
+  const { data, fieldsAuths, datasource, initialValue, readonly, className, projectId, nodeType } = props;
   const [form] = Form.useForm<FormValue>();
   const [loading, setLoading] = useState<boolean>(false);
   const [fieldsVisible, setFieldsVisible] = useState<FieldsVisible>({});
@@ -94,47 +95,6 @@ const FormDetail = React.forwardRef(function FormDetail(
       console.log(e);
     }
   };
-
-  useEffect(() => {
-    const visbles: FieldsVisible = {};
-    const comMaps: { [key: string]: FormMeta['components'][number] } = {};
-    const formValues: FormProps['initialValue'] = {};
-    (async () => {
-      if (componentTypes.includes('Attachment')) {
-        const fileMap = await getFilesTypeList();
-        data.components.forEach((comp) => {
-          if (comp.config.type === 'Attachment') {
-            comp.props.fileMap = fileMap;
-          }
-        });
-      }
-      data.components.forEach((com) => {
-        const { fieldName, id } = com.config;
-
-        if (initialValue && initialValue[fieldName] !== undefined) {
-          formValues[fieldName] = initialValue[fieldName];
-        } else {
-          formValues[fieldName || id] = com.props.defaultValue || com.config.value;
-        }
-        comMaps[id] = com;
-        // 流程编排中没有配置fieldAuths这个字段默认可见
-        visbles[fieldName || id] = fieldsAuths && fieldsAuths[fieldName || id] !== AuthType.Denied;
-      });
-      // 设置表单初始值
-      form.setFieldsValue(formValues);
-      const hiddenFieldMap: FieldsVisible = {};
-      Object.keys(visbles).forEach((key) => {
-        if (!visbles[key]) {
-          hiddenFieldMap[key] = false;
-        }
-      });
-      // 设置字段可见性, 不能和下面代码交互执行顺序
-      setFieldsVisible(visbles);
-      setCompMaps(comMaps);
-      setShowForm(true);
-    })();
-    
-  }, [data, fieldsAuths, initialValue, form, componentTypes]);
 
   const callInterfaceList = useMemoCallback((ruleList: DataConfig[], formValues: any) => {
     const formDataList: { name: string; value: any }[] = (Object.keys(formValues) || [])
@@ -225,6 +185,9 @@ const FormDetail = React.forwardRef(function FormDetail(
         return;
       }
       const formValues = form.getFieldsValue();
+      if (formValues[key] === undefined) {
+        return;
+      }
       const interfaceList = interfaceRules
         .filter(({ condition, watchList }) => {
           if (watchList.includes(key)) {
@@ -241,10 +204,10 @@ const FormDetail = React.forwardRef(function FormDetail(
     }, 500),
   );
 
-  const onValuesChange = useMemoCallback((changeValue: any, all: any) => {
+  const onValuesChange = useMemoCallback((changeValue: any, all?: any) => {
     // 此处不要进行setState操作   避免重复更新
     Object.entries(changeValue).forEach(([key, value]: any) => {
-      if (value && !Array.isArray(value) && Object.values(value).length) {
+      if (value && typeof value === 'object' && !Array.isArray(value) && Object.values(value).length) {
         const field = Object.values(value)[0];
         if (typeof field === 'object' && field) {
           const changeKey = Object.keys(field)[0];
@@ -260,6 +223,58 @@ const FormDetail = React.forwardRef(function FormDetail(
       handleCallInterface(key);
     });
   });
+
+  useEffect(() => {
+    const visbles: FieldsVisible = {};
+    const comMaps: { [key: string]: FormMeta['components'][number] } = {};
+    const formValues: FormProps['initialValue'] = {};
+    (async () => {
+      if (componentTypes.includes('Attachment')) {
+        const fileMap = await getFilesTypeList();
+        data.components.forEach((comp) => {
+          if (comp.config.type === 'Attachment') {
+            comp.props.fileMap = fileMap;
+          }
+        });
+      }
+      data.components.forEach((com) => {
+        const { fieldName, id } = com.config;
+
+        if (initialValue && initialValue[fieldName] !== undefined) {
+          formValues[fieldName] = initialValue[fieldName];
+        } else {
+          formValues[fieldName || id] = com.props.defaultValue || com.config.value;
+        }
+        comMaps[id] = com;
+        // 流程编排中没有配置fieldAuths这个字段默认可见
+        visbles[fieldName || id] = fieldsAuths && fieldsAuths[fieldName || id] !== AuthType.Denied;
+      });
+      // 设置表单初始值
+      form.setFieldsValue(formValues);
+
+      const hiddenFieldMap: FieldsVisible = {};
+      Object.keys(visbles).forEach((key) => {
+        if (!visbles[key]) {
+          hiddenFieldMap[key] = false;
+        }
+      });
+      // 设置字段可见性, 不能和下面代码交互执行顺序
+      setFieldsVisible(visbles);
+      setCompMaps(comMaps);
+      setShowForm(true);
+
+      // 不是开始节点的话，需要一进来就走一遍表单逻辑规则
+      setTimeout(() => {
+        if (nodeType !== 'start') {
+          Object.entries(formValues)
+            .filter(([key, value]: [string, any]) => value !== undefined)
+            .forEach(([key, value]) => {
+              onValuesChange({ [key]: value });
+            });
+        }
+      }, 10);
+    })();
+  }, [data, fieldsAuths, initialValue, form, componentTypes, onValuesChange]);
 
   return (
     <Form

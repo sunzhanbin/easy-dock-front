@@ -11,3 +11,7 @@ export default createApi({
   tagTypes: ["Workspace", "SubApps"],
   endpoints: () => ({}),
 });
+
+export const axios = axiosInstance({
+  baseURL: `${process.env.REACT_APP_EASY_DOCK_BASE_SERVICE_ENDPOINT}/enc-oss-easydock/api/runtime/v1`,
+});

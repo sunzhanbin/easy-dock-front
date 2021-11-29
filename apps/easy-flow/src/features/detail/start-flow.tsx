@@ -92,6 +92,7 @@ function StartFlow() {
         initialValue={formData}
         projectId={projectId}
         fieldsAuths={processMeta.fieldsAuths}
+        nodeType="start"
       />
     );
   }, [data, datasource, projectId]);

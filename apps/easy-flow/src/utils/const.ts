@@ -18,6 +18,11 @@ export const ResetDurationOptions = [
   { key: 'year', value: '每年重置' },
 ];
 
+export const SERIAL_TYPE = {
+  CUSTOM_TYPE: 'custom',
+  INJECT_TYPE: 'inject',
+};
+
 export const initialRules: RuleOption[] = [
   {
     digitsNum: 5,

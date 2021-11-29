@@ -69,7 +69,6 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
       });
       components.push(component);
     });
-    console.log(components, '--------------')
     return {
       layout,
       events: {
@@ -159,6 +158,7 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
                 fieldsAuths={auths}
                 className={styles['form-engine']}
                 projectId={projectId}
+                nodeType="preview"
               />
             </div>
           </div>

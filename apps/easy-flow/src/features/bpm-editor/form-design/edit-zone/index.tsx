@@ -47,7 +47,7 @@ const EditZone = () => {
     return '';
   }, [formDesign.selectedField, byId]);
   useEffect(() => {
-    setTimeout(() => {
+    Promise.resolve().then(() => {
       // 编辑子控件
       if (subComponentConfig) {
         const { parentId, type } = subComponentConfig;
@@ -97,7 +97,7 @@ const EditZone = () => {
         setComponentId(selectedField);
         setComponentType(fieldType);
       }
-    }, 0);
+    });
   }, [byId, formDesign, subComponentConfig, selectedField, fieldType]);
   useEffect(() => {
     selectedField ? setActiveKey('1') : setActiveKey('2');

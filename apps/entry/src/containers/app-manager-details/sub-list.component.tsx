@@ -1,13 +1,13 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { Tabs, Input } from "antd";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "@/store";
 import { useFetchsubAppListQuery } from "@/http/app-manager.hooks";
 import { selectCurrentWorkspaceId } from "@/views/app-manager/index.slice";
 
 const { TabPane } = Tabs;
 
-const SubListComponent = () => {
-  const workspaceId = useSelector(selectCurrentWorkspaceId);
+const SubListComponent: React.FC = () => {
+  const workspaceId = useAppSelector(selectCurrentWorkspaceId);
   const { data: subApps } = useFetchsubAppListQuery(workspaceId);
   const [activeKey, setActiveKey] = useState<string>("1");
 

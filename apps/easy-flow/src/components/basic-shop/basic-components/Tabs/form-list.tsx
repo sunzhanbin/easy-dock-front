@@ -84,7 +84,7 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId }: Form
         const visibleRules = ruleList?.filter((item) => item?.subtype === EventType.Visible);
         const watchList = watchFn(ruleList);
         const visibleWatchList = watchFn(visibleRules);
-        watchList.forEach((field) => {
+        watchList?.forEach((field) => {
           PubSub.subscribe(field as string, (msg) => {
             if (visibleWatchList.includes(msg)) {
               setFieldVisible(visibleRules, form, key);

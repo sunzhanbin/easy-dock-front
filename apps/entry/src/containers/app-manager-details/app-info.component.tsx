@@ -1,6 +1,7 @@
 import React, { useCallback } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "antd";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "@/store";
 import {
   useFetchWorkspaceListQuery,
   useModifyAppStatusMutation,
@@ -12,9 +13,9 @@ import {
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { workspaceShape } from "@utils/types";
 
-const AppInfoComponent = () => {
-  const projectId = useSelector(selectProjectId);
-  const workspaceId = useSelector(selectCurrentWorkspaceId);
+const AppInfoComponent: React.FC = () => {
+  const projectId = useAppSelector(selectProjectId);
+  const workspaceId = useAppSelector(selectCurrentWorkspaceId);
 
   const { workspace } = useFetchWorkspaceListQuery(projectId, {
     selectFromResult: ({ data }) => ({
@@ -37,6 +38,8 @@ const AppInfoComponent = () => {
   return (
     <React.Fragment>
       这里是应用详情:: {workspace.name}
+      <br />
+      <Link to={`../${workspaceId}`}>编辑应用</Link>
       <br />
       <Button onClick={handleModifyAppStatus}>修改状态</Button>
       <Button onClick={handlePreview}>预览</Button>
