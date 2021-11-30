@@ -72,6 +72,7 @@
       .delete,
       .symbol {
         flex: 1;
+        max-width: calc(50% - 38px);
         height: 40px;
         display: flex;
         justify-content: center;

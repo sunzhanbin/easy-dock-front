@@ -29,6 +29,7 @@ interface Component {
 const Mapping = ({ name, parentName, subAppId, value, onChange }: MappingProps) => {
   const formMeta = useAppSelector(formMetaSelector);
   const [targetComponents, setTargetComponents] = useState<Component[]>([]);
+  const [cacheComponents, setCacheComponents] = useState<Component[]>([]);
   const currentComponents = useMemo(() => {
     return Object.values(formMeta?.components || {})
       .map((v) => v.config)
@@ -45,6 +46,7 @@ const Mapping = ({ name, parentName, subAppId, value, onChange }: MappingProps) 
           onChange && onChange(requiredConfig);
         }
         setTargetComponents(components);
+        setCacheComponents(components);
       });
     }
     // eslint-disable-next-line
@@ -55,8 +57,8 @@ const Mapping = ({ name, parentName, subAppId, value, onChange }: MappingProps) 
     const list = (Array.isArray(value) ? [...value] : []).filter((v) => v?.target);
     if (list.length > 0) {
       const fieldList = list.map((v) => v.target);
-      setTargetComponents((components) => {
-        return components.filter((v) => !fieldList.includes(v.field));
+      setTargetComponents(() => {
+        return cacheComponents.filter((v) => !fieldList.includes(v.field));
       });
     }
   }, [value]);
