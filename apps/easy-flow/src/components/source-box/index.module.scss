@@ -1,3 +1,4 @@
+@import '@common/styles/var.scss';
 .container {
   padding: 12px 16px;
   cursor: move;
@@ -16,7 +17,7 @@
     top: 0;
     right: 0;
     display: none;
-    width: 52px;
+    width: 60px;
     height: 22px;
     background: #8b8fa1;
     border-radius: 0px 3px 0px 3px;
@@ -36,6 +37,9 @@
       font-size: 16px;
       color: #fff;
       cursor: pointer;
+      &:hover {
+        color: $primary-color;
+      }
     }
   }
   .moveUp,
@@ -51,7 +55,7 @@
     text-align: center;
     background: #ffffff;
     border-radius: 3px;
-    border: 1px solid #4c5cdb;
+    border: 1px solid $primary-color;
     cursor: pointer;
     .iconfont {
       position: absolute;
@@ -61,7 +65,7 @@
       height: 10px;
       line-height: 10px;
       font-size: 10px;
-      color: #4c5cdb;
+      color: $primary-color;
       transform: translate(-50%, -50%);
     }
   }

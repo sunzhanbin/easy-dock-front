@@ -10,6 +10,7 @@ export type TodoItem = {
   processInstanceId: string;
   startTime: number;
   starter: string;
+  dueState: 0 | 1 | 2; // 0-未配置超时信息   1-超时   2-未超时
   taskCreateTime: number;
   taskDefKey: string;
   taskId: string;
@@ -34,6 +35,7 @@ export type currentNodeItem = {
   currentNode: string;
   currentNodeId: string;
   currentNodeStartTime: number | null;
+  dueState?: 0 | 1 | 2;
 };
 
 export type StartItem = {

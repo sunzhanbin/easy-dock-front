@@ -98,6 +98,45 @@ export const dataSource = {
   required: true,
   isProps: false,
 };
+const flows = {
+  key: 'flows',
+  label: 'flowsData',
+  defaultValue: {
+    data: [
+      { key: 'key1', value: '字段1' },
+      { key: 'key2', value: '字段2' },
+      { key: 'key3', value: '字段3' },
+    ],
+  },
+  type: 'selectColumns',
+  direction: 'vertical',
+  required: true,
+  isProps: false,
+};
+
+// 编号规则
+const serialRule = {
+  key: 'serialRule',
+  label: '编号规则',
+  defaultValue: {
+    serialId: '',
+    serialMata: {
+      rules: [
+        {
+          digitsNum: 5,
+          startValue: 1,
+          resetDuration: 'none',
+          type: 'incNumber',
+        },
+      ],
+    },
+  },
+  type: 'serialRules',
+  direction: 'vertical',
+  required: false,
+  isProps: false,
+};
+
 const format = {
   key: 'format',
   defaultValue: 'YYYY-MM-DD',
@@ -117,15 +156,6 @@ const format = {
   ],
   required: false,
   isProps: true,
-};
-const notSelectPassed = {
-  key: 'notSelectPassed',
-  defaultValue: false,
-  label: '禁止选择已过去的时间',
-  type: 'Switch',
-  direction: 'horizontal',
-  required: false,
-  isProps: false,
 };
 const descTextValue = {
   key: 'value',
@@ -151,6 +181,101 @@ const getMaxCount = (max, min, defaultValue) => {
     max,
     min,
   };
+};
+
+const fieldManage = {
+  key: 'components',
+  label: '子控件',
+  type: 'FieldManage',
+  required: true,
+  requiredMessage: '请选择子控件',
+  isProps: true,
+};
+
+const numberOption = {
+  key: 'defaultNumber',
+  label: '默认值',
+  defaultValue: {
+    type: 'custom',
+    id: '',
+    customData: '',
+  },
+  type: 'NumberOption',
+  direction: 'vertical',
+  required: false,
+  isProps: false,
+};
+
+const allowDecimal = {
+  key: 'decimal',
+  label: '允许小数',
+  defaultValue: {
+    enable: false,
+  },
+  type: 'allowDecimal',
+  required: false,
+  isProps: true,
+};
+
+const decimalCount = {
+  key: 'precision',
+  type: 'precision',
+  required: false,
+  isProps: true,
+};
+const limitNum = {
+  key: 'numlimit',
+  label: '限制数值范围',
+  defaultValue: {
+    enable: false,
+  },
+  type: 'limitNum',
+  required: false,
+  isProps: true,
+};
+
+const rangeNum = {
+  key: 'numrange',
+  type: 'numrange',
+  required: false,
+  isProps: true,
+};
+
+const limitDate = {
+  key: 'datelimit',
+  label: '限制日期范围',
+  defaultValue: {
+    enable: false,
+  },
+  type: 'limitDate',
+  required: false,
+  isProps: true,
+};
+
+const rangeDate = {
+  key: 'daterange',
+  type: 'daterange',
+  required: false,
+  isProps: true,
+};
+
+// 限制文件类型
+const files = {
+  key: 'typeRestrict',
+  label: '限制文件类型',
+  defaultValue: {
+    enable: false,
+  },
+  type: 'files',
+  required: false,
+  isProps: true,
+};
+
+const filetype = {
+  key: 'filetype',
+  type: 'filetype',
+  required: false,
+  isProps: true,
 };
 
 const components = {
@@ -217,8 +342,9 @@ const components = {
       getLabel('日期'),
       desc,
       format,
-      notSelectPassed,
       getDefaultValue('DefaultDate', '选择日期'),
+      limitDate,
+      rangeDate,
       colSpace,
     ],
   },
@@ -230,7 +356,7 @@ const components = {
       version: '1.0',
       type: 'InputNumber',
     },
-    config: [fieldName, getLabel('数字'), desc, getDefaultValue('InputNumber'), colSpace],
+    config: [fieldName, getLabel('数字'), desc, numberOption, allowDecimal, decimalCount, limitNum, rangeNum, colSpace],
   },
   DescText: {
     baseInfo: {
@@ -241,6 +367,26 @@ const components = {
       type: 'DescText',
     },
     config: [getLabel('描述文字'), descTextValue, colSpace],
+  },
+  Table: {
+    baseInfo: {
+      name: '表格 ',
+      icon: 'biaoge',
+      category: '基础控件',
+      version: '1.0',
+      type: 'Table',
+    },
+    config: [fieldName, getLabel('表格 '), desc, fieldManage],
+  },
+  Tabs: {
+    baseInfo: {
+      name: '标签页 ',
+      icon: 'tabcaise',
+      category: '基础控件',
+      version: '1.0',
+      type: 'Tabs',
+    },
+    config: [fieldName, getLabel('标签页 '), desc, fieldManage],
   },
   Image: {
     baseInfo: {
@@ -260,7 +406,17 @@ const components = {
       version: '1.0',
       type: 'Attachment',
     },
-    config: [fieldName, getLabel('附件'), desc, getMaxCount(5, 1, 5), colSpace],
+    config: [fieldName, getLabel('附件'), desc, getMaxCount(5, 1, 5), files, filetype, colSpace],
+  },
+  SerialNum: {
+    baseInfo: {
+      name: '编号',
+      icon: 'bianhaocaise',
+      category: '基础控件',
+      version: '1.0',
+      type: 'SerialNum',
+    },
+    config: [fieldName, getLabel('编号'), desc, serialRule, colSpace],
   },
   Member: {
     baseInfo: {
@@ -271,6 +427,26 @@ const components = {
       type: 'Member',
     },
     config: [fieldName, getLabel('人员'), desc, multiple, showSearch, colSpace],
+  },
+  Department: {
+    baseInfo: {
+      name: '部门',
+      icon: 'bumencaise',
+      category: '高级控件',
+      version: '1.0',
+      type: 'Department',
+    },
+    config: [fieldName, getLabel('部门'), desc, multiple, showSearch, colSpace],
+  },
+  FlowData: {
+    baseInfo: {
+      name: '关联流程',
+      icon: 'liuchengcaise',
+      category: '高级控件',
+      version: '1.0',
+      type: 'FlowData',
+    },
+    config: [fieldName, getLabel('关联流程'), flows, colSpace],
   },
 };
 

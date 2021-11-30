@@ -1,3 +1,4 @@
+@import '@common/styles/var.scss';
 .container {
   flex: 0 0 354px;
   height: calc(100vh - 64px);
@@ -5,12 +6,25 @@
   padding: 20px 24px;
   overflow-y: auto;
   box-shadow: 0px 6px 24px 0px rgba(24, 31, 67, 0.1);
+  .title_wrap {
+    display: flex;
+    align-items: center;
+    height: 42px;
+    .back {
+      flex: 0 0 32px;
+      cursor: pointer;
+      .icon {
+        font-size: 22px;
+      }
+    }
+  }
   .edit_title {
+    display: flex;
+    align-items: center;
     font-size: 18px;
     font-weight: 600;
     color: rgba(0, 0, 0, 0.85);
-    line-height: 28px;
-    margin-bottom: 14px;
+    height: 42px;
   }
   :global {
     .ant-tabs {
@@ -40,7 +54,7 @@
     .ant-tabs-top > div > .ant-tabs-nav .ant-tabs-ink-bar,
     .ant-tabs-bottom > div > .ant-tabs-nav .ant-tabs-ink-bar {
       height: 5px;
-      background: #4c5cdb;
+      background: $primary-color;
     }
   }
 }

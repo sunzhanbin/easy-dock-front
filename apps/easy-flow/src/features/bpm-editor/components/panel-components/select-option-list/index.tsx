@@ -12,6 +12,7 @@ import classNames from 'classnames';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import DataApiConfig from '@/features/bpm-editor/components/data-api-config';
 import ResponseNoMap from '@/features/bpm-editor/components/data-api-config/response-no-map';
+import { DataConfig } from '@/type/api';
 
 const { Option } = Select;
 interface editProps {
@@ -34,7 +35,7 @@ const SelectOptionList = (props: editProps) => {
   const fields = useMemo<{ id: string; name: string }[]>(() => {
     const componentList = Object.values(byId).map((item: FormField) => item) || [];
     return componentList
-      .filter((com) => com.type !== 'DescText' && com.id !== id)
+      .filter((com) => !['DescText', 'Tabs'].includes(com.type) && com.id !== id)
       .map((com) => ({ id: com.fieldName, name: com.label }));
   }, [byId, id]);
 
@@ -122,7 +123,11 @@ const SelectOptionList = (props: editProps) => {
     } else if (type === 'subapp' && subAppKey && componentKey) {
       onChange && onChange({ type, subappId: subAppKey, fieldName: componentKey });
     } else if (type === 'interface') {
-      onChange && onChange({ type, apiConfig: value?.apiConfig });
+      let apiConfig: DataConfig = { type: 1, request: { required: [], customize: [] } };
+      if (value?.apiConfig) {
+        apiConfig = Object.assign({}, apiConfig, value.apiConfig);
+      }
+      onChange && onChange({ type, apiConfig });
     }
   });
   const handleApiChange = useMemoCallback((apiConfig) => {
@@ -210,7 +215,7 @@ const SelectOptionList = (props: editProps) => {
         .get(`/subapp/${appId}/list/all/deployed`)
         .then((res) => {
           const list = res.data
-            .filter((app: { id: number }) => app.id !== subAppId)
+            .filter((app: { id: number; type: number }) => app.type === 2 && app.id !== subAppId)
             .map((app: { name: string; id: number; version: { id: number } }) => ({
               key: app.id,
               value: app.name,
@@ -271,14 +276,16 @@ interface DragableOptionProps {
 function DragableOption(props: DragableOptionProps) {
   const { onDelete, data, onChange, onDrop, index } = props;
   const dragWrapperRef = useRef<HTMLDivElement>(null);
+  const [canMove, setCanMove] = useState<boolean>(false);
   const [, drag] = useDrag(
     () => ({
       type: 'option',
       item() {
         return { index };
       },
+      canDrag: () => canMove,
     }),
-    [index],
+    [index, canMove],
   );
   const [, drop] = useDrop(
     () => ({
@@ -300,6 +307,14 @@ function DragableOption(props: DragableOptionProps) {
     onDelete(index);
   });
 
+  const handleMouseEnter = useMemoCallback(() => {
+    setCanMove(true);
+  });
+
+  const handleMouseLeave = useMemoCallback(() => {
+    setCanMove(false);
+  });
+
   useEffect(() => {
     drag(drop(dragWrapperRef));
   }, [drag, drop]);
@@ -313,7 +328,7 @@ function DragableOption(props: DragableOptionProps) {
           </span>
         </Tooltip>
       </div>
-      <div className={styles.move}>
+      <div className={styles.move} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
         <Tooltip title="拖动换行">
           <span>
             <Icon className={styles.iconfont} type="caidan" />

@@ -6,6 +6,8 @@ declare type User = {
   name?: string;
 };
 
+declare const REACT_APP_SSO_LOGIN_URL: string;
+
 interface Window {
   COMMON_LOGIN_DOMAIN: string;
   ALGOR_ORCH_BASE_SERVICE_ENDPOINT: string;
@@ -13,6 +15,8 @@ interface Window {
   ALGOR_ORCH_FRONTEND_ENTRY: string;
   EASY_FLOW_FRONTEND_ENTRY: string;
   EASY_CHART_FRONTEND_ENTRY: string;
+  IS_RELATIVE: boolean | undefined;
+  SSO_LOGIN_URL: string;
   COMMON_LOGIN_URL: string;
   setImmediate(): void;
 }
@@ -24,3 +28,6 @@ interface MicroApp {
   title: string;
   description?: string;
 }
+
+declare module '@enc/theme-scheme/dist/utils.esm';
+declare module '@enc/sso';

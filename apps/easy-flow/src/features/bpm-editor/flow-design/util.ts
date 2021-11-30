@@ -8,7 +8,8 @@ import {
   CCNode,
   BranchNode,
   SubBranch,
-  AutoNode,
+  AutoNodePushData,
+  AutoNodeTriggerProcess,
   RevertType,
   AuthType,
   FieldAuthsMap,
@@ -41,7 +42,8 @@ export function branchuuid(group: number = 3) {
 export function createNode(type: NodeType.AuditNode, name: string): AuditNode;
 export function createNode(type: NodeType.FillNode, name: string): FillNode;
 export function createNode(type: NodeType.CCNode, name: string): CCNode;
-export function createNode(type: NodeType.AutoNode, name: string): AutoNode;
+export function createNode(type: NodeType.AutoNodePushData, name: string): AutoNodePushData;
+export function createNode(type: NodeType.AutoNodeTriggerProcess, name: string): AutoNodeTriggerProcess;
 export function createNode(type: NodeType.BranchNode): BranchNode;
 export function createNode(type: NodeType.SubBranch): SubBranch;
 export function createNode(type: NodeType, name?: string) {
@@ -72,17 +74,20 @@ export function createNode(type: NodeType, name?: string) {
         },
       ],
     };
-  } else if (type === NodeType.AutoNode) {
-    return <AutoNode>{
+  } else if (type === NodeType.AutoNodePushData) {
+    return <AutoNodePushData>{
       id: fielduuid(),
       name,
       type,
-      dataConfig: {
-        api: undefined,
-        request: {
-          required: [],
-          customize: [],
-        },
+    };
+  } else if (type === NodeType.AutoNodeTriggerProcess) {
+    return <AutoNodeTriggerProcess>{
+      id: fielduuid(),
+      name,
+      type,
+      triggerConfig: {
+        isWait: false,
+        subapps: [{ id: undefined, name: undefined, starter: { type: 1 }, mapping: [] }],
       },
     };
   }
@@ -110,6 +115,23 @@ export function createNode(type: NodeType, name?: string) {
       revert: {
         type: RevertType.Start,
       },
+      dueConfig: {
+        enable: false,
+        timeout: {
+          unit: 'day',
+        },
+        notice: {
+          starter: false,
+          assign: false,
+          admin: false,
+          other: false,
+        },
+        cycle: {
+          enable: false,
+          unit: 'day',
+        },
+        action: null,
+      },
     };
   } else if (type === NodeType.FillNode) {
     return <FillNode>{
@@ -117,6 +139,22 @@ export function createNode(type: NodeType, name?: string) {
       btnText: {
         submit: { enable: true },
         save: { enable: true },
+      },
+      dueConfig: {
+        enable: false,
+        timeout: {
+          unit: 'day',
+        },
+        notice: {
+          starter: false,
+          assign: false,
+          admin: false,
+          other: false,
+        },
+        cycle: {
+          enable: false,
+          unit: 'day',
+        },
       },
     };
   } else if (type === NodeType.CCNode) {
@@ -219,10 +257,10 @@ export function valid(data: AllNode[], validRes: ValidResultType) {
       node.branches.forEach((branch) => {
         const errors: string[] = [];
 
-        branch.conditions.some((row) => {
+        const isInvalid = branch.conditions.some((row) => {
           return row.some((col) => {
             for (let key in col) {
-              if (!col[key as keyof typeof col]) {
+              if (!col[key as keyof typeof col] && !['parentId', 'valueType'].includes(key)) {
                 errors.push('条件配置不合法');
 
                 return true;
@@ -233,14 +271,13 @@ export function valid(data: AllNode[], validRes: ValidResultType) {
           });
         });
 
-        if (errors.length) {
+        if (errors.length && isInvalid) {
           validRes[branch.id] = {
             name: '子分支',
             id: branch.id,
             errors,
           };
         }
-
         valid(branch.nodes, validRes);
       });
 
@@ -278,15 +315,27 @@ export function valid(data: AllNode[], validRes: ValidResultType) {
           }
         }
       }
+      // 审批节点和抄送节点需要进行超时配置
+      if (node.type !== NodeType.CCNode) {
+        const timeoutValidMessage = validators.timeoutConfig(node.dueConfig!);
+        if (timeoutValidMessage) {
+          errors.push(timeoutValidMessage);
+        }
+      }
 
       if (memberValidMessage) {
         errors.push(memberValidMessage);
       }
-    } else if (node.type === NodeType.AutoNode) {
+    } else if (node.type === NodeType.AutoNodePushData) {
       const dataPushValidMessage = validators.data(node.dataConfig);
 
       if (dataPushValidMessage) {
         errors.push(dataPushValidMessage);
+      }
+    } else if (node.type === NodeType.AutoNodeTriggerProcess) {
+      const triggerConfigValidMessage = validators.config(node.triggerConfig.subapps);
+      if (triggerConfigValidMessage) {
+        errors.push(triggerConfigValidMessage);
       }
     }
 
@@ -358,7 +407,12 @@ export const findPrevNodes = (flow: AllNode[], targetId: string): PrevNodeType[]
 
 export function formatFieldsAuths(fieldsTemplate: FieldTemplate[]) {
   return fieldsTemplate.reduce((fieldsAuths, item) => {
-    fieldsAuths[item.id] = AuthType.View;
+    const { parentId, id } = item;
+    if (parentId) {
+      fieldsAuths[parentId] = Object.assign({}, fieldsAuths[parentId] || {}, { [id]: AuthType.View });
+    } else {
+      fieldsAuths[id] = AuthType.View;
+    }
 
     return fieldsAuths;
   }, <FieldAuthsMap>{});

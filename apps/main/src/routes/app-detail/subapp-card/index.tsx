@@ -10,6 +10,7 @@ import { FlowMicroApp, ChartMicroApp } from '@/consts';
 import { message, Tooltip } from 'antd';
 import AppModel from '../app-model';
 import { stopPropagation } from '@consts';
+import useMemoCallback from '@common/hooks/use-memo-callback';
 
 const CardContainer = styled.div`
   position: relative;
@@ -59,7 +60,7 @@ const CardContainer = styled.div`
           width: 20px;
           height: 20px;
           &:hover {
-            color: #4c5cdb;
+            color: $primary-color;
           }
         }
       }
@@ -189,20 +190,21 @@ const Card: FC<{
     }
     return () => containerRef.current!;
   }, [containerId]);
+  const hideOperation = useMemoCallback((msg: string) => {
+    setIsShowOperation(false);
+    message.success(msg);
+    onChange && onChange();
+  });
   const handleStart = useCallback(() => {
     axios.put('/subapp/status', { id, status: 1 }).then(() => {
-      setIsShowOperation(false);
-      message.success('启用成功!');
-      onChange && onChange();
+      hideOperation('启用成功!');
     });
-  }, [id, onChange]);
+  }, [id, hideOperation]);
   const handleStop = useCallback(() => {
     axios.put('/subapp/status', { id, status: -1 }).then(() => {
-      setIsShowOperation(false);
-      message.success('停用成功!');
-      onChange && onChange();
+      hideOperation('停用成功!');
     });
-  }, [id, onChange]);
+  }, [id, hideOperation]);
   const handleEdit = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
     setIsShowOperation(false);

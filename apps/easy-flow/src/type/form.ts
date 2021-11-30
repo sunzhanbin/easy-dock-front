@@ -1,3 +1,4 @@
+import { ConfigItem } from '.';
 import { DataConfig } from './api';
 
 export type FieldType = FormField['type'];
@@ -25,7 +26,24 @@ export type InputField = {
 export type InputNumberField = {
   type: 'InputNumber';
   defaultValue: number;
-  range?: [number, number];
+  defaultNumber?: {
+    customData?: number | undefined;
+    calcType?: string | undefined;
+    calculateData?: string | string[];
+    id: string;
+    type: string; // custom | inject
+  };
+  decimal?: {
+    enable: boolean;
+    precision?: number;
+  };
+  numlimit?: {
+    enable: boolean;
+    numrange?: {
+      min: number;
+      max: number;
+    };
+  };
 } & BaseField;
 
 export type TextAreaField = {
@@ -35,7 +53,12 @@ export type TextAreaField = {
 
 export type DateField = {
   type: 'Date';
-  notSelectPassed: boolean;
+  datelimit?: {
+    daterange: {
+      min: string;
+      max: string;
+    };
+  };
   format: 'YYYY-MM-DD' | 'YYYY-MM-DD HH:mm:ss';
   defaultValue: number;
 } & BaseField;
@@ -51,6 +74,14 @@ export type SelectOptionItem = {
   subappId?: string;
   fieldName?: string;
   apiconfig?: DataConfig;
+};
+
+export type NumberDefaultOption = {
+  id: string | undefined;
+  type: string;
+  customData?: number;
+  calcType?: string;
+  calculateData?: any;
 };
 
 export type RadioField = {
@@ -89,6 +120,27 @@ export type MemberField = {
   showSearch: boolean;
 } & BaseField;
 
+export type FlowField = {
+  type: 'FlowData';
+  flows: any;
+} & BaseField;
+
+export type CompConfig = {
+  config: ConfigItem;
+  props: { [k: string]: any };
+};
+
+export type TabsField = {
+  type: 'Tabs';
+  fieldManage: CompConfig[];
+  components?: CompConfig[];
+} & BaseField;
+
+export type SerialNumField = {
+  type: 'SerialNum';
+  serialRule: any;
+} & BaseField;
+
 export type FormField =
   | InputField
   | InputNumberField
@@ -100,4 +152,7 @@ export type FormField =
   | DescTextField
   | ImageField
   | AttachmentField
-  | MemberField;
+  | MemberField
+  | TabsField
+  | FlowField
+  | SerialNumField;

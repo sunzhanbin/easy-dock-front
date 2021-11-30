@@ -15,7 +15,8 @@
   "command": {
     "bootstrap": {
       "npmClient": "yarn",
-      "useWorkspaces": true
+      "useWorkspaces": true,
+      "npmClientArgs": ["--frozen-lockfile"]
     }
   }
 }

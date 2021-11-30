@@ -29,6 +29,8 @@ export default function AppHeader({ children }: AppHeaderProps) {
     }
     return false;
   }, [user]);
+
+
   // 是否有权限跳转到应用端,只有正常项目租户才有权限
   const canGoApp = useMemo(() => {
     if (user && user.info && user.info.power) {
@@ -37,6 +39,7 @@ export default function AppHeader({ children }: AppHeaderProps) {
     }
     return false;
   }, [user]);
+
   return (
     <div className={styles.container}>
       <div className={classnames('easy-dock-content', styles.header)}>

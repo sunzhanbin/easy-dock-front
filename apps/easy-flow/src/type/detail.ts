@@ -24,6 +24,7 @@ export interface FormMeta {
     children?: Omit<NonNullable<FormMeta['rules']>[number], 'children'>[];
   }[];
   formRules?: FormRuleItem[];
+  propertyRules?: FormRuleItem[];
 }
 
 export type FormValue = { [key: string]: any };
@@ -44,6 +45,7 @@ export enum NodeStatusType {
   Undo = 3,
   Finish = 4,
   Revert = 5,
+  Waiting = 6,
 }
 
 export type FlowInstance = {

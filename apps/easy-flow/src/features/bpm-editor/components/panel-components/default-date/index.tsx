@@ -11,7 +11,7 @@ import { Icon } from '@common/components';
 interface editProps {
   id: string;
   value?: number;
-  onChange?: (v: string) => void;
+  onChange?: (v: this['value']) => void;
 }
 
 const DefaultDate = (props: editProps) => {
@@ -20,8 +20,8 @@ const DefaultDate = (props: editProps) => {
   const formatType = useMemo(() => {
     return (byId[id] as DateField)?.format;
   }, [id, byId]);
-  const notSelectPassed = useMemo(() => {
-    return (byId[id] as DateField)?.notSelectPassed;
+  const range = useMemo(() => {
+    return (byId[id] as DateField)?.datelimit?.daterange;
   }, [id, byId]);
   const propList = useMemo(() => {
     const props: { [k: string]: string | boolean | Function | Moment | ReactNode } = {
@@ -36,25 +36,30 @@ const DefaultDate = (props: editProps) => {
     } else {
       props.format = 'YYYY-MM-DD';
     }
-    if (notSelectPassed) {
-      props.disabledDate = (current: Moment) => {
-        return current && current < moment().endOf('second');
-      };
-    }
-    if (value) {
+    if (typeof value === 'number') {
       props.value = moment(value);
     }
     return props;
-  }, [formatType, notSelectPassed, value]);
+  }, [formatType, value]);
+  const handleDisabled = (current: Moment) => {
+    if (range) {
+      return current.valueOf() < Number(range.min) || current.valueOf() > Number(range.max);
+    }
+    return false;
+  };
   const handleChange = useCallback(
     (e) => {
-      onChange && onChange(e.valueOf());
+      if (e?.valueOf()) {
+        onChange && onChange(e.valueOf());
+      } else {
+        onChange && onChange(undefined);
+      }
     },
     [onChange],
   );
   return (
     <div className={styles.container}>
-      <DatePicker {...propList} locale={locale} onChange={handleChange} />
+      <DatePicker {...propList} locale={locale} onChange={handleChange} disabledDate={handleDisabled} />
     </div>
   );
 };

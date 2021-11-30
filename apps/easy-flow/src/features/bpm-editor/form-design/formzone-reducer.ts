@@ -7,6 +7,7 @@ import {
   FormField,
   FormFieldMap,
   FormRuleItem,
+  PropertyRuleItem,
   TConfigItem,
   TConfigMap,
 } from '@type';
@@ -48,38 +49,7 @@ const reducers = {
       }
       state.isDirty = true;
       state.selectedField = com.id;
-      return state;
-    },
-    prepare: (com: FormField, rowIndex: number) => {
-      com.id = uniqueId(`${com.type}_`);
-      return {
-        payload: {
-          rowIndex,
-          com,
-        },
-      };
-    },
-  },
-  comInserted: {
-    reducer: (state: FormDesign, action: PayloadAction<{ com: FormField; rowIndex: number }>) => {
-      const { com, rowIndex } = action.payload;
-      if (!state.byId) {
-        state.byId = {};
-      }
-      if (!state.layout) {
-        state.layout = [];
-      }
-      if (state.byId[com.id]) return state;
-      let config = Object.assign({}, com, { fieldName: com.id });
-      if ((com.type as string) === 'DescText') {
-        config = Object.assign({}, config, { label: config.label + com.id?.split('_')[1] });
-      }
-      state.byId[com.id] = Object.assign({}, com, config);
-      const index = rowIndex !== undefined ? rowIndex : state.layout.length - 1;
-      // 如果当前选中了某一行，则在当前行之后插入；否则在末尾插入
-      state.layout.splice(index + 1, 0, [com.id]);
-      state.isDirty = true;
-      state.selectedField = com.id;
+      state.subComponentConfig = null;
       return state;
     },
     prepare: (com: FormField, rowIndex: number) => {
@@ -171,6 +141,7 @@ const reducers = {
   },
   selectField(state: FormDesign, action: PayloadAction<{ id: string }>) {
     const { id } = action.payload;
+    state.subComponentConfig = null;
     state.selectedField = id;
     return state;
   },
@@ -179,8 +150,7 @@ const reducers = {
     action: PayloadAction<{ id: string; config: FormField; isEdit?: boolean; isValidate?: boolean }>,
   ) {
     const { id, config, isEdit, isValidate } = action.payload;
-    const componentConfig = id.startsWith('DescText') ? Object.assign({}, config, { fieldName: config.id }) : config;
-    state.byId[id] = componentConfig;
+    state.byId[id] = id.startsWith('DescText') ? Object.assign({}, config, { fieldName: config.id }) : config;
     // 如果改变控件宽度后导致整行的宽度大于100%,则需要改变layout布局以实现换行
     if (isEdit) {
       const [rowIndex, colIndex] = locateById(id, state.layout);
@@ -214,8 +184,8 @@ const reducers = {
     }
     state.isDirty = true;
     if (isValidate) {
-      const index = state.errors.findIndex((item) => item.id === id);
-      state.errors.splice(index, 1);
+      const index = (state.errors || []).findIndex((item) => item.id === id);
+      index > -1 && state.errors.splice(index, 1);
     }
     return state;
   },
@@ -247,6 +217,32 @@ const reducers = {
   setFormRules(state: FormDesign, action: PayloadAction<{ formRules: FormRuleItem[] }>) {
     const { formRules } = action.payload;
     state.formRules = formRules;
+    state.isDirty = true;
+    return state;
+  },
+  setPropertyRules(state: FormDesign, action: PayloadAction<{ propertyRules: PropertyRuleItem[] }>) {
+    const { propertyRules } = action.payload;
+    state.propertyRules = propertyRules;
+    state.isDirty = true;
+    return state;
+  },
+  setSubComponentConfig(state: FormDesign, action: PayloadAction<{ config: FormFieldMap | null }>) {
+    const { config } = action.payload;
+    state.subComponentConfig = config;
+    return state;
+  },
+  editSubComponentProps(
+    state: FormDesign,
+    action: PayloadAction<{ parentId: string; config: FormFieldMap; props: FormFieldMap }>,
+  ) {
+    const { parentId, config, props } = action.payload;
+    (state.byId[parentId] as any).components = (state.byId[parentId] as any).components.map((field: any) => {
+      if (field.config.id === config.id) {
+        return { props: { ...field.props, ...props }, config: { ...field.config, ...config } };
+      }
+      return field;
+    });
+    state.subComponentConfig = { ...config, ...props };
     state.isDirty = true;
     return state;
   },
@@ -321,10 +317,16 @@ export const errorSelector = createSelector([(state: RootState) => state.formDes
 export const formRulesSelector = createSelector([(state: RootState) => state.formDesign], (formDesign) => {
   return formDesign.formRules;
 });
-
+// 表单静态属性规则
+export const propertyRulesSelector = createSelector([(state: RootState) => state.formDesign], (formDesign) => {
+  return formDesign.propertyRules;
+});
+export const subComponentConfigSelector = createSelector(
+  [(state: RootState) => state.formDesign],
+  (formDesign) => formDesign.subComponentConfig,
+);
 export const {
   comAdded,
-  comInserted,
   comDeleted,
   moveRow,
   moveDown,
@@ -339,4 +341,7 @@ export const {
   setIsDirty,
   setErrors,
   setFormRules,
+  setPropertyRules,
+  setSubComponentConfig,
+  editSubComponentProps,
 } = reducers;

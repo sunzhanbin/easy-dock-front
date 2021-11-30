@@ -1,3 +1,4 @@
+@import '@common/styles/var.scss';
 .container {
   :global {
     .ant-form-item-label {
@@ -27,14 +28,14 @@
         color: rgba(24, 31, 67, 0.95);
         box-shadow: none !important;
         &:hover {
-          color: #4c5cdb;
+          color: $primary-color;
         }
       }
       .ant-radio-button-wrapper:not(:first-child)::before {
         display: none;
       }
       .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
-        color: #4c5cdb;
+        color: $primary-color;
         background-image: url(~@/assets/selected.png);
         background-position: top right;
         background-repeat: no-repeat;
@@ -45,11 +46,81 @@
       height: 32px;
       line-height: 32px;
     }
+
     .ant-switch {
       float: right;
     }
+
     .input_number {
       width: 100%;
+    }
+  }
+
+
+  .dateRange {
+
+    margin-top: -15px;
+
+    .tips {
+      font-size: 12px;
+      color: #ccc;
+      margin-bottom: 10px;
+    }
+  }
+
+  .fileWrapper {
+
+    :global {
+      .ant-select-item-option-content {
+        span:nth-child(1) {
+          color: #181F43;
+        }
+
+        span:nth-child(2) {
+          padding-left: 10px;
+          font-size: 12px;
+          letter-spacing: 1px;
+          color: rgba(24, 31, 67, 0.5);
+        }
+      }
+    }
+
+    .customType {
+      margin-bottom: 10px;
+    }
+  }
+
+
+  .limitRange, .allowDecimal {
+    display: flex;
+
+    .Item {
+      flex: 1;
+
+      :global {
+        .ant-input-number, .ant-picker-large .ant-picker-input > input {
+          width: 100%;
+          font-size: 14px;
+        }
+      }
+    }
+
+    .formItem {
+      flex: 0 0 160px;
+      margin-left: 10px;
+
+      :global {
+        .ant-input-number {
+          width: 100%;
+          font-size: 14px;
+        }
+      }
+    }
+
+    .text {
+      flex: 0 0 30px;
+      line-height: 40px;
+      text-align: center;
     }
   }
 }

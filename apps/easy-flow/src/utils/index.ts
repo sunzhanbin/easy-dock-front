@@ -1,8 +1,11 @@
 import moment from 'moment';
+import {AbstractTooltipProps} from "antd/lib/tooltip";
 
-export { default as axios, runtimeAxios, builderAxios } from './axios';
-export { default as history } from './history';
+export {default as axios, runtimeAxios, builderAxios} from './axios';
+export {default as history} from './history';
 export * from './form';
+
+export const getPopupContainer: AbstractTooltipProps['getPopupContainer'] = (container) => container;
 
 export function getToolboxImageUrl(icon: string): string {
   const publicPath = process.env.PUBLIC_URL;

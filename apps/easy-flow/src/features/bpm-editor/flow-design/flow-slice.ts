@@ -157,11 +157,31 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
     ]);
 
     const fields = form.meta.components || [];
-    const fieldsTemplate: FlowType['fieldsTemplate'] = fields.map((item) => ({
-      name: <string>item.config.label,
-      id: <string>item.config.fieldName || item.config.id,
-      type: item.config.type,
-    }));
+    const fieldsTemplate: FlowType['fieldsTemplate'] = [];
+    fields.forEach((item) => {
+      // Tabs需要设置的是子控件的权限
+      if (item.config.type === 'Tabs') {
+        const component = fields.find((field) => field.props.id === item.config.id);
+        if (component?.props?.components && component.props.components.length > 0) {
+          const list = component.props.components.map((com: any) => {
+            const config = com.config;
+            return {
+              name: <string>`${item.config.label}·${config.label}`,
+              id: <string>config.fieldName || config.id,
+              parentId: <string>item.config.fieldName || item.config.id,
+              type: config.type,
+            };
+          });
+          fieldsTemplate.push(...list);
+        }
+      } else {
+        fieldsTemplate.push({
+          name: <string>item.config.label,
+          id: <string>item.config.fieldName || item.config.id,
+          type: item.config.type,
+        });
+      }
+    });
 
     let flowData = flowResponse.meta || [];
 
@@ -233,18 +253,34 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
                 roleIds.add(role);
               });
           }
+          if (node.type === NodeType.FillNode || node.type === NodeType.AuditNode) {
+            (node.dueConfig?.notice.users || []).forEach((v) => userIds.add(v));
+          }
 
           const fieldsAuths: FieldAuthsMap = {};
-
           // 舍弃冗余字段
           fieldsTemplate.forEach((field) => {
-            if (node.fieldsAuths && node.fieldsAuths[field.id] !== undefined) {
-              fieldsAuths[field.id] = node.fieldsAuths[field.id];
+            const { id, parentId } = field;
+            // Tabs等有子组件的权限需要有层级区分,为以下这种形式{fieldsAuths:{Input_1:1,Tabs_2:{Radio:2,Checkbox:1}}}
+            if (parentId) {
+              fieldsAuths[parentId] = fieldsAuths[parentId] || {};
+              if (node.fieldsAuths && node.fieldsAuths[parentId]) {
+                if ((node.fieldsAuths[parentId] as FieldAuthsMap)[id] !== undefined) {
+                  (fieldsAuths[parentId] as FieldAuthsMap)[id] = (node.fieldsAuths[parentId] as FieldAuthsMap)[id];
+                } else {
+                  (fieldsAuths[parentId] as FieldAuthsMap)[id] = AuthType.View;
+                }
+              } else {
+                (fieldsAuths[parentId] as FieldAuthsMap)[id] = AuthType.View;
+              }
+              return;
+            }
+            if (node.fieldsAuths && node.fieldsAuths[id] !== undefined) {
+              fieldsAuths[id] = node.fieldsAuths[id];
             } else {
-              fieldsAuths[field.id] = AuthType.View;
+              fieldsAuths[id] = AuthType.View;
             }
           });
-
           node.fieldsAuths = fieldsAuths;
         } else if (node.type === NodeType.BranchNode) {
           node.branches = node.branches.map((branch) => {
@@ -255,7 +291,7 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
               }),
             };
           });
-        } else if (node.type === NodeType.AutoNode && !hasAutoNode) {
+        } else if (node.type === NodeType.AutoNodePushData && !hasAutoNode) {
           hasAutoNode = true;
         }
       });
@@ -393,13 +429,15 @@ export const addNode = createAsyncThunk<void, { prevId: string; type: AddableNod
 
     if (type === NodeType.BranchNode) {
       tmpNode = createNode(type);
-    } else if (type === NodeType.AutoNode) {
-      tmpNode = createNode(type, '自动节点');
+    } else if (type === NodeType.AutoNodePushData) {
+      tmpNode = createNode(type, '自动节点_数据连接');
 
       // 如果添加了自动节点判断下服务编排里的接口有没有被加载进来
       if (flow.apis.length === 0) {
         dispatch(loadApis());
       }
+    } else if (type === NodeType.AutoNodeTriggerProcess) {
+      tmpNode = createNode(type, '自动节点_触发流程');
     } else {
       if (type === NodeType.AuditNode) {
         tmpNode = createNode(type, '审批节点');

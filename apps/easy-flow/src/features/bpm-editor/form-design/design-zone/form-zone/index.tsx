@@ -1,4 +1,5 @@
 import { FC, memo, useMemo, useCallback } from 'react';
+import { Form } from 'antd';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { layoutSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 import { moveIndex } from '@/features/bpm-editor/form-design/formdesign-slice';
@@ -33,7 +34,9 @@ const FormZone: FC<{}> = () => {
     return (
       <div className={styles.form_design} ref={drop}>
         {layout && layout.length > 0 ? (
-          layout.map((row, rowIndex) => renderCard({ row, rowIndex, moveCard }, rowIndex))
+          <Form layout="vertical" autoComplete="off" id="edit-form">
+            {layout.map((row, rowIndex) => renderCard({ row, rowIndex, moveCard }, rowIndex))}
+          </Form>
         ) : (
           <div className={styles.empty_tip}>
             <img src={emptyImage} className={styles.image} alt="empty" />

@@ -6,6 +6,39 @@
     z-index: 9999;
   }
 
+  .type {
+    display: flex;
+    max-width: 320px;
+    :global {
+      .ant-radio-button-wrapper {
+        flex: 1;
+        background: rgba(24, 39, 67, 0.04);
+        border-radius: 3px;
+        border-color: transparent;
+        background-image: none !important;
+        text-align: center;
+        &:hover {
+          color: rgba(76, 92, 219, 1);
+        }
+        &.ant-radio-button-wrapper-checked {
+          background: #fff !important;
+          border-radius: 3px 0px 0px 3px;
+          border: 1px solid rgba(24, 31, 67, 0.12);
+          color: rgba(76, 92, 219, 1) !important;
+        }
+        &:focus-within {
+          box-shadow: none;
+        }
+      }
+      .ant-radio-button-wrapper:not(:first-child)::before {
+        display: none;
+      }
+      .ant-radio-button-wrapper-checked:not([class*=' ant-radio-button-wrapper-disabled']).ant-radio-button-wrapper:first-child {
+        border-right-color: rgba(24, 31, 67, 0.12);
+      }
+    }
+  }
+
   .api-form-item {
     margin-bottom: 0;
 

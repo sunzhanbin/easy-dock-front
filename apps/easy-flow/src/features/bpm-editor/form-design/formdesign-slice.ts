@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
   comAdded as addedReducer,
-  comInserted as insertedReducer,
   moveDown as moveDownReducer,
   moveRow as moveRowReducer,
   moveUp as moveUpReducer,
@@ -16,21 +15,25 @@ import {
   setIsDirty as setIsDirtyReducer,
   setErrors as setErrorsReducer,
   setFormRules as setFormRulesReducer,
+  setPropertyRules as setFieldRulesReducer,
+  setSubComponentConfig as setSubComponentConfigReducer,
+  editSubComponentProps as editSubComponentPropsReducer,
 } from './formzone-reducer';
 import { ConfigItem, ErrorItem, FieldType, FormDesign, FormField, FormMeta } from '@/type';
 import { loadComponents } from './toolbox/toolbox-reducer';
+import { validateFieldName, validateFields, validateHasChecked, validateLabel, validateSerial } from './validate';
 import { RootState } from '@/app/store';
 import { axios } from '@/utils';
 import { message } from 'antd';
 
-let initialState: FormDesign = {} as FormDesign;
+let initialState: FormDesign = { subComponentConfig: null } as FormDesign;
 
 const formDesign = createSlice({
   name: 'formDesign',
   initialState,
   reducers: {
     comAdded: addedReducer,
-    comInserted: insertedReducer,
+    comInserted: addedReducer,
     comDeleted: comDeletedReducer,
     moveDown: moveDownReducer,
     moveRow: moveRowReducer,
@@ -45,6 +48,9 @@ const formDesign = createSlice({
     setIsDirty: setIsDirtyReducer,
     setErrors: setErrorsReducer,
     setFormRules: setFormRulesReducer,
+    setPropertyRules: setFieldRulesReducer,
+    setSubComponentConfig: setSubComponentConfigReducer,
+    editSubComponentProps: editSubComponentPropsReducer,
   },
   extraReducers: (builder) => {
     builder.addCase(loadComponents.fulfilled, (state, action) => {
@@ -71,35 +77,29 @@ export const {
   setIsDirty,
   setErrors,
   setFormRules,
+  setPropertyRules,
+  setSubComponentConfig,
+  editSubComponentProps,
 } = formDesign.actions;
 
 export default formDesign.reducer;
 
-const validComponentConfig = (config: ConfigItem) => {
-  const label = config.label || '';
-  const reg = /^[a-zA-Z][a-zA-Z0-9_]{0,29}$/;
-  const errorItem: ErrorItem = { id: '', content: '' };
-  const configKeys: string[] = Object.keys(config);
-  for (let i = 0, len = configKeys.length; i < len; i++) {
-    const key = configKeys[i];
-    if (key === 'fieldName') {
-      const errorText = config.fieldName
-        ? reg.test(config.fieldName as string)
-          ? ''
-          : `${label}的数据库字段名不符合规范`
-        : `请填写${label}的数据库字段名`;
-      if (errorText) {
-        errorItem.id = config.id;
-        errorItem.content = errorText;
-        break;
-      }
-    } else if (key === 'label' && !config.label) {
-      errorItem.id = config.id;
-      errorItem.content = '请输入控件名称';
-      break;
-    }
+const validComponentConfig = (config: ConfigItem, props: ConfigItem) => {
+  const { id, label = '', fieldName = '', type } = config;
+  const errorItem: ErrorItem = { id, content: [] };
+  const nameError = validateFieldName(fieldName);
+  const labelError = validateLabel(label);
+  const serialError = validateSerial(config);
+  const propsError = validateHasChecked(props);
+  if (type === 'Tabs') {
+    const fieldsError = validateFields(props.components);
+    fieldsError && errorItem.content.push(fieldsError);
   }
-  return errorItem.id ? errorItem : null;
+  nameError && errorItem.content.push(nameError);
+  labelError && errorItem.content.push(labelError);
+  propsError && errorItem.content.push(propsError);
+  serialError && errorItem.content.push(serialError);
+  return errorItem.content.length > 0 ? errorItem : null;
 };
 type SaveParams = {
   subAppId: string;
@@ -111,22 +111,23 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
   'form/save',
   async ({ subAppId, isShowTip, isShowErrorTip }, { getState, dispatch }) => {
     const { formDesign } = getState();
-    const { layout = [], schema = {}, isDirty = false, byId = {}, formRules } = formDesign;
+    const { layout = [], schema = {}, isDirty = false, byId = {}, formRules, propertyRules } = formDesign;
     const formMeta: FormMeta = {
       components: [],
       layout: layout,
       schema: schema,
       formRules,
+      propertyRules,
     };
     const errors: ErrorItem[] = [];
     // 组装控件属性
     layout.forEach((row) => {
       row.forEach((id: string) => {
-        const type = <FieldType>(id.split('_')[0] || '');
+        const type = <FieldType>formDesign.byId[id].type || '';
         const version = schema[type]?.baseInfo.version || '';
         const componentConfig =
           type === 'DescText'
-            ? schema[type]?.config.concat([{ key: 'fieldName', type: 'Input', isProps: false }]) //富文本也要保存fieldName
+            ? schema[type]?.config.concat([{ key: 'fieldName', type: 'Input', isProps: false, checked: false }]) //富文本也要保存fieldName
             : schema[type]?.config;
         const config: ConfigItem = {
           id,
@@ -134,10 +135,9 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
           version,
           rules: [],
           canSubmit: type !== 'DescText',
-          multiple: type === 'Checkbox' || (type === 'Select' && byId[id].multiple),
+          multiple: type === 'Checkbox' || (['Select', 'Member'].includes(type) && byId[id].multiple),
         };
-
-        const props: ConfigItem = { type, id };
+        const props: ConfigItem = { type, id, multiple: type === 'Checkbox' };
         componentConfig?.forEach(({ isProps, key }) => {
           if (isProps) {
             props[key] = byId[id][key as Key];
@@ -149,14 +149,15 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
           }
         });
         // 校验编辑的控件属性
-        const errorItem = validComponentConfig(config);
+        const errorItem = validComponentConfig(config, props);
+        // 校验props中label带勾选控件属性
+
         if (errorItem) {
           errors.push(errorItem);
         }
         formMeta.components.push({ config, props });
       });
     });
-    // TODO 校验表单规则
 
     if (errors.length > 0) {
       const id = errors[0].id || '';

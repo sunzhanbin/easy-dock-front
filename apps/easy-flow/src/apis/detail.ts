@@ -95,7 +95,7 @@ export async function fetchDataSource(
         //   if (name) {
         //     allPromises.push(
         //       runtimeAxios
-        //         .post('/common/doHttpJson', { jsonObject: apiconfig, formDataList: formValues })
+        //         .post('/common/doHttpJson', { meta: apiconfig, formDataList: formValues })
         //         .then((res) => {
         //           const data = eval(`res.${name}`);
         //           let list: { key: string; value: string }[] = [];
@@ -128,3 +128,7 @@ export async function fetchDataSource(
 export const deleteDraft = async (draftId: number | string) => {
   await runtimeAxios.delete(`task/draft/${draftId}`);
 };
+
+export const getFlowData = (params: any) => {
+  return runtimeAxios.post('', params)
+}

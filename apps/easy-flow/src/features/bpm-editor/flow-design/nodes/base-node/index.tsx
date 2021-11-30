@@ -32,7 +32,9 @@ export const CardHeader = memo(function CardHeader(props: CardHeaderProps) {
       return styles['fill-node'];
     } else if (type === NodeType.CCNode) {
       return styles['cc-node'];
-    } else if (type === NodeType.AutoNode) {
+    } else if (type === NodeType.AutoNodePushData) {
+      return styles['auto-node'];
+    } else if (type === NodeType.AutoNodeTriggerProcess) {
       return styles['auto-node'];
     }
 
@@ -65,7 +67,8 @@ function Base(props: BaseProps) {
       type === NodeType.AuditNode ||
       type === NodeType.FillNode ||
       type === NodeType.CCNode ||
-      type === NodeType.AutoNode
+      type === NodeType.AutoNodePushData ||
+      type === NodeType.AutoNodeTriggerProcess
     );
   }, [type]);
 

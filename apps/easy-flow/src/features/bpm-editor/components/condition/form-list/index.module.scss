@@ -4,22 +4,32 @@
   .loading {
     z-index: 8888;
   }
+
   .fieldName {
     width: 135px;
     margin-right: 14px;
   }
+
   .symbol {
     width: 135px;
-    margin-right: 24px;
+    margin-right: 14px;
   }
+
+  .valueType {
+    width: 135px;
+    margin-right: 14px;
+  }
+
   .valueWrapper {
     flex: 1;
     max-width: calc(100% - 304px);
     margin-right: 0;
+
     .value {
       width: 100%;
     }
   }
+
   :global {
     .ant-form-item {
       margin-bottom: 8px;

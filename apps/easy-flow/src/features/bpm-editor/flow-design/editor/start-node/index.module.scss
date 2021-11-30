@@ -1,3 +1,4 @@
+@import '@common/styles/var.scss';
 .btns {
   .button {
     width: 88px;
@@ -6,8 +7,8 @@
     background-color: rgba(#182743, 0.04);
 
     &.active {
-      color: #4c5cdb;
-      border-color: #4c5cdb;
+      color: $primary-color;
+      border-color: $primary-color;
       border-width: 1px;
       border-style: solid;
       z-index: 10;

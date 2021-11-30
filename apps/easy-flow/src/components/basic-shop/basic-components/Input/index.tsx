@@ -1,26 +1,23 @@
-import { memo, useMemo } from 'react';
-import { Input } from 'antd';
+import { memo, useEffect } from 'react';
+import BaseInput from './base-input';
 import { InputProps } from 'antd/lib/input';
+import EventHoc from '@/components/form-engine/eventHoc';
+import { useContainerContext } from '@/components/form-engine/context';
 
-const InputComponent = (props: InputProps & { unique: boolean }) => {
-  const { defaultValue, unique, onChange } = props;
-  const propList = useMemo(() => {
-    const prop: { [k: string]: string | boolean | number | undefined | null | Function } = {
-      size: 'large',
-      placeholder: '请输入',
-      maxLength: 200, //最大长度200 v1.0.0暂定
-      unique: String(unique),
-      onChange: onChange,
-    };
-    if (defaultValue) {
-      prop.defaultValue = defaultValue as string;
-    }
-    const result = Object.assign({}, props, prop);
-    delete result.fieldName;
-    delete result.colSpace;
-    return result;
-  }, [defaultValue, unique, props, onChange]);
-  return <Input {...propList} key={defaultValue as string} />;
+const InputComponent = (props: InputProps & { unique: boolean } & { [key: string]: any }) => {
+  const { form, rules, fieldName, type } = useContainerContext();
+
+  useEffect(() => {
+    if (!form) return;
+    const formValue = form.getFieldsValue();
+    console.log({ formValue, rules, fieldName, type });
+  });
+
+  return (
+    <EventHoc>
+      <BaseInput {...props} />
+    </EventHoc>
+  );
 };
 
 export default memo(InputComponent);

@@ -1,6 +1,16 @@
 import { memo } from 'react';
 import { AllNode, NodeType } from '@type/flow';
-import { StartNode, AuditNode, FillNode, FinishNode, CCNode, BranchNode, Branch, AutoNode } from './nodes';
+import {
+  StartNode,
+  AuditNode,
+  FillNode,
+  FinishNode,
+  CCNode,
+  BranchNode,
+  Branch,
+  AutoNodePushData,
+  AutoNodeTriggerProcess,
+} from './nodes';
 
 interface FlowTreeProps {
   data: AllNode[];
@@ -33,8 +43,12 @@ function FlowTree(props: FlowTreeProps) {
             return <FinishNode key={node.id} node={node} />;
           }
 
-          case NodeType.AutoNode: {
-            return <AutoNode key={node.id} node={node} />;
+          case NodeType.AutoNodePushData: {
+            return <AutoNodePushData key={node.id} node={node} />;
+          }
+
+          case NodeType.AutoNodeTriggerProcess: {
+            return <AutoNodeTriggerProcess key={node.id} node={node} />;
           }
 
           case NodeType.BranchNode: {

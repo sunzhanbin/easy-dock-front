@@ -1,12 +1,13 @@
 import { message } from 'antd';
-import Axios, { AxiosRequestConfig } from 'axios';
-import cookie from 'js-cookie';
+import Axios, { AxiosRequestConfig, AxiosInstance } from 'axios';
 
-function createAxios(config?: AxiosRequestConfig) {
+import Auth from '@enc/sso';
+
+function createAxios(config?: AxiosRequestConfig): AxiosInstance {
   const instance = Axios.create({
     ...config,
     headers: {
-      auth: cookie.get('token'),
+      auth: Auth.getAuth(),
       ...(config ? config.headers : {}),
     },
   });
@@ -15,13 +16,16 @@ function createAxios(config?: AxiosRequestConfig) {
     function (response) {
       return response.data;
     },
-    function ({ config, message: errMsg, response }) {
+    async function ({ config, message: errMsg, response }) {
       const { status, data } = response || {};
 
       if (status === 500) {
         errMsg = '服务异常';
       } else if (status === 403) {
-        window.location.replace(window.COMMON_LOGIN_URL + `?redirect=${encodeURIComponent(window.location.href)}`);
+        // import Auth 之后 Auth 的实例会放入 window.Auth 中
+        if (window.Auth && window.Auth.getAuth()) {
+          window.Auth.logout();
+        } 
 
         return Promise.reject({
           code: -1,

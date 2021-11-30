@@ -4,7 +4,7 @@ const { name, version } = require('./package.json');
 const fs = require('fs');
 const { getPaths } = require('@rescripts/utilities');
 
-process.env.PORT = 8082;
+process.env.PORT = 8084;
 // process.env.FAST_REFRESH = 'false';
 
 module.exports = {

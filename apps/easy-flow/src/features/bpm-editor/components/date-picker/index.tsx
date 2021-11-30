@@ -10,12 +10,21 @@ function TimesDatePicker(
     value?: number;
     onChange?(value?: number): void;
     disabledDate?(time: Moment): boolean;
+    type?: string;
   } & DatePickerProps,
 ) {
-  const { value, format, size = 'large', showTime = true, className, onChange, disabledDate } = props;
+  const { value, format, size = 'large', showTime = true, className, onChange, disabledDate, type } = props;
   const handleChange = useMemoCallback((value: Moment | null) => {
     if (onChange) {
       const time = moment(value).format(format as string);
+      if (type === 'startTime' && format === 'YYYY-MM-DD') {
+        onChange((value && moment(time).startOf('day').valueOf()) || 0);
+        return;
+      }
+      if (type === 'endTime' && format === 'YYYY-MM-DD') {
+        onChange((value && moment(time).endOf('day').valueOf()) || 0);
+        return;
+      }
       onChange((value && moment(time).valueOf()) || 0);
     }
   });

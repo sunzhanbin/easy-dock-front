@@ -5,8 +5,9 @@
   "scripts": {
     "start": "rescripts start",
     "build:test": "sh -ac '. .env.staging; rescripts build'",
-    "build": "REACT_APP_TARGET_ENV=staging rescripts build",
-    "build:cluster": "REACT_APP_TARGET_ENV=cluster rescripts build",
+    "build": "cross-env REACT_APP_TARGET_ENV=staging rescripts build",
+    "build:dev": "cross-env REACT_APP_TARGET_ENV=dev rescripts build",
+    "build:cluster": "cross-env REACT_APP_TARGET_ENV=cluster rescripts build",
     "eject": "rescripts eject"
   },
   "eslintConfig": {
@@ -25,6 +26,8 @@
     ]
   },
   "dependencies": {
+    "@enc/sso": "^0.3.0-beta.1",
+    "@enc/theme-scheme": "^0.0.1",
     "@reduxjs/toolkit": "^1.5.1",
     "antd": "^4.15.2",
     "axios": "^0.21.1",
@@ -35,13 +38,15 @@
     "qiankun": "^2.4.0",
     "react": "^17.0.2",
     "react-beautiful-dnd": "^13.1.0",
+    "react-color": "^2.19.3",
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
     "styled-components": "^5.3.0",
     "typescript": "^4.1.2",
-    "use-immer": "^0.5.1"
+    "use-immer": "^0.5.1",
+    "history": "^4"
   },
   "devDependencies": {
     "@rescripts/cli": "^0.0.16",

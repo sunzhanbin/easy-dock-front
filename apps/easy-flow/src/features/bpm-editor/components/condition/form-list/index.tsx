@@ -1,8 +1,8 @@
 import { memo, useMemo, useState, useEffect } from 'react';
 import { Form, Select, Input, InputNumber } from 'antd';
 import classnames from 'classnames';
-import { DateField, fieldRule, FormField, SelectField } from '@/type';
-import { symbolMap, dynamicMap } from '@/utils';
+import { fieldRule } from '@/type';
+import { symbolMap, dynamicMap, datePropertyMap, flowVarsMap } from '@/utils';
 import { Icon, Loading } from '@common/components';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import MultiText from '@/features/bpm-editor/components/multi-text';
@@ -45,6 +45,7 @@ const symbolListMap = {
     symbolMap.null,
     symbolMap.notNull,
   ],
+  dateFilter: [symbolMap.latter, symbolMap.earlier],
   option: [
     symbolMap.equal,
     symbolMap.unequal,
@@ -65,14 +66,19 @@ type RuleFormProps = {
   name: string;
   blockIndex: number;
   ruleIndex: number;
+  isFormRule: boolean | undefined;
   onChange?: (blockIndex: number, ruleIndex: number, rule: fieldRule) => void;
-  loadDataSource?: (id: string) => Promise<{ key: string; value: string }[] | { data: { data: string[] } }>;
+  loadDataSource?: (
+    id: string,
+    parentId?: string,
+  ) => Promise<{ key: string; value: string }[] | { data: { data: string[] } }>;
 };
 const FormList = ({
   components,
   className,
   rule,
   name,
+  isFormRule,
   blockIndex,
   ruleIndex,
   onChange,
@@ -80,6 +86,7 @@ const FormList = ({
 }: RuleFormProps) => {
   const [fieldName, setFieldName] = useState<string | undefined>(undefined);
   const [symbol, setSymbol] = useState<string | undefined>(undefined);
+  const [valueType, setValueType] = useState<string | undefined>(undefined);
   const [value, setValue] = useState<string | number | string[] | [number, number] | undefined>(undefined);
   const [optionList, setOptionList] = useState<{ key: string; value: string }[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -88,27 +95,14 @@ const FormList = ({
   }, [blockIndex, ruleIndex, name]);
   const componentList = useMemo(() => {
     if (components && components?.length > 0) {
-      const list = [...components];
-      return (
-        list
-          .filter((item: { type: string }) => item.type !== 'DescText')
-          .map((item: FormField) => ({
-            label: item.label,
-            id: item.id,
-            type: item.type,
-            format: (item as DateField).format,
-            sourceType: (item as SelectField).dataSource?.type || '',
-            fieldName: item.fieldName,
-            multiple: (item as SelectField)?.multiple || false,
-          })) || []
-      );
+      return components;
     }
     return [];
   }, [components]);
-  const setDataSource = useMemoCallback((fieldName, fieldType) => {
+  const setDataSource = useMemoCallback((fieldName, fieldType, parentId?) => {
     if (loadDataSource && (fieldType === 'Select' || fieldType === 'Radio' || fieldType === 'Checkbox')) {
       setLoading(true);
-      loadDataSource(fieldName)
+      loadDataSource(fieldName, parentId)
         .then((res) => {
           if (res) {
             // 如果返回的是一个key-value数组,直接赋值给下拉选项
@@ -131,22 +125,36 @@ const FormList = ({
     setSymbol(undefined);
     setValue(undefined);
     const component = componentList.find((item) => item.fieldName === fieldName);
-    const fieldType = component && (component.type as string);
-    setDataSource(fieldName, fieldType);
-    const fieldRule = {
-      fieldName: fieldName,
-      fieldType: component?.type || rule.fieldType,
-    };
+    const fieldType = (component?.type as string) || rule.fieldType;
+    const parentId = component?.parentId || rule.parentId;
+    setDataSource(fieldName, fieldType, parentId);
+    const fieldRule = { fieldName, fieldType, parentId };
     onChange && onChange(blockIndex, ruleIndex, fieldRule);
   });
   const changeSymbol = useMemoCallback((symbol) => {
     setSymbol(symbol);
     setValue(undefined);
+    setValueType(undefined);
     const selectComponent = componentList.find((item) => item.fieldName === fieldName);
     const fieldRule = {
       fieldName: fieldName,
       symbol: symbol,
       fieldType: selectComponent?.type || rule.fieldType,
+      parentId: selectComponent?.parentId || rule.parentId,
+    };
+    onChange && onChange(blockIndex, ruleIndex, fieldRule);
+  });
+  const changeValueType = useMemoCallback((type) => {
+    setValue(undefined);
+    setValueType(type);
+    const selectComponent = componentList.find((item) => item.fieldName === fieldName);
+    const fieldRule = {
+      fieldName,
+      symbol,
+      value: undefined,
+      valueType: type,
+      fieldType: selectComponent?.type || rule.fieldType,
+      parentId: selectComponent?.parentId || rule.parentId,
     };
     onChange && onChange(blockIndex, ruleIndex, fieldRule);
   });
@@ -154,21 +162,24 @@ const FormList = ({
     setValue(value);
     const selectComponent = componentList.find((item) => item.fieldName === fieldName);
     const fieldRule = {
-      fieldName: fieldName,
-      symbol: symbol,
+      fieldName,
+      symbol,
       value: value,
+      valueType,
       fieldType: selectComponent?.type || rule.fieldType,
+      parentId: selectComponent?.parentId || rule.parentId,
     };
     onChange && onChange(blockIndex, ruleIndex, fieldRule);
   });
   const init = useMemoCallback(() => {
-    const { fieldName, symbol, value, fieldType } = rule;
+    const { fieldName, symbol, value, fieldType, valueType, parentId } = rule;
     setFieldName(fieldName);
     setSymbol(symbol);
     setValue(value);
+    setValueType(valueType);
     if (fieldName) {
       const type = fieldType;
-      setDataSource(fieldName, type);
+      setDataSource(fieldName, type, parentId);
     }
   });
 
@@ -195,7 +206,7 @@ const FormList = ({
           symbolList = symbolListMap.number;
           break;
         case 'Date':
-          symbolList = symbolListMap.date;
+          symbolList = isFormRule ? symbolListMap.date : symbolListMap.dateFilter;
           break;
         case 'Select':
         case 'Radio':
@@ -322,6 +333,60 @@ const FormList = ({
               onChange={changeValue}
             />
           </Form.Item>
+        );
+      }
+      if (symbol === 'latter' || symbol === 'earlier') {
+        return (
+          <>
+            <Form.Item
+              name="valueType"
+              className={styles.valueType}
+              rules={[{ required: true, message: '请选择判断属性!' }]}
+            >
+              <Select
+                placeholder="判断属性"
+                size="large"
+                value={valueType}
+                onChange={changeValueType}
+                getPopupContainer={getPopupContainer}
+              >
+                {Object.values(datePropertyMap).map(({ value, label }) => (
+                  <Option key={value} value={value} label={label}>
+                    {label}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+
+            <Form.Item
+              name="value"
+              className={styles.valueWrapper}
+              rules={[{ required: true, message: '请选择判断值!' }]}
+            >
+              <Select
+                placeholder="判断值"
+                size="large"
+                className={styles.value}
+                value={value as string}
+                onChange={changeValue}
+                getPopupContainer={getPopupContainer}
+              >
+                {valueType === 'other'
+                  ? componentList
+                      .filter((item) => item.fieldName !== fieldName)
+                      .map(({ fieldName, label }) => (
+                        <Option key={fieldName} value={fieldName} label={label}>
+                          {label}
+                        </Option>
+                      ))
+                  : Object.values(flowVarsMap).map(({ value, label }) => (
+                      <Option key={value} value={value} label={label}>
+                        {label}
+                      </Option>
+                    ))}
+              </Select>
+            </Form.Item>
+          </>
         );
       }
       if (symbol) {

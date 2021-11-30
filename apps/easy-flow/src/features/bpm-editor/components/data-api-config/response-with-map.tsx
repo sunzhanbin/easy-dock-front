@@ -64,7 +64,7 @@ function ResponseWithMap(props: ResponseWithMapProps) {
                     </Form.Item>
 
                     <span className={styles.map}>对应</span>
-                    <FieldMap name={[field.name, 'map']} />
+                    <FieldMap name={[field.name, 'map']} isAutoSelect={false} />
                   </div>
                   <Button className={styles.del} icon={<Icon type="shanchu" />} onClick={() => remove(index)} />
                 </div>
@@ -72,9 +72,9 @@ function ResponseWithMap(props: ResponseWithMapProps) {
             })}
 
             <div className={styles.btns}>
-              <Button icon={<Icon type="xinzeng" />} onClick={() => add({ type: ParamType.Optional })}>
+              {/* <Button icon={<Icon type="xinzeng" />} onClick={() => add({ type: ParamType.Optional })}>
                 添加已获取的参数
-              </Button>
+              </Button> */}
               <Button icon={<Icon type="xinzeng" />} onClick={() => add({ type: ParamType.Customize })}>
                 新增参数
               </Button>

@@ -1,13 +1,17 @@
 import { batchUpload, downloadFile as download } from '@/apis/file';
 import { ImageValue } from '@/components/basic-shop/basic-components/Image';
 import { DateField, fieldRule, FormField, SelectOptionItem } from '@/type';
+// import { FieldAuthsMap } from '@/type/flow';
 import moment from 'moment';
 import { runtimeAxios } from './axios';
+import { DATE_DEFAULT_FORMAT } from '@utils/const';
+import { cloneDeep } from 'lodash';
 
 // 格式化单个条件value
 export function formatRuleValue(
   rule: fieldRule,
   field: FormField,
+  fieldNext?: { [key: string]: any },
 ): { name: string | undefined; symbol: string; value?: string } {
   const { symbol, value } = rule;
   const name = field.label;
@@ -47,6 +51,10 @@ export function formatRuleValue(
       const text = dynamicMap[value as string]?.label || '';
       return { name, symbol: label, value: text ? `在${text}之内` : '' };
     }
+    if (symbol === 'earlier' || symbol === 'latter') {
+      const value = fieldNext?.label;
+      return { name, symbol: label, value: value || '' };
+    }
     const text = moment(value as number).format(format);
     return { name, symbol: label, value: value ? text : '' };
   }
@@ -75,6 +83,8 @@ export const symbolMap: { [k in string]: { value: string; label: string } } = {
   greaterOrEqual: { value: 'greaterOrEqual', label: '大于等于' },
   less: { value: 'less', label: '小于' },
   lessOrEqual: { value: 'lessOrEqual', label: '小于等于' },
+  latter: { value: 'latter', label: '不早于' },
+  earlier: { value: 'earlier', label: '不晚于' },
   range: { value: 'range', label: '选择范围' },
   dynamic: { value: 'dynamic', label: '动态筛选' },
   equalAnyOne: { value: 'equalAnyOne', label: '等于任意一个' },
@@ -98,6 +108,18 @@ export const dynamicMap: { [k in string]: { value: string; label: string } } = {
   last30days: { value: 'last30days', label: '最近30天' },
   last90days: { value: 'last90days', label: '最近90天' },
 };
+
+export const datePropertyMap: { [k in string]: { value: string; label: string } } = {
+  flowVars: { value: 'flowVars', label: '流程变量' },
+  other: { value: 'other', label: '其他控件' },
+};
+
+export const flowVarsMap: { [k in string]: { value: string; label: string } } = {
+  currentMonth: { value: 'currentMonth', label: '当前月' },
+  currentYear: { value: 'currentYear', label: '当前年' },
+  currentTime: { value: 'currentTime', label: '当前时间' },
+};
+
 // 解析文本类型规则
 function analysisTextRule(symbol: string, value: string | string[], formValue: string): boolean {
   let result = false;
@@ -366,6 +388,9 @@ function analysisMember(symbol: string, formValue: number | number[]): boolean {
 export function analysisRule(rule: fieldRule, formValues: { [k in string]: any }): boolean {
   const { fieldName, fieldType = '', symbol = '', value } = rule;
   const formValue = fieldName && formValues[fieldName];
+  if (formValue === undefined) {
+    return false;
+  }
   // 文本类型
   if (fieldType === 'Input' || fieldType === 'Textarea') {
     return analysisTextRule(symbol, value as string | string[], formValue as string);
@@ -420,24 +445,18 @@ export function getBase64(file: File | Blob) {
     reader.onerror = (error) => reject(error);
   });
 }
-type FileValue = {
-  type: string;
-  fileList: File[];
-  fileIdList: { id: string; name: string }[];
-};
 // 批量上传文件
-// TODO 这里不要用any, 看不懂values的结构
 export async function uploadFile(values: any) {
   // 需要上传的文件,图片和附件合并到一起
   const imageFiles: { originFileObj: File }[] = [];
   const attachmentFiles: { originFileObj: File }[] = [];
-  const fileIndexLocationRecord: { [key: string]: [number, number] } = {};
-  const fileIdMap: { [k: string]: FileValue } = {};
+  const fileIndexLocationRecord: { [key: string]: any } = cloneDeep(values);
+  const fileIdMap: { [k: string]: any } = cloneDeep(values);
   // 找出需要上传的文件,只有图片和附件需要上传
   Object.keys(values).forEach((key) => {
     const componentType = values[key] && values[key]?.type;
 
-    if (componentType === 'Image' || componentType === 'Attachment') {
+    if (['Attachment', 'Image'].includes(componentType)) {
       const fileList = values[key].fileList.filter((file: { originFileObj: File }) => file.originFileObj);
 
       if (componentType === 'Image') {
@@ -447,6 +466,27 @@ export async function uploadFile(values: any) {
         fileIndexLocationRecord[key] = [attachmentFiles.length, attachmentFiles.length + fileList.length];
         attachmentFiles.push(...fileList);
       }
+    }
+    // 找出Tabs内的图片和附件控件
+    if (Array.isArray(values[key])) {
+      const tabsValue = values[key];
+      tabsValue.forEach((item: any, index: number) => {
+        Object.entries(item)
+          .filter(([k, v]: [string, any]) => ['Attachment', 'Image'].includes(v?.type))
+          .forEach(([k, v]: [string, any]) => {
+            const fileList = v?.fileList.filter((file: { originFileObj: File }) => file.originFileObj);
+            if (v.type === 'Image') {
+              fileIndexLocationRecord[key][index][k] = [imageFiles.length, imageFiles.length + fileList.length];
+              imageFiles.push(...fileList);
+            } else {
+              fileIndexLocationRecord[key][index][k] = [
+                attachmentFiles.length,
+                attachmentFiles.length + fileList.length,
+              ];
+              attachmentFiles.push(...fileList);
+            }
+          });
+      });
     }
   });
 
@@ -461,25 +501,47 @@ export async function uploadFile(values: any) {
   } else {
     promiseList.push(Promise.resolve());
   }
-
   const [imageRes, attachmentRes] = await Promise.all(promiseList);
 
-  Object.keys(fileIndexLocationRecord).forEach((key) => {
-    const oldValue = values[key];
-    let fileIdList;
+  Object.entries(fileIndexLocationRecord)
+    .filter(([, value]: [string, any]) => value)
+    .forEach(([key]) => {
+      const oldValue = values[key];
+      let fileIdList;
 
-    if (oldValue.type === 'Image') {
-      fileIdList = (imageRes?.data || []).slice(...fileIndexLocationRecord[key]);
-    } else if (oldValue.type === 'Attachment') {
-      fileIdList = (attachmentRes?.data || []).slice(...fileIndexLocationRecord[key]);
-    }
-
-    fileIdMap[key] = {
-      type: oldValue.type,
-      fileList: [],
-      fileIdList: (oldValue.fileIdList || []).concat(fileIdList),
-    };
-  });
+      if (['Image', 'Attachment'].includes(oldValue?.type)) {
+        if (oldValue?.type === 'Image') {
+          fileIdList = (imageRes?.data || []).slice(...fileIndexLocationRecord[key]);
+        } else if (oldValue?.type === 'Attachment') {
+          fileIdList = (attachmentRes?.data || []).slice(...fileIndexLocationRecord[key]);
+        }
+        fileIdMap[key] = {
+          type: oldValue?.type,
+          fileList: [],
+          fileIdList: (oldValue?.fileIdList || []).concat(fileIdList),
+        };
+      }
+      // 替换tabs内的图片和附件控件
+      if (Array.isArray(oldValue)) {
+        const tabsValue = values[key];
+        tabsValue.forEach((item: any, index: number) => {
+          Object.entries(item)
+            .filter(([k, v]: [string, any]) => ['Attachment', 'Image'].includes(v?.type))
+            .forEach(([k, v]: [string, any]) => {
+              if (v.type === 'Image') {
+                fileIdList = (imageRes?.data || []).slice(...fileIndexLocationRecord[key][index][k]);
+              } else {
+                fileIdList = (attachmentRes?.data || []).slice(...fileIndexLocationRecord[key][index][k]);
+              }
+              fileIdMap[key][index][k] = {
+                type: oldValue?.[index]?.[k]?.type,
+                fileList: [],
+                fileIdList: (oldValue?.[index]?.[k]?.fileIdList || []).concat(fileIdList),
+              };
+            });
+        });
+      }
+    });
   // 重新组装表单数据
   return Object.assign({}, values, fileIdMap);
 }
@@ -527,7 +589,7 @@ export const loadFieldDatasource = async (config: SelectOptionItem): Promise<any
     // if (apiconfig && formDataList) {
     //   const name = (apiconfig.response as { name: string })?.name;
     //   if (name) {
-    //     const res = await runtimeAxios.post('/common/doHttpJson', { jsonObject: apiconfig, formDataList });
+    //     const res = await runtimeAxios.post('/common/doHttpJson', { meta: apiconfig, formDataList });
     //     let list: OptionItem[] = [];
     //     const data = eval(`res.${name}`);
     //     if (Array.isArray(data)) {
@@ -547,3 +609,36 @@ export const loadFieldDatasource = async (config: SelectOptionItem): Promise<any
 
   return Promise.resolve([]);
 };
+
+// type ExtendProps = {
+//   datasource: Datasource[keyof Datasource];
+//   fieldName: string;
+//   fieldsAuths: FieldAuthsMap;
+//   projectId?: number;
+//   readonly?: boolean;
+// };
+// export function compRender(type: AllComponentType['type'], Component: any, props: any, extendProps: ExtendProps) {
+//   const { datasource, projectId, fieldName, fieldsAuths, readonly } = extendProps;
+//   if ((type === 'Select' || type === 'Radio' || type === 'Checkbox') && datasource) {
+//     return <Component {...props} options={datasource} />;
+//   }
+//   if (type === 'Member') {
+//     return <Component {...props} projectid={projectId} />;
+//   }
+//   if (type === 'Tabs') {
+//     return <Component {...props} fieldName={fieldName} auth={fieldsAuths} readonly={readonly} />;
+//   }
+//   return <Component {...props} />;
+// }
+
+export function getFieldValue(values: { key: 'createTime' | 'fieldName' | 'fixedChars'; fieldValue?: string }) {
+  let tmp = {};
+  if (values.key === 'createTime') {
+    tmp = { format: DATE_DEFAULT_FORMAT };
+  } else if (values.key === 'fieldName') {
+    tmp = { fieldValue: values?.fieldValue };
+  } else if (values.key === 'fixedChars') {
+    tmp = { chars: '' };
+  }
+  return { ...tmp, type: values?.key };
+}
