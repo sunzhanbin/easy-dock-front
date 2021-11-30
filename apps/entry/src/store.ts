@@ -2,13 +2,15 @@ import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import appsOrchestrationApi from "@utils/fetch";
 import appManagerSlice from "@views/app-manager/index.slice";
-import appSetupSlice from "@views/app-setup/index.slice";
+import basicSetupSlice from "@views/app-setup/basic-setup.slice";
+import menuSetupSlice from "@views/app-setup/menu-setup.slice";
 
 export const store = configureStore({
   reducer: {
     [appsOrchestrationApi.reducerPath]: appsOrchestrationApi.reducer,
     appManager: appManagerSlice,
-    appSetup: appSetupSlice,
+    basicSetup: basicSetupSlice,
+    menuSetup: menuSetupSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
