@@ -158,6 +158,7 @@ const FormItemWrap = (props: ComponentProps) => {
       labelCol={{ span: type === 'Switch' || type === 'Checkbox' ? 12 : 24 }}
       labelAlign="left"
       required={required}
+      colon={false}
       rules={
         rules
           ? [...rules, { required: required, message: requiredMessage }]
@@ -203,7 +204,7 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
         key={componentId}
         name="form_editor"
         autoComplete="off"
-        layout="vertical"
+        // layout="vertical"
         initialValues={initValues}
         onFinish={onFinish}
         onValuesChange={handleChange}

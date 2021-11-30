@@ -34,10 +34,15 @@ export interface AppManagerState {
   subApps: SubAppInfo[];
 }
 
-export interface appManagerInitialState {
+export interface BasicSetupInitialState {
   theme: string;
   navMode: number;
   logo: { [key: string]: any };
   basicForm: { [key: string]: any };
+}
+
+export interface MenuSetupInitialState {
+  currentId: string;
+  menu: any[];
   menuForm: { [key: string]: any };
 }

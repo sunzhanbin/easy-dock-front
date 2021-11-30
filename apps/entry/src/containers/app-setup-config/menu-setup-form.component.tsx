@@ -52,7 +52,7 @@ const MenuSetupFormComponent = () => {
           </Form.Item>
           <Form.Item label="内容设置">
             <Form.Item name="asset">
-              <Radio.Group>
+              <Radio.Group size="small">
                 <Radio.Button value="exist">使用已有资产</Radio.Button>
                 <Radio.Button value="custom">自定义 URL</Radio.Button>
               </Radio.Group>

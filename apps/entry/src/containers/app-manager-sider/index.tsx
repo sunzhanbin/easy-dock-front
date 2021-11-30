@@ -30,7 +30,7 @@ const AppManagerSider = () => {
   }, []);
 
   return (
-    <>
+    <div className="app-manager-sider">
       <Sider trigger={null} collapsible>
         <div className="logo" />
         {workspaceId && (
@@ -50,7 +50,7 @@ const AppManagerSider = () => {
         )}
       </Sider>
       <AddWorkspaceModal ref={modalRef} />
-    </>
+    </div>
   );
 };
 
