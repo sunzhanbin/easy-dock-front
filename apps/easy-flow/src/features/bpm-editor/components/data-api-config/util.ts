@@ -51,7 +51,7 @@ if (useMock && process.env.NODE_ENV === 'development') {
 }
 
 const orchPrefix = '/api/api-orchestration-service-main/interfaceManage/v1';
-const baseURL = useMock ? '/' : window.ORCH_SERVICE_ENDPOINT;
+const baseURL = useMock ? '/' : window.ALGOR_ORCH_BASE_SERVICE_ENDPOINT;
 
 export async function queryApiDetail(
   api: number,

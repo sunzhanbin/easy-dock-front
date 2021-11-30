@@ -19,7 +19,7 @@ function AutoNodeTriggerProcess(props: AutoNodeProps) {
   }, [triggerConfig]);
 
   return (
-    <BaseNode node={node} icon={<Icon type="zidongjiediandise" />}>
+    <BaseNode node={node} icon={<Icon type="liuchengchufadise" />}>
       {flowNames ? (
         <div className={styles.api}>
           <span className={styles.desc}>触发流程</span>
