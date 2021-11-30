@@ -192,8 +192,21 @@
   }
 
   &[disabled] {
+    color: inherit;
+    background: linear-gradient(
+      -45deg,
+      rgba(24, 39, 67, 0.04) 0,
+      rgba(24, 39, 67, 0.04) 5%,
+      transparent 5%,
+      transparent 50%,
+      rgba(24, 39, 67, 0.04) 50%,
+      rgba(24, 39, 67, 0.04) 55%,
+      transparent 55%,
+      transparent
+    );
+    background-size: 10px 10px;
     background-color: rgba(24, 39, 67, 0.04);
-
+    border-color: transparent;
     &:hover {
       border-color: transparent;
     }
@@ -273,7 +286,6 @@
       color: #ff5568;
     }
   }
-
 }
 
 .ant-checkbox {
@@ -351,11 +363,29 @@
     background-color: transparent;
   }
   &.ant-picker-disabled {
+    color: inherit;
+    background: linear-gradient(
+      -45deg,
+      rgba(24, 39, 67, 0.04) 0,
+      rgba(24, 39, 67, 0.04) 5%,
+      transparent 5%,
+      transparent 50%,
+      rgba(24, 39, 67, 0.04) 50%,
+      rgba(24, 39, 67, 0.04) 55%,
+      transparent 55%,
+      transparent
+    );
+    background-size: 10px 10px;
     background-color: rgba(24, 39, 67, 0.04);
     border-color: transparent;
     &:hover {
       border-color: transparent;
     }
+  }
+}
+.ant-picker-input {
+  & > input[disabled] {
+    color: inherit;
   }
 }
 // 定制数字输入框
@@ -386,6 +416,19 @@
 
   .ant-input-number-input {
     &[disabled] {
+      color: inherit;
+      background: linear-gradient(
+        -45deg,
+        rgba(24, 39, 67, 0.04) 0,
+        rgba(24, 39, 67, 0.04) 5%,
+        transparent 5%,
+        transparent 50%,
+        rgba(24, 39, 67, 0.04) 50%,
+        rgba(24, 39, 67, 0.04) 55%,
+        transparent 55%,
+        transparent
+      );
+      background-size: 10px 10px;
       background-color: rgba(24, 39, 67, 0.04);
     }
   }
@@ -536,9 +579,22 @@
     &.ant-select-disabled {
       &:not(.ant-select-customize-input) {
         .ant-select-selector {
-          background: rgba(24, 39, 67, 0.04);
+          background-color: rgba(24, 39, 67, 0.04);
+          color: inherit;
         }
       }
+      background: linear-gradient(
+        -45deg,
+        rgba(24, 39, 67, 0.04) 0,
+        rgba(24, 39, 67, 0.04) 5%,
+        transparent 5%,
+        transparent 50%,
+        rgba(24, 39, 67, 0.04) 50%,
+        rgba(24, 39, 67, 0.04) 55%,
+        transparent 55%,
+        transparent
+      );
+      background-size: 10px 10px;
     }
   }
 
@@ -556,9 +612,22 @@
     &.ant-select-disabled {
       &:not(.ant-select-customize-input) {
         .ant-select-selector {
-          background: rgba(24, 39, 67, 0.04);
+          background-color: rgba(24, 39, 67, 0.04);
+          color: inherit;
         }
       }
+      background: linear-gradient(
+        -45deg,
+        rgba(24, 39, 67, 0.04) 0,
+        rgba(24, 39, 67, 0.04) 5%,
+        transparent 5%,
+        transparent 50%,
+        rgba(24, 39, 67, 0.04) 50%,
+        rgba(24, 39, 67, 0.04) 55%,
+        transparent 55%,
+        transparent
+      );
+      background-size: 10px 10px;
     }
   }
 }
