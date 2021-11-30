@@ -125,6 +125,8 @@ export type serialRulesItem = {
     changeRules?: RuleOption[];
     ruleName?: string | undefined;
     changeRuleName?: string | undefined;
+    ruleStatus?: number;
+    editStatus?: boolean;
   };
 };
 

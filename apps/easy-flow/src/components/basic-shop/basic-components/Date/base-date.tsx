@@ -3,6 +3,7 @@ import { DatePicker } from 'antd';
 import { Icon } from '@common/components';
 import { DatePickerProps } from 'antd/lib/date-picker';
 import moment, { Moment } from 'moment';
+import { getPopupContainer } from '@utils';
 
 const DateComponent = (props: DatePickerProps & { onChange: (value?: number) => void }) => {
   const { format, defaultValue, value, onChange, disabledDate } = props;
@@ -10,6 +11,7 @@ const DateComponent = (props: DatePickerProps & { onChange: (value?: number) => 
     const prop: { [k: string]: string | boolean | Function | Moment | ReactNode } = {
       size: 'large',
       suffixIcon: <Icon type="riqi" />,
+      getPopupContainer: getPopupContainer,
       onChange(val: moment.Moment) {
         const time = moment(val).format(format as string);
         onChange && onChange(val ? moment(time).valueOf() : undefined);

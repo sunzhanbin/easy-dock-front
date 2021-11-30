@@ -1,5 +1,5 @@
 import React, { memo, useState, useEffect } from 'react';
-import { message, Modal, Popconfirm } from 'antd';
+import { message, Modal, Popconfirm, Tooltip } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import styles from '../index.module.scss';
 import { deleteSerialId, getSerialList } from '@apis/form';
@@ -7,7 +7,7 @@ import { useSubAppDetail } from '@app/app';
 import { Icon } from '@common/components';
 import classNames from 'classnames';
 import { RuleOption } from '@type';
-import {RULE_TYPE} from "@utils/const";
+import { RULE_TYPE } from '@utils/const';
 
 interface RuleProps {
   fields: { id: string; name: string }[];
@@ -58,17 +58,24 @@ const RuleModal = (props: RuleProps) => {
   }, [getRuleList]);
 
   const formatComponent: { [key: string]: (props: any) => React.ReactNode } = {
-    'incNumber': (item) => <span>{Math.pow(10, item.digitsNum)}</span>,
-    'createTime': (item) => <span>{item.format}</span>,
-    'fixedChars': (item) => <span>{item.chars}</span>,
-    'fieldName': (item) => <span>{fields.find((field) => field.id === item.fieldValue)?.name}</span>,
-  }
-  
+    incNumber: (item) => {
+      let digitsNum = '00000';
+      digitsNum = digitsNum.substr(digitsNum.length - 5, item.digitsNum - 1) + 1;
+      return <span>{digitsNum}</span>;
+    },
+    createTime: (item) => <span>{item.format}</span>,
+    fixedChars: (item) => <span>{item.chars}</span>,
+    fieldName: (item) => {
+      const fieldName = fields.find((field) => field.id === item.fieldValue)?.name;
+      return <span> {fieldName ? '${' + fieldName + '}' : ''}</span>;
+    },
+  };
+
   const renderLabel = useMemoCallback((rule) => {
     return rule.mata.map((item: RuleOption, index: number) => {
-      return <React.Fragment key={index}>
-        {RULE_TYPE.includes(item.type) && formatComponent[item.type](item)}
-      </React.Fragment>
+      return (
+        <React.Fragment key={index}>{RULE_TYPE.includes(item.type) && formatComponent[item.type](item)}</React.Fragment>
+      );
     });
   });
 
@@ -99,10 +106,18 @@ const RuleModal = (props: RuleProps) => {
               onClick={() => handleSelectRule(rule, index)}
             >
               <div className={styles.text}>{rule.name}</div>
-              <span className={styles.ruleTips}>{renderLabel(rule)}</span>
+              <Tooltip title={renderLabel(rule)}>
+                <span className={styles.ruleTips}>{renderLabel(rule)}</span>
+              </Tooltip>
             </div>
             <div className={styles.operation}>
-              {rule.status === 0 && (
+              {rule.status !== 0 ? (
+                <Tooltip title="该规则已被使用，不可删除">
+                  <div className={classNames(styles.delete, styles.disable)}>
+                    <Icon className={styles.iconfont} type="shanchu" />
+                  </div>
+                </Tooltip>
+              ) : (
                 <Popconfirm
                   title="确定要删除此条规则吗?"
                   okText="确 定"

@@ -111,7 +111,7 @@ const FormItemWrap = (props: ComponentProps) => {
 
   if (LABEL_INCLUDE_CHECKBOX.includes(type)) {
     return (
-      <Form.Item name={[id, 'enable']} valuePropName="checked">
+      <Form.Item name={[id, 'enable']} valuePropName="checked" className={styles.formLabel}>
         <Checkbox>{label}</Checkbox>
       </Form.Item>
     );

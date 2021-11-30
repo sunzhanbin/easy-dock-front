@@ -3,6 +3,7 @@ import { DatePicker, DatePickerProps } from 'antd';
 import { Icon } from '@common/components';
 import moment, { Moment } from 'moment';
 import useMemoCallback from '@common/hooks/use-memo-callback';
+import { getPopupContainer } from '@utils';
 
 function TimesDatePicker(
   props: {
@@ -37,6 +38,7 @@ function TimesDatePicker(
       format={format}
       className={className}
       suffixIcon={<Icon type="riqi" />}
+      getPopupContainer={getPopupContainer}
       onChange={handleChange}
       disabledDate={disabledDate}
     />
