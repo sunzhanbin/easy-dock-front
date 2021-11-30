@@ -1,3 +1,24 @@
 .menu-setup-list-component {
-  background: transparent;
+  flex: 1;
+  .header {}
+  .list {
+    .add {}
+    .menu {
+      .menu-item {
+        display: flex;
+        justify-content: space-around;
+        .text {}
+        .acts {
+          display: inline-flex;
+          width: 100px;
+          justify-content: space-evenly;
+          .item {
+            &.add {}
+            &.remove {}
+            &.drag {}
+          }
+        }
+      }
+    }
+  }
 }

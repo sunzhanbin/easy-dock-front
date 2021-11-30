@@ -1,9 +1,32 @@
-import "./menu-setup-form.style";
+import { Button } from "antd";
+import { PlusOutlined, MenuOutlined, RestOutlined } from "@ant-design/icons";
+import "./menu-setup-list.style";
 
-const MenuSetupListComponent = () => {
+const MenuSetupListComponent = ()       => {
   return (
     <div className="menu-setup-list-component">
-      这里是菜单设置的菜单列表的控件；
+      <div className="header">菜单设置</div>
+      <div className="list">
+        <div className="addMenu">
+          <Button>添加一级菜单</Button>
+        </div>
+        <div className="menu">
+          <div className="menu-item">
+            <span className="text">一级菜单</span>
+            <span className="acts">
+              <span className="item add">
+                <PlusOutlined />
+              </span>
+              <span className="item remove">
+                <RestOutlined />
+              </span>
+              <span className="item drag">
+                <MenuOutlined />
+              </span>
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { Tabs } from "antd";
-import BasicFormComponent from "./basic-setup.component";
-import MenuFormComponent from "./menu-setup.component";
+import BasicSetupFormComponent from "./basic-setup-form.component";
+import MenuSetupComponent from "./menu-setup.component";
 import "./index.style";
 
 const { TabPane } = Tabs;
@@ -16,10 +16,10 @@ const AppSetupConfig = () => {
     <div className="app-setup-config">
       <Tabs defaultActiveKey="1" onChange={handleTasChange}>
         <TabPane tab="应用设置" key="1">
-          <BasicFormComponent />
+          <BasicSetupFormComponent />
         </TabPane>
         <TabPane tab="菜单设置" key="2">
-          <MenuFormComponent />
+          <MenuSetupComponent />
         </TabPane>
       </Tabs>
     </div>

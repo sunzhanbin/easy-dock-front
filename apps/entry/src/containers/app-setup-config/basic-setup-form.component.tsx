@@ -3,8 +3,9 @@ import { Form, Input, Button, Select, Radio, Upload } from "antd";
 import { useAppDispatch } from "@/store";
 import { setTheme, setMode, setBaseForm } from "@views/app-setup/index.slice";
 import { axios } from "@utils/fetch";
-
 import { UploadOutlined } from "@ant-design/icons";
+
+import "./basic-setup-form.style";
 
 const { Option } = Select;
 
@@ -20,7 +21,7 @@ const normFile = (e: any) => {
   return e && e.fileList;
 };
 
-const BasicFormComponent = () => {
+const BasicSetupFormComponent = () => {
   const [form] = Form.useForm();
   const dispatch = useAppDispatch();
 
@@ -46,7 +47,7 @@ const BasicFormComponent = () => {
       formData.append(filename, file);
       axios
         .post(`/file/batchUpload?controlType=1`, formData)
-        .then(({ data: response }) => {
+        .then(({ data: response }: any) => {
           onSuccess(response, file);
         })
         .catch(onError);
@@ -59,7 +60,7 @@ const BasicFormComponent = () => {
   }, []);
 
   return (
-    <div className="basic-form-component">
+    <div className="basic-setup-form-component">
       <Form layout="vertical" form={form} onFinish={handleFormFinish}>
         <Form.Item
           label="应用名称"
@@ -134,4 +135,4 @@ const BasicFormComponent = () => {
   );
 };
 
-export default BasicFormComponent;
+export default BasicSetupFormComponent;
