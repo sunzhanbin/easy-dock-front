@@ -11,7 +11,7 @@ declare global {
     COMMON_LOGIN_URL: string;
     COMMON_LOGIN_DOMAIN: string;
     EASY_DOCK_BASE_SERVICE_ENDPOINT: string;
-    ORCH_SERVICE_ENDPOINT: string;
+    ALGOR_ORCH_BASE_SERVICE_ENDPOINT: string;
   }
 }
 
