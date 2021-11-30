@@ -36,7 +36,7 @@ function AddNodeButton(props: AddNodeButtonProps) {
             handleAddNode(NodeType.AutoNodePushData);
           }}
         >
-          <Icon type="geshiyouhua" />
+          <Icon type="shujulianjie" />
           <span>数据连接</span>
         </div>
         <div
@@ -45,7 +45,7 @@ function AddNodeButton(props: AddNodeButtonProps) {
             handleAddNode(NodeType.AutoNodeTriggerProcess);
           }}
         >
-          <Icon type="geshiyouhua" />
+          <Icon type="liuchengchufa" />
           <span>流程触发</span>
         </div>
       </div>

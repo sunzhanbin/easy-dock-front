@@ -97,13 +97,13 @@ function FlowDesign() {
       );
     } else if (choosedNode.type === NodeType.AutoNodePushData) {
       return (
-        <CardHeader icon={<Icon type="zidongjiediandise" />} type={choosedNode.type}>
+        <CardHeader icon={<Icon type="shujulianjiedise" />} type={choosedNode.type}>
           自动节点_数据连接
         </CardHeader>
       );
     } else if (choosedNode.type === NodeType.AutoNodeTriggerProcess) {
       return (
-        <CardHeader icon={<Icon type="zidongjiediandise" />} type={choosedNode.type}>
+        <CardHeader icon={<Icon type="liuchengchufadise" />} type={choosedNode.type}>
           自动节点_触发流程
         </CardHeader>
       );
