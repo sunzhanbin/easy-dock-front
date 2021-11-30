@@ -25,7 +25,9 @@ function FlowDesign() {
   const { bpmId } = useParams<{ bpmId: string }>();
   const { loading, data: flow, choosedNode } = useAppSelector(flowDataSelector);
   const handleCloseDrawer = useMemoCallback(() => {
-    dispatch(setChoosedNode(null));
+    if (choosedNode) {
+      dispatch(setChoosedNode(null));
+    }
   });
 
   useEffect(() => {
@@ -95,13 +97,13 @@ function FlowDesign() {
       );
     } else if (choosedNode.type === NodeType.AutoNodePushData) {
       return (
-        <CardHeader icon={<Icon type="zidongjiediandise" />} type={choosedNode.type}>
+        <CardHeader icon={<Icon type="shujulianjiedise" />} type={choosedNode.type}>
           自动节点_数据连接
         </CardHeader>
       );
     } else if (choosedNode.type === NodeType.AutoNodeTriggerProcess) {
       return (
-        <CardHeader icon={<Icon type="zidongjiediandise" />} type={choosedNode.type}>
+        <CardHeader icon={<Icon type="liuchengchufadise" />} type={choosedNode.type}>
           自动节点_触发流程
         </CardHeader>
       );
@@ -118,7 +120,7 @@ function FlowDesign() {
 
   return (
     <div className={styles['scroll-container']}>
-      <div className={styles.flow}>
+      <div className={styles.flow} onClick={handleCloseDrawer}>
         {loading && <Loading />}
 
         <div className={styles.content} id="flow-design-container">
@@ -132,6 +134,7 @@ function FlowDesign() {
         onClose={handleCloseDrawer}
         destroyOnClose
         closable={false}
+        mask={false}
       >
         {drawerHeader}
 

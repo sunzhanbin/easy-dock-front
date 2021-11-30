@@ -186,8 +186,10 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
       form.validateFields();
     }
     return () => {
-      // 此处reset会触发form的shouldUpdate 暂先屏蔽
-      // form.resetFields();
+      form.resetFields();
+      setTimeout(() => {
+        form.validateFields();
+      }, 100);
     };
   }, [componentId, form, errorIdList]);
   useEffect(() => {
@@ -201,6 +203,7 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
         key={componentId}
         name="form_editor"
         autoComplete="off"
+        layout="vertical"
         initialValues={initValues}
         onFinish={onFinish}
         onValuesChange={handleChange}

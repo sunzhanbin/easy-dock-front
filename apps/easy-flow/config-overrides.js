@@ -33,6 +33,7 @@ module.exports = {
     function overrideWebpackOutput(config) {
       config.output = {
         ...config.output,
+        publicPath: process.env.REACT_APP_IS_RELATIVE === 'true' ? '/easyflow/' : '/',
         globalObject: 'window',
         libraryTarget: 'umd',
         library: `${appPackageJson.name}-[name]`,
@@ -69,6 +70,8 @@ module.exports = {
                     source: `${paths.appPath}/conf${
                       process.env.REACT_APP_TARGET_ENV === 'staging'
                         ? '.staging.js'
+                        : process.env.REACT_APP_TARGET_ENV === 'staging'
+                        ? '.js'
                         : process.env.REACT_APP_TARGET_ENV === 'cluster'
                         ? '.cluster.js'
                         : '.production.js'

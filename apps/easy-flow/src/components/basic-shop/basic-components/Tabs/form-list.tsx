@@ -113,6 +113,8 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId }: Form
               }
               const isRequired = fieldAuth === AuthType.Required;
               const comProps = Object.assign({}, props, { disabled: fieldAuth === AuthType.View || readonly });
+              delete comProps.defaultValue;
+              delete comProps.apiConfig;
               const rules: Rule[] = validateRules(isRequired, label, type, props);
               return (
                 <Col span={Number(colSpace) * 6} className={styles.col} key={fieldName}>

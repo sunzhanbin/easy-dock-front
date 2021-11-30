@@ -61,6 +61,8 @@ module.exports = {
                     `conf${
                       process.env.REACT_APP_TARGET_ENV === 'staging'
                         ? '.staging.js'
+                        : process.env.REACT_APP_TARGET_ENV === 'dev'
+                        ? '.js'
                         : process.env.REACT_APP_TARGET_ENV === 'cluster'
                         ? '.cluster.js'
                         : '.production.js'
