@@ -233,7 +233,14 @@ function DataApiConfig(props: DataApiConfigProps) {
             if (type === 2) {
               return (
                 <>
-                  <Form.Item name={[...thisFormItemName, 'url']} label="接口地址" rules={[urlRule]}>
+                  <Form.Item
+                    name={[...thisFormItemName, 'url']}
+                    label="接口地址"
+                    rules={[urlRule]}
+                    labelCol={{ span: 24 }}
+                    labelAlign="left"
+                    colon={false}
+                  >
                     <Input size="large" placeholder="请输入接口地址" />
                   </Form.Item>
                   <Form.Item
@@ -249,6 +256,9 @@ function DataApiConfig(props: DataApiConfigProps) {
                         },
                       },
                     ]}
+                    labelCol={{ span: 24 }}
+                    labelAlign="left"
+                    colon={false}
                   >
                     <Select size="large" placeholder="请选择" suffixIcon={<Icon type="xiala" />}>
                       <Select.Option value="POST">POST</Select.Option>
