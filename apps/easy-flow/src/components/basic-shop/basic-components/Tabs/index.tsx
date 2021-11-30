@@ -61,17 +61,18 @@ const Tabs = ({
   const handleRemove = useMemoCallback((key: string) => {
     // 为了解决tabs回显问题,所以使用了formInstance
     const fieldsValue = formInstance?.getFieldsValue()[fieldName];
-    const list = fieldsValue
+    let list = fieldsValue
       ? Array.isArray(fieldsValue)
         ? fieldsValue
         : Object.values({ ...fieldsValue, ...panes })
       : [...panes];
+    list = list.filter((v) => v?.key);
     const index = list.findIndex((pane: any) => pane.key === key);
     const paneList = list.filter((v: any) => v.key !== key);
     setPanes(paneList);
     onChange && onChange(paneList);
     if (activeKey === list[index].key) {
-      index > 0 ? setActiveKey(list[index - 1].key) : setActiveKey(list[0].key);
+      index > 0 ? setActiveKey(list[index - 1].key) : setActiveKey(paneList[0]?.key);
     }
   });
   const handleEdit = useMemoCallback((targetKey, action) => {

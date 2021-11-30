@@ -203,6 +203,7 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
         key={componentId}
         name="form_editor"
         autoComplete="off"
+        layout="vertical"
         initialValues={initValues}
         onFinish={onFinish}
         onValuesChange={handleChange}
