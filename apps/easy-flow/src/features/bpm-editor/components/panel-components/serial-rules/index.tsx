@@ -9,7 +9,7 @@ import { message } from 'antd';
 import { useSubAppDetail } from '@app/app';
 import { useAppSelector } from '@app/hooks';
 import { initialRules } from '@utils/const';
-import { componentPropsSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
+import { componentPropsSelector, errorSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 import { SERIAL_TYPE } from '@utils/const';
 
 interface RulesProps {
@@ -25,14 +25,18 @@ const SerialRules = (props: RulesProps) => {
   const injectRef = useRef<any>(null);
   const { data } = useSubAppDetail();
   const byId = useAppSelector(componentPropsSelector);
+  const errors = useAppSelector(errorSelector);
   const [type, setType] = useState<string>(''); // 编号规则类型
   const [rules, setRules] = useState<RuleOption[]>([]); // 自定义规则
   const [changeRules, setChangeRules] = useState<RuleOption[]>([]); // 已有规则
+  // 得从接口里面拿
   const [resetRules, setResetRules] = useState<RuleOption[]>(value?.serialMata?.changeRules || []); // 取消时重置规则
   const [resetRuleName, setResetRuleName] = useState<string>(value?.serialMata?.changeRuleName || '');
   const [ruleName, setRuleName] = useState<string>('');
   const [changeRuleName, setChangeRuleName] = useState<string>('');
-
+  const [ruleStatus, setRuleStatus] = useState<number | undefined>(undefined);
+  // 是否可编辑   默认不可编辑
+  const [editStatus, setEditStatus] = useState<boolean | undefined>(undefined);
   const fields = useMemo<{ id: string; name: string }[]>(() => {
     const componentList = Object.values(byId).map((item: FormField) => item) || [];
     const compType = ['Date', 'Input', 'Radio', 'InputNumber'];
@@ -46,6 +50,8 @@ const SerialRules = (props: RulesProps) => {
   const fieldSerial = useMemo(() => {
     return (byId[id] as SerialNumField)?.serialRule;
   }, [id, byId]);
+  const [isError, setErrors] = useState<boolean>(false);
+  const [isErrorCustom, setErrorsCustom] = useState<boolean>(false);
 
   useEffect(() => {
     if (!fieldSerial) return;
@@ -55,8 +61,21 @@ const SerialRules = (props: RulesProps) => {
     setRuleName(serialMata?.ruleName || '');
     setChangeRuleName(serialMata?.changeRuleName || '');
     setSerialId(serialId || '');
+    setEditStatus(serialMata?.editStatus);
+    setRuleStatus(serialMata?.ruleStatus === 0 ? 0 : 1);
     setType(serialMata?.type || (serialId ? SERIAL_TYPE.INJECT_TYPE : SERIAL_TYPE.CUSTOM_TYPE));
   }, [fieldSerial]);
+
+  useEffect(() => {
+    const errorList = errors.find((item) => item.id === id);
+    if (errorList && errorList.content.includes('请输入已有规则固定字符')) {
+      setEditStatus(true);
+      setErrors(true);
+    }
+    if (errorList && errorList.content.includes('请输入自定义规则固定字符')) {
+      setErrorsCustom(true);
+    }
+  }, [errors, id]);
 
   // 自定义规则/引用规则
   const handleTypeChange = (type: string) => {
@@ -64,19 +83,52 @@ const SerialRules = (props: RulesProps) => {
   };
 
   const handleConfirmRule = useMemoCallback((selectedSerial) => {
-    const { name, mata } = selectedSerial;
+    const { name, mata, status } = selectedSerial;
     setResetRules(mata);
     setResetRuleName(name);
+    setRuleStatus(status);
+    setEditStatus(false);
     onChange &&
       onChange({
         serialId: selectedSerial.id,
-        serialMata: { id, type, ruleName, rules, changeRuleName: name, changeRules: mata },
+        serialMata: {
+          id,
+          type,
+          ruleName,
+          rules,
+          changeRuleName: name,
+          changeRules: mata,
+          ruleStatus: status,
+          editStatus: false,
+        },
       });
   });
+
+  const handleEditRule = () => {
+    setEditStatus(true);
+    onChange &&
+      onChange({
+        serialId,
+        serialMata: {
+          id,
+          type,
+          ruleName,
+          rules,
+          changeRuleName,
+          changeRules,
+          ruleStatus,
+          editStatus: true,
+        },
+      });
+  };
 
   const handleOnChange = (serialItem: { type: string; rules: any; ruleName: string }) => {
     const { type, rules: formRule, ruleName: formName } = serialItem;
     if (type === SERIAL_TYPE.CUSTOM_TYPE) {
+      const hasChars = formRule.some(
+        (item: { type: string; chars?: string }) => item.type === 'fixedChars' && !item.chars,
+      );
+      setErrorsCustom(hasChars);
       onChange &&
         onChange({
           serialId,
@@ -87,13 +139,28 @@ const SerialRules = (props: RulesProps) => {
             rules: formRule,
             changeRuleName,
             changeRules,
+            ruleStatus,
+            editStatus,
           },
         });
     } else {
+      const hasChars = formRule.some(
+        (item: { type: string; chars?: string }) => item.type === 'fixedChars' && !item.chars,
+      );
+      setErrors(hasChars);
       onChange &&
         onChange({
           serialId,
-          serialMata: { id, type, ruleName, rules, changeRuleName: formName, changeRules: formRule },
+          serialMata: {
+            id,
+            type,
+            ruleName,
+            rules,
+            changeRuleName: formName,
+            changeRules: formRule,
+            ruleStatus,
+            editStatus,
+          },
         });
     }
   };
@@ -104,13 +171,16 @@ const SerialRules = (props: RulesProps) => {
     setResetRules(mata);
     setResetRuleName(name);
     if (type === 'inject') {
-      injectRef?.current?.setEditStatus(false);
+      setEditStatus(false);
+      setErrors(false);
       return;
     }
     customRef.current.reset();
     handleTypeChange('inject');
-    injectRef?.current?.setEditStatus(false);
-    injectRef.current.setRuleStatus(status);
+    setEditStatus(false);
+    setErrorsCustom(false);
+
+    setRuleStatus(status);
     injectRef.current.reset(name);
     onChange &&
       onChange({
@@ -122,12 +192,16 @@ const SerialRules = (props: RulesProps) => {
           rules: initialRules,
           changeRuleName: name,
           changeRules: mata,
+          ruleStatus: status,
+          editStatus: false,
         },
       });
   };
 
   const handleCancelEdit = useMemoCallback(() => {
     injectRef.current.reset(resetRuleName);
+    setEditStatus(false);
+    setErrors(false);
     onChange &&
       onChange({
         serialId,
@@ -138,6 +212,8 @@ const SerialRules = (props: RulesProps) => {
           rules,
           changeRules: resetRules,
           changeRuleName: resetRuleName,
+          ruleStatus,
+          editStatus: false,
         },
       });
   });
@@ -149,8 +225,10 @@ const SerialRules = (props: RulesProps) => {
           ref={customRef}
           rules={rules}
           ruleName={ruleName}
-          type="custom"
+          type={type}
           id={id}
+          isError={isErrorCustom}
+          setErrors={setErrorsCustom}
           appId={data?.app?.id}
           onChange={handleOnChange}
           fields={fields}
@@ -163,15 +241,19 @@ const SerialRules = (props: RulesProps) => {
           ref={injectRef}
           rules={changeRules}
           ruleName={changeRuleName}
-          type="inject"
+          editStatus={editStatus}
           id={id}
           serialId={serialId}
+          isError={isError}
           appId={data?.app?.id}
           onChange={handleOnChange}
           fields={fields}
+          setErrors={setErrors}
+          ruleStatus={ruleStatus}
           onSave={handleSaveRules}
           onCancelEdit={handleCancelEdit}
           onConfirmRule={handleConfirmRule}
+          onEdit={handleEditRule}
         />
       );
     }

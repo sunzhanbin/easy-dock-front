@@ -21,7 +21,15 @@ import {
 } from './formzone-reducer';
 import { ConfigItem, ErrorItem, FieldType, FormDesign, FormField, FormMeta } from '@/type';
 import { loadComponents } from './toolbox/toolbox-reducer';
-import { validateFieldName, validateFields, validateHasChecked, validateLabel, validateSerial } from './validate';
+import {
+  validateFieldName,
+  validateFields,
+  validateHasChecked,
+  validateLabel,
+  validateSerialCustom,
+  validateSerialInject,
+  validateSerial,
+} from './validate';
 import { RootState } from '@/app/store';
 import { axios } from '@/utils';
 import { message } from 'antd';
@@ -90,6 +98,8 @@ const validComponentConfig = (config: ConfigItem, props: ConfigItem) => {
   const nameError = validateFieldName(fieldName);
   const labelError = validateLabel(label);
   const serialError = validateSerial(config);
+  const customError = validateSerialCustom(config);
+  const injectError = validateSerialInject(config);
   const propsError = validateHasChecked(props);
   if (type === 'Tabs') {
     const fieldsError = validateFields(props.components);
@@ -99,6 +109,8 @@ const validComponentConfig = (config: ConfigItem, props: ConfigItem) => {
   labelError && errorItem.content.push(labelError);
   propsError && errorItem.content.push(propsError);
   serialError && errorItem.content.push(serialError);
+  customError && errorItem.content.push(customError);
+  injectError && errorItem.content.push(injectError);
   return errorItem.content.length > 0 ? errorItem : null;
 };
 type SaveParams = {
@@ -163,6 +175,7 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
       const id = errors[0].id || '';
       id && dispatch(selectField({ id }));
       dispatch(setErrors({ errors }));
+      if (errors.find((item) => item.content.includes('errorTipsExchange'))) return Promise.reject(errors);
       isShowErrorTip && message.error('您有内容未填写或填写错误，请检查');
       return Promise.reject(errors);
     }

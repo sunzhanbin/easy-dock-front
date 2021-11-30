@@ -101,30 +101,34 @@ function DraggableOption(props: DraggableOptionProps) {
       case 'createTime':
         const date = DateOptions.find((item) => item.key === data?.format)?.value;
         return (
-          <div className={styles.label}>
-            <Select
-              placeholder="请选择"
-              size="large"
-              className={styles.formItem}
-              value={`格式：${date}`}
-              showArrow={true}
-              disabled={disabled}
-              onChange={handleSelectChange}
-              getPopupContainer={getPopupContainer}
-            >
-              {DateOptions.map(({ key, value }) => (
-                <Option key={key} value={key} label={value}>
-                  {value}
-                </Option>
-              ))}
-            </Select>
-          </div>
+          <Select
+            placeholder="请选择"
+            size="large"
+            className={styles.formItem}
+            value={`格式：${date}`}
+            showArrow={true}
+            disabled={disabled}
+            onChange={handleSelectChange}
+            getPopupContainer={getPopupContainer}
+          >
+            {DateOptions.map(({ key, value }) => (
+              <Option key={key} value={key} label={value}>
+                {value}
+              </Option>
+            ))}
+          </Select>
         );
       case 'fixedChars':
         return (
-          <div className={styles.label}>
-            <Input onChange={handleInputBlur} value={data?.chars} disabled={disabled} maxLength={10} />
-          </div>
+          <Input
+            className={classNames(!data?.chars ? styles.inputBorder : '')}
+            size="large"
+            onChange={handleInputBlur}
+            value={data?.chars}
+            disabled={disabled}
+            maxLength={10}
+            placeholder="请输入"
+          />
         );
       case 'fieldName':
         return (
@@ -156,7 +160,7 @@ function DraggableOption(props: DraggableOptionProps) {
         {renderLabel()}
       </div>
       <div className={styles.operation}>
-        {type !== 'incNumber' && !disabled && (
+        {type !== 'incNumber' && !disabled ? (
           <div className={styles.delete} onClick={handleDelete}>
             <Tooltip title="删除">
               <span>
@@ -164,8 +168,14 @@ function DraggableOption(props: DraggableOptionProps) {
               </span>
             </Tooltip>
           </div>
+        ) : (
+          <div className={classNames(styles.delete, styles.disable)} onClick={handleDelete}>
+            <span>
+              <Icon className={styles.iconfont} type="shanchu" />
+            </span>
+          </div>
         )}
-        {!disabled && (
+        {!disabled ? (
           <div
             className={classNames(styles.move, type === 'incNumber' ? styles.incNumber : '')}
             onMouseEnter={handleMouseEnter}
@@ -176,6 +186,12 @@ function DraggableOption(props: DraggableOptionProps) {
                 <Icon className={styles.iconfont} type="caidan" />
               </span>
             </Tooltip>
+          </div>
+        ) : (
+          <div className={classNames(styles.move, styles.disable)}>
+            <span>
+              <Icon className={styles.iconfont} type="caidan" />
+            </span>
           </div>
         )}
       </div>

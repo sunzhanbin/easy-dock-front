@@ -5,8 +5,8 @@ export const DATE_DEFAULT_FORMAT = 'yyyyMMdd';
 
 export const DateOptions = [
   { key: 'yyyy', value: '年' },
-  { key: 'yyyyMM', value: '年月' },
-  { key: 'yyyyMMdd', value: '年月日' },
+  { key: 'yyyyMM', value: '年.月' },
+  { key: 'yyyyMMdd', value: '年.月.日' },
 ];
 
 // 编号规则自动计数定义
