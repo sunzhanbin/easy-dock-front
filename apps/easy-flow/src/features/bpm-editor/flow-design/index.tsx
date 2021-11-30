@@ -25,7 +25,9 @@ function FlowDesign() {
   const { bpmId } = useParams<{ bpmId: string }>();
   const { loading, data: flow, choosedNode } = useAppSelector(flowDataSelector);
   const handleCloseDrawer = useMemoCallback(() => {
-    dispatch(setChoosedNode(null));
+    if (choosedNode) {
+      dispatch(setChoosedNode(null));
+    }
   });
 
   useEffect(() => {
@@ -118,7 +120,7 @@ function FlowDesign() {
 
   return (
     <div className={styles['scroll-container']}>
-      <div className={styles.flow}>
+      <div className={styles.flow} onClick={handleCloseDrawer}>
         {loading && <Loading />}
 
         <div className={styles.content} id="flow-design-container">
@@ -132,6 +134,7 @@ function FlowDesign() {
         onClose={handleCloseDrawer}
         destroyOnClose
         closable={false}
+        mask={false}
       >
         {drawerHeader}
 
