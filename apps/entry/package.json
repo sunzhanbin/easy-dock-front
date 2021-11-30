@@ -9,13 +9,15 @@
     "react-copy-to-clipboard": "^5.0.4",
     "react-dom": "^17.0.2",
     "react-router-dom": "6",
+    "uuid": "^8.3.2",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "npx eslint --fix --ext .tsx,.ts src ../../packages/common/*"
   },
   "eslintConfig": {
     "extends": [
@@ -37,23 +39,27 @@
   "devDependencies": {
     "@craco/craco": "^6.4.0",
     "@dealmore/craco-plugin-babel-include": "^1.0.0",
-    "@types/react-copy-to-clipboard": "^5.0.2",
     "@types/node": "^12.0.0",
     "@types/react": "^17.0.0",
+    "@types/react-copy-to-clipboard": "^5.0.2",
     "@types/react-dom": "^17.0.0",
     "@types/react-redux": "^7.1.0",
-    "node-sass": "^6.0.1",
-    "react-scripts": "4.0.3",
-    "typescript": "^4.1.2",
-    "eslint": "7.25.0",
+    "@types/uuid": "^8.3.3",
     "@typescript-eslint/eslint-plugin": "^4.24.0",
     "@typescript-eslint/parser": "4.22.1",
+    "eslint": "7.25.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-config-react-app": "6.0.0",
     "eslint-plugin-import": "^2.23.2",
+    "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-react": "7.23.2",
     "eslint-plugin-react-hooks": "4.2.0",
+    "node-sass": "^6.0.1",
     "prettier": "2.2.1",
-    "eslint-plugin-prettier": "^3.4.0"
-  }
+    "react-scripts": "4.0.3",
+    "typescript": "^4.1.2"
+  },
+  "pre-commit": [
+    "lint"
+  ]
 }

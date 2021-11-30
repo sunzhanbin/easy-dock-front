@@ -1,5 +1,8 @@
 import { useAppSelector } from "@/store";
-import { selectTheme, selectNavMode } from "@/views/app-setup/index.slice";
+import {
+  selectTheme,
+  selectNavMode,
+} from "@/views/app-setup/basic-setup.slice";
 import "./index.style";
 
 const AppSetupPreview = () => {

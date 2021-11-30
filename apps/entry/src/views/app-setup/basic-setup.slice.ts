@@ -1,18 +1,17 @@
 import { appManager } from "@/http";
 import { RootState } from "@/store";
 import { createSlice, PayloadAction, current } from "@reduxjs/toolkit";
-import { appManagerInitialState } from "@utils/types";
+import { BasicSetupInitialState } from "@utils/types";
 
-const initialState: appManagerInitialState = {
+const initialState: BasicSetupInitialState = {
   theme: "theme1",
   navMode: 0,
   logo: {},
   basicForm: {},
-  menuForm: {},
 };
 
-export const appSetupSlice = createSlice({
-  name: "appSetup",
+export const basicSetupSlice = createSlice({
+  name: "basicSetup",
   initialState,
   reducers: {
     setTheme: (state, action: PayloadAction<string>) => {
@@ -31,9 +30,6 @@ export const appSetupSlice = createSlice({
         state.basicForm.icon = icon;
       }
     },
-    setMenuForm: (state, action: PayloadAction<{ [key: string]: any }>) => {
-      state.menuForm = action.payload;
-    },
   },
   extraReducers: (builder) => {
     builder.addMatcher(
@@ -45,19 +41,12 @@ export const appSetupSlice = createSlice({
   },
 });
 
-export default appSetupSlice.reducer;
+export default basicSetupSlice.reducer;
 
-export const selectTheme = (state: RootState) => state.appSetup.theme;
+export const selectTheme = (state: RootState) => state.basicSetup.theme;
 
-export const selectNavMode = (state: RootState) => state.appSetup.navMode;
+export const selectNavMode = (state: RootState) => state.basicSetup.navMode;
 
-export const selectBasicForm = (state: RootState) => state.appSetup.basicForm;
+export const selectBasicForm = (state: RootState) => state.basicSetup.basicForm;
 
-export const selectMenuForm = (state: RootState) => state.appSetup.menuForm;
-
-export const {
-  setTheme,
-  setMode,
-  setBaseForm,
-  setMenuForm,
-} = appSetupSlice.actions;
+export const { setTheme, setMode, setBaseForm } = basicSetupSlice.actions;
