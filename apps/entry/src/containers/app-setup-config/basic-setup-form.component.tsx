@@ -1,7 +1,11 @@
 import { useCallback } from "react";
 import { Form, Input, Button, Select, Radio, Upload } from "antd";
 import { useAppDispatch } from "@/store";
-import { setTheme, setMode, setBaseForm } from "@views/app-setup/index.slice";
+import {
+  setTheme,
+  setMode,
+  setBaseForm,
+} from "@/views/app-setup/basic-setup.slice";
 import { axios } from "@utils/fetch";
 import { UploadOutlined } from "@ant-design/icons";
 

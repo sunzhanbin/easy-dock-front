@@ -7,12 +7,16 @@
       .menu-item {
         display: flex;
         justify-content: space-around;
+        margin: 10px;
+        padding: 10px;
+        border: 1px solid cornflowerblue;
         .text {}
         .acts {
           display: inline-flex;
           width: 100px;
           justify-content: space-evenly;
           .item {
+            cursor: pointer;
             &.add {}
             &.remove {}
             &.drag {}

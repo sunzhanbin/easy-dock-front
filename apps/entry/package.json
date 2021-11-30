@@ -17,7 +17,7 @@
     "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject",
-    "lint": "npx eslint --fix"
+    "lint": "npx eslint --fix --ext .tsx,.ts src ../../packages/common/*"
   },
   "eslintConfig": {
     "extends": [
@@ -44,6 +44,7 @@
     "@types/react-copy-to-clipboard": "^5.0.2",
     "@types/react-dom": "^17.0.0",
     "@types/react-redux": "^7.1.0",
+    "@types/uuid": "^8.3.3",
     "@typescript-eslint/eslint-plugin": "^4.24.0",
     "@typescript-eslint/parser": "4.22.1",
     "eslint": "7.25.0",
@@ -54,10 +55,11 @@
     "eslint-plugin-react": "7.23.2",
     "eslint-plugin-react-hooks": "4.2.0",
     "node-sass": "^6.0.1",
-    "pre-commit": "^1.2.2",
     "prettier": "2.2.1",
     "react-scripts": "4.0.3",
     "typescript": "^4.1.2"
   },
-  "pre-commit": ["lint"]
+  "pre-commit": [
+    "lint"
+  ]
 }
