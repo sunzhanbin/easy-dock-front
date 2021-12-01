@@ -69,7 +69,7 @@ export const validateHasChecked = (props: ConfigItem) => {
   const { type } = props;
   switch (type) {
     case 'InputNumber':
-      const { decimal, numlimit } = props;
+      const { decimal = {}, numlimit = {} } = props;
       if (decimal.enable && !decimal.precision) {
         return '请输入小数位数';
       }
@@ -78,7 +78,7 @@ export const validateHasChecked = (props: ConfigItem) => {
       }
       break;
     case 'Date':
-      const { datelimit, defaultValue } = props;
+      const { datelimit = {}, defaultValue = {} } = props;
       if (datelimit.enable && (!datelimit.daterange || (!datelimit.daterange?.min && !datelimit.daterange?.max))) {
         return '请输入数值范围';
       }
@@ -92,7 +92,7 @@ export const validateHasChecked = (props: ConfigItem) => {
       }
       break;
     case 'Attachment':
-      const { typeRestrict } = props;
+      const { typeRestrict = {} } = props;
       if (typeRestrict.enable && (!typeRestrict.types || !typeRestrict.types.length)) {
         return '请选择文件类型';
       }
