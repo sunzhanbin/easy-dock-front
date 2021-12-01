@@ -73,6 +73,9 @@ export const validateHasChecked = (props: ConfigItem) => {
       if (decimal.enable && !decimal.precision) {
         return '请输入小数位数';
       }
+      if (!/^[1-9]\d*$/.test(decimal.precision)) {
+        return '请输入正整数';
+      }
       if (numlimit.enable && (!numlimit.numrange || (!numlimit.numrange?.min && !numlimit.numrange?.max))) {
         return '请输入数值范围';
       }

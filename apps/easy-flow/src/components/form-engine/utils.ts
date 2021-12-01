@@ -146,7 +146,7 @@ export const validateRules = (isRequired: boolean, label: string, type: string, 
     rules.push({
       validator(_, val) {
         if (val < numrange?.min || val > numrange.max) {
-          return Promise.reject(new Error(`请设置数值范围内的数值！`));
+          return Promise.reject(new Error(`当前数值已超过限制范围，请重新输入！`));
         }
         return Promise.resolve();
       },
