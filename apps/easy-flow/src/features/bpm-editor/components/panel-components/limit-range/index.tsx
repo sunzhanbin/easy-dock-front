@@ -36,7 +36,11 @@ const LimitNum = ({ id }: LimitNumProps) => {
                 size="large"
                 placeholder="最小值"
                 max={getFieldValue(['numlimit', id, 'max'])}
-                {...(fieldValue?.enable ? { precision: fieldValue.precision } : '')}
+                formatter={(value) => {
+                  if (!fieldValue?.enable || value.indexOf('.') === -1) return value;
+                  return value.substring(0, value.indexOf('.') + fieldValue.precision + 1);
+                }}
+                {...(fieldValue?.enable ? { precision: fieldValue.precision } : 10)}
               />
             </Form.Item>
             <span className={styles.text}>~</span>
@@ -58,7 +62,11 @@ const LimitNum = ({ id }: LimitNumProps) => {
                 size="large"
                 placeholder="最大值"
                 min={getFieldValue(['numlimit', id, 'min'])}
-                {...(fieldValue?.enable ? { precision: fieldValue.precision } : '')}
+                formatter={(value) => {
+                  if (!fieldValue?.enable || value.indexOf('.') === -1) return value;
+                  return value.substring(0, value.indexOf('.') + fieldValue.precision + 1);
+                }}
+                {...(fieldValue?.enable ? { precision: fieldValue.precision } : 10)}
               />
             </Form.Item>
           </div>
