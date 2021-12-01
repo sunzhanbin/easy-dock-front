@@ -36,7 +36,7 @@ export interface AppManagerState {
 
 export interface BasicSetupInitialState {
   theme: string;
-  navMode: number;
+  navMode: "single" | "multi";
   logo: { [key: string]: any };
   basicForm: { [key: string]: any };
 }

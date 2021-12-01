@@ -97,9 +97,8 @@ const BasicSetupFormComponent = () => {
           rules={[{ required: true, message: "Please input your password!" }]}
         >
           <Radio.Group onChange={handleNavChange}>
-            <Radio value={0}>导航 1</Radio>
-            <Radio value={1}>导航 2</Radio>
-            <Radio value={2}>导航 3</Radio>
+            <Radio value="single">左边栏导航</Radio>
+            <Radio value="multi">双导航</Radio>
           </Radio.Group>
         </Form.Item>
         <Form.Item

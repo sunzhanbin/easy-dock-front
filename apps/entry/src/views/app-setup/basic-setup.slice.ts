@@ -5,7 +5,7 @@ import { BasicSetupInitialState } from "@utils/types";
 
 const initialState: BasicSetupInitialState = {
   theme: "theme1",
-  navMode: 0,
+  navMode: "single",
   logo: {},
   basicForm: {},
 };
@@ -17,7 +17,7 @@ export const basicSetupSlice = createSlice({
     setTheme: (state, action: PayloadAction<string>) => {
       state.theme = action.payload;
     },
-    setMode: (state, action: PayloadAction<number>) => {
+    setMode: (state, action: PayloadAction<"single" | "multi">) => {
       state.navMode = action.payload;
     },
     setLogo: (state, action: PayloadAction<{ [key: string]: any }>) => {

@@ -3,6 +3,8 @@
   "plugins": ["prettier"],
   "rules": {
     "prettier/prettier": "error",
-    "@typescript-eslint/explicit-module-boundary-types": "off"
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "no-param-reassign": ["error", { "props": true, "ignorePropertyModificationsFor": ["state"] }],
+    "linebreak-style": 0
   }
 }

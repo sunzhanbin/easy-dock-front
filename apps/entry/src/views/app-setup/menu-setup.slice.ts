@@ -8,7 +8,7 @@ const defaultForm = {
   name: "",
   showMenu: false,
   icon: "icon1",
-  mode: 0,
+  mode: "single", // 'single' | 'multi'
   asset: "exist",
   assetConfig: {
     app: "flow",
@@ -28,18 +28,18 @@ export const menuSetupSlice = createSlice({
   initialState,
   reducers: {
     setCurrentMenu: (state, action: PayloadAction<string>) => {
-      state.currentId = action.payload;
       const currentItem: any = findItem(action.payload, state.menu);
       state.menuForm = JSON.parse(JSON.stringify(currentItem))?.form || {};
+      state.currentId = action.payload;
     },
     setMenu: (state, action: PayloadAction<any[]>) => {
       state.menu = action.payload;
     },
     // 关联菜单与表单信息；
     setMenuForm: (state, action: PayloadAction<{ [key: string]: any }>) => {
-      state.menuForm = action.payload;
       const currentItem: any = findItem(state.currentId, state.menu);
       currentItem.form = JSON.parse(JSON.stringify(action.payload));
+      state.menuForm = action.payload;
     },
     // 添加菜单；
     add: (
@@ -81,7 +81,6 @@ export const menuSetupSlice = createSlice({
       }
 
       const parentItem: any = findItem(parentId, state.menu);
-
       parentItem.children = parentItem.children?.filter(
         (item: any) => item.id !== currentId
       );

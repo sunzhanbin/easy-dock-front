@@ -1,3 +1,33 @@
 .app-setup-preview {
   flex: 1;
+
+  .single-nav-component {
+    display: flex;
+    .sider {
+      width: 240px;
+      .extra {}
+      .submenu{}
+    }
+    .content {
+      flex: 1;
+    }
+  }
+
+  .multi-nav-component {
+    .header {
+      .extra {}
+      .menu {}
+    }
+    .content {
+      display: flex;
+      flex-direction: row;
+      .submenu {
+        width: 240px;
+      }
+      .content {
+        flex: 1;
+      }
+    }
+  }
+
 }
