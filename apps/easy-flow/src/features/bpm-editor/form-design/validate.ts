@@ -82,7 +82,11 @@ export const validateHasChecked = (props: ConfigItem) => {
       if (datelimit.enable && (!datelimit.daterange || (!datelimit.daterange?.min && !datelimit.daterange?.max))) {
         return '请输入数值范围';
       }
-      if (datelimit.enable && (defaultValue < datelimit.daterange?.min || defaultValue > datelimit.daterange?.max)) {
+      if (
+        datelimit.enable &&
+        defaultValue &&
+        (defaultValue < datelimit.daterange?.min || defaultValue > datelimit.daterange?.max)
+      ) {
         message.error('请设置默认值在日期范围内');
         return 'errorTipsExchange';
       }
