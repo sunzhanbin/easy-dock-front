@@ -42,9 +42,9 @@ const DateRange = ({ id, componentId }: DateRangeProps) => {
     const {
       datelimit: { daterange },
     } = form.getFieldsValue();
-    if (index === 'prev') {
+    if (index === 'prev' && daterange.max) {
       return current && current > daterange.max;
-    } else if (index === 'next') {
+    } else if (index === 'next' && daterange.min) {
       return current && current < daterange.min;
     }
     return false;

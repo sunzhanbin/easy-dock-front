@@ -9,23 +9,31 @@ import { saveSerialRules } from '@apis/form';
 import { SERIAL_TYPE } from '@utils/const';
 
 const InjectRule = (props: any, ref: React.Ref<unknown> | undefined) => {
-  const { serialId, id, onChange, fields, onSave, onCancelEdit, onConfirmRule, appId, rules, ruleName } = props;
+  const {
+    serialId,
+    id,
+    onChange,
+    ruleStatus,
+    fields,
+    isError,
+    setErrors,
+    editStatus,
+    onSave,
+    onCancelEdit,
+    onConfirmRule,
+    onEdit,
+    appId,
+    rules,
+    ruleName,
+  } = props;
 
   const [formChangeSerial] = Form.useForm();
   // 选择已有规则弹框
   const [ruleModal, setRuleModal] = useState<boolean>(false);
-  // 是否可编辑   默认不可编辑
-  const [editStatus, setEditStatus] = useState<boolean>(false);
-  const [ruleStatus, setRuleStatus] = useState<number>(1);
+
   useImperativeHandle(ref, () => ({
     reset: (name: string) => {
       formChangeSerial.setFieldsValue({ name: name || '' });
-    },
-    setEditStatus: (status: boolean) => {
-      setEditStatus(status);
-    },
-    setRuleStatus: (status: number) => {
-      setRuleStatus(status);
     },
   }));
 
@@ -37,12 +45,7 @@ const InjectRule = (props: any, ref: React.Ref<unknown> | undefined) => {
     setRuleModal(false);
   };
 
-  const handleEditRule = () => {
-    setEditStatus(true);
-  };
-
   const handleCancelEdit = () => {
-    setEditStatus(false);
     onCancelEdit && onCancelEdit();
   };
 
@@ -50,6 +53,12 @@ const InjectRule = (props: any, ref: React.Ref<unknown> | undefined) => {
     try {
       const values = await formChangeSerial.validateFields();
       if (values.errorFields || !appId) return;
+      const hasChars = rules.some(
+        (item: { type: string; chars?: string }) => item.type === 'fixedChars' && !item.chars,
+      );
+      if (hasChars) {
+        return setErrors(hasChars);
+      }
       const params = { appId: appId, name: values.name, rules: rules, id: serialId };
       const ret = await saveSerialRules(params);
       onSave && onSave(SERIAL_TYPE.INJECT_TYPE, ret.data);
@@ -59,11 +68,9 @@ const InjectRule = (props: any, ref: React.Ref<unknown> | undefined) => {
   });
 
   const handleConfirmRule = useMemoCallback((selectedSerial) => {
-    const { name, status } = selectedSerial;
+    const { name } = selectedSerial;
     setRuleModal(false);
-    setRuleStatus(status);
     formChangeSerial.setFieldsValue({ name });
-    setEditStatus(false);
     onConfirmRule && onConfirmRule(selectedSerial);
   });
 
@@ -87,6 +94,7 @@ const InjectRule = (props: any, ref: React.Ref<unknown> | undefined) => {
             rules={rules}
             ruleName={ruleName}
             onChange={onChange}
+            isError={isError}
             ruleStatus={ruleStatus}
             editStatus={!editStatus}
             serialId={serialId}
@@ -94,12 +102,12 @@ const InjectRule = (props: any, ref: React.Ref<unknown> | undefined) => {
           />
           {!editStatus ? (
             <Form.Item noStyle>
-              <Button className={styles.add_custom} size="large" onClick={handleEditRule}>
+              <Button className={styles.edit_btn} size="large" onClick={onEdit}>
                 <span>编辑规则</span>
               </Button>
             </Form.Item>
           ) : (
-            <div className={styles.flexbox}>
+            <div className={styles.edit_save_btn}>
               <Form.Item noStyle>
                 <Button className={styles.change_btn} size="large" onClick={handleCancelEdit}>
                   <span>取 消</span>

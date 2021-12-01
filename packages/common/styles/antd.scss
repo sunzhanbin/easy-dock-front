@@ -156,7 +156,7 @@
     margin-left: -32px;
     margin-right: -32px;
     padding: 0 64px;
-    border: none;
+    // border: none;
     background-color: rgba(24, 31, 67, 0.04);
 
     .ant-btn + .ant-btn:not(.ant-dropdown-trigger) {
@@ -176,13 +176,13 @@
   background-color: rgba(24, 39, 67, 0.04);
 
   &:hover {
-    border-color: rgba($primary-color-custom, 0.85);
+    border-color: rgba($primary-color-custom, 0.8);
     background-color: transparent;
   }
 
   &:focus {
-    border-color: rgba($primary-color-custom, 0.85);
-    box-shadow: 0 0 0 3px rgba(76, 92, 219, 0.2);
+    border-color: rgba($primary-color-custom, 0.8);
+    box-shadow: 0 0 0 3px rgba($primary-color-custom, 0.12);
     background-color: transparent;
   }
 
@@ -219,7 +219,7 @@
   background-color: rgba(24, 31, 67, 0.04);
 
   &:not(&-disabled):hover {
-    border-color: rgba(76, 92, 219, 0.85);
+    border-color: rgba($primary-color-custom, 0.85);
     background-color: transparent;
   }
 
@@ -229,8 +229,8 @@
 }
 
 .ant-input-affix-wrapper-focused {
-  border-color: rgba(76, 92, 219, 0.85);
-  box-shadow: 0 0 0 3px rgba(76, 92, 219, 0.2);
+  border-color: rgba($primary-color-custom, 0.85);
+  box-shadow: 0 0 0 3px rgba($primary-color-custom, 0.12);
 }
 
 .ant-form-item-has-error {
@@ -359,7 +359,7 @@
 
   &:focus {
     border-color: rgba($primary-color-custom, 0.85);
-    box-shadow: 0 0 0 3px rgba(76, 92, 219, 0.2);
+    box-shadow: 0 0 0 3px rgba($primary-color-custom, 0.12);
     background-color: transparent;
   }
   &.ant-picker-disabled {
@@ -406,7 +406,7 @@
 
   &:focus {
     border-color: rgba($primary-color-custom, 0.85);
-    box-shadow: 0 0 0 3px rgba(76, 92, 219, 0.2);
+    box-shadow: 0 0 0 3px rgba($primary-color-custom, 0.2);
     background-color: transparent;
   }
 
@@ -573,6 +573,10 @@
         background: rgba(24, 39, 67, 0.04);
         border-radius: 3px;
         border-color: transparent;
+        transition: none;
+        &:hover {
+          background: #fff;
+        }
       }
     }
 
@@ -607,7 +611,11 @@
     .ant-select-selector {
       background: rgba(24, 39, 67, 0.04);
       border-radius: 3px;
-      border: none;
+      border-color: transparent;
+      transition: none;
+      &:hover {
+        background: #fff;
+      }
     }
     &.ant-select-disabled {
       &:not(.ant-select-customize-input) {
@@ -637,7 +645,9 @@
 }
 
 .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector {
-  box-shadow: 0 0 0 2px rgba($primary-color-custom, 0.2);
+  box-shadow: 0 0 0 3px rgba($primary-color-custom, 0.12);
+  border-color: rgba($primary-color-custom, 0.8);
+  background-color: #fff;
 }
 
 .ant-select-item {
@@ -661,7 +671,9 @@
 
 .ant-select:not(.ant-select-disabled):hover .ant-select-selector,
 .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector {
-  border-color: $primary-color-custom;
+  box-shadow: 0 0 0 3px rgba($primary-color-custom, 0.12);
+  border-color: rgba($primary-color-custom, 0.8);
+  background-color: #fff;
 }
 
 // 定制表格

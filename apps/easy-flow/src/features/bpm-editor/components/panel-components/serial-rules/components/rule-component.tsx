@@ -21,12 +21,13 @@ interface RuleComponentProps {
   ruleStatus?: number;
   editStatus?: boolean;
   form?: any;
+  isError?: any;
   id: string;
   serialId?: string;
 }
 
 const RuleComponent = (props: RuleComponentProps) => {
-  const { onChange, type, editStatus, ruleStatus, rules, ruleName, form, fields, id } = props;
+  const { onChange, type, editStatus, isError, ruleStatus, rules, ruleName, form, fields, id } = props;
   const errors = useAppSelector(errorSelector);
 
   const handleAdd = useMemoCallback((addItem) => {
@@ -110,62 +111,71 @@ const RuleComponent = (props: RuleComponentProps) => {
   });
 
   useEffect(() => {
-    if (errors.find((item) => item.id === id)) {
+    const isError = errors.find((item) => item.id === id);
+    if (isError && isError.content?.includes('请输入规则名称')) {
       form.validateFields();
     }
   }, [errors, id, form]);
 
   return (
-    <Form component="div" form={form} initialValues={{ name: ruleName }}>
-      <Fragment>
-        <Form.Item
-          name="name"
-          label="规则名称"
-          labelCol={labelCol}
-          rules={[
-            {
-              validator(_, value) {
-                if (!value) {
-                  return Promise.reject(new Error('请输入规则名称'));
-                }
-                if (!/^[\u4E00-\u9FA5a-zA-Z0-9_]{3,20}$/.test(value)) {
-                  return Promise.reject(new Error('请输入字母开头，包含字母、数字、下划线的3-20位字符'));
-                }
-                return Promise.resolve();
+    <>
+      <Form component="div" form={form} initialValues={{ name: ruleName }}>
+        <Fragment>
+          <Form.Item
+            name="name"
+            label="规则名称"
+            labelCol={labelCol}
+            rules={[
+              {
+                validator(_, value) {
+                  if (!value) {
+                    return Promise.reject(new Error('请输入规则名称'));
+                  }
+                  if (!/^[\u4E00-\u9FA5a-zA-Z0-9_]{3,20}$/.test(value)) {
+                    return Promise.reject(new Error('请输入字母开头，包含字母、数字、下划线的3-20位字符'));
+                  }
+                  return Promise.resolve();
+                },
               },
-            },
-          ]}
-        >
-          <Input size="large" onChange={handleChangeName} disabled={type === 'inject' && editStatus} />
-        </Form.Item>
-        <Form.Item className={styles.form} name="rules" label="规则配置" labelCol={labelCol}>
-          <div className={styles.custom_list}>
-            {rules?.map((item, index: number) => (
-              <Fragment key={index}>
-                <DraggableOption
-                  index={index}
-                  key={index}
-                  data={item}
-                  fields={fields}
-                  onChange={handleChangeRule}
-                  onDrag={handleDrag}
-                  onDelete={handleDelete}
-                  disabled={type === 'inject' && (editStatus || ruleStatus === 1)}
-                />
-              </Fragment>
-            ))}
-            {!(type === 'inject' && (editStatus || ruleStatus === 1)) && (
-              <Dropdown overlay={menu}>
-                <Button className={styles.add_custom} size="large">
-                  <Icon className={styles.iconfont} type="xinzengjiacu" />
-                  <span>添加</span>
-                </Button>
-              </Dropdown>
-            )}
-          </div>
-        </Form.Item>
-      </Fragment>
-    </Form>
+            ]}
+          >
+            <Input
+              size="large"
+              placeholder="请输入"
+              onChange={handleChangeName}
+              disabled={type === 'inject' && editStatus}
+            />
+          </Form.Item>
+          <Form.Item className={styles.formWrapper} name="rules" label="规则配置" labelCol={labelCol}>
+            <div className={styles.custom_list}>
+              {rules?.map((item, index: number) => (
+                <Fragment key={index}>
+                  <DraggableOption
+                    index={index}
+                    key={index}
+                    data={item}
+                    fields={fields}
+                    onChange={handleChangeRule}
+                    onDrag={handleDrag}
+                    onDelete={handleDelete}
+                    disabled={type === 'inject' && (editStatus || ruleStatus === 1)}
+                  />
+                </Fragment>
+              ))}
+            </div>
+          </Form.Item>
+        </Fragment>
+      </Form>
+      {isError && <span className={styles.errorTips}>请输入编号规则固定字符</span>}
+      {!(type === 'inject' && (editStatus || ruleStatus === 1)) && (
+        <Dropdown overlay={menu}>
+          <Button className={styles.add_custom} size="large">
+            <Icon className={styles.iconfont} type="xinzengjiacu" />
+            <span>添加</span>
+          </Button>
+        </Dropdown>
+      )}
+    </>
   );
 };
 

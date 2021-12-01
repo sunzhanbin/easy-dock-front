@@ -1,5 +1,7 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { Form, Input, Select, Checkbox, Button, Radio } from "antd";
+import { selectMenuForm, setMenuForm } from "@views/app-setup/menu-setup.slice";
+import { useAppDispatch, useAppSelector } from "@/store";
 
 import "./menu-setup-form.style";
 
@@ -10,11 +12,17 @@ const tailLayout = {
 };
 
 const MenuSetupFormComponent = () => {
+  const dispatch = useAppDispatch();
+  const menuForm = useAppSelector(selectMenuForm);
   const [form] = Form.useForm();
 
   const handleFormFinish = useCallback((values: { [key: string]: any }) => {
-    console.log("values", values);
+    dispatch(setMenuForm(values));
   }, []);
+
+  useEffect(() => {
+    form.setFieldsValue(menuForm);
+  }, [menuForm]);
 
   return (
     <div className="menu-setup-form-component">
