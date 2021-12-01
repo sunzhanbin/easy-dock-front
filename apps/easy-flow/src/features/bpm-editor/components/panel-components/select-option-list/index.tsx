@@ -31,6 +31,7 @@ const SelectOptionList = (props: editProps) => {
   const [appList, setAppList] = useState<(OptionItem & { versionId: number })[]>([]);
   const [componentKey, setComponentKey] = useState<string | undefined>(value?.fieldName);
   const [componentList, setComponentList] = useState<OptionItem[]>([]);
+  const [cacheApiConfig, setCacheApiConfig] = useState<DataConfig>();
 
   const fields = useMemo<{ id: string; name: string }[]>(() => {
     const componentList = Object.values(byId).map((item: FormField) => item) || [];
@@ -124,13 +125,14 @@ const SelectOptionList = (props: editProps) => {
       onChange && onChange({ type, subappId: subAppKey, fieldName: componentKey });
     } else if (type === 'interface') {
       let apiConfig: DataConfig = { type: 1, request: { required: [], customize: [] } };
-      if (value?.apiConfig) {
-        apiConfig = Object.assign({}, apiConfig, value.apiConfig);
+      if (cacheApiConfig) {
+        apiConfig = Object.assign({}, apiConfig, value?.apiConfig, cacheApiConfig);
       }
       onChange && onChange({ type, apiConfig });
     }
   });
   const handleApiChange = useMemoCallback((apiConfig) => {
+    setCacheApiConfig(apiConfig);
     onChange && onChange({ type, apiConfig });
   });
 
@@ -191,7 +193,7 @@ const SelectOptionList = (props: editProps) => {
       );
     } else if (type === 'interface') {
       return (
-        <Form.Item className={styles.form} name="apiConfig" label="选择要读取数据的接口">
+        <Form.Item className={styles.form} name={['dataSource', 'apiConfig']} label="选择要读取数据的接口">
           <DataApiConfig
             name={['dataSource', 'apiConfig']}
             label="为表单控件匹配请求参数"
