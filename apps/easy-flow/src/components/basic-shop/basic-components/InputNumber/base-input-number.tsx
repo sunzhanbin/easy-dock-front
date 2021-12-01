@@ -9,9 +9,11 @@ const InputNumberComponent = (
   props: InputNumberProps & {
     decimal?: InputNumberField['decimal'];
     numlimit?: InputNumberField['numlimit'];
+  } & {
+    defaultNumber?: any;
   },
 ) => {
-  const { onChange, decimal, numlimit } = props;
+  const { onChange, decimal, numlimit, defaultNumber } = props;
   const propList = useMemo(() => {
     const prop: { [k: string]: string | number | boolean | undefined | Function } = {
       size: 'large',
@@ -25,6 +27,10 @@ const InputNumberComponent = (
       prop.min = numlimit.numrange.min;
       prop.max = numlimit.numrange.max;
     }
+    console.log(defaultNumber, 'vvvvvv');
+    if (defaultNumber?.customData) {
+      prop.defaultValue = defaultNumber?.customData as string;
+    }
     const result = Object.assign({}, props, prop);
     delete result.fieldName;
     delete result.colSpace;
@@ -34,6 +40,7 @@ const InputNumberComponent = (
     delete result.numrange;
     return result;
   }, [props, decimal, numlimit, onChange]);
+  console.log(propList, 'list');
 
   return (
     <div className={styles.container}>

@@ -13,7 +13,7 @@ export const getCalculateNum = (
   } = rule;
   let returnNum = undefined;
   let formListMap: { [key: string]: any } = {};
-  watch?.forEach((item: string) => {
+  watch?.map((item: string) => {
     if (item.includes('Tab')) {
       const parentName = item.split('.')[0];
       const fieldName = item.split('.')[1];
@@ -25,13 +25,14 @@ export const getCalculateNum = (
     }
   });
   const filterList = Object.values(formListMap).filter(Boolean);
+  if (!filterList.length) return 0;
   if (calcType === 'minus') {
     if (watch.find((item: string) => item.includes('Date'))) {
       if (filterList.length < 2) return 0;
       const rangeDateNum = Object.values(formListMap).reduceRight((p: any, n: any) => n - p);
       returnNum = Math.floor(rangeDateNum / (1000 * 3600 * 24));
     } else {
-      returnNum = filterList.reduceRight((p: any, n: any) => n - p);
+      returnNum = filterList.reverse().reduceRight((p: any, n: any) => p - n);
     }
   } else if (calcType === 'add') {
     returnNum = math.sum(filterList);
