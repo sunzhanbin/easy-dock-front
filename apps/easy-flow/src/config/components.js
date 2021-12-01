@@ -277,6 +277,29 @@ const filetype = {
   required: false,
   isProps: true,
 };
+const maxHeight = {
+  key: 'maxHeight',
+  placeholder: '请输入',
+  label: '最大高度(rem)',
+  defaultValue: 10,
+  type: 'InputNumber',
+  direction: 'vertical',
+  required: false,
+  isProps: true,
+  precision: 2,
+};
+
+const urlOption = {
+  key: 'url',
+  label: 'URL',
+  defaultValue: {
+    type: 'custom',
+    value: '',
+  },
+  type: 'UrlOption',
+  required: true,
+  isProps: true,
+};
 
 const components = {
   Input: {
@@ -447,6 +470,16 @@ const components = {
       type: 'FlowData',
     },
     config: [fieldName, getLabel('关联流程'), flows, colSpace],
+  },
+  Iframe: {
+    baseInfo: {
+      name: 'iframe',
+      icon: 'wangyebuju',
+      category: '高级控件',
+      version: '1.0',
+      type: 'Iframe',
+    },
+    config: [getLabel('iframe'), desc, maxHeight, urlOption],
   },
 };
 

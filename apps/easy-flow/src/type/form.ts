@@ -141,6 +141,12 @@ export type SerialNumField = {
   serialRule: any;
 } & BaseField;
 
+export type IframeField = {
+  type: 'Iframe';
+  url: string;
+  maxHeight: number;
+} & BaseField;
+
 export type FormField =
   | InputField
   | InputNumberField
@@ -155,4 +161,5 @@ export type FormField =
   | MemberField
   | TabsField
   | FlowField
+  | IframeField
   | SerialNumField;
