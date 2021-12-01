@@ -5,6 +5,9 @@
     .add {}
     .menu {
       .menu-item {
+        &.active {
+          background: #89aded;
+        }
         display: flex;
         justify-content: space-around;
         margin: 10px;
