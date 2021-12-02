@@ -59,7 +59,7 @@ const NumberOption = (props: NumberOptionProps) => {
     if (!fieldNumber) return null;
     const { decimal, numlimit } = fieldNumber!;
     return {
-      precision: decimal?.enable ? decimal?.precision : 10,
+      precision: decimal?.enable ? decimal?.precision : 0,
       min: numlimit?.numrange?.min,
       max: numlimit?.numrange?.max,
     };

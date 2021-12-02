@@ -30,7 +30,7 @@ export const getCalculateNum = (
     if (watch.find((item: string) => item.includes('Date'))) {
       if (filterList.length < 2) return 0;
       const rangeDateNum = Object.values(formListMap).reduceRight((p: any, n: any) => n - p);
-      returnNum = Math.floor(rangeDateNum / (1000 * 3600 * 24));
+      returnNum = (rangeDateNum / (1000 * 3600 * 24)).toFixed(0);
     } else {
       returnNum = filterList.reverse().reduceRight((p: any, n: any) => p - n);
     }

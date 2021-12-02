@@ -23,19 +23,13 @@ const InputNumberComponent = (
       min: Number.MIN_SAFE_INTEGER,
       onChange: onChange,
     };
-    decimal?.enable && (prop.precision = decimal.precision);
     if (numlimit?.numrange) {
       prop.min = numlimit.numrange.min;
       prop.max = numlimit.numrange.max;
     }
     const el = document.getElementById('edit-form');
-    // console.log(el, 'el');
     if (defaultNumber?.customData) {
       prop.defaultValue = +defaultNumber?.customData;
-      // if (!prop.value) {
-      //   onChange && onChange(prop.defaultValue);
-      // }
-      console.log(prop, props);
       if (el?.contains(containerRef?.current)) {
         prop.value = +defaultNumber?.customData;
       }
@@ -46,6 +40,7 @@ const InputNumberComponent = (
         prop.value = defaultNumber;
       }
     }
+    prop.precision = decimal?.enable ? decimal.precision : 0;
     const result = Object.assign({}, props, prop);
     delete result.fieldName;
     delete result.colSpace;
