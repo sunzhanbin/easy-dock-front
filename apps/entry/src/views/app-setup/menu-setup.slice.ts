@@ -52,7 +52,7 @@ export const menuSetupSlice = createSlice({
       if (!currentId) {
         return void state.menu.push({
           id: childId,
-          name: "一级菜单",
+          name: `一级菜单${(1000 * Math.random()).toFixed()}`,
           parentId: null,
           depth: 1,
           form: state.menuForm,
@@ -64,7 +64,9 @@ export const menuSetupSlice = createSlice({
       currentItem.children.push({
         id: childId,
         parentId: currentItem.id,
-        name: `${currentItem.depth + 1}子级菜单`,
+        name: `${currentItem.depth + 1}子级菜单${(
+          1000 * Math.random()
+        ).toFixed()}`,
         depth: currentItem.depth + 1,
         form: state.menuForm,
         children: [],

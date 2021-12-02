@@ -46,3 +46,12 @@ export interface MenuSetupInitialState {
   menu: any[];
   menuForm: { [key: string]: any };
 }
+
+export interface Menu {
+  depth: number;
+  children: Menu[];
+  form: { [key: string]: any };
+  id: string;
+  name: string;
+  parentId: string | null;
+}

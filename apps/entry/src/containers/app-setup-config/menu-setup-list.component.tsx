@@ -8,7 +8,7 @@ import {
   setCurrentMenu,
   add,
   remove,
-} from "@/views/app-setup/menu-setup.slice";
+} from "@views/app-setup/menu-setup.slice";
 import { v4 as uuid } from "uuid";
 import classnames from "classnames";
 import "./menu-setup-list.style";
@@ -62,7 +62,7 @@ const MenuItemComponent = ({ menu }: any) => {
 // 菜单嵌套逻辑组件；
 const MenuComponent = ({ menu }: any) => {
   return (
-    <>
+    <div className="menu-component">
       {menu?.children?.length ? (
         <div className="men-wrap">
           <MenuItemComponent menu={menu} />
@@ -75,7 +75,7 @@ const MenuComponent = ({ menu }: any) => {
       ) : (
         <MenuItemComponent menu={menu} />
       )}
-    </>
+    </div>
   );
 };
 
