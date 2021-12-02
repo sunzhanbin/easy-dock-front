@@ -163,8 +163,8 @@ const descTextValue = {
   label: '内容',
   type: 'Editor',
   direction: 'vertical',
-  required: true,
-  isProps: false,
+  required: false,
+  isProps: true,
 };
 
 const getMaxCount = (max, min, defaultValue) => {
@@ -203,7 +203,7 @@ const numberOption = {
   type: 'NumberOption',
   direction: 'vertical',
   required: false,
-  isProps: false,
+  isProps: true,
 };
 
 const allowDecimal = {

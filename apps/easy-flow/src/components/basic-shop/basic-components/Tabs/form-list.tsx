@@ -113,7 +113,10 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId }: Form
               }
               const isRequired = fieldAuth === AuthType.Required;
               const comProps = Object.assign({}, props, { disabled: fieldAuth === AuthType.View || readonly });
-              delete comProps.defaultValue;
+              if (type === 'DescText' && comProps.value) {
+                comProps['text_value'] = comProps.value;
+              }
+              // delete comProps.defaultValue;
               delete comProps.apiConfig;
               const rules: Rule[] = validateRules(isRequired, label, type, props);
               return (

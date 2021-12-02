@@ -30,6 +30,9 @@ const InputNumberComponent = (
     if (defaultNumber?.customData) {
       prop.defaultValue = defaultNumber?.customData as string;
     }
+    if (typeof defaultNumber === 'number') {
+      prop.value = defaultNumber;
+    }
     const result = Object.assign({}, props, prop);
     delete result.fieldName;
     delete result.colSpace;
