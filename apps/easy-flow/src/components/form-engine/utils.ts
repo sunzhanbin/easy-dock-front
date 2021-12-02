@@ -108,11 +108,12 @@ export const convertFormRules = (data: FormRuleItem[], components: { config: any
   });
   // 属性面板配置
   components?.forEach((com) => {
-    const { config } = com;
+    const { config, props } = com;
     // 此处不能用fieldName 预览时没有fieldName字段 统一用id作为key
-    if (config.id && config.type === 'InputNumber' && config.defaultNumber) {
+    if (config.id && config.type === 'InputNumber' && (config.defaultNumber || props.defaultNumber)) {
       // panel配置公式计算
-      const { id, defaultNumber, fieldName } = config;
+      const { id, fieldName } = config;
+      const defaultNumber = props.defaultNumber || config.defaultNumber;
       const value = defaultNumber.calculateData;
       value && setFieldRules(fieldName || id, value, defaultNumber, 'change', 2);
     }

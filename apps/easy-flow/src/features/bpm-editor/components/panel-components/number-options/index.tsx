@@ -69,8 +69,7 @@ const NumberOption = (props: NumberOptionProps) => {
   const handleChange = useMemoCallback((value: string) => {
     onChange && onChange({ id, type: value, calculateData: undefined, calcType: undefined, customData: undefined });
   });
-  const handleInputBlur = useMemoCallback((e) => {
-    const value: number = e.target.value;
+  const handleInputBlur = useMemoCallback((value) => {
     onChange && onChange({ id, type, customData: value });
   });
   // 改变公式计算类型
@@ -97,7 +96,7 @@ const NumberOption = (props: NumberOptionProps) => {
               return value.substring(0, value.indexOf('.') + defaultNumberProps.precision + 1);
             }}
             value={customData}
-            onBlur={handleInputBlur}
+            onChange={handleInputBlur}
             {...defaultNumberProps}
           />
         </div>

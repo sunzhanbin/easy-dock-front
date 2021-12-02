@@ -1,4 +1,4 @@
-import { memo, useMemo, useRef } from 'react';
+import { memo, useMemo, useRef, useEffect } from 'react';
 import { InputNumber } from 'antd';
 import { Icon } from '@common/components';
 import { InputNumberProps } from 'antd/lib/input-number';
@@ -29,8 +29,13 @@ const InputNumberComponent = (
       prop.max = numlimit.numrange.max;
     }
     const el = document.getElementById('edit-form');
+    // console.log(el, 'el');
     if (defaultNumber?.customData) {
       prop.defaultValue = +defaultNumber?.customData;
+      // if (!prop.value) {
+      //   onChange && onChange(prop.defaultValue);
+      // }
+      console.log(prop, props);
       if (el?.contains(containerRef?.current)) {
         prop.value = +defaultNumber?.customData;
       }
@@ -49,7 +54,14 @@ const InputNumberComponent = (
     delete result.numlimit;
     delete result.numrange;
     return result;
-  }, [props, decimal, numlimit, onChange]);
+  }, [props, decimal, numlimit, defaultNumber, onChange]);
+  useEffect(() => {
+    if (propList.defaultValue) {
+      onChange && onChange(propList.defaultValue as number);
+    }
+    // eslint-disable-next-line
+  }, []);
+
   return (
     <div className={styles.container} ref={containerRef}>
       <div className={styles.number_container}>
