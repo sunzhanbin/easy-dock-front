@@ -1,4 +1,4 @@
-import { memo, useMemo } from 'react';
+import { memo, useMemo, useRef } from 'react';
 import { InputNumber } from 'antd';
 import { Icon } from '@common/components';
 import { InputNumberProps } from 'antd/lib/input-number';
@@ -14,6 +14,7 @@ const InputNumberComponent = (
   },
 ) => {
   const { onChange, decimal, numlimit, defaultNumber } = props;
+  const containerRef = useRef<HTMLDivElement>(null);
   const propList = useMemo(() => {
     const prop: { [k: string]: string | number | boolean | undefined | Function } = {
       size: 'large',
@@ -27,11 +28,18 @@ const InputNumberComponent = (
       prop.min = numlimit.numrange.min;
       prop.max = numlimit.numrange.max;
     }
+    const el = document.getElementById('edit-form');
     if (defaultNumber?.customData) {
-      prop.defaultValue = defaultNumber?.customData as string;
+      prop.defaultValue = +defaultNumber?.customData;
+      if (el?.contains(containerRef?.current)) {
+        prop.value = +defaultNumber?.customData;
+      }
     }
     if (typeof defaultNumber === 'number') {
-      prop.value = defaultNumber;
+      prop.defaultValue = defaultNumber;
+      if (el?.contains(containerRef?.current)) {
+        prop.value = defaultNumber;
+      }
     }
     const result = Object.assign({}, props, prop);
     delete result.fieldName;
@@ -43,7 +51,7 @@ const InputNumberComponent = (
     return result;
   }, [props, decimal, numlimit, onChange]);
   return (
-    <div className={styles.container}>
+    <div className={styles.container} ref={containerRef}>
       <div className={styles.number_container}>
         <div className={styles.icon}>
           <Icon className={styles.iconfont} type="shuzi123" />
