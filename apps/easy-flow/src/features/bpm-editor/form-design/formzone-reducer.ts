@@ -34,7 +34,12 @@ const reducers = {
       if (!state.layout) {
         state.layout = [];
       }
-      if (state.byId[com.id]) return state;
+      // 如果有重复的id,则从当前控件id为当前最大的数字+1
+      if (state.byId[com.id]) {
+        const numList: number[] = Object.keys(state.byId).map((id) => +id.split('_')[1] || -1);
+        const max = Math.max(...numList);
+        com.id = `${com.type}_${max + 1}`;
+      }
       let config = Object.assign({}, com, { fieldName: com.id });
       if ((com.type as string) === 'DescText') {
         config = Object.assign({}, config, { label: config.label + com.id?.split('_')[1] });
