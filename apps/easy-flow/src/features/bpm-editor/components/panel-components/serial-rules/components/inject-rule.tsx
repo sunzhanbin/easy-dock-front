@@ -126,6 +126,7 @@ const InjectRule = (props: any, ref: React.Ref<unknown> | undefined) => {
         <RuleModal
           showRuleModal={ruleModal}
           fields={fields}
+          serialId={serialId}
           onCancel={handleCancelRuleModal}
           onSubmit={handleConfirmRule}
         />

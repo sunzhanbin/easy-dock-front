@@ -169,10 +169,12 @@ function DraggableOption(props: DraggableOptionProps) {
             </Tooltip>
           </div>
         ) : (
-          <div className={classNames(styles.delete, styles.disable)} onClick={handleDelete}>
-            <span>
-              <Icon className={styles.iconfont} type="shanchu" />
-            </span>
+          <div className={classNames(styles.delete, styles.disable)}>
+            <Tooltip title="自动计数规则不可删除">
+              <span>
+                <Icon className={styles.iconfont} type="shanchu" />
+              </span>
+            </Tooltip>
           </div>
         )}
         {!disabled ? (

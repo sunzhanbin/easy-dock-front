@@ -81,6 +81,9 @@ const DateRange = ({ id, componentId }: DateRangeProps) => {
                   {...propList}
                   type="startTime"
                   disabledDate={(v: Moment) => handleDisabledDate(v, 'prev', form)}
+                  onChange={() => {
+                    form.validateFields([['datelimit', id, 'max']]);
+                  }}
                 />
               </Form.Item>
               <span className={styles.text}>~</span>
@@ -104,6 +107,9 @@ const DateRange = ({ id, componentId }: DateRangeProps) => {
                   {...propList}
                   type="endTime"
                   disabledDate={(v: Moment) => handleDisabledDate(v, 'next', form)}
+                  onChange={() => {
+                    form.validateFields([['datelimit', id, 'min']]);
+                  }}
                 />
               </Form.Item>
             </div>

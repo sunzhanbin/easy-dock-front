@@ -14,10 +14,11 @@ interface RuleProps {
   showRuleModal: boolean;
   onCancel: () => void;
   onSubmit: (fieldsValue: any) => void;
+  serialId?: string;
 }
 
 const RuleModal = (props: RuleProps) => {
-  const { showRuleModal, onCancel, onSubmit, fields } = props;
+  const { showRuleModal, onCancel, onSubmit, fields, serialId } = props;
   const { data } = useSubAppDetail();
   const [ruleList, setRuleList] = useState([]);
   const [rule, setRule] = useState({});
@@ -105,7 +106,9 @@ const RuleModal = (props: RuleProps) => {
               className={classNames(styles.name, activeIndex === index ? styles.active : '')}
               onClick={() => handleSelectRule(rule, index)}
             >
-              <div className={styles.text}>{rule.name}</div>
+              <Tooltip title={rule.name}>
+                <div className={styles.text}>{rule.name}</div>
+              </Tooltip>
               <Tooltip title={renderLabel(rule)}>
                 <span className={styles.ruleTips}>{renderLabel(rule)}</span>
               </Tooltip>
@@ -113,6 +116,12 @@ const RuleModal = (props: RuleProps) => {
             <div className={styles.operation}>
               {rule.status !== 0 ? (
                 <Tooltip title="该规则已被使用，不可删除">
+                  <div className={classNames(styles.delete, styles.disable)}>
+                    <Icon className={styles.iconfont} type="shanchu" />
+                  </div>
+                </Tooltip>
+              ) : rule.id === serialId ? (
+                <Tooltip title="该规则已被关联，不可删除">
                   <div className={classNames(styles.delete, styles.disable)}>
                     <Icon className={styles.iconfont} type="shanchu" />
                   </div>
