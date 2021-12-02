@@ -24,7 +24,7 @@ export const getCalculateNum = (
       formListMap[item] = formValue[item];
     }
   });
-  const filterList = Object.values(formListMap).filter(Boolean);
+  const filterList = Object.values(formListMap).filter((v) => v !== undefined && v !== null);
   if (!filterList.length) return 0;
   if (calcType === 'minus') {
     if (watch.find((item: string) => item.includes('Date'))) {
