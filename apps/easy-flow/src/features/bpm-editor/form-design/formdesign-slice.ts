@@ -100,7 +100,7 @@ const validComponentConfig = (config: ConfigItem, props: ConfigItem) => {
   const serialError = validateSerial(config);
   const customError = validateSerialCustom(config);
   const injectError = validateSerialInject(config);
-  const propsError = validateHasChecked(props);
+  const propsError = validateHasChecked(props, config);
   if (type === 'Tabs') {
     const fieldsError = validateFields(props.components);
     fieldsError && errorItem.content.push(fieldsError);

@@ -65,11 +65,12 @@ export const validateFields = (components: any) => {
   return '';
 };
 
-export const validateHasChecked = (props: ConfigItem) => {
+export const validateHasChecked = (props: ConfigItem, config: ConfigItem) => {
   const { type } = props;
   switch (type) {
     case 'InputNumber':
       const { decimal = {}, numlimit = {} } = props;
+      const { defaultNumber = {} } = config;
       if (decimal.enable && !decimal.precision) {
         return '请输入小数位数';
       }
@@ -78,6 +79,15 @@ export const validateHasChecked = (props: ConfigItem) => {
       }
       if (numlimit.enable && (!numlimit.numrange || (!numlimit.numrange?.min && !numlimit.numrange?.max))) {
         return '请输入数值范围';
+      }
+      if (
+        numlimit.enable &&
+        defaultNumber &&
+        defaultNumber.type === 'custom' &&
+        (defaultNumber.customData < numlimit.numrange?.min || defaultNumber.customData > numlimit.numrange?.max)
+      ) {
+        message.error('请设置默认值在数值范围内');
+        return 'errorTipsExchange';
       }
       break;
     case 'Date':
@@ -98,6 +108,15 @@ export const validateHasChecked = (props: ConfigItem) => {
       const { typeRestrict = {} } = props;
       if (typeRestrict.enable && (!typeRestrict.types || !typeRestrict.types.length)) {
         return '请选择文件类型';
+      }
+      if (
+        typeRestrict.enable &&
+        typeRestrict.types &&
+        typeRestrict.types.length &&
+        typeRestrict.types.includes('custom') &&
+        (!typeRestrict.custom || !typeRestrict.custom.length)
+      ) {
+        return '请选择自定义文件类型';
       }
       break;
   }
