@@ -125,7 +125,6 @@ const getDisabledDateRule = ({ rules, current, formValue, id, range }: RuleParam
   });
 
   if (!rules && range) {
-    console.log('comrin');
     if (range.min) {
       rule6 = current && current < moment(range.min);
     }
