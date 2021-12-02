@@ -12,6 +12,7 @@ import PubSub from 'pubsub-js';
 import { analysisFormChangeRule } from '@/utils';
 import { formRulesItem, formRulesReturn, validateRules } from '@/components/form-engine/utils';
 import useMemoCallback from '@common/hooks/use-memo-callback';
+import { getFilesTypeList } from '@/components/form-engine';
 
 interface FormListProps {
   fields: CompConfig[];
@@ -29,6 +30,7 @@ interface VisibleMap {
 const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId }: FormListProps) => {
   const context = useContainerContext();
   const [visibleMap, setVisibleMap] = useState<VisibleMap>({});
+  const [fileMap, setFileMap] = useState<{ [key: string]: string[] } | undefined>(undefined);
   const componentTypes = useMemo(() => {
     return fields.map((v) => v.config.type);
   }, [fields]);
@@ -44,6 +46,15 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId }: Form
       });
     }
   }, [optionComponents]);
+
+  useEffect(() => {
+    if (componentTypes.includes('Attachment')) {
+      (async () => {
+        const fileMap = await getFilesTypeList();
+        setFileMap(fileMap);
+      })();
+    }
+  }, [componentTypes]);
   const watchFn = useMemoCallback((rules: formRulesItem[]) => {
     return [
       ...new Set(
@@ -113,7 +124,13 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId }: Form
               }
               const isRequired = fieldAuth === AuthType.Required;
               const comProps = Object.assign({}, props, { disabled: fieldAuth === AuthType.View || readonly });
-              delete comProps.defaultValue;
+              if (type === 'DescText' && comProps.value) {
+                comProps['text_value'] = comProps.value;
+              }
+              if (type === 'Attachment' && fileMap) {
+                comProps.fileMap = fileMap;
+              }
+              // delete comProps.defaultValue;
               delete comProps.apiConfig;
               const rules: Rule[] = validateRules(isRequired, label, type, props);
               return (

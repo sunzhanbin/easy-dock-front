@@ -44,23 +44,23 @@ const Attachment = (
   });
 
   useEffect(() => {
-    if (!typeRestrict) {
+    if (!typeRestrict || !fileMap) {
       return;
     }
-    const { types } = typeRestrict;
+    const { types, custom = [] } = typeRestrict;
     const exceptCustom: string[] = types?.filter((item) => item !== 'custom') || [];
-    const fileTypeList =
-      fileMap &&
-      Object.entries(fileMap)
-        ?.map(([key, value]: any) => {
-          if (exceptCustom.includes(key)) {
-            return value?.map((item: string) => `.${item}`);
-          }
-          return undefined;
-        })
-        .flat(2)
-        .filter(Boolean);
-    setFileTypeList(fileTypeList);
+    const fileTypeList = Object.entries(fileMap)
+      ?.map(([key, value]: any) => {
+        if (exceptCustom.includes(key)) {
+          return value?.map((item: string) => `.${item}`);
+        }
+        return undefined;
+      })
+      .flat(2)
+      .filter(Boolean);
+    const customList = custom.map((item) => `.${item}`);
+    const typeList = [...new Set(fileTypeList.concat(customList))];
+    setFileTypeList(typeList);
   }, [fileMap, typeRestrict]);
 
   const handleChange = useMemoCallback(({ file }: UploadChangeParam) => {

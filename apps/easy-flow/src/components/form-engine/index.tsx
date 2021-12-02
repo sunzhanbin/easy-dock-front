@@ -52,6 +52,19 @@ export type ConfigMap = {
   };
 };
 
+export const getFilesTypeList = async () => {
+  try {
+    const ret = await getFilesType();
+    const fileMap: { [key: string]: string[] } = {};
+    ret.data.forEach((item: { code: string; suffixes: string[] }) => {
+      fileMap[item.code] = item.suffixes;
+    });
+    return fileMap;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 const FormDetail = React.forwardRef(function FormDetail(
   props: FormProps,
   ref: React.ForwardedRef<FormInstance<FormValue>>,
@@ -82,19 +95,6 @@ const FormDetail = React.forwardRef(function FormDetail(
   }, [data]);
   // 获取组件源码
   const compSources = useLoadComponents(componentTypes);
-
-  const getFilesTypeList = async () => {
-    try {
-      const ret = await getFilesType();
-      const fileMap: { [key: string]: string[] } = {};
-      ret.data.forEach((item: { code: string; suffixes: string[] }) => {
-        fileMap[item.code] = item.suffixes;
-      });
-      return fileMap;
-    } catch (e) {
-      console.log(e);
-    }
-  };
 
   const callInterfaceList = useMemoCallback((ruleList: DataConfig[], formValues: any) => {
     const formDataList: { name: string; value: any }[] = (Object.keys(formValues) || [])
