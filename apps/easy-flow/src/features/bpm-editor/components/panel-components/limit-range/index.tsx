@@ -10,9 +10,9 @@ interface LimitNumProps {
 const LimitNum = ({ id }: LimitNumProps) => {
   return (
     <Form.Item noStyle shouldUpdate>
-      {({ getFieldValue }) => {
-        const isChecked = getFieldValue('numlimit');
-        const fieldValue = getFieldValue('decimal');
+      {(form) => {
+        const isChecked = form.getFieldValue('numlimit');
+        const fieldValue = form.getFieldValue('decimal');
         if (!isChecked || !isChecked.enable) {
           return null;
         }
@@ -24,7 +24,7 @@ const LimitNum = ({ id }: LimitNumProps) => {
               rules={[
                 {
                   validator(_: any, value: number) {
-                    if (!getFieldValue(['numlimit', id, 'max']) && (value === undefined || value === null)) {
+                    if (!form.getFieldValue(['numlimit', id, 'max']) && (value === undefined || value === null)) {
                       return Promise.reject(new Error('请输入取值范围'));
                     }
                     return Promise.resolve();
@@ -35,7 +35,8 @@ const LimitNum = ({ id }: LimitNumProps) => {
               <InputNumber
                 size="large"
                 placeholder="最小值"
-                max={getFieldValue(['numlimit', id, 'max'])}
+                max={form.getFieldValue(['numlimit', id, 'max'])}
+                onChange={() => form.validateFields([['numlimit', id, 'max']])}
                 formatter={(value) => {
                   if (!fieldValue?.enable || value.indexOf('.') === -1) return value;
                   return value.substring(0, value.indexOf('.') + fieldValue.precision + 1);
@@ -50,7 +51,7 @@ const LimitNum = ({ id }: LimitNumProps) => {
               rules={[
                 {
                   validator(_: any, value: number) {
-                    if (!getFieldValue(['numlimit', id, 'min']) && (value === undefined || value === null)) {
+                    if (!form.getFieldValue(['numlimit', id, 'min']) && (value === undefined || value === null)) {
                       return Promise.reject(new Error('请输入取值范围'));
                     }
                     return Promise.resolve();
@@ -61,7 +62,8 @@ const LimitNum = ({ id }: LimitNumProps) => {
               <InputNumber
                 size="large"
                 placeholder="最大值"
-                min={getFieldValue(['numlimit', id, 'min'])}
+                min={form.getFieldValue(['numlimit', id, 'min'])}
+                onChange={() => form.validateFields([['numlimit', id, 'min']])}
                 formatter={(value) => {
                   if (!fieldValue?.enable || value.indexOf('.') === -1) return value;
                   return value.substring(0, value.indexOf('.') + fieldValue.precision + 1);
