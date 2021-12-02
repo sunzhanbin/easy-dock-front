@@ -86,7 +86,7 @@ export const validateHasChecked = (props: ConfigItem, config: ConfigItem) => {
         defaultNumber.type === 'custom' &&
         (defaultNumber.customData < numlimit.numrange?.min || defaultNumber.customData > numlimit.numrange?.max)
       ) {
-        message.error('请设置默认值在数值范围内');
+        message.error('该默认值已超过限制范围，请重新输入！');
         return 'errorTipsExchange';
       }
       break;
@@ -100,7 +100,7 @@ export const validateHasChecked = (props: ConfigItem, config: ConfigItem) => {
         defaultValue &&
         (defaultValue < datelimit.daterange?.min || defaultValue > datelimit.daterange?.max)
       ) {
-        message.error('请设置默认值在日期范围内');
+        message.error('该默认值已超过限制范围，请重新输入！');
         return 'errorTipsExchange';
       }
       break;

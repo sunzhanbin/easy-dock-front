@@ -1,16 +1,15 @@
 import React, { Fragment, memo, ReactNode, useEffect, useMemo } from 'react';
-import { Checkbox, Form, Input, InputNumber, Radio, Select, Switch } from 'antd';
+import { Checkbox, Form, Input, InputNumber, Radio, Switch } from 'antd';
 import SelectOptionList from '../select-option-list';
 import SelectDefaultOption from '../select-default-option';
 import DefaultDate from '../default-date';
 import Editor from '../rich-text';
 import FieldManage from '../field-manage';
-import { FormField, rangeItem, SchemaConfigItem } from '@/type';
+import { FormField, SchemaConfigItem } from '@/type';
 import { Store } from 'antd/lib/form/interface';
 import styles from './index.module.scss';
 import { useAppSelector } from '@/app/hooks';
 import { errorSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
-import { Icon } from '@common/components';
 import { Rule } from 'antd/lib/form';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import SelectColumns from '../select-columns';
@@ -23,8 +22,6 @@ import DateFormat from '../date-format';
 import { LABEL_INCLUDE_CHECKBOX, LABEL_LINKED_RULES } from '@utils/const';
 import FilesType from '@/features/bpm-editor/components/panel-components/files-type';
 import { FormInstance } from 'antd/lib/form';
-
-const { Option } = Select;
 
 interface CompAttrEditorProps {
   config: SchemaConfigItem[];
