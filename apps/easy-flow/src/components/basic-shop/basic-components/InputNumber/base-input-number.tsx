@@ -27,7 +27,6 @@ const InputNumberComponent = (
       prop.min = numlimit.numrange.min;
       prop.max = numlimit.numrange.max;
     }
-    console.log(defaultNumber, 'vvvvvv');
     if (defaultNumber?.customData) {
       prop.defaultValue = defaultNumber?.customData as string;
     }
