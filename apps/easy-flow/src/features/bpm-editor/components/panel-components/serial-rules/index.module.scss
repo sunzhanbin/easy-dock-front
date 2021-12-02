@@ -10,8 +10,6 @@
 
   .name {
     flex: 1;
-    display: flex;
-    align-items: center;
     border-radius: 3px;
     border: 1px solid rgba(24, 31, 67, 0.12);
 
@@ -20,13 +18,20 @@
     }
 
     .text {
-      flex: 0 0 160px;
-      padding-left: 20px;
+      width: 140px;
+      margin-left: 20px;
       text-align: left;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: inline-block;
+      line-height: 38px;
     }
 
     .ruleTips {
-      flex: 1;
+      display: inline-block;
+      line-height: 38px;
+      width: calc(100% - 160px);
       text-align: left;
       text-overflow: ellipsis;
       white-space: nowrap;

@@ -105,7 +105,9 @@ const RuleModal = (props: RuleProps) => {
               className={classNames(styles.name, activeIndex === index ? styles.active : '')}
               onClick={() => handleSelectRule(rule, index)}
             >
-              <div className={styles.text}>{rule.name}</div>
+              <Tooltip title={rule.name}>
+                <div className={styles.text}>{rule.name}</div>
+              </Tooltip>
               <Tooltip title={renderLabel(rule)}>
                 <span className={styles.ruleTips}>{renderLabel(rule)}</span>
               </Tooltip>
