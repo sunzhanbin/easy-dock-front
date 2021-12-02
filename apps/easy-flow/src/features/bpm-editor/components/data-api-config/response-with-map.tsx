@@ -32,7 +32,7 @@ function ResponseWithMap(props: ResponseWithMapProps) {
                     <Form.Item shouldUpdate noStyle>
                       {(form) => {
                         const value = form.getFieldValue(name);
-                        const { type } = value[index];
+                        const { type } = value?.[index] || {};
                         const optionals = detail?.responses || [];
                         let paramNameChildren;
 
