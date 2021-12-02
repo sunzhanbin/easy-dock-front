@@ -40,8 +40,6 @@ const InputNumberComponent = (
     delete result.numrange;
     return result;
   }, [props, decimal, numlimit, onChange]);
-  console.log(propList, 'list');
-
   return (
     <div className={styles.container}>
       <div className={styles.number_container}>
