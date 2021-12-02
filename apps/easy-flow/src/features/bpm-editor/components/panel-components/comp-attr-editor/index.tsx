@@ -19,6 +19,7 @@ import NumberOption from '../number-options';
 import AllowDecimal from '../allow-decimal';
 import LimitRange from '../limit-range';
 import DateRange from '../date-range';
+import DateFormat from '../date-format';
 import { LABEL_INCLUDE_CHECKBOX, LABEL_LINKED_RULES } from '@utils/const';
 import FilesType from '@/features/bpm-editor/components/panel-components/files-type';
 import { FormInstance } from 'antd/lib/form';
@@ -61,16 +62,7 @@ const options = [
 const componentMap: { [k: string]: (props: { [k: string]: any }) => ReactNode } = {
   Input: (props) => <Input placeholder={props.placeholder} size="large" />,
   Textarea: (props) => <Input.TextArea placeholder={props.placeholder} rows={4} size="large" />,
-  Select: (props) => (
-    <Select placeholder={props.placeholder || '请选择'} size="large" suffixIcon={<Icon type="xiala" />}>
-      {props.range &&
-        (props.range as rangeItem[]).map((v) => (
-          <Option value={v.key} key={v.key}>
-            {v.value}
-          </Option>
-        ))}
-    </Select>
-  ),
+  Select: (props) => <DateFormat {...props} id={props.componentId} />,
   ColSpace: () => {
     return <Radio.Group options={options} optionType="button" />;
   },
