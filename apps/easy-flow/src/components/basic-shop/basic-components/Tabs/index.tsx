@@ -7,6 +7,8 @@ import styles from './index.module.scss';
 import { CompConfig } from '@/type';
 import FormList from './form-list';
 import { FieldAuthsMap } from '@/type/flow';
+import { omit } from 'lodash';
+import PubSub from 'pubsub-js';
 
 const { TabPane } = TabList;
 type PaneType = {
@@ -68,6 +70,11 @@ const Tabs = ({
       : [...panes];
     list = list.filter((v) => v?.key);
     const index = list.findIndex((pane: any) => pane.key === key);
+    // 删除tab时要更新关联的数字公示计算
+    const subComponentNames = Object.keys(omit(list[index], ['__title__', 'key', 'content']));
+    subComponentNames.forEach((key) => {
+      PubSub.publish(`${fieldName}.${key}-change`, undefined);
+    });
     const paneList = list.filter((v: any) => v.key !== key);
     setPanes(paneList);
     onChange && onChange(paneList);
