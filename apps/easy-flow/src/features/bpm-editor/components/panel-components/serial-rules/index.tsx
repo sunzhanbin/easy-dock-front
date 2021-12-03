@@ -79,6 +79,7 @@ const SerialRules = (props: RulesProps) => {
   useEffect(() => {
     (async () => {
       try {
+        console.log(serialId, 'serialId');
         if (!serialId) return;
         const ret = await getSerialInfo(serialId);
         const { data } = ret;
