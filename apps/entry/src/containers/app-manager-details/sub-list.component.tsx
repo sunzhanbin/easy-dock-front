@@ -1,8 +1,8 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { Tabs, Input } from "antd";
 import { useAppSelector } from "@/store";
-import { useFetchsubAppListQuery } from "@/http/app-manager.hooks";
-import { selectCurrentWorkspaceId } from "@/views/app-manager/index.slice";
+import { useFetchsubAppListQuery } from "@http/app-manager.hooks";
+import { selectCurrentWorkspaceId } from "@views/app-manager/index.slice";
 
 const { TabPane } = Tabs;
 
@@ -17,7 +17,7 @@ const SubListComponent: React.FC = () => {
 
   const handleTabSearch = useCallback((value, event) => {
     event.preventDefault();
-    console.log("value", value);
+    console.log("value", handleTabSearch);
   }, []);
 
   const renderExtra = useMemo(() => {

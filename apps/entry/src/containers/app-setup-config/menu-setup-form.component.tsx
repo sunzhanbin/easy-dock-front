@@ -2,8 +2,9 @@ import { useCallback, useEffect } from "react";
 import { Form, Input, Select, Checkbox, Button, Radio } from "antd";
 import { selectMenuForm, setMenuForm } from "@views/app-setup/menu-setup.slice";
 import { useAppDispatch, useAppSelector } from "@/store";
+import { MenuSetupForm } from "@utils/types";
 
-import "./menu-setup-form.style";
+import "@containers/app-setup-config/menu-setup-form.style";
 
 const { Option } = Select;
 
@@ -16,7 +17,7 @@ const MenuSetupFormComponent = () => {
   const menuForm = useAppSelector(selectMenuForm);
   const [form] = Form.useForm();
 
-  const handleFormFinish = useCallback((values: { [key: string]: any }) => {
+  const handleFormFinish = useCallback((values: MenuSetupForm) => {
     dispatch(setMenuForm(values));
   }, []);
 

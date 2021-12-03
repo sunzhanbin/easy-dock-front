@@ -1,14 +1,15 @@
-import { appManager } from "@/http";
+import { appManager } from "@http/app-manager.hooks";
 import { RootState } from "@/store";
 import { createSlice, PayloadAction, current } from "@reduxjs/toolkit";
-import { MenuSetupInitialState } from "@utils/types";
+import { MenuSetupInitialState, MenuSetupForm } from "@utils/types";
 import { findItem } from "@utils/utils";
 
-const defaultForm = {
+const defaultForm: MenuSetupForm = {
   name: "",
   showMenu: false,
   icon: "icon1",
-  mode: "single", // 'single' | 'multi'
+  mode: "blank",
+  isHome: false,
   asset: "exist",
   assetConfig: {
     app: "flow",
@@ -36,7 +37,7 @@ export const menuSetupSlice = createSlice({
       state.menu = action.payload;
     },
     // 关联菜单与表单信息；
-    setMenuForm: (state, action: PayloadAction<{ [key: string]: any }>) => {
+    setMenuForm: (state, action: PayloadAction<MenuSetupForm>) => {
       const currentItem: any = findItem(state.currentId, state.menu);
       currentItem.form = JSON.parse(JSON.stringify(action.payload));
       state.menuForm = action.payload;

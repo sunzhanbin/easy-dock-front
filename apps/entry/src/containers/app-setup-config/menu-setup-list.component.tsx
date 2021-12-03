@@ -10,11 +10,13 @@ import {
   remove,
 } from "@views/app-setup/menu-setup.slice";
 import { v4 as uuid } from "uuid";
+import { Menu } from "@utils/types";
+
 import classnames from "classnames";
-import "./menu-setup-list.style";
+import "@containers/app-setup-config/menu-setup-list.style";
 
 // 菜单单元组件；
-const MenuItemComponent = ({ menu }: any) => {
+const MenuItemComponent = ({ menu }: { menu: Menu }) => {
   const dispatch = useAppDispatch();
   const currentId = useAppSelector(selectCurrentId);
 
@@ -60,14 +62,14 @@ const MenuItemComponent = ({ menu }: any) => {
 };
 
 // 菜单嵌套逻辑组件；
-const MenuComponent = ({ menu }: any) => {
+const MenuComponent = ({ menu }: { menu: Menu }) => {
   return (
     <div className="menu-component">
       {menu?.children?.length ? (
         <div className="men-wrap">
           <MenuItemComponent menu={menu} />
           <div className="children">
-            {menu.children.map((item: any, index: number) => (
+            {menu.children.map((item, index: number) => (
               <MenuComponent key={index} menu={item} />
             ))}
           </div>

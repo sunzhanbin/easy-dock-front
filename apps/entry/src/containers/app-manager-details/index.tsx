@@ -1,6 +1,6 @@
 import React from "react";
-import AppInfoComponent from "./app-info.component";
-import SubListComponent from "./sub-list.component";
+import AppInfoComponent from "@containers/app-manager-details/app-info.component";
+import SubListComponent from "@containers/app-manager-details/sub-list.component";
 
 const AppManagerDetails: React.FC = () => {
   return (

@@ -1,3 +1,3 @@
-export * from "./app-manager.hooks";
-export * from "./asset-centre.hooks";
-export * from "./template-mail.hooks";
+export * from "@http/app-manager.hooks";
+export * from "@http/asset-centre.hooks";
+export * from "@http/template-mail.hooks";

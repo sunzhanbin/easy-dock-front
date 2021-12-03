@@ -1,8 +1,8 @@
 import { useCallback, useRef } from "react";
 import { Layout, Menu, Button } from "antd";
-import { useFetchWorkspaceListQuery } from "@/http";
+import { useFetchWorkspaceListQuery } from "@http/app-manager.hooks";
 import { useAppDispatch, useAppSelector } from "@/store";
-import AddWorkspaceModal from "@/components/add-workspace-modal";
+import AddWorkspaceModal from "@components/add-workspace-modal";
 import {
   selectCurrentWorkspaceId,
   setCurrentWorkspaceId,

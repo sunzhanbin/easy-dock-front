@@ -1,3 +1,5 @@
+import "@containers/layout/app-manager-header.style";
+
 const AppManagerHeader: React.FC = () => {
   return (
     <>

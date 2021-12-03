@@ -1,8 +1,8 @@
 import { Layout } from "antd";
 import { useAppSelector } from "@/store";
-import AppManagerSider from "@/containers/app-manager-sider";
-import AppManagerDetails from "@/containers/app-manager-details";
-import { selectCurrentWorkspaceId } from "./index.slice";
+import AppManagerSider from "@containers/app-manager-sider";
+import AppManagerDetails from "@containers/app-manager-details";
+import { selectCurrentWorkspaceId } from "@views/app-manager/index.slice";
 
 const { Content } = Layout;
 

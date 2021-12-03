@@ -5,11 +5,11 @@ import { useAppSelector } from "@/store";
 import {
   useFetchWorkspaceListQuery,
   useModifyAppStatusMutation,
-} from "@/http/app-manager.hooks";
+} from "@http/app-manager.hooks";
 import {
   selectCurrentWorkspaceId,
   selectProjectId,
-} from "@/views/app-manager/index.slice";
+} from "@views/app-manager/index.slice";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { workspaceShape } from "@utils/types";
 
@@ -32,7 +32,7 @@ const AppInfoComponent: React.FC = () => {
   }, [modifyAppStatus, workspaceId]);
 
   const handlePreview = useCallback(() => {
-    console.log("preview");
+    console.log("handlePreview");
   }, []);
 
   return (

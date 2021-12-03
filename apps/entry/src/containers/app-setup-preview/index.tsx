@@ -1,81 +1,11 @@
-import { useCallback, useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useAppSelector } from "@/store";
+import { NavMenuComponentProps } from "@utils/types";
 import { selectTheme, selectNavMode } from "@views/app-setup/basic-setup.slice";
 import { selectMenu, selectCurrentId } from "@views/app-setup/menu-setup.slice";
-import { keyPath } from "@utils/utils";
-import "./index.style";
-
-import { Menu } from "antd";
-
-const { SubMenu } = Menu;
-
-const SingleNavComponent = ({
-  children,
-  extra,
-  dataSource,
-  selectedKey,
-}: any) => {
-  const handleMenuClick = useCallback(({ item, key, keyPath }) => {
-    console.log("%c^_^", "color: #C80815", { item, key, keyPath });
-  }, []);
-
-  const handleMenuSelect = useCallback(({ item, key, keyPath }) => {
-    console.log("%c^_^ menuSelect", "color: #C80815", { item, key, keyPath });
-  }, []);
-
-  return (
-    <div className="single-nav-component">
-      <div className="sider">
-        <div className="extra">{extra}</div>
-        <div className="menu">
-          <Menu
-            openKeys={keyPath(selectedKey, dataSource)}
-            onClick={handleMenuClick}
-            selectedKeys={[selectedKey]}
-            onSelect={handleMenuSelect}
-            mode="inline"
-            style={{ width: 256 }}
-          >
-            {/* @Todo 此处和菜单设置里的嵌套组件不同，antd 组件嵌套时，key 的数据丢失 */}
-            {((dataSource) => {
-              const recurse = (menus: any) => {
-                return menus.map((menu: any) => {
-                  if (menu?.children?.length) {
-                    return (
-                      <SubMenu key={menu.id} title={menu.name}>
-                        {recurse(menu.children)}
-                      </SubMenu>
-                    );
-                  } else {
-                    return <Menu.Item key={menu.id}>{menu.name}</Menu.Item>;
-                  }
-                });
-              };
-              return recurse(dataSource);
-            })(dataSource)}
-          </Menu>
-        </div>
-      </div>
-      <div className="content">{children}</div>
-    </div>
-  );
-};
-
-const MultiNavComponent = ({ children, extra }: any) => {
-  return (
-    <div className="multi-nav-component">
-      <div className="header">
-        <div className="extra">{extra}</div>
-        <div className="menu">这里是主菜单</div>
-      </div>
-      <div className="content">
-        <div className="submenu">这里是子菜单</div>
-        <div className="content">{children}</div>
-        <div></div>
-      </div>
-    </div>
-  );
-};
+import SingleNavComponent from "@containers/app-setup-preview/single-nav.component";
+import MultiNavComponent from "@containers/app-setup-preview/multi-nav.component";
+import "@containers/app-setup-preview/index.style";
 
 const NavMenuComponent = ({
   extra,
@@ -83,17 +13,7 @@ const NavMenuComponent = ({
   selectedKey,
   dataSource,
   children,
-}: {
-  extra: React.ReactNode;
-  navMode: "single" | "multi";
-  selectedKey: string;
-  dataSource: { [key: string]: any }[];
-  children: React.ReactNode;
-}) => {
-  useEffect(() => {
-    console.log("%c^-^", "color: #E32636", { dataSource });
-  }, [dataSource]);
-
+}: NavMenuComponentProps) => {
   return (
     <div className="nav-menu-component">
       {navMode === "single" && (
@@ -131,8 +51,8 @@ const AppSetupPreview = () => {
 
   useEffect(() => {
     console.log(
-      "%c^-^",
-      "color: #E32636",
+      "%c^_^ \n\n",
+      "color: #C80815; font-weight: bolder",
       JSON.stringify({ theme, navMode }, null, 2)
     );
   }, [theme, navMode]);

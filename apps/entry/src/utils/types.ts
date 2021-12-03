@@ -43,15 +43,40 @@ export interface BasicSetupInitialState {
 
 export interface MenuSetupInitialState {
   currentId: string;
-  menu: any[];
-  menuForm: { [key: string]: any };
+  menu: Menu[];
+  menuForm: MenuSetupForm;
 }
 
 export interface Menu {
   depth: number;
   children: Menu[];
-  form: { [key: string]: any };
+  form: MenuSetupForm;
   id: string;
   name: string;
   parentId: string | null;
+}
+
+export interface MenuSetupForm {
+  name: string;
+  showMenu: boolean;
+  icon: string;
+  mode: "blank" | "current";
+  isHome: boolean;
+  asset: "exist" | "custom";
+  assetConfig: {
+    app?: string;
+    subapp?: string;
+    url?: string;
+  };
+}
+
+export interface MenuComponentProps {
+  extra: React.ReactNode;
+  selectedKey: string;
+  dataSource: Menu[];
+  children: React.ReactNode;
+}
+
+export interface NavMenuComponentProps extends MenuComponentProps {
+  navMode: "single" | "multi";
 }

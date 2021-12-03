@@ -1,11 +1,11 @@
-import { appManager } from "@/http";
+import { appManager } from "@http/app-manager.hooks";
 import { RootState } from "@/store";
 import { createSlice, PayloadAction, current } from "@reduxjs/toolkit";
 import { BasicSetupInitialState } from "@utils/types";
 
 const initialState: BasicSetupInitialState = {
   theme: "theme1",
-  navMode: "single",
+  navMode: "multi", // 'single' | 'multi'
   logo: {},
   basicForm: {},
 };

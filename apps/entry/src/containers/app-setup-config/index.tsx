@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 import { Tabs } from "antd";
-import BasicSetupFormComponent from "./basic-setup-form.component";
-import MenuSetupComponent from "./menu-setup.component";
-import "./index.style";
+import BasicSetupFormComponent from "@containers/app-setup-config/basic-setup-form.component";
+import MenuSetupComponent from "@containers/app-setup-config/menu-setup.component";
+import "@containers/app-setup-config/index.style";
 
 const { TabPane } = Tabs;
 

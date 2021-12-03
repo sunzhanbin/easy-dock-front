@@ -1,0 +1,21 @@
+.multi-nav-component {
+  .header {
+    display: flex;
+    .extra {
+      width: 200px;
+    }
+    .menu {
+      flex: 1;
+    }
+  }
+  .content {
+    display: flex;
+    flex-direction: row;
+    .submenu {
+      width: 240px;
+    }
+    .content {
+      flex: 1;
+    }
+  }
+}

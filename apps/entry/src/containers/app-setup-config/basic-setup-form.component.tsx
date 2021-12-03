@@ -5,11 +5,11 @@ import {
   setTheme,
   setMode,
   setBaseForm,
-} from "@/views/app-setup/basic-setup.slice";
+} from "@views/app-setup/basic-setup.slice";
 import { axios } from "@utils/fetch";
 import { UploadOutlined } from "@ant-design/icons";
 
-import "./basic-setup-form.style";
+import "@containers/app-setup-config/basic-setup-form.style";
 
 const { Option } = Select;
 
@@ -18,7 +18,6 @@ const tailLayout = {
 };
 
 const normFile = (e: any) => {
-  console.log("Upload event:", e);
   if (Array.isArray(e)) {
     return e;
   }
@@ -36,7 +35,7 @@ const BasicSetupFormComponent = () => {
   const handleNavChange = useCallback((event: any) => {
     const { value } = event.target;
     dispatch(setMode(value));
-    console.log("navMode::", value);
+    console.log("handleNavChange ::", value);
   }, []);
 
   const handleThemeChange = useCallback((event: any) => {

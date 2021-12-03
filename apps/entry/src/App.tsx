@@ -1,8 +1,8 @@
 import React, { Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 import AntdProvider from "@common/components/antd-provider";
-import Layout from "@/containers/layout";
-import Home from "@/views/home";
+import Layout from "@containers/layout";
+import Home from "@views/home";
 import "@/App.scss";
 
 const AppManager = React.lazy(() => import("@views/app-manager"));
