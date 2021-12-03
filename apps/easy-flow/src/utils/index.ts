@@ -71,7 +71,7 @@ export function getPassedTime(startTime: number) {
   }
   // 超过前天的，显示年-月-日 时:分
   if (passedTime >= 3 * dayTime) {
-    return moment(startTime).format('YYYY-MM-DD HH:mm');
+    return moment(startTime).format('yyyy-MM-dd HH:mm');
   }
 }
 

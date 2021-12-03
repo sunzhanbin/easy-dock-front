@@ -18,11 +18,11 @@ function TimesDatePicker(
   const handleChange = useMemoCallback((value: Moment | null) => {
     if (onChange) {
       const time = moment(value).format(format as string);
-      if (type === 'startTime' && format === 'YYYY-MM-DD') {
+      if (type === 'startTime' && format === 'yyyy-MM-dd') {
         onChange((value && moment(time).startOf('day').valueOf()) || 0);
         return;
       }
-      if (type === 'endTime' && format === 'YYYY-MM-DD') {
+      if (type === 'endTime' && format === 'yyyy-MM-dd') {
         onChange((value && moment(time).endOf('day').valueOf()) || 0);
         return;
       }

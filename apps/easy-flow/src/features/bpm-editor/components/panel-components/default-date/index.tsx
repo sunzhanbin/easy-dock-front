@@ -28,13 +28,13 @@ const DefaultDate = (props: editProps) => {
       size: 'large',
       suffixIcon: <Icon type="riqi" />,
     };
-    if (formatType === 'YYYY-MM-DD HH:mm:ss') {
+    if (formatType === 'yyyy-MM-dd HH:mm:ss') {
       props.showTime = true;
-      props.format = 'YYYY-MM-DD HH:mm:ss';
-    } else if (formatType === 'YYYY-MM-DD') {
-      props.format = 'YYYY-MM-DD';
+      props.format = 'yyyy-MM-dd HH:mm:ss';
+    } else if (formatType === 'yyyy-MM-dd') {
+      props.format = 'yyyy-MM-dd';
     } else {
-      props.format = 'YYYY-MM-DD';
+      props.format = 'yyyy-MM-dd';
     }
     if (typeof value === 'number') {
       props.value = moment(value);

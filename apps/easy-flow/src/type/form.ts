@@ -59,7 +59,7 @@ export type DateField = {
       max: string;
     };
   };
-  format: 'YYYY-MM-DD' | 'YYYY-MM-DD HH:mm:ss';
+  format: 'yyyy-MM-dd' | 'yyyy-MM-dd HH:mm:ss';
   defaultValue: number;
 } & BaseField;
 

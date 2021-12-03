@@ -88,7 +88,7 @@ const Done: FC<{}> = () => {
         width: '20%',
         render(_: string, record: DoneItem) {
           const { endTime } = record;
-          return <div className={styles.endTime}>{endTime ? moment(endTime).format('YYYY-MM-DD HH:mm') : ''}</div>;
+          return <div className={styles.endTime}>{endTime ? moment(endTime).format('yyyy-MM-dd HH:mm') : ''}</div>;
         },
       },
     ];
@@ -257,7 +257,7 @@ const Done: FC<{}> = () => {
             <Form.Item label="发起时间" name="timeRange" className="timeRange">
               <RangePicker
                 showTime={{ format: 'HH:mm' }}
-                format="YYYY-MM-DD HH:mm"
+                format="yyyy-MM-dd HH:mm"
                 suffixIcon={<Icon type="riqi" />}
                 style={{ width: '100%' }}
                 onChange={() => {

@@ -272,7 +272,7 @@ const Start: FC<{}> = () => {
             <Form.Item label="发起时间" name="timeRange" className="startTime">
               <RangePicker
                 showTime={{ format: 'HH:mm' }}
-                format="YYYY-MM-DD HH:mm"
+                format="yyyy-MM-dd HH:mm"
                 style={{ width: '100%' }}
                 suffixIcon={<Icon type="riqi" />}
                 onChange={() => {
