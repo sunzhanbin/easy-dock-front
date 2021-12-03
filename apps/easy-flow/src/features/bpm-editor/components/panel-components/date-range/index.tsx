@@ -25,15 +25,15 @@ const DateRange = ({ id, componentId }: DateRangeProps) => {
       suffixIcon: <Icon type="riqi" />,
       onChange: (v: Moment) => void 0,
     };
-    if (formatType === 'yyyy-MM-dd HH:mm:ss') {
+    if (formatType === 'yyyy-MM-DD HH:mm:ss') {
       props.showTime = true;
-      props.format = 'yyyy-MM-dd HH:mm:ss';
-    } else if (formatType === 'yyyy-MM-dd') {
+      props.format = 'yyyy-MM-DD HH:mm:ss';
+    } else if (formatType === 'yyyy-MM-DD') {
       props.showTime = false;
-      props.format = 'yyyy-MM-dd';
+      props.format = 'yyyy-MM-DD';
     } else {
       props.showTime = false;
-      props.format = 'yyyy-MM-dd';
+      props.format = 'yyyy-MM-DD';
     }
     return props;
   }, [formatType]);

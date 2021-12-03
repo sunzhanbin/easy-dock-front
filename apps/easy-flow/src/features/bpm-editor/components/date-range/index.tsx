@@ -32,7 +32,7 @@ function DateRange(props: DateRangeProps) {
     } else {
       const [start, end] = values;
       // 如果格日期式是到天的话,起始时间是开始日期的00:00:00到结束日期的23:59:59
-      if (format === 'yyyy-MM-dd') {
+      if (format === 'yyyy-MM-DD') {
         const startDay = moment(start).format(format);
         const endDay = moment(end).format(format);
         const startTime = startDay ? +moment(startDay).startOf('day').format('x') : null;

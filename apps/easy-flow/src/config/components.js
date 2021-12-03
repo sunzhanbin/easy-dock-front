@@ -139,18 +139,18 @@ const serialRule = {
 
 const format = {
   key: 'format',
-  defaultValue: 'yyyy-MM-dd',
+  defaultValue: 'yyyy-MM-DD',
   label: '显示格式',
   placeholder: '请选择',
   type: 'Select',
   direction: 'vertical',
   range: [
     {
-      key: 'yyyy-MM-dd',
+      key: 'yyyy-MM-DD',
       value: '年-月-日',
     },
     {
-      key: 'yyyy-MM-dd HH:mm:ss',
+      key: 'yyyy-MM-DD HH:mm:ss',
       value: '年-月-日 时:分:秒',
     },
   ],
