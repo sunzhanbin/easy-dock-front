@@ -85,6 +85,9 @@ const FieldAttrEditor = () => {
       setRules(propertyRules);
     }
   }, [propertyRules]);
+  useEffect(() => {
+    console.log(rules, 'rules');
+  }, [rules]);
   return (
     <>
       <div className={styles.rules}>
@@ -92,7 +95,7 @@ const FieldAttrEditor = () => {
         <div className={styles.content}>
           {rules.map((item: PropertyRuleItem, index: number) => {
             const condition = item.formChangeRule!.fieldRule;
-            if (!condition) {
+            if (!condition || !condition.length) {
               return null;
             }
             return (

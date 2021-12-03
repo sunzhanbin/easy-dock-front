@@ -1,5 +1,6 @@
-import { ConfigItem } from '@type';
+import { ConfigItem, FormRuleItem } from '@type';
 import { message } from 'antd';
+import { current } from '@reduxjs/toolkit';
 
 export const validateFieldName = (fieldName: string): string => {
   if (!fieldName) {
@@ -131,4 +132,21 @@ export const validateHasChecked = (props: ConfigItem, config: ConfigItem) => {
       break;
   }
   return '';
+};
+
+// 表单属性关联的该控件规则也需要清空
+export const formatRules = (rules: FormRuleItem[], id: string) => {
+  rules?.forEach((rule) => {
+    if (!rule.formChangeRule) return;
+    const { formChangeRule } = rule;
+    const { fieldRule, showComponents, hideComponents } = formChangeRule;
+    rule.formChangeRule.fieldRule = fieldRule
+      .map((field) => field.filter((item) => item.fieldName !== id && item.value !== id))
+      .filter((item) => item.length);
+    if (showComponents || hideComponents) {
+      rule.formChangeRule.showComponents = showComponents?.filter((item) => !item?.includes(id));
+      rule.formChangeRule.hideComponents = hideComponents?.filter((item) => !item?.includes(id));
+    }
+  });
+  return rules;
 };
