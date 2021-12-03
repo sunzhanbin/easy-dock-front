@@ -25,10 +25,10 @@ export const getCalculateNum = (
     }
   });
   const filterList = Object.values(formListMap).filter((v) => v !== undefined && v !== null);
-  if (!filterList.length) return 0;
+  if (!filterList.length) return undefined;
   if (calcType === 'minus') {
     if (watch.find((item: string) => item.includes('Date'))) {
-      if (filterList.length < 2) return 0;
+      if (filterList.length < 2) return undefined;
       const rangeDateNum = Object.values(formListMap).reduceRight((p: any, n: any) => n - p);
       returnNum = (rangeDateNum / (1000 * 3600 * 24)).toFixed(0);
     } else {

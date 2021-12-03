@@ -8,6 +8,7 @@ import InjectRule from './components/inject-rule';
 import { message } from 'antd';
 import { useSubAppDetail } from '@app/app';
 import { useAppSelector } from '@app/hooks';
+import { getSerialInfo } from '@apis/form';
 import { initialRules } from '@utils/const';
 import { componentPropsSelector, errorSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 import { SERIAL_TYPE } from '@utils/const';
@@ -30,8 +31,8 @@ const SerialRules = (props: RulesProps) => {
   const [rules, setRules] = useState<RuleOption[]>([]); // 自定义规则
   const [changeRules, setChangeRules] = useState<RuleOption[]>([]); // 已有规则
   // 得从接口里面拿
-  const [resetRules, setResetRules] = useState<RuleOption[]>(value?.serialMata?.changeRules || []); // 取消时重置规则
-  const [resetRuleName, setResetRuleName] = useState<string>(value?.serialMata?.changeRuleName || '');
+  const [resetRules, setResetRules] = useState<RuleOption[]>([]); // 取消时重置规则
+  const [resetRuleName, setResetRuleName] = useState<string>('');
   const [ruleName, setRuleName] = useState<string>('');
   const [changeRuleName, setChangeRuleName] = useState<string>('');
   const [ruleStatus, setRuleStatus] = useState<number | undefined>(undefined);
@@ -62,7 +63,6 @@ const SerialRules = (props: RulesProps) => {
     setChangeRuleName(serialMata?.changeRuleName || '');
     setSerialId(serialId || '');
     setEditStatus(serialMata?.editStatus);
-    setRuleStatus(serialMata?.ruleStatus === 0 ? 0 : 1);
     setType(serialMata?.type || (serialId ? SERIAL_TYPE.INJECT_TYPE : SERIAL_TYPE.CUSTOM_TYPE));
   }, [fieldSerial]);
 
@@ -76,6 +76,22 @@ const SerialRules = (props: RulesProps) => {
       setErrorsCustom(true);
     }
   }, [errors, id]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        if (!serialId) return;
+        const ret = await getSerialInfo(serialId);
+        const { data } = ret;
+        setRuleStatus(data.status === 0 ? 0 : 1);
+        setResetRules(data.mata);
+        setResetRuleName(data.name);
+      } catch (e) {
+        console.log(e);
+      }
+    })();
+    // eslint-disable-next-line
+  }, [serialId]);
 
   // 自定义规则/引用规则
   const handleTypeChange = (type: string) => {
@@ -98,7 +114,6 @@ const SerialRules = (props: RulesProps) => {
           rules,
           changeRuleName: name,
           changeRules: mata,
-          ruleStatus: status,
           editStatus: false,
         },
       });
@@ -116,7 +131,6 @@ const SerialRules = (props: RulesProps) => {
           rules,
           changeRuleName,
           changeRules,
-          ruleStatus,
           editStatus: true,
         },
       });
@@ -139,7 +153,6 @@ const SerialRules = (props: RulesProps) => {
             rules: formRule,
             changeRuleName,
             changeRules,
-            ruleStatus,
             editStatus,
           },
         });
@@ -158,7 +171,6 @@ const SerialRules = (props: RulesProps) => {
             rules,
             changeRuleName: formName,
             changeRules: formRule,
-            ruleStatus,
             editStatus,
           },
         });
@@ -192,7 +204,6 @@ const SerialRules = (props: RulesProps) => {
           rules: initialRules,
           changeRuleName: name,
           changeRules: mata,
-          ruleStatus: status,
           editStatus: false,
         },
       });
@@ -212,7 +223,6 @@ const SerialRules = (props: RulesProps) => {
           rules,
           changeRules: resetRules,
           changeRuleName: resetRuleName,
-          ruleStatus,
           editStatus: false,
         },
       });
