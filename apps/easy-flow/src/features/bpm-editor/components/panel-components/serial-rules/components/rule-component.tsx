@@ -112,8 +112,8 @@ const RuleComponent = (props: RuleComponentProps) => {
 
   useEffect(() => {
     const isError = errors.find((item) => item.id === id);
-    if (isError && isError.content?.includes('请输入规则名称')) {
-      form.validateFields();
+    if (isError && isError.content?.includes('SerialError')) {
+      form.validateFields([['name']]);
     }
   }, [errors, id, form]);
 
