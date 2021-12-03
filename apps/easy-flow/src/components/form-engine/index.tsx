@@ -15,7 +15,7 @@ import PubSub from 'pubsub-js';
 import Container from './container';
 import { convertFormRules, validateRules } from './utils';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import { debounce } from 'lodash';
+import { debounce, omit } from 'lodash';
 import { getFilesType } from '@apis/form';
 
 type FieldsVisible = { [fieldId: string]: boolean };
@@ -269,10 +269,17 @@ const FormDetail = React.forwardRef(function FormDetail(
           Object.entries(formValues)
             .filter(([key, value]: [string, any]) => value !== undefined)
             .forEach(([key, value]) => {
-              onValuesChange({ [key]: value });
+              if (Array.isArray(value) && value.length > 0 && value[0]['__title__']) {
+                const subComponents = omit(value[0], ['__title__', 'key', 'content']);
+                Object.entries(subComponents).forEach(([key, value]: [string, any]) => {
+                  PubSub.publish(`${key}-change`, value);
+                });
+              } else {
+                onValuesChange({ [key]: value });
+              }
             });
         }
-      }, 10);
+      }, 88);
     })();
   }, [data, fieldsAuths, initialValue, form, componentTypes, nodeType, onValuesChange]);
 
