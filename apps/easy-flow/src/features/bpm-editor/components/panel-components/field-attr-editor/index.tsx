@@ -85,9 +85,6 @@ const FieldAttrEditor = () => {
       setRules(propertyRules);
     }
   }, [propertyRules]);
-  useEffect(() => {
-    console.log(rules, 'rules');
-  }, [rules]);
   return (
     <>
       <div className={styles.rules}>
