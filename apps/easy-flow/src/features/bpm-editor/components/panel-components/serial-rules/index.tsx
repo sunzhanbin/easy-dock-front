@@ -31,8 +31,8 @@ const SerialRules = (props: RulesProps) => {
   const [rules, setRules] = useState<RuleOption[]>([]); // 自定义规则
   const [changeRules, setChangeRules] = useState<RuleOption[]>([]); // 已有规则
   // 得从接口里面拿
-  const [resetRules, setResetRules] = useState<RuleOption[]>(value?.serialMata?.changeRules || []); // 取消时重置规则
-  const [resetRuleName, setResetRuleName] = useState<string>(value?.serialMata?.changeRuleName || '');
+  const [resetRules, setResetRules] = useState<RuleOption[]>([]); // 取消时重置规则
+  const [resetRuleName, setResetRuleName] = useState<string>('');
   const [ruleName, setRuleName] = useState<string>('');
   const [changeRuleName, setChangeRuleName] = useState<string>('');
   const [ruleStatus, setRuleStatus] = useState<number | undefined>(undefined);
@@ -84,6 +84,8 @@ const SerialRules = (props: RulesProps) => {
         const ret = await getSerialInfo(serialId);
         const { data } = ret;
         setRuleStatus(data.status === 0 ? 0 : 1);
+        setResetRules(data.mata);
+        setResetRuleName(data.name);
       } catch (e) {
         console.log(e);
       }
