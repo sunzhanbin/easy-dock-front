@@ -20,7 +20,7 @@ interface RulesProps {
 }
 
 const SerialRules = (props: RulesProps) => {
-  const { id, value, onChange } = props;
+  const { id, onChange } = props;
   const [serialId, setSerialId] = useState('');
   const customRef = useRef<any>(null);
   const injectRef = useRef<any>(null);
@@ -30,7 +30,6 @@ const SerialRules = (props: RulesProps) => {
   const [type, setType] = useState<string>(''); // 编号规则类型
   const [rules, setRules] = useState<RuleOption[]>([]); // 自定义规则
   const [changeRules, setChangeRules] = useState<RuleOption[]>([]); // 已有规则
-  // 得从接口里面拿
   const [resetRules, setResetRules] = useState<RuleOption[]>([]); // 取消时重置规则
   const [resetRuleName, setResetRuleName] = useState<string>('');
   const [ruleName, setRuleName] = useState<string>('');
@@ -90,7 +89,6 @@ const SerialRules = (props: RulesProps) => {
         console.log(e);
       }
     })();
-    // eslint-disable-next-line
   }, [serialId]);
 
   // 自定义规则/引用规则
