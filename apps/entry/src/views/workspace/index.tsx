@@ -1,5 +1,13 @@
+import WorkspaceRunning from "@containers/workspace-running";
+
+// const NavComponent = () => <>导航栏</>;
+
 const Workspace = () => {
-  return <div className="workspace">这里是运行端的工作区</div>;
+  return (
+    <div className="workspace">
+      <WorkspaceRunning />
+    </div>
+  );
 };
 
 export default Workspace;

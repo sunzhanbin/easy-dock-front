@@ -12,7 +12,7 @@ const Layout: React.FC = () => {
     <LayoutWrap>
       <Routes>
         <Route path="app-manager/:id" element={<AppManagerHeader />} />
-        <Route path="workspace/:workspaceId" element={null} />
+        <Route path="workspace/*" element={null} />
         <Route path="*" element={<HomeHeader />} />
       </Routes>
       <Content>

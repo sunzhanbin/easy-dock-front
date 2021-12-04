@@ -1,14 +1,14 @@
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { useAppSelector } from "@/store";
 import { NavMenuComponentProps } from "@utils/types";
 import { selectTheme, selectNavMode } from "@views/app-setup/basic-setup.slice";
 import { selectMenu, selectCurrentId } from "@views/app-setup/menu-setup.slice";
 import SingleNavComponent from "@containers/app-setup-preview/single-nav.component";
 import MultiNavComponent from "@containers/app-setup-preview/multi-nav.component";
+import { SingleNavAppInfo, MultiNavAppInfo } from "@components/app-info";
 import "@containers/app-setup-preview/index.style";
 
 const NavMenuComponent = ({
-  extra,
   navMode,
   selectedKey,
   dataSource,
@@ -20,7 +20,7 @@ const NavMenuComponent = ({
         <SingleNavComponent
           selectedKey={selectedKey}
           dataSource={dataSource}
-          extra={extra}
+          extra={<SingleNavAppInfo />}
         >
           {children}
         </SingleNavComponent>
@@ -29,7 +29,7 @@ const NavMenuComponent = ({
         <MultiNavComponent
           selectedKey={selectedKey}
           dataSource={dataSource}
-          extra={extra}
+          extra={<MultiNavAppInfo />}
         >
           {children}
         </MultiNavComponent>
@@ -43,11 +43,6 @@ const AppSetupPreview = () => {
   const navMode = useAppSelector(selectNavMode);
   const menu = useAppSelector(selectMenu);
   const selectedKey = useAppSelector(selectCurrentId);
-
-  const appInfo = useMemo(() => {
-    if (navMode === "single") return <div>single app Info</div>;
-    if (navMode === "multi") return <div>multi app info</div>;
-  }, [navMode]);
 
   useEffect(() => {
     console.log(
@@ -63,7 +58,6 @@ const AppSetupPreview = () => {
         selectedKey={selectedKey}
         dataSource={menu}
         navMode={navMode}
-        extra={appInfo}
       >
         这里是内容区
       </NavMenuComponent>

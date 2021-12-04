@@ -24,14 +24,9 @@ export interface SubAppInfo {
   };
 }
 
-export interface AppManagerState {
-  value: number;
+export interface AppManagerInitialState {
   projectId: number;
   currentWorkspaceId: number;
-  status: "idle" | "loading" | "failed";
-  currentWorkspace: workspaceShape;
-  workspaces: workspaceShape[];
-  subApps: SubAppInfo[];
 }
 
 export interface BasicSetupInitialState {
@@ -45,6 +40,12 @@ export interface MenuSetupInitialState {
   currentId: string;
   menu: Menu[];
   menuForm: MenuSetupForm;
+}
+
+export interface WorkspaceInitialState {
+  name: string;
+  navMode: "single" | "multi";
+  menu: Menu[];
 }
 
 export interface Menu {
@@ -70,13 +71,26 @@ export interface MenuSetupForm {
   };
 }
 
-export interface MenuComponentProps {
-  extra: React.ReactNode;
+export interface baseMenuProps {
   selectedKey: string;
   dataSource: Menu[];
   children: React.ReactNode;
 }
 
-export interface NavMenuComponentProps extends MenuComponentProps {
+export interface MenuComponentProps extends baseMenuProps {
+  extra: React.ReactNode;
+}
+
+export interface NavMenuComponentProps extends baseMenuProps {
   navMode: "single" | "multi";
+}
+
+export interface WorkspaceMenuProps {
+  navMode: "single" | "multi";
+  dataSource: Menu[];
+}
+
+export interface WorkspaceBaseMenuProps {
+  extra: React.ReactNode;
+  dataSource: Menu[];
 }

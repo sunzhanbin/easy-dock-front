@@ -39,12 +39,10 @@ const App: React.FC = () => {
             path="template-mall"
             element={<SuspenseWrap render={<TemplateMall />} />}
           />
-          <Route path="workspace">
-            <Route
-              path=":workspaceId"
-              element={<SuspenseWrap render={<Workspace />} />}
-            />
-          </Route>
+          <Route
+            path="workspace/*"
+            element={<SuspenseWrap render={<Workspace />} />}
+          />
           <Route path="*" element={<SuspenseWrap render={<NoMatch />} />} />
         </Route>
       </Routes>

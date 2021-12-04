@@ -1,8 +1,9 @@
 import { createSlice, PayloadAction, current } from "@reduxjs/toolkit";
 import { RootState } from "@/store";
 import { appManager } from "@/http";
+import { AppManagerInitialState } from "@utils/types";
 
-const initialState = {
+const initialState: AppManagerInitialState = {
   projectId: 13395898537664, // 当前所属项目ID；
   currentWorkspaceId: 0, // 当前工作ID；
 };

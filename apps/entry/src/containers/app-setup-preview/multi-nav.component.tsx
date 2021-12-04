@@ -82,7 +82,6 @@ const MultiNavComponent = ({
           </Menu>
         </div>
         <div className="content">{children}</div>
-        <div></div>
       </div>
     </div>
   );
