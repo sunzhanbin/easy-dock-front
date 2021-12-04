@@ -43,7 +43,7 @@ const Mapping = ({ name, parentName, subAppId, value, onChange }: MappingProps) 
         const components = res.data.filter((v) => !['Tabs', 'FlowData', 'SerialNum'].includes(v.type));
         const requiredList = components.filter((v) => v.auth === AuthType.Required);
         const requiredConfig = requiredList.map((v) => ({ target: v.field, required: true }));
-        if (requiredConfig.length) {
+        if (requiredConfig.length && value?.length === 0) {
           onChange && onChange(requiredConfig);
         }
         setTargetComponents(components);
