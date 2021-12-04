@@ -1,8 +1,10 @@
 import React, { useCallback, useMemo, useState } from "react";
 import { Tabs, Input } from "antd";
 import { useAppSelector } from "@/store";
-import { useFetchsubAppListQuery } from "@http/app-manager.hooks";
+import { useFetchsubAppListQuery } from "@/http";
 import { selectCurrentWorkspaceId } from "@views/app-manager/index.slice";
+
+import "@containers/app-manager-details/sub-list.style";
 
 const { TabPane } = Tabs;
 
@@ -29,7 +31,7 @@ const SubListComponent: React.FC = () => {
   }, [handleTabSearch]);
 
   return (
-    <>
+    <div className="sub-list-component">
       <Tabs
         activeKey={activeKey}
         onChange={handleTabsChange}
@@ -59,7 +61,7 @@ const SubListComponent: React.FC = () => {
           Content of Tab Pane 3
         </TabPane>
       </Tabs>
-    </>
+    </div>
   );
 };
 

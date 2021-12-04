@@ -13,7 +13,7 @@ const SingleNavComponent = ({
   selectedKey,
 }: MenuComponentProps) => {
   const handleMenuClick = useCallback(({ item, key, keyPath }) => {
-    console.log("%c^_^ \n\n", "color: #C80815, font-weight: bolder", {
+    console.log("%c^_^ \n\n", "color: #C80815; font-weight: bolder", {
       item,
       key,
       keyPath,
@@ -21,7 +21,7 @@ const SingleNavComponent = ({
   }, []);
 
   const handleMenuSelect = useCallback(({ item, key, keyPath }) => {
-    console.log("%c^_^ \n\n", "color: #C80815, font-weight: bolder", {
+    console.log("%c^_^ \n\n", "color: #C80815; font-weight: bolder", {
       item,
       key,
       keyPath,

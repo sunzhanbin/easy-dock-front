@@ -2,13 +2,15 @@ import React from "react";
 import AppInfoComponent from "@containers/app-manager-details/app-info.component";
 import SubListComponent from "@containers/app-manager-details/sub-list.component";
 
+import "@containers/app-manager-details/index.style";
+
 const AppManagerDetails: React.FC = () => {
   return (
-    <React.Fragment>
+    <div className="app-manager-details">
       <AppInfoComponent />
       <br />
       <SubListComponent />
-    </React.Fragment>
+    </div>
   );
 };
 

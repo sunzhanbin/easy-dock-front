@@ -1,6 +1,6 @@
 import { useCallback, useRef } from "react";
 import { Layout, Menu, Button } from "antd";
-import { useFetchWorkspaceListQuery } from "@http/app-manager.hooks";
+import { useFetchWorkspaceListQuery } from "@/http";
 import { useAppDispatch, useAppSelector } from "@/store";
 import AddWorkspaceModal from "@components/add-workspace-modal";
 import {
@@ -8,6 +8,7 @@ import {
   setCurrentWorkspaceId,
   selectProjectId,
 } from "@views/app-manager/index.slice";
+import "@containers/app-manager-sider/index.style";
 
 const { Sider } = Layout;
 

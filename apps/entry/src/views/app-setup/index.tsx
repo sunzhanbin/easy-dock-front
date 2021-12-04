@@ -10,7 +10,7 @@ const AppSetup: React.FC = () => {
   useEffect(() => {
     console.log(
       "%c^_^ \n\n",
-      "color: #C80815, font-weight: bolder",
+      "color: #C80815; font-weight: bolder",
       JSON.stringify({ workspaceId }, null, 2)
     );
   }, [workspaceId]);

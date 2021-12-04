@@ -28,6 +28,10 @@ const MenuSetupFormComponent = React.forwardRef<{
   }));
 
   useEffect(() => {
+    console.log("%c^_^ \n\n", "color: #C80815; font-weight: bolder", {
+      menuForm,
+    });
+
     form.setFieldsValue(menuForm);
   }, [menuForm]);
 

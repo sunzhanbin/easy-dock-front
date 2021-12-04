@@ -13,10 +13,12 @@ import {
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { workspaceShape } from "@utils/types";
 
+import "@containers/app-manager-details/app-info.style";
+
 const AppInfoComponent: React.FC = () => {
   const projectId = useAppSelector(selectProjectId);
   const workspaceId = useAppSelector(selectCurrentWorkspaceId);
-
+  const [modifyAppStatus] = useModifyAppStatusMutation();
   const { workspace } = useFetchWorkspaceListQuery(projectId, {
     selectFromResult: ({ data }) => ({
       workspace: data?.find(
@@ -24,8 +26,6 @@ const AppInfoComponent: React.FC = () => {
       ),
     }),
   });
-
-  const [modifyAppStatus] = useModifyAppStatusMutation();
 
   const handleModifyAppStatus = useCallback(() => {
     modifyAppStatus({ id: workspaceId, status: 1 });
@@ -36,7 +36,7 @@ const AppInfoComponent: React.FC = () => {
   }, []);
 
   return (
-    <React.Fragment>
+    <div className="app-info-component">
       这里是应用详情:: {workspace.name}
       <br />
       <Link to={`../${workspaceId}`}>编辑应用</Link>
@@ -46,7 +46,7 @@ const AppInfoComponent: React.FC = () => {
       <CopyToClipboard text={"www.exmple.com"}>
         <Button>复制链接</Button>
       </CopyToClipboard>
-    </React.Fragment>
+    </div>
   );
 };
 

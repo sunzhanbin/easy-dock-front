@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction, current } from "@reduxjs/toolkit";
 import { RootState } from "@/store";
-import { appManager } from "@http/app-manager.hooks";
+import { appManager } from "@/http";
 
 const initialState = {
   projectId: 13395898537664, // 当前所属项目ID；

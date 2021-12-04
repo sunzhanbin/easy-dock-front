@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction, current } from "@reduxjs/toolkit";
-import { appManager } from "@http/app-manager.hooks";
+import { appManager } from "@/http";
 import { RootState } from "@/store";
 
 const initialState = {

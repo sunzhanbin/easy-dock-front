@@ -7,7 +7,7 @@ const HomeHeader: React.FC = () => {
     textDecoration: "underline",
   };
   return (
-    <React.Fragment>
+    <div className="home-header">
       <nav className="menu">
         <ul>
           <li>
@@ -29,7 +29,7 @@ const HomeHeader: React.FC = () => {
           </li>
         </ul>
       </nav>
-    </React.Fragment>
+    </div>
   );
 };
 

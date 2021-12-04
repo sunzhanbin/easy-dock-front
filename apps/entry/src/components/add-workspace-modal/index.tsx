@@ -5,7 +5,7 @@ import React, {
   useImperativeHandle,
 } from "react";
 import { useAppSelector } from "@/store";
-import { useAddWorkspaceMutation } from "@http/app-manager.hooks";
+import { useAddWorkspaceMutation } from "@/http";
 import { selectProjectId } from "@views/app-manager/index.slice";
 import { Modal, Input } from "antd";
 

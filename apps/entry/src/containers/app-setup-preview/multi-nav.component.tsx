@@ -26,13 +26,13 @@ const MultiNavComponent = ({
   useEffect(() => {
     console.log(
       "%c^_^ \n\n",
-      "color: #C80815, font-weight: bolder",
+      "color: #C80815; font-weight: bolder",
       JSON.stringify({ dataSource }, null, 2)
     );
   }, [dataSource]);
 
   const handleMainManu = useCallback(({ item, key, keyPath }) => {
-    console.log("%c^_^ \n\n", "color: #C80815, font-weight: bolder", {
+    console.log("%c^_^ \n\n", "color: #C80815; font-weight: bolder", {
       item,
       key,
       keyPath,

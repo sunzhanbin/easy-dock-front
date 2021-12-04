@@ -11,6 +11,7 @@ type MenuSetupFormComponentHandle = React.ElementRef<
 const MenuSetupComponent = () => {
   const formRef = useRef<MenuSetupFormComponentHandle>(null);
 
+  // 切换菜单前执行执行钩子；
   const handleBeforeIdChange = useCallback(() => {
     return new Promise((resolve, reject) => {
       /* 以下仅作为参考示例 */
@@ -27,7 +28,7 @@ const MenuSetupComponent = () => {
   }, [formRef.current]);
 
   useEffect(() => {
-    console.log("%c^_^ \n\n", "color: #C80815, font-weight: bolder", {
+    console.log("%c^_^ \n\n", "color: #C80815; font-weight: bolder", {
       formRef,
     });
   }, [formRef]);

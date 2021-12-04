@@ -1,4 +1,4 @@
-import { appManager } from "@http/app-manager.hooks";
+import { appManager } from "@/http";
 import { RootState } from "@/store";
 import { createSlice, PayloadAction, current } from "@reduxjs/toolkit";
 import { MenuSetupInitialState, MenuSetupForm } from "@utils/types";
@@ -30,8 +30,10 @@ export const menuSetupSlice = createSlice({
   reducers: {
     setCurrentMenu: (state, action: PayloadAction<string>) => {
       const currentItem: any = findItem(action.payload, state.menu);
-      state.menuForm = JSON.parse(JSON.stringify(currentItem))?.form || {};
-      state.currentId = action.payload;
+      {
+        state.currentId = action.payload;
+        state.menuForm = JSON.parse(JSON.stringify(currentItem))?.form || {};
+      }
     },
     setMenu: (state, action: PayloadAction<any[]>) => {
       state.menu = action.payload;
@@ -48,8 +50,11 @@ export const menuSetupSlice = createSlice({
       action: PayloadAction<{ currentId: string | null; childId: string }>
     ) => {
       const { currentId, childId } = action.payload;
-      state.currentId = childId;
-      state.menuForm = defaultForm;
+      {
+        state.currentId = childId;
+        // 为了避免初始值为同一个默认值引用，每次新增都需要保证是新的对象；
+        state.menuForm = JSON.parse(JSON.stringify(defaultForm));
+      }
       if (!currentId) {
         return void state.menu.push({
           id: childId,

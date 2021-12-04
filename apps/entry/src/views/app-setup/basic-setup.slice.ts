@@ -1,4 +1,4 @@
-import { appManager } from "@http/app-manager.hooks";
+import { appManager } from "@/http";
 import { RootState } from "@/store";
 import { createSlice, PayloadAction, current } from "@reduxjs/toolkit";
 import { BasicSetupInitialState } from "@utils/types";

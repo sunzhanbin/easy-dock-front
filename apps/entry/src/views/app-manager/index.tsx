@@ -10,14 +10,16 @@ const AppManager = () => {
   const workspaceId = useAppSelector(selectCurrentWorkspaceId);
 
   return (
-    <Layout>
-      <AppManagerSider />
-      <Layout className="site-layout">
-        <Content className="site-layout-background">
-          {workspaceId && <AppManagerDetails />}
-        </Content>
+    <div className="app-manager">
+      <Layout>
+        <AppManagerSider />
+        <Layout className="site-layout">
+          <Content className="site-layout-background">
+            {workspaceId && <AppManagerDetails />}
+          </Content>
+        </Layout>
       </Layout>
-    </Layout>
+    </div>
   );
 };
 
