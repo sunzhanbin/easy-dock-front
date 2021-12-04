@@ -305,7 +305,7 @@ const FormDetail = React.forwardRef(function FormDetail(
               const isRequired = fieldsAuths && fieldsAuths[fieldName] === AuthType.Required;
               const compProps = { ...props };
               const Component = compSources[config?.type as AllComponentType['type']];
-              if (!fieldsVisible[fieldName || fieldId] || !Component) return null;
+              if (!fieldsVisible[config.fieldName || fieldId] || !Component) return null;
               delete compProps['defaultValue'];
               delete compProps['apiConfig'];
               const rules: Rule[] = validateRules(isRequired, label, type, props);
