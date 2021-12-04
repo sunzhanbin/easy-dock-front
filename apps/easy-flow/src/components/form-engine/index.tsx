@@ -306,6 +306,9 @@ const FormDetail = React.forwardRef(function FormDetail(
               const compProps = { ...props };
               const Component = compSources[config?.type as AllComponentType['type']];
               if (!fieldsVisible[config.fieldName || fieldId] || !Component) return null;
+              if (type === 'DescText' && compProps.value) {
+                compProps['text_value'] = compProps.value;
+              }
               delete compProps['defaultValue'];
               delete compProps['apiConfig'];
               const rules: Rule[] = validateRules(isRequired, label, type, props);
