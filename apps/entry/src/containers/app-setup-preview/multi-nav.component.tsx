@@ -62,7 +62,6 @@ const MultiNavComponent = ({
             mode="inline"
             selectedKeys={[selectedKey]}
             openKeys={keyPath(selectedKey, submenu)}
-            style={{ height: "100%", borderRight: 0 }}
           >
             {((dataSource) => {
               const recurse = (menus: IMenu[]) => {

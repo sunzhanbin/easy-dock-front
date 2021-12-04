@@ -9,6 +9,7 @@ const AppManager = React.lazy(() => import("@views/app-manager"));
 const AppSetup = React.lazy(() => import("@views/app-setup"));
 const AssetCentre = React.lazy(() => import("@views/asset-centre"));
 const TemplateMall = React.lazy(() => import("@views/template-mall"));
+const Workspace = React.lazy(() => import("@views/workspace"));
 const NoMatch = React.lazy(() => import("@views/no-match"));
 
 const SuspenseWrap = ({ render }: { render: React.ReactNode }) => (
@@ -30,7 +31,7 @@ const App: React.FC = () => {
           <Route path="app-manager">
             <Route index element={<SuspenseWrap render={<AppManager />} />} />
             <Route
-              path=":workspace"
+              path=":workspaceId"
               element={<SuspenseWrap render={<AppSetup />} />}
             />
           </Route>
@@ -38,6 +39,12 @@ const App: React.FC = () => {
             path="template-mall"
             element={<SuspenseWrap render={<TemplateMall />} />}
           />
+          <Route path="workspace">
+            <Route
+              path=":workspaceId"
+              element={<SuspenseWrap render={<Workspace />} />}
+            />
+          </Route>
           <Route path="*" element={<SuspenseWrap render={<NoMatch />} />} />
         </Route>
       </Routes>

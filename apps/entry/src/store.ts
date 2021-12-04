@@ -4,6 +4,7 @@ import appsOrchestrationApi from "@utils/fetch";
 import appManagerSlice from "@views/app-manager/index.slice";
 import basicSetupSlice from "@views/app-setup/basic-setup.slice";
 import menuSetupSlice from "@views/app-setup/menu-setup.slice";
+import workspaceSlice from "@views/workspace/index.slice";
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
     appManager: appManagerSlice,
     basicSetup: basicSetupSlice,
     menuSetup: menuSetupSlice,
+    workspace: workspaceSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

@@ -5,15 +5,15 @@ import AppSetupPreview from "@containers/app-setup-preview";
 import "@views/app-setup/index.style";
 
 const AppSetup: React.FC = () => {
-  const { workspace } = useParams();
+  const { workspaceId } = useParams();
 
   useEffect(() => {
     console.log(
       "%c^_^ \n\n",
       "color: #C80815, font-weight: bolder",
-      JSON.stringify({ workspace }, null, 2)
+      JSON.stringify({ workspaceId }, null, 2)
     );
-  }, [workspace]);
+  }, [workspaceId]);
 
   return (
     <div className="app-setup">

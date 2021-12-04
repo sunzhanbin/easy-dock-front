@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import React, { useCallback, useImperativeHandle } from "react";
 import { Form, Input, Button, Select, Radio, Upload } from "antd";
 import { useAppDispatch } from "@/store";
 import {
@@ -24,7 +24,9 @@ const normFile = (e: any) => {
   return e && e.fileList;
 };
 
-const BasicSetupFormComponent = () => {
+const BasicSetupFormComponent = React.forwardRef<{
+  validateFields: () => Promise<any>;
+}>(function basicSetupForm(_, ref) {
   const [form] = Form.useForm();
   const dispatch = useAppDispatch();
 
@@ -61,6 +63,10 @@ const BasicSetupFormComponent = () => {
   const handleLogoUploadChange = useCallback((props: any) => {
     console.log("handleLogoUploadChange", props);
   }, []);
+
+  useImperativeHandle(ref, () => ({
+    validateFields: () => form.validateFields(),
+  }));
 
   return (
     <div className="basic-setup-form-component">
@@ -135,6 +141,6 @@ const BasicSetupFormComponent = () => {
       </Form>
     </div>
   );
-};
+});
 
 export default BasicSetupFormComponent;

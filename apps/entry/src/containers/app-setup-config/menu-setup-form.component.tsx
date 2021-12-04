@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useImperativeHandle } from "react";
 import { Form, Input, Select, Checkbox, Button, Radio } from "antd";
 import { selectMenuForm, setMenuForm } from "@views/app-setup/menu-setup.slice";
 import { useAppDispatch, useAppSelector } from "@/store";
@@ -12,7 +12,9 @@ const tailLayout = {
   wrapperCol: { offset: 8, span: 16 },
 };
 
-const MenuSetupFormComponent = () => {
+const MenuSetupFormComponent = React.forwardRef<{
+  validateFields: () => Promise<any>;
+}>(function menuSetupForm(_, ref) {
   const dispatch = useAppDispatch();
   const menuForm = useAppSelector(selectMenuForm);
   const [form] = Form.useForm();
@@ -20,6 +22,10 @@ const MenuSetupFormComponent = () => {
   const handleFormFinish = useCallback((values: MenuSetupForm) => {
     dispatch(setMenuForm(values));
   }, []);
+
+  useImperativeHandle(ref, () => ({
+    validateFields: () => form.validateFields(),
+  }));
 
   useEffect(() => {
     form.setFieldsValue(menuForm);
@@ -103,6 +109,6 @@ const MenuSetupFormComponent = () => {
       </div>
     </div>
   );
-};
+});
 
 export default MenuSetupFormComponent;

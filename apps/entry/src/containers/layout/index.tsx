@@ -5,17 +5,16 @@ import AppManagerHeader from "@containers/layout/app-manager-header.component";
 
 import "@containers/layout/index.style";
 
-const { Header, Content } = LayoutWrap;
+const { Content } = LayoutWrap;
 
 const Layout: React.FC = () => {
   return (
     <LayoutWrap>
-      <Header>
-        <Routes>
-          <Route path="app-manager/:id" element={<AppManagerHeader />} />
-          <Route path="*" element={<HomeHeader />} />
-        </Routes>
-      </Header>
+      <Routes>
+        <Route path="app-manager/:id" element={<AppManagerHeader />} />
+        <Route path="workspace/:workspaceId" element={null} />
+        <Route path="*" element={<HomeHeader />} />
+      </Routes>
       <Content>
         <Outlet />
       </Content>

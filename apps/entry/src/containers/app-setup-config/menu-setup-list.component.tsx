@@ -82,11 +82,17 @@ const MenuComponent = ({ menu }: { menu: Menu }) => {
 };
 
 // 菜单容器组件；
-const MenuSetupListComponent = () => {
+const MenuSetupListComponent = ({
+  onBeforeIdChange,
+}: {
+  onBeforeIdChange: () => void;
+}) => {
   const dispatch = useAppDispatch();
   const menu = useAppSelector(selectMenu);
 
-  const handleAddMenu = useCallback(() => {
+  const handleAddMenu = useCallback(async () => {
+    await onBeforeIdChange();
+
     const childId = uuid();
     dispatch(add({ currentId: null, childId }));
   }, []);
