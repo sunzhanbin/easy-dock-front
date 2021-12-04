@@ -18,13 +18,13 @@ const DateComponent = (props: DatePickerProps & { onChange: (value?: number) => 
       },
     };
     let formatStr: string = '';
-    if (format === 'YYYY-MM-DD HH:mm:ss') {
+    if (format === 'yyyy-MM-DD HH:mm:ss') {
       prop.showTime = true;
-      formatStr = 'YYYY-MM-DD HH:mm:ss';
-    } else if (format === 'YYYY-MM-DD') {
-      formatStr = 'YYYY-MM-DD';
+      formatStr = 'yyyy-MM-DD HH:mm:ss';
+    } else if (format === 'yyyy-MM-DD') {
+      formatStr = 'yyyy-MM-DD';
     } else {
-      formatStr = 'YYYY-MM-DD';
+      formatStr = 'yyyy-MM-DD';
     }
     prop.format = formatStr;
     if (defaultValue) {

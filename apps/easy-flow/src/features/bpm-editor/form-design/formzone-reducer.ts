@@ -1,4 +1,4 @@
-import { createSelector, PayloadAction } from '@reduxjs/toolkit';
+import { createSelector, PayloadAction, current } from '@reduxjs/toolkit';
 import { uniqueId } from 'lodash';
 import {
   ErrorItem,
@@ -12,6 +12,7 @@ import {
   TConfigMap,
 } from '@type';
 import { RootState } from '@/app/store';
+import { formatRules } from './validate';
 
 function locateById(target: string, layout: Array<string[]>): [number, number] {
   let res: [number, number] = [-1, -1];
@@ -79,6 +80,9 @@ const reducers = {
     if (id === state.selectedField) {
       state.selectedField = null;
     }
+    // 表单属性关联的该控件规则也需要清空
+    formatRules(state.formRules, id);
+    formatRules(state.propertyRules, id);
     state.isDirty = true;
     return state;
   },

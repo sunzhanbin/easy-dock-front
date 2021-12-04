@@ -80,7 +80,6 @@
   margin-bottom: 12px;
   border-radius: 3px;
   background-color: rgba(24, 39, 67, 0.04);
-  cursor: pointer;
 
   .name {
     flex: 1;
@@ -109,12 +108,20 @@
       text-align: left;
       font-size: 14px;
       font-weight: 400;
-      padding-left: 12px;
+      //padding-left: 12px;
       color: rgba(24, 31, 67, 0.95);
       cursor: pointer;
 
       .labelStr {
         display: inline-block;
+        padding: 0 14px 0 10px;
+        box-sizing: border-box;
+        border: 1px solid transparent;
+        &:hover {
+          border-radius: 3px;
+          border: 1px solid rgba(76, 92, 219, 0.8);
+          box-shadow: 0 0 0 3px rgba(76, 92, 219, 0.12);
+        }
       }
 
       &.labelDisable {
@@ -122,6 +129,10 @@
         background: linear-gradient(-45deg, rgba(24, 39, 67, 0.04) 0, rgba(24, 39, 67, 0.04) 5%, transparent 5%, transparent 50%, rgba(24, 39, 67, 0.04) 50%, rgba(24, 39, 67, 0.04) 55%, transparent 55%, transparent);
         background-size: 10px 10px;
         cursor: not-allowed;
+        &:hover {
+          border: 0 none;
+          box-shadow: none;
+        }
       }
 
       :global {
@@ -132,6 +143,7 @@
         .ant-select-selector {
           padding: 0;
         }
+        
       }
       
     }

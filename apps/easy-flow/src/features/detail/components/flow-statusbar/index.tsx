@@ -139,7 +139,7 @@ function StatusBar(props: StatusBarProps) {
         <Cell icon="dangqianchuliren" title={flowIns.applyUser.name} desc="申请人" />
         <Cell
           icon="xuanzeshijian"
-          title={moment(flowIns.applyTime).format('YYYY-MM-DD HH:mm:ss')}
+          title={moment(flowIns.applyTime).format('yyyy-MM-DD HH:mm:ss')}
           desc="申请时间"
           getContainer={getContainer}
         />

@@ -13,7 +13,7 @@ export const saveSerialRules = (params: any) => {
   return builderAxios.post('id_rule/save', params);
 };
 
-export const getSerialId = (id: string) => {
+export const getSerialInfo = (id: string) => {
   return builderAxios.get(`id_rule/${id}`);
 };
 

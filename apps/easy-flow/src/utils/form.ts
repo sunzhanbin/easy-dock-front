@@ -40,7 +40,7 @@ export function formatRuleValue(
   }
   // 日期类型
   if (fieldType === 'Date') {
-    const format = (field as DateField)?.format || 'YYYY-MM-DD';
+    const format = (field as DateField)?.format || 'yyyy-MM-DD';
     if (symbol === 'range') {
       const [start, end] = (value as [number, number]) || [0, 0];
       const startTime = start ? moment(start).format(format) : '';
@@ -237,8 +237,8 @@ function getDynamicTimeRange(dynamic: string): [number, number] {
       endTime = moment().endOf('day').format('x');
       break;
     case 'yesterday':
-      startDay = moment().subtract(1, 'day').format('YYYY-MM-DD');
-      endDay = moment().subtract(1, 'day').format('YYYY-MM-DD');
+      startDay = moment().subtract(1, 'day').format('yyyy-MM-DD');
+      endDay = moment().subtract(1, 'day').format('yyyy-MM-DD');
       startTime = moment(startDay).startOf('day').format('x');
       endTime = moment(endDay).endOf('day').format('x');
       break;
@@ -247,7 +247,7 @@ function getDynamicTimeRange(dynamic: string): [number, number] {
       endTime = moment().endOf('week').format('x');
       break;
     case 'lastWeek':
-      const lastWeekDay = moment().subtract(1, 'week').format('YYYY-MM-DD');
+      const lastWeekDay = moment().subtract(1, 'week').format('yyyy-MM-DD');
       startTime = moment(lastWeekDay).startOf('day').format('x');
       endTime = moment(lastWeekDay).endOf('day').format('x');
       break;
@@ -256,7 +256,7 @@ function getDynamicTimeRange(dynamic: string): [number, number] {
       endTime = moment().endOf('month').format('x');
       break;
     case 'lastMonth':
-      const lastMonth = moment().subtract(1, 'month').format('YYYY-MM-DD');
+      const lastMonth = moment().subtract(1, 'month').format('yyyy-MM-DD');
       startTime = moment(lastMonth).startOf('day').format('x');
       endTime = moment(lastMonth).endOf('day').format('x');
       break;
@@ -265,25 +265,25 @@ function getDynamicTimeRange(dynamic: string): [number, number] {
       endTime = moment().endOf('year').format('x');
       break;
     case 'lastYear':
-      const lastYear = moment().subtract(1, 'year').format('YYYY-MM-DD');
+      const lastYear = moment().subtract(1, 'year').format('yyyy-MM-DD');
       startTime = moment(lastYear).startOf('day').format('x');
       endTime = moment(lastYear).endOf('day').format('x');
       break;
     case 'last7days':
-      startDay = moment().subtract(6, 'day').format('YYYY-MM-DD');
-      endDay = moment().subtract(0, 'day').format('YYYY-MM-DD');
+      startDay = moment().subtract(6, 'day').format('yyyy-MM-DD');
+      endDay = moment().subtract(0, 'day').format('yyyy-MM-DD');
       startTime = moment(startDay).startOf('day').format('x');
       endTime = moment(endDay).endOf('day').format('x');
       break;
     case 'last30days':
-      startDay = moment().subtract(29, 'day').format('YYYY-MM-DD');
-      endDay = moment().subtract(0, 'day').format('YYYY-MM-DD');
+      startDay = moment().subtract(29, 'day').format('yyyy-MM-DD');
+      endDay = moment().subtract(0, 'day').format('yyyy-MM-DD');
       startTime = moment(startDay).startOf('day').format('x');
       endTime = moment(endDay).endOf('day').format('x');
       break;
     case 'last90days':
-      startDay = moment().subtract(89, 'day').format('YYYY-MM-DD');
-      endDay = moment().subtract(0, 'day').format('YYYY-MM-DD');
+      startDay = moment().subtract(89, 'day').format('yyyy-MM-DD');
+      endDay = moment().subtract(0, 'day').format('yyyy-MM-DD');
       startTime = moment(startDay).startOf('day').format('x');
       endTime = moment(endDay).endOf('day').format('x');
       break;

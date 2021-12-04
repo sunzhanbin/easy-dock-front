@@ -321,7 +321,7 @@ const FormList = ({
         );
       }
       const format = component && component.format;
-      const showTime = format === 'YYYY-MM-DD HH:mm:ss';
+      const showTime = format === 'yyyy-MM-DD HH:mm:ss';
       if (symbol === 'range') {
         return (
           <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: '请选择!' }]}>

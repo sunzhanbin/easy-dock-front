@@ -92,7 +92,7 @@ const FieldAttrEditor = () => {
         <div className={styles.content}>
           {rules.map((item: PropertyRuleItem, index: number) => {
             const condition = item.formChangeRule!.fieldRule;
-            if (!condition) {
+            if (!condition || !condition.length) {
               return null;
             }
             return (
