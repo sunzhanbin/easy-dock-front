@@ -15,6 +15,7 @@ export default createContext<FormConfigContext | undefined>(undefined);
 interface IContainerContext {
   rules: formRulesItem[];
   children?: React.ReactNode;
+  nodeType: string;
   fieldName: string;
   form: FormInstance<FormValue>;
   type: string;

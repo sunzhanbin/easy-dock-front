@@ -13,6 +13,7 @@ import { analysisFormChangeRule } from '@/utils';
 import { formRulesItem, formRulesReturn, validateRules } from '@/components/form-engine/utils';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { getFilesTypeList } from '@/components/form-engine';
+import { omit } from 'lodash';
 
 interface FormListProps {
   fields: CompConfig[];
@@ -89,7 +90,7 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId }: Form
   }, [fields, setVisibleMap]);
   useEffect(() => {
     if (context && context?.rules) {
-      const { rules, form } = context;
+      const { rules, form, nodeType } = context;
       Object.keys(rules).forEach((key) => {
         const ruleList = ((rules as unknown) as formRulesReturn)[key];
         const visibleRules = ruleList?.filter((item) => item?.subtype === EventType.Visible);
@@ -103,6 +104,13 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId }: Form
           });
         });
       });
+      if (nodeType !== 'start') {
+        const fieldValue = form.getFieldValue([parentId, id]);
+        const subComponents = omit(fieldValue, ['__title__', 'key', 'content']);
+        Object.entries(subComponents).forEach(([key, value]: [string, any]) => {
+          PubSub.publish(`${key}-change`, value);
+        });
+      }
     }
   }, [context, setFieldVisible, watchFn]);
   return (
