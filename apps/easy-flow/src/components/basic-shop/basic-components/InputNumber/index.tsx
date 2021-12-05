@@ -1,31 +1,29 @@
-import { memo, useEffect, useState } from 'react';
+import { memo, useMemo } from 'react';
 import BaseInputNumber from './base-input-number';
 import { InputNumberProps } from 'antd/lib/input-number';
 import EventHoc from '@/components/form-engine/eventHoc';
 import { useContainerContext } from '@/components/form-engine/context';
 import { getCalculateNum } from './utils';
 
-const InputNumber = (props: InputNumberProps & { onChange: (v: any) => void } & { [key: string]: any }) => {
+const InputNumberContainer = (props: InputNumberProps & { [key: string]: any }) => {
   const { form, rules, refresh } = useContainerContext();
-  const [value, setValue] = useState<number | undefined>(undefined);
-  useEffect(() => {
-    if (props.value === undefined || props.value === null) return;
-    setValue(props.value as number);
-  }, [props]);
-  useEffect(() => {
-    if (!form || !rules || refresh === undefined) return;
-    const formValue = form.getFieldsValue();
-    const inputValue = getCalculateNum(rules, formValue, props.decimal);
-    setValue(inputValue);
-    const { onChange } = props;
-    onChange && onChange(inputValue);
+  const { onChange } = props;
+  const propList = useMemo(() => {
+    const prop = { ...props };
+    if (form && rules && refresh !== undefined) {
+      const formValue = form.getFieldsValue();
+      const numberValue = getCalculateNum(rules, formValue, props.decimal);
+      prop.value = numberValue;
+      onChange && onChange(numberValue!);
+    }
+    return prop;
   }, [form, props, refresh, rules]);
 
   return (
     <EventHoc>
-      <BaseInputNumber {...props} value={value} />
+      <BaseInputNumber {...propList} />
     </EventHoc>
   );
 };
 
-export default memo(InputNumber);
+export default memo(InputNumberContainer);

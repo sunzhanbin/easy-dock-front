@@ -1,5 +1,5 @@
-import { memo, useState, useRef, useEffect } from 'react';
-import { Tabs as TabList, Modal, Form, Input, FormInstance } from 'antd';
+import { memo, useState, useRef, useEffect, useMemo } from 'react';
+import { Form, Input, FormInstance, Tooltip, Popconfirm } from 'antd';
 import classNames from 'classnames';
 import { Icon } from '@common/components';
 import useMemoCallback from '@common/hooks/use-memo-callback';
@@ -9,13 +9,6 @@ import FormList from './form-list';
 import { FieldAuthsMap } from '@/type/flow';
 import { omit } from 'lodash';
 import PubSub from 'pubsub-js';
-
-const { TabPane } = TabList;
-type PaneType = {
-  __title__: string; //为了防止用户输入的数据库字段名为title与这个重复，故使用__title__
-  content: (key: string) => JSX.Element;
-  key: string;
-};
 
 interface TabProps {
   fieldName: string;
@@ -29,137 +22,173 @@ interface TabProps {
   onChange?: (value: this['value']) => void;
 }
 
-const Tabs = ({
-  components = [],
-  fieldName,
-  auth,
-  projectId,
-  disabled,
-  formInstance,
-  value,
-  readonly,
-  onChange,
-}: TabProps) => {
+const Tabs = ({ components = [], fieldName, auth, projectId, disabled, formInstance, readonly }: TabProps) => {
   const [form] = Form.useForm();
   const tabRef = useRef<HTMLDivElement>(null);
-  const content = useMemoCallback((key: string) => {
-    return (
-      <FormList
-        fields={components}
-        id={key}
-        parentId={fieldName}
-        auth={auth}
-        readonly={readonly}
-        projectId={projectId}
-      />
-    );
-  });
-  const [panes, setPanes] = useState<PaneType[]>([]);
-  const [activeKey, setActiveKey] = useState<string>();
-  const [showModal, setShowModal] = useState<boolean>(false);
-  const handleAdd = useMemoCallback(() => {
-    setShowModal(true);
-  });
-  const handleRemove = useMemoCallback((key: string) => {
-    // 为了解决tabs回显问题,所以使用了formInstance
-    const fieldsValue = formInstance?.getFieldsValue()[fieldName];
-    let list = fieldsValue
-      ? Array.isArray(fieldsValue)
-        ? fieldsValue
-        : Object.values({ ...fieldsValue, ...panes })
-      : [...panes];
-    list = list.filter((v) => v?.key);
-    const index = list.findIndex((pane: any) => pane.key === key);
-    // 删除tab时要更新关联的数字公示计算
-    const subComponentNames = Object.keys(omit(list[index], ['__title__', 'key', 'content']));
-    subComponentNames.forEach((key) => {
-      PubSub.publish(`${fieldName}.${key}-change`, undefined);
-    });
-    const paneList = list.filter((v: any) => v.key !== key);
-    setPanes(paneList);
-    onChange && onChange(paneList);
-    if (activeKey === list[index].key) {
-      index > 0 ? setActiveKey(list[index - 1].key) : setActiveKey(paneList[0]?.key);
-    }
-  });
-  const handleEdit = useMemoCallback((targetKey, action) => {
-    if (disabled) {
-      return;
-    }
-    if (action === 'add') {
-      handleAdd();
-    } else if (action === 'remove') {
-      handleRemove(targetKey);
-    }
-  });
-  const handleClose = useMemoCallback(() => {
-    form.setFieldsValue({ __title__: '' });
-    setShowModal(false);
-  });
-  const handleOk = useMemoCallback(() => {
-    form.validateFields().then((values) => {
-      const { __title__ } = values;
-      // 为了解决tabs回显问题,所以使用了formInstance
-      const fieldsValue = formInstance?.getFieldsValue()[fieldName];
-      const list = fieldsValue
-        ? Array.isArray(fieldsValue)
-          ? fieldsValue
-          : Object.values({ ...fieldsValue, ...panes })
-        : [...panes];
-      const key = String(list.length);
-      list.push({ key, __title__, content });
-      setPanes(list);
-      onChange && onChange(list);
-      setActiveKey(key);
-      handleClose();
-    });
-  });
-  const handleChange = useMemoCallback((key) => {
-    setActiveKey(key);
-  });
-  useEffect(() => {
-    const list = typeof value === 'string' ? JSON.parse(value) : Array.isArray(value) ? [...value] : [];
-    const panes = list.map((pane: any) => {
-      if (!pane.content) {
-        return { ...pane, content };
-      }
-      return pane;
-    });
-    setPanes(panes);
-  }, [value, content]);
+  const [activeKey, setActiveKey] = useState<number>();
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [popVisible, setPopVisible] = useState<boolean>(false);
   // 编辑态默认有个tab,用于展示编辑的控件
   useEffect(() => {
     const el = document.getElementById('edit-form');
     if (el?.contains(tabRef.current)) {
-      setPanes([{ __title__: 'tab', content, key: 'edit' }]);
-      setActiveKey('edit');
+      setIsEdit(true);
+      setActiveKey(-1);
+    } else {
+      setIsEdit(false);
+      setActiveKey(0);
     }
-  }, [tabRef, content]);
+  }, [tabRef]);
+
+  const handleAdd = useMemoCallback((add: (defaultValue?: any) => void, length: number, __title__: string) => {
+    if (disabled) {
+      return;
+    }
+    add();
+    setActiveKey(length);
+    const tabValue = (formInstance?.getFieldValue(fieldName) || []).filter((v: any) => v && v?.__title__);
+    if (length === 0) {
+      const defaultValue = formInstance?.getFieldValue(fieldName)?.[0];
+      if (defaultValue && typeof defaultValue === 'object' && Object.keys(defaultValue).length) {
+        tabValue.push({ __title__, ...defaultValue });
+      } else {
+        tabValue.push({ __title__ });
+      }
+    } else {
+      tabValue.push({ __title__ });
+    }
+    formInstance?.setFieldsValue({ [fieldName]: tabValue });
+  });
+
+  const handleRemove = useMemoCallback((remove: (index: number) => void, index: number, event: MouseEvent) => {
+    event.stopPropagation();
+    if (disabled) {
+      return;
+    }
+    const tabsValue = formInstance?.getFieldValue(fieldName);
+    if (tabsValue && tabsValue?.[index]) {
+      // 删除tab时要更新关联的数字公示计算
+      const subComponentNames = Object.keys(omit(tabsValue[index], ['__title__']));
+      subComponentNames.forEach((key) => {
+        PubSub.publish(`${fieldName}.${key}-change`, undefined);
+      });
+    }
+    remove(index);
+    if (activeKey !== undefined) {
+      let newKey = activeKey;
+      if (index < activeKey) {
+        newKey = activeKey - 1;
+      } else if (index === activeKey) {
+        newKey = activeKey < 1 ? 0 : activeKey - 1;
+      }
+      setActiveKey(newKey);
+    }
+  });
+
+  const content = useMemo(() => {
+    return (
+      <Form form={form} autoComplete="off">
+        <Form.Item label="标题" name="__title__" required rules={[{ required: true, message: '请输入标题' }]}>
+          <Input placeholder="请输入" />
+        </Form.Item>
+      </Form>
+    );
+  }, []);
+
+  const handleConfirm = useMemoCallback((add: (defaultValue?: any) => void, length: number) => {
+    form
+      .validateFields()
+      .then((values) => {
+        const { __title__ } = values;
+        handleAdd(add, length, __title__);
+        form.resetFields();
+        setPopVisible(false);
+      })
+      .catch(() => {
+        setPopVisible(true);
+      });
+  });
+
+  const handleShowPopup = useMemoCallback(() => {
+    if (disabled) {
+      return;
+    }
+    setPopVisible(true);
+  });
 
   return (
-    <div className={classNames(styles.tabs, disabled ? styles.disabled : '')} ref={tabRef}>
-      <TabList
-        type="editable-card"
-        activeKey={activeKey}
-        addIcon={<Icon type="xinzeng" />}
-        onEdit={handleEdit}
-        onChange={handleChange}
-      >
-        {(panes || []).map(({ __title__, key, content }) => {
+    <div className={classNames(styles.tabs, disabled ? styles.disabled : '', isEdit ? styles.edit : '')} ref={tabRef}>
+      <Form.Item noStyle shouldUpdate>
+        {(form) => {
+          const fieldValue = form.getFieldValue(fieldName);
           return (
-            <TabPane tab={__title__} key={key}>
-              {typeof content === 'function' && content(key)}
-            </TabPane>
+            <Form.List name={fieldName}>
+              {(fields, { add, remove }) => {
+                return (
+                  <div className={styles.container}>
+                    <div className={classNames(styles.title)}>
+                      {isEdit ? (
+                        <div className={classNames(styles.item, styles.active)}>
+                          <div className={styles.name}>Edit</div>
+                        </div>
+                      ) : (
+                        fields.map((field, index) => {
+                          return (
+                            <div
+                              key={field.key}
+                              className={classNames(styles.item, activeKey === field.name ? styles.active : '')}
+                              onClick={() => setActiveKey(field.name)}
+                            >
+                              <div className={styles.name}>{fieldValue?.[index]?.['__title__']}</div>
+                              <div className={styles.operation}>
+                                <div
+                                  className={styles.delete}
+                                  onClick={(event) => handleRemove(remove, index, event as any)}
+                                >
+                                  <Tooltip title="删除">
+                                    <span>
+                                      <Icon type="shanchu" className={styles.icon} />
+                                    </span>
+                                  </Tooltip>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })
+                      )}
+                      <Popconfirm
+                        placement="bottomLeft"
+                        icon={null}
+                        title={content}
+                        visible={popVisible}
+                        onConfirm={() => handleConfirm(add, fields.length)}
+                        onCancel={() => setPopVisible(false)}
+                      >
+                        <div className={styles.add} onClick={handleShowPopup}>
+                          <Icon type="xinzeng" className={styles.icon} />
+                        </div>
+                      </Popconfirm>
+                    </div>
+                    <div className={styles.content}>
+                      {(fields.length > 0 || isEdit) && (
+                        <FormList
+                          fields={components}
+                          id={String(activeKey)}
+                          parentId={fieldName}
+                          auth={auth}
+                          readonly={readonly}
+                          projectId={projectId}
+                          name={activeKey!}
+                        />
+                      )}
+                    </div>
+                  </div>
+                );
+              }}
+            </Form.List>
           );
-        })}
-      </TabList>
-      <Modal visible={showModal} title="标题" closable={false} onCancel={handleClose} onOk={handleOk}>
-        <Form form={form} autoComplete="off">
-          <Form.Item label="标题" name="__title__" required rules={[{ required: true, message: '请输入标题' }]}>
-            <Input />
-          </Form.Item>
-        </Form>
-      </Modal>
+        }}
+      </Form.Item>
     </div>
   );
 };
