@@ -38,10 +38,15 @@ const LimitNum = ({ id }: LimitNumProps) => {
                 max={form.getFieldValue(['numlimit', id, 'max'])}
                 onChange={() => form.validateFields([['numlimit', id, 'max']])}
                 formatter={(value) => {
-                  if (!fieldValue?.enable || value.indexOf('.') === -1) return value;
-                  return value.substring(0, value.indexOf('.') + fieldValue.precision + 1);
+                  if (value.indexOf('.') === -1) return value;
+                  const strLength = value.toString().split('.')[1].length;
+                  if (fieldValue?.enable && strLength > fieldValue.precision) {
+                    return value.substring(0, value.indexOf('.') + fieldValue.precision + 1);
+                  } else {
+                    if (strLength > 10) return value.substring(0, value.indexOf('.') + 11);
+                  }
                 }}
-                {...(fieldValue?.enable ? { precision: fieldValue.precision } : 10)}
+                {...{ precision: fieldValue?.enable ? fieldValue.precision : 10 }}
               />
             </Form.Item>
             <span className={styles.text}>~</span>
@@ -65,10 +70,15 @@ const LimitNum = ({ id }: LimitNumProps) => {
                 min={form.getFieldValue(['numlimit', id, 'min'])}
                 onChange={() => form.validateFields([['numlimit', id, 'min']])}
                 formatter={(value) => {
-                  if (!fieldValue?.enable || value.indexOf('.') === -1) return value;
-                  return value.substring(0, value.indexOf('.') + fieldValue.precision + 1);
+                  if (value.indexOf('.') === -1) return value;
+                  const strLength = value.toString().split('.')[1].length;
+                  if (fieldValue?.enable && strLength > fieldValue.precision) {
+                    return value.substring(0, value.indexOf('.') + fieldValue.precision + 1);
+                  } else {
+                    if (strLength > 10) return value.substring(0, value.indexOf('.') + 11);
+                  }
                 }}
-                {...(fieldValue?.enable ? { precision: fieldValue.precision } : 10)}
+                {...{ precision: fieldValue?.enable ? fieldValue.precision : 10 }}
               />
             </Form.Item>
           </div>
