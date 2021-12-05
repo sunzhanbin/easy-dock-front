@@ -44,7 +44,7 @@ const Attachment = (
   });
 
   useEffect(() => {
-    if (!typeRestrict || !fileMap) {
+    if (!typeRestrict || !typeRestrict.enable || !fileMap) {
       return;
     }
     const { types, custom = [] } = typeRestrict;
