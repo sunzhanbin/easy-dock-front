@@ -21,7 +21,7 @@ const DefaultDate = (props: editProps) => {
     return (byId[id] as DateField)?.format;
   }, [id, byId]);
   const range = useMemo(() => {
-    return (byId[id] as DateField)?.datelimit?.daterange;
+    return (byId[id] as DateField)?.datelimit;
   }, [id, byId]);
   const propList = useMemo(() => {
     const props: { [k: string]: string | boolean | Function | Moment | ReactNode } = {
@@ -42,8 +42,8 @@ const DefaultDate = (props: editProps) => {
     return props;
   }, [formatType, value]);
   const handleDisabled = (current: Moment) => {
-    if (range) {
-      return current.valueOf() < Number(range.min) || current.valueOf() > Number(range.max);
+    if (range && range?.enable) {
+      return current.valueOf() < Number(range.daterange.min) || current.valueOf() > Number(range.daterange.max);
     }
     return false;
   };

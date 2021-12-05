@@ -4,6 +4,7 @@ import * as math from 'mathjs';
 export const getCalculateNum = (
   rules: { [key: string]: any }[],
   formValue: { [key: string]: any },
+  decimal: { [key: string]: any },
 ): number | undefined => {
   const rule = rules.find((rule) => rule.condition.calcType);
   if (!rule || !rule.condition.calcType) return undefined;
@@ -21,7 +22,7 @@ export const getCalculateNum = (
       if (!fieldList) return;
       formListMap = fieldList.map((item: { [x: string]: any }) => item[fieldName]);
     } else {
-      formListMap[item] = formValue[item];
+      formListMap[item] = item.includes('InputNumber') ? formValue[item] || 0 : formValue[item];
     }
   });
   const filterList = Object.values(formListMap).filter((v) => v !== undefined && v !== null);
@@ -48,6 +49,10 @@ export const getCalculateNum = (
     returnNum = math.min(filterList);
   } else if (calcType === 'deduplicate') {
     returnNum = [...new Set(filterList)].length;
+  }
+  const precision = decimal && decimal.enable ? decimal.precision : 0;
+  if (precision !== undefined && returnNum) {
+    returnNum = Number(returnNum)?.toFixed(precision);
   }
   return returnNum;
 };

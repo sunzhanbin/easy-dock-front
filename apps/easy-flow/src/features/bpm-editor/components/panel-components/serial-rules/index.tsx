@@ -9,9 +9,9 @@ import { message } from 'antd';
 import { useSubAppDetail } from '@app/app';
 import { useAppSelector } from '@app/hooks';
 import { getSerialInfo } from '@apis/form';
-import { initialRules } from '@utils/const';
+import { initialRules, SERIAL_TYPE } from '@utils/const';
 import { componentPropsSelector, errorSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
-import { SERIAL_TYPE } from '@utils/const';
+import { filterRules } from './utils';
 
 interface RulesProps {
   id: string;
@@ -47,6 +47,7 @@ const SerialRules = (props: RulesProps) => {
         name: com.label,
       }));
   }, [byId, id]);
+  console.log(fields, '3333');
   const fieldSerial = useMemo(() => {
     return (byId[id] as SerialNumField)?.serialRule;
   }, [id, byId]);
@@ -57,13 +58,14 @@ const SerialRules = (props: RulesProps) => {
     if (!fieldSerial) return;
     const { serialId, serialMata } = fieldSerial;
     setRules(serialMata?.rules || initialRules);
-    setChangeRules(serialMata?.changeRules || []);
+    const filterMata = filterRules(serialMata?.changeRules, fields);
+    setChangeRules(filterMata || []);
     setRuleName(serialMata?.ruleName || '');
     setChangeRuleName(serialMata?.changeRuleName || '');
     setSerialId(serialId || '');
     setEditStatus(serialMata?.editStatus);
     setType(serialMata?.type || (serialId ? SERIAL_TYPE.INJECT_TYPE : SERIAL_TYPE.CUSTOM_TYPE));
-  }, [fieldSerial]);
+  }, [fieldSerial, fields]);
 
   useEffect(() => {
     const errorList = errors.find((item) => item.id === id);
@@ -79,18 +81,18 @@ const SerialRules = (props: RulesProps) => {
   useEffect(() => {
     (async () => {
       try {
-        console.log(serialId, 'serialId');
         if (!serialId) return;
         const ret = await getSerialInfo(serialId);
         const { data } = ret;
         setRuleStatus(data.status === 0 ? 0 : 1);
-        setResetRules(data.mata);
+        const filterMata = filterRules(data.mata, fields);
+        setResetRules(filterMata);
         setResetRuleName(data.name);
       } catch (e) {
         console.log(e);
       }
     })();
-  }, [serialId]);
+  }, [serialId, fields]);
 
   // 自定义规则/引用规则
   const handleTypeChange = (type: string) => {
@@ -99,7 +101,8 @@ const SerialRules = (props: RulesProps) => {
 
   const handleConfirmRule = useMemoCallback((selectedSerial) => {
     const { name, mata, status } = selectedSerial;
-    setResetRules(mata);
+    const filterMata = filterRules(mata, fields);
+    setResetRules(filterMata);
     setResetRuleName(name);
     setRuleStatus(status);
     setEditStatus(false);
@@ -112,7 +115,7 @@ const SerialRules = (props: RulesProps) => {
           ruleName,
           rules,
           changeRuleName: name,
-          changeRules: mata,
+          changeRules: filterMata,
           editStatus: false,
         },
       });
@@ -179,7 +182,9 @@ const SerialRules = (props: RulesProps) => {
   const handleSaveRules = async (type: string, serialMap: any) => {
     message.success('保存成功');
     const { mata, status, name } = serialMap;
-    setResetRules(mata);
+    const filterMata = filterRules(mata, fields);
+
+    setResetRules(filterMata);
     setResetRuleName(name);
     if (type === 'inject') {
       setEditStatus(false);
@@ -202,7 +207,7 @@ const SerialRules = (props: RulesProps) => {
           ruleName: '',
           rules: initialRules,
           changeRuleName: name,
-          changeRules: mata,
+          changeRules: filterMata,
           editStatus: false,
         },
       });
