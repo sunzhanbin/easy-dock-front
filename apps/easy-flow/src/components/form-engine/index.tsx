@@ -28,7 +28,7 @@ interface FormProps {
   readonly?: boolean;
   className?: string;
   projectId?: number;
-  nodeType?: string;
+  nodeType: string;
 }
 
 type CompMaps = {
@@ -69,7 +69,7 @@ const FormDetail = React.forwardRef(function FormDetail(
   props: FormProps,
   ref: React.ForwardedRef<FormInstance<FormValue>>,
 ) {
-  const { data, fieldsAuths, datasource, initialValue, readonly, className, projectId, nodeType } = props;
+  const { data, fieldsAuths, datasource, initialValue, readonly, className, projectId, nodeType = 'start' } = props;
   const [form] = Form.useForm<FormValue>();
   const [loading, setLoading] = useState<boolean>(false);
   const [fieldsVisible, setFieldsVisible] = useState<FieldsVisible>({});
@@ -269,17 +269,10 @@ const FormDetail = React.forwardRef(function FormDetail(
           Object.entries(formValues)
             .filter(([key, value]: [string, any]) => value !== undefined)
             .forEach(([key, value]) => {
-              if (Array.isArray(value) && value.length > 0 && value[0]['__title__']) {
-                const subComponents = omit(value[0], ['__title__', 'key', 'content']);
-                Object.entries(subComponents).forEach(([key, value]: [string, any]) => {
-                  PubSub.publish(`${key}-change`, value);
-                });
-              } else {
-                onValuesChange({ [key]: value });
-              }
+              onValuesChange({ [key]: value });
             });
         }
-      }, 88);
+      }, 18);
     })();
   }, [data, fieldsAuths, initialValue, form, componentTypes, nodeType, onValuesChange]);
 
@@ -306,6 +299,9 @@ const FormDetail = React.forwardRef(function FormDetail(
               const compProps = { ...props };
               const Component = compSources[config?.type as AllComponentType['type']];
               if (!fieldsVisible[config.fieldName || fieldId] || !Component) return null;
+              if (type === 'DescText' && compProps.value) {
+                compProps['text_value'] = compProps.value;
+              }
               delete compProps['defaultValue'];
               delete compProps['apiConfig'];
               const rules: Rule[] = validateRules(isRequired, label, type, props);
@@ -317,6 +313,7 @@ const FormDetail = React.forwardRef(function FormDetail(
                     fieldName={fieldName || id}
                     form={form}
                     rules={comRules.formRules[fieldName || id]}
+                    nodeType={nodeType!}
                   >
                     <Form.Item
                       key={fieldId}

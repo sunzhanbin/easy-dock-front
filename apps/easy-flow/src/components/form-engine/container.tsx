@@ -14,9 +14,10 @@ interface ContainerProps {
   form: FormInstance<FormValue>;
   type: string;
   changeType?: string;
+  nodeType: string;
 }
 
-export const Container = React.memo(({ children, rules, fieldName, form, type }: ContainerProps) => {
+export const Container = React.memo(({ children, rules, fieldName, form, type, nodeType }: ContainerProps) => {
   const visibleRules = useMemo(() => rules?.filter((item) => item?.subtype === EventType.Visible), [rules]);
   const [visible, setVisible] = useState<boolean>(true);
   const [reFreshKey, setReFreshKey] = useState<number>(0);
@@ -71,7 +72,7 @@ export const Container = React.memo(({ children, rules, fieldName, form, type }:
   }, [rules, form, visibleRules, watchFn, setComponentValueAndVisible]);
 
   return (
-    <ContainerProvider value={{ rules, form, fieldName, type, refresh: reFreshKey }}>
+    <ContainerProvider value={{ rules, form, fieldName, type, nodeType, refresh: reFreshKey }}>
       {visible
         ? React.cloneElement(children as React.ReactElement<any>, {
             refresh: reFreshKey,
@@ -81,17 +82,17 @@ export const Container = React.memo(({ children, rules, fieldName, form, type }:
   );
 });
 
-const wrapContainer = React.memo(({ children, rules, fieldName, form, type }: ContainerProps) => {
+const wrapContainer = React.memo(({ children, rules, fieldName, form, type, nodeType }: ContainerProps) => {
   const isLeaf = Array.isArray(rules);
 
   return (
     <>
       {isLeaf ? (
-        <Container rules={rules} fieldName={fieldName} form={form} type={type}>
+        <Container rules={rules} fieldName={fieldName} form={form} type={type} nodeType={nodeType}>
           {children}
         </Container>
       ) : (
-        <ContainerProvider value={{ rules, form, fieldName, type }}>{children}</ContainerProvider>
+        <ContainerProvider value={{ rules, form, fieldName, type, nodeType }}>{children}</ContainerProvider>
       )}
     </>
   );
