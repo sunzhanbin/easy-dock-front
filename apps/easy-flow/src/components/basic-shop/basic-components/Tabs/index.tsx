@@ -137,9 +137,7 @@ const Tabs = ({ components = [], fieldName, auth, projectId, disabled, formInsta
                             <div
                               key={field.key}
                               className={classNames(styles.item, activeKey === field.name ? styles.active : '')}
-                              onClick={() => {
-                                setActiveKey(field.name), console.info(formInstance?.getFieldValue(fieldName));
-                              }}
+                              onClick={() => setActiveKey(field.name)}
                             >
                               <div className={styles.name}>{fieldValue?.[index]?.['__title__']}</div>
                               <div className={styles.operation}>
