@@ -91,10 +91,10 @@ export const validateHasChecked = (props: ConfigItem, config: ConfigItem) => {
       if (numlimit.enable && (!numlimit.numrange || (!numlimit.numrange?.min && !numlimit.numrange?.max))) {
         return '请输入数值范围';
       }
-      console.log(defaultNumber);
       if (
         numlimit.enable &&
         defaultNumber &&
+        defaultNumber.customData &&
         defaultNumber.type === 'custom' &&
         (defaultNumber.customData < numlimit.numrange?.min || defaultNumber.customData > numlimit.numrange?.max)
       ) {
