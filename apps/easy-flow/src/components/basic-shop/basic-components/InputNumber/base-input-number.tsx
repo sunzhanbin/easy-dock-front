@@ -23,7 +23,7 @@ const InputNumberComponent = (
       min: Number.MIN_SAFE_INTEGER,
       onChange: onChange,
     };
-    if (numlimit?.numrange) {
+    if (numlimit?.numrange && numlimit.enable) {
       prop.min = numlimit.numrange.min;
       prop.max = numlimit.numrange.max;
     }
