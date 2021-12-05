@@ -43,7 +43,11 @@ const LimitNum = ({ id }: LimitNumProps) => {
                   if (fieldValue?.enable && strLength > fieldValue.precision) {
                     return value.substring(0, value.indexOf('.') + fieldValue.precision + 1);
                   } else {
-                    if (strLength > 10) return value.substring(0, value.indexOf('.') + 11);
+                    if (strLength > 10) {
+                      return value.substring(0, value.indexOf('.') + 11);
+                    } else {
+                      return value;
+                    }
                   }
                 }}
                 {...{ precision: fieldValue?.enable ? fieldValue.precision : 10 }}
@@ -75,7 +79,11 @@ const LimitNum = ({ id }: LimitNumProps) => {
                   if (fieldValue?.enable && strLength > fieldValue.precision) {
                     return value.substring(0, value.indexOf('.') + fieldValue.precision + 1);
                   } else {
-                    if (strLength > 10) return value.substring(0, value.indexOf('.') + 11);
+                    if (strLength > 10) {
+                      return value.substring(0, value.indexOf('.') + 11);
+                    } else {
+                      return value;
+                    }
                   }
                 }}
                 {...{ precision: fieldValue?.enable ? fieldValue.precision : 10 }}
