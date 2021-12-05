@@ -5,7 +5,7 @@ import EventHoc from '@/components/form-engine/eventHoc';
 import { useContainerContext } from '@/components/form-engine/context';
 import { getCalculateNum } from './utils';
 
-const InputNumberComponent = (props: InputNumberProps & { onChange: (v: any) => void } & { [key: string]: any }) => {
+const InputNumber = (props: InputNumberProps & { onChange: (v: any) => void } & { [key: string]: any }) => {
   const { form, rules, refresh } = useContainerContext();
   const [value, setValue] = useState<number | undefined>(undefined);
   useEffect(() => {
@@ -17,9 +17,8 @@ const InputNumberComponent = (props: InputNumberProps & { onChange: (v: any) => 
     if (!form || !rules || refresh === undefined) return;
     console.log(props, 'props');
     const formValue = form.getFieldsValue();
-    const inputValue = getCalculateNum(rules, formValue);
+    const inputValue = getCalculateNum(rules, formValue, props.decimal);
     setValue(inputValue);
-    form.setFieldsValue({ [props.id as string]: inputValue });
     const { onChange } = props;
     onChange && onChange(inputValue);
   }, [form, props, refresh, rules]);
@@ -31,4 +30,4 @@ const InputNumberComponent = (props: InputNumberProps & { onChange: (v: any) => 
   );
 };
 
-export default memo(InputNumberComponent);
+export default memo(InputNumber);
