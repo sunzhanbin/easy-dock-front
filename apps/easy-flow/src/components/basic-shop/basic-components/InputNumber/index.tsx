@@ -11,11 +11,9 @@ const InputNumber = (props: InputNumberProps & { onChange: (v: any) => void } & 
   useEffect(() => {
     if (props.value === undefined || props.value === null) return;
     setValue(props.value as number);
-    console.log(props.value, '------------');
   }, [props]);
   useEffect(() => {
     if (!form || !rules || refresh === undefined) return;
-    console.log(props, 'props');
     const formValue = form.getFieldsValue();
     const inputValue = getCalculateNum(rules, formValue, props.decimal);
     setValue(inputValue);
