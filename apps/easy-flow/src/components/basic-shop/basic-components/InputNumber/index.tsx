@@ -9,6 +9,9 @@ const InputNumberComponent = (props: InputNumberProps & { onChange: (v: any) => 
   const { form, rules, refresh } = useContainerContext();
   const [value, setValue] = useState<number | undefined>(undefined);
   useEffect(() => {
+    setValue(props.value as number);
+  }, [props]);
+  useEffect(() => {
     if (!form || !rules || !refresh) return;
     const formValue = form.getFieldsValue();
     const inputValue = getCalculateNum(rules, formValue);
