@@ -12,7 +12,7 @@ import {
   TConfigMap,
 } from '@type';
 import { RootState } from '@/app/store';
-import { formatRules } from './validate';
+import { formatRules, formatSerialRules } from './validate';
 
 function locateById(target: string, layout: Array<string[]>): [number, number] {
   let res: [number, number] = [-1, -1];
@@ -77,9 +77,8 @@ const reducers = {
       state.layout[row].splice(col, 1);
     }
     delete state.byId[id];
-    if (id === state.selectedField) {
-      state.selectedField = null;
-    }
+    // 控件删除的时候 如果关联了编号中的表单字段 需要过滤掉
+    formatSerialRules(state.byId, id);
     // 表单属性关联的该控件规则也需要清空
     formatRules(state.formRules, id);
     formatRules(state.propertyRules, id);

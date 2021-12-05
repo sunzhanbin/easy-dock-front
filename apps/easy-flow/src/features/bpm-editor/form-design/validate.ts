@@ -1,4 +1,4 @@
-import { ConfigItem, FormRuleItem } from '@type';
+import { ConfigItem, FormField, FormRuleItem } from '@type';
 import { message } from 'antd';
 import { current } from '@reduxjs/toolkit';
 
@@ -150,4 +150,26 @@ export const formatRules = (rules: FormRuleItem[], id: string) => {
     }
   });
   return rules;
+};
+
+export const formatSerialRules = (byId: any, id: string) => {
+  const componentList = Object.values(byId).map((item: any) => item) || [];
+  componentList.forEach((comp) => {
+    if (comp.type === 'SerialNum') {
+      const { serialMata = {} } = comp.serialRule;
+      serialMata.changeRules = serialMata.changeRules.filter((item: any) => {
+        if (item.type === 'fieldName') {
+          return item.fieldValue !== id && item;
+        }
+        return item;
+      });
+      serialMata.rules = serialMata.rules.filter((item: any) => {
+        if (item.type === 'fieldName') {
+          return item.fieldValue !== id && item;
+        }
+        return item;
+      });
+    }
+  });
+  return byId;
 };
