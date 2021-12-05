@@ -54,6 +54,7 @@ export type TextAreaField = {
 export type DateField = {
   type: 'Date';
   datelimit?: {
+    enable?: boolean;
     daterange: {
       min: string;
       max: string;

@@ -81,7 +81,7 @@ export const validateHasChecked = (props: ConfigItem, config: ConfigItem) => {
   switch (type) {
     case 'InputNumber':
       const { decimal = {}, numlimit = {} } = props;
-      const { defaultNumber = {} } = config;
+      const defaultNumber = config.defaultNumber || props.defaultNumber;
       if (decimal.enable && !decimal.precision) {
         return '请输入小数位数';
       }
@@ -91,6 +91,7 @@ export const validateHasChecked = (props: ConfigItem, config: ConfigItem) => {
       if (numlimit.enable && (!numlimit.numrange || (!numlimit.numrange?.min && !numlimit.numrange?.max))) {
         return '请输入数值范围';
       }
+      console.log(defaultNumber);
       if (
         numlimit.enable &&
         defaultNumber &&
