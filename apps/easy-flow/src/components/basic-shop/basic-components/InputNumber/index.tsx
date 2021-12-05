@@ -9,6 +9,7 @@ const InputNumberComponent = (props: InputNumberProps & { onChange: (v: any) => 
   const { form, rules, refresh } = useContainerContext();
   const [value, setValue] = useState<number | undefined>(undefined);
   useEffect(() => {
+    if (props.value === undefined || props.value === null) return;
     setValue(props.value as number);
     console.log(props.value, '------------');
   }, [props]);
