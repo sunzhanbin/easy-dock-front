@@ -22,7 +22,7 @@ export const getCalculateNum = (
       if (!fieldList) return;
       formListMap = fieldList.map((item: { [x: string]: any }) => item[fieldName]);
     } else {
-      formListMap[item] = formValue[item];
+      formListMap[item] = item.includes('InputNumber') ? formValue[item] || 0 : formValue[item];
     }
   });
   const filterList = Object.values(formListMap).filter((v) => v !== undefined && v !== null);
