@@ -179,6 +179,7 @@ const Tabs = ({ components = [], fieldName, auth, projectId, disabled, formInsta
                           readonly={readonly}
                           projectId={projectId}
                           name={activeKey!}
+                          key={activeKey}
                         />
                       )}
                     </div>
