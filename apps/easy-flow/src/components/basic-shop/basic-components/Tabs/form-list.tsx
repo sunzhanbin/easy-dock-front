@@ -22,13 +22,14 @@ interface FormListProps {
   auth: FieldAuthsMap;
   projectId: number;
   readonly: boolean | undefined;
+  name: number;
 }
 
 interface VisibleMap {
   [k: string]: boolean;
 }
 
-const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId }: FormListProps) => {
+const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId, name }: FormListProps) => {
   const context = useContainerContext();
   const [visibleMap, setVisibleMap] = useState<VisibleMap>({});
   const [fileMap, setFileMap] = useState<{ [key: string]: string[] } | undefined>(undefined);
@@ -87,7 +88,21 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId }: Form
       .forEach((name) => {
         setVisibleMap((old) => Object.assign({}, old, { [name]: true }));
       });
-  }, [fields, setVisibleMap]);
+    if (context && context?.form) {
+      const { form } = context;
+      const initialValue: { [k: string]: any } = {};
+      fields
+        .map((v) => ({ key: v.config.fieldName, value: v.props?.defaultValue }))
+        .filter(({ value }) => value !== undefined && value !== null)
+        .forEach(({ key, value }) => {
+          initialValue[key] = value;
+        });
+      const parentValue = form.getFieldValue(parentId);
+      const fieldValue = Object.assign({}, { ...initialValue }, form.getFieldValue([parentId, name]));
+      const newValue = Object.assign([], parentValue, { [name]: fieldValue });
+      form.setFieldsValue({ [parentId]: newValue });
+    }
+  }, [fields, context, parentId, name, setVisibleMap]);
   useEffect(() => {
     if (context && context?.rules) {
       const { rules, form, nodeType } = context;
@@ -112,9 +127,9 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId }: Form
         });
       }
     }
-  }, [context, setFieldVisible, watchFn]);
+  }, [context, name, setFieldVisible, watchFn]);
   return (
-    <Form.List name={[parentId, id]}>
+    <Form.List name={name}>
       {() => {
         return (
           <Row className={styles.row}>
@@ -138,7 +153,9 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId }: Form
               if (type === 'Attachment' && fileMap) {
                 comProps.fileMap = fileMap;
               }
-              // delete comProps.defaultValue;
+              if (name !== -1) {
+                delete comProps.defaultValue;
+              }
               delete comProps.apiConfig;
               const rules: Rule[] = validateRules(isRequired, label, type, props);
               return (
@@ -161,7 +178,7 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId }: Form
   );
 };
 
-export default memo(FormList);
+export default memo(FormList, (prev, current) => prev.name === current.name);
 
 function compRender(
   type: AllComponentType['type'],

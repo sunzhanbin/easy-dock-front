@@ -204,12 +204,13 @@ const FormDetail = React.forwardRef(function FormDetail(
     }, 500),
   );
 
-  const onValuesChange = useMemoCallback((changeValue: any, all?: any) => {
+  const onValuesChange = useMemoCallback((changeValue: any, all: any) => {
     // 此处不要进行setState操作   避免重复更新
     Object.entries(changeValue).forEach(([key, value]: any) => {
-      if (value && typeof value === 'object' && !Array.isArray(value) && Object.values(value).length) {
-        const field = Object.values(value)[0];
-        if (typeof field === 'object' && field) {
+      // tabs components
+      if (value && Array.isArray(value) && value.length && all?.[key]?.[0]?.['__title__']) {
+        const field = value[value.length - 1];
+        if (field && typeof field === 'object') {
           const changeKey = Object.keys(field)[0];
           const changeValue = Object.values(field)[0];
           if (!changeKey) return;
@@ -269,7 +270,7 @@ const FormDetail = React.forwardRef(function FormDetail(
           Object.entries(formValues)
             .filter(([key, value]: [string, any]) => value !== undefined)
             .forEach(([key, value]) => {
-              onValuesChange({ [key]: value });
+              onValuesChange({ [key]: value }, formValues);
             });
         }
       }, 18);

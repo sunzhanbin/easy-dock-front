@@ -1,3 +1,4 @@
+@import '@common/styles/var.scss';
 .row {
   & > .col {
     flex-shrink: 1;
@@ -6,12 +7,73 @@
 }
 
 .tabs {
-  &.disabled {
-    :global {
-      .ant-tabs-nav-add,
-      .ant-tabs-tab-remove {
-        cursor: not-allowed;
+  &.edit {
+    margin-top: 8px;
+  }
+  .container {
+    width: 100%;
+    .title {
+      display: flex;
+      align-items: center;
+      height: 40px;
+      border-bottom: 1px solid rgba(227, 228, 232, 1);
+      .item {
+        position: relative;
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        max-width: 66px;
+        height: 40px;
+        border-radius: 3px;
+        padding: 9px 16px;
+        background: rgba(24, 39, 67, 0.04);
+        border-right: 1px solid rgba(227, 228, 232, 1);
+        cursor: pointer;
+        .operation {
+          display: none;
+          position: absolute;
+          top: 0;
+          right: 8px;
+          cursor: pointer;
+        }
+        &:hover {
+          .operation {
+            display: block;
+            .icon {
+              color: $primary-text-color;
+            }
+          }
+        }
+        &.active {
+          background-color: $white;
+          color: $primary-text-color;
+          border: 1px dashed rgba(24, 31, 67, 0.75);
+          border-bottom: 1px solid rgba(227, 228, 232, 1);
+        }
       }
+      .add {
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        background: rgba(24, 39, 67, 0.04);
+        border-radius: 0px 2px 0px 0px;
+        cursor: pointer;
+        &:hover {
+          .icon {
+            color: $primary-text-color;
+          }
+        }
+      }
+    }
+    .content {
+      margin-top: 12px;
+    }
+  }
+  &.disabled {
+    .add,
+    .operation {
+      cursor: not-allowed !important;
     }
   }
 }
