@@ -12,7 +12,7 @@ const InputNumberComponent = (props: InputNumberProps & { onChange: (v: any) => 
     setValue(props.value as number);
   }, [props]);
   useEffect(() => {
-    if (!form || !rules || !refresh) return;
+    if (!form || !rules || refresh === undefined) return;
     const formValue = form.getFieldsValue();
     const inputValue = getCalculateNum(rules, formValue);
     setValue(inputValue);
