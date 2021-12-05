@@ -10,12 +10,15 @@ const InputNumberComponent = (props: InputNumberProps & { onChange: (v: any) => 
   const [value, setValue] = useState<number | undefined>(undefined);
   useEffect(() => {
     setValue(props.value as number);
+    console.log(props.value, '------------');
   }, [props]);
   useEffect(() => {
     if (!form || !rules || refresh === undefined) return;
+    console.log(props, 'props');
     const formValue = form.getFieldsValue();
     const inputValue = getCalculateNum(rules, formValue);
     setValue(inputValue);
+    form.setFieldsValue({ [props.id as string]: inputValue });
     const { onChange } = props;
     onChange && onChange(inputValue);
   }, [form, props, refresh, rules]);

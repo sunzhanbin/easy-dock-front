@@ -65,7 +65,7 @@ const SerialRules = (props: RulesProps) => {
     setSerialId(serialId || '');
     setEditStatus(serialMata?.editStatus);
     setType(serialMata?.type || (serialId ? SERIAL_TYPE.INJECT_TYPE : SERIAL_TYPE.CUSTOM_TYPE));
-  }, [fieldSerial]);
+  }, [fieldSerial, fields]);
 
   useEffect(() => {
     const errorList = errors.find((item) => item.id === id);
@@ -92,7 +92,7 @@ const SerialRules = (props: RulesProps) => {
         console.log(e);
       }
     })();
-  }, [serialId]);
+  }, [serialId, fields]);
 
   // 自定义规则/引用规则
   const handleTypeChange = (type: string) => {
