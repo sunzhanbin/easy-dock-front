@@ -178,7 +178,7 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId, name }
   );
 };
 
-export default memo(FormList, (prev, current) => prev.name === current.name);
+export default memo(FormList, (prev, current) => prev.name === current.name && prev.fields === current.fields);
 
 function compRender(
   type: AllComponentType['type'],
