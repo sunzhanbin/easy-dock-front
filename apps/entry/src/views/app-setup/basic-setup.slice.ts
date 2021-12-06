@@ -6,7 +6,7 @@ import { BasicSetupInitialState } from "@utils/types";
 const initialState: BasicSetupInitialState = {
   theme: "theme1",
   navMode: "multi", // 'single' | 'multi'
-  logo: {},
+  logo: {}, // logo 需要上传，故需要记录，表单上传时使用；
   basicForm: {},
 };
 
