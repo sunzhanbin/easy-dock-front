@@ -447,6 +447,24 @@ export function getBase64(file: File | Blob) {
   });
 }
 
+export function addClassName(el: Element, className: string) {
+  const classList: string[] = el.classList?.length > 0 ? [...el.classList] : [];
+  if (classList.includes(className)) {
+    return;
+  }
+  classList.push(className);
+  el.className = classList.join(' ');
+}
+
+export function removeClassName(el: Element, className: string) {
+  const classList: string[] = el.classList?.length > 0 ? [...el.classList] : [];
+  const index = classList.findIndex((name) => name === className);
+  if (index > 0) {
+    classList.splice(index, 1);
+  }
+  el.className = classList.join(' ');
+}
+
 export function validateTabs(form: FormInstance) {
   const res = form.validateFields();
   // 校验并提示tabs内控件错误
@@ -473,19 +491,16 @@ export function validateTabs(form: FormInstance) {
       if (errorTabs.length < 1) {
         return;
       }
+      const elements = document.querySelectorAll('.ant-form .tabs-container .tab-nav');
+      [...elements].forEach((el) => {
+        removeClassName(el, 'error');
+      });
       errorTabs.forEach((item) => {
         const { tabIndex, paneIndex } = item;
         const selector = `.ant-form .tabs-container:nth-child(${tabIndex + 1})  .tab-nav:nth-child(${paneIndex + 1})`;
         const el = document.querySelector(selector);
         if (el) {
-          const classNameList: string[] = [];
-          el.classList.forEach((className) => {
-            if (!className.includes('error')) {
-              classNameList.push(className);
-            }
-          });
-          classNameList.push('error');
-          el.className = classNameList.join(' ');
+          addClassName(el, 'error');
         }
       });
     }
