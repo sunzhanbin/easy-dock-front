@@ -47,16 +47,16 @@ const RuleComponent = (props: RuleComponentProps) => {
   // 添加规则下拉
   const menu = useMemoCallback(() => {
     const disabledMenu = rules.findIndex((item) => item.type === 'createTime') !== -1;
-    const children = fields.map((item) => <Menu.Item key={item.id}>{item.name}</Menu.Item>);
+    // const children = fields.map((item) => <Menu.Item key={item.id}>{item.name}</Menu.Item>);
     return (
       <Menu onClick={handleAdd}>
         <Menu.Item key="createTime" disabled={disabledMenu}>
           提交日期
         </Menu.Item>
         <Menu.Item key="fixedChars">固定字符</Menu.Item>
-        <SubMenu title="表单字段" key="fieldName">
-          {children}
-        </SubMenu>
+        {/*<SubMenu title="表单字段" key="fieldName">*/}
+        {/*  {children}*/}
+        {/*</SubMenu>*/}
       </Menu>
     );
   });
