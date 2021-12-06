@@ -92,9 +92,9 @@ export const {
 
 export default formDesign.reducer;
 
-const validComponentConfig = (config: ConfigItem, props: ConfigItem) => {
+const validComponentConfig = (config: ConfigItem, props: ConfigItem): ErrorItem | null => {
   const { id, label = '', fieldName = '', type } = config;
-  const errorItem: ErrorItem = { id, content: [] };
+  const errorItem: ErrorItem = { id, content: [], subError: [] };
   const nameError = validateFieldName(fieldName);
   const labelError = validateLabel(label);
   const serialError = validateSerial(config);
@@ -104,6 +104,17 @@ const validComponentConfig = (config: ConfigItem, props: ConfigItem) => {
   if (type === 'Tabs') {
     const fieldsError = validateFields(props.components);
     fieldsError && errorItem.content.push(fieldsError);
+    const len = props.components?.length;
+    if (len > 0) {
+      for (let i = 0; i < len; i++) {
+        const comp = props.components[i];
+        const subError = validComponentConfig(comp.config, comp.props);
+        if (subError?.content && subError?.content.length > 0) {
+          errorItem.content.push('子控件错误!');
+          errorItem.subError?.push({ id: subError.id, content: subError.content });
+        }
+      }
+    }
   }
   nameError && errorItem.content.push(nameError);
   labelError && errorItem.content.push(labelError);
