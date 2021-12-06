@@ -137,8 +137,12 @@ export const validateRules = (isRequired: boolean, label: string, type: string, 
       });
     } else {
       rules.push({
-        required: true,
-        message: `${label}不能为空`,
+        validator(_, val) {
+          if (val === undefined || val === null) {
+            return Promise.reject(new Error(`${label}不能为空`));
+          }
+          return Promise.resolve();
+        },
       });
     }
   }
