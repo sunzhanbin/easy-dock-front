@@ -50,12 +50,12 @@ const InputNumberComponent = (
     delete result.numrange;
     return result;
   }, [props, decimal, numlimit, defaultNumber, onChange]);
-  useEffect(() => {
-    if (propList.defaultValue) {
-      onChange && onChange(propList.defaultValue as number);
-    }
-    // eslint-disable-next-line
-  }, []);
+  // useEffect(() => {
+  //   if (propList.defaultValue) {
+  //     onChange && onChange(propList.defaultValue as number);
+  //   }
+  //   // eslint-disable-next-line
+  // }, []);
 
   return (
     <div className={styles.container} ref={containerRef}>
