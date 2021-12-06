@@ -1,7 +1,7 @@
 import { memo, useState, useRef, useEffect, useMemo } from 'react';
 import { Form, Input, FormInstance, Tooltip, Popconfirm } from 'antd';
 import classNames from 'classnames';
-import { Icon } from '@common/components';
+import { Icon, Text } from '@common/components';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import styles from './index.module.scss';
 import { CompConfig } from '@/type';
@@ -79,13 +79,31 @@ const Tabs = ({ components = [], fieldName, auth, projectId, disabled, formInsta
       }
       setActiveKey(newKey);
     }
+    setPopVisible(false);
   });
 
   const content = useMemo(() => {
     return (
       <Form form={form} autoComplete="off">
-        <Form.Item label="标题" name="__title__" required rules={[{ required: true, message: '请输入标题' }]}>
-          <Input placeholder="请输入" />
+        <Form.Item
+          label="标题"
+          name="__title__"
+          required
+          rules={[
+            {
+              validator(_, value) {
+                if (!value || !value.trim()) {
+                  return Promise.reject(new Error('请输入标题'));
+                }
+                if (!/^[a-zA-Z0-9_]{1,30}$/.test(value)) {
+                  return Promise.reject(new Error('请输入仅包含字母、数字、下划线的1-30位字符'));
+                }
+                return Promise.resolve();
+              },
+            },
+          ]}
+        >
+          <Input placeholder="请输入" autoFocus={true} style={{ width: '250px' }} />
         </Form.Item>
       </Form>
     );
@@ -110,6 +128,13 @@ const Tabs = ({ components = [], fieldName, auth, projectId, disabled, formInsta
       return;
     }
     setPopVisible(true);
+  });
+
+  const handleCancel = useMemoCallback(() => {
+    form.resetFields();
+    setTimeout(() => {
+      setPopVisible(false);
+    }, 0);
   });
 
   return (
@@ -139,7 +164,9 @@ const Tabs = ({ components = [], fieldName, auth, projectId, disabled, formInsta
                               )}
                               onClick={() => setActiveKey(field.name)}
                             >
-                              <div className={styles.name}>{fieldValue?.[index]?.['__title__']}</div>
+                              <div className={styles.name}>
+                                <Text text={fieldValue?.[index]?.['__title__'] || ''} />
+                              </div>
                               <div className={styles.operation}>
                                 <div
                                   className={styles.delete}
@@ -158,14 +185,19 @@ const Tabs = ({ components = [], fieldName, auth, projectId, disabled, formInsta
                       )}
                       <Popconfirm
                         placement="bottomLeft"
+                        z-index={9999}
                         icon={null}
                         title={content}
                         visible={popVisible}
+                        disabled={true}
+                        destroyTooltipOnHide={true}
                         onConfirm={() => handleConfirm(add, fields.length)}
-                        onCancel={() => setPopVisible(false)}
+                        onCancel={() => handleCancel()}
                       >
                         <div className={styles.add} onClick={handleShowPopup}>
-                          <Icon type="xinzeng" className={styles.icon} />
+                          <span>
+                            <Icon type="xinzeng" className={styles.icon} />
+                          </span>
                         </div>
                       </Popconfirm>
                     </div>
