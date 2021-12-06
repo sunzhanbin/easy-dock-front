@@ -138,7 +138,7 @@ export const validateRules = (isRequired: boolean, label: string, type: string, 
     } else {
       rules.push({
         validator(_, val) {
-          if (val === undefined || val === null) {
+          if (val === undefined || val === null || (typeof val === 'string' && val.trim() === '')) {
             return Promise.reject(new Error(`${label}不能为空`));
           }
           return Promise.resolve();
