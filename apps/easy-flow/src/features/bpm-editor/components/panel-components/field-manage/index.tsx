@@ -16,7 +16,7 @@ interface ComProps {
 }
 
 // 不能添加到Tabs,Table里的控件
-const excludeTypes = ['Tabs', 'SerialNum'];
+const excludeTypes = ['Tabs', 'SerialNum', 'FlowData'];
 
 const componentList = Object.values(componentSchema).filter((com) => !excludeTypes.includes(com.baseInfo.type));
 
