@@ -107,7 +107,7 @@ const Attachment = (
     if (value) {
       const componentValue = typeof value === 'string' ? (JSON.parse(value) as FileValue) : { ...value };
       const { fileIdList, fileList } = componentValue;
-      const list: UploadFile[] = fileList ? fileList : [];
+      const list: UploadFile[] = [];
       if (fileIdList && fileIdList.length > 0) {
         fileIdList.forEach((file) => {
           list.push({
@@ -123,8 +123,6 @@ const Attachment = (
             list.push(val);
           });
         }
-        setFileList(list);
-      } else {
         setFileList(list);
       }
     }

@@ -106,7 +106,7 @@ const ImageComponent = (
     if (value) {
       const componentValue = typeof value === 'string' ? (JSON.parse(value) as ImageValue) : { ...value };
       const { fileIdList, fileList } = componentValue;
-      const list: UploadFile[] = fileList ? fileList : [];
+      const list: UploadFile[] = [];
       if (fileIdList && fileIdList.length > 0) {
         const promiseList: Promise<any>[] = [];
 
@@ -132,8 +132,6 @@ const ImageComponent = (
           }
           setFileList(list);
         });
-      } else {
-        setFileList(list);
       }
     }
   });
