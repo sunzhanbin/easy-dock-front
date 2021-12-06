@@ -49,6 +49,10 @@ export async function loadDatasource(
           })
           .then(({ data }) => {
             datasource[comp.config.fieldName] = data;
+          })
+          .catch(() => {
+            // 如果调用接口出错,则数据源设为空数组,防止页面崩溃
+            datasource[comp.config.fieldName] = [];
           }),
       );
     }
@@ -130,5 +134,5 @@ export const deleteDraft = async (draftId: number | string) => {
 };
 
 export const getFlowData = (params: any) => {
-  return runtimeAxios.post('', params)
-}
+  return runtimeAxios.post('', params);
+};
