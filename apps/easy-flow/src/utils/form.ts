@@ -320,14 +320,14 @@ function analysisOptionRule(symbol: string, value: string | string[], formValue:
       break;
     case 'equalAnyOne':
       if (Array.isArray(formValue)) {
-        result = (value as string[]).some((val) => formValue.toString() === val);
+        result = formValue.length > 0 && formValue.every((val) => (value as string[]).includes(val));
       } else {
         result = (value as string[]).includes(formValue);
       }
       break;
     case 'unequalAnyOne':
       if (Array.isArray(formValue)) {
-        result = (value as string[]).every((val) => formValue.toString() !== val) && formValue.length <= 1;
+        result = formValue.some((val) => !(value as string[]).includes(val)) || formValue.length === 0;
       } else {
         result = !(value as string[]).includes(formValue);
       }

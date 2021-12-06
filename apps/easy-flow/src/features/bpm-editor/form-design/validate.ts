@@ -95,15 +95,24 @@ export const validateHasChecked = (props: ConfigItem, config: ConfigItem) => {
       if (numlimit.enable && (!numlimit.numrange || (!numlimit.numrange?.min && !numlimit.numrange?.max))) {
         return '请输入数值范围';
       }
-      if (
-        numlimit.enable &&
-        defaultNumber &&
-        defaultNumber.customData &&
-        defaultNumber.type === 'custom' &&
-        (defaultNumber.customData < numlimit.numrange?.min || defaultNumber.customData > numlimit.numrange?.max)
-      ) {
-        message.error('该默认值已超过限制范围，请重新输入！');
-        return 'errorTipsExchange';
+
+      if (numlimit.enable) {
+        if (typeof defaultNumber === 'object' && defaultNumber) {
+          if (
+            defaultNumber.customData &&
+            defaultNumber.type === 'custom' &&
+            (defaultNumber.customData < numlimit.numrange?.min || defaultNumber.customData > numlimit.numrange?.max)
+          ) {
+            message.error('该默认值已超过限制范围，请重新输入！');
+            return 'errorTipsExchange';
+          }
+        } else if (typeof defaultNumber === 'number') {
+          // 兼容tab里的数字控件
+          if (defaultNumber < numlimit.numrange?.min || defaultNumber > numlimit.numrange?.max) {
+            message.error('该默认值已超过限制范围，请重新输入！');
+            return 'errorTipsExchange';
+          }
+        }
       }
       break;
     case 'Date':
