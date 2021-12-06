@@ -1,6 +1,6 @@
-import { ConfigItem, FormField, FormRuleItem } from '@type';
+import { ConfigItem, FormRuleItem } from '@type';
 import { message } from 'antd';
-import { current } from '@reduxjs/toolkit';
+// import { current } from '@reduxjs/toolkit';
 
 export const validateFieldName = (fieldName: string): string => {
   if (!fieldName) {
