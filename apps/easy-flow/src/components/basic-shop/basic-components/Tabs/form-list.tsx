@@ -42,12 +42,20 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId, name }
   const compSources = useLoadComponents(componentTypes);
   const [dataSourceMap, setDataSourceMap] = useState<Datasource>({});
   useEffect(() => {
-    if (optionComponents.length > 0) {
-      fetchDataSource(optionComponents as any).then((res) => {
-        setDataSourceMap(res);
-      });
+    if (context && context.form) {
+      if (optionComponents.length > 0) {
+        const { form } = context;
+        const formDataList: { name: string; value: any }[] = [];
+        const formValues = form.getFieldsValue() || {};
+        Object.entries(formValues).forEach(([key, value]) => {
+          formDataList.push({ name: key, value });
+        });
+        fetchDataSource(optionComponents as any, formDataList).then((res) => {
+          setDataSourceMap(res);
+        });
+      }
     }
-  }, [optionComponents]);
+  }, [optionComponents, context]);
 
   useEffect(() => {
     if (componentTypes.includes('Attachment')) {

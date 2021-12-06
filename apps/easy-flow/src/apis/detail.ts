@@ -92,36 +92,69 @@ export async function fetchDataSource(
           );
         }
       } else if (dataSource.type === 'interface') {
-        // const { apiconfig } = dataSource;
-        // if (apiconfig && formDataList) {
-        //   const name = (apiconfig.response as { name: string })?.name;
-        //   const formValues = formDataList.filter((val) => val.value);
-        //   if (name) {
-        //     allPromises.push(
-        //       runtimeAxios
-        //         .post('/common/doHttpJson', { meta: apiconfig, formDataList: formValues })
-        //         .then((res) => {
-        //           const data = eval(`res.${name}`);
-        //           let list: { key: string; value: string }[] = [];
-        //           if (Array.isArray(data)) {
-        //             if (data.every((val) => typeof val === 'string')) {
-        //               // 字符串数组
-        //               list = data.map((val) => ({ key: val, value: val }));
-        //             } else if (data.every((val) => val.key && val.value)) {
-        //               // key-value对象数组
-        //               list = data.map((item) => ({ key: item.key, value: item.value }));
-        //             }
-        //           }
-        //           source[key] = list;
-        //         }),
-        //     );
-        //   }
-        // }
-        allPromises.push(
-          Promise.resolve(1).then(() => {
-            source[key] = [];
-          }),
-        );
+        const { apiConfig } = dataSource;
+        if (apiConfig && formDataList) {
+          const formValues: { [k: string]: any } = {};
+          formDataList?.forEach((v) => {
+            formValues[v.name] = v.value;
+          });
+          const required = apiConfig.request.required;
+          const custom = apiConfig.request.customize;
+          const requestFields = required
+            .concat(custom)
+            .map((item) => {
+              const { map } = item;
+              if (!map) {
+                return '';
+              }
+              return String(map?.match(/(?<=\$\{).*?(?=\})/));
+            })
+            .filter((name) => !name);
+          const isEmpty =
+            requestFields.length > 0 &&
+            requestFields.some((name) => formValues[name] === undefined || formValues[name] === null);
+          // 只要入参中有一个没有值，则不调用接口
+          if (isEmpty) {
+            allPromises.push(
+              Promise.resolve(1).then(() => {
+                source[key] = [];
+              }),
+            );
+            return;
+          }
+          const name = (apiConfig.response as { name: string })?.name;
+          const formData = formDataList?.filter((val) => val.value) || [];
+          if (name) {
+            allPromises.push(
+              runtimeAxios.post('/common/doHttpJson', { meta: apiConfig, formDataList: formData }).then((res) => {
+                const data = eval(`res.${name}`);
+                let list: { key: string; value: string }[] = [];
+                if (Array.isArray(data)) {
+                  if (data.every((val) => typeof val === 'string')) {
+                    // 字符串数组
+                    list = data.map((val) => ({ key: val, value: val }));
+                  } else if (data.every((val) => val.key && val.value)) {
+                    // key-value对象数组
+                    list = data.map((item) => ({ key: item.key, value: item.value }));
+                  }
+                }
+                source[key] = list;
+              }),
+            );
+          } else {
+            allPromises.push(
+              Promise.resolve(1).then(() => {
+                source[key] = [];
+              }),
+            );
+          }
+        } else {
+          allPromises.push(
+            Promise.resolve(1).then(() => {
+              source[key] = [];
+            }),
+          );
+        }
       }
     }
   });
