@@ -65,6 +65,11 @@
           }
         }
       }
+      :global {
+        .error {
+          border: 1px solid #ff5568 !important;
+        }
+      }
     }
     .content {
       margin-top: 12px;

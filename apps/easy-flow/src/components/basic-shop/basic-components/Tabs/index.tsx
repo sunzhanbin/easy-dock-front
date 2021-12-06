@@ -125,7 +125,7 @@ const Tabs = ({ components = [], fieldName, auth, projectId, disabled, formInsta
             <Form.List name={fieldName}>
               {(fields, { add, remove }) => {
                 return (
-                  <div className={styles.container}>
+                  <div className={classNames(styles.container, 'tabs-container')}>
                     <div className={classNames(styles.title)}>
                       {isEdit ? (
                         <div className={classNames(styles.item, styles.active)}>
@@ -136,7 +136,11 @@ const Tabs = ({ components = [], fieldName, auth, projectId, disabled, formInsta
                           return (
                             <div
                               key={field.key}
-                              className={classNames(styles.item, activeKey === field.name ? styles.active : '')}
+                              className={classNames(
+                                styles.item,
+                                activeKey === field.name ? styles.active : '',
+                                'tab-nav',
+                              )}
                               onClick={() => setActiveKey(field.name)}
                             >
                               <div className={styles.name}>{fieldValue?.[index]?.['__title__']}</div>
@@ -170,7 +174,7 @@ const Tabs = ({ components = [], fieldName, auth, projectId, disabled, formInsta
                       </Popconfirm>
                     </div>
                     <div className={styles.content}>
-                      {(fields.length > 0 || isEdit) && (
+                      {isEdit ? (
                         <FormList
                           fields={components}
                           id={String(activeKey)}
@@ -181,6 +185,23 @@ const Tabs = ({ components = [], fieldName, auth, projectId, disabled, formInsta
                           name={activeKey!}
                           key={activeKey}
                         />
+                      ) : (
+                        fields.map((field) => {
+                          return (
+                            <div key={field.name} style={{ display: field.name === activeKey ? 'block' : 'none' }}>
+                              <FormList
+                                fields={components}
+                                id={String(field.name)}
+                                parentId={fieldName}
+                                auth={auth}
+                                readonly={readonly}
+                                projectId={projectId}
+                                name={field.name!}
+                                key={field.name}
+                              />
+                            </div>
+                          );
+                        })
                       )}
                     </div>
                   </div>

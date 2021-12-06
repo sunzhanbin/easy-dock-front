@@ -5,7 +5,7 @@ import { Loading } from '@common/components';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import ConfirmModal, { ActionType } from './components/confirm-modal';
 import Header from '@components/header';
-import { runtimeAxios, uploadFile } from '@utils';
+import { runtimeAxios, uploadFile, validateTabs } from '@utils';
 import { loadFlowData } from '@/apis/detail';
 import { dynamicRoutes } from '@consts';
 import Detail from './components/detail';
@@ -75,6 +75,7 @@ function FlowDetail() {
 
   const handleSaveNodeForm = useMemoCallback(async () => {
     if (!formRef.current) return;
+    validateTabs(formRef.current);
     const values = await formRef.current.validateFields();
     const formValues = await uploadFile(values);
 
@@ -87,6 +88,7 @@ function FlowDetail() {
   });
 
   const handleSubmitNodeForm = useMemoCallback(async () => {
+    validateTabs(formRef.current!);
     const values = await formRef.current!.validateFields();
     const formValues = await uploadFile(values);
 
@@ -103,6 +105,7 @@ function FlowDetail() {
   });
 
   const handleConfirm = useMemoCallback(async (remark: string) => {
+    validateTabs(formRef.current!);
     const values = await formRef.current!.validateFields();
     const formValues = await uploadFile(values);
 
