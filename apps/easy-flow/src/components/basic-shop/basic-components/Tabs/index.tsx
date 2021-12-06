@@ -47,13 +47,9 @@ const Tabs = ({ components = [], fieldName, auth, projectId, disabled, formInsta
     add();
     setActiveKey(length);
     const tabValue = (formInstance?.getFieldValue(fieldName) || []).filter((v: any) => v && v?.__title__);
-    if (length === 0) {
-      const defaultValue = formInstance?.getFieldValue(fieldName)?.[0];
-      if (defaultValue && typeof defaultValue === 'object' && Object.keys(defaultValue).length) {
-        tabValue.push({ __title__, ...defaultValue });
-      } else {
-        tabValue.push({ __title__ });
-      }
+    const defaultValue = formInstance?.getFieldValue(fieldName)?.[length];
+    if (defaultValue && typeof defaultValue === 'object' && Object.keys(defaultValue).length) {
+      tabValue.push({ __title__, ...defaultValue });
     } else {
       tabValue.push({ __title__ });
     }
