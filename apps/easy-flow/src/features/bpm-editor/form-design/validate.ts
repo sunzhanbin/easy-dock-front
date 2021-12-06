@@ -30,6 +30,10 @@ export const validateSerial = (config: ConfigItem) => {
   ) {
     return 'SerialError';
   }
+  if (!config.serialRule.serialId) {
+    message.error('编号控件未关联编号规则，请检查!');
+    return 'errorTipsExchange';
+  }
   const name = config.serialRule.serialMata?.ruleName;
   const changeName = config.serialRule.serialMata?.changeRuleName;
   // 自定义规则和已有规则规则名称不符合格式
