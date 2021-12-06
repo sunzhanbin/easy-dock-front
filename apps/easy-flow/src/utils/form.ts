@@ -6,6 +6,7 @@ import moment from 'moment';
 import { runtimeAxios } from './axios';
 import { DATE_DEFAULT_FORMAT } from '@utils/const';
 import { cloneDeep } from 'lodash';
+import { FormInstance } from 'antd';
 
 // 格式化单个条件value
 export function formatRuleValue(
@@ -445,6 +446,52 @@ export function getBase64(file: File | Blob) {
     reader.onerror = (error) => reject(error);
   });
 }
+
+export function validateTabs(form: FormInstance) {
+  const res = form.validateFields();
+  // 校验并提示tabs内控件错误
+  res.catch((error) => {
+    const { errorFields = [], values } = error;
+    if (errorFields.length > 0) {
+      const tabsNameMapIndex: { [k: string]: number } = {};
+      Object.keys(values)
+        .filter((name) => Array.isArray(values[name]))
+        .forEach((name, index) => {
+          tabsNameMapIndex[name] = index;
+        });
+      const errorTabList = errorFields
+        .filter((field: { name: string[] }) => field.name.length === 3)
+        .map((v: { name: string[] }) => v.name)
+        .map((name: [string, string, string]) => `${name[0]},${name[1]}`);
+      const errorTabs = Array.from(new Set(errorTabList)).map((name) => {
+        const [tabName, paneKey] = (name as string).split(',');
+        return {
+          tabIndex: tabsNameMapIndex[tabName],
+          paneIndex: Number(paneKey),
+        };
+      });
+      if (errorTabs.length < 1) {
+        return;
+      }
+      errorTabs.forEach((item) => {
+        const { tabIndex, paneIndex } = item;
+        const selector = `.ant-form .tabs-container:nth-child(${tabIndex + 1})  .tab-nav:nth-child(${paneIndex + 1})`;
+        const el = document.querySelector(selector);
+        if (el) {
+          const classNameList: string[] = [];
+          el.classList.forEach((className) => {
+            if (!className.includes('error')) {
+              classNameList.push(className);
+            }
+          });
+          classNameList.push('error');
+          el.className = classNameList.join(' ');
+        }
+      });
+    }
+  });
+}
+
 // 批量上传文件
 export async function uploadFile(values: any) {
   // 需要上传的文件,图片和附件合并到一起
