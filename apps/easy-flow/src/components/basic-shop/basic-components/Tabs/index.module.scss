@@ -1,4 +1,5 @@
 @import '@common/styles/var.scss';
+@import '@common/styles/mixin.scss';
 .row {
   & > .col {
     flex-shrink: 1;
@@ -29,6 +30,10 @@
         background: rgba(24, 39, 67, 0.04);
         border-right: 1px solid rgba(227, 228, 232, 1);
         cursor: pointer;
+        .name {
+          width: 100%;
+          @include ellipsis;
+        }
         .operation {
           display: none;
           position: absolute;
@@ -80,5 +85,11 @@
     .operation {
       cursor: not-allowed !important;
     }
+  }
+}
+
+:global {
+  .ant-popconfirm {
+    pointer-events: initial !important;
   }
 }
