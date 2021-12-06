@@ -42,7 +42,7 @@ const DefaultDate = (props: editProps) => {
     return props;
   }, [formatType, value]);
   const handleDisabled = (current: Moment) => {
-    if (range && range?.enable) {
+    if (range && range?.enable && range.daterange) {
       return current.valueOf() < Number(range.daterange.min) || current.valueOf() > Number(range.daterange.max);
     }
     return false;
