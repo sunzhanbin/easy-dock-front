@@ -186,8 +186,13 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
       const id = errors[0].id || '';
       id && dispatch(selectField({ id }));
       dispatch(setErrors({ errors }));
-      if (errors.find((item) => item.content.includes('errorTipsExchange'))) return Promise.reject(errors);
-      isShowErrorTip && message.error('您有内容未填写或填写错误，请检查');
+      const hasTipsError = errors.find((item) => item.content.includes('errorTipsExchange'));
+      const hasSubTipsError = errors.some((item) => {
+        return item?.subError && item.subError.some((v) => v.content.includes('errorTipsExchange'));
+      });
+      if (isShowErrorTip && !hasTipsError && !hasSubTipsError) {
+        message.error('您有内容未填写或填写错误，请检查');
+      }
       return Promise.reject(errors);
     }
     // 表单改变之后才有必要调后台接口

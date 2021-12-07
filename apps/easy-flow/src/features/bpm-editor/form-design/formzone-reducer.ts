@@ -255,6 +255,21 @@ const reducers = {
     });
     state.subComponentConfig = { ...config, ...props };
     state.isDirty = true;
+    // 编辑后需要去除错误标记
+    const parentIndex = (state.errors || []).findIndex((v) => v.id === parentId);
+    if (parentIndex > -1) {
+      const subErrors = state.errors[parentIndex].subError;
+      if (subErrors && subErrors.length > 0) {
+        const subIndex = subErrors.findIndex((v) => v.id === (config as any).id);
+        if (subIndex > -1) {
+          subErrors.splice(subIndex, 1);
+          // 删除过后如果没有子控件错误,则父控件的错误也删除
+          if (subErrors.length === 0) {
+            state.errors.splice(parentIndex, 1);
+          }
+        }
+      }
+    }
     return state;
   },
 };
