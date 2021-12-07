@@ -45,7 +45,7 @@ const symbolListMap = {
     symbolMap.null,
     symbolMap.notNull,
   ],
-  dateFilter: [symbolMap.latter, symbolMap.earlier, symbolMap.dateEqual],
+  dateFilter: [symbolMap.earlier, symbolMap.latter, symbolMap.earlierEqual, symbolMap.latterEqual],
   option: [
     symbolMap.equal,
     symbolMap.unequal,
@@ -335,7 +335,7 @@ const FormList = ({
           </Form.Item>
         );
       }
-      if (symbol === 'latter' || symbol === 'earlier' || symbol === 'dateEqual') {
+      if (symbol === 'latter' || symbol === 'earlier' || symbol === 'earlierEqual' || symbol === 'latterEqual') {
         return (
           <>
             <Form.Item

@@ -11,16 +11,17 @@ type RuleParams = {
   format?: any;
 };
 
+// 转换流程变量时间
 const getFlowVarsRule = (date: string, type: string, format?: string) => {
   switch (date) {
     case 'currentMonth':
-      if (type === 'earlier') {
+      if (type === 'earlier' || type === 'latterEqual') {
         return moment().startOf('month').valueOf();
       } else {
         return moment().endOf('month').valueOf();
       }
     case 'currentYear':
-      if (type === 'earlier') {
+      if (type === 'earlier' || type === 'latterEqual') {
         return moment().startOf('year').valueOf();
       } else {
         return moment().endOf('year').valueOf();
@@ -29,7 +30,7 @@ const getFlowVarsRule = (date: string, type: string, format?: string) => {
       if (format === 'yyyy-MM-DD HH:mm:ss') {
         return moment().valueOf();
       } else {
-        if (type === 'earlier') {
+        if (type === 'earlier' || type === 'latterEqual') {
           return moment().startOf('day').valueOf();
         } else {
           return moment().endOf('day').valueOf();
@@ -38,6 +39,16 @@ const getFlowVarsRule = (date: string, type: string, format?: string) => {
   }
 };
 
+// 转换关联控件的时间
+const formatFieldDate = (type: string, currentTime: number) => {
+  if (type === 'earlier' || type === 'latterEqual') {
+    return moment(currentTime).startOf('day').valueOf();
+  } else {
+    return moment(currentTime).endOf('day').valueOf();
+  }
+};
+
+// 日期默认范围限制
 const analyseRangeRule = (
   current: Moment,
   currentTime: number,
@@ -64,17 +75,25 @@ const formatMaxMinDate = (
   type: string,
   format?: string,
 ) => {
-  const dateRules = rules?.filter((item) => item.condition.symbol === type);
+  const dateRules = rules?.filter((item) => {
+    return (
+      item.condition.symbol === type ||
+      (type === 'earlier' ? item.condition.symbol === 'earlierEqual' : item.condition.symbol === 'latterEqual')
+    );
+  });
   const ruleWatchKeys = dateRules?.map((rule) => rule.watch).flat(2);
   // 流程变量的数据需要特殊处理
   const flowVarsRule: { [key: string]: any } = {};
-  const values: number[] = ruleWatchKeys
+  const values = ruleWatchKeys
     ?.map((item) => {
+      const rule = dateRules.find((rule) => rule.conditon && rule.conditon.value === item);
       if (Object.keys(flowVarsMap).includes(item)) {
-        flowVarsRule[item] = getFlowVarsRule(item, type, format) as number;
-        return getFlowVarsRule(item, type, format) as number;
+        flowVarsRule[item] = getFlowVarsRule(item, rule?.conditon.symbol, format) as number;
+        return getFlowVarsRule(item, rule?.conditon.symbol, format) as number;
       } else {
-        return formValue[item] as number;
+        // 如果日期是经过转换的 需要把form的日期同步  否则通过value找key有问题
+        formValue[item] = formatFieldDate(rule?.conditon.symbol, formValue[item]);
+        return formatFieldDate(rule?.conditon.symbol, formValue[item]);
       }
     })
     ?.filter(Boolean);
@@ -111,13 +130,13 @@ const getDisabledDateRule = ({ rules, current, formValue, id, range, format }: R
   let rules1, rules2, rules3, rules4, rules5, rule6, rule7;
   const earlierRules = formatMaxMinDate(rules, formValue, 'earlier', format);
   const latterRules = formatMaxMinDate(rules, formValue, 'latter', format);
-  const formatRules = [...earlierRules, ...latterRules];
+  const formatRules = [...earlierRules, ...latterRules].flat(2);
   (formatRules ?? []).forEach((item) => {
     const { watch, condition } = item;
-    if (condition.symbol === 'earlier') {
-      // 早于
+    if (condition.symbol === 'earlier' || condition.symbol === 'earlierEqual') {
+      // 小于/小于等于
       if (Object.keys(flowVarsMap).includes(watch[0])) {
-        const currentTime = getFlowVarsRule(watch[0], 'earlier', format)!;
+        const currentTime = getFlowVarsRule(watch[0], condition.symbol, format)!;
         rules5 = analyseRangeRule(
           current,
           currentTime,
@@ -136,7 +155,7 @@ const getDisabledDateRule = ({ rules, current, formValue, id, range, format }: R
             currentTime > moment(range?.min).valueOf() || currentTime > moment(range?.max).valueOf(),
             range!,
           );
-          rules3 = current.valueOf() > currentTime;
+          rules3 = current.valueOf() >= formatFieldDate(condition.symbol, currentTime);
         } else if (id === condition.value) {
           const currentTime = formValue[condition.fieldName as string];
           rules5 = analyseRangeRule(
@@ -145,15 +164,14 @@ const getDisabledDateRule = ({ rules, current, formValue, id, range, format }: R
             currentTime < moment(range?.max).valueOf() || currentTime < moment(range?.min).valueOf(),
             range!,
           );
-          rules3 = current.valueOf() < currentTime;
+          rules3 = current.valueOf() < formatFieldDate(condition.symbol, currentTime);
         }
       }
     }
-
-    if (condition.symbol === 'latter') {
-      // 晚于
+    if (condition.symbol === 'latter' || condition.symbol === 'latterEqual') {
+      // 大于/大于等于
       if (Object.keys(flowVarsMap).includes(watch[0])) {
-        const currentTime = getFlowVarsRule(watch[0], 'latter', format)!;
+        const currentTime = getFlowVarsRule(watch[0], condition.symbol, format)!;
         rules5 = analyseRangeRule(
           current,
           currentTime,
@@ -172,7 +190,7 @@ const getDisabledDateRule = ({ rules, current, formValue, id, range, format }: R
             currentTime < moment(range?.min).valueOf() || currentTime < moment(range?.max).valueOf(),
             range!,
           );
-          rules4 = current.valueOf() < currentTime;
+          rules4 = current.valueOf() < formatFieldDate(condition.symbol, currentTime);
         } else if (id === condition.value) {
           const currentTime = formValue[condition.fieldName as string];
           rules5 = analyseRangeRule(
@@ -181,7 +199,7 @@ const getDisabledDateRule = ({ rules, current, formValue, id, range, format }: R
             currentTime > moment(range?.min).valueOf() || currentTime > moment(range?.max).valueOf(),
             range!,
           );
-          rules4 = current.valueOf() > currentTime;
+          rules4 = current.valueOf() > formatFieldDate(condition.symbol, currentTime);
         }
       }
     }
