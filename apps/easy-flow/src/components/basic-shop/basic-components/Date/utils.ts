@@ -75,10 +75,10 @@ const formatMaxMinDate = (
   type: string,
   format?: string,
 ) => {
-  const dateRules = (rules ?? []).filter((item) => {
+  const dateRules = (Array.isArray(rules) ? rules : []).filter((item) => {
     return (
-      item.condition.symbol === type ||
-      (type === 'earlier' ? item.condition.symbol === 'earlierEqual' : item.condition.symbol === 'latterEqual')
+      item?.condition?.symbol === type ||
+      (type === 'earlier' ? item?.condition?.symbol === 'earlierEqual' : item?.condition?.symbol === 'latterEqual')
     );
   });
   const ruleWatchKeys = dateRules?.map((rule) => rule.watch).flat(2);
