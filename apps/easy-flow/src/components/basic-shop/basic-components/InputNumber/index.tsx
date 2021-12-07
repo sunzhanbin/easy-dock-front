@@ -13,7 +13,9 @@ const InputNumberContainer = (props: InputNumberProps & { [key: string]: any }) 
     if (form && rules && refresh !== undefined) {
       const formValue = form.getFieldsValue();
       const numberValue = getCalculateNum(rules, formValue, props.decimal);
-      prop.value = numberValue;
+      if (numberValue !== undefined && numberValue !== null) {
+        prop.value = numberValue;
+      }
       onChange && onChange(numberValue!);
     }
     return prop;
