@@ -19,6 +19,7 @@ import AllowDecimal from '../allow-decimal';
 import LimitRange from '../limit-range';
 import DateRange from '../date-range';
 import DateFormat from '../date-format';
+import SubInputNumber from '../sub-input-number';
 import { LABEL_INCLUDE_CHECKBOX, LABEL_LINKED_RULES } from '@utils/const';
 import FilesType from '@/features/bpm-editor/components/panel-components/files-type';
 import { FormInstance } from 'antd/lib/form';
@@ -83,6 +84,7 @@ const componentMap: { [k: string]: (props: { [k: string]: any }) => ReactNode } 
   DefaultDate: (props) => <DefaultDate id={props.componentId} />,
   Editor: () => <Editor />,
   FieldManage: (props) => <FieldManage parentId={props.parentId} />,
+  SubInputNumber: (props) => <SubInputNumber id={props.componentId} />,
 };
 
 const NumberContainer = ({ children, ...rest }: any) => {
