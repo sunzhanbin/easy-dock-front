@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useRef } from 'react';
 import { DatePicker, DatePickerProps } from 'antd';
 import { Icon } from '@common/components';
 import moment, { Moment } from 'moment';
@@ -31,17 +31,19 @@ function TimesDatePicker(
   });
 
   return (
-    <DatePicker
-      value={value ? moment(value) : undefined}
-      showTime={showTime}
-      size={size}
-      format={format}
-      className={className}
-      suffixIcon={<Icon type="riqi" />}
-      getPopupContainer={getPopupContainer}
-      onChange={handleChange}
-      disabledDate={disabledDate}
-    />
+    <div>
+      <DatePicker
+        value={value ? moment(value) : undefined}
+        showTime={showTime}
+        size={size}
+        format={format}
+        className={className}
+        suffixIcon={<Icon type="riqi" />}
+        onChange={handleChange}
+        disabledDate={disabledDate}
+        {...(!type ? { getPopupContainer: getPopupContainer } : null)}
+      />
+    </div>
   );
 }
 
