@@ -398,6 +398,7 @@
     background-color: transparent;
   }
   &.ant-input-number-disabled {
+    color: inherit;
     background-color: inherit;
     &:hover {
       border-color: transparent;
