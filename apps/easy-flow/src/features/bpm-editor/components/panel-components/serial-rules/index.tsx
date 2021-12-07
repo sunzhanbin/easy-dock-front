@@ -47,7 +47,7 @@ const SerialRules = (props: RulesProps) => {
         name: com.label,
       }));
   }, [byId, id]);
-  console.log(fields, '3333');
+
   const fieldSerial = useMemo(() => {
     return (byId[id] as SerialNumField)?.serialRule;
   }, [id, byId]);
