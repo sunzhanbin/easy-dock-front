@@ -12,9 +12,10 @@ import { FormInstance } from 'antd/es';
 interface DateRangeProps {
   id: string;
   componentId: string;
+  form: FormInstance<any>;
 }
 
-const DateRange = ({ id, componentId }: DateRangeProps) => {
+const DateRangeComponent = ({ id, componentId, form }: DateRangeProps) => {
   const byId = useAppSelector(componentPropsSelector);
   const formatType = useMemo(() => {
     return (byId[componentId] as DateField)?.format;
@@ -49,73 +50,84 @@ const DateRange = ({ id, componentId }: DateRangeProps) => {
     }
     return false;
   };
+  const isChecked = form.getFieldValue('datelimit');
+  if (!isChecked || !isChecked.enable) {
+    return null;
+  }
+  //
+  // return (
+  //   <Form.Item noStyle shouldUpdate>
+  //     {(form: FormInstance<any>) => {
 
   return (
-    <Form.Item noStyle shouldUpdate>
-      {(form: FormInstance<any>) => {
-        const isChecked = form.getFieldValue('datelimit');
-        if (!isChecked || !isChecked.enable) {
-          return null;
-        }
-        return (
-          <div className={styles.dateRange}>
-            <p className={styles.tips}>此处限制与表单静态规则冲突时，以表单静态规则为准。</p>
-            <div className={styles.limitRange}>
-              <Form.Item
-                className={styles.Item}
-                name={['datelimit', id, 'min']}
-                rules={[
-                  {
-                    validator(_: any, value: number) {
-                      if (!form.getFieldValue(['datelimit', id, 'max']) && !value) {
-                        return Promise.reject(new Error('请选择日期范围'));
-                      }
-                      return Promise.resolve();
-                    },
-                  },
-                ]}
-              >
-                <DatePicker
-                  size="large"
-                  placeholder="最早日期"
-                  {...propList}
-                  type="startTime"
-                  disabledDate={(v: Moment) => handleDisabledDate(v, 'prev', form)}
-                  onChange={() => {
-                    form.validateFields([['datelimit', id, 'max']]);
-                  }}
-                />
-              </Form.Item>
-              <span className={styles.text}>~</span>
-              <Form.Item
-                className={styles.Item}
-                name={['datelimit', id, 'max']}
-                rules={[
-                  {
-                    validator(_: any, value: number) {
-                      if (!form.getFieldValue(['datelimit', id, 'min']) && !value) {
-                        return Promise.reject(new Error('请选择日期范围'));
-                      }
-                      return Promise.resolve();
-                    },
-                  },
-                ]}
-              >
-                <DatePicker
-                  size="large"
-                  placeholder="最晚日期"
-                  {...propList}
-                  type="endTime"
-                  disabledDate={(v: Moment) => handleDisabledDate(v, 'next', form)}
-                  onChange={() => {
-                    form.validateFields([['datelimit', id, 'min']]);
-                  }}
-                />
-              </Form.Item>
-            </div>
-          </div>
-        );
-      }}
+    <div className={styles.dateRange}>
+      <p className={styles.tips}>此处限制与表单静态规则冲突时，以表单静态规则为准。</p>
+      <div className={styles.limitRange}>
+        <Form.Item
+          className={styles.Item}
+          name={['datelimit', id, 'min']}
+          rules={[
+            {
+              validator(_: any, value: number) {
+                if (!form.getFieldValue(['datelimit', id, 'max']) && !value) {
+                  return Promise.reject(new Error('请选择日期范围'));
+                }
+                return Promise.resolve();
+              },
+            },
+          ]}
+        >
+          <DatePicker
+            size="large"
+            placeholder="最早日期"
+            {...propList}
+            type="startTime"
+            disabledDate={(v: Moment) => handleDisabledDate(v, 'prev', form)}
+            onChange={() => {
+              form.validateFields([['datelimit', id, 'max']]);
+            }}
+          />
+        </Form.Item>
+        <span className={styles.text}>~</span>
+        <Form.Item
+          className={styles.Item}
+          name={['datelimit', id, 'max']}
+          rules={[
+            {
+              validator(_: any, value: number) {
+                if (!form.getFieldValue(['datelimit', id, 'min']) && !value) {
+                  return Promise.reject(new Error('请选择日期范围'));
+                }
+                return Promise.resolve();
+              },
+            },
+          ]}
+        >
+          <DatePicker
+            size="large"
+            placeholder="最晚日期"
+            {...propList}
+            type="endTime"
+            disabledDate={(v: Moment) => handleDisabledDate(v, 'next', form)}
+            onChange={() => {
+              form.validateFields([['datelimit', id, 'min']]);
+            }}
+          />
+        </Form.Item>
+      </div>
+    </div>
+  );
+  // }}
+  // </Form.Item>
+  // );
+};
+
+const DateRange = (props: any) => {
+  return (
+    <Form.Item name="datelimit" noStyle>
+      <Form.Item name={['datelimit', props.id]} noStyle>
+        <DateRangeComponent {...props} />
+      </Form.Item>
     </Form.Item>
   );
 };
