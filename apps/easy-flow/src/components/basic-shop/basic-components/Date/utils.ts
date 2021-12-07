@@ -77,7 +77,7 @@ const formatMaxMinDate = (
         return formValue[item] as number;
       }
     })
-    .filter(Boolean);
+    ?.filter(Boolean);
   if (values && values.length) {
     let dateValue = '';
     if (type === 'earlier') {
@@ -93,7 +93,7 @@ const formatMaxMinDate = (
         return formValue[fieldKey] === dateValue;
       }
     });
-    return rules.filter((item) => item.watch.includes(dateKey));
+    return rules?.filter((item) => item.watch.includes(dateKey));
   }
   return [];
 };
