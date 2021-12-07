@@ -89,10 +89,27 @@ const NumberContainer = ({ children, ...rest }: any) => {
   return React.cloneElement(children, rest);
 };
 
-const CheckComponentType: { [key: string]: (id: string, componentId?: string) => any } = {
-  numrange: (id, componentId) => componentId && <LimitRange id={id} componentId={componentId} />,
-  daterange: (id, componentId) => componentId && <DateRange id={id} componentId={componentId} />,
-  filetype: (id, componentId) => componentId && <FilesType componentId={componentId} />,
+const CheckComponentType: { [key: string]: (id: string, componentId?: string, formInstance?: any) => any } = {
+  precision: (id, componentId, formInstance) => (
+    <NumberContainer>
+      <AllowDecimal id={id} formInstance={formInstance} />
+    </NumberContainer>
+  ),
+  numrange: (id, componentId, formInstance) => (
+    <NumberContainer>
+      <LimitRange id={id} form={formInstance} />
+    </NumberContainer>
+  ),
+  daterange: (id, componentId, formInstance) => (
+    <NumberContainer>
+      <DateRange id={id} componentId={componentId} form={formInstance} />
+    </NumberContainer>
+  ),
+  filetype: (id, componentId, formInstance) => (
+    <NumberContainer>
+      <FilesType componentId={componentId} form={formInstance} />
+    </NumberContainer>
+  ),
 };
 
 const FormItemWrap = (props: ComponentProps) => {
@@ -106,14 +123,7 @@ const FormItemWrap = (props: ComponentProps) => {
     );
   }
   if (LABEL_LINKED_RULES.includes(type)) {
-    return CheckComponentType[type](id, componentId);
-  }
-  if (type === 'precision' && formInstance) {
-    return (
-      <NumberContainer>
-        <AllowDecimal id={id} formInstance={formInstance} />
-      </NumberContainer>
-    );
+    return componentId && formInstance && CheckComponentType[type](id, componentId, formInstance);
   }
   if (type === 'FieldManage') {
     return (
@@ -213,8 +223,7 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
               parentId: componentId,
             };
             const component =
-              ![...LABEL_INCLUDE_CHECKBOX, ...LABEL_LINKED_RULES, 'precision'].includes(type) &&
-              componentMap[type](props);
+              ![...LABEL_INCLUDE_CHECKBOX, ...LABEL_LINKED_RULES].includes(type) && componentMap[type](props);
             return (
               <Fragment key={key}>
                 <FormItemWrap

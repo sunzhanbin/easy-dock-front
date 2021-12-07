@@ -4,9 +4,11 @@ import useMemoCallback from '@common/hooks/use-memo-callback';
 import { Tooltip } from 'antd';
 import React, { memo, useEffect, useRef, useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
+import classNames from 'classnames';
 import styles from './index.module.scss';
 
 interface DragProps {
+  className?: string;
   data: CompConfig;
   index: number;
   onDelete(index: this['index']): void;
@@ -14,7 +16,7 @@ interface DragProps {
   onDrop(sourceIndex: number, targetIndex: number): void;
 }
 
-const DraggableOption = ({ data, index, onEdit, onDelete, onDrop }: DragProps) => {
+const DraggableOption = ({ className, data, index, onEdit, onDelete, onDrop }: DragProps) => {
   const dragWrapperRef = useRef<HTMLDivElement>(null);
   const [canMove, setCanMove] = useState<boolean>(false);
   const [, drag] = useDrag(
@@ -58,7 +60,11 @@ const DraggableOption = ({ data, index, onEdit, onDelete, onDrop }: DragProps) =
   });
 
   return (
-    <div ref={dragWrapperRef} className={styles.draggable} onClick={handleClick}>
+    <div
+      ref={dragWrapperRef}
+      className={classNames(styles.draggable, className ? className : '')}
+      onClick={handleClick}
+    >
       <div className={styles.name}>
         <Icon type={data.config.icon} className={styles.icon} />
         <div className={styles.text}>{data.config.label}</div>
