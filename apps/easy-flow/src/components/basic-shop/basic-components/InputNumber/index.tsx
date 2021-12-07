@@ -10,14 +10,17 @@ const InputNumberContainer = (props: InputNumberProps & { [key: string]: any }) 
   const { onChange } = props;
   const propList = useMemo(() => {
     const prop = { ...props };
-    if (form && rules && refresh !== undefined) {
-      const formValue = form.getFieldsValue();
-      const numberValue = getCalculateNum(rules, formValue, props.decimal);
-      if (numberValue !== undefined && numberValue !== null) {
-        prop.value = numberValue;
+    setTimeout(() => {
+      if (form && rules && refresh !== undefined) {
+        const formValue = form.getFieldsValue();
+        const numberValue = getCalculateNum(rules, formValue, props.decimal);
+        if (numberValue !== undefined && numberValue !== null) {
+          prop.value = numberValue;
+        }
+        onChange && onChange(numberValue!);
       }
-      onChange && onChange(numberValue!);
-    }
+    }, 0);
+
     return prop;
   }, [form, props, refresh, rules]);
 
