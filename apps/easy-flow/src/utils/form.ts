@@ -52,7 +52,7 @@ export function formatRuleValue(
       const text = dynamicMap[value as string]?.label || '';
       return { name, symbol: label, value: text ? `在${text}之内` : '' };
     }
-    if (symbol === 'earlier' || symbol === 'latter') {
+    if (symbol === 'earlier' || symbol === 'latter' || symbol === 'dateEqual') {
       const value = fieldNext?.label;
       return { name, symbol: label, value: value || '' };
     }
