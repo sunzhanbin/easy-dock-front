@@ -18,9 +18,10 @@ const Date = (props: DatePickerProps & { onChange: (v: any) => void } & { [key: 
         formValue,
         id: props.id!,
         range: props.datelimit?.enable ? props.datelimit?.daterange : undefined,
+        format: props.format,
       });
     };
-  }, [rules, form, props.id, props.datelimit]);
+  }, [rules, form, props.id, props.datelimit, props.format]);
 
   return (
     <EventHoc>

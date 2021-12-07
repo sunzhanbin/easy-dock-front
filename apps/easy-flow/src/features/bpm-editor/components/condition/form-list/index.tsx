@@ -45,7 +45,7 @@ const symbolListMap = {
     symbolMap.null,
     symbolMap.notNull,
   ],
-  dateFilter: [symbolMap.latter, symbolMap.earlier],
+  dateFilter: [symbolMap.latter, symbolMap.earlier, symbolMap.dateEqual],
   option: [
     symbolMap.equal,
     symbolMap.unequal,
