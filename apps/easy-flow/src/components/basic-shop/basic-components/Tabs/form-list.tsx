@@ -100,10 +100,14 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId, name }
       const { form } = context;
       const initialValue: { [k: string]: any } = {};
       fields
-        .map((v) => ({ key: v.config.fieldName, value: v.props?.defaultValue }))
+        .map((v) => ({
+          key: v.config.fieldName,
+          value: v.props?.defaultValue || (typeof v.props?.defaultNumber === 'number' && v.props?.defaultNumber),
+        }))
         .filter(({ value }) => value !== undefined && value !== null)
         .forEach(({ key, value }) => {
           initialValue[key] = value;
+          PubSub.publish(`${parentId}.${key}-change`, value);
         });
       const parentValue = form.getFieldValue(parentId);
       const fieldValue = Object.assign({}, { ...initialValue }, form.getFieldValue([parentId, name]));
