@@ -61,7 +61,8 @@ const FieldManage = ({ parentId, value, onChange }: ComProps) => {
               handleAddComponent(baseInfo.type as FormField['type']);
             }}
           >
-            {baseInfo.name}
+            <Icon className="icon" type={baseInfo.icon} />
+            <div className="name">{baseInfo.name}</div>
           </Menu.Item>
         ))}
       </Menu>
