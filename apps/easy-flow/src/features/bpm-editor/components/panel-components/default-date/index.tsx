@@ -2,11 +2,12 @@ import { memo, useMemo, useCallback, ReactNode } from 'react';
 import { DatePicker } from 'antd';
 import moment, { Moment } from 'moment';
 import locale from 'antd/lib/date-picker/locale/zh_CN';
-import { componentPropsSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
+import { componentPropsSelector, subComponentConfigSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 import { useAppSelector } from '@/app/hooks';
 import { DateField } from '@/type';
 import styles from './index.module.scss';
 import { Icon } from '@common/components';
+import useMemoCallback from '@common/hooks/use-memo-callback';
 
 interface editProps {
   id: string;
@@ -17,12 +18,16 @@ interface editProps {
 const DefaultDate = (props: editProps) => {
   const { id, value, onChange } = props;
   const byId = useAppSelector(componentPropsSelector);
+  const subAppConfig = useAppSelector(subComponentConfigSelector);
   const formatType = useMemo(() => {
     return (byId[id] as DateField)?.format;
   }, [id, byId]);
   const range = useMemo(() => {
+    if (subAppConfig?.id === id) {
+      return subAppConfig?.datelimit;
+    }
     return (byId[id] as DateField)?.datelimit;
-  }, [id, byId]);
+  }, [id, byId, subAppConfig]);
   const propList = useMemo(() => {
     const props: { [k: string]: string | boolean | Function | Moment | ReactNode } = {
       size: 'large',
@@ -41,12 +46,12 @@ const DefaultDate = (props: editProps) => {
     }
     return props;
   }, [formatType, value]);
-  const handleDisabled = (current: Moment) => {
+  const handleDisabled = useMemoCallback((current: Moment) => {
     if (range && range?.enable && range.daterange) {
       return current.valueOf() < Number(range.daterange.min) || current.valueOf() > Number(range.daterange.max);
     }
     return false;
-  };
+  });
   const handleChange = useCallback(
     (e) => {
       if (e?.valueOf()) {
