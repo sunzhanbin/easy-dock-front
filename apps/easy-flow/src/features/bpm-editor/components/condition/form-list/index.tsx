@@ -335,7 +335,7 @@ const FormList = ({
           </Form.Item>
         );
       }
-      if (symbol === 'latter' || symbol === 'earlier') {
+      if (symbol === 'latter' || symbol === 'earlier' || symbol === 'dateEqual') {
         return (
           <>
             <Form.Item
