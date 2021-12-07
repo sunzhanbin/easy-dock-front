@@ -52,7 +52,7 @@ export function formatRuleValue(
       const text = dynamicMap[value as string]?.label || '';
       return { name, symbol: label, value: text ? `在${text}之内` : '' };
     }
-    if (symbol === 'earlier' || symbol === 'latter') {
+    if (symbol === 'earlier' || symbol === 'latter' || symbol === 'dateEqual') {
       const value = fieldNext?.label;
       return { name, symbol: label, value: value || '' };
     }
@@ -84,8 +84,9 @@ export const symbolMap: { [k in string]: { value: string; label: string } } = {
   greaterOrEqual: { value: 'greaterOrEqual', label: '大于等于' },
   less: { value: 'less', label: '小于' },
   lessOrEqual: { value: 'lessOrEqual', label: '小于等于' },
-  latter: { value: 'latter', label: '不早于' },
-  earlier: { value: 'earlier', label: '不晚于' },
+  earlier: { value: 'earlier', label: '早于' },
+  latter: { value: 'latter', label: '晚于' },
+  dateEqual: { value: 'dateEqual', label: '等于' },
   range: { value: 'range', label: '选择范围' },
   dynamic: { value: 'dynamic', label: '动态筛选' },
   equalAnyOne: { value: 'equalAnyOne', label: '等于任意一个' },
