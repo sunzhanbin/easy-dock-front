@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect } from 'react';
+import React, { memo, useState, useEffect, useMemo } from 'react';
 import { message, Modal, Popconfirm, Tooltip } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import styles from '../index.module.scss';
@@ -6,8 +6,10 @@ import { deleteSerialId, getSerialList } from '@apis/form';
 import { useSubAppDetail } from '@app/app';
 import { Icon } from '@common/components';
 import classNames from 'classnames';
-import { RuleOption } from '@type';
+import { FormField, RuleOption } from '@type';
 import { RULE_TYPE } from '@utils/const';
+import { useAppSelector } from '@app/hooks';
+import { componentPropsSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 
 interface RuleProps {
   fields: { id: string; name: string }[];
@@ -18,11 +20,25 @@ interface RuleProps {
 }
 
 const RuleModal = (props: RuleProps) => {
-  const { showRuleModal, onCancel, onSubmit, fields, serialId } = props;
+  const { showRuleModal, onCancel, onSubmit, fields } = props;
   const { data } = useSubAppDetail();
   const [ruleList, setRuleList] = useState([]);
   const [rule, setRule] = useState({});
+  const byId = useAppSelector(componentPropsSelector);
+
   const [activeIndex, setActiveIndex] = useState(-1);
+
+  const selectedRules = useMemo<{ id: string; name: string }[]>(() => {
+    const componentList = Object.values(byId).map((item: FormField) => item) || [];
+    const compType = ['SerialNum'];
+    return componentList
+      .filter((com) => compType.includes(com.type))
+      .map((com) => ({
+        id: com.type === 'SerialNum' && com.serialRule.serialId,
+        name: com.label,
+      }));
+  }, [byId]);
+
   const handleSubmit = useMemoCallback(() => {
     if (activeIndex === -1) {
       return message.warning('请选择规则');
@@ -120,7 +136,7 @@ const RuleModal = (props: RuleProps) => {
                     <Icon className={styles.iconfont} type="shanchu" />
                   </div>
                 </Tooltip>
-              ) : rule.id === serialId ? (
+              ) : selectedRules.find((item) => item.id === rule.id) ? (
                 <Tooltip title="该规则已被关联，不可删除">
                   <div className={classNames(styles.delete, styles.disable)}>
                     <Icon className={styles.iconfont} type="shanchu" />
