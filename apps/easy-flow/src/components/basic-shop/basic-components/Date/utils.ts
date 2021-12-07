@@ -75,7 +75,7 @@ const formatMaxMinDate = (
   type: string,
   format?: string,
 ) => {
-  const dateRules = rules?.filter((item) => {
+  const dateRules = (rules ?? []).filter((item) => {
     return (
       item.condition.symbol === type ||
       (type === 'earlier' ? item.condition.symbol === 'earlierEqual' : item.condition.symbol === 'latterEqual')
