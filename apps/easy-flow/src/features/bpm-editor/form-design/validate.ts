@@ -1,3 +1,4 @@
+import { nameRegexp } from '@/utils';
 import { ConfigItem, FormRuleItem } from '@type';
 import { message } from 'antd';
 // import { current } from '@reduxjs/toolkit';
@@ -16,6 +17,9 @@ export const validateFieldName = (fieldName: string): string => {
 export const validateLabel = (label: string) => {
   if (!label) {
     return '请填写控件名称';
+  }
+  if (!nameRegexp.test(label.trim())) {
+    return '请输入1-30位的汉字、字母、数字、下划线';
   }
   return '';
 };

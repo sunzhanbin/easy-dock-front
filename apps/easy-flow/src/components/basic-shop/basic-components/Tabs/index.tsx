@@ -9,6 +9,7 @@ import FormList from './form-list';
 import { FieldAuthsMap } from '@/type/flow';
 import { omit } from 'lodash';
 import PubSub from 'pubsub-js';
+import { nameRegexp } from '@/utils';
 
 interface TabProps {
   fieldName: string;
@@ -95,8 +96,8 @@ const Tabs = ({ components = [], fieldName, auth, projectId, disabled, formInsta
                 if (!value || !value.trim()) {
                   return Promise.reject(new Error('请输入标题'));
                 }
-                if (!/^[a-zA-Z0-9_]{1,30}$/.test(value)) {
-                  return Promise.reject(new Error('请输入仅包含字母、数字、下划线的1-30位字符'));
+                if (!nameRegexp.test(value.trim())) {
+                  return Promise.reject(new Error('请输入1-30位的汉字、字母、数字、下划线'));
                 }
                 return Promise.resolve();
               },
