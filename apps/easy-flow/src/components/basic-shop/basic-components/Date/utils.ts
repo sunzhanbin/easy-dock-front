@@ -16,15 +16,15 @@ const getFlowVarsRule = (date: string, type: string, format?: string) => {
   switch (date) {
     case 'currentMonth':
       if (type === 'earlier' || type === 'latterEqual') {
-        return moment().startOf('month').valueOf();
+        return moment().startOf('month').startOf('day').valueOf();
       } else {
-        return moment().endOf('month').valueOf();
+        return moment().startOf('month').endOf('day').valueOf();
       }
     case 'currentYear':
       if (type === 'earlier' || type === 'latterEqual') {
-        return moment().startOf('year').valueOf();
+        return moment().startOf('year').startOf('day').valueOf();
       } else {
-        return moment().endOf('year').valueOf();
+        return moment().startOf('year').endOf('day').valueOf();
       }
     case 'currentTime':
       if (format === 'yyyy-MM-DD HH:mm:ss') {
@@ -92,8 +92,11 @@ const formatMaxMinDate = (
         return getFlowVarsRule(item, rule?.conditon.symbol, format) as number;
       } else {
         // 如果日期是经过转换的 需要把form的日期同步  否则通过value找key有问题
-        formValue[item] = formatFieldDate(rule?.conditon.symbol, formValue[item]);
-        return formatFieldDate(rule?.conditon.symbol, formValue[item]);
+        if (formValue[item]) {
+          formValue[item] = formatFieldDate(rule?.conditon.symbol, formValue[item]);
+          return formatFieldDate(rule?.conditon.symbol, formValue[item]);
+        }
+        return 0;
       }
     })
     ?.filter(Boolean);
@@ -131,6 +134,7 @@ const getDisabledDateRule = ({ rules, current, formValue, id, range, format }: R
   const earlierRules = formatMaxMinDate(rules, formValue, 'earlier', format);
   const latterRules = formatMaxMinDate(rules, formValue, 'latter', format);
   const formatRules = [...earlierRules, ...latterRules].flat(2);
+  // console.log(formatRules, '---------');
   (formatRules ?? []).forEach((item) => {
     const { watch, condition } = item;
     if (condition.symbol === 'earlier' || condition.symbol === 'earlierEqual') {

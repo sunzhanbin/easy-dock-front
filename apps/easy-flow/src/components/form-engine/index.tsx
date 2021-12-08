@@ -244,7 +244,11 @@ const FormDetail = React.forwardRef(function FormDetail(
         if (initialValue && initialValue[fieldName] !== undefined) {
           formValues[fieldName] = initialValue[fieldName];
         } else {
-          formValues[fieldName || id] = com.props.defaultValue || com.config.value;
+          if (com.props.defaultNumber && com.props.defaultNumber.customData) {
+            formValues[fieldName || id] = com.props.defaultNumber.customData;
+          } else {
+            formValues[fieldName || id] = com.props.defaultValue || com.config.value;
+          }
         }
         comMaps[id] = com;
         // 流程编排中没有配置fieldAuths这个字段默认可见
