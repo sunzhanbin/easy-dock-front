@@ -15,7 +15,7 @@ import PubSub from 'pubsub-js';
 import Container from './container';
 import { convertFormRules, validateRules } from './utils';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import { debounce } from 'lodash';
+import { debounce, omit } from 'lodash';
 import { getFilesType } from '@apis/form';
 
 type FieldsVisible = { [fieldId: string]: boolean };
@@ -28,7 +28,7 @@ interface FormProps {
   readonly?: boolean;
   className?: string;
   projectId?: number;
-  nodeType?: string;
+  nodeType: string;
 }
 
 type CompMaps = {
@@ -52,11 +52,24 @@ export type ConfigMap = {
   };
 };
 
+export const getFilesTypeList = async () => {
+  try {
+    const ret = await getFilesType();
+    const fileMap: { [key: string]: string[] } = {};
+    ret.data.forEach((item: { code: string; suffixes: string[] }) => {
+      fileMap[item.code] = item.suffixes;
+    });
+    return fileMap;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 const FormDetail = React.forwardRef(function FormDetail(
   props: FormProps,
   ref: React.ForwardedRef<FormInstance<FormValue>>,
 ) {
-  const { data, fieldsAuths, datasource, initialValue, readonly, className, projectId, nodeType } = props;
+  const { data, fieldsAuths, datasource, initialValue, readonly, className, projectId, nodeType = 'start' } = props;
   const [form] = Form.useForm<FormValue>();
   const [loading, setLoading] = useState<boolean>(false);
   const [fieldsVisible, setFieldsVisible] = useState<FieldsVisible>({});
@@ -82,19 +95,6 @@ const FormDetail = React.forwardRef(function FormDetail(
   }, [data]);
   // 获取组件源码
   const compSources = useLoadComponents(componentTypes);
-
-  const getFilesTypeList = async () => {
-    try {
-      const ret = await getFilesType();
-      const fileMap: { [key: string]: string[] } = {};
-      ret.data.forEach((item: { code: string; suffixes: string[] }) => {
-        fileMap[item.code] = item.suffixes;
-      });
-      return fileMap;
-    } catch (e) {
-      console.log(e);
-    }
-  };
 
   const callInterfaceList = useMemoCallback((ruleList: DataConfig[], formValues: any) => {
     const formDataList: { name: string; value: any }[] = (Object.keys(formValues) || [])
@@ -204,12 +204,13 @@ const FormDetail = React.forwardRef(function FormDetail(
     }, 500),
   );
 
-  const onValuesChange = useMemoCallback((changeValue: any, all?: any) => {
+  const onValuesChange = useMemoCallback((changeValue: any, all: any) => {
     // 此处不要进行setState操作   避免重复更新
     Object.entries(changeValue).forEach(([key, value]: any) => {
-      if (value && typeof value === 'object' && !Array.isArray(value) && Object.values(value).length) {
-        const field = Object.values(value)[0];
-        if (typeof field === 'object' && field) {
+      // tabs components
+      if (value && Array.isArray(value) && value.length && all?.[key]?.[0]?.['__title__']) {
+        const field = value[value.length - 1];
+        if (field && typeof field === 'object') {
           const changeKey = Object.keys(field)[0];
           const changeValue = Object.values(field)[0];
           if (!changeKey) return;
@@ -243,7 +244,11 @@ const FormDetail = React.forwardRef(function FormDetail(
         if (initialValue && initialValue[fieldName] !== undefined) {
           formValues[fieldName] = initialValue[fieldName];
         } else {
-          formValues[fieldName || id] = com.props.defaultValue || com.config.value;
+          if (com.props.defaultNumber && com.props.defaultNumber.customData) {
+            formValues[fieldName || id] = com.props.defaultNumber.customData;
+          } else {
+            formValues[fieldName || id] = com.props.defaultValue || com.config.value;
+          }
         }
         comMaps[id] = com;
         // 流程编排中没有配置fieldAuths这个字段默认可见
@@ -269,10 +274,10 @@ const FormDetail = React.forwardRef(function FormDetail(
           Object.entries(formValues)
             .filter(([key, value]: [string, any]) => value !== undefined)
             .forEach(([key, value]) => {
-              onValuesChange({ [key]: value });
+              onValuesChange({ [key]: value }, formValues);
             });
         }
-      }, 10);
+      }, 18);
     })();
   }, [data, fieldsAuths, initialValue, form, componentTypes, nodeType, onValuesChange]);
 
@@ -298,7 +303,10 @@ const FormDetail = React.forwardRef(function FormDetail(
               const isRequired = fieldsAuths && fieldsAuths[fieldName] === AuthType.Required;
               const compProps = { ...props };
               const Component = compSources[config?.type as AllComponentType['type']];
-              if (!fieldsVisible[fieldName || fieldId] || !Component) return null;
+              if (!fieldsVisible[config.fieldName || fieldId] || !Component) return null;
+              if (type === 'DescText' && compProps.value) {
+                compProps['text_value'] = compProps.value;
+              }
               delete compProps['defaultValue'];
               delete compProps['apiConfig'];
               const rules: Rule[] = validateRules(isRequired, label, type, props);
@@ -310,6 +318,7 @@ const FormDetail = React.forwardRef(function FormDetail(
                     fieldName={fieldName || id}
                     form={form}
                     rules={comRules.formRules[fieldName || id]}
+                    nodeType={nodeType!}
                   >
                     <Form.Item
                       key={fieldId}

@@ -1,16 +1,15 @@
 import React, { Fragment, memo, ReactNode, useEffect, useMemo } from 'react';
-import { Checkbox, Form, Input, InputNumber, Radio, Select, Switch } from 'antd';
+import { Checkbox, Form, Input, InputNumber, Radio, Switch } from 'antd';
 import SelectOptionList from '../select-option-list';
 import SelectDefaultOption from '../select-default-option';
 import DefaultDate from '../default-date';
 import Editor from '../rich-text';
 import FieldManage from '../field-manage';
-import { FormField, rangeItem, SchemaConfigItem } from '@/type';
+import { FormField, SchemaConfigItem } from '@/type';
 import { Store } from 'antd/lib/form/interface';
 import styles from './index.module.scss';
 import { useAppSelector } from '@/app/hooks';
 import { errorSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
-import { Icon } from '@common/components';
 import { Rule } from 'antd/lib/form';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import SelectColumns from '../select-columns';
@@ -20,11 +19,11 @@ import AllowDecimal from '../allow-decimal';
 import LimitRange from '../limit-range';
 import DateRange from '../date-range';
 import UrlOption from '../url-option';
+import DateFormat from '../date-format';
+import SubInputNumber from '../sub-input-number';
 import { LABEL_INCLUDE_CHECKBOX, LABEL_LINKED_RULES } from '@utils/const';
 import FilesType from '@/features/bpm-editor/components/panel-components/files-type';
 import { FormInstance } from 'antd/lib/form';
-
-const { Option } = Select;
 
 interface CompAttrEditorProps {
   config: SchemaConfigItem[];
@@ -62,16 +61,7 @@ const options = [
 const componentMap: { [k: string]: (props: { [k: string]: any }) => ReactNode } = {
   Input: (props) => <Input placeholder={props.placeholder} size="large" />,
   Textarea: (props) => <Input.TextArea placeholder={props.placeholder} rows={4} size="large" />,
-  Select: (props) => (
-    <Select placeholder={props.placeholder || '请选择'} size="large" suffixIcon={<Icon type="xiala" />}>
-      {props.range &&
-        (props.range as rangeItem[]).map((v) => (
-          <Option value={v.key} key={v.key}>
-            {v.value}
-          </Option>
-        ))}
-    </Select>
-  ),
+  Select: (props) => <DateFormat {...props} id={props.componentId} />,
   ColSpace: () => {
     return <Radio.Group options={options} optionType="button" />;
   },
@@ -96,16 +86,34 @@ const componentMap: { [k: string]: (props: { [k: string]: any }) => ReactNode } 
   Editor: () => <Editor />,
   FieldManage: (props) => <FieldManage parentId={props.parentId} />,
   UrlOption: () => <UrlOption />,
+  SubInputNumber: (props) => <SubInputNumber id={props.componentId} />,
 };
 
 const NumberContainer = ({ children, ...rest }: any) => {
   return React.cloneElement(children, rest);
 };
 
-const CheckComponentType: { [key: string]: (id: string, componentId?: string) => any } = {
-  numrange: (id, componentId) => componentId && <LimitRange id={id} componentId={componentId} />,
-  daterange: (id, componentId) => componentId && <DateRange id={id} componentId={componentId} />,
-  filetype: (id, componentId) => componentId && <FilesType componentId={componentId} />,
+const CheckComponentType: { [key: string]: (id: string, componentId?: string, formInstance?: any) => any } = {
+  precision: (id, componentId, formInstance) => (
+    <NumberContainer>
+      <AllowDecimal id={id} formInstance={formInstance} />
+    </NumberContainer>
+  ),
+  numrange: (id, componentId, formInstance) => (
+    <NumberContainer>
+      <LimitRange id={id} form={formInstance} />
+    </NumberContainer>
+  ),
+  daterange: (id, componentId, formInstance) => (
+    <NumberContainer>
+      <DateRange id={id} componentId={componentId} form={formInstance} />
+    </NumberContainer>
+  ),
+  filetype: (id, componentId, formInstance) => (
+    <NumberContainer>
+      <FilesType componentId={componentId} form={formInstance} />
+    </NumberContainer>
+  ),
 };
 
 const FormItemWrap = (props: ComponentProps) => {
@@ -119,14 +127,7 @@ const FormItemWrap = (props: ComponentProps) => {
     );
   }
   if (LABEL_LINKED_RULES.includes(type)) {
-    return CheckComponentType[type](id, componentId);
-  }
-  if (type === 'precision' && formInstance) {
-    return (
-      <NumberContainer>
-        <AllowDecimal id={id} formInstance={formInstance} />
-      </NumberContainer>
-    );
+    return componentId && formInstance && CheckComponentType[type](id, componentId, formInstance);
   }
   if (type === 'FieldManage') {
     return (
@@ -226,8 +227,7 @@ const CompAttrEditor = (props: CompAttrEditorProps) => {
               parentId: componentId,
             };
             const component =
-              ![...LABEL_INCLUDE_CHECKBOX, ...LABEL_LINKED_RULES, 'precision'].includes(type) &&
-              componentMap[type](props);
+              ![...LABEL_INCLUDE_CHECKBOX, ...LABEL_LINKED_RULES].includes(type) && componentMap[type](props);
             return (
               <Fragment key={key}>
                 <FormItemWrap

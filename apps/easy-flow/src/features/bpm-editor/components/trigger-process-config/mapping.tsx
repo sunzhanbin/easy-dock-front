@@ -24,6 +24,7 @@ interface Component {
   name: string;
   field: string;
   auth: AuthType | null;
+  disabled?: boolean;
 }
 
 const Mapping = ({ name, parentName, subAppId, value, onChange }: MappingProps) => {
@@ -42,7 +43,7 @@ const Mapping = ({ name, parentName, subAppId, value, onChange }: MappingProps) 
         const components = res.data.filter((v) => !['Tabs', 'FlowData', 'SerialNum'].includes(v.type));
         const requiredList = components.filter((v) => v.auth === AuthType.Required);
         const requiredConfig = requiredList.map((v) => ({ target: v.field, required: true }));
-        if (requiredConfig.length) {
+        if (requiredConfig.length && value?.length === 0) {
           onChange && onChange(requiredConfig);
         }
         setTargetComponents(components);
@@ -58,7 +59,12 @@ const Mapping = ({ name, parentName, subAppId, value, onChange }: MappingProps) 
     if (list.length > 0) {
       const fieldList = list.map((v) => v.target);
       setTargetComponents(() => {
-        return cacheComponents.filter((v) => !fieldList.includes(v.field));
+        return cacheComponents.map((v) => {
+          if (fieldList.includes(v.field)) {
+            return Object.assign({}, v, { disabled: true });
+          }
+          return v;
+        });
       });
     }
   }, [value]);
@@ -96,7 +102,7 @@ const Mapping = ({ name, parentName, subAppId, value, onChange }: MappingProps) 
                                 >
                                   {targetComponents.map((v) => {
                                     return (
-                                      <Option key={v.field} value={v.field}>
+                                      <Option key={v.field} value={v.field} disabled={v.disabled}>
                                         {v.name}
                                       </Option>
                                     );

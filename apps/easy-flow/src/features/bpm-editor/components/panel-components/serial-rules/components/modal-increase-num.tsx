@@ -23,7 +23,8 @@ const IncNumModal = (props: IncNumProps) => {
   const [resetDuration, setResetDuration] = useState<string>(data.resetDuration || 'none'); // 重置周期
   const [startValue, setStartValue] = useState<number>(data.startValue || 1); // 初始值
 
-  const handleSubmit = useMemoCallback(() => {
+  const handleSubmit = useMemoCallback(async () => {
+    await form.validateFields();
     const params = Object.assign({}, MODAL_TYPE, form.getFieldsValue());
     onSubmit && onSubmit(params);
   });
@@ -45,7 +46,20 @@ const IncNumModal = (props: IncNumProps) => {
       getContainer={false}
     >
       <Form form={form} layout="vertical" autoComplete="off" initialValues={props.data}>
-        <Form.Item label="计数位数" name="digitsNum">
+        <Form.Item
+          label="计数位数"
+          name="digitsNum"
+          rules={[
+            {
+              validator(_, value) {
+                if (!/^[1-9]\d*$/.test(value)) {
+                  return Promise.reject(new Error('请输入正整数'));
+                }
+                return Promise.resolve();
+              },
+            },
+          ]}
+        >
           <InputNumber
             size="large"
             min={1}
@@ -74,7 +88,20 @@ const IncNumModal = (props: IncNumProps) => {
           </Form.Item>
           <p className={styles.resetTips}>{INCREASE_NUM_LIST[resetDuration]}</p>
         </Form.Item>
-        <Form.Item label="初始值" name="startValue">
+        <Form.Item
+          label="初始值"
+          name="startValue"
+          rules={[
+            {
+              validator(_, value) {
+                if (!/^[1-9]\d*$/.test(value)) {
+                  return Promise.reject(new Error('请输入正整数'));
+                }
+                return Promise.resolve();
+              },
+            },
+          ]}
+        >
           <InputNumber
             min={1}
             size="large"

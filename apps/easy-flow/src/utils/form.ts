@@ -6,6 +6,7 @@ import moment from 'moment';
 import { runtimeAxios } from './axios';
 import { DATE_DEFAULT_FORMAT } from '@utils/const';
 import { cloneDeep } from 'lodash';
+import { FormInstance } from 'antd';
 
 // 格式化单个条件value
 export function formatRuleValue(
@@ -40,7 +41,7 @@ export function formatRuleValue(
   }
   // 日期类型
   if (fieldType === 'Date') {
-    const format = (field as DateField)?.format || 'YYYY-MM-DD';
+    const format = (field as DateField)?.format || 'yyyy-MM-DD';
     if (symbol === 'range') {
       const [start, end] = (value as [number, number]) || [0, 0];
       const startTime = start ? moment(start).format(format) : '';
@@ -51,7 +52,7 @@ export function formatRuleValue(
       const text = dynamicMap[value as string]?.label || '';
       return { name, symbol: label, value: text ? `在${text}之内` : '' };
     }
-    if (symbol === 'earlier' || symbol === 'latter') {
+    if (symbol === 'earlier' || symbol === 'latter' || symbol === 'earlierEqual' || symbol === 'latterEqual') {
       const value = fieldNext?.label;
       return { name, symbol: label, value: value || '' };
     }
@@ -83,8 +84,10 @@ export const symbolMap: { [k in string]: { value: string; label: string } } = {
   greaterOrEqual: { value: 'greaterOrEqual', label: '大于等于' },
   less: { value: 'less', label: '小于' },
   lessOrEqual: { value: 'lessOrEqual', label: '小于等于' },
-  latter: { value: 'latter', label: '不早于' },
-  earlier: { value: 'earlier', label: '不晚于' },
+  earlier: { value: 'earlier', label: '小于' },
+  earlierEqual: { value: 'earlierEqual', label: '小于等于' },
+  latter: { value: 'latter', label: '大于' },
+  latterEqual: { value: 'latterEqual', label: '大于等于' },
   range: { value: 'range', label: '选择范围' },
   dynamic: { value: 'dynamic', label: '动态筛选' },
   equalAnyOne: { value: 'equalAnyOne', label: '等于任意一个' },
@@ -237,8 +240,8 @@ function getDynamicTimeRange(dynamic: string): [number, number] {
       endTime = moment().endOf('day').format('x');
       break;
     case 'yesterday':
-      startDay = moment().subtract(1, 'day').format('YYYY-MM-DD');
-      endDay = moment().subtract(1, 'day').format('YYYY-MM-DD');
+      startDay = moment().subtract(1, 'day').format('yyyy-MM-DD');
+      endDay = moment().subtract(1, 'day').format('yyyy-MM-DD');
       startTime = moment(startDay).startOf('day').format('x');
       endTime = moment(endDay).endOf('day').format('x');
       break;
@@ -247,7 +250,7 @@ function getDynamicTimeRange(dynamic: string): [number, number] {
       endTime = moment().endOf('week').format('x');
       break;
     case 'lastWeek':
-      const lastWeekDay = moment().subtract(1, 'week').format('YYYY-MM-DD');
+      const lastWeekDay = moment().subtract(1, 'week').format('yyyy-MM-DD');
       startTime = moment(lastWeekDay).startOf('day').format('x');
       endTime = moment(lastWeekDay).endOf('day').format('x');
       break;
@@ -256,7 +259,7 @@ function getDynamicTimeRange(dynamic: string): [number, number] {
       endTime = moment().endOf('month').format('x');
       break;
     case 'lastMonth':
-      const lastMonth = moment().subtract(1, 'month').format('YYYY-MM-DD');
+      const lastMonth = moment().subtract(1, 'month').format('yyyy-MM-DD');
       startTime = moment(lastMonth).startOf('day').format('x');
       endTime = moment(lastMonth).endOf('day').format('x');
       break;
@@ -265,25 +268,25 @@ function getDynamicTimeRange(dynamic: string): [number, number] {
       endTime = moment().endOf('year').format('x');
       break;
     case 'lastYear':
-      const lastYear = moment().subtract(1, 'year').format('YYYY-MM-DD');
+      const lastYear = moment().subtract(1, 'year').format('yyyy-MM-DD');
       startTime = moment(lastYear).startOf('day').format('x');
       endTime = moment(lastYear).endOf('day').format('x');
       break;
     case 'last7days':
-      startDay = moment().subtract(6, 'day').format('YYYY-MM-DD');
-      endDay = moment().subtract(0, 'day').format('YYYY-MM-DD');
+      startDay = moment().subtract(6, 'day').format('yyyy-MM-DD');
+      endDay = moment().subtract(0, 'day').format('yyyy-MM-DD');
       startTime = moment(startDay).startOf('day').format('x');
       endTime = moment(endDay).endOf('day').format('x');
       break;
     case 'last30days':
-      startDay = moment().subtract(29, 'day').format('YYYY-MM-DD');
-      endDay = moment().subtract(0, 'day').format('YYYY-MM-DD');
+      startDay = moment().subtract(29, 'day').format('yyyy-MM-DD');
+      endDay = moment().subtract(0, 'day').format('yyyy-MM-DD');
       startTime = moment(startDay).startOf('day').format('x');
       endTime = moment(endDay).endOf('day').format('x');
       break;
     case 'last90days':
-      startDay = moment().subtract(89, 'day').format('YYYY-MM-DD');
-      endDay = moment().subtract(0, 'day').format('YYYY-MM-DD');
+      startDay = moment().subtract(89, 'day').format('yyyy-MM-DD');
+      endDay = moment().subtract(0, 'day').format('yyyy-MM-DD');
       startTime = moment(startDay).startOf('day').format('x');
       endTime = moment(endDay).endOf('day').format('x');
       break;
@@ -319,14 +322,14 @@ function analysisOptionRule(symbol: string, value: string | string[], formValue:
       break;
     case 'equalAnyOne':
       if (Array.isArray(formValue)) {
-        result = (value as string[]).some((val) => formValue.toString() === val);
+        result = formValue.length > 0 && formValue.every((val) => (value as string[]).includes(val));
       } else {
         result = (value as string[]).includes(formValue);
       }
       break;
     case 'unequalAnyOne':
       if (Array.isArray(formValue)) {
-        result = (value as string[]).every((val) => formValue.toString() !== val) && formValue.length <= 1;
+        result = formValue.some((val) => !(value as string[]).includes(val)) || formValue.length === 0;
       } else {
         result = !(value as string[]).includes(formValue);
       }
@@ -445,6 +448,67 @@ export function getBase64(file: File | Blob) {
     reader.onerror = (error) => reject(error);
   });
 }
+
+export function addClassName(el: Element, className: string) {
+  const classList: string[] = el.classList?.length > 0 ? [...el.classList] : [];
+  if (classList.includes(className)) {
+    return;
+  }
+  classList.push(className);
+  el.className = classList.join(' ');
+}
+
+export function removeClassName(el: Element, className: string) {
+  const classList: string[] = el.classList?.length > 0 ? [...el.classList] : [];
+  const index = classList.findIndex((name) => name === className);
+  if (index > 0) {
+    classList.splice(index, 1);
+  }
+  el.className = classList.join(' ');
+}
+
+export function validateTabs(form: FormInstance) {
+  const res = form.validateFields();
+  // 校验并提示tabs内控件错误
+  res.catch((error) => {
+    const { errorFields = [], values } = error;
+    if (errorFields.length > 0) {
+      const tabsNameMapIndex: { [k: string]: number } = {};
+      Object.keys(values)
+        .filter((name) => Array.isArray(values[name]))
+        .forEach((name, index) => {
+          tabsNameMapIndex[name] = index;
+        });
+      const errorTabList = errorFields
+        .filter((field: { name: string[] }) => field.name.length === 3)
+        .map((v: { name: string[] }) => v.name)
+        .map((name: [string, string, string]) => `${name[0]},${name[1]}`);
+      const errorTabs = Array.from(new Set(errorTabList)).map((name) => {
+        const [tabName, paneKey] = (name as string).split(',');
+        return {
+          tabIndex: tabsNameMapIndex[tabName],
+          paneIndex: Number(paneKey),
+        };
+      });
+      if (errorTabs.length < 1) {
+        return;
+      }
+      const elements = document.querySelectorAll('.ant-form .tabs-container .tab-nav');
+      [...elements].forEach((el) => {
+        removeClassName(el, 'error');
+      });
+      errorTabs.forEach((item) => {
+        const { tabIndex, paneIndex } = item;
+        const selector = `.ant-form .tabs-container:nth-child(${tabIndex + 1})  .tab-nav:nth-child(${paneIndex + 1})`;
+        const el = document.querySelector(selector);
+        if (el) {
+          addClassName(el, 'error');
+        }
+      });
+    }
+  });
+}
+
 // 批量上传文件
 export async function uploadFile(values: any) {
   // 需要上传的文件,图片和附件合并到一起

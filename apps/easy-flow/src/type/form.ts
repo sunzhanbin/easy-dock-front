@@ -54,12 +54,13 @@ export type TextAreaField = {
 export type DateField = {
   type: 'Date';
   datelimit?: {
+    enable?: boolean;
     daterange: {
       min: string;
       max: string;
     };
   };
-  format: 'YYYY-MM-DD' | 'YYYY-MM-DD HH:mm:ss';
+  format: 'yyyy-MM-DD' | 'yyyy-MM-DD HH:mm:ss';
   defaultValue: number;
 } & BaseField;
 
@@ -73,7 +74,7 @@ export type SelectOptionItem = {
   data?: OptionItem[];
   subappId?: string;
   fieldName?: string;
-  apiconfig?: DataConfig;
+  apiConfig?: DataConfig;
 };
 
 export type NumberDefaultOption = {

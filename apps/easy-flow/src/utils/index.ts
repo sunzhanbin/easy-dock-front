@@ -1,8 +1,8 @@
 import moment from 'moment';
-import {AbstractTooltipProps} from "antd/lib/tooltip";
+import { AbstractTooltipProps } from 'antd/lib/tooltip';
 
-export {default as axios, runtimeAxios, builderAxios} from './axios';
-export {default as history} from './history';
+export { default as axios, runtimeAxios, builderAxios } from './axios';
+export { default as history } from './history';
 export * from './form';
 
 export const getPopupContainer: AbstractTooltipProps['getPopupContainer'] = (container) => container;
@@ -71,7 +71,7 @@ export function getPassedTime(startTime: number) {
   }
   // 超过前天的，显示年-月-日 时:分
   if (passedTime >= 3 * dayTime) {
-    return moment(startTime).format('YYYY-MM-DD HH:mm');
+    return moment(startTime).format('yyyy-MM-DD HH:mm');
   }
 }
 
@@ -121,3 +121,18 @@ export function evalPro(str: string) {
   const Fn = Function; //一个变量指向Function，防止有些前端编译工具报错
   return new Fn(`return ${str}`)();
 }
+
+// 数值范围最大最小值需要在小数位满足时截断   而不是四舍五入
+export const formatNumber = (value: any, fieldValue: { enable: boolean; precision: number }) => {
+  if (value.indexOf('.') === -1) return value;
+  const strLength = value.toString().split('.')[1].length;
+  if (fieldValue?.enable && strLength > fieldValue.precision) {
+    return value.substring(0, value.indexOf('.') + fieldValue.precision + 1);
+  } else {
+    if (strLength > 10) {
+      return value.substring(0, value.indexOf('.') + 11);
+    } else {
+      return value;
+    }
+  }
+};

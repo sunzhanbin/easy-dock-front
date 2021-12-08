@@ -26,7 +26,20 @@ const DecimalComponent = (props: { id: string; formInstance: any }) => {
       <Form.Item
         className={styles.formItem}
         name={['decimal', id]}
-        rules={[{ required: isChecked.enable, message: '请输入小数位数' }]}
+        rules={[
+          {
+            required: isChecked.enable,
+            message: '请输入小数位数',
+          },
+          {
+            validator(_, value) {
+              if (!/^[1-9]\d*$/.test(value)) {
+                return Promise.reject(new Error('请输入正整数'));
+              }
+              return Promise.resolve();
+            },
+          },
+        ]}
       >
         <InputNumber size="large" min={1} max={10} placeholder="请输入" />
       </Form.Item>

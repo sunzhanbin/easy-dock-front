@@ -108,6 +108,12 @@ export type SelectOptionItem = {
   apiConfig?: DataConfig;
 };
 
+export type UrlOptionItem = {
+  type: 'custom' | 'interface';
+  customValue?: string;
+  apiConfig?: DataConfig;
+};
+
 export type SelectColumnsItem = {
   id: string | undefined;
   columns?: ColumnsItem[];
@@ -140,6 +146,7 @@ export type FormFieldMap = {
 export type ErrorItem = {
   id: string;
   content: string[];
+  subError?: ErrorItem[];
 };
 
 export type fieldRule = {

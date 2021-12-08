@@ -33,10 +33,15 @@
       }
       &.active {
         background: #ffffff;
-        border-radius: 3px 0px 0px 3px;
         border: 1px solid rgba(24, 31, 67, 0.12);
         font-weight: 500;
         color: $primary-color;
+        &:first-child {
+          border-radius: 3px 0 0 3px;
+        }
+        &:last-child {
+          border-radius: 0 3px 3px 0;
+        }
       }
     }
   }

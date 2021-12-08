@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, memo } from 'react';
-import { useDrag, useDrop } from 'react-dnd';
+import { DropTargetMonitor, useDrag, useDrop, XYCoord } from 'react-dnd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import styles from '../index.module.scss';
 import { Tooltip, Input, Select } from 'antd';
@@ -32,23 +32,55 @@ function DraggableOption(props: DraggableOptionProps) {
   const dragWrapperRef = useRef<HTMLDivElement>(null);
   const [canMove, setCanMove] = useState<boolean>(false);
   const [showIncModal, setShowIncModal] = useState<boolean>(false);
-  const [, drag] = useDrag(
+  const [{ opacity }, drag] = useDrag(
     () => ({
       type: 'option',
       item() {
         return { index };
       },
       canDrag: () => canMove,
+      collect(monitor) {
+        return { opacity: monitor.isDragging() ? 0.2 : 1 };
+      },
     }),
     [index, canMove],
   );
   const [, drop] = useDrop(
     () => ({
       accept: 'option',
-      drop: (currentDragItem: { index: number }) => {
-        if (currentDragItem.index !== index) {
-          onDrag(currentDragItem.index, index);
+      hover: (currentDragItem: { index: number }, monitor: DropTargetMonitor) => {
+        if (!dragWrapperRef.current) {
+          return;
         }
+        const dragIndex = currentDragItem.index;
+        const hoverIndex = index;
+        if (hoverIndex === dragIndex) {
+          return;
+        }
+        const hoverBoundingRect = dragWrapperRef.current?.getBoundingClientRect();
+
+        // Get vertical middle
+        const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+
+        // Determine mouse position
+        const clientOffset = monitor.getClientOffset();
+
+        // Get pixels to the top
+        const hoverClientY = (clientOffset as XYCoord).y - hoverBoundingRect.top;
+        // Dragging downwards
+        if (dragIndex === -1 || (dragIndex < hoverIndex && hoverClientY < hoverMiddleY)) {
+          return;
+        }
+
+        // Dragging upwards
+        if (dragIndex === -1 || (dragIndex > hoverIndex && hoverClientY > hoverMiddleY)) {
+          return;
+        }
+        onDrag(dragIndex, hoverIndex);
+        currentDragItem.index = hoverIndex;
+      },
+      drop: (currentDragItem: { index: number }) => {
+        return { ...currentDragItem, hoverIndex: index };
       },
     }),
     [onDrag, index],
@@ -154,7 +186,7 @@ function DraggableOption(props: DraggableOptionProps) {
     }
   });
   return (
-    <div className={styles.draggable} ref={dragWrapperRef}>
+    <div className={styles.draggable} ref={dragWrapperRef} style={{ opacity }}>
       <div className={styles.name}>
         <div className={styles.text}>{SerialNumType[type]}</div>
         {renderLabel()}
@@ -169,10 +201,12 @@ function DraggableOption(props: DraggableOptionProps) {
             </Tooltip>
           </div>
         ) : (
-          <div className={classNames(styles.delete, styles.disable)} onClick={handleDelete}>
-            <span>
-              <Icon className={styles.iconfont} type="shanchu" />
-            </span>
+          <div className={classNames(styles.delete, styles.disable)}>
+            <Tooltip title="自动计数规则不可删除">
+              <span>
+                <Icon className={styles.iconfont} type="shanchu" />
+              </span>
+            </Tooltip>
           </div>
         )}
         {!disabled ? (
