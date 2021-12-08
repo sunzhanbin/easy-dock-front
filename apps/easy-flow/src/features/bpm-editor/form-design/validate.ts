@@ -188,6 +188,7 @@ export const formatSerialRules = (byId: any, id: string) => {
   return byId;
 };
 
+// eslint-disable-next-line
 export const urlRegex = /(^(http|https):\/\/([\w\-]+\.)+[\w\-]+(\/[\w\u4e00-\u9fa5\-\.\/?\@\%\!\&=\+\~\:\#\;\,]*)?)/;
 
 export const validUrlOption = (option: UrlOptionItem) => {
