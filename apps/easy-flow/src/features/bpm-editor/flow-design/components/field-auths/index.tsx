@@ -77,6 +77,9 @@ interface FieldAuthsProps {
   onChange?(value: this['value']): void;
 }
 
+// 只能查看,不能编辑的控件类型
+const viewComponentTypes = ['DescText', 'SerialNum', 'FlowData', 'Iframe'];
+
 function FieldAuths(props: FieldAuthsProps) {
   const { value, onChange, max = AuthType.Required } = props;
   const templates = useFieldsTemplate();
@@ -110,7 +113,7 @@ function FieldAuths(props: FieldAuthsProps) {
     templates.forEach((field) => {
       const { type, id, parentId } = field;
 
-      if (['DescText', 'SerialNum','FlowData'].includes(type)) {
+      if (viewComponentTypes.includes(type)) {
         viewTypeNum++;
       }
       let auth: AuthType = AuthType.View;
@@ -190,12 +193,12 @@ function FieldAuths(props: FieldAuthsProps) {
       const { id, parentId, type } = field;
       if (parentId) {
         const parentAuth = Object.assign({}, newValue[parentId], {
-          [id]: ['DescText', 'SerialNum','FlowData'].includes(type) ? Math.min(auth, AuthType.View) : auth,
+          [id]: viewComponentTypes.includes(type) ? Math.min(auth, AuthType.View) : auth,
         });
         newValue[parentId] = Object.assign({}, newValue[parentId], parentAuth);
         return;
       }
-      if (['DescText', 'SerialNum','FlowData'].includes(type)) {
+      if (viewComponentTypes.includes(type)) {
         newValue[id] = Math.min(auth, AuthType.View);
       } else {
         newValue[id] = auth;
@@ -231,9 +234,9 @@ function FieldAuths(props: FieldAuthsProps) {
             className={classnames({
               // 当字段是描述文字的时候并且字段列表可配编辑和必填时让描述文字的复选框显示only-view
               // 右侧会空出空间与其他字段对齐
-              [styles['only-view']]: ['DescText', 'SerialNum','FlowData'].includes(field.type) && max === AuthType.Required,
+              [styles['only-view']]: viewComponentTypes.includes(field.type) && max === AuthType.Required,
             })}
-            max={['DescText', 'SerialNum','FlowData'].includes(field.type) ? 1 : max}
+            max={viewComponentTypes.includes(field.type) ? 1 : max}
             key={field.id}
             value={fieldAuth}
             onChange={handleFieldChange}

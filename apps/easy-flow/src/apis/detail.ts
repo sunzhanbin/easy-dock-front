@@ -99,8 +99,8 @@ export async function fetchDataSource(
           formDataList?.forEach((v) => {
             formValues[v.name] = v.value;
           });
-          const required = apiConfig.request.required;
-          const custom = apiConfig.request.customize;
+          const required = apiConfig.request?.required || [];
+          const custom = apiConfig.request?.customize || [];
           const requestFields = required
             .concat(custom)
             .map((item) => {
@@ -187,8 +187,8 @@ export const loadSrc = async (option: UrlOptionItem, formDataList?: { name: stri
     formDataList?.forEach((v) => {
       formValues[v.name] = v.value;
     });
-    const required = apiConfig.request.required;
-    const custom = apiConfig.request.customize;
+    const required = apiConfig.request?.required || [];
+    const custom = apiConfig.request?.customize || [];
     const requestFields = required
       .concat(custom)
       .map((item) => {
