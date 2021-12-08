@@ -18,13 +18,13 @@ const getFlowVarsRule = (date: string, type: string, format?: string) => {
       if (type === 'earlier' || type === 'latterEqual') {
         return moment().startOf('month').startOf('day').valueOf();
       } else {
-        return moment().startOf('month').endOf('day').valueOf();
+        return moment().endOf('month').endOf('day').valueOf();
       }
     case 'currentYear':
       if (type === 'earlier' || type === 'latterEqual') {
         return moment().startOf('year').startOf('day').valueOf();
       } else {
-        return moment().startOf('year').endOf('day').valueOf();
+        return moment().endOf('year').endOf('day').valueOf();
       }
     case 'currentTime':
       if (format === 'yyyy-MM-DD HH:mm:ss') {
