@@ -42,8 +42,8 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId, name }
   const compSources = useLoadComponents(componentTypes);
   const [dataSourceMap, setDataSourceMap] = useState<Datasource>({});
   useEffect(() => {
-    if (context && context.form) {
-      if (optionComponents.length > 0) {
+    if (optionComponents.length > 0) {
+      if (context && context.form) {
         const { form } = context;
         const formDataList: { name: string; value: any }[] = [];
         const formValues = form.getFieldsValue() || {};
@@ -51,6 +51,10 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId, name }
           formDataList.push({ name: key, value });
         });
         fetchDataSource(optionComponents as any, formDataList).then((res) => {
+          setDataSourceMap(res);
+        });
+      } else {
+        fetchDataSource(optionComponents as any).then((res) => {
           setDataSourceMap(res);
         });
       }
@@ -102,7 +106,10 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId, name }
       fields
         .map((v) => ({
           key: v.config.fieldName,
-          value: v.props?.defaultValue || (typeof v.props?.defaultNumber === 'number' && v.props?.defaultNumber),
+          value:
+            v.props?.defaultValue ||
+            (typeof v.props?.defaultNumber === 'number' && v.props?.defaultNumber) ||
+            undefined,
         }))
         .filter(({ value }) => value !== undefined && value !== null)
         .forEach(({ key, value }) => {
