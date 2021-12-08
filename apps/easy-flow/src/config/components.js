@@ -277,11 +277,11 @@ const filetype = {
   required: false,
   isProps: true,
 };
-const maxHeight = {
-  key: 'maxHeight',
+const height = {
+  key: 'height',
   placeholder: '请输入',
-  label: '最大高度(rem)',
-  defaultValue: 10,
+  label: '高度(rem)',
+  defaultValue: 30,
   type: 'InputNumber',
   direction: 'vertical',
   required: false,
@@ -479,7 +479,7 @@ const components = {
       version: '1.0',
       type: 'Iframe',
     },
-    config: [getLabel('iframe'), desc, maxHeight, urlOption],
+    config: [getLabel('iframe'), desc, height, urlOption],
   },
 };
 
