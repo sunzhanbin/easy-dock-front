@@ -290,7 +290,7 @@ const Copy: FC<{}> = () => {
             <Form.Item label="抄送时间" name="timeRange" className="timeRange" labelCol={{ style: { width: 66 } }}>
               <RangePicker
                 showTime={{ format: 'HH:mm' }}
-                format="YYYY-MM-DD HH:mm"
+                format="yyyy-MM-DD HH:mm"
                 suffixIcon={<Icon type="riqi" />}
                 style={{ width: '100%' }}
                 onChange={handleSearch}

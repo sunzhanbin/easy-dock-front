@@ -10,23 +10,28 @@
 
   .name {
     flex: 1;
-    display: flex;
-    align-items: center;
     border-radius: 3px;
     border: 1px solid rgba(24, 31, 67, 0.12);
-
+    overflow: hidden;
     &.active {
       border-color: #4c5cdb;
     }
 
     .text {
-      flex: 0 0 160px;
-      padding-left: 20px;
+      width: 140px;
+      margin-left: 20px;
       text-align: left;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: inline-block;
+      line-height: 38px;
     }
 
     .ruleTips {
-      flex: 1;
+      display: inline-block;
+      line-height: 38px;
+      width: calc(100% - 160px);
       text-align: left;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -75,7 +80,6 @@
   margin-bottom: 12px;
   border-radius: 3px;
   background-color: rgba(24, 39, 67, 0.04);
-  cursor: pointer;
 
   .name {
     flex: 1;
@@ -93,18 +97,31 @@
       font-size: 12px;
       color: var(--ant-error-color);
     }
+    :global {
+      .ant-select.ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+        background-color: transparent;
+      }
+    }
 
     .label {
       flex: 1;
       text-align: left;
       font-size: 14px;
       font-weight: 400;
-      padding-left: 12px;
+      //padding-left: 12px;
       color: rgba(24, 31, 67, 0.95);
       cursor: pointer;
 
       .labelStr {
         display: inline-block;
+        padding: 0 14px 0 10px;
+        box-sizing: border-box;
+        border: 1px solid transparent;
+        &:hover {
+          border-radius: 3px;
+          border: 1px solid rgba(76, 92, 219, 0.8);
+          box-shadow: 0 0 0 3px rgba(76, 92, 219, 0.12);
+        }
       }
 
       &.labelDisable {
@@ -112,6 +129,13 @@
         background: linear-gradient(-45deg, rgba(24, 39, 67, 0.04) 0, rgba(24, 39, 67, 0.04) 5%, transparent 5%, transparent 50%, rgba(24, 39, 67, 0.04) 50%, rgba(24, 39, 67, 0.04) 55%, transparent 55%, transparent);
         background-size: 10px 10px;
         cursor: not-allowed;
+        .labelStr {
+          &:hover {
+            border: 1px solid transparent;
+            box-shadow: none;
+          }
+        }
+        
       }
 
       :global {
@@ -122,6 +146,7 @@
         .ant-select-selector {
           padding: 0;
         }
+        
       }
       
     }
@@ -151,12 +176,6 @@
     }
     .iconfont {
       font-size: 14px;
-    }
-  }
-
-  :global {
-    .ant-select.ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
-      background-color: transparent;
     }
   }
 }

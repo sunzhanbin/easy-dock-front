@@ -5,8 +5,8 @@ import debounce from 'lodash/debounce';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import ResponseWithMap from '@/features/bpm-editor/components/data-api-config/response-with-map';
 import { AutoNodePushData } from '@type/flow';
-import { useAppDispatch } from '@/app/hooks';
-import { updateNode } from '../../flow-slice';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { formMetaSelector, updateNode } from '../../flow-slice';
 import { trimInputValue } from '../../util';
 import { rules } from '../../validators';
 import useValidateForm from '../../hooks/use-validate-form';
@@ -24,7 +24,7 @@ type FormValuesType = {
 function AutoNodeEditor(props: AutoNodeEditorProps) {
   const dispatch = useAppDispatch();
   const { node } = props;
-  const fieldsTemplate = useFieldsTemplate();
+  const formMeta = useAppSelector(formMetaSelector);
   const [form] = Form.useForm<FormValuesType>();
 
   useValidateForm<FormValuesType>(form, node.id);
@@ -47,10 +47,10 @@ function AutoNodeEditor(props: AutoNodeEditorProps) {
   }, []);
 
   const fields = useMemo(() => {
-    return fieldsTemplate
-      .filter((item) => !['DescText', 'Tabs'].includes(item.type))
-      .map((item) => ({ name: item.name, id: item.id }));
-  }, [fieldsTemplate]);
+    return (formMeta?.components || [])
+      .filter((item) => !['DescText', 'Tabs'].includes(item.config.type))
+      .map((item) => ({ name: item.config.label as string, id: item.config.id }));
+  }, [formMeta]);
 
   return (
     <Form

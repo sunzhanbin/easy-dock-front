@@ -108,11 +108,12 @@ export const convertFormRules = (data: FormRuleItem[], components: { config: any
   });
   // 属性面板配置
   components?.forEach((com) => {
-    const { config } = com;
+    const { config, props } = com;
     // 此处不能用fieldName 预览时没有fieldName字段 统一用id作为key
-    if (config.id && config.type === 'InputNumber' && config.defaultNumber) {
+    if (config.id && config.type === 'InputNumber' && (config.defaultNumber || props.defaultNumber)) {
       // panel配置公式计算
-      const { id, defaultNumber, fieldName } = config;
+      const { id, fieldName } = config;
+      const defaultNumber = props.defaultNumber || config.defaultNumber;
       const value = defaultNumber.calculateData;
       value && setFieldRules(fieldName || id, value, defaultNumber, 'change', 2);
     }
@@ -136,8 +137,12 @@ export const validateRules = (isRequired: boolean, label: string, type: string, 
       });
     } else {
       rules.push({
-        required: true,
-        message: `${label}不能为空`,
+        validator(_, val) {
+          if (val === undefined || val === null || (typeof val === 'string' && val.trim() === '')) {
+            return Promise.reject(new Error(`${label}不能为空`));
+          }
+          return Promise.resolve();
+        },
       });
     }
   }
@@ -146,7 +151,7 @@ export const validateRules = (isRequired: boolean, label: string, type: string, 
     rules.push({
       validator(_, val) {
         if (val < numrange?.min || val > numrange.max) {
-          return Promise.reject(new Error(`请设置数值范围内的数值！`));
+          return Promise.reject(new Error(`当前数值已超过限制范围，请重新输入！`));
         }
         return Promise.resolve();
       },

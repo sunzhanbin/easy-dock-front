@@ -199,7 +199,7 @@ const ToDo: FC<{}> = () => {
         sorter: true,
         render(_: string, record: TodoItem) {
           const { startTime } = record;
-          return moment(startTime).format('YYYY-MM-DD HH:mm');
+          return moment(startTime).format('yyyy-MM-DD HH:mm');
         },
       },
     ];
@@ -277,7 +277,7 @@ const ToDo: FC<{}> = () => {
             <Form.Item label="发起时间" name="timeRange" className="timeRange">
               <RangePicker
                 showTime={{ format: 'HH:mm' }}
-                format="YYYY-MM-DD HH:mm"
+                format="yyyy-MM-DD HH:mm"
                 style={{ width: '100%' }}
                 suffixIcon={<Icon type="riqi" />}
                 onChange={() => {

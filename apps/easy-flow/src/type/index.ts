@@ -140,6 +140,7 @@ export type FormFieldMap = {
 export type ErrorItem = {
   id: string;
   content: string[];
+  subError?: ErrorItem[];
 };
 
 export type fieldRule = {

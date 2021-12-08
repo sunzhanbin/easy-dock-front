@@ -217,10 +217,10 @@ const ImageComponent = (
         bodyStyle={{ maxHeight: '600px' }}
         onCancel={handleCancel}
       >
-        <img alt="example" style={{ width: '100%' }} src={previewImage} />
+        <img alt={previewTitle} style={{ width: '100%' }} src={previewImage} />
       </Modal>
     </div>
   );
 };
 
-export default memo(ImageComponent);
+export default memo(ImageComponent, (prev, current) => prev.value === current.value);

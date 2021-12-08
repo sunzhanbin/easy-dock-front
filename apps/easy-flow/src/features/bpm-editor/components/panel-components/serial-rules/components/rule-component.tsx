@@ -47,16 +47,16 @@ const RuleComponent = (props: RuleComponentProps) => {
   // 添加规则下拉
   const menu = useMemoCallback(() => {
     const disabledMenu = rules.findIndex((item) => item.type === 'createTime') !== -1;
-    const children = fields.map((item) => <Menu.Item key={item.id}>{item.name}</Menu.Item>);
+    // const children = fields.map((item) => <Menu.Item key={item.id}>{item.name}</Menu.Item>);
     return (
       <Menu onClick={handleAdd}>
         <Menu.Item key="createTime" disabled={disabledMenu}>
           提交日期
         </Menu.Item>
         <Menu.Item key="fixedChars">固定字符</Menu.Item>
-        <SubMenu title="表单字段" key="fieldName">
-          {children}
-        </SubMenu>
+        {/*<SubMenu title="表单字段" key="fieldName">*/}
+        {/*  {children}*/}
+        {/*</SubMenu>*/}
       </Menu>
     );
   });
@@ -112,8 +112,8 @@ const RuleComponent = (props: RuleComponentProps) => {
 
   useEffect(() => {
     const isError = errors.find((item) => item.id === id);
-    if (isError && isError.content?.includes('请输入规则名称')) {
-      form.validateFields();
+    if (isError && isError.content?.includes('SerialError')) {
+      form.validateFields([['name']]);
     }
   }, [errors, id, form]);
 
@@ -131,8 +131,8 @@ const RuleComponent = (props: RuleComponentProps) => {
                   if (!value) {
                     return Promise.reject(new Error('请输入规则名称'));
                   }
-                  if (!/^[\u4E00-\u9FA5a-zA-Z0-9_]{3,20}$/.test(value)) {
-                    return Promise.reject(new Error('请输入字母开头，包含字母、数字、下划线的3-20位字符'));
+                  if (!/^[\u4E00-\u9FA5a-zA-Z0-9_]{1,30}$/.test(value)) {
+                    return Promise.reject(new Error('请输入1-30位的汉字、字母、数字、下划线'));
                   }
                   return Promise.resolve();
                 },

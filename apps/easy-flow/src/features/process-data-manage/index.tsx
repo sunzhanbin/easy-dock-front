@@ -104,7 +104,7 @@ const DataManage = () => {
         defaultSortOrder: 'descend',
         width: 180,
         render(_, data: TableDataBase) {
-          return moment(data.startTime).format('YYYY-MM-DD HH:mm');
+          return moment(data.startTime).format('yyyy-MM-DD HH:mm');
         },
       },
     ];
@@ -132,9 +132,9 @@ const DataManage = () => {
       if (tableColumn) {
         tableColumn.width = 360;
       }
-      return date.map((ts) => moment(ts).format('YYYY-MM-DD HH:mm:ss')).join('至');
+      return date.map((ts) => moment(ts).format('yyyy-MM-DD HH:mm:ss')).join('至');
     }
-    return moment(date).format('YYYY-MM-DD HH:mm:ss');
+    return moment(date).format('yyyy-MM-DD HH:mm:ss');
   });
 
   const renderText = useMemoCallback((value: string | string[]) => {

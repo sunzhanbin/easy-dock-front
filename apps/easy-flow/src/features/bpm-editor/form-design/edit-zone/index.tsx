@@ -20,7 +20,7 @@ const defaultNumberConfig = {
   placeholder: '请输入',
   label: '默认值',
   defaultValue: '',
-  type: 'InputNumber',
+  type: 'SubInputNumber',
   direction: 'vertical',
   required: false,
   isProps: false,

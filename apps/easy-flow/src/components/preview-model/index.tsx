@@ -33,6 +33,7 @@ const propsKey = [
   'fieldName',
   'decimal',
   'fileMap',
+  'defaultNumber',
 ];
 type Key = keyof FormField;
 

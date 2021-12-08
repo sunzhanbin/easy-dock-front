@@ -105,7 +105,14 @@ function StatusBar(props: StatusBarProps) {
     );
 
     if (flowIns.state === NodeStatusType.Waiting) {
-      return null;
+      const currentNodesName = (flowIns.currentNodeList || []).map((item) => item.currentNodeName).join(',');
+
+      return (
+        <div className={styles.status}>
+          <Cell icon="dangqianjiedian" title={currentNodesName} desc="当前节点" />
+          {trackCell}
+        </div>
+      );
     }
 
     // 显示当前处理人
@@ -132,7 +139,7 @@ function StatusBar(props: StatusBarProps) {
         <Cell icon="dangqianchuliren" title={flowIns.applyUser.name} desc="申请人" />
         <Cell
           icon="xuanzeshijian"
-          title={moment(flowIns.applyTime).format('YYYY-MM-DD HH:mm:ss')}
+          title={moment(flowIns.applyTime).format('yyyy-MM-DD HH:mm:ss')}
           desc="申请时间"
           getContainer={getContainer}
         />
