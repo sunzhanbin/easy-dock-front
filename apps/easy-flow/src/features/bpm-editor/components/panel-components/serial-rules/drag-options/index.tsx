@@ -156,7 +156,7 @@ function DraggableOption(props: DraggableOptionProps) {
             className={classNames(!data?.chars ? styles.inputBorder : '')}
             size="large"
             onChange={handleInputBlur}
-            value={data?.chars}
+            defaultValue={data?.chars}
             disabled={disabled}
             maxLength={10}
             placeholder="请输入"
