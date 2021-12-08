@@ -1,7 +1,8 @@
 import { runtimeAxios } from '@utils/axios';
 import { AuthType, FieldAuthsMap } from '@type/flow';
 import type { TaskDetailType, FlowMeta, FormMeta, FormValue, FlowInstance, Datasource } from '@type/detail';
-import { CheckboxField, RadioField, SelectField } from '@/type';
+import { CheckboxField, RadioField, SelectField, UrlOptionItem } from '@/type';
+import { urlRegex } from '@/features/bpm-editor/form-design/validate';
 
 export async function loadFlowData(
   flowIns: FlowInstance,
@@ -168,4 +169,20 @@ export const deleteDraft = async (draftId: number | string) => {
 
 export const getFlowData = (params: any) => {
   return runtimeAxios.post('', params);
+};
+
+export const loadSrc = async (option: UrlOptionItem, formDataList?: { name: string; value: any }[]) => {
+  if (option.type === 'custom') {
+    if (option.customValue && urlRegex.test(option.customValue)) {
+      return option.customValue;
+    }
+    return '';
+  }
+  if (option.type === 'interface') {
+    const { apiConfig } = option;
+    if (!apiConfig) {
+      return '';
+    }
+    
+  }
 };
