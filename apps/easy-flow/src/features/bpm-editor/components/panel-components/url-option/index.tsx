@@ -7,37 +7,44 @@ import ResponseNoMap from '@/features/bpm-editor/components/data-api-config/resp
 import styles from './index.module.scss';
 import { useAppSelector } from '@/app/hooks';
 import { componentPropsSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
-import { FormField } from '@/type';
+import { FormField, UrlOptionItem } from '@/type';
 
 interface UrlOptionProps {
   id?: string;
-  value?: any;
+  value?: UrlOptionItem;
   onChange?: (value: this['value']) => void;
 }
 
 const UrlOption = ({ id, value, onChange }: UrlOptionProps) => {
-  const [type, setType] = useState<string>(value?.type || 'custom');
+  const [type, setType] = useState<UrlOptionItem['type']>(value?.type || 'custom');
   const byId = useAppSelector(componentPropsSelector);
   const fields = useMemo<{ id: string; name: string }[]>(() => {
     const componentList = Object.values(byId).map((item: FormField) => item) || [];
     return componentList
-      .filter((com) => !['DescText', 'Tabs'].includes(com.type) && com.id !== id)
+      .filter((com) => !['DescText', 'Tabs', 'Iframe', 'Table', 'FlowData'].includes(com.type))
       .map((com) => ({ id: com.fieldName, name: com.label }));
-  }, [byId, id]);
+  }, [byId]);
+
   const handleApiChange = useMemoCallback(() => {});
+  const handleChangeType = useMemoCallback((type: UrlOptionItem['type']) => {
+    if (type === 'custom') {
+    } else if (type === 'interface') {
+    }
+    setType(type);
+  });
   const renderContent = useMemoCallback(() => {
     if (type === 'custom') {
       return (
-        <Form.Item>
+        <Form.Item name={['url', 'customValue']}>
           <Input size="large" placeholder="请输入url" />
         </Form.Item>
       );
     }
     if (type === 'interface') {
       return (
-        <Form.Item className={styles.form} name="apiConfig" label="">
+        <Form.Item className={styles.form} name={['url', 'apiConfig']} label="">
           <DataApiConfig
-            name={['dataSource', 'apiConfig']}
+            name={['url', 'apiConfig']}
             label="匹配请求参数"
             layout="vertical"
             className={styles.apiConfig}
@@ -52,17 +59,17 @@ const UrlOption = ({ id, value, onChange }: UrlOptionProps) => {
     return null;
   });
   return (
-    <div className={styles.container}>
+    <div className={styles.container} key={id}>
       <div className={styles.title}>
         <div
           className={classNames(styles.custom, type === 'custom' ? styles.active : '')}
-          onClick={() => setType('custom')}
+          onClick={() => handleChangeType('custom')}
         >
           自定义数据
         </div>
         <div
           className={classNames(styles.custom, type === 'interface' ? styles.active : '')}
-          onClick={() => setType('interface')}
+          onClick={() => handleChangeType('interface')}
         >
           接口数据
         </div>
