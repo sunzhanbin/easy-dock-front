@@ -53,14 +53,16 @@ const SubInputNumber = ({ id, value, onChange }: SubInputNumberProps) => {
       if (!decimal?.enable) {
         return number.split('.')[0];
       }
-      const { precision } = decimal;
+      if (number.indexOf('.') > 0) {
+        const { precision } = decimal;
 
-      // 小数位数
-      const precisionLength = number.split('.')[1].length;
+        // 小数位数
+        const precisionLength = number.split('.')[1].length;
 
-      // 小数位数超出时,截断
-      if (precisionLength > precision) {
-        return number.substring(0, number.indexOf('.') + decimal.precision + 1);
+        // 小数位数超出时,截断
+        if (precisionLength > precision) {
+          return number.substring(0, number.indexOf('.') + decimal.precision + 1);
+        }
       }
       return number;
     };
