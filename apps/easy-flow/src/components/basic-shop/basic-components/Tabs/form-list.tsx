@@ -102,7 +102,10 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId, name }
       fields
         .map((v) => ({
           key: v.config.fieldName,
-          value: v.props?.defaultValue || (typeof v.props?.defaultNumber === 'number' && v.props?.defaultNumber),
+          value:
+            v.props?.defaultValue ||
+            (typeof v.props?.defaultNumber === 'number' && v.props?.defaultNumber) ||
+            undefined,
         }))
         .filter(({ value }) => value !== undefined && value !== null)
         .forEach(({ key, value }) => {
