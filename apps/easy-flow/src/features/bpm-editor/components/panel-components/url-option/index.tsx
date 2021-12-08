@@ -27,15 +27,31 @@ const UrlOption = ({ id, value, onChange }: UrlOptionProps) => {
 
   const handleApiChange = useMemoCallback(() => {});
   const handleChangeType = useMemoCallback((type: UrlOptionItem['type']) => {
-    if (type === 'custom') {
-    } else if (type === 'interface') {
-    }
+    const newValue = Object.assign({}, value, { type });
+    onChange && onChange(newValue);
     setType(type);
   });
   const renderContent = useMemoCallback(() => {
     if (type === 'custom') {
       return (
-        <Form.Item name={['url', 'customValue']}>
+        <Form.Item
+          name={['url', 'customValue']}
+          rules={[
+            {
+              validator(_: any, val: string) {
+                if (!val) {
+                  return Promise.reject(new Error('请输入url地址'));
+                }
+                // eslint-disable-next-line
+                const urlRegex = /(^(http|https):\/\/([\w\-]+\.)+[\w\-]+(\/[\w\u4e00-\u9fa5\-\.\/?\@\%\!\&=\+\~\:\#\;\,]*)?)/;
+                if (!urlRegex.test(val)) {
+                  return Promise.reject(new Error('请输入正确的url地址'));
+                }
+                return Promise.resolve();
+              },
+            },
+          ]}
+        >
           <Input size="large" placeholder="请输入url" />
         </Form.Item>
       );

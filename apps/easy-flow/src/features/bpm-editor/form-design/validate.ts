@@ -1,5 +1,6 @@
-import { ConfigItem, FormRuleItem } from '@type';
+import { ConfigItem, FormRuleItem, UrlOptionItem } from '@type';
 import { message } from 'antd';
+import { dataPushConfig } from '../flow-design/validators';
 // import { current } from '@reduxjs/toolkit';
 
 export const validateFieldName = (fieldName: string): string => {
@@ -185,4 +186,21 @@ export const formatSerialRules = (byId: any, id: string) => {
     }
   });
   return byId;
+};
+
+export const urlRegex = /(^(http|https):\/\/([\w\-]+\.)+[\w\-]+(\/[\w\u4e00-\u9fa5\-\.\/?\@\%\!\&=\+\~\:\#\;\,]*)?)/;
+
+export const validUrlOption = (option: UrlOptionItem) => {
+  if (option.type === 'custom') {
+    if (!option?.customValue) {
+      return '请输入url';
+    }
+    if (!urlRegex.test(option?.customValue)) {
+      return '请输入正确的url';
+    }
+    return '';
+  } else if (option.type === 'interface') {
+    return dataPushConfig(option.apiConfig!);
+  }
+  return '';
 };

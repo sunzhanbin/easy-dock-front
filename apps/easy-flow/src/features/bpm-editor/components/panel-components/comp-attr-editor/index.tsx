@@ -85,7 +85,7 @@ const componentMap: { [k: string]: (props: { [k: string]: any }) => ReactNode } 
   DefaultDate: (props) => <DefaultDate id={props.componentId} />,
   Editor: () => <Editor />,
   FieldManage: (props) => <FieldManage parentId={props.parentId} />,
-  UrlOption: () => <UrlOption />,
+  UrlOption: (props) => <UrlOption id={props.componentId} />,
   SubInputNumber: (props) => <SubInputNumber id={props.componentId} />,
 };
 

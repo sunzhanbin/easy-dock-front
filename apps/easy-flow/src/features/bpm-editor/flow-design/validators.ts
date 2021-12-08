@@ -14,7 +14,7 @@ const member = (value: CorrelationMemberConfig): string => {
   return '';
 };
 
-const dataPushConfig = (value: DataConfig): string => {
+export const dataPushConfig = (value: DataConfig): string => {
   const { type, id, url, method, request: { required = [], customize = [] } = {} } = value || {};
 
   if (type !== ApiType.CUSTOM && !id) {

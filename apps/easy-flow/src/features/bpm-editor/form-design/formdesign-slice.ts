@@ -29,6 +29,7 @@ import {
   validateSerialCustom,
   validateSerialInject,
   validateSerial,
+  validUrlOption,
 } from './validate';
 import { RootState } from '@/app/store';
 import { axios } from '@/utils';
@@ -95,12 +96,20 @@ export default formDesign.reducer;
 const validComponentConfig = (config: ConfigItem, props: ConfigItem): ErrorItem | null => {
   const { id, label = '', fieldName = '', type } = config;
   const errorItem: ErrorItem = { id, content: [], subError: [] };
-  const nameError = validateFieldName(fieldName);
+  if (!['DescText', 'Iframe'].includes(type)) {
+    const nameError = validateFieldName(fieldName);
+    nameError && errorItem.content.push(nameError);
+  }
   const labelError = validateLabel(label);
+  labelError && errorItem.content.push(labelError);
   const serialError = validateSerial(config);
+  serialError && errorItem.content.push(serialError);
   const customError = validateSerialCustom(config);
+  customError && errorItem.content.push(customError);
   const injectError = validateSerialInject(config);
+  injectError && errorItem.content.push(injectError);
   const propsError = validateHasChecked(props, config);
+  propsError && errorItem.content.push(propsError);
   if (type === 'Tabs') {
     const fieldsError = validateFields(props.components);
     fieldsError && errorItem.content.push(fieldsError);
@@ -116,12 +125,12 @@ const validComponentConfig = (config: ConfigItem, props: ConfigItem): ErrorItem 
       }
     }
   }
-  nameError && errorItem.content.push(nameError);
-  labelError && errorItem.content.push(labelError);
-  propsError && errorItem.content.push(propsError);
-  serialError && errorItem.content.push(serialError);
-  customError && errorItem.content.push(customError);
-  injectError && errorItem.content.push(injectError);
+  if (type === 'Iframe') {
+    const urlOption = props.url;
+    const urlError = validUrlOption(urlOption);
+    urlError && errorItem.content.push(urlError);
+  }
+
   return errorItem.content.length > 0 ? errorItem : null;
 };
 type SaveParams = {
@@ -157,7 +166,7 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
           type,
           version,
           rules: [],
-          canSubmit: type !== 'DescText',
+          canSubmit: !['DescText', 'FlowData', 'Iframe'].includes(type),
           multiple: type === 'Checkbox' || (['Select', 'Member'].includes(type) && byId[id].multiple),
         };
         const props: ConfigItem = { type, id, multiple: type === 'Checkbox' };
