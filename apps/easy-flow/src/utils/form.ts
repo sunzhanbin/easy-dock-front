@@ -6,7 +6,7 @@ import moment from 'moment';
 import { runtimeAxios } from './axios';
 import { DATE_DEFAULT_FORMAT } from '@utils/const';
 import { cloneDeep } from 'lodash';
-import { FormInstance } from 'antd';
+import { FormInstance, message } from 'antd';
 
 // 格式化单个条件value
 export function formatRuleValue(
@@ -473,9 +473,11 @@ export function validateTabs(form: FormInstance) {
   res.catch((error) => {
     const { errorFields = [], values } = error;
     if (errorFields.length > 0) {
+      message.error('您有内容未填写或填写错误，请检查!');
       const tabsNameMapIndex: { [k: string]: number } = {};
       Object.keys(values)
         .filter((name) => Array.isArray(values[name]))
+        .filter((name) => values[name]?.[0]?.['__title__'])
         .forEach((name, index) => {
           tabsNameMapIndex[name] = index;
         });
@@ -486,7 +488,7 @@ export function validateTabs(form: FormInstance) {
       const errorTabs = Array.from(new Set(errorTabList)).map((name) => {
         const [tabName, paneKey] = (name as string).split(',');
         return {
-          tabIndex: tabsNameMapIndex[tabName],
+          tabIndex: tabsNameMapIndex[tabName] || 0,
           paneIndex: Number(paneKey),
         };
       });
