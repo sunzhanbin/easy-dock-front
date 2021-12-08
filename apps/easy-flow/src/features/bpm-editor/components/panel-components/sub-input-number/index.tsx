@@ -34,19 +34,26 @@ const SubInputNumber = ({ id, value, onChange }: SubInputNumberProps) => {
     if (decimal && decimal.enable && decimal.precision) {
       props.precision = decimal.precision;
     }
+    if (!decimal?.enable) {
+      props.precision = 0;
+    }
     if (numberRange && numberRange.enable && numberRange.min) {
       props.min = numberRange.min;
     }
     if (numberRange && numberRange.enable && numberRange.max) {
       props.max = numberRange.max;
     }
-    if (decimal && decimal.enable && decimal.precision) {
-      props.formatter = (value: number | string) => {
-        const number = String(value);
-        // 没有小数位数限制或者没有值,直接返回
-        if (!decimal?.enable || !number) {
-          return number;
-        }
+    props.formatter = (value: number | string) => {
+      const number = String(value);
+      // 没有值,直接返回
+      if (!number) {
+        return number;
+      }
+      // 不允许小数位数,整数截断
+      if (!decimal?.enable) {
+        return number.split('.')[0];
+      }
+      if (number.indexOf('.') > 0) {
         const { precision } = decimal;
 
         // 小数位数
@@ -56,9 +63,9 @@ const SubInputNumber = ({ id, value, onChange }: SubInputNumberProps) => {
         if (precisionLength > precision) {
           return number.substring(0, number.indexOf('.') + decimal.precision + 1);
         }
-        return number;
-      };
-    }
+      }
+      return number;
+    };
     return props;
   }, [value, decimal, numberRange]);
 
