@@ -59,7 +59,7 @@ const NumberOption = (props: NumberOptionProps) => {
     if (!fieldNumber) return null;
     const { decimal, numlimit } = fieldNumber!;
     return {
-      precision: decimal?.enable ? decimal?.precision : 10,
+      precision: decimal?.enable ? decimal?.precision : 0,
       min: numlimit?.numrange?.min,
       max: numlimit?.numrange?.max,
     };
@@ -93,15 +93,12 @@ const NumberOption = (props: NumberOptionProps) => {
             placeholder="请输入"
             formatter={(value: any) => {
               if (!value || value.indexOf('.') === -1) return value;
+              if (!defaultNumberProps?.precision) {
+                return value.toString().split('.')[0];
+              }
               const strLength = value.toString().split('.')[1].length;
               if (defaultNumberProps?.precision && strLength > defaultNumberProps?.precision) {
                 return value.substring(0, value.indexOf('.') + defaultNumberProps.precision + 1);
-              } else {
-                if (strLength > 10) {
-                  return value.substring(0, value.indexOf('.') + 11);
-                } else {
-                  return value;
-                }
               }
             }}
             value={customData}
