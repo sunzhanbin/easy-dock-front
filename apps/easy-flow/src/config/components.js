@@ -1,3 +1,4 @@
+import { nameRegexp } from '@/utils';
 const fieldName = {
   key: 'fieldName',
   defaultValue: '',
@@ -19,6 +20,20 @@ const getLabel = (defaultValue) => {
     direction: 'vertical',
     required: true,
     requiredMessage: '请输入控件名称',
+    rules: [
+      {
+        validator(_, value) {
+          const label = value?.trim();
+          if (!label) {
+            return Promise.resolve();
+          }
+          if (!nameRegexp.test(label)) {
+            return Promise.reject(new Error('请输入1-30位的汉字、字母、数字、下划线'));
+          }
+          return Promise.resolve();
+        },
+      },
+    ],
     isProps: false,
     defaultValue,
   };

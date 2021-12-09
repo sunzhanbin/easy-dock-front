@@ -89,7 +89,7 @@
       flex: 0 0 80px;
       text-align: center;
     }
-    
+
     .inputBorder {
       border: 1px solid var(--ant-error-color);
     }
@@ -115,8 +115,13 @@
       .labelStr {
         display: inline-block;
         padding: 0 14px 0 10px;
+        vertical-align: middle;
         box-sizing: border-box;
         border: 1px solid transparent;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        width: 165px;
+        white-space: nowrap;
         &:hover {
           border-radius: 3px;
           border: 1px solid rgba(76, 92, 219, 0.8);
@@ -135,7 +140,7 @@
             box-shadow: none;
           }
         }
-        
+
       }
 
       :global {
@@ -146,9 +151,9 @@
         .ant-select-selector {
           padding: 0;
         }
-        
+
       }
-      
+
     }
     input {
       background-color: transparent;
