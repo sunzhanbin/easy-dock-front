@@ -15,7 +15,8 @@ code {
     monospace;
 }
 
-#root {
+#root, #root>.ant-layout {
   height: 100%;
   min-height: inherit;
 }
+

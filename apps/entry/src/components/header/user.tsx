@@ -1,9 +1,10 @@
 import { memo, useMemo, useCallback } from "react";
-// import Auth from "@enc/sso";
 import { useDispatch } from "react-redux";
 import { Dropdown, Menu } from "antd";
 import { useLogoutMutation } from "@/http";
-import { Avatar, Icon } from "@common/components";
+import { Avatar } from "@common/components";
+import Icon from "@assets/icon";
+
 // import { userSelector, logout } from "@/store/user";
 import "@components/header/index.style.scss";
 
@@ -29,7 +30,7 @@ function HeaderUser() {
       <Menu>
         <Menu.Item key="logout" onClick={handleLogout} className="menuItem">
           <span>
-            <Icon type="tuichudenglu" className="icon" />
+            <Icon type="custom-icon-tuichudenglu" className="icon" />
             退出登录
           </span>
         </Menu.Item>
