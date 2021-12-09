@@ -1,4 +1,5 @@
-$primary-color: #4c5cdb;
+$primary-color: var(--ant-primary-color, #4c5cdb);
+$primary-color-custom: #4c5cdb;
 $main-content-min-height: calc(100vh - 65px);
 $primary-text-color: #181f43;
 $title-text-color: rgba($primary-text-color, 1);
@@ -17,3 +18,7 @@ $disabled-color: rgba($white, 0.35);
 $deep-mask-color: rgba($mask-color, 0.85);
 $success-color: #63c4ad;
 $danger-color: #ff5568;
+
+:root {
+  --ant-primary-5: rgba(#4c5cdb, 0.85);
+}

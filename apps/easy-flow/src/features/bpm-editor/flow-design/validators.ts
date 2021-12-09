@@ -1,6 +1,6 @@
 import { Rule } from 'antd/lib/form';
-import { CorrelationMemberConfig, AuditNode, RevertType } from '@type/flow';
-import { DataConfig } from '@type/api';
+import { CorrelationMemberConfig, AuditNode, RevertType, TriggerConfig, IDueConfig } from '@type/flow';
+import { ApiType, DataConfig } from '@type/api';
 import { validName } from '@common/rule';
 import { dynamicIsEmpty } from './util';
 
@@ -15,15 +15,29 @@ const member = (value: CorrelationMemberConfig): string => {
 };
 
 const dataPushConfig = (value: DataConfig): string => {
-  const { api, request: { required = [], customize = [] } = {} } = value || {};
+  const { type, id, url, method, request: { required = [], customize = [] } = {} } = value || {};
 
-  if (!api) {
+  if (type !== ApiType.CUSTOM && !id) {
     return '推送数据的接口的不能为空';
+  }
+
+  if (type === ApiType.CUSTOM) {
+    if (!url) {
+      return '推送数据的接口地址的不能为空';
+    }
+    // eslint-disable-next-line
+    const urlRegex = /(^(http|https):\/\/([\w\-]+\.)+[\w\-]+(\/[\w\u4e00-\u9fa5\-\.\/?\@\%\!\&=\+\~\:\#\;\,]*)?)/;
+    if (!urlRegex.test(url)) {
+      return '请输入正确的接口地址';
+    }
+    if (!method) {
+      return '请选择请求方式';
+    }
   }
 
   let message = '';
 
-  [...required, ...customize].some((param) => {
+  const isInvalid = [...required, ...customize].some((param) => {
     if (!param.name || !param.location || !param.map) {
       message = '推送数据配置不合法';
 
@@ -33,7 +47,11 @@ const dataPushConfig = (value: DataConfig): string => {
     return false;
   });
 
-  return message;
+  if (isInvalid) {
+    return message;
+  }
+
+  return '';
 };
 
 const revert = (value: AuditNode['revert']) => {
@@ -44,10 +62,57 @@ const revert = (value: AuditNode['revert']) => {
   return '';
 };
 
+const triggerConfig = (value: TriggerConfig[]): string => {
+  if (!value || value.length < 1) {
+    return '请选择触发流程';
+  }
+  const lackProcessId = value.some((v) => !v.id);
+  if (lackProcessId) {
+    return '请选择触发流程';
+  }
+  const lackFields = value.some((v) => {
+    if (v.mapping?.length > 0) {
+      return v.mapping.some((k) => !k.current || !k.target);
+    }
+    return false;
+  });
+  if (lackFields) {
+    return '请选择对应字段';
+  }
+  const lackMember = value.some((v) => {
+    if (v.starter.type === 3) {
+      return !v.starter.value;
+    }
+    return false;
+  });
+  if (lackMember) {
+    return '请选择表单内人员控件';
+  }
+  return '';
+};
+
+const timeoutConfig = (value: IDueConfig) => {
+  if (value?.enable) {
+    if (!value.timeout.num) {
+      return '请输入超时时间';
+    }
+    if (value.cycle.enable && !value.cycle.num) {
+      return '请输入超时时间';
+    }
+    if (value.notice.other && (!value.notice.users || value.notice.users.length === 0)) {
+      return '请选择其他人员';
+    }
+    return '';
+  }
+  return '';
+};
+
 export const validators = {
   member,
+  timeoutConfig,
   name: validName,
   data: dataPushConfig,
+  config: triggerConfig,
   revert: revert,
 };
 

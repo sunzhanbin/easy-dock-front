@@ -55,7 +55,7 @@ export const Card: FC<CardProps> = ({ rowIndex, row, moveCard }) => {
   );
   const getColSpace = useCallback(
     (id) => {
-      const space = byId[id]?.colSpace;
+      const space = byId[id]?.colSpace || 4;
       if (space) {
         return spaceMap[space];
       }
@@ -177,7 +177,7 @@ export const Card: FC<CardProps> = ({ rowIndex, row, moveCard }) => {
               span={getColSpace(id)}
             >
               <SourceBox
-                type={id ? id.split('_')[0] : ''}
+                type={id ? byId?.[id]?.type : ''}
                 config={byId[id]}
                 moveConfig={getMoveConfig(rowIndex, colIndex)}
                 id={id}

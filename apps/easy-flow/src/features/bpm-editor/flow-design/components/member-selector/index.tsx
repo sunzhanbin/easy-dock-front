@@ -46,7 +46,7 @@ function MemberSelector(props: MemberSelectorProps) {
       deptIds.push(dept.id);
     });
 
-    roles.concat(dynamic?.roles || []).forEach((role) => {
+    roles.forEach((role) => {
       caches[role.id] = role;
       roleIds.push(role.id);
     });
@@ -56,8 +56,8 @@ function MemberSelector(props: MemberSelectorProps) {
     if (onChange) {
       onChange({
         members: memberIds,
-        depts: depts.map((depart) => depart.id),
-        roles: roles.map((role) => role.id),
+        depts: deptIds,
+        roles: roleIds,
         dynamic: {
           starter: dynamic?.starter,
           roles: dynamicRoles,

@@ -2,16 +2,17 @@
   flex: 1 1 0;
   display: flex;
   align-items: center;
-  color: #181f43;
+  color: var(--custom-nav-menu-item-color, #181f43);
 
   .nav {
-    color: inherit;
+    color: var(--custom-nav-menu-item-color, #181f43);
     padding: 18px 16px;
     line-height: 20px;
   }
 
   .active {
-    background-color: #f0f0f6;
+    color: var(--custom-nav-menu-highlight-color);
+    background: var(--custom-nav-menu-item-active-bg, #f0f0f6);
     font-weight: 500;
   }
 }

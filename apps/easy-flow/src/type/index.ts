@@ -18,6 +18,7 @@ export type SchemaConfigItem = {
   direction?: 'vertical' | 'horizontal';
   range?: rangeItem[];
   isProps: boolean;
+  checked?: boolean;
   max?: number;
   min?: number;
   precision?: number;
@@ -88,6 +89,17 @@ export type OptionItem = {
   key: string;
   value: string;
 };
+
+export type LabelMap = {
+  key: string;
+  label: string;
+  value: string;
+};
+export type ColumnsItem = {
+  title: string;
+  dataIndex: string;
+  key: string;
+};
 export type SelectOptionItem = {
   type: OptionMode;
   data?: OptionItem[];
@@ -96,31 +108,80 @@ export type SelectOptionItem = {
   apiConfig?: DataConfig;
 };
 
+export type SelectColumnsItem = {
+  id: string | undefined;
+  columns?: ColumnsItem[];
+  formKeyId?: string;
+};
+
+export type ruleType = 'custom' | 'inject';
+
+export type serialRulesItem = {
+  serialId: string | undefined;
+  serialMata?: {
+    id: string;
+    type?: string;
+    rules?: RuleOption[];
+    changeRules?: RuleOption[];
+    ruleName?: string | undefined;
+    changeRuleName?: string | undefined;
+    ruleStatus?: number;
+    editStatus?: boolean;
+  };
+};
+
+export type RuleOption = {
+  type: keyof typeof SerialNumType;
+} & { [key: string]: any };
+
 export type FormFieldMap = {
   [k: string]: FormField;
 };
 export type ErrorItem = {
   id: string;
-  content: string;
+  content: string[];
+  subError?: ErrorItem[];
 };
 
 export type fieldRule = {
   fieldName: string | undefined;
+  parentId?: string;
   symbol?: string;
   fieldType?: string;
+  valueType?: string;
   value?: string | number | string[] | [number, number];
 };
 // 值改变时规则
 export type FormChangeRule = {
   fieldRule: fieldRule[][];
-  showComponents: string[];
-  hideComponents: string[];
+  showComponents?: string[];
+  hideComponents?: string[];
+  interfaceConfig?: DataConfig;
 };
 
+export type FieldChangeRule = {
+  fieldRule: fieldRule[][];
+};
+
+export enum EventType {
+  Available = 0, // 设值
+  Visible = 1, // 显示隐藏
+  Union = 2, // 联动
+  Enable = 3, // 启用禁用
+  Interface = 4, //调用接口
+}
+
 export type FormRuleItem = {
-  type: 'change' | 'init';
+  type: string;
+  subtype?: EventType;
   formChangeRule?: FormChangeRule;
   formInitRule?: DataConfig;
+};
+
+export type PropertyRuleItem = {
+  type: string;
+  subtype?: EventType;
+  formChangeRule?: FieldChangeRule;
 };
 
 export type FormDesign = {
@@ -130,6 +191,7 @@ export type FormDesign = {
   layout: string[][];
   errors: ErrorItem[];
   formRules: FormRuleItem[];
+  propertyRules: PropertyRuleItem[];
   schema: Schema;
   isDirty: boolean;
   subAppInfo: {
@@ -137,6 +199,7 @@ export type FormDesign = {
     id: number | string;
     appId: number | string;
   };
+  subComponentConfig?: any;
 };
 
 export type TConfigItem = {
@@ -199,6 +262,7 @@ export type FormMeta = {
   events?: Events;
   schema: { [k: string]: SchemaItem };
   formRules: FormRuleItem[];
+  propertyRules: PropertyRuleItem[];
   rules?: FormRule[];
   themes?: Theme[];
 };
@@ -206,3 +270,18 @@ export type FormMeta = {
 export type Datasource = {
   [key: string]: { key: string; value: string }[];
 };
+
+export enum SerialNumType {
+  incNumber = '自动计数',
+  createTime = '提交日期',
+  fixedChars = '固定字符',
+  fieldName = '表单字段',
+}
+
+export enum CountResetRules {
+  none = '不自动重置',
+  day = '每日重置',
+  week = '每周重置',
+  month = '每月重置',
+  year = '每年重置',
+}

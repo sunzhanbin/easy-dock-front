@@ -18,14 +18,14 @@ const componentConfig = createSlice({
       state.currentSelectId = id as string;
       state.componentList = {...state.componentList, [id]: {...payload}};
     },
-    editComponent(state, { payload }: PayloadAction<ComponentClass>) {
-      const { id } = payload;
-      state.currentSelectId = id as string;
-      state.componentList = {...state.componentList, [id]: {...payload}};
-    },
+    // editComponent(state, { payload }: PayloadAction<ComponentClass>) {
+    //   const { id } = payload;
+    //   state.currentSelectId = id as string;
+    //   state.componentList = {...state.componentList, [id]: {...payload}};
+    // },
     deleteComponent(state, { payload }: PayloadAction<ComponentClass>) {
-      const { id } = payload;
-      delete state.componentList[id];
+      // const { id } = payload;
+      // delete state.componentList[id];
     },
     copyComponent(state, { payload }: PayloadAction<ComponentClass>) {
       const generateId = new Date().getTime().toString();

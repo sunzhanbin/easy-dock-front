@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import { FormInstance, message } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { AsyncButton, Loading, PopoverConfirm } from '@common/components';
-import { runtimeAxios } from '@utils';
+import { runtimeAxios, validateTabs } from '@utils';
 import { dynamicRoutes } from '@consts';
 import { loadDatasource, deleteDraft } from '@apis/detail';
 import { StartNode } from '@type/flow';
@@ -92,12 +92,14 @@ function StartFlow() {
         initialValue={formData}
         projectId={projectId}
         fieldsAuths={processMeta.fieldsAuths}
+        nodeType="start"
       />
     );
   }, [data, datasource, projectId]);
 
   const handleSubmit = useMemoCallback(async () => {
     if (!formRef.current || !subApp) return;
+    validateTabs(formRef.current);
     const values = await formRef.current.validateFields();
     const formValues = await uploadFile(values);
     // 上传文件成功之后再提交表单

@@ -1,13 +1,15 @@
+@import '@common/styles/var.scss';
 @import '@common/styles/mixin.scss';
 
 .container {
+  width: 100%;
   position: relative;
   z-index: 1000;
   display: inline-block;
   padding: 0;
   // border-bottom: 1px solid rgba(24, 31, 67, 0.12);
-  box-shadow: 0px 2px 8px 0px rgba(24, 31, 67, 0.08);
-  background-color: #fff;
+  box-shadow: var(--custom-nav-menu-shadow, 0px 2px 8px 0px rgba(24, 31, 67, 0.08));
+  background: var(--custom-nav-menu-bg, #fff);
 
   .header {
     display: flex;
@@ -36,9 +38,9 @@
         color: rgba(0, 0, 0, 0.85);
       }
       &:hover {
-        border-color: #4c5cdb;
+        border-color: $primary-color;
         .text {
-          color: #4c5cdb;
+          color: $primary-color;
         }
       }
       &.active {
@@ -56,6 +58,10 @@
   }
 }
 
+.login {
+  color: #4c5cdb;
+  cursor: pointer;
+}
 .user {
   @include center('flex');
 

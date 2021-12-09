@@ -1,44 +1,33 @@
-import { memo, ReactNode, useMemo } from 'react';
-import { DatePicker } from 'antd';
-import { Icon } from '@common/components';
+import { memo, useMemo } from 'react';
+import BaseDate from './base-date';
+import EventHoc from '@components/form-engine/eventHoc';
 import { DatePickerProps } from 'antd/lib/date-picker';
-import moment, { Moment } from 'moment';
+import { useContainerContext } from '@components/form-engine/context';
+import getDisabledDateRule from './utils';
+import { Moment } from 'moment';
 
-const Date = (props: DatePickerProps & { notSelectPassed: boolean; onChange: (value?: number) => void }) => {
-  const { format, notSelectPassed, defaultValue, value, onChange } = props;
-  const propList = useMemo(() => {
-    const prop: { [k: string]: string | boolean | Function | Moment | ReactNode } = {
-      size: 'large',
-      suffixIcon: <Icon type="riqi" />,
-      onChange(val: moment.Moment) {
-        const time = moment(val).format(format as string);
-        onChange && onChange(val ? moment(time).valueOf() : undefined);
-      },
+const Date = (props: DatePickerProps & { onChange: (v: any) => void } & { [key: string]: any }) => {
+  const { form, rules } = useContainerContext();
+
+  const handleDisabledDate = useMemo(() => {
+    return (current: Moment) => {
+      const formValue = form.getFieldsValue();
+      return getDisabledDateRule({
+        rules,
+        current,
+        formValue,
+        id: props.id!,
+        range: props.datelimit?.enable ? props.datelimit?.daterange : undefined,
+        format: props.format,
+      });
     };
-    let formatStr: string = '';
-    if (format === 'YYYY-MM-DD HH:mm:ss') {
-      prop.showTime = true;
-      formatStr = 'YYYY-MM-DD HH:mm:ss';
-    } else if (format === 'YYYY-MM-DD') {
-      formatStr = 'YYYY-MM-DD';
-    } else {
-      formatStr = 'YYYY-MM-DD';
-    }
-    prop.format = formatStr;
-    if (notSelectPassed) {
-      prop.disabledDate = (current: Moment) => {
-        return current && current < moment().endOf('second');
-      };
-    }
-    if (defaultValue) {
-      prop.defaultValue = typeof defaultValue === 'number' ? moment(defaultValue) : defaultValue;
-    }
-    if (value) {
-      prop.value = typeof value === 'number' ? moment(value) : value;
-    }
+  }, [rules, form, props.id, props.datelimit, props.format]);
 
-    return Object.assign({}, props, prop);
-  }, [format, notSelectPassed, defaultValue, value, props, onChange]);
-  return <DatePicker {...propList} style={{ width: '100%' }} key={defaultValue?.toString()} />;
+  return (
+    <EventHoc>
+      <BaseDate {...props} disabledDate={handleDisabledDate} />
+    </EventHoc>
+  );
 };
+
 export default memo(Date);

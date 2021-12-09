@@ -1,17 +1,18 @@
-import { memo, FC, useMemo, useState, useEffect } from 'react';
+import { FC, memo, useEffect, useMemo, useState } from 'react';
 import { Modal } from 'antd';
 import { Icon, Loading } from '@common/components';
 import { useAppSelector } from '@/app/hooks';
 import {
   componentPropsSelector,
+  propertyRulesSelector,
   formRulesSelector,
   layoutSelector,
   subAppSelector,
 } from '@/features/bpm-editor/form-design/formzone-reducer';
 import FormEngine from '@components/form-engine';
 import { Datasource, FormMeta } from '@type/detail';
-import { FieldAuthsMap, AuthType } from '@type/flow';
-import { ComponentConfig, FieldType, FormField, FormFieldMap, InputField, InputNumberField, RadioField } from '@/type';
+import { AuthType, FieldAuthsMap } from '@type/flow';
+import { ComponentConfig, FormField, FormFieldMap, InputField, InputNumberField, RadioField } from '@/type';
 import { fetchDataSource } from '@/apis/detail';
 import { useSubAppDetail } from '@/app/app';
 import styles from './index.module.scss';
@@ -20,7 +21,20 @@ import titleImage from '@/assets/title.png';
 import leftImage from '@assets/background_left.png';
 import rightImage from '@assets/background_right.png';
 
-const propsKey = ['defaultValue', 'showSearch', 'multiple', 'format', 'notSelectPassed', 'maxCount'];
+const propsKey = [
+  'defaultValue',
+  'showSearch',
+  'multiple',
+  'format',
+  'datelimit',
+  'numlimit',
+  'maxCount',
+  'components',
+  'fieldName',
+  'decimal',
+  'fileMap',
+  'defaultNumber',
+];
 type Key = keyof FormField;
 
 const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, onClose }) => {
@@ -28,6 +42,7 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
   const layout = useAppSelector(layoutSelector);
   const byId: FormFieldMap = useAppSelector(componentPropsSelector);
   const formRules = useAppSelector(formRulesSelector);
+  const propertyRules = useAppSelector(propertyRulesSelector);
   const [dataSource, setDataSource] = useState<Datasource>({});
   const [loading, setLoading] = useState<boolean>(false);
   const subAppDetail = useSubAppDetail();
@@ -41,7 +56,7 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
     const components: ComponentConfig[] = [];
     Object.keys(byId).forEach((id) => {
       const object = byId[id];
-      const type = id.split('_')[0] as FieldType;
+      const type = object.type;
       const component: ComponentConfig = { config: { type, id }, props: { type, id } };
       Object.keys(object).forEach((key) => {
         if (propsKey.includes(key)) {
@@ -55,19 +70,19 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
       });
       components.push(component);
     });
-    const formMeta = {
+    return {
       layout,
       events: {
         onchange: [],
       },
       rules: [],
       formRules,
+      propertyRules,
       themes: [{}],
       components: components,
       selectedTheme: '',
     };
-    return formMeta;
-  }, [layout, byId, formRules]);
+  }, [layout, byId, formRules, propertyRules]);
   const auths = useMemo(() => {
     const res: FieldAuthsMap = {};
     Object.keys(byId).forEach((id) => {
@@ -127,8 +142,8 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
       {loading && <Loading className={styles.loading} />}
       <div className="content">
         <div className={styles.background}>
-          <div className={styles.left} style={{ backgroundImage: `url(${leftImage})` }}></div>
-          <div className={styles.right} style={{ backgroundImage: `url(${rightImage})` }}></div>
+          <div className={styles.left} style={{ backgroundImage: `url(${leftImage})` }} />
+          <div className={styles.right} style={{ backgroundImage: `url(${rightImage})` }} />
         </div>
         <div className={styles['start-form-wrapper']}>
           <div className={classnames(styles.form)} style={{ height: `${document.body.clientHeight - 124}px` }}>
@@ -144,7 +159,8 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
                 fieldsAuths={auths}
                 className={styles['form-engine']}
                 projectId={projectId}
-              ></FormEngine>
+                nodeType="preview"
+              />
             </div>
           </div>
         </div>

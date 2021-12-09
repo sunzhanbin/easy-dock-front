@@ -1,3 +1,4 @@
+@import '@common/styles/var.scss';
 .container {
   .title {
     font-size: 16px;
@@ -5,6 +6,8 @@
     margin-bottom: 4px;
   }
   .rules {
+    margin-bottom: 15px;
+
     .content {
       .ruleItem {
         height: 72px;
@@ -45,7 +48,7 @@
             margin: 0 8px;
             cursor: pointer;
             &:hover {
-              color: #4c5cdb;
+              color: $primary-color;
             }
           }
           .edit {

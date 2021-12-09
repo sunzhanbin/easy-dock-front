@@ -1,5 +1,6 @@
 import { memo, useMemo, useCallback } from 'react';
-import { NavLink, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+import Auth from '@enc/sso';
 import { useSelector, useDispatch } from 'react-redux';
 import { Dropdown, Menu } from 'antd';
 import classNames from 'classnames';
@@ -9,19 +10,21 @@ import { userSelector, logout } from '@/store/user';
 import { ROUTES } from '@consts';
 import { RoleEnum } from '@/schema/app';
 import styles from './index.module.scss';
+import useMemoCallback from '@common/hooks/use-memo-callback';
 
 function HeaderUser() {
   const history = useHistory();
   const dispatch = useDispatch();
-  const handleLogout = useCallback(async () => {
-    const logoutResponse = await dispatch(logout());
-
-    if (logoutResponse.meta.requestStatus === 'rejected') {
-      return;
+  const handleLogin = useMemoCallback(async () => {
+    if (window.Auth) {
+      await window.Auth.getToken(true, window.EASY_DOCK_BASE_SERVICE_ENDPOINT);
+    } else {
+      await Auth.getToken(true, window.EASY_DOCK_BASE_SERVICE_ENDPOINT);
     }
-
-    history.replace(ROUTES.LOGIN + `?redirect=${encodeURIComponent(window.location.href)}`);
-  }, [history, dispatch]);
+  });
+  const handleLogout = useCallback(() => {
+    dispatch(logout());
+  }, [dispatch]);
 
   const user = useSelector(userSelector);
   const handleGoAuth = useCallback(() => {
@@ -68,7 +71,10 @@ function HeaderUser() {
           </div>
         </Dropdown>
       ) : (
-        <NavLink to={ROUTES.LOGIN}>登陆</NavLink>
+        // <NavLink to={ROUTES.LOGIN}>登陆</NavLink>
+        <div className={styles.login} onClick={handleLogin}>
+          登录
+        </div>
       )}
     </>
   );

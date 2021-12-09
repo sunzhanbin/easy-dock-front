@@ -65,6 +65,9 @@ function StatusBar(props: StatusBarProps) {
     } else if (status === NodeStatusType.Finish) {
       image = `${publicPath}/images/flow-detail/finish.png`;
       styleName = styles.finish;
+    } else if (status === NodeStatusType.Waiting) {
+      image = `${publicPath}/images/flow-detail/waiting.png`;
+      styleName = styles.processing;
     }
 
     return { image, styleName };
@@ -101,6 +104,17 @@ function StatusBar(props: StatusBarProps) {
       />
     );
 
+    if (flowIns.state === NodeStatusType.Waiting) {
+      const currentNodesName = (flowIns.currentNodeList || []).map((item) => item.currentNodeName).join(',');
+
+      return (
+        <div className={styles.status}>
+          <Cell icon="dangqianjiedian" title={currentNodesName} desc="当前节点" />
+          {trackCell}
+        </div>
+      );
+    }
+
     // 显示当前处理人
     if (showCurrentProcessor && flowIns.state !== NodeStatusType.Terminated) {
       const currentNodesName = (flowIns.currentNodeList || []).map((item) => item.currentNodeName).join(',');
@@ -125,7 +139,7 @@ function StatusBar(props: StatusBarProps) {
         <Cell icon="dangqianchuliren" title={flowIns.applyUser.name} desc="申请人" />
         <Cell
           icon="xuanzeshijian"
-          title={moment(flowIns.applyTime).format('YYYY-MM-DD HH:mm:ss')}
+          title={moment(flowIns.applyTime).format('yyyy-MM-DD HH:mm:ss')}
           desc="申请时间"
           getContainer={getContainer}
         />

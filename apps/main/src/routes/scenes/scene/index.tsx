@@ -21,6 +21,7 @@ export default function Scene(props: SceneProps) {
   const { data, onEdit, onStatusChange, onTapCard, className, onDelete, containerId } = props;
   const [showActionDropdown, setShowActionDropdown] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  const [showMoreAction, setShowMoreAction] = useState<boolean>(false);
   const cardRef = useRef<HTMLDivElement>(null);
   // 编辑应用
   const handleEditScene = useCallback(() => {
@@ -101,7 +102,13 @@ export default function Scene(props: SceneProps) {
   }, []);
 
   return (
-    <div className={classnames(className, styles.card)} onClick={handleClickCard} ref={cardRef}>
+    <div
+      ref={cardRef}
+      className={classnames(className, styles.card)}
+      onClick={handleClickCard}
+      onMouseEnter={() => setShowMoreAction(true)}
+      onMouseLeave={() => setShowMoreAction(false)}
+    >
       <img src={getSceneImageUrl(data.icon)} alt="iamge" />
       <div className={styles.content}>
         {data.name.length > 15 ? (
@@ -146,18 +153,21 @@ export default function Scene(props: SceneProps) {
             <div className={styles.del}></div>
           </PopoverConfirm>
 
-          <Dropdown
-            overlayClassName="dark"
-            overlay={dropownOverlay}
-            placement="bottomRight"
-            visible={showActionDropdown}
-            onVisibleChange={setShowActionDropdown}
-            getPopupContainer={getPopupContainer}
-          >
-            <div onClick={stopPropagation} className={styles.more}>
-              <Icon type="gengduo" />
-            </div>
-          </Dropdown>
+          {showMoreAction && (
+            <Dropdown
+              overlayClassName="dark"
+              placement="bottomRight"
+              trigger={['click']}
+              overlay={dropownOverlay}
+              visible={showActionDropdown}
+              onVisibleChange={setShowActionDropdown}
+              getPopupContainer={getPopupContainer}
+            >
+              <div onClick={stopPropagation} className={styles.more}>
+                <Icon type="gengduo" />
+              </div>
+            </Dropdown>
+          )}
         </div>
       </div>
     </div>

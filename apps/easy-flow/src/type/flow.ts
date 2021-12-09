@@ -16,8 +16,10 @@ export enum NodeType {
   CCNode = 6,
   // 分支
   SubBranch = 7,
-  // 自动节点
-  AutoNode = 8,
+  // 自动节点_数据连接
+  AutoNodePushData = 8,
+  // 自动节点_触发流程
+  AutoNodeTriggerProcess = 9,
 }
 
 export enum AuthType {
@@ -45,7 +47,7 @@ export enum RevertType {
 }
 
 export type FieldAuthsMap = {
-  [fieldId: string]: AuthType;
+  [fieldId: string]: AuthType | FieldAuthsMap;
 };
 
 export type CorrelationMemberConfigKey = string | number;
@@ -64,6 +66,41 @@ export type CorrelationMemberConfig = {
 export interface UserNode extends BaseNode {
   correlationMemberConfig: CorrelationMemberConfig;
   fieldsAuths: FieldAuthsMap;
+}
+
+export interface FieldAuth {
+  type: string;
+  field: string;
+  name: string;
+  auth: AuthType | null;
+  components: FieldAuth[] | null;
+}
+
+export enum TimeUnit {
+  Day = 'day',
+  Hour = 'hour',
+  Minute = 'minute',
+}
+
+export interface IDueConfig {
+  enable: boolean;
+  timeout: {
+    num?: number;
+    unit: TimeUnit;
+  };
+  cycle: {
+    enable: boolean;
+    num?: number;
+    unit: TimeUnit;
+  };
+  notice: {
+    starter: boolean;
+    assign: boolean;
+    admin: boolean;
+    other: boolean;
+    users?: number[];
+  };
+  action?: 'submit' | 'back' | null;
 }
 
 export interface AuditNode extends UserNode {
@@ -85,10 +122,12 @@ export interface AuditNode extends UserNode {
     count: number;
     percent: number;
   };
+  dueConfig: IDueConfig;
 }
 
 export interface FillNode extends UserNode {
   type: NodeType.FillNode;
+  dueConfig?: IDueConfig;
   btnText: {
     submit: ButtonAuth;
     save: ButtonAuth;
@@ -155,15 +194,56 @@ export interface CCNode extends BaseNode {
   fieldsAuths: FieldAuthsMap;
 }
 
-export interface AutoNode extends BaseNode {
-  type: NodeType.AutoNode;
+export interface AutoNodePushData extends BaseNode {
+  type: NodeType.AutoNodePushData;
   dataConfig: DataConfig;
 }
 
-export type AllNode = StartNode | AuditNode | FillNode | BranchNode | FinishNode | CCNode | AutoNode;
+export enum StarterEnum {
+  FlowStarter = 1, //当前流程发起人
+  Admin = 2, //系统发起
+  FormComponent = 3, //表单中人员控件的值
+}
+
+export interface TriggerConfig {
+  id: number | undefined; //自动触发流程id
+  name: string | undefined; //自动触发流程名称
+  // 发起人
+  starter: {
+    type: StarterEnum;
+    value?: string; //表单中人员控件的值
+  };
+  // 字段映射
+  mapping: { current: string; target: string; required?: boolean }[];
+}
+
+export interface AutoNodeTriggerProcess extends BaseNode {
+  type: NodeType.AutoNodeTriggerProcess;
+  triggerConfig: {
+    isWait: boolean;
+    subapps: TriggerConfig[];
+  };
+}
+
+export type AllNode =
+  | StartNode
+  | AuditNode
+  | FillNode
+  | BranchNode
+  | FinishNode
+  | CCNode
+  | AutoNodePushData
+  | AutoNodeTriggerProcess;
 
 export type Flow = AllNode[];
 
-export type FieldTemplate = { id: string; name: string; type: FieldType };
+export type FieldTemplate = { id: string; name: string; type: FieldType; parentId?: string };
 
-export type AddableNode = AuditNode | FillNode | BranchNode | CCNode | SubBranch | AutoNode;
+export type AddableNode =
+  | AuditNode
+  | FillNode
+  | BranchNode
+  | CCNode
+  | SubBranch
+  | AutoNodePushData
+  | AutoNodeTriggerProcess;

@@ -16,8 +16,8 @@
 .ant-btn:hover,
 .ant-btn:active,
 .ant-btn:focus {
-  color: $primary-color;
-  border-color: $primary-color;
+  color: $primary-color-custom;
+  border-color: $primary-color-custom;
 
   svg {
     color: inherit;
@@ -30,28 +30,28 @@
   &:focus,
   &:active {
     color: #fff;
-    background-color: $primary-color;
-    border-color: $primary-color;
+    background-color: $primary-color-custom;
+    border-color: $primary-color-custom;
   }
 
   &.ant-btn-background-ghost {
-    color: $primary-color;
+    color: $primary-color-custom;
     border-radius: 3px;
-    border-color: rgba($primary-color, 0.8);
+    border-color: rgba($primary-color-custom, 0.8);
 
     &:focus {
-      border-color: $primary-color;
-      color: $primary-color;
+      border-color: $primary-color-custom;
+      color: $primary-color-custom;
     }
 
     &:hover {
-      border-color: rgba($primary-color, 0.5);
-      color: rgba($primary-color, 0.8);
+      border-color: rgba($primary-color-custom, 0.5);
+      color: rgba($primary-color-custom, 0.8);
     }
 
     &.disabled {
       border-color: rgba(#a6ace2, 0.5);
-      color: rgba($primary-color, 0.5);
+      color: rgba($primary-color-custom, 0.5);
     }
   }
 
@@ -100,7 +100,7 @@
 }
 
 .ant-switch-checked {
-  background-color: $primary-color;
+  background-color: $primary-color-custom;
 
   .ant-switch-handle {
     left: calc(100% - 20px - 2px);
@@ -156,7 +156,7 @@
     margin-left: -32px;
     margin-right: -32px;
     padding: 0 64px;
-    border: none;
+    // border: none;
     background-color: rgba(24, 31, 67, 0.04);
 
     .ant-btn + .ant-btn:not(.ant-dropdown-trigger) {
@@ -176,13 +176,13 @@
   background-color: rgba(24, 39, 67, 0.04);
 
   &:hover {
-    border-color: rgba($primary-color, 0.85);
+    border-color: rgba($primary-color-custom, 0.8);
     background-color: transparent;
   }
 
   &:focus {
-    border-color: rgba($primary-color, 0.85);
-    box-shadow: 0 0 0 3px rgba(76, 92, 219, 0.2);
+    border-color: rgba($primary-color-custom, 0.8);
+    box-shadow: 0 0 0 3px rgba($primary-color-custom, 0.12);
     background-color: transparent;
   }
 
@@ -192,8 +192,21 @@
   }
 
   &[disabled] {
+    color: inherit;
+    background: linear-gradient(
+      -45deg,
+      rgba(24, 39, 67, 0.04) 0,
+      rgba(24, 39, 67, 0.04) 5%,
+      transparent 5%,
+      transparent 50%,
+      rgba(24, 39, 67, 0.04) 50%,
+      rgba(24, 39, 67, 0.04) 55%,
+      transparent 55%,
+      transparent
+    );
+    background-size: 10px 10px;
     background-color: rgba(24, 39, 67, 0.04);
-
+    border-color: transparent;
     &:hover {
       border-color: transparent;
     }
@@ -206,7 +219,7 @@
   background-color: rgba(24, 31, 67, 0.04);
 
   &:not(&-disabled):hover {
-    border-color: rgba(76, 92, 219, 0.85);
+    border-color: rgba($primary-color-custom, 0.85);
     background-color: transparent;
   }
 
@@ -216,8 +229,8 @@
 }
 
 .ant-input-affix-wrapper-focused {
-  border-color: rgba(76, 92, 219, 0.85);
-  box-shadow: 0 0 0 3px rgba(76, 92, 219, 0.2);
+  border-color: rgba($primary-color-custom, 0.85);
+  box-shadow: 0 0 0 3px rgba($primary-color-custom, 0.12);
 }
 
 .ant-form-item-has-error {
@@ -273,7 +286,6 @@
       color: #ff5568;
     }
   }
-
 }
 
 .ant-checkbox {
@@ -292,30 +304,30 @@
 
 .ant-checkbox-checked .ant-checkbox-inner,
 .ant-tree-checkbox-checked .ant-tree-checkbox-inner {
-  background-color: $primary-color;
-  border-color: $primary-color;
+  background-color: $primary-color-custom;
+  border-color: $primary-color-custom;
 }
 
 // 树形控件半选状态
 .ant-tree-checkbox-indeterminate .ant-tree-checkbox-inner::after {
-  background-color: $primary-color;
+  background-color: $primary-color-custom;
 }
 
 .ant-tree-checkbox-wrapper:hover .ant-tree-checkbox-inner,
 .ant-tree-checkbox:hover .ant-tree-checkbox-inner,
 .ant-tree-checkbox-input:focus + .ant-tree-checkbox-inner {
-  border-color: $primary-color;
+  border-color: $primary-color-custom;
 }
 
 .ant-checkbox-indeterminate .ant-checkbox-inner::after {
-  background-color: $primary-color;
+  background-color: $primary-color-custom;
 }
 
 .ant-checkbox-wrapper:hover .ant-checkbox-inner,
 .ant-checkbox:hover .ant-checkbox-inner,
 .ant-checkbox-input:focus + .ant-checkbox-inner,
 .ant-checkbox-checked::after {
-  border-color: $primary-color;
+  border-color: $primary-color-custom;
 }
 
 .ant-checkbox-disabled.ant-checkbox-checked .ant-checkbox-inner {
@@ -341,21 +353,39 @@
   border-color: transparent;
   background-color: rgba(24, 39, 67, 0.04);
   &:hover {
-    border-color: rgba($primary-color, 0.85);
+    border-color: rgba($primary-color-custom, 0.85);
     background-color: transparent;
   }
 
   &:focus {
-    border-color: rgba($primary-color, 0.85);
-    box-shadow: 0 0 0 3px rgba(76, 92, 219, 0.2);
+    border-color: rgba($primary-color-custom, 0.85);
+    box-shadow: 0 0 0 3px rgba($primary-color-custom, 0.12);
     background-color: transparent;
   }
   &.ant-picker-disabled {
+    color: inherit;
+    background: linear-gradient(
+      -45deg,
+      rgba(24, 39, 67, 0.04) 0,
+      rgba(24, 39, 67, 0.04) 5%,
+      transparent 5%,
+      transparent 50%,
+      rgba(24, 39, 67, 0.04) 50%,
+      rgba(24, 39, 67, 0.04) 55%,
+      transparent 55%,
+      transparent
+    );
+    background-size: 10px 10px;
     background-color: rgba(24, 39, 67, 0.04);
     border-color: transparent;
     &:hover {
       border-color: transparent;
     }
+  }
+}
+.ant-picker-input {
+  & > input[disabled] {
+    color: inherit;
   }
 }
 // 定制数字输入框
@@ -364,10 +394,11 @@
   border-color: transparent;
   background-color: rgba(24, 39, 67, 0.04);
   &:hover {
-    border-color: rgba($primary-color, 0.85);
+    border-color: rgba($primary-color-custom, 0.85);
     background-color: transparent;
   }
   &.ant-input-number-disabled {
+    color: inherit;
     background-color: inherit;
     &:hover {
       border-color: transparent;
@@ -375,17 +406,30 @@
   }
 
   &:focus {
-    border-color: rgba($primary-color, 0.85);
-    box-shadow: 0 0 0 3px rgba(76, 92, 219, 0.2);
+    border-color: rgba($primary-color-custom, 0.85);
+    box-shadow: 0 0 0 3px rgba($primary-color-custom, 0.2);
     background-color: transparent;
   }
 
   &.ant-input-number-focused {
-    box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+    box-shadow: 0 0 0 2px rgba($primary-color-custom, 0.2);
   }
 
   .ant-input-number-input {
     &[disabled] {
+      color: inherit;
+      background: linear-gradient(
+        -45deg,
+        rgba(24, 39, 67, 0.04) 0,
+        rgba(24, 39, 67, 0.04) 5%,
+        transparent 5%,
+        transparent 50%,
+        rgba(24, 39, 67, 0.04) 50%,
+        rgba(24, 39, 67, 0.04) 55%,
+        transparent 55%,
+        transparent
+      );
+      background-size: 10px 10px;
       background-color: rgba(24, 39, 67, 0.04);
     }
   }
@@ -433,10 +477,10 @@
   // 选中样式
   &.ant-radio-checked {
     .ant-radio-inner {
-      border-color: $primary-color;
+      border-color: $primary-color-custom;
 
       &::after {
-        background-color: $primary-color;
+        background-color: $primary-color-custom;
       }
     }
   }
@@ -490,8 +534,8 @@
 
 .ant-cascader-menu-item-active:not(.ant-cascader-menu-item-disabled),
 .ant-cascader-menu-item-active:not(.ant-cascader-menu-item-disabled):hover {
-  color: $primary-color;
-  background-color: rgba($primary-color, 0.08);
+  color: $primary-color-custom;
+  background-color: rgba($primary-color-custom, 0.08);
   font-weight: normal;
 }
 
@@ -504,19 +548,19 @@
 }
 
 .ant-cascader-picker:focus .ant-cascader-input {
-  box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+  box-shadow: 0 0 0 2px rgba($primary-color-custom, 0.2);
 }
 
 .ant-cascader-picker-label:hover
   + .ant-cascader-input:not(.ant-cascader-picker-disabled .ant-cascader-picker-label:hover + .ant-cascader-input) {
-  border-color: $primary-color;
+  border-color: $primary-color-custom;
 }
 
 .ant-cascader-picker {
   &:hover,
   &:focus {
     .ant-cascader-input {
-      border-color: $primary-color;
+      border-color: $primary-color-custom;
     }
   }
 }
@@ -530,15 +574,32 @@
         background: rgba(24, 39, 67, 0.04);
         border-radius: 3px;
         border-color: transparent;
+        transition: none;
+        &:hover {
+          background: #fff;
+        }
       }
     }
 
     &.ant-select-disabled {
       &:not(.ant-select-customize-input) {
         .ant-select-selector {
-          background: rgba(24, 39, 67, 0.04);
+          background-color: rgba(24, 39, 67, 0.04);
+          color: inherit;
         }
       }
+      background: linear-gradient(
+        -45deg,
+        rgba(24, 39, 67, 0.04) 0,
+        rgba(24, 39, 67, 0.04) 5%,
+        transparent 5%,
+        transparent 50%,
+        rgba(24, 39, 67, 0.04) 50%,
+        rgba(24, 39, 67, 0.04) 55%,
+        transparent 55%,
+        transparent
+      );
+      background-size: 10px 10px;
     }
   }
 
@@ -551,14 +612,31 @@
     .ant-select-selector {
       background: rgba(24, 39, 67, 0.04);
       border-radius: 3px;
-      border: none;
+      border-color: transparent;
+      transition: none;
+      &:hover {
+        background: #fff;
+      }
     }
     &.ant-select-disabled {
       &:not(.ant-select-customize-input) {
         .ant-select-selector {
-          background: rgba(24, 39, 67, 0.04);
+          background-color: rgba(24, 39, 67, 0.04);
+          color: inherit;
         }
       }
+      background: linear-gradient(
+        -45deg,
+        rgba(24, 39, 67, 0.04) 0,
+        rgba(24, 39, 67, 0.04) 5%,
+        transparent 5%,
+        transparent 50%,
+        rgba(24, 39, 67, 0.04) 50%,
+        rgba(24, 39, 67, 0.04) 55%,
+        transparent 55%,
+        transparent
+      );
+      background-size: 10px 10px;
     }
   }
 }
@@ -568,7 +646,9 @@
 }
 
 .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector {
-  box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+  box-shadow: 0 0 0 3px rgba($primary-color-custom, 0.12);
+  border-color: rgba($primary-color-custom, 0.8);
+  background-color: #fff;
 }
 
 .ant-select-item {
@@ -585,14 +665,16 @@
 }
 
 .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
-  color: $primary-color;
-  background-color: rgba($primary-color, 0.08);
+  color: $primary-color-custom;
+  background-color: rgba($primary-color-custom, 0.08);
   font-weight: normal;
 }
 
 .ant-select:not(.ant-select-disabled):hover .ant-select-selector,
 .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector {
-  border-color: $primary-color;
+  box-shadow: 0 0 0 3px rgba($primary-color-custom, 0.12);
+  border-color: rgba($primary-color-custom, 0.8);
+  background-color: #fff;
 }
 
 // 定制表格
@@ -625,24 +707,24 @@
 
   .ant-table-column-sorter-up.active,
   .ant-table-column-sorter-down.active {
-    color: $primary-color;
+    color: $primary-color-custom;
   }
 }
 
 .ant-pagination-item-active {
-  border-color: $primary-color;
+  border-color: $primary-color-custom;
 }
 
 .ant-pagination-item-active a {
-  color: $primary-color;
+  color: $primary-color-custom;
 }
 
 .ant-pagination-item:focus-visible,
 .ant-pagination-item:hover {
-  border-color: $primary-color;
+  border-color: $primary-color-custom;
 
   a {
-    color: $primary-color;
+    color: $primary-color-custom;
   }
 }
 
@@ -650,8 +732,8 @@
 .ant-pagination-next:focus-visible .ant-pagination-item-link,
 .ant-pagination-prev:hover .ant-pagination-item-link,
 .ant-pagination-next:hover .ant-pagination-item-link {
-  border-color: $primary-color;
-  color: $primary-color;
+  border-color: $primary-color-custom;
+  color: $primary-color-custom;
 }
 
 .ant-pagination-disabled .ant-pagination-item-link,

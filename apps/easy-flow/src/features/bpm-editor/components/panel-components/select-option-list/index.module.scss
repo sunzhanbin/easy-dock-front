@@ -1,3 +1,4 @@
+@import '@common/styles/var.scss';
 .container {
   .title {
     display: flex;
@@ -32,10 +33,15 @@
       }
       &.active {
         background: #ffffff;
-        border-radius: 3px 0px 0px 3px;
         border: 1px solid rgba(24, 31, 67, 0.12);
         font-weight: 500;
-        color: #4c5cdb;
+        color: $primary-color;
+        &:first-child {
+          border-radius: 3px 0 0 3px;
+        }
+        &:last-child {
+          border-radius: 0 3px 3px 0;
+        }
       }
     }
   }
@@ -98,13 +104,20 @@
   }
   .content {
     .form {
+      flex-direction: column;
       margin-top: 24px;
       margin-bottom: 0;
       .apiConfig {
-        div {
+        & > div {
           &:last-child {
             margin-bottom: 0;
           }
+        }
+      }
+      :global {
+        .ant-form-item-label {
+          text-align: left;
+          margin-bottom: 4px;
         }
       }
     }

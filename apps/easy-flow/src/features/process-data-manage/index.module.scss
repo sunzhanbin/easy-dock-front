@@ -89,6 +89,38 @@
     .dynamic-cell {
       max-width: 150px;
     }
+    .tab-detail {
+      max-width: 150px;
+      cursor: pointer;
+      &:hover {
+        color: $primary-color;
+      }
+    }
+  }
+  .pop-container {
+    min-width: 100px;
+    max-width: 600px;
+    max-height: 400px;
+    overflow: auto;
+    .header {
+      display: flex;
+      height: 32px;
+      .cell {
+        font-weight: 600;
+      }
+    }
+    .content {
+      .row {
+        display: flex;
+        align-items: center;
+        height: 32px;
+      }
+    }
+    .cell {
+      flex: 1;
+      padding: 4px;
+      font-size: 12px;
+    }
   }
 }
 

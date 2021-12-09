@@ -12,6 +12,7 @@ import useAppId from '@/hooks/use-app-id';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { setTodoNum, appSelector } from '../taskcenter-slice';
 import { Icon } from '@common/components';
+import TimeoutState from '../components/timeout-state';
 import { debounce, throttle } from 'lodash';
 
 const { RangePicker } = DatePicker;
@@ -173,8 +174,13 @@ const ToDo: FC<{}> = () => {
         key: 'stay',
         width: '15%',
         render(_: string, record: TodoItem) {
-          const { startTime } = record;
-          return <div className={styles.stayTime}>{getStayTime(startTime)}</div>;
+          const { taskCreateTime, dueState } = record;
+          return (
+            <div className={styles.stayTime}>
+              <div className={styles.time}>{getStayTime(taskCreateTime)}</div>
+              {dueState === 1 && <TimeoutState className={styles.timeout} />}
+            </div>
+          );
         },
       },
       {
@@ -192,8 +198,8 @@ const ToDo: FC<{}> = () => {
         defaultSortOrder: 'descend' as 'descend',
         sorter: true,
         render(_: string, record: TodoItem) {
-          const { taskCreateTime } = record;
-          return moment(taskCreateTime).format('YYYY-MM-DD HH:mm');
+          const { startTime } = record;
+          return moment(startTime).format('yyyy-MM-DD HH:mm');
         },
       },
     ];
@@ -271,7 +277,7 @@ const ToDo: FC<{}> = () => {
             <Form.Item label="发起时间" name="timeRange" className="timeRange">
               <RangePicker
                 showTime={{ format: 'HH:mm' }}
-                format="YYYY-MM-DD HH:mm"
+                format="yyyy-MM-DD HH:mm"
                 style={{ width: '100%' }}
                 suffixIcon={<Icon type="riqi" />}
                 onChange={() => {

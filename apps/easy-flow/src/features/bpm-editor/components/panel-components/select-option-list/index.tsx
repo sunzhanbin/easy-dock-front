@@ -1,6 +1,6 @@
 import { memo, useCallback, useMemo, useState, useEffect, useRef } from 'react';
 import { Select, Input, Tooltip, Form } from 'antd';
-import { useDrag, useDrop } from 'react-dnd';
+import { DropTargetMonitor, useDrag, useDrop, XYCoord } from 'react-dnd';
 import { axios } from '@utils';
 import { FormField, OptionItem, OptionMode, SelectOptionItem } from '@/type';
 import { Icon } from '@common/components';
@@ -12,6 +12,7 @@ import classNames from 'classnames';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import DataApiConfig from '@/features/bpm-editor/components/data-api-config';
 import ResponseNoMap from '@/features/bpm-editor/components/data-api-config/response-no-map';
+import { DataConfig } from '@/type/api';
 
 const { Option } = Select;
 interface editProps {
@@ -30,11 +31,12 @@ const SelectOptionList = (props: editProps) => {
   const [appList, setAppList] = useState<(OptionItem & { versionId: number })[]>([]);
   const [componentKey, setComponentKey] = useState<string | undefined>(value?.fieldName);
   const [componentList, setComponentList] = useState<OptionItem[]>([]);
+  const [cacheApiConfig, setCacheApiConfig] = useState<DataConfig>();
 
   const fields = useMemo<{ id: string; name: string }[]>(() => {
     const componentList = Object.values(byId).map((item: FormField) => item) || [];
     return componentList
-      .filter((com) => com.type !== 'DescText' && com.id !== id)
+      .filter((com) => !['DescText', 'Tabs'].includes(com.type) && com.id !== id)
       .map((com) => ({ id: com.fieldName, name: com.label }));
   }, [byId, id]);
 
@@ -122,10 +124,15 @@ const SelectOptionList = (props: editProps) => {
     } else if (type === 'subapp' && subAppKey && componentKey) {
       onChange && onChange({ type, subappId: subAppKey, fieldName: componentKey });
     } else if (type === 'interface') {
-      onChange && onChange({ type, apiConfig: value?.apiConfig });
+      let apiConfig: DataConfig = { type: 1, request: { required: [], customize: [] } };
+      if (cacheApiConfig) {
+        apiConfig = Object.assign({}, apiConfig, value?.apiConfig, cacheApiConfig);
+      }
+      onChange && onChange({ type, apiConfig });
     }
   });
   const handleApiChange = useMemoCallback((apiConfig) => {
+    setCacheApiConfig(apiConfig);
     onChange && onChange({ type, apiConfig });
   });
 
@@ -186,7 +193,7 @@ const SelectOptionList = (props: editProps) => {
       );
     } else if (type === 'interface') {
       return (
-        <Form.Item className={styles.form} name="apiConfig" label="选择要读取数据的接口">
+        <Form.Item className={styles.form} name={['dataSource', 'apiConfig']} label="选择要读取数据的接口">
           <DataApiConfig
             name={['dataSource', 'apiConfig']}
             label="为表单控件匹配请求参数"
@@ -210,7 +217,7 @@ const SelectOptionList = (props: editProps) => {
         .get(`/subapp/${appId}/list/all/deployed`)
         .then((res) => {
           const list = res.data
-            .filter((app: { id: number }) => app.id !== subAppId)
+            .filter((app: { id: number; type: number }) => app.type === 2 && app.id !== subAppId)
             .map((app: { name: string; id: number; version: { id: number } }) => ({
               key: app.id,
               value: app.name,
@@ -271,22 +278,56 @@ interface DragableOptionProps {
 function DragableOption(props: DragableOptionProps) {
   const { onDelete, data, onChange, onDrop, index } = props;
   const dragWrapperRef = useRef<HTMLDivElement>(null);
-  const [, drag] = useDrag(
+  const [canMove, setCanMove] = useState<boolean>(false);
+  const [{ opacity }, drag] = useDrag(
     () => ({
       type: 'option',
       item() {
         return { index };
       },
+      canDrag: () => canMove,
+      collect(monitor) {
+        return { opacity: monitor.isDragging() ? 0.2 : 1 };
+      },
     }),
-    [index],
+    [index, canMove],
   );
   const [, drop] = useDrop(
     () => ({
       accept: 'option',
-      drop: (currentDragItem: { index: number }) => {
-        if (currentDragItem.index !== index) {
-          onDrop(currentDragItem.index, index);
+      hover: (currentDragItem: { index: number }, monitor: DropTargetMonitor) => {
+        if (!dragWrapperRef.current) {
+          return;
         }
+        const dragIndex = currentDragItem.index;
+        const hoverIndex = index;
+        if (hoverIndex === dragIndex) {
+          return;
+        }
+        const hoverBoundingRect = dragWrapperRef.current?.getBoundingClientRect();
+
+        // Get vertical middle
+        const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+
+        // Determine mouse position
+        const clientOffset = monitor.getClientOffset();
+
+        // Get pixels to the top
+        const hoverClientY = (clientOffset as XYCoord).y - hoverBoundingRect.top;
+        // Dragging downwards
+        if (dragIndex === -1 || (dragIndex < hoverIndex && hoverClientY < hoverMiddleY)) {
+          return;
+        }
+
+        // Dragging upwards
+        if (dragIndex === -1 || (dragIndex > hoverIndex && hoverClientY > hoverMiddleY)) {
+          return;
+        }
+        onDrop(dragIndex, hoverIndex);
+        currentDragItem.index = hoverIndex;
+      },
+      drop: (currentDragItem: { index: number }) => {
+        return { ...currentDragItem, hoverIndex: index };
       },
     }),
     [onDrop, index],
@@ -300,12 +341,20 @@ function DragableOption(props: DragableOptionProps) {
     onDelete(index);
   });
 
+  const handleMouseEnter = useMemoCallback(() => {
+    setCanMove(true);
+  });
+
+  const handleMouseLeave = useMemoCallback(() => {
+    setCanMove(false);
+  });
+
   useEffect(() => {
     drag(drop(dragWrapperRef));
   }, [drag, drop]);
 
   return (
-    <div className={styles.custom_item} ref={dragWrapperRef}>
+    <div className={styles.custom_item} ref={dragWrapperRef} style={{ opacity }}>
       <div className={styles.delete} onClick={handleDelete}>
         <Tooltip title="删除">
           <span>
@@ -313,7 +362,7 @@ function DragableOption(props: DragableOptionProps) {
           </span>
         </Tooltip>
       </div>
-      <div className={styles.move}>
+      <div className={styles.move} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
         <Tooltip title="拖动换行">
           <span>
             <Icon className={styles.iconfont} type="caidan" />

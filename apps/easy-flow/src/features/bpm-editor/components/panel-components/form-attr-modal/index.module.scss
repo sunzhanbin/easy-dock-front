@@ -7,7 +7,7 @@
       width: calc(50% - 12px);
       margin-right: 24px;
     }
-    .ruleType {
+    .subtype {
       width: calc(50% - 12px);
     }
     .condition,
@@ -40,6 +40,15 @@
             line-height: 22px;
             padding-bottom: 4px;
           }
+        }
+      }
+    }
+    .ant-modal-footer {
+      .ant-btn {
+        &:first-child {
+          border: none;
+          background-color: transparent;
+          box-shadow: none;
         }
       }
     }

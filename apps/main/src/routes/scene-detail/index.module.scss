@@ -1,3 +1,4 @@
+@import '@common/styles/var.scss';
 @import '@common/styles/mixin.scss';
 
 .detail {
@@ -64,7 +65,7 @@
     cursor: pointer;
 
     &.active {
-      color: #4c5cdb;
+      color: $primary-color;
       background-color: rgba(76, 92, 219, 0.06);
     }
   }
