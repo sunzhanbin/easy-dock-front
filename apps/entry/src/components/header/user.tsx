@@ -1,59 +1,32 @@
 import { memo, useMemo, useCallback } from "react";
-// import { useHistory } from "react-router-dom";
-import Auth from "@enc/sso";
+// import Auth from "@enc/sso";
 import { useDispatch } from "react-redux";
 import { Dropdown, Menu } from "antd";
+import { useLogoutMutation } from "@/http";
 import { Avatar, Icon } from "@common/components";
-
 // import { userSelector, logout } from "@/store/user";
-// import { ROUTES } from "@consts";
-// import { RoleEnum } from "@/schema/app";
 import "@components/header/index.style.scss";
 
 function HeaderUser() {
-  // const history = useHistory();
   const dispatch = useDispatch();
   const handleLogin = async () => {
-    console.log(
-      window.EASY_DOCK_BASE_SERVICE_ENDPOINT,
-      "window.EASY_DOCK_BASE_SERVICE_ENDPOINT"
-    );
-    await Auth.getToken(true, window.EASY_DOCK_BASE_SERVICE_ENDPOINT);
+    //  todo
   };
   const handleLogout = useCallback(() => {
-    // dispatch(logout());
+    useLogoutMutation();
   }, [dispatch]);
 
   const user = {
     info: {
-      avatar: "cxx",
-      username: "cxx",
+      avatar: "Cxx",
+      username: "Cxx",
     },
-    cast: true,
+    cast: false,
   };
   const isAdmin = false;
-  const handleGoAuth = useCallback(() => {
-    // history.push(ROUTES.USER_MANAGER_AUTH);
-  }, [history]);
-  // 当前角色是否是超管
-  // const isAdmin = useMemo(() => {
-  //   const power = user.info?.power || 0;
-  //   return (power & RoleEnum.ADMIN) === RoleEnum.ADMIN;
-  // }, [user]);
   const dropdownOverlay = useMemo(() => {
     return (
       <Menu>
-        {isAdmin && (
-          <>
-            <Menu.Item key="auth" onClick={handleGoAuth} className="menuItem">
-              <span>
-                <Icon type="quanxianshezhi" className="icon" />
-                权限设置
-              </span>
-            </Menu.Item>
-            <Menu.Item key="line" className="menuItem line" />
-          </>
-        )}
         <Menu.Item key="logout" onClick={handleLogout} className="menuItem">
           <span>
             <Icon type="tuichudenglu" className="icon" />
@@ -62,11 +35,11 @@ function HeaderUser() {
         </Menu.Item>
       </Menu>
     );
-  }, [isAdmin, handleGoAuth, handleLogout]);
+  }, [isAdmin, handleLogout]);
 
   return (
     <>
-      {user.cast ? (
+      {user.info ? (
         <Dropdown
           overlay={dropdownOverlay}
           getPopupContainer={(c) => c}
