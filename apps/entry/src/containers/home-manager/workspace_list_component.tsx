@@ -39,7 +39,7 @@ const HomeWorkspaceList = () => {
           <Icon className="icon" type="custom-icon-jinrujiantou" />
         </p>
       </div>
-      <div>
+      <div className="workspace_list">
         {/*<InfiniteScroll*/}
         {/*  dataLength={data.length}*/}
         {/*  next={loadMoreData}*/}
@@ -49,6 +49,7 @@ const HomeWorkspaceList = () => {
         {/*  scrollableTarget="scrollableDiv"*/}
         {/*>*/}
         <List
+          className="list"
           grid={{
             gutter: 16,
             column: 2,
@@ -58,10 +59,11 @@ const HomeWorkspaceList = () => {
             <List.Item key={item.id}>
               <List.Item.Meta
                 avatar={<Avatar src={item.picture.large} />}
-                title={<a href="https://ant.design">{item.name.last}</a>}
+                title={
+                  <a className="name">{item.name.last}64654365543252354</a>
+                }
                 description="12"
               />
-              <div>Content</div>
             </List.Item>
           )}
         />
