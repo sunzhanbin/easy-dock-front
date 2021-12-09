@@ -401,7 +401,7 @@ const components = {
       version: '1.0',
       type: 'Tabs',
     },
-    config: [fieldName, getLabel('标签页 '), desc, fieldManage],
+    config: [fieldName, getLabel('标签页'), desc, fieldManage],
   },
   Image: {
     baseInfo: {
