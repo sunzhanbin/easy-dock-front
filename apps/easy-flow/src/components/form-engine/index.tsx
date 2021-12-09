@@ -157,11 +157,13 @@ const FormDetail = React.forwardRef(function FormDetail(
   });
 
   useEffect(() => {
-    // 进入表单时请求接口
-    if (initRuleList.length > 0) {
-      callInterfaceList(initRuleList, initialValue);
-    }
-  }, [initRuleList, initialValue, callInterfaceList]);
+    // 进入表单时请求接口,延迟拿到form初始值
+    setTimeout(() => {
+      if (initRuleList.length > 0) {
+        callInterfaceList(initRuleList, form.getFieldsValue());
+      }
+    }, 100);
+  }, [initRuleList, initialValue, form, callInterfaceList]);
 
   const interfaceRules = useMemo(() => {
     return (data.formRules?.filter((v) => v.subtype === EventType.Interface) || []).map((v) => {
