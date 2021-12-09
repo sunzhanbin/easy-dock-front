@@ -1,3 +1,4 @@
+import { nameRegexp } from '@/utils';
 const fieldName = {
   key: 'fieldName',
   defaultValue: '',
@@ -19,6 +20,20 @@ const getLabel = (defaultValue) => {
     direction: 'vertical',
     required: true,
     requiredMessage: '请输入控件名称',
+    rules: [
+      {
+        validator(_, value) {
+          const label = value?.trim();
+          if (!label) {
+            return Promise.resolve();
+          }
+          if (!nameRegexp.test(label)) {
+            return Promise.reject(new Error('请输入1-30位的汉字、字母、数字、下划线'));
+          }
+          return Promise.resolve();
+        },
+      },
+    ],
     isProps: false,
     defaultValue,
   };
@@ -277,16 +292,15 @@ const filetype = {
   required: false,
   isProps: true,
 };
-const maxHeight = {
-  key: 'maxHeight',
+const height = {
+  key: 'height',
   placeholder: '请输入',
-  label: '最大高度(rem)',
-  defaultValue: 10,
+  label: '高度(px)',
+  defaultValue: 450,
   type: 'InputNumber',
   direction: 'vertical',
   required: false,
   isProps: true,
-  precision: 2,
 };
 
 const urlOption = {
@@ -479,7 +493,7 @@ const components = {
       version: '1.0',
       type: 'Iframe',
     },
-    config: [getLabel('iframe'), desc, maxHeight, urlOption],
+    config: [getLabel('iframe'), desc, height, urlOption],
   },
 };
 

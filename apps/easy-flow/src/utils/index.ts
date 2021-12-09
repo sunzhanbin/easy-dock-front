@@ -136,3 +136,5 @@ export const formatNumber = (value: any, fieldValue: { enable: boolean; precisio
     }
   }
 };
+
+export const nameRegexp = /^[\u4e00-\u9fa5_a-zA-Z0-9]{1,30}$/; //请输入1-30位的汉字、字母、数字、下划线

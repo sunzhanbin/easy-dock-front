@@ -9,6 +9,7 @@ import DataContext from './context';
 import Required from './required';
 import Custom from './custom';
 import styles from './index.module.scss';
+import { urlRegex } from '../../form-design/validate';
 
 export interface DataApiConfigProps {
   value?: DataConfig;
@@ -159,8 +160,6 @@ function DataApiConfig(props: DataApiConfigProps) {
         if (!val) {
           return Promise.reject(new Error('请输入接口地址'));
         }
-        // eslint-disable-next-line
-        const urlRegex = /(^(http|https):\/\/([\w\-]+\.)+[\w\-]+(\/[\w\u4e00-\u9fa5\-\.\/?\@\%\!\&=\+\~\:\#\;\,]*)?)/;
         if (!urlRegex.test(val)) {
           return Promise.reject(new Error('请输入正确的接口地址'));
         }

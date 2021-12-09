@@ -8,6 +8,7 @@ import styles from './index.module.scss';
 import { useAppSelector } from '@/app/hooks';
 import { componentPropsSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 import { FormField, UrlOptionItem } from '@/type';
+import { urlRegex } from '@/features/bpm-editor/form-design/validate';
 
 interface UrlOptionProps {
   id?: string;
@@ -42,8 +43,6 @@ const UrlOption = ({ id, value, onChange }: UrlOptionProps) => {
                 if (!val) {
                   return Promise.reject(new Error('请输入url地址'));
                 }
-                // eslint-disable-next-line
-                const urlRegex = /(^(http|https):\/\/([\w\-]+\.)+[\w\-]+(\/[\w\u4e00-\u9fa5\-\.\/?\@\%\!\&=\+\~\:\#\;\,]*)?)/;
                 if (!urlRegex.test(val)) {
                   return Promise.reject(new Error('请输入正确的url地址'));
                 }

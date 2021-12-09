@@ -29,11 +29,13 @@ const propsKey = [
   'datelimit',
   'numlimit',
   'maxCount',
+  'height',
   'components',
   'fieldName',
   'decimal',
   'fileMap',
   'defaultNumber',
+  'url',
 ];
 type Key = keyof FormField;
 

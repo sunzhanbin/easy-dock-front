@@ -1,7 +1,8 @@
 import { runtimeAxios } from '@utils/axios';
 import { AuthType, FieldAuthsMap } from '@type/flow';
 import type { TaskDetailType, FlowMeta, FormMeta, FormValue, FlowInstance, Datasource } from '@type/detail';
-import { CheckboxField, RadioField, SelectField } from '@/type';
+import { CheckboxField, RadioField, SelectField, UrlOptionItem } from '@/type';
+import { urlRegex } from '@/features/bpm-editor/form-design/validate';
 
 export async function loadFlowData(
   flowIns: FlowInstance,
@@ -98,8 +99,8 @@ export async function fetchDataSource(
           formDataList?.forEach((v) => {
             formValues[v.name] = v.value;
           });
-          const required = apiConfig.request.required;
-          const custom = apiConfig.request.customize;
+          const required = apiConfig.request?.required || [];
+          const custom = apiConfig.request?.customize || [];
           const requestFields = required
             .concat(custom)
             .map((item) => {
@@ -168,4 +169,54 @@ export const deleteDraft = async (draftId: number | string) => {
 
 export const getFlowData = (params: any) => {
   return runtimeAxios.post('', params);
+};
+
+export const loadSrc = async (option: UrlOptionItem, formDataList?: { name: string; value: any }[]) => {
+  if (option?.type === 'custom') {
+    if (option.customValue && urlRegex.test(option.customValue)) {
+      return option.customValue;
+    }
+    return '';
+  }
+  if (option?.type === 'interface') {
+    const { apiConfig } = option;
+    if (!apiConfig) {
+      return '';
+    }
+    const formValues: { [k: string]: any } = {};
+    formDataList?.forEach((v) => {
+      formValues[v.name] = v.value;
+    });
+    const required = apiConfig.request?.required || [];
+    const custom = apiConfig.request?.customize || [];
+    const requestFields = required
+      .concat(custom)
+      .map((item) => {
+        const { map } = item;
+        if (!map) {
+          return '';
+        }
+        return String(map?.match(/(?<=\$\{).*?(?=\})/));
+      })
+      .filter((name) => !name);
+    const isEmpty =
+      requestFields.length > 0 &&
+      requestFields.some((name) => formValues[name] === undefined || formValues[name] === null);
+    // 只要入参中有一个没有值，就不调用接口
+    if (isEmpty) {
+      return '';
+    }
+    const name = (apiConfig.response as { name: string })?.name;
+    if (!name) {
+      return '';
+    }
+    const formData = formDataList?.filter((val) => val.value) || [];
+    try {
+      const res = await runtimeAxios.post('/common/doHttpJson', { meta: apiConfig, formDataList: formData });
+      return eval(`res.${name}`);
+    } catch (error) {
+      return '';
+    }
+  }
+  return '';
 };

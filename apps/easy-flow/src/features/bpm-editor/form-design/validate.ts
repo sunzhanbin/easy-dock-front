@@ -1,3 +1,4 @@
+import { nameRegexp } from '@/utils';
 import { ConfigItem, FormRuleItem, UrlOptionItem } from '@type';
 import { message } from 'antd';
 import { dataPushConfig } from '../flow-design/validators';
@@ -17,6 +18,9 @@ export const validateFieldName = (fieldName: string): string => {
 export const validateLabel = (label: string) => {
   if (!label) {
     return '请填写控件名称';
+  }
+  if (!nameRegexp.test(label.trim())) {
+    return '请输入1-30位的汉字、字母、数字、下划线';
   }
   return '';
 };
@@ -188,6 +192,7 @@ export const formatSerialRules = (byId: any, id: string) => {
   return byId;
 };
 
+// eslint-disable-next-line
 export const urlRegex = /(^(http|https):\/\/([\w\-]+\.)+[\w\-]+(\/[\w\u4e00-\u9fa5\-\.\/?\@\%\!\&=\+\~\:\#\;\,]*)?)/;
 
 export const validUrlOption = (option: UrlOptionItem) => {
