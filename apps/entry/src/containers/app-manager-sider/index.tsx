@@ -1,8 +1,10 @@
-import { useCallback, useRef } from "react";
-import { Layout, Menu, Button } from "antd";
+import { useCallback, useRef, useMemo } from "react";
+import { Layout, Menu, Button, Input } from "antd";
 import { useFetchWorkspaceListQuery } from "@/http";
 import { useAppDispatch, useAppSelector } from "@/store";
 import AddWorkspaceModal from "@components/add-workspace-modal";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { Icon } from "@common/components";
 import {
   selectCurrentWorkspaceId,
   setCurrentWorkspaceId,
@@ -30,10 +32,25 @@ const AppManagerSider = () => {
     modalRef.current.show();
   }, []);
 
+  const renderMenuIcon = useMemoCallback((id) => {
+    return (
+      <Icon
+        type={+workspaceId === +id ? "wenjianjiacaisedakai" : "wenjianjiacaise"}
+      />
+    );
+  });
+
   return (
     <div className="app-manager-sider">
-      <Sider trigger={null} collapsible theme="light">
-        <div className="logo" />
+      <Sider trigger={null} collapsible theme="light" width={240}>
+        <div className="search">
+          <Input
+            size="large"
+            bordered={false}
+            prefix={<Icon type="sousuo" className="search-icon" />}
+            placeholder="请输入工作区名称"
+          />
+        </div>
         {workspaceId && (
           <>
             <Menu
@@ -43,10 +60,24 @@ const AppManagerSider = () => {
               onClick={handleMenuClick}
             >
               {workspaceList?.map((workspace: any) => (
-                <Menu.Item key={workspace.id}>{workspace.name}</Menu.Item>
+                <Menu.Item
+                  key={workspace.id}
+                  icon={renderMenuIcon(workspace.id)}
+                >
+                  {workspace.name}
+                </Menu.Item>
               ))}
             </Menu>
-            <Button onClick={handleAddWorkspaceVisible}>新增工作区</Button>
+            <div className="add-workspace">
+              <Button
+                className="button"
+                size="large"
+                icon={<Icon type="xinzeng" />}
+                onClick={handleAddWorkspaceVisible}
+              >
+                新增工作区
+              </Button>
+            </div>
           </>
         )}
       </Sider>
