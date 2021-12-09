@@ -280,13 +280,12 @@ const filetype = {
 const height = {
   key: 'height',
   placeholder: '请输入',
-  label: '高度(rem)',
-  defaultValue: 30,
+  label: '高度(px)',
+  defaultValue: 450,
   type: 'InputNumber',
   direction: 'vertical',
   required: false,
   isProps: true,
-  precision: 2,
 };
 
 const urlOption = {

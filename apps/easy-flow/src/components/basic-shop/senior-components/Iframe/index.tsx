@@ -15,7 +15,7 @@ const Iframe: FC<{ url: UrlOptionItem; height?: number }> = ({ url, height }) =>
     } else if (!height) {
       iframeHeight = 'auto';
     } else {
-      iframeHeight = `${height}rem`;
+      iframeHeight = `${height}px`;
     }
 
     return { height: iframeHeight };
