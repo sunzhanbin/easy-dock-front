@@ -47,8 +47,9 @@ const AppManagerSider = () => {
           <Input
             size="large"
             bordered={false}
-            prefix={<Icon type="sousuo" className="search-icon" />}
+            className="input"
             placeholder="请输入工作区名称"
+            prefix={<Icon type="sousuo" className="search-icon" />}
           />
         </div>
         {workspaceId && (
@@ -72,6 +73,7 @@ const AppManagerSider = () => {
               <Button
                 className="button"
                 size="large"
+                type="default"
                 icon={<Icon type="xinzeng" />}
                 onClick={handleAddWorkspaceVisible}
               >

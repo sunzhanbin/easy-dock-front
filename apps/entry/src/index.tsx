@@ -5,7 +5,7 @@ import reportWebVitals from "@/reportWebVitals";
 import { store } from "@/store";
 import App from "@/App";
 import "antd/dist/antd.css";
-import "@/index.css";
+import "@/index.scss";
 
 ReactDOM.render(
   <Provider store={store}>
