@@ -2,6 +2,7 @@ import React from "react";
 import classnames from "classnames";
 import { NavLink } from "react-router-dom";
 import Header from "@components/header";
+import Icon from "@assets/icon";
 import "@containers/layout/home-header.style";
 
 const HomeHeader: React.FC = () => {
@@ -15,6 +16,7 @@ const HomeHeader: React.FC = () => {
             }
             to="/"
           >
+            <Icon className="icon" type="custom-icon-gongzuotai" />
             开始
           </NavLink>
           <NavLink
