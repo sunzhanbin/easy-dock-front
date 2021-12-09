@@ -32,12 +32,12 @@ const AppManagerSider = () => {
 
   return (
     <div className="app-manager-sider">
-      <Sider trigger={null} collapsible>
+      <Sider trigger={null} collapsible theme="light">
         <div className="logo" />
         {workspaceId && (
           <>
             <Menu
-              theme="dark"
+              theme="light"
               mode="inline"
               defaultSelectedKeys={[`${workspaceId}`]}
               onClick={handleMenuClick}
