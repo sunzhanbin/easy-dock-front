@@ -1,3 +1,5 @@
+@import '@common/styles/var.scss';
+
 .top_sider {
   display: inline-flex;
   justify-content: center;
@@ -11,7 +13,7 @@
     justify-content: center;
     width: 181px;
     height: 164px;
-    background: url('~@assets/images/newApp.png') 0 0 no-repeat;
+    background: url('~@assets/images/home/newApp.png') 0 0 no-repeat;
     background-size: 181px 164px;
     .icon_new_app {
       width: 48px;
@@ -40,7 +42,6 @@
 .bottom_sider {
   flex: 1;
   padding: 0 24px;
-
   .workspace_info {
     display: inline-flex;
     justify-content: space-around;
@@ -70,16 +71,30 @@
   }
 
   .workspace_list {
-    background-color: pink;
+    height: calc(100% - 60px);
+    padding-bottom: 20px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    .infinite-scroll-component {
+      overflow-x: hidden !important;
+    }
     .list {
-
-      :global {
-        .ant-list-item {
-          background-color: red;
-          border-radius: 3px;
-          border: 1px solid rgba(24, 31, 67, 0.08);
-        }
-
+      .ant-list-item {
+        padding: 10px;
+        border-radius: 3px;
+        border: 1px solid rgba(24, 31, 67, 0.08);
+      }
+      .ant-list-item-meta-title, .ant-list-item-meta-description {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+      .ant-list-item-meta-title .name {
+        color: $primary-text-color;
+      }
+      .ant-list-item-meta-description{
+        color: rgba(24, 31, 67, 0.5);
+        font-size: 12px;
       }
     }
 

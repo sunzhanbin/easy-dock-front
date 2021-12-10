@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { List, message, Avatar, Skeleton, Divider } from "antd";
-// import InfiniteScroll from "react-infinite-scroll-component";
+import InfiniteScroll from "react-infinite-scroll-component";
 import Icon from "@assets/icon";
 import "@containers/home-manager/index.style.scss";
 
@@ -39,35 +39,32 @@ const HomeWorkspaceList = () => {
           <Icon className="icon" type="custom-icon-jinrujiantou" />
         </p>
       </div>
-      <div className="workspace_list">
-        {/*<InfiniteScroll*/}
-        {/*  dataLength={data.length}*/}
-        {/*  next={loadMoreData}*/}
-        {/*  hasMore={data.length < 50}*/}
-        {/*  loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}*/}
-        {/*  endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}*/}
-        {/*  scrollableTarget="scrollableDiv"*/}
-        {/*>*/}
-        <List
-          className="list"
-          grid={{
-            gutter: 16,
-            column: 2,
-          }}
-          dataSource={data}
-          renderItem={(item: any) => (
-            <List.Item key={item.id}>
-              <List.Item.Meta
-                avatar={<Avatar src={item.picture.large} />}
-                title={
-                  <a className="name">{item.name.last}64654365543252354</a>
-                }
-                description="12"
-              />
-            </List.Item>
-          )}
-        />
-        {/*</InfiniteScroll>*/}
+      <div className="workspace_list" id="scrollableDiv">
+        <InfiniteScroll
+          dataLength={data.length}
+          next={loadMoreData}
+          hasMore={false}
+          loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
+          scrollableTarget="scrollableDiv"
+        >
+          <List
+            className="list"
+            grid={{
+              gutter: 16,
+              column: 2,
+            }}
+            dataSource={data}
+            renderItem={(item: any) => (
+              <List.Item key={item.id}>
+                <List.Item.Meta
+                  avatar={<Avatar src={item.picture.large} />}
+                  title={<a className="name">{item.name.last}665543252354</a>}
+                  description="应用｜工作区一"
+                />
+              </List.Item>
+            )}
+          />
+        </InfiniteScroll>
       </div>
     </div>
   );

@@ -2,7 +2,8 @@
   height: 100%;
 
   .home_content {
-
+    display: flex;
+    flex-direction: column;
   }
   .home_sider {
     flex: 0 0 360px !important;
@@ -11,7 +12,9 @@
     min-width: 360px !important;
     background-color: #fff;
     box-shadow: 0 2px 20px 0 rgba(24, 39, 67, 0.04);
-    display: flex;
-    flex-direction: column;
+    .ant-layout-sider-children {
+      display: flex;
+      flex-direction: column;
+    }
   }
 }
