@@ -5,6 +5,7 @@ import logo from "@assets/images/logo.png";
 import Icon from "@assets/icon";
 import UserComponent from "@components//header/user";
 import "@components/header/index.style.scss";
+import ProjectComponent from "@components/header/project";
 
 interface HeaderProps {
   children?: ReactNode;
@@ -18,6 +19,7 @@ export default function Header({ children }: HeaderProps) {
         <Link to="/" className="logo">
           <img src={logo} alt="logo" />
         </Link>
+        <ProjectComponent />
         {children}
         <div className="right">
           <Icon className="icon" type="custom-icon-shezhi" />
