@@ -1,18 +1,22 @@
-import React, { memo, useState, useEffect } from 'react';
-import { message, Modal, Tooltip } from 'antd';
+import React, { memo, useState, useEffect, useMemo } from 'react';
+import { message, Modal, Popconfirm, Tooltip } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import styles from '../index.module.scss';
 import { deleteSerialId, getSerialList } from '@apis/form';
 import { useSubAppDetail } from '@app/app';
 import { Icon } from '@common/components';
 import classNames from 'classnames';
-import { RuleOption } from '@type';
+import { FormField, RuleOption } from '@type';
+import { RULE_TYPE } from '@utils/const';
+import { useAppSelector } from '@app/hooks';
+import { componentPropsSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 
 interface RuleProps {
   fields: { id: string; name: string }[];
   showRuleModal: boolean;
   onCancel: () => void;
   onSubmit: (fieldsValue: any) => void;
+  serialId?: string;
 }
 
 const RuleModal = (props: RuleProps) => {
@@ -20,9 +24,25 @@ const RuleModal = (props: RuleProps) => {
   const { data } = useSubAppDetail();
   const [ruleList, setRuleList] = useState([]);
   const [rule, setRule] = useState({});
+  const byId = useAppSelector(componentPropsSelector);
+
   const [activeIndex, setActiveIndex] = useState(-1);
+
+  const selectedRules = useMemo<{ id: string; name: string }[]>(() => {
+    const componentList = Object.values(byId).map((item: FormField) => item) || [];
+    const compType = ['SerialNum'];
+    return componentList
+      .filter((com) => compType.includes(com.type))
+      .map((com) => ({
+        id: com.type === 'SerialNum' && com.serialRule.serialId,
+        name: com.label,
+      }));
+  }, [byId]);
+
   const handleSubmit = useMemoCallback(() => {
-    if (activeIndex === -1) return;
+    if (activeIndex === -1) {
+      return message.warning('请选择规则');
+    }
     onSubmit && onSubmit(rule);
   });
 
@@ -51,24 +71,28 @@ const RuleModal = (props: RuleProps) => {
     }
   });
   useEffect(() => {
-    getRuleList();
+    (() => getRuleList())();
   }, [getRuleList]);
 
+  const formatComponent: { [key: string]: (props: any) => React.ReactNode } = {
+    incNumber: (item) => {
+      let digitsNum = '00000';
+      digitsNum = digitsNum.substr(digitsNum.length - 5, item.digitsNum - 1) + 1;
+      return <span>{digitsNum}</span>;
+    },
+    createTime: (item) => <span>{item.format}</span>,
+    fixedChars: (item) => <span>{item.chars}</span>,
+    fieldName: (item) => {
+      const fieldName = fields.find((field) => field.id === item.fieldValue)?.name;
+      return <span> {fieldName ? '${' + fieldName + '}' : ''}</span>;
+    },
+  };
+
   const renderLabel = useMemoCallback((rule) => {
-    return rule.mata.map((item: RuleOption) => {
-      if (item.type === 'incNumber') {
-        return <span>{Math.pow(10, item.digitsNum)}</span>;
-      }
-      if (item.type === 'createTime') {
-        return <span>{item.format}</span>;
-      }
-      if (item.type === 'fixedChars') {
-        return <span>{item.chars}</span>;
-      }
-      if (item.type === 'fieldName') {
-        return <span>{fields.find((field) => field.id === item.fieldValue)?.name}</span>;
-      }
-      return null;
+    return rule.mata.map((item: RuleOption, index: number) => {
+      return (
+        <React.Fragment key={index}>{RULE_TYPE.includes(item.type) && formatComponent[item.type](item)}</React.Fragment>
+      );
     });
   });
 
@@ -93,23 +117,44 @@ const RuleModal = (props: RuleProps) => {
     >
       <div className={styles.ruleModal}>
         {ruleList.map((rule: any, index) => (
-          <div key={index} className={styles.ruleItem}>
+          <div key={rule.id} className={styles.ruleItem}>
             <div
               className={classNames(styles.name, activeIndex === index ? styles.active : '')}
               onClick={() => handleSelectRule(rule, index)}
             >
-              <div className={styles.text}>{rule.name}</div>
-              <span className={styles.ruleTips}>{renderLabel(rule)}</span>
+              <Tooltip title={rule.name}>
+                <div className={styles.text}>{rule.name}</div>
+              </Tooltip>
+              <Tooltip title={renderLabel(rule)}>
+                <span className={styles.ruleTips}>{renderLabel(rule)}</span>
+              </Tooltip>
             </div>
             <div className={styles.operation}>
-              {rule.status === 0 && (
-                <div className={styles.delete} onClick={() => handleDelete(rule, index)}>
-                  <Tooltip title="删除">
-                    <span>
-                      <Icon className={styles.iconfont} type="shanchu" />
-                    </span>
-                  </Tooltip>
-                </div>
+              {rule.status !== 0 ? (
+                <Tooltip title="该规则已被使用，不可删除">
+                  <div className={classNames(styles.delete, styles.disable)}>
+                    <Icon className={styles.iconfont} type="shanchu" />
+                  </div>
+                </Tooltip>
+              ) : selectedRules.find((item) => item.id === rule.id) ? (
+                <Tooltip title="该规则已被关联，不可删除">
+                  <div className={classNames(styles.delete, styles.disable)}>
+                    <Icon className={styles.iconfont} type="shanchu" />
+                  </div>
+                </Tooltip>
+              ) : (
+                <Popconfirm
+                  title="确定要删除此条规则吗?"
+                  okText="确 定"
+                  placement="right"
+                  icon={null}
+                  cancelText="取 消"
+                  onConfirm={() => handleDelete(rule, index)}
+                >
+                  <div className={styles.delete}>
+                    <Icon className={styles.iconfont} type="shanchu" />
+                  </div>
+                </Popconfirm>
               )}
             </div>
           </div>

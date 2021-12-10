@@ -13,32 +13,10 @@ import { dynamicRoutes } from '@/consts';
 import moment from 'moment';
 import useAppId from '@/hooks/use-app-id';
 import StateTag from '@/features/bpm-editor/components/state-tag';
+import { TASK_STATE_LIST } from '@/utils/const';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
-
-const stateList: { key: number; value: string }[] = [
-  {
-    key: 1,
-    value: '进行中',
-  },
-  {
-    key: 2,
-    value: '已终止',
-  },
-  {
-    key: 5,
-    value: '已驳回',
-  },
-  {
-    key: 4,
-    value: '已办结',
-  },
-  {
-    key: 3,
-    value: '已撤回',
-  },
-];
 
 const Copy: FC<{}> = () => {
   const [form] = Form.useForm();
@@ -302,7 +280,7 @@ const Copy: FC<{}> = () => {
                 onChange={handleSearch}
                 allowClear
               >
-                {stateList.map(({ key, value }) => (
+                {TASK_STATE_LIST.map(({ key, value }) => (
                   <Option key={key} value={key}>
                     {value}
                   </Option>
@@ -312,7 +290,7 @@ const Copy: FC<{}> = () => {
             <Form.Item label="抄送时间" name="timeRange" className="timeRange" labelCol={{ style: { width: 66 } }}>
               <RangePicker
                 showTime={{ format: 'HH:mm' }}
-                format="YYYY-MM-DD HH:mm"
+                format="yyyy-MM-DD HH:mm"
                 suffixIcon={<Icon type="riqi" />}
                 style={{ width: '100%' }}
                 onChange={handleSearch}

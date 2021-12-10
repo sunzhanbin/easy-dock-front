@@ -26,10 +26,16 @@ const propsKey = [
   'showSearch',
   'multiple',
   'format',
-  'daterange',
+  'datelimit',
+  'numlimit',
   'maxCount',
+  'height',
   'components',
   'fieldName',
+  'decimal',
+  'fileMap',
+  'defaultNumber',
+  'url',
 ];
 type Key = keyof FormField;
 
@@ -155,6 +161,7 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
                 fieldsAuths={auths}
                 className={styles['form-engine']}
                 projectId={projectId}
+                nodeType="preview"
               />
             </div>
           </div>

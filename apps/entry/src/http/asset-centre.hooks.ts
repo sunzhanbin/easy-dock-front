@@ -1,4 +1,4 @@
-import baseFetch from "@/utils/fetch";
+import baseFetch from "@utils/fetch";
 
 export const assetCentre = baseFetch.injectEndpoints({
   endpoints: (build) => ({

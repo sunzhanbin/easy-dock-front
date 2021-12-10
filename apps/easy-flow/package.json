@@ -1,6 +1,6 @@
 {
   "name": "easy-flow-front",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "dependencies": {
     "antd": "^4.15.2",
@@ -61,6 +61,7 @@
   "scripts": {
     "start": "react-app-rewired start",
     "build": "cross-env REACT_APP_TARGET_ENV=staging react-app-rewired build",
+    "build:dev": "cross-env REACT_APP_TARGET_ENV=dev react-app-rewired build",
     "build:cluster": "cross-env REACT_APP_TARGET_ENV=cluster react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject"

@@ -26,12 +26,24 @@ export type InputField = {
 export type InputNumberField = {
   type: 'InputNumber';
   defaultValue: number;
-  range?: [number, number];
-  scope?: {
-    min: number;
-    max: number;
+  defaultNumber?: {
+    customData?: number | undefined;
+    calcType?: string | undefined;
+    calculateData?: string | string[];
+    id: string;
+    type: string; // custom | inject
   };
-  precision?: number;
+  decimal?: {
+    enable: boolean;
+    precision?: number;
+  };
+  numlimit?: {
+    enable: boolean;
+    numrange?: {
+      min: number;
+      max: number;
+    };
+  };
 } & BaseField;
 
 export type TextAreaField = {
@@ -41,11 +53,14 @@ export type TextAreaField = {
 
 export type DateField = {
   type: 'Date';
-  daterange: {
-    min: string;
-    max: string;
+  datelimit?: {
+    enable?: boolean;
+    daterange: {
+      min: string;
+      max: string;
+    };
   };
-  format: 'YYYY-MM-DD' | 'YYYY-MM-DD HH:mm:ss';
+  format: 'yyyy-MM-DD' | 'yyyy-MM-DD HH:mm:ss';
   defaultValue: number;
 } & BaseField;
 
@@ -59,7 +74,7 @@ export type SelectOptionItem = {
   data?: OptionItem[];
   subappId?: string;
   fieldName?: string;
-  apiconfig?: DataConfig;
+  apiConfig?: DataConfig;
 };
 
 export type NumberDefaultOption = {
@@ -127,6 +142,12 @@ export type SerialNumField = {
   serialRule: any;
 } & BaseField;
 
+export type IframeField = {
+  type: 'Iframe';
+  url: string;
+  maxHeight: number;
+} & BaseField;
+
 export type FormField =
   | InputField
   | InputNumberField
@@ -141,4 +162,5 @@ export type FormField =
   | MemberField
   | TabsField
   | FlowField
+  | IframeField
   | SerialNumField;

@@ -1,0 +1,102 @@
+@import '@common/styles/var.scss';
+
+.top_sider {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 280px;
+  background: linear-gradient(314deg, #EEEEEE 0%, #FFFFFF 100%);
+  .new_app_wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 181px;
+    height: 164px;
+    background: url('~@assets/images/home/newApp.png') 0 0 no-repeat;
+    background-size: 181px 164px;
+    .icon_new_app {
+      width: 48px;
+      height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      line-height: 1;
+      background-color: var(--custom-primary-color, #4c5cdb);
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 50%;
+      margin: 0 auto 10px;
+    }
+    .text_new_app {
+      font-size: 24px;
+      font-weight: bold;
+      color: rgba(0, 0, 0, 0.85);
+      line-height: 34px;
+      text-align: center;
+    }
+  }
+}
+
+.bottom_sider {
+  flex: 1;
+  padding: 0 24px;
+  .workspace_info {
+    display: inline-flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 60px;
+    width: 100%;
+    p {
+      margin-bottom: 0;
+    }
+    .text_recent_app {
+      flex: 1;
+      font-size: 18px;
+      color: rgba(0, 0, 0, 0.85);
+    }
+    .operation_all {
+      flex: 0 0 54px;
+      .text {
+        padding-right: 4px;
+        font-size: 16px;
+      }
+      .icon {
+        font-size: 16px;
+        color: #5e6576;
+      }
+    }
+
+  }
+
+  .workspace_list {
+    height: calc(100% - 60px);
+    padding-bottom: 20px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    .infinite-scroll-component {
+      overflow-x: hidden !important;
+    }
+    .list {
+      .ant-list-item {
+        padding: 10px;
+        border-radius: 3px;
+        border: 1px solid rgba(24, 31, 67, 0.08);
+      }
+      .ant-list-item-meta-title, .ant-list-item-meta-description {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+      .ant-list-item-meta-title .name {
+        color: $primary-text-color;
+      }
+      .ant-list-item-meta-description{
+        color: rgba(24, 31, 67, 0.5);
+        font-size: 12px;
+      }
+    }
+
+  }
+}

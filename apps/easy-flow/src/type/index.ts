@@ -108,6 +108,12 @@ export type SelectOptionItem = {
   apiConfig?: DataConfig;
 };
 
+export type UrlOptionItem = {
+  type: 'custom' | 'interface';
+  customValue?: string;
+  apiConfig?: DataConfig;
+};
+
 export type SelectColumnsItem = {
   id: string | undefined;
   columns?: ColumnsItem[];
@@ -119,11 +125,14 @@ export type ruleType = 'custom' | 'inject';
 export type serialRulesItem = {
   serialId: string | undefined;
   serialMata?: {
-    type: string;
+    id: string;
+    type?: string;
     rules?: RuleOption[];
     changeRules?: RuleOption[];
     ruleName?: string | undefined;
     changeRuleName?: string | undefined;
+    ruleStatus?: number;
+    editStatus?: boolean;
   };
 };
 
@@ -137,6 +146,7 @@ export type FormFieldMap = {
 export type ErrorItem = {
   id: string;
   content: string[];
+  subError?: ErrorItem[];
 };
 
 export type fieldRule = {

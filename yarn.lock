@@ -1458,12 +1458,12 @@
   resolved "https://registry.nlark.com/@emotion/unitless/download/@emotion/unitless-0.7.5.tgz"
   integrity sha1-dyESkcGQCnALinjPr9oxYNdpSe0=
 
-"@enc/sso@^0.2.0-beta.12":
-  version "0.2.0-beta.12"
-  resolved "http://10.39.39.153:4837/@enc%2fsso/-/sso-0.2.0-beta.12.tgz#7e221b03dec6d1a7bd7d6438a259a014e1baa033"
-  integrity sha512-O5Ei5CgnI+jM985uoE8MIkMiJdB4rhVTepwDWRS4hFedMZGUZN5rF5ffTQksDWY1o7MpKgikRAu7tcv9PD9gGw==
+"@enc/sso@^0.3.0-beta.1":
+  version "0.3.0"
+  resolved "http://10.39.39.153:4837/@enc%2fsso/-/sso-0.3.0.tgz#ba906c4675de243856f7c374afc0bb39e44dc9f1"
+  integrity sha512-frD6SpjKxNOXGEjiepI9J3pV872qKHG7YYyihVK7vBaZpYZaKrw1BqpT1V6PBNUf5lSOL0RjsrYGcRyusqzdAA==
   dependencies:
-    "@microsoft/tsdoc" "^0.13.2"
+    xss "^1.0.10"
 
 "@enc/theme-scheme@^0.0.1":
   version "0.0.1"
@@ -2418,11 +2418,6 @@
     npmlog "^4.1.2"
     write-file-atomic "^3.0.3"
 
-"@microsoft/tsdoc@^0.13.2":
-  version "0.13.2"
-  resolved "https://registry.nlark.com/@microsoft/tsdoc/download/@microsoft/tsdoc-0.13.2.tgz#3b0efb6d3903bd49edb073696f60e90df08efb26"
-  integrity sha1-Ow77bTkDvUntsHNpb2DpDfCO+yY=
-
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.nlark.com/@mrmlnc/readdir-enhanced/download/@mrmlnc/readdir-enhanced-2.2.1.tgz"
@@ -3286,6 +3281,11 @@
   integrity sha1-HK2N8fsLFDxaugjeVxLqnR/3ESQ=
   dependencies:
     source-map "^0.6.1"
+
+"@types/uuid@^8.3.3":
+  version "8.3.3"
+  resolved "http://10.39.39.153:4837/@types%2fuuid/-/uuid-8.3.3.tgz#c6a60686d953dbd1b1d45e66f4ecdbd5d471b4d0"
+  integrity sha512-0LbEEx1zxrYB3pgpd1M5lEhLcXjKJnYghvhTRgaBeUivLHMDM1TzF3IJ6hXU2+8uA4Xz+5BA63mtZo5DjVT8iA==
 
 "@types/webpack-env@^1.16.0":
   version "1.16.0"
@@ -5388,7 +5388,7 @@ commander@4.1.1, commander@^4.0.0, commander@^4.1.1:
   resolved "https://registry.nlark.com/commander/download/commander-4.1.1.tgz?cache=0&sync_timestamp=1622954303803&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fcommander%2Fdownload%2Fcommander-4.1.1.tgz"
   integrity sha1-n9YCvZNilOnp70aj9NaWQESxgGg=
 
-commander@^2.20.0:
+commander@^2.20.0, commander@^2.20.3:
   version "2.20.3"
   resolved "https://registry.nlark.com/commander/download/commander-2.20.3.tgz?cache=0&sync_timestamp=1622954303803&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fcommander%2Fdownload%2Fcommander-2.20.3.tgz"
   integrity sha1-/UhehMA+tIgcIHIrpIA16FMa6zM=
@@ -6063,6 +6063,11 @@ cssesc@^3.0.0:
   version "3.0.0"
   resolved "https://registry.nlark.com/cssesc/download/cssesc-3.0.0.tgz"
   integrity sha1-N3QZGZA7hoVl4cCep0dEXNGJg+4=
+
+cssfilter@0.0.10:
+  version "0.0.10"
+  resolved "http://10.39.39.153:4837/cssfilter/-/cssfilter-0.0.10.tgz#c6d2672632a2e5c83e013e6864a42ce8defd20ae"
+  integrity sha1-xtJnJjKi5cg+AT5oZKQs6N79IK4=
 
 cssnano-preset-default@^4.0.8:
   version "4.0.8"
@@ -8429,7 +8434,7 @@ history@5, history@^5.1.0:
   dependencies:
     "@babel/runtime" "^7.7.6"
 
-history@^4.9.0:
+history@^4, history@^4.9.0:
   version "4.10.1"
   resolved "https://registry.nlark.com/history/download/history-4.10.1.tgz"
   integrity sha1-MzcaZeOoOyZ0NOKz87G0xYqtTPM=
@@ -16548,10 +16553,10 @@ uuid@^3.3.2, uuid@^3.4.0:
   resolved "https://registry.nlark.com/uuid/download/uuid-3.4.0.tgz"
   integrity sha1-sj5DWK+oogL+ehAK8fX4g/AgB+4=
 
-uuid@^8.3.0:
+uuid@^8.3.0, uuid@^8.3.2:
   version "8.3.2"
-  resolved "https://registry.nlark.com/uuid/download/uuid-8.3.2.tgz"
-  integrity sha1-gNW1ztJxu5r2xEXyGhoExgbO++I=
+  resolved "http://10.39.39.153:4837/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
+  integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
 
 v8-compile-cache@^2.0.3:
   version "2.3.0"
@@ -17176,6 +17181,14 @@ xmlchars@^2.2.0:
   version "2.2.0"
   resolved "https://registry.npm.taobao.org/xmlchars/download/xmlchars-2.2.0.tgz"
   integrity sha1-Bg/hvLf5x2/ioX24apvDq4lCEMs=
+
+xss@^1.0.10:
+  version "1.0.10"
+  resolved "http://10.39.39.153:4837/xss/-/xss-1.0.10.tgz#5cd63a9b147a755a14cb0455c7db8866120eb4d2"
+  integrity sha512-qmoqrRksmzqSKvgqzN0055UFWY7OKx1/9JWeRswwEVX9fCG5jcYRxa/A2DHcmZX6VJvjzHRQ2STeeVcQkrmLSw==
+  dependencies:
+    commander "^2.20.3"
+    cssfilter "0.0.10"
 
 "xtend@>=4.0.0 <4.1.0-0", xtend@^4.0.0, xtend@~4.0.1:
   version "4.0.2"

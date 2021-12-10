@@ -156,7 +156,7 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
       builderAxios.get<{ data: { meta: FormMeta } }>(`/form/${appkey}`),
     ]);
 
-    const fields = form.meta.components || [];
+    const fields = form.meta?.components || [];
     const fieldsTemplate: FlowType['fieldsTemplate'] = [];
     fields.forEach((item) => {
       // Tabs需要设置的是子控件的权限

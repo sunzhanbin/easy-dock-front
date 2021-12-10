@@ -35,6 +35,7 @@ export type currentNodeItem = {
   currentNode: string;
   currentNodeId: string;
   currentNodeStartTime: number | null;
+  dueState?: 0 | 1 | 2;
 };
 
 export type StartItem = {

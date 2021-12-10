@@ -24,12 +24,73 @@ export interface SubAppInfo {
   };
 }
 
-export interface AppManagerState {
-  value: number;
+export interface AppManagerInitialState {
   projectId: number;
   currentWorkspaceId: number;
-  status: "idle" | "loading" | "failed";
-  currentWorkspace: workspaceShape;
-  workspaces: workspaceShape[];
-  subApps: SubAppInfo[];
+}
+
+export interface BasicSetupInitialState {
+  theme: string;
+  navMode: "single" | "multi";
+  logo: { [key: string]: any };
+  basicForm: { [key: string]: any };
+}
+
+export interface MenuSetupInitialState {
+  currentId: string;
+  menu: Menu[];
+  menuForm: MenuSetupForm;
+}
+
+export interface WorkspaceInitialState {
+  name: string;
+  navMode: "single" | "multi";
+  menu: Menu[];
+}
+
+export interface Menu {
+  depth: number;
+  children: Menu[];
+  form: MenuSetupForm;
+  id: string;
+  name: string;
+  parentId: string | null;
+}
+
+export interface MenuSetupForm {
+  name: string;
+  showMenu: boolean;
+  icon: string;
+  mode: "blank" | "current";
+  isHome: boolean;
+  asset: "exist" | "custom";
+  assetConfig: {
+    app?: string;
+    subapp?: string;
+    url?: string;
+  };
+}
+
+export interface baseMenuProps {
+  selectedKey: string;
+  dataSource: Menu[];
+  children: React.ReactNode;
+}
+
+export interface MenuComponentProps extends baseMenuProps {
+  extra: React.ReactNode;
+}
+
+export interface NavMenuComponentProps extends baseMenuProps {
+  navMode: "single" | "multi";
+}
+
+export interface WorkspaceMenuProps {
+  navMode: "single" | "multi";
+  dataSource: Menu[];
+}
+
+export interface WorkspaceBaseMenuProps {
+  extra: React.ReactNode;
+  dataSource: Menu[];
 }

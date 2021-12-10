@@ -1,17 +1,16 @@
 import React, { Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 import AntdProvider from "@common/components/antd-provider";
-import Layout from "@/containers/layout";
-import Start from "@/views/home";
+import Layout from "@containers/layout";
+import Home from "@views/home";
 import "@/App.scss";
 
-const AppManager = React.lazy(() => import("@/views/app-manager"));
-const AppManagerEditor = React.lazy(
-  () => import("@/containers/app-manager-editor")
-);
-const AssetCentre = React.lazy(() => import("@/views/asset-centre"));
-const TemplateMall = React.lazy(() => import("@/views/template-mall"));
-const NoMatch = React.lazy(() => import("@/views/no-match"));
+const AppManager = React.lazy(() => import("@views/app-manager"));
+const AppSetup = React.lazy(() => import("@views/app-setup"));
+const AssetCentre = React.lazy(() => import("@views/asset-centre"));
+const TemplateMall = React.lazy(() => import("@views/template-mall"));
+const Workspace = React.lazy(() => import("@views/workspace"));
+const NoMatch = React.lazy(() => import("@views/no-match"));
 
 const SuspenseWrap = ({ render }: { render: React.ReactNode }) => (
   <React.Fragment>
@@ -19,12 +18,12 @@ const SuspenseWrap = ({ render }: { render: React.ReactNode }) => (
   </React.Fragment>
 );
 
-const App = () => {
+const App: React.FC = () => {
   return (
     <AntdProvider>
       <Routes>
         <Route path="/*" element={<Layout />}>
-          <Route index element={<Start />} />
+          <Route index element={<Home />} />
           <Route
             path="asset-centre"
             element={<SuspenseWrap render={<AssetCentre />} />}
@@ -32,13 +31,17 @@ const App = () => {
           <Route path="app-manager">
             <Route index element={<SuspenseWrap render={<AppManager />} />} />
             <Route
-              path=":workspace"
-              element={<SuspenseWrap render={<AppManagerEditor />} />}
+              path=":workspaceId"
+              element={<SuspenseWrap render={<AppSetup />} />}
             />
           </Route>
           <Route
             path="template-mall"
             element={<SuspenseWrap render={<TemplateMall />} />}
+          />
+          <Route
+            path="workspace/*"
+            element={<SuspenseWrap render={<Workspace />} />}
           />
           <Route path="*" element={<SuspenseWrap render={<NoMatch />} />} />
         </Route>

@@ -9,6 +9,7 @@ import DataContext from './context';
 import Required from './required';
 import Custom from './custom';
 import styles from './index.module.scss';
+import { urlRegex } from '../../form-design/validate';
 
 export interface DataApiConfigProps {
   value?: DataConfig;
@@ -159,8 +160,6 @@ function DataApiConfig(props: DataApiConfigProps) {
         if (!val) {
           return Promise.reject(new Error('请输入接口地址'));
         }
-        // eslint-disable-next-line
-        const urlRegex = /(^(http|https):\/\/([\w\-]+\.)+[\w\-]+(\/[\w\u4e00-\u9fa5\-\.\/?\@\%\!\&=\+\~\:\#\;\,]*)?)/;
         if (!urlRegex.test(val)) {
           return Promise.reject(new Error('请输入正确的接口地址'));
         }
@@ -233,7 +232,14 @@ function DataApiConfig(props: DataApiConfigProps) {
             if (type === 2) {
               return (
                 <>
-                  <Form.Item name={[...thisFormItemName, 'url']} label="接口地址" rules={[urlRule]}>
+                  <Form.Item
+                    name={[...thisFormItemName, 'url']}
+                    label="接口地址"
+                    rules={[urlRule]}
+                    labelCol={{ span: 24 }}
+                    labelAlign="left"
+                    colon={false}
+                  >
                     <Input size="large" placeholder="请输入接口地址" />
                   </Form.Item>
                   <Form.Item
@@ -249,6 +255,9 @@ function DataApiConfig(props: DataApiConfigProps) {
                         },
                       },
                     ]}
+                    labelCol={{ span: 24 }}
+                    labelAlign="left"
+                    colon={false}
                   >
                     <Select size="large" placeholder="请选择" suffixIcon={<Icon type="xiala" />}>
                       <Select.Option value="POST">POST</Select.Option>

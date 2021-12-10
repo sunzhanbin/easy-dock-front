@@ -7,8 +7,9 @@ import componentSchema from '@/config/components';
 import DraggableOption from './draggable-option';
 import styles from './index.module.scss';
 import { CompConfig, ConfigItem, FormField, SchemaItem } from '@/type';
-import { useAppDispatch } from '@/app/hooks';
+import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { setSubComponentConfig } from '@/features/bpm-editor/form-design/formdesign-slice';
+import { errorSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 interface ComProps {
   parentId: string;
   value?: CompConfig[];
@@ -16,12 +17,13 @@ interface ComProps {
 }
 
 // 不能添加到Tabs,Table里的控件
-const excludeTypes = ['Tabs', 'SerialNum'];
+const excludeTypes = ['Tabs', 'SerialNum', 'FlowData'];
 
 const componentList = Object.values(componentSchema).filter((com) => !excludeTypes.includes(com.baseInfo.type));
 
 const FieldManage = ({ parentId, value, onChange }: ComProps) => {
   const dispatch = useAppDispatch();
+  const errors = useAppSelector(errorSelector);
   const handleAddComponent = useMemoCallback((type: FormField['type']) => {
     const list = value ? [...value] : [];
     const id = uniqueId(`${type}_`).concat(`__${parentId}`);
@@ -43,6 +45,11 @@ const FieldManage = ({ parentId, value, onChange }: ComProps) => {
     list.push({ config, props });
     onChange && onChange(list);
   });
+  const subErrorIdList = useMemo(() => {
+    const error = errors.find((v) => v.id === parentId);
+    const list = (error?.subError || []).map((v) => v.id);
+    return list;
+  }, [errors, parentId]);
   const overlay = useMemo(() => {
     return (
       <Menu>
@@ -54,7 +61,8 @@ const FieldManage = ({ parentId, value, onChange }: ComProps) => {
               handleAddComponent(baseInfo.type as FormField['type']);
             }}
           >
-            {baseInfo.name}
+            <Icon className="icon" type={baseInfo.icon} />
+            <div className="name">{baseInfo.name}</div>
           </Menu.Item>
         ))}
       </Menu>
@@ -81,13 +89,21 @@ const FieldManage = ({ parentId, value, onChange }: ComProps) => {
     <div className={styles.fields}>
       {value?.map((v, i) => {
         return (
-          <DraggableOption key={i} index={i} data={v} onEdit={handleEdit} onDelete={handleDelete} onDrop={handleDrop} />
+          <DraggableOption
+            key={i}
+            index={i}
+            data={v}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            onDrop={handleDrop}
+            className={subErrorIdList.includes(v.config.id) ? styles.error : ''}
+          />
         );
       })}
       <Dropdown placement="bottomLeft" trigger={['click']} overlay={overlay} getPopupContainer={(c) => c}>
         <div className={styles.add_custom}>
           <Icon className={styles.iconfont} type="xinzengjiacu" />
-          <span>添加字段</span>
+          <span>添加控件</span>
         </div>
       </Dropdown>
     </div>

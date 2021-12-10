@@ -14,8 +14,8 @@ const ToolBox: FC<{}> = () => {
         <div className={styles.groupTitle}>{key}</div>
         <div className={styles.componentContainer}>
           {map(value, (tool, index) => {
-            const { name, icon, type } = tool;
-            return <ToolBoxItem icon={icon} displayName={name} type={type} key={type}></ToolBoxItem>;
+            const { name, icon, type, disabled = false } = tool;
+            return <ToolBoxItem icon={icon} displayName={name} type={type} key={type} disabled={disabled}></ToolBoxItem>;
           })}
         </div>
       </div>

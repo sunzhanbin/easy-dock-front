@@ -1,7 +1,7 @@
 import { memo, useState, useEffect, useRef, useMemo } from 'react';
 import moment from 'moment';
 import { debounce } from 'lodash';
-import { Select, Form, Checkbox, Table, Tooltip, message } from 'antd';
+import { Select, Form, Checkbox, Table, Tooltip, message, Popover } from 'antd';
 import type { TablePaginationConfig, TableProps } from 'antd/lib/table';
 import { SorterResult } from 'antd/lib/table/interface';
 import { SubappShort, AppStatus, SubAppType } from '@type/subapp';
@@ -12,6 +12,8 @@ import { FieldType } from '@type/form';
 import { exportFile, runtimeAxios } from '@utils';
 import { Icon } from '@common/components';
 import StateTag from '@/features/bpm-editor/components/state-tag';
+import { TASK_STATE_LIST } from '@/utils/const';
+import { omit } from 'lodash';
 import styles from './index.module.scss';
 
 const useMock = false;
@@ -30,6 +32,14 @@ type FormValue = {
     sortDirection: 'ASC' | 'DESC';
   };
 };
+
+interface TableColumn {
+  key: string;
+  dataIndex: string;
+  title: string;
+  width: number;
+  render: (_: any, data: any) => React.ReactNode;
+}
 
 export type TableDataBase = {
   processInstanceId: string;
@@ -57,7 +67,7 @@ const DataManage = () => {
   const [dataSource, setDataSource] = useState<any[]>();
   const formInititalValue: Omit<FormValue, 'subappId'> = useMemo(() => {
     return {
-      stateList: [1, 2, 3, 4, 5],
+      stateList: [1, 2, 3, 4, 5, 6],
       table: {
         current: 1,
         pageSize: 10,
@@ -94,13 +104,84 @@ const DataManage = () => {
         defaultSortOrder: 'descend',
         width: 180,
         render(_, data: TableDataBase) {
-          return moment(data.startTime).format('YYYY-MM-DD HH:mm');
+          return moment(data.startTime).format('yyyy-MM-DD HH:mm');
         },
       },
     ];
   }, []);
 
   const [tableColumns, setTableColumns] = useState(baseColumns);
+
+  const renderMember = useMemoCallback((member?: number | number[]) => {
+    if (!member) return null;
+    let text;
+    if (Array.isArray(member)) {
+      text = member.map((id) => membersCacheRef.current[id].name).join(',');
+    } else {
+      text = membersCacheRef.current[member]?.name || '';
+    }
+    return <Text className={styles['dynamic-cell']} text={String(text)} getContainer={false} />;
+  });
+
+  const renderDate = useMemoCallback((date: number | [number, number], tableColumn?: any) => {
+    if (!date) return null;
+    if (tableColumn) {
+      tableColumn.width = 180;
+    }
+    if (Array.isArray(date)) {
+      if (tableColumn) {
+        tableColumn.width = 360;
+      }
+      return date.map((ts) => moment(ts).format('yyyy-MM-DD HH:mm:ss')).join('至');
+    }
+    return moment(date).format('yyyy-MM-DD HH:mm:ss');
+  });
+
+  const renderText = useMemoCallback((value: string | string[]) => {
+    if (!value) {
+      return null;
+    }
+    let text;
+    if (Array.isArray(value)) {
+      text = value.join(',');
+    } else {
+      text = value;
+    }
+    return <Text className={styles['dynamic-cell']} text={String(text)} getContainer={false} />;
+  });
+
+  const renderContent = useMemoCallback(
+    (data: { [k: string]: any }[], componentList: { field: string; type: string }[]) => {
+      const nameMap = data.shift() || {};
+      const dataSource = data;
+      const columns: TableColumn[] = [];
+      componentList.forEach(({ field, type }) => {
+        columns.push({
+          key: field,
+          dataIndex: field,
+          title: nameMap[field],
+          width: 120,
+          render(_, data) {
+            if (type === 'Member') {
+              const member = data[field];
+              return renderMember(member);
+            } else if (type === 'Date') {
+              const date = data[field];
+              return renderDate(date);
+            } else {
+              const value = data[field];
+              return renderText(value);
+            }
+          },
+        });
+      });
+      return (
+        <div className={styles['pop-container']}>
+          <Table dataSource={dataSource} columns={columns} rowKey="key" pagination={false}></Table>
+        </div>
+      );
+    },
+  );
 
   const fetchDatasource = useMemoCallback(async () => {
     setLoading(true);
@@ -136,15 +217,9 @@ const DataManage = () => {
 
       if (fieldResponse) {
         shouldReFetchFormFields.current = false;
-        currentFields = (fieldResponse.data || []).filter((field) => {
-          return (
-            field.type !== 'Attachment' &&
-            field.type !== 'DescText' &&
-            field.type !== 'Image' &&
-            field.type !== 'Tabs' &&
-            field.type !== 'FlowData'
-          );
-        });
+        // 不展示的控件类型
+        const excludeTypeList: string[] = ['Attachment', 'DescText', 'Image', 'FlowData'];
+        currentFields = (fieldResponse.data || []).filter((field) => !excludeTypeList.includes(field.type));
 
         const dynamicColumns: TableProps<TableDataBase>['columns'] = currentFields.map((field) => {
           let tableKey = `formData.${field.field}`;
@@ -154,50 +229,55 @@ const DataManage = () => {
             dataIndex: tableKey,
             width: 150,
           };
-
-          if (field.type === 'Member') {
+          if (field.type === 'Tabs') {
+            tableColumn.render = (_: string, data: TableDataBase) => {
+              const components = (field as any).components;
+              if (!components || components?.length === 0) {
+                return null;
+              }
+              const tabData: any[] = [];
+              const nameMap: { [k: string]: string } = {};
+              const keyList: string[] = [];
+              const componentList: { field: string; type: string }[] = [];
+              components.forEach((com: any) => {
+                nameMap[com.field] = com.name;
+                keyList.push(com.field);
+                componentList.push({ field: com.field, type: com.type });
+              });
+              tabData.push(nameMap);
+              let fieldData = data.formData?.[field.field];
+              if (!fieldData) {
+                return null;
+              }
+              fieldData = Array.isArray(fieldData) ? fieldData : JSON.parse(fieldData as string);
+              const compData = ((fieldData as any[]) || []).map((item) => omit(item, ['__title__']));
+              tabData.push(...compData);
+              return (
+                <Popover
+                  placement="topLeft"
+                  trigger="click"
+                  title={null}
+                  content={renderContent(tabData, componentList)}
+                  getPopupContainer={() => containerRef.current as HTMLDivElement}
+                >
+                  <div className={styles['tab-detail']}>查看详情</div>
+                </Popover>
+              );
+            };
+          } else if (field.type === 'Member') {
             tableColumn.render = (_: string, data: TableDataBase) => {
               const member = data.formData[field.field] || field.defaultValue;
-              if (!member) return null;
-
-              let text;
-
-              if (Array.isArray(member)) {
-                text = member.map((id) => membersCacheRef.current[id].name).join(',');
-              } else {
-                text = membersCacheRef.current[member].name;
-              }
-
-              return <Text className={styles['dynamic-cell']} text={String(text)} getContainer={false} />;
+              return renderMember(member as number | number[]);
             };
           } else if (field.type === 'Date') {
             tableColumn.render = (_: string, data: TableDataBase) => {
               const date = data.formData[field.field] || field.defaultValue || '';
-
-              tableColumn.width = 180;
-
-              if (!date) return null;
-
-              if (Array.isArray(date)) {
-                tableColumn.width = 360;
-
-                return date.map((ts) => moment(ts).format('YYYY-MM-DD HH:mm:ss')).join('至');
-              }
-
-              return moment(date).format('YYYY-MM-DD HH:mm:ss');
+              return renderDate(date as number | [number, number], tableColumn);
             };
           } else {
             tableColumn.render = (_: string, data: TableDataBase) => {
               const value = data.formData[field.field] || field.defaultValue || '';
-              let text;
-
-              if (Array.isArray(value)) {
-                text = value.join(',');
-              } else {
-                text = value;
-              }
-
-              return <Text className={styles['dynamic-cell']} text={String(text)} getContainer={false} />;
+              return renderText(value as string | string[]);
             };
           }
 
@@ -241,6 +321,29 @@ const DataManage = () => {
               if (!membersCacheRef.current[mValue]) {
                 ids.add(mValue);
               }
+            }
+          } else if (field.type === 'Tabs') {
+            const tabData = item.formData[key];
+            const memberKeys = (field as any).components
+              .filter((v: { type: string }) => v.type === 'Member')
+              .map((v: { field: string }) => v.field);
+            if (Array.isArray(tabData)) {
+              tabData.forEach((item) => {
+                memberKeys?.forEach((key: string) => {
+                  const mValue = (item as any)[key];
+                  if (Array.isArray(mValue)) {
+                    mValue.forEach((id) => {
+                      if (!membersCacheRef.current[id]) {
+                        ids.add(id);
+                      }
+                    });
+                  } else {
+                    if (!membersCacheRef.current[mValue]) {
+                      ids.add(mValue);
+                    }
+                  }
+                });
+              });
             }
           }
         });
@@ -389,11 +492,11 @@ const DataManage = () => {
 
         <Form.Item name="stateList">
           <Checkbox.Group>
-            <Checkbox value={1}>进行中</Checkbox>
-            <Checkbox value={2}>已终止</Checkbox>
-            <Checkbox value={3}>已撤回</Checkbox>
-            <Checkbox value={4}>已办结</Checkbox>
-            <Checkbox value={5}>已驳回</Checkbox>
+            {TASK_STATE_LIST.map(({ key, value }) => (
+              <Checkbox key={key} value={key}>
+                {value}
+              </Checkbox>
+            ))}
           </Checkbox.Group>
         </Form.Item>
 

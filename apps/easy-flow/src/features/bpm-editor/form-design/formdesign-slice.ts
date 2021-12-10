@@ -21,7 +21,16 @@ import {
 } from './formzone-reducer';
 import { ConfigItem, ErrorItem, FieldType, FormDesign, FormField, FormMeta } from '@/type';
 import { loadComponents } from './toolbox/toolbox-reducer';
-import { validateFieldName, validateHasChecked, validateLabel } from './validate';
+import {
+  validateFieldName,
+  validateFields,
+  validateHasChecked,
+  validateLabel,
+  validateSerialCustom,
+  validateSerialInject,
+  validateSerial,
+  validUrlOption,
+} from './validate';
 import { RootState } from '@/app/store';
 import { axios } from '@/utils';
 import { message } from 'antd';
@@ -84,16 +93,44 @@ export const {
 
 export default formDesign.reducer;
 
-const validComponentConfig = (config: ConfigItem, props: ConfigItem) => {
-  const { id, label = '', fieldName = '' } = config;
-  debugger;
-  const errorItem: ErrorItem = { id, content: [] };
-  const nameError = validateFieldName(fieldName);
+const validComponentConfig = (config: ConfigItem, props: ConfigItem): ErrorItem | null => {
+  const { id, label = '', fieldName = '', type } = config;
+  const errorItem: ErrorItem = { id, content: [], subError: [] };
+  if (!['DescText', 'Iframe'].includes(type)) {
+    const nameError = validateFieldName(fieldName);
+    nameError && errorItem.content.push(nameError);
+  }
   const labelError = validateLabel(label);
-  const propsError = validateHasChecked(props);
-  nameError && errorItem.content.push(nameError);
   labelError && errorItem.content.push(labelError);
+  const serialError = validateSerial(config);
+  serialError && errorItem.content.push(serialError);
+  const customError = validateSerialCustom(config);
+  customError && errorItem.content.push(customError);
+  const injectError = validateSerialInject(config);
+  injectError && errorItem.content.push(injectError);
+  const propsError = validateHasChecked(props, config);
   propsError && errorItem.content.push(propsError);
+  if (type === 'Tabs') {
+    const fieldsError = validateFields(props.components);
+    fieldsError && errorItem.content.push(fieldsError);
+    const len = props.components?.length;
+    if (len > 0) {
+      for (let i = 0; i < len; i++) {
+        const comp = props.components[i];
+        const subError = validComponentConfig(comp.config, comp.props);
+        if (subError?.content && subError?.content.length > 0) {
+          errorItem.content.push('子控件错误!');
+          errorItem.subError?.push({ id: subError.id, content: subError.content });
+        }
+      }
+    }
+  }
+  if (type === 'Iframe') {
+    const urlOption = props.url;
+    const urlError = validUrlOption(urlOption);
+    urlError && errorItem.content.push(urlError);
+  }
+
   return errorItem.content.length > 0 ? errorItem : null;
 };
 type SaveParams = {
@@ -129,11 +166,9 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
           type,
           version,
           rules: [],
-          canSubmit: type !== 'DescText',
+          canSubmit: !['DescText', 'FlowData', 'Iframe'].includes(type),
           multiple: type === 'Checkbox' || (['Select', 'Member'].includes(type) && byId[id].multiple),
         };
-        debugger;
-
         const props: ConfigItem = { type, id, multiple: type === 'Checkbox' };
         componentConfig?.forEach(({ isProps, key }) => {
           if (isProps) {
@@ -160,7 +195,13 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
       const id = errors[0].id || '';
       id && dispatch(selectField({ id }));
       dispatch(setErrors({ errors }));
-      isShowErrorTip && message.error('您有内容未填写或填写错误，请检查');
+      const hasTipsError = errors.find((item) => item.content.includes('errorTipsExchange'));
+      const hasSubTipsError = errors.some((item) => {
+        return item?.subError && item.subError.some((v) => v.content.includes('errorTipsExchange'));
+      });
+      if (isShowErrorTip && !hasTipsError && !hasSubTipsError) {
+        message.error('您有内容未填写或填写错误，请检查');
+      }
       return Promise.reject(errors);
     }
     // 表单改变之后才有必要调后台接口

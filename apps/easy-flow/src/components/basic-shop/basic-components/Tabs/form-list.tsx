@@ -4,52 +4,71 @@ import { Rule, FormInstance } from 'antd/lib/form';
 import { AllComponentType, CompConfig, Datasource, EventType } from '@/type';
 import useLoadComponents from '@/hooks/use-load-components';
 import { fetchDataSource } from '@/apis/detail';
-import { useSubAppDetail } from '@/app/app';
 import LabelContent from '../../../label-content';
 import styles from './index.module.scss';
 import { AuthType, FieldAuthsMap } from '@/type/flow';
 import { useContainerContext } from '@/components/form-engine/context';
 import PubSub from 'pubsub-js';
 import { analysisFormChangeRule } from '@/utils';
-import { formRulesItem, formRulesReturn } from '@/components/form-engine/utils';
+import { formRulesItem, formRulesReturn, validateRules } from '@/components/form-engine/utils';
 import useMemoCallback from '@common/hooks/use-memo-callback';
+import { getFilesTypeList } from '@/components/form-engine';
+import { omit } from 'lodash';
 
 interface FormListProps {
   fields: CompConfig[];
   id: string;
   parentId: string;
   auth: FieldAuthsMap;
+  projectId: number;
   readonly: boolean | undefined;
+  name: number;
 }
 
 interface VisibleMap {
   [k: string]: boolean;
 }
 
-const FormList = ({ fields, id, parentId, auth = {}, readonly }: FormListProps) => {
+const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId, name }: FormListProps) => {
   const context = useContainerContext();
   const [visibleMap, setVisibleMap] = useState<VisibleMap>({});
+  const [fileMap, setFileMap] = useState<{ [key: string]: string[] } | undefined>(undefined);
   const componentTypes = useMemo(() => {
     return fields.map((v) => v.config.type);
   }, [fields]);
   const optionComponents = useMemo(() => {
     return fields.filter((v) => ['Select', 'Radio', 'Checkbox'].includes(v.config.type)).map((v) => v.config);
   }, [fields]);
-  const subAppDetail = useSubAppDetail();
-  const projectId = useMemo(() => {
-    if (subAppDetail && subAppDetail.data && subAppDetail.data.app) {
-      return subAppDetail.data.app.project.id;
-    }
-  }, [subAppDetail]);
   const compSources = useLoadComponents(componentTypes);
   const [dataSourceMap, setDataSourceMap] = useState<Datasource>({});
   useEffect(() => {
     if (optionComponents.length > 0) {
-      fetchDataSource(optionComponents as any).then((res) => {
-        setDataSourceMap(res);
-      });
+      if (context && context.form) {
+        const { form } = context;
+        const formDataList: { name: string; value: any }[] = [];
+        const formValues = form.getFieldsValue() || {};
+        Object.entries(formValues).forEach(([key, value]) => {
+          formDataList.push({ name: key, value });
+        });
+        fetchDataSource(optionComponents as any, formDataList).then((res) => {
+          setDataSourceMap(res);
+        });
+      } else {
+        fetchDataSource(optionComponents as any).then((res) => {
+          setDataSourceMap(res);
+        });
+      }
     }
-  }, [optionComponents]);
+  }, [optionComponents, context]);
+
+  useEffect(() => {
+    if (componentTypes.includes('Attachment')) {
+      (async () => {
+        const fileMap = await getFilesTypeList();
+        setFileMap(fileMap);
+      })();
+    }
+  }, [componentTypes]);
   const watchFn = useMemoCallback((rules: formRulesItem[]) => {
     return [
       ...new Set(
@@ -81,16 +100,37 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly }: FormListProps) 
       .forEach((name) => {
         setVisibleMap((old) => Object.assign({}, old, { [name]: true }));
       });
-  }, [fields, setVisibleMap]);
+    if (context && context?.form) {
+      const { form } = context;
+      const initialValue: { [k: string]: any } = {};
+      fields
+        .map((v) => ({
+          key: v.config.fieldName,
+          value:
+            v.props?.defaultValue ||
+            (typeof v.props?.defaultNumber === 'number' && v.props?.defaultNumber) ||
+            undefined,
+        }))
+        .filter(({ value }) => value !== undefined && value !== null)
+        .forEach(({ key, value }) => {
+          initialValue[key] = value;
+          PubSub.publish(`${parentId}.${key}-change`, value);
+        });
+      const parentValue = form.getFieldValue(parentId);
+      const fieldValue = Object.assign({}, { ...initialValue }, form.getFieldValue([parentId, name]));
+      const newValue = Object.assign([], parentValue, { [name]: fieldValue });
+      form.setFieldsValue({ [parentId]: newValue });
+    }
+  }, [fields, context, parentId, name, setVisibleMap]);
   useEffect(() => {
     if (context && context?.rules) {
-      const { rules, form } = context;
+      const { rules, form, nodeType } = context;
       Object.keys(rules).forEach((key) => {
         const ruleList = ((rules as unknown) as formRulesReturn)[key];
         const visibleRules = ruleList?.filter((item) => item?.subtype === EventType.Visible);
         const watchList = watchFn(ruleList);
         const visibleWatchList = watchFn(visibleRules);
-        watchList.forEach((field) => {
+        watchList?.forEach((field) => {
           PubSub.subscribe(field as string, (msg) => {
             if (visibleWatchList.includes(msg)) {
               setFieldVisible(visibleRules, form, key);
@@ -98,19 +138,26 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly }: FormListProps) 
           });
         });
       });
+      if (nodeType !== 'start') {
+        const fieldValue = form.getFieldValue([parentId, id]);
+        const subComponents = omit(fieldValue, ['__title__', 'key', 'content']);
+        Object.entries(subComponents).forEach(([key, value]: [string, any]) => {
+          PubSub.publish(`${key}-change`, value);
+        });
+      }
     }
-  }, [context, setFieldVisible, watchFn]);
+  }, [context, name, setFieldVisible, watchFn]);
   return (
-    <Form.List name={[parentId, id]}>
+    <Form.List name={name}>
       {() => {
         return (
           <Row className={styles.row}>
             {fields.map((field) => {
               const { config, props } = field;
-              const { fieldName = '', label = '', colSpace = '4', desc = '', type } = config;
+              const { fieldName = '', label = '', colSpace = 4, desc = '', type } = config;
               const Component = compSources ? compSources[type] : null;
               const dataSource = dataSourceMap[fieldName] || [];
-              let fieldAuth = auth[fieldName] ?? AuthType.View;
+              let fieldAuth = auth[fieldName] ?? AuthType.Edit;
               if (!visibleMap[fieldName]) {
                 fieldAuth = AuthType.Denied;
               }
@@ -118,11 +165,18 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly }: FormListProps) 
                 return null;
               }
               const isRequired = fieldAuth === AuthType.Required;
-              const rules: Rule[] = [];
-              if (isRequired) {
-                rules.push({ required: true, message: `${label}不能为空` });
-              }
               const comProps = Object.assign({}, props, { disabled: fieldAuth === AuthType.View || readonly });
+              if (type === 'DescText' && comProps.value) {
+                comProps['text_value'] = comProps.value;
+              }
+              if (type === 'Attachment' && fileMap) {
+                comProps.fileMap = fileMap;
+              }
+              if (name !== -1) {
+                delete comProps.defaultValue;
+              }
+              delete comProps.apiConfig;
+              const rules: Rule[] = validateRules(isRequired, label, type, props);
               return (
                 <Col span={Number(colSpace) * 6} className={styles.col} key={fieldName}>
                   <Form.Item
@@ -143,7 +197,7 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly }: FormListProps) 
   );
 };
 
-export default memo(FormList);
+export default memo(FormList, (prev, current) => prev.name === current.name && prev.fields === current.fields);
 
 function compRender(
   type: AllComponentType['type'],

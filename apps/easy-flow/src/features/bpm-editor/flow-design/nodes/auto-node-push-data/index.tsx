@@ -28,7 +28,7 @@ function AutoNodePushData(props: AutoNodeProps) {
   }, [api, apis]);
 
   return (
-    <BaseNode node={node} icon={<Icon type="zidongjiediandise" />}>
+    <BaseNode node={node} icon={<Icon type="shujulianjiedise" />}>
       {apiName ? (
         <div className={styles.api}>
           <span className={styles.desc}>接收数据接口</span>

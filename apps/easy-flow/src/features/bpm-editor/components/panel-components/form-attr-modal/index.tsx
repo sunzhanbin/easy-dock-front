@@ -29,7 +29,7 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
   }, [byId]);
   const fields = useMemo<{ id: string; name: string }[]>(() => {
     return componentList
-      .filter((com) => com.type !== 'DescText')
+      .filter((com) => !['DescText', 'Tabs'].includes(com.type))
       .map((com) => ({ id: com.fieldName, name: com.label }));
   }, [componentList]);
   const initFormValues = useMemo(() => {

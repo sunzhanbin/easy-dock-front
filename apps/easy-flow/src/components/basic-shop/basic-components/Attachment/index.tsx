@@ -31,7 +31,7 @@ const Attachment = (
   const checkoutFile = useMemoCallback((file: File) => {
     const { size, name } = file;
     const extension = name.replace(/.+\./, '.');
-    if (!name || !fileTypeList.includes(extension)) {
+    if (!name || (fileTypeList?.length && !fileTypeList.includes(extension))) {
       message.error('当前文件上传类型有误，请重新上传');
       return false;
     }
@@ -44,23 +44,23 @@ const Attachment = (
   });
 
   useEffect(() => {
-    if (!typeRestrict) {
+    if (!typeRestrict || !typeRestrict.enable || !fileMap) {
       return;
     }
-    const { types } = typeRestrict;
+    const { types, custom = [] } = typeRestrict;
     const exceptCustom: string[] = types?.filter((item) => item !== 'custom') || [];
-    const fileTypeList =
-      fileMap &&
-      Object.entries(fileMap)
-        ?.map(([key, value]: any) => {
-          if (exceptCustom.includes(key)) {
-            return value?.map((item: string) => `.${item}`);
-          }
-          return undefined;
-        })
-        .flat(2)
-        .filter(Boolean);
-    setFileTypeList(fileTypeList);
+    const fileTypeList = Object.entries(fileMap)
+      ?.map(([key, value]: any) => {
+        if (exceptCustom.includes(key)) {
+          return value?.map((item: string) => `.${item}`);
+        }
+        return undefined;
+      })
+      .flat(2)
+      .filter(Boolean);
+    const customList = custom.map((item) => `.${item}`);
+    const typeList = [...new Set(fileTypeList.concat(customList))];
+    setFileTypeList(typeList);
   }, [fileMap, typeRestrict]);
 
   const handleChange = useMemoCallback(({ file }: UploadChangeParam) => {

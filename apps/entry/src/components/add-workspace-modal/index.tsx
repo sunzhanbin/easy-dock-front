@@ -4,15 +4,16 @@ import React, {
   useState,
   useImperativeHandle,
 } from "react";
-import { useSelector } from "react-redux";
-import { useAddWorkspaceMutation } from "@/http/app-manager.hooks";
-import { selectProjectId } from "@/views/app-manager/index.slice";
-import { Modal, Input } from "antd";
+import { useAppSelector } from "@/store";
+import { useAddWorkspaceMutation } from "@/http";
+import { selectProjectId } from "@views/app-manager/index.slice";
+import { Modal, Form, Input } from "antd";
 
 const AddWorkspaceModal = React.forwardRef(function addWorkspace(_, ref) {
-  const projectId = useSelector(selectProjectId);
+  const projectId = useAppSelector(selectProjectId);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [addWorkspace] = useAddWorkspaceMutation();
+  const [form] = Form.useForm();
   const inputRef = useRef<any>("");
 
   useImperativeHandle(ref, () => ({
@@ -40,13 +41,16 @@ const AddWorkspaceModal = React.forwardRef(function addWorkspace(_, ref) {
 
   return (
     <Modal
-      title="Basic Modal"
+      title="新增工作区"
       visible={isModalVisible}
       onOk={handleOk}
       onCancel={handleCancel}
     >
-      工作区名称：
-      <Input ref={inputRef} />
+      <Form form={form}>
+        <Form.Item name="name" label="工作区名称" required>
+          <Input size="large" placeholder="请输入" />
+        </Form.Item>
+      </Form>
     </Modal>
   );
 });

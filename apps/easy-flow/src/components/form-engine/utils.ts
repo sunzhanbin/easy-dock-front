@@ -1,5 +1,6 @@
 import { FormRuleItem, fieldRule, EventType } from '@type';
 import { flowVarsMap } from '@utils';
+import { Rule } from 'antd/lib/form';
 
 export interface fieldRulesItem {
   condition: fieldRule[];
@@ -29,7 +30,7 @@ export interface fieldRulesReturn {
 
 export const convertFormRules = (data: FormRuleItem[], components: { config: any; props: any }[]) => {
   const fieldRulesObj: any = {};
-  const componentList = components.map((v) => v.config);
+  const componentList = components.map((v) => Object.assign({}, v.config, v.props));
 
   function setFieldRules(fieldName: string, value: any, item: any, type: string, subtype: EventType) {
     const obj = {
@@ -107,13 +108,54 @@ export const convertFormRules = (data: FormRuleItem[], components: { config: any
   });
   // 属性面板配置
   components?.forEach((com) => {
-    const { config } = com;
-    if (config.fieldName && config.type === 'InputNumber' && config.defaultNumber) {
+    const { config, props } = com;
+    // 此处不能用fieldName 预览时没有fieldName字段 统一用id作为key
+    if (config.id && config.type === 'InputNumber' && (config.defaultNumber || props.defaultNumber)) {
       // panel配置公式计算
-      const { fieldName, defaultNumber } = config;
+      const { id, fieldName } = config;
+      const defaultNumber = props.defaultNumber || config.defaultNumber;
       const value = defaultNumber.calculateData;
-      value && setFieldRules(fieldName, value, defaultNumber, 'change', 2);
+      value && setFieldRules(fieldName || id, value, defaultNumber, 'change', 2);
     }
   });
   return fieldRulesObj;
+};
+
+export const validateRules = (isRequired: boolean, label: string, type: string, props: any): Rule[] => {
+  const rules: Rule[] = [];
+
+  if (isRequired) {
+    // 图片和附件的必填校验特殊处理
+    if (['Image', 'Attachment'].includes(type)) {
+      rules.push({
+        validator(_, value) {
+          if (!value || (value?.fileList?.length === 0 && value?.fileIdList?.length === 0)) {
+            return Promise.reject(new Error(`请选择上传的${type === 'Image' ? '图片' : '附件'}`));
+          }
+          return Promise.resolve();
+        },
+      });
+    } else {
+      rules.push({
+        validator(_, val) {
+          if (val === undefined || val === null || (typeof val === 'string' && val.trim() === '')) {
+            return Promise.reject(new Error(`${label}不能为空`));
+          }
+          return Promise.resolve();
+        },
+      });
+    }
+  }
+  if (type === 'InputNumber' && props.numlimit?.enable) {
+    const { numrange } = props.numlimit;
+    rules.push({
+      validator(_, val) {
+        if (val < numrange?.min || val > numrange.max) {
+          return Promise.reject(new Error(`当前数值已超过限制范围，请重新输入！`));
+        }
+        return Promise.resolve();
+      },
+    });
+  }
+  return rules;
 };

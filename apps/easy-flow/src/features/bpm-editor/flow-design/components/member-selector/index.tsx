@@ -46,7 +46,7 @@ function MemberSelector(props: MemberSelectorProps) {
       deptIds.push(dept.id);
     });
 
-    roles.concat(dynamic?.roles || []).forEach((role) => {
+    roles.forEach((role) => {
       caches[role.id] = role;
       roleIds.push(role.id);
     });

@@ -1,4 +1,4 @@
-import { memo, useState, useMemo } from 'react';
+import { memo, useState, useMemo, useEffect } from 'react';
 import styles from './index.module.scss';
 import { Icon } from '@common/components';
 import { InputNumber, Select } from 'antd';
@@ -30,60 +30,79 @@ const calculateOptions = [
   { key: 'min', value: '最小值' },
 ];
 const NumberOption = (props: NumberOptionProps) => {
-  const { id, value, onChange } = props;
   const byId = useAppSelector(componentPropsSelector);
-  // 默认值类型选择
-  const [type, setType] = useState<string>(value?.type);
-  // 公式计算类型选择
-  const [calcType, setCalcType] = useState<string>(value?.calcType);
-  // 公式计算的表单字段
-  const [calculateData, setCalculateData] = useState<string | string[]>(value?.calculateData);
-  // 默认值的小数位数
-  const precision = useMemo(() => {
-    return (byId[id] as InputNumberField)?.precision;
-  }, [id, byId]);
-  // 默认值的数值范围
-  const range = useMemo(() => {
-    return (byId[id] as InputNumberField)?.scope;
-  }, [id, byId]);
+  const { id, onChange } = props;
 
+  const fieldNumber = useMemo(() => {
+    return byId[id] as InputNumberField;
+  }, [id, byId]);
+  // 默认值类型选择
+  const [type, setType] = useState<string>('');
+  // 公式计算类型选择
+  const [calcType, setCalcType] = useState<string | undefined>(undefined);
+  // 自定义数值类型
+  const [customData, setCustomData] = useState<number | undefined>(undefined);
+  // 公式计算的表单字段
+  const [calculateData, setCalculateData] = useState<string | string[]>([]);
+
+  useEffect(() => {
+    if (!fieldNumber) return;
+    const { defaultNumber } = fieldNumber;
+    setType(defaultNumber?.type || 'custom');
+    setCustomData(defaultNumber?.customData || undefined);
+    setCalcType(defaultNumber?.calcType);
+    setCalculateData(defaultNumber?.calculateData || []);
+  }, [fieldNumber]);
+
+  // 默认值的小数位数 默认值的数值范围
   const defaultNumberProps = useMemo(() => {
+    if (!fieldNumber) return null;
+    const { decimal, numlimit } = fieldNumber!;
     return {
-      precision,
-      min: range?.min,
-      max: range?.max,
+      precision: decimal?.enable ? decimal?.precision : 0,
+      min: numlimit?.numrange?.min,
+      max: numlimit?.numrange?.max,
     };
-  }, [precision, range]);
+  }, [fieldNumber]);
 
   // 改变默认值类型
   const handleChange = useMemoCallback((value: string) => {
-    setType(value);
+    onChange && onChange({ id, type: value, calculateData: undefined, calcType: undefined, customData: undefined });
   });
-  const handleInputBlur = useMemoCallback((e) => {
-    const value: number = e.target.value;
+  const handleInputBlur = useMemoCallback((value) => {
     onChange && onChange({ id, type, customData: value });
   });
   // 改变公式计算类型
   const handleChangeCalcType = useMemoCallback((value) => {
-    setCalcType(value);
-    setCalculateData([]);
-    onChange && onChange({ id, type, calcType: value });
+    onChange && onChange({ id, type, calcType: value, calculateData: [] });
   });
   // 改变公式计算表单控件
   const handleCalcChange = useMemoCallback((value) => {
-    setCalculateData(value);
     onChange && onChange({ id, type, calcType, calculateData: value });
   });
 
   const renderContent = useMemoCallback(() => {
+    if (!fieldNumber) return null;
+
     if (type === 'custom') {
       return (
         <div className={styles.custom_select}>
           <InputNumber
             size="large"
             className="input_number"
-            placeholder="请选择"
-            onBlur={handleInputBlur}
+            placeholder="请输入"
+            formatter={(value: any) => {
+              if (!value || value.indexOf('.') === -1) return value;
+              if (!defaultNumberProps?.precision) {
+                return value.toString().split('.')[0];
+              }
+              const strLength = value.toString().split('.')[1].length;
+              if (defaultNumberProps?.precision && strLength > defaultNumberProps?.precision) {
+                return value.substring(0, value.indexOf('.') + defaultNumberProps.precision + 1);
+              }
+            }}
+            value={customData}
+            onChange={handleInputBlur}
             {...defaultNumberProps}
           />
         </div>
@@ -92,10 +111,10 @@ const NumberOption = (props: NumberOptionProps) => {
       return (
         <>
           <Select
-            placeholder="请选择"
-            className={styles.dict_content}
+            className={styles.select_calc}
             size="large"
             suffixIcon={<Icon type="xiala" />}
+            placeholder="请选择函数"
             value={calcType}
             onChange={handleChangeCalcType}
           >
@@ -131,4 +150,4 @@ const NumberOption = (props: NumberOptionProps) => {
   );
 };
 
-export default memo(NumberOption);
+export default memo(NumberOption, (prev, next) => prev.id === next.id);

@@ -4,7 +4,7 @@ import useMemoCallback from '@common/hooks/use-memo-callback';
 import styles from '../index.module.scss';
 import { RuleOption } from '@type';
 import { getPopupContainer } from '@utils';
-import { ResetDurationOptions } from '@utils/const';
+import { INCREASE_NUM_LIST, ResetDurationOptions } from '@utils/const';
 
 interface IncNumProps {
   showIncModal: boolean;
@@ -23,14 +23,15 @@ const IncNumModal = (props: IncNumProps) => {
   const [resetDuration, setResetDuration] = useState<string>(data.resetDuration || 'none'); // 重置周期
   const [startValue, setStartValue] = useState<number>(data.startValue || 1); // 初始值
 
-  const handleSubmit = useMemoCallback(() => {
+  const handleSubmit = useMemoCallback(async () => {
+    await form.validateFields();
     const params = Object.assign({}, MODAL_TYPE, form.getFieldsValue());
     onSubmit && onSubmit(params);
   });
 
   return (
     <Modal
-      width={350}
+      width={400}
       className={styles.modalIncrease}
       visible={showIncModal}
       title={'计数设置'}
@@ -45,8 +46,28 @@ const IncNumModal = (props: IncNumProps) => {
       getContainer={false}
     >
       <Form form={form} layout="vertical" autoComplete="off" initialValues={props.data}>
-        <Form.Item label="计数位数" name="digitsNum">
-          <InputNumber min={1} max={10} value={digitsNum} onChange={setDigitsNum} className={styles.formItem} />
+        <Form.Item
+          label="计数位数"
+          name="digitsNum"
+          rules={[
+            {
+              validator(_, value) {
+                if (!/^[1-9]\d*$/.test(value)) {
+                  return Promise.reject(new Error('请输入正整数'));
+                }
+                return Promise.resolve();
+              },
+            },
+          ]}
+        >
+          <InputNumber
+            size="large"
+            min={1}
+            max={10}
+            value={digitsNum}
+            onChange={setDigitsNum}
+            className={styles.formItem}
+          />
         </Form.Item>
         <Form.Item label="重置周期">
           <Form.Item name="resetDuration" style={{ marginBottom: '5px' }}>
@@ -65,11 +86,25 @@ const IncNumModal = (props: IncNumProps) => {
               ))}
             </Select>
           </Form.Item>
-          <p className={styles.resetTips}>仅当计数达到最大值时，从0开始重新计数。</p>
+          <p className={styles.resetTips}>{INCREASE_NUM_LIST[resetDuration]}</p>
         </Form.Item>
-        <Form.Item label="初始值" name="startValue">
+        <Form.Item
+          label="初始值"
+          name="startValue"
+          rules={[
+            {
+              validator(_, value) {
+                if (!/^[1-9]\d*$/.test(value)) {
+                  return Promise.reject(new Error('请输入正整数'));
+                }
+                return Promise.resolve();
+              },
+            },
+          ]}
+        >
           <InputNumber
             min={1}
+            size="large"
             max={Math.pow(10, digitsNum) - 1}
             value={startValue}
             onChange={setStartValue}

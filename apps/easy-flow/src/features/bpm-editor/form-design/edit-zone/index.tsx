@@ -20,7 +20,7 @@ const defaultNumberConfig = {
   placeholder: '请输入',
   label: '默认值',
   defaultValue: '',
-  type: 'InputNumber',
+  type: 'SubInputNumber',
   direction: 'vertical',
   required: false,
   isProps: false,
@@ -47,7 +47,7 @@ const EditZone = () => {
     return '';
   }, [formDesign.selectedField, byId]);
   useEffect(() => {
-    setTimeout(() => {
+    Promise.resolve().then(() => {
       // 编辑子控件
       if (subComponentConfig) {
         const { parentId, type } = subComponentConfig;
@@ -58,6 +58,21 @@ const EditZone = () => {
         // tab内的数字控件默认值不需要公式计算
         if (type === 'InputNumber') {
           const index = editConfig.findIndex((v) => v.key === 'defaultNumber');
+          if (subComponentConfig.decimal?.enable) {
+            const precision = subComponentConfig.decimal?.precision || 1;
+            (defaultNumberConfig as any).precision = precision;
+          } else {
+            (defaultNumberConfig as any).precision = undefined;
+          }
+          if (subComponentConfig.numlimit?.enable) {
+            const min = subComponentConfig.numlimit?.numrange?.min;
+            const max = subComponentConfig.numlimit?.numrange?.max;
+            (defaultNumberConfig as any).min = min;
+            (defaultNumberConfig as any).max = max;
+          } else {
+            (defaultNumberConfig as any).min = undefined;
+            (defaultNumberConfig as any).max = undefined;
+          }
           index > -1 && editConfig.splice(index, 1, defaultNumberConfig as SchemaConfigItem);
           newConfig = {
             ...newConfig,
@@ -82,7 +97,7 @@ const EditZone = () => {
         setComponentId(selectedField);
         setComponentType(fieldType);
       }
-    }, 0);
+    });
   }, [byId, formDesign, subComponentConfig, selectedField, fieldType]);
   useEffect(() => {
     selectedField ? setActiveKey('1') : setActiveKey('2');

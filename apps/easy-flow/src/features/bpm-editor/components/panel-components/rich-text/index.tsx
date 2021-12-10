@@ -82,6 +82,7 @@ const RichText = (props: RichTextProps) => {
       'font-size',
       'text-color',
       'text-align',
+      'hr',
       'link',
       {
         key: 'media',

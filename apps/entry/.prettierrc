@@ -1,5 +1,16 @@
 {
   "react/react-in-jsx-scope": "off",
   "filepath": "../../.prettierrc",
-  "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx", ".tsx", ".ts"] }]
+  "react/jsx-filename-extension": [
+    1,
+    {
+      "extensions": [
+        ".js",
+        ".jsx",
+        ".tsx",
+        ".ts"
+      ]
+    }
+  ],
+  "endOfLine": "auto"
 }

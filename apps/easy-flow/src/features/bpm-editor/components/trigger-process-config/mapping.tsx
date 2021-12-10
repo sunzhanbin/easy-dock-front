@@ -24,11 +24,13 @@ interface Component {
   name: string;
   field: string;
   auth: AuthType | null;
+  disabled?: boolean;
 }
 
 const Mapping = ({ name, parentName, subAppId, value, onChange }: MappingProps) => {
   const formMeta = useAppSelector(formMetaSelector);
   const [targetComponents, setTargetComponents] = useState<Component[]>([]);
+  const [cacheComponents, setCacheComponents] = useState<Component[]>([]);
   const currentComponents = useMemo(() => {
     return Object.values(formMeta?.components || {})
       .map((v) => v.config)
@@ -41,10 +43,11 @@ const Mapping = ({ name, parentName, subAppId, value, onChange }: MappingProps) 
         const components = res.data.filter((v) => !['Tabs', 'FlowData', 'SerialNum'].includes(v.type));
         const requiredList = components.filter((v) => v.auth === AuthType.Required);
         const requiredConfig = requiredList.map((v) => ({ target: v.field, required: true }));
-        if (requiredConfig.length) {
+        if (requiredConfig.length && value?.length === 0) {
           onChange && onChange(requiredConfig);
         }
         setTargetComponents(components);
+        setCacheComponents(components);
       });
     }
     // eslint-disable-next-line
@@ -55,8 +58,13 @@ const Mapping = ({ name, parentName, subAppId, value, onChange }: MappingProps) 
     const list = (Array.isArray(value) ? [...value] : []).filter((v) => v?.target);
     if (list.length > 0) {
       const fieldList = list.map((v) => v.target);
-      setTargetComponents((components) => {
-        return components.filter((v) => !fieldList.includes(v.field));
+      setTargetComponents(() => {
+        return cacheComponents.map((v) => {
+          if (fieldList.includes(v.field)) {
+            return Object.assign({}, v, { disabled: true });
+          }
+          return v;
+        });
       });
     }
   }, [value]);
@@ -94,7 +102,7 @@ const Mapping = ({ name, parentName, subAppId, value, onChange }: MappingProps) 
                                 >
                                   {targetComponents.map((v) => {
                                     return (
-                                      <Option key={v.field} value={v.field}>
+                                      <Option key={v.field} value={v.field} disabled={v.disabled}>
                                         {v.name}
                                       </Option>
                                     );

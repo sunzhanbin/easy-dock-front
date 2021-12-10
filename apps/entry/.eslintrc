@@ -1,7 +1,9 @@
 {
-  "extends": "../../.eslintrc",
+  "extends": ["../../.eslintrc", "plugin:react/jsx-runtime"],
   "plugins": ["prettier"],
   "rules": {
-    "prettier/prettier": "error"
+    "prettier/prettier": "error",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "no-param-reassign": ["error", { "props": true, "ignorePropertyModificationsFor": ["state", "webpackConfig"] }]
   }
 }

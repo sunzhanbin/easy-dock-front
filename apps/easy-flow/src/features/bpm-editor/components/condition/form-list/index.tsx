@@ -45,7 +45,7 @@ const symbolListMap = {
     symbolMap.null,
     symbolMap.notNull,
   ],
-  dateFilter: [symbolMap.latter, symbolMap.earlier],
+  dateFilter: [symbolMap.earlier, symbolMap.latter, symbolMap.earlierEqual, symbolMap.latterEqual],
   option: [
     symbolMap.equal,
     symbolMap.unequal,
@@ -321,7 +321,7 @@ const FormList = ({
         );
       }
       const format = component && component.format;
-      const showTime = format === 'YYYY-MM-DD HH:mm:ss';
+      const showTime = format === 'yyyy-MM-DD HH:mm:ss';
       if (symbol === 'range') {
         return (
           <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: '请选择!' }]}>
@@ -335,7 +335,7 @@ const FormList = ({
           </Form.Item>
         );
       }
-      if (symbol === 'latter' || symbol === 'earlier') {
+      if (symbol === 'latter' || symbol === 'earlier' || symbol === 'earlierEqual' || symbol === 'latterEqual') {
         return (
           <>
             <Form.Item

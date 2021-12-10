@@ -24,12 +24,14 @@ const CardContainer = styled.div`
   }
   .image {
     flex: 0 0 74px;
+    border-radius: 3px 0 0 3px;
     & > img {
       width: 100%;
     }
   }
   & > .content {
     flex: 1;
+    height: 92px;
     padding: 16px;
     background: rgba(24, 39, 67, 0.03);
     border-radius: 0 3px 3px 0;

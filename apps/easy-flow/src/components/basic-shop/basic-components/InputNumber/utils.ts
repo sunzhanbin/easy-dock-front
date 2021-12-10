@@ -4,6 +4,7 @@ import * as math from 'mathjs';
 export const getCalculateNum = (
   rules: { [key: string]: any }[],
   formValue: { [key: string]: any },
+  decimal: { [key: string]: any },
 ): number | undefined => {
   const rule = rules.find((rule) => rule.condition.calcType);
   if (!rule || !rule.condition.calcType) return undefined;
@@ -21,17 +22,18 @@ export const getCalculateNum = (
       if (!fieldList) return;
       formListMap = fieldList.map((item: { [x: string]: any }) => item[fieldName]);
     } else {
-      formListMap[item] = formValue[item];
+      formListMap[item] = item.includes('InputNumber') ? formValue[item] || 0 : formValue[item];
     }
   });
-  const filterList = Object.values(formListMap).filter(Boolean);
+  const filterList = Object.values(formListMap).filter((v) => v !== undefined && v !== null);
+  if (!filterList.length) return undefined;
   if (calcType === 'minus') {
     if (watch.find((item: string) => item.includes('Date'))) {
-      if (filterList.length < 2) return 0;
+      if (filterList.length < 2) return undefined;
       const rangeDateNum = Object.values(formListMap).reduceRight((p: any, n: any) => n - p);
-      returnNum = Math.floor(rangeDateNum / (1000 * 3600 * 24));
+      returnNum = (rangeDateNum / (1000 * 3600 * 24)).toFixed(0);
     } else {
-      returnNum = filterList.reduceRight((p: any, n: any) => n - p);
+      returnNum = filterList.reverse().reduceRight((p: any, n: any) => p - n);
     }
   } else if (calcType === 'add') {
     returnNum = math.sum(filterList);
@@ -47,6 +49,10 @@ export const getCalculateNum = (
     returnNum = math.min(filterList);
   } else if (calcType === 'deduplicate') {
     returnNum = [...new Set(filterList)].length;
+  }
+  const precision = decimal && decimal.enable ? decimal.precision : 0;
+  if (precision !== undefined && returnNum) {
+    returnNum = Number(returnNum)?.toFixed(precision);
   }
   return returnNum;
 };

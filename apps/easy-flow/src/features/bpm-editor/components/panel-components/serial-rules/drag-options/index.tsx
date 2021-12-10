@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, memo } from 'react';
-import { useDrag, useDrop } from 'react-dnd';
+import { DropTargetMonitor, useDrag, useDrop, XYCoord } from 'react-dnd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import styles from '../index.module.scss';
 import { Tooltip, Input, Select } from 'antd';
@@ -32,23 +32,55 @@ function DraggableOption(props: DraggableOptionProps) {
   const dragWrapperRef = useRef<HTMLDivElement>(null);
   const [canMove, setCanMove] = useState<boolean>(false);
   const [showIncModal, setShowIncModal] = useState<boolean>(false);
-  const [, drag] = useDrag(
+  const [{ opacity }, drag] = useDrag(
     () => ({
       type: 'option',
       item() {
         return { index };
       },
       canDrag: () => canMove,
+      collect(monitor) {
+        return { opacity: monitor.isDragging() ? 0.2 : 1 };
+      },
     }),
     [index, canMove],
   );
   const [, drop] = useDrop(
     () => ({
       accept: 'option',
-      drop: (currentDragItem: { index: number }) => {
-        if (currentDragItem.index !== index) {
-          onDrag(currentDragItem.index, index);
+      hover: (currentDragItem: { index: number }, monitor: DropTargetMonitor) => {
+        if (!dragWrapperRef.current) {
+          return;
         }
+        const dragIndex = currentDragItem.index;
+        const hoverIndex = index;
+        if (hoverIndex === dragIndex) {
+          return;
+        }
+        const hoverBoundingRect = dragWrapperRef.current?.getBoundingClientRect();
+
+        // Get vertical middle
+        const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+
+        // Determine mouse position
+        const clientOffset = monitor.getClientOffset();
+
+        // Get pixels to the top
+        const hoverClientY = (clientOffset as XYCoord).y - hoverBoundingRect.top;
+        // Dragging downwards
+        if (dragIndex === -1 || (dragIndex < hoverIndex && hoverClientY < hoverMiddleY)) {
+          return;
+        }
+
+        // Dragging upwards
+        if (dragIndex === -1 || (dragIndex > hoverIndex && hoverClientY > hoverMiddleY)) {
+          return;
+        }
+        onDrag(dragIndex, hoverIndex);
+        currentDragItem.index = hoverIndex;
+      },
+      drop: (currentDragItem: { index: number }) => {
+        return { ...currentDragItem, hoverIndex: index };
       },
     }),
     [onDrag, index],
@@ -101,30 +133,34 @@ function DraggableOption(props: DraggableOptionProps) {
       case 'createTime':
         const date = DateOptions.find((item) => item.key === data?.format)?.value;
         return (
-          <div className={styles.label}>
-            <Select
-              placeholder="请选择"
-              size="large"
-              className={styles.formItem}
-              value={`格式：${date}`}
-              showArrow={true}
-              disabled={disabled}
-              onChange={handleSelectChange}
-              getPopupContainer={getPopupContainer}
-            >
-              {DateOptions.map(({ key, value }) => (
-                <Option key={key} value={key} label={value}>
-                  {value}
-                </Option>
-              ))}
-            </Select>
-          </div>
+          <Select
+            placeholder="请选择"
+            size="large"
+            className={styles.formItem}
+            value={`格式：${date}`}
+            showArrow={true}
+            disabled={disabled}
+            onChange={handleSelectChange}
+            getPopupContainer={getPopupContainer}
+          >
+            {DateOptions.map(({ key, value }) => (
+              <Option key={key} value={key} label={value}>
+                {value}
+              </Option>
+            ))}
+          </Select>
         );
       case 'fixedChars':
         return (
-          <div className={styles.label}>
-            <Input onChange={handleInputBlur} value={data?.chars} disabled={disabled} />
-          </div>
+          <Input
+            className={classNames(!data?.chars ? styles.inputBorder : '')}
+            size="large"
+            onChange={handleInputBlur}
+            defaultValue={data?.chars}
+            disabled={disabled}
+            maxLength={10}
+            placeholder="请输入"
+          />
         );
       case 'fieldName':
         return (
@@ -150,13 +186,13 @@ function DraggableOption(props: DraggableOptionProps) {
     }
   });
   return (
-    <div className={styles.draggable} ref={dragWrapperRef}>
+    <div className={styles.draggable} ref={dragWrapperRef} style={{ opacity }}>
       <div className={styles.name}>
         <div className={styles.text}>{SerialNumType[type]}</div>
         {renderLabel()}
       </div>
       <div className={styles.operation}>
-        {type !== 'incNumber' && !disabled && (
+        {type !== 'incNumber' && !disabled ? (
           <div className={styles.delete} onClick={handleDelete}>
             <Tooltip title="删除">
               <span>
@@ -164,8 +200,16 @@ function DraggableOption(props: DraggableOptionProps) {
               </span>
             </Tooltip>
           </div>
+        ) : (
+          <div className={classNames(styles.delete, styles.disable)}>
+            <Tooltip title="自动计数规则不可删除">
+              <span>
+                <Icon className={styles.iconfont} type="shanchu" />
+              </span>
+            </Tooltip>
+          </div>
         )}
-        {!disabled && (
+        {!disabled ? (
           <div
             className={classNames(styles.move, type === 'incNumber' ? styles.incNumber : '')}
             onMouseEnter={handleMouseEnter}
@@ -176,6 +220,12 @@ function DraggableOption(props: DraggableOptionProps) {
                 <Icon className={styles.iconfont} type="caidan" />
               </span>
             </Tooltip>
+          </div>
+        ) : (
+          <div className={classNames(styles.move, styles.disable)}>
+            <span>
+              <Icon className={styles.iconfont} type="caidan" />
+            </span>
           </div>
         )}
       </div>

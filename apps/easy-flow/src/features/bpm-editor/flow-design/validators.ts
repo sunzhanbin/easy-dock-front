@@ -3,6 +3,7 @@ import { CorrelationMemberConfig, AuditNode, RevertType, TriggerConfig, IDueConf
 import { ApiType, DataConfig } from '@type/api';
 import { validName } from '@common/rule';
 import { dynamicIsEmpty } from './util';
+import { urlRegex } from '../form-design/validate';
 
 const member = (value: CorrelationMemberConfig): string => {
   const { members = [], depts = [], roles = [], dynamic } = value;
@@ -14,7 +15,7 @@ const member = (value: CorrelationMemberConfig): string => {
   return '';
 };
 
-const dataPushConfig = (value: DataConfig): string => {
+export const dataPushConfig = (value: DataConfig): string => {
   const { type, id, url, method, request: { required = [], customize = [] } = {} } = value || {};
 
   if (type !== ApiType.CUSTOM && !id) {
@@ -25,8 +26,6 @@ const dataPushConfig = (value: DataConfig): string => {
     if (!url) {
       return '推送数据的接口地址的不能为空';
     }
-    // eslint-disable-next-line
-    const urlRegex = /(^(http|https):\/\/([\w\-]+\.)+[\w\-]+(\/[\w\u4e00-\u9fa5\-\.\/?\@\%\!\&=\+\~\:\#\;\,]*)?)/;
     if (!urlRegex.test(url)) {
       return '请输入正确的接口地址';
     }
