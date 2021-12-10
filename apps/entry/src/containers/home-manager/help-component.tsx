@@ -1,20 +1,9 @@
 import "@containers/home-manager/help.style.scss";
-import { useEffect, useState } from "react";
-import { List } from "antd";
+import { List, Tooltip } from "antd";
 import Icon from "@assets/icon";
+import { HELP_LIST } from "@utils/const";
 
 const HeaderHelp = () => {
-  const [data, setData] = useState<any>([]);
-
-  useEffect(() => {
-    setData([
-      {
-        id: 1,
-        name: "平台说明",
-        desc: "79834729471947",
-      },
-    ]);
-  }, []);
   return (
     <div className="header_help">
       <List
@@ -32,14 +21,18 @@ const HeaderHelp = () => {
             </p>
           </div>
         }
-        dataSource={data}
-        renderItem={(item: any) => (
-          <List.Item key={item.id}>
+        dataSource={HELP_LIST}
+        renderItem={(item, index) => (
+          <List.Item key={index}>
             <List.Item.Meta
               title={<a className="name">{item.name}</a>}
-              description={item.desc}
+              description={
+                <Tooltip title={item.desc} className="desc">
+                  {item.desc}
+                </Tooltip>
+              }
             />
-            <Icon className="icon" type="custom-icon-jinru" />
+            <Icon className="icon icon-detail" type="custom-icon-jinru" />
           </List.Item>
         )}
       />
