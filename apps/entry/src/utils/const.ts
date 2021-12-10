@@ -76,3 +76,18 @@ export const CREATE_VIRTUAL_LIST = [
     text: "新建空间",
   },
 ];
+
+export const ASSETS_DATA_LIST = [
+  {
+    name: "接口数",
+    num: 207,
+  },
+  {
+    name: "数据数",
+    num: 0,
+  },
+  {
+    name: "模型数",
+    num: 51,
+  },
+];

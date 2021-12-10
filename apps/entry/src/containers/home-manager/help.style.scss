@@ -1,4 +1,27 @@
 .header_help {
   flex: 1;
   background-color: #fff;
+  .help_header{
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
+    padding: 0 24px;
+    .text_recent_app {
+      flex: 1;
+      font-size: 18px;
+      color: rgba(0, 0, 0, 0.85);
+    }
+    .operation_all {
+      flex: 0 0 54px;
+      .text {
+        padding-right: 4px;
+        font-size: 16px;
+      }
+      .icon {
+        font-size: 16px;
+        color: #5e6576;
+      }
+    }
+  }
 }
