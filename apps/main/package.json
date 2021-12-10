@@ -26,7 +26,7 @@
     ]
   },
   "dependencies": {
-    "@enc/sso": "^0.3.0-beta.1",
+    "@enc/sso": "^0.3.1",
     "@enc/theme-scheme": "^0.0.1",
     "@reduxjs/toolkit": "^1.5.1",
     "antd": "^4.15.2",

@@ -135,9 +135,9 @@ class Auth implements IAuth {
     private setAuth(token: string) {
         if (this.cookieAttr) {
             Cookies.set(this.cookieAttr, token);
+        } else {
+            window.localStorage.setItem(this.authAttr, token);
         }
-
-        window.localStorage.setItem(this.authAttr, token);
     }
 
     /**
@@ -231,7 +231,7 @@ class Auth implements IAuth {
 
     public getAuth() {
         if (this.cookieAttr) {
-            Cookies.get(this.cookieAttr);
+            return Cookies.get(this.cookieAttr) || null;
         }
 
         return window.localStorage.getItem(this.authAttr);
