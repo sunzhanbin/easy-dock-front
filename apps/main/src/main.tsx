@@ -5,7 +5,7 @@ import '@enc/theme-scheme/dist/variable.css';
 
 import { memo } from 'react';
 import { Switch, Route } from 'react-router-dom';
-import Auth from '@enc/sso';
+// import Auth from '@enc/sso';
 import AntdProvider from '@common/components/antd-provider';
 import LoginLayout from '@layouts/login-layout';
 import SidebarLayout from '@/layouts/sidebar-layout';
@@ -15,7 +15,7 @@ import { ROUTES } from '@consts';
 import cookie from 'js-cookie';
 import { registerTheme } from '@enc/theme-scheme/dist/utils.esm';
 
-Auth.setConfig({ server: window.SSO_LOGIN_URL });
+// Auth.setConfig({ server: window.SSO_LOGIN_URL });
 const query = decodeURIComponent(window.location.href.split('?')[1]);
 const theme = new URLSearchParams(query).get('theme');
 

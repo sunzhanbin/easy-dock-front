@@ -7,7 +7,7 @@ function createAxios(config?: AxiosRequestConfig): AxiosInstance {
   const instance = Axios.create({
     ...config,
     headers: {
-      auth: Auth.getAuth(),
+      auth: window.Auth.getAuth(),
       ...(config ? config.headers : {}),
     },
   });
