@@ -1,3 +1,8 @@
 .app-manager {
+  height: 100%;
+  overflow-y: auto;
   background: transparent;
+  & > .ant-layout {
+    height: 100%;
+  }
 }

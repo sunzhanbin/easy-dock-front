@@ -69,6 +69,7 @@ module.exports = {
       ["@views"]: path.resolve(__dirname, "src/views"),
       ["@assets"]: path.resolve(__dirname, "src/assets"),
       ["@styles"]: path.resolve(__dirname, "src/styles"),
+      ["@consts"]: path.resolve(__dirname, "src/consts"),
       ["@common"]: path.resolve(__dirname, "../../packages/common"),
     },
     // plugins: {

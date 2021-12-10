@@ -1,0 +1,96 @@
+@import "@common/styles/var.scss";
+
+.app-modal {
+  position: absolute;
+  top: 104px;
+  z-index: 8;
+  width: 390px;
+  background: #ffffff;
+  box-shadow: 0px 6px 24px 0px rgba(24, 31, 67, 0.1);
+  border-radius: 3px;
+  padding: 16px;
+  cursor: default;
+  .header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(24, 31, 67, 0.08);
+    .title {
+      height: 24px;
+      font-size: 16px;
+      font-weight: 600;
+      color: rgba(24, 31, 67, 0.75);
+      line-height: 24px;
+      margin-bottom: 12px;
+    }
+    .close {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      .icon {
+        display: block;
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+  .content {
+    margin-top: 12px;
+    .form-item {
+      .label {
+        height: 20px;
+        font-size: 12px;
+        font-weight: 400;
+        color: rgba(24, 31, 67, 0.95);
+        line-height: 20px;
+        margin-bottom: 4px;
+      }
+      .type-list {
+        display: grid;
+        grid-row-gap: 12px;
+        grid-column-gap: 12px;
+        grid-template-columns: repeat(3, 1fr);
+        & > .type-card {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 8px 0;
+          background: #ffffff;
+          border-radius: 3px;
+          border: 1px solid rgba(24, 31, 67, 0.12);
+          cursor: pointer;
+          & > .image {
+            width: 36px;
+            margin-top: 4px;
+            img {
+              width: 100%;
+            }
+          }
+          & > .name {
+            font-size: 14px;
+            font-weight: 400;
+            color: #181f43;
+            line-height: 22px;
+          }
+          &.active {
+            border-color: $primary-color;
+            & > .name {
+              color: $primary-color;
+            }
+          }
+        }
+      }
+      &.mt24 {
+        margin-top: 24px;
+      }
+    }
+  }
+  .model_footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 24px;
+    .cancel {
+      margin-right: 12px;
+    }
+  }
+}
