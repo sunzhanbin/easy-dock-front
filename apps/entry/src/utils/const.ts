@@ -31,3 +31,48 @@ export const SCENE_IAMGES = {
   scene11: `scene11`,
   scene12: `scene12`,
 };
+
+export const CREATE_DATA_LIST = [
+  {
+    icon: "icon_shebei",
+    text: "接入设备",
+  },
+  {
+    icon: "icon_shuju",
+    text: "接入数据",
+  },
+  {
+    icon: "icon_shujumoxing",
+    text: "新建数据模型",
+  },
+];
+
+export const CREATE_BUSINESS_LIST = [
+  {
+    icon: "icon_newform",
+    text: "新建表单",
+  },
+  {
+    icon: "icon_newflow",
+    text: "新建流程",
+  },
+  {
+    icon: "icon_newinterface",
+    text: "新建接口",
+  },
+];
+
+export const CREATE_VIRTUAL_LIST = [
+  {
+    icon: "icon_newchart",
+    text: "新建报表",
+  },
+  {
+    icon: "icon_newcanvas",
+    text: "新建大屏",
+  },
+  {
+    icon: "icon_newspace",
+    text: "新建空间",
+  },
+];

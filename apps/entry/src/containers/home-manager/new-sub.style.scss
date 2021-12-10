@@ -8,12 +8,11 @@
   background-size: cover;
   display: flex;
 
-
   .banner_content {
     flex: 1;
     display: flex;
     flex-direction: column;
-    padding-top: 40px;
+    padding-top: 44px;
     position: relative;
     .text_wrapper {
       width: 100%;
@@ -49,27 +48,57 @@
       box-shadow: 0 13px 12px -12px rgba(24, 31, 67, 0.08);
       position: absolute;
       width: 100%;
-      top: 150px;
+      top: 175px;
       display: flex;
       .operation_wrapper {
         flex: 1;
         border: 1px solid rgba(24, 31, 67, 0.08);
         display: inline-flex;
-        flex-direction: column;
         justify-content: center;
         align-items: center;
+        position: relative;
+        transition: all 1s;
+
+        .container {
+          display: inline-flex;
+          flex-direction: column;
+          align-items: center;
+          .icon_arrow {
+            font-size: 16px;
+            height: 0;
+            transition: all 0.5s;
+          }
+        }
+        &:after {
+          content: '';
+          display: block;
+          height: 2px;
+          width: 0;
+          background: #4C5CDB;
+          position: absolute;
+          bottom: 0;
+          transition: all 1s;
+        }
+        &.orange:after {
+          background: #D55F3C;
+
+        }
         &:hover {
-
           background: rgba(24, 39, 67, 0.04);
-          &::after {
-
+          &:after {
+            width: 100%;
+          }
+          .container {
+            .icon_arrow {
+              height: 20px;
+            }
           }
         }
         .icon {
           width: 52px;
           height: 52px;
           display: inline-block;
-          margin-bottom: 10px;
+          margin-bottom: 8px;
         }
         .icon_shebei {
           background: url('~@assets/images/home/jierushebei.png') 0 0 no-repeat;
@@ -83,9 +112,35 @@
           background: url('~@assets/images/home/newshujumoxing.png') 0 0 no-repeat;
           background-size: cover;
         }
+        .icon_newform {
+          background: url('~@assets/images/home/newform.png') 0 0 no-repeat;
+          background-size: cover;
+        }
+        .icon_newflow {
+          background: url('~@assets/images/home/newflow.png') 0 0 no-repeat;
+          background-size: cover;
+        }
+        .icon_newinterface {
+          background: url('~@assets/images/home/newinterface.png') 0 0 no-repeat;
+          background-size: cover;
+        }
+        .icon_newchart {
+          background: url('~@assets/images/home/newchart.png') 0 0 no-repeat;
+          background-size: cover;
+        }
+        .icon_newcanvas {
+          background: url('~@assets/images/home/newcanvas.png') 0 0 no-repeat;
+          background-size: cover;
+        }
+        .icon_newspace {
+          background: url('~@assets/images/home/newspace.png') 0 0 no-repeat;
+          background-size: cover;
+        }
+
         .text {
           color: $primary-text-color;
           font-size: 14px;
+          margin-bottom: 12px;
         }
         &:nth-child(2){
           border: 0 none;
