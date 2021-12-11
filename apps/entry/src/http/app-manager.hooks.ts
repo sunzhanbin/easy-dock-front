@@ -63,6 +63,38 @@ export const appManager = baseFetch.injectEndpoints({
           data: params,
         } as any),
     }),
+    // 修改子应用状态
+    modifySubAppStatus: build.mutation({
+      query: (params: { status: number; id: number }) =>
+        ({
+          url: "/subapp/status",
+          method: "put",
+          data: params,
+        } as any),
+      invalidatesTags: [{ type: "SubApps", id: "LIST" }],
+    }),
+    // 修改子应用名称
+    modifySubAppName: build.mutation({
+      query: (params: { name: string; id: number }) =>
+        ({
+          url: "/subapp",
+          method: "put",
+          data: params,
+        } as any),
+      invalidatesTags: [{ type: "SubApps", id: "LIST" }],
+    }),
+    // 删除子应用
+    deleteSupApp: build.mutation({
+      query: (id: number) =>
+        ({ url: `/subapp/${id}`, method: "delete" } as any),
+      invalidatesTags: [{ type: "SubApps", id: "LIST" }],
+    }),
+    // 新增子应用
+    createSupApp: build.mutation({
+      query: (data: { appId: number; type: number; name: string }) =>
+        ({ url: `/subapp/`, method: "post", data } as any),
+      invalidatesTags: [{ type: "SubApps", id: "LIST" }],
+    }),
     // 保存应用配置；
     saveAppSetup: build.mutation({
       query: (params: {
@@ -91,5 +123,9 @@ export const {
   useAddSubAppMutation,
   useFetchsubAppListQuery,
   useModifyAppStatusMutation,
+  useModifySubAppStatusMutation,
+  useModifySubAppNameMutation,
+  useDeleteSupAppMutation,
+  useCreateSupAppMutation,
   useSaveAppSetupMutation,
 } = appManager;
