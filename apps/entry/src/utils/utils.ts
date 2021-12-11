@@ -1,4 +1,9 @@
 import { Menu } from "@utils/types";
+import { AbstractTooltipProps } from "antd/lib/tooltip";
+
+export const getPopupContainer: AbstractTooltipProps["getPopupContainer"] = (
+  container
+) => container;
 
 export const findItem = (id: string, menus: Menu[]) => {
   let result = {} as Menu;
