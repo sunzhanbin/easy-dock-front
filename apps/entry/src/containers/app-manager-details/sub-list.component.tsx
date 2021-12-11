@@ -18,6 +18,7 @@ import { SubAppInfo, SubAppType } from "@/consts";
 import { Icon } from "@common/components";
 import AppModal from "./app-modal.component";
 import AppCard from "./app-card.component";
+import AppEmpty from "./app-empty.component";
 import "@containers/app-manager-details/sub-list.style";
 
 const { TabPane } = Tabs;
@@ -281,7 +282,7 @@ const SubListComponent: React.FC = () => {
           </TabPane>
         </Tabs>
       ) : (
-        <div></div>
+        <AppEmpty />
       )}
     </div>
   );
