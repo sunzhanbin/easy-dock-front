@@ -25,7 +25,6 @@ export interface SubAppInfo {
 }
 
 export interface AppManagerInitialState {
-  projectId: number;
   currentWorkspaceId: number;
 }
 

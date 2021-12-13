@@ -14,10 +14,11 @@ type FormValuesType = {
 
 type SelectCardProps = {
   type: { key: string; label: string };
-  list?: { [key: string]: string }[];
+  list?: { [key: string]: string | number }[];
   onSelect?: (v: string) => void;
+  selectedId?: string | number;
 };
-const SelectCard = ({ type, list, onSelect }: SelectCardProps) => {
+const SelectCard = ({ type, list, onSelect, selectedId }: SelectCardProps) => {
   const [fieldName, setFieldName] = useState<string>("");
   const [showButton, setShowButton] = useState<boolean>(true);
   const [form] = Form.useForm<FormValuesType>();
@@ -27,7 +28,7 @@ const SelectCard = ({ type, list, onSelect }: SelectCardProps) => {
     setFieldName(e.target.value);
   };
 
-  const handleSelectField = (field: string) => {
+  const handleSelectField = (field: any) => {
     onSelect && onSelect(field);
   };
 
@@ -62,6 +63,7 @@ const SelectCard = ({ type, list, onSelect }: SelectCardProps) => {
         placeholder={`请选择${type.label}`}
         onDropdownVisibleChange={handleDropdownVisible}
         onChange={handleSelectField}
+        {...(type.key === "project" && { value: selectedId })}
         {...(type.key === "project" && {
           getPopupContainer: getPopupContainer,
         })}

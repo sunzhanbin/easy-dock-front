@@ -1,8 +1,8 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import SelectCard from "@components/select-card";
 import { useGetProjectListQuery } from "@/http";
-import { useAppDispatch } from "@/store";
-import { setProjectId } from "@views/app-manager/index.slice";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { selectProjectId, setProjectId } from "@views/home/index.slice";
 
 const SELECT_CARD_TYPE = {
   key: "project",
@@ -10,22 +10,26 @@ const SELECT_CARD_TYPE = {
 };
 const ProjectComponent = () => {
   const dispatch = useAppDispatch();
-
-  const { data: projectList } = useGetProjectListQuery("");
-
-  console.log(projectList, "data");
+  const { projectList } = useGetProjectListQuery("", {
+    selectFromResult: ({ data }) => ({
+      projectList: data?.filter(Boolean),
+    }),
+  });
+  const projectId = useAppSelector(selectProjectId);
   const handleSelectProject = useCallback(
     (projectId) => {
       dispatch(setProjectId(projectId));
     },
     [dispatch]
   );
-  if (!projectList) return null;
+
+  console.log(projectId);
   return (
     <SelectCard
       type={SELECT_CARD_TYPE}
       list={projectList}
       onSelect={handleSelectProject}
+      selectedId={projectId}
     />
   );
 };

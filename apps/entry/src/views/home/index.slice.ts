@@ -1,30 +1,39 @@
 import { homeManage } from "@/http";
 import { createSlice, PayloadAction, current } from "@reduxjs/toolkit";
+import { RootState } from "@/store";
 // import { fetchUser } from '@utils/apis';
 
 export interface HomeManagerState {
-  projectList: { [key: string]: any }[];
+  projectId: number; // 当前所属项目ID；
+  projectList: { [key: string]: any }[]; // 当前项目List；
 }
 
 const initialState: HomeManagerState = {
+  projectId: 0,
   projectList: [],
 };
 
 export const HomeManagerSlice = createSlice({
   name: "homeManager",
   initialState,
-  reducers: {},
+  reducers: {
+    setProjectId: (state, action: PayloadAction<number>) => {
+      state.projectId = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder.addMatcher(
       homeManage.endpoints.getProjectList.matchFulfilled,
       (state, action) => {
         state.projectList = action.payload;
-        // console.log("数据来了", current(state), action.payload);
+        state.projectId = action.payload.length && action.payload[0].id;
       }
     );
   },
 });
 
-// export const {} = HomeManagerSlice.actions;
+export const { setProjectId } = HomeManagerSlice.actions;
+
+export const selectProjectId = (state: RootState) => state.home.projectId;
 
 export default HomeManagerSlice.reducer;

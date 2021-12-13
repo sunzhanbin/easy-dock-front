@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useImperativeHandle } from "react";
 import { useAppSelector } from "@/store";
 import { useAddWorkspaceMutation } from "@/http";
-import { selectProjectId } from "@views/app-manager/index.slice";
+import { selectProjectId } from "@views/home/index.slice";
 import { Modal, Form, Input } from "antd";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import { nameRule } from "@/consts";
