@@ -32,7 +32,7 @@ export const SCENE_IAMGES = {
   scene12: `scene12`,
 };
 
-export const CREATE_DATA_LIST = [
+const CREATE_DATA_LIST = [
   {
     icon: "icon_shebei",
     text: "接入设备",
@@ -50,7 +50,7 @@ export const CREATE_DATA_LIST = [
   },
 ];
 
-export const CREATE_BUSINESS_LIST = [
+const CREATE_BUSINESS_LIST = [
   {
     icon: "icon_newform",
     text: "新建表单",
@@ -68,7 +68,7 @@ export const CREATE_BUSINESS_LIST = [
   },
 ];
 
-export const CREATE_VIRTUAL_LIST = [
+const CREATE_VIRTUAL_LIST = [
   {
     icon: "icon_newchart",
     text: "新建报表",

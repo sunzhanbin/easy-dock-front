@@ -2,15 +2,17 @@ import baseFetch from "@utils/fetch";
 
 export const homeManage = baseFetch.injectEndpoints({
   endpoints: (build) => ({
-    logout: build.mutation({
-      query: (params?: { name: string; projectId: number }) =>
+    logout: build.query({
+      query: () =>
         ({
           url: "/app",
           method: "post",
-          data: params,
         } as any),
+    }),
+    getProjectList: build.query({
+      query: () => "/project/list/all",
     }),
   }),
 });
 
-export const { useLogoutMutation } = homeManage;
+export const { useGetProjectListQuery, useLazyLogoutQuery } = homeManage;

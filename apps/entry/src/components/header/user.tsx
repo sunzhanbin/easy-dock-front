@@ -1,7 +1,7 @@
 import { memo, useMemo, useCallback } from "react";
-import { useDispatch } from "react-redux";
+// import { useDispatch } from "react-redux";
 import { Dropdown, Menu } from "antd";
-import { useLogoutMutation } from "@/http";
+import { useLazyLogoutQuery } from "@/http";
 import { Avatar } from "@common/components";
 import Icon from "@assets/icon";
 
@@ -9,13 +9,12 @@ import Icon from "@assets/icon";
 import "@components/header/index.style.scss";
 
 function HeaderUser() {
-  const dispatch = useDispatch();
   const handleLogin = async () => {
     //  todo
   };
   const handleLogout = useCallback(() => {
-    useLogoutMutation();
-  }, [dispatch]);
+    useLazyLogoutQuery();
+  }, []);
 
   const user = {
     info: {

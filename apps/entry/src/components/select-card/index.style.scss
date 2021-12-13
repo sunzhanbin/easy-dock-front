@@ -1,0 +1,51 @@
+.select_field {
+  min-width: 264px;
+
+  &.select_project.ant-select.ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+    background-color: transparent !important;
+  }
+
+
+  .ant-select-dropdown {
+    .rc-virtual-list {
+      max-height: 235px;
+      overflow-y: auto;
+    }
+  }
+}
+
+.footer_select {
+  display: flex;
+  margin-top: 10px !important;
+  .ant-row.ant-form-item {
+    margin-bottom: 0;
+    width: 100%;
+    .btn_add_field {
+      width: 100%;
+    }
+  }
+
+  .tick_icon {
+    width: 20px;
+    height: 20px;
+    line-height: 23px;
+    background-color: #06C498;
+    border-radius: 3px;
+    margin-right: 10px;
+    font-size: 12px;
+    color: #fff;
+    cursor: pointer;
+
+    &.disabled {
+      cursor: not-allowed;
+      background-color: rgba(6, 196, 152, 0.3);
+    }
+  }
+  .close {
+    font-size: 14px;
+    cursor: pointer;
+    &:hover {
+      color: #4C5CDB;
+    }
+  }
+}

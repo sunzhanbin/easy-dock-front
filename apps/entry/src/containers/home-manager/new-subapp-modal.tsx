@@ -1,12 +1,18 @@
 import { memo } from "react";
 import { Modal, Form, Input } from "antd";
 import { nameRegexp } from "@utils/const";
+import SelectCard from "@components/select-card";
 
 type ModalProps = {
   modalInfo: { title: string; name: string };
   visible: boolean;
   onOk: (v: any) => void;
   onCancel: () => void;
+};
+
+const SELECT_CARD_TYPE = {
+  key: "workspace",
+  label: "工作区",
 };
 
 const NewSubAppModal = ({ modalInfo, visible, onOk, onCancel }: ModalProps) => {
@@ -87,7 +93,7 @@ const NewSubAppModal = ({ modalInfo, visible, onOk, onCancel }: ModalProps) => {
             },
           ]}
         >
-          <Input placeholder="请输入" size="large" />
+          <SelectCard type={SELECT_CARD_TYPE} />
         </Form.Item>
       </Form>
     </Modal>
