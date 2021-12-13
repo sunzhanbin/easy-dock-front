@@ -10,7 +10,7 @@ import {
 } from "@views/app-setup/basic-setup.slice";
 import { axios } from "@utils/fetch";
 import { UploadOutlined } from "@ant-design/icons";
-import { selectProjectId } from "@/views/app-manager/index.slice";
+import { selectProjectId } from "@/views/home/index.slice";
 import NavMode from "./nav-mode.component";
 import "@containers/app-setup-config/basic-setup-form.style";
 

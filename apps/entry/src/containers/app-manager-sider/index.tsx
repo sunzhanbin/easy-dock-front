@@ -8,9 +8,9 @@ import { Icon } from "@common/components";
 import {
   selectCurrentWorkspaceId,
   setCurrentWorkspaceId,
-  selectProjectId,
 } from "@views/app-manager/index.slice";
 import "@containers/app-manager-sider/index.style";
+import { selectProjectId } from "@/views/home/index.slice";
 
 const { Sider } = Layout;
 

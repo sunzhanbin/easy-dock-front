@@ -8,16 +8,14 @@ import {
   useWorkspaceDetailQuery,
   useFetchsubAppListQuery,
 } from "@http/app-manager.hooks";
-import {
-  selectCurrentWorkspaceId,
-  selectProjectId,
-} from "@views/app-manager/index.slice";
+import { selectCurrentWorkspaceId } from "@views/app-manager/index.slice";
 import { Icon } from "@common/components";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { workspaceShape } from "@utils/types";
 
 import "@containers/app-manager-details/app-info.style";
 import useMemoCallback from "@common/hooks/use-memo-callback";
+import { selectProjectId } from "@/views/home/index.slice";
 
 const AppInfoComponent: React.FC = () => {
   const projectId = useAppSelector(selectProjectId);

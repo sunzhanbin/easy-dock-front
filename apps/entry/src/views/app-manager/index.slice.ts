@@ -13,7 +13,6 @@ export const appManagerSlice = createSlice({
   reducers: {
     setCurrentWorkspaceId: (state, action: PayloadAction<number>) => {
       state.currentWorkspaceId = action.payload;
-      console.log(current(state));
     },
   },
   extraReducers: (builder) => {
@@ -32,8 +31,6 @@ export const appManagerSlice = createSlice({
 export default appManagerSlice.reducer;
 
 export const { setCurrentWorkspaceId } = appManagerSlice.actions;
-
-export const selectProjectId = (state: RootState) => state.home.projectId;
 
 export const selectCurrentWorkspaceId = (state: RootState) =>
   state.appManager.currentWorkspaceId;
