@@ -10,7 +10,7 @@ const { Option } = Select;
 type FormValuesType = {
   projectName: string;
 };
-let index = 0;
+const index = 0;
 const ProjectComponent = () => {
   const [projectName, setProjectName] = useState<string>("");
   const [showButton, setShowButton] = useState<boolean>(true);
@@ -31,7 +31,7 @@ const ProjectComponent = () => {
     if (!values.projectName) return false;
     setShowButton(true);
     // todo 掉接口
-    setProjectList([...projectList, `111aaaaa${index++}`]);
+    setProjectList([...projectList, projectName]);
     form.setFieldsValue({ projectName: "" });
   }, [projectList, projectName, form]);
 

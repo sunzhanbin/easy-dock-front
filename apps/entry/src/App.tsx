@@ -1,6 +1,9 @@
 import React, { Suspense } from "react";
+import { ConfigProvider } from "antd";
+import zh_CN from "antd/es/locale/zh_CN";
+import "moment/locale/zh-cn";
+
 import { Routes, Route } from "react-router-dom";
-import AntdProvider from "@common/components/antd-provider";
 import Layout from "@containers/layout";
 import Home from "@views/home";
 import "@/App.scss";
@@ -20,7 +23,7 @@ const SuspenseWrap = ({ render }: { render: React.ReactNode }) => (
 
 const App: React.FC = () => {
   return (
-    <AntdProvider>
+    <ConfigProvider locale={zh_CN}>
       <Routes>
         <Route path="/*" element={<Layout />}>
           <Route index element={<Home />} />
@@ -46,7 +49,7 @@ const App: React.FC = () => {
           <Route path="*" element={<SuspenseWrap render={<NoMatch />} />} />
         </Route>
       </Routes>
-    </AntdProvider>
+    </ConfigProvider>
   );
 };
 

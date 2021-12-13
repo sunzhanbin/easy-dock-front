@@ -36,14 +36,17 @@ export const CREATE_DATA_LIST = [
   {
     icon: "icon_shebei",
     text: "接入设备",
+    linkName: "设备",
   },
   {
     icon: "icon_shuju",
     text: "接入数据",
+    linkName: "数据",
   },
   {
     icon: "icon_shujumoxing",
     text: "新建数据模型",
+    linkName: "数据模型",
   },
 ];
 
@@ -51,14 +54,17 @@ export const CREATE_BUSINESS_LIST = [
   {
     icon: "icon_newform",
     text: "新建表单",
+    linkName: "表单",
   },
   {
     icon: "icon_newflow",
     text: "新建流程",
+    linkName: "流程",
   },
   {
     icon: "icon_newinterface",
     text: "新建接口",
+    linkName: "接口",
   },
 ];
 
@@ -66,14 +72,17 @@ export const CREATE_VIRTUAL_LIST = [
   {
     icon: "icon_newchart",
     text: "新建报表",
+    linkName: "报表",
   },
   {
     icon: "icon_newcanvas",
     text: "新建大屏",
+    linkName: "大屏",
   },
   {
     icon: "icon_newspace",
     text: "新建空间",
+    linkName: "空间",
   },
 ];
 
@@ -113,3 +122,27 @@ export const HELP_LIST = [
     desc: "任务中心展示该用户的待办任务、发起流程、已办任务、抄送、草稿等",
   },
 ];
+
+export const SUB_APP_LIST = [
+  {
+    name: "数据构建",
+    desc: "轻松融合海量数据，优化、清晰、 有序",
+    className: "create_data",
+    subList: CREATE_DATA_LIST,
+  },
+  {
+    name: "业务构建",
+    desc: "无码化搭建，快速完成业务信息化",
+    className: "create_business",
+    subList: CREATE_BUSINESS_LIST,
+  },
+  {
+    name: "可视化构建",
+    desc: "多角度呈现可视化数据，极速搭建页面",
+    className: "create_virtual",
+    subList: CREATE_VIRTUAL_LIST,
+  },
+];
+
+// 请输入1-30位的汉字、字母、数字、下划线
+export const nameRegexp = /^[\u4e00-\u9fa5_a-zA-Z0-9]{1,30}$/;
