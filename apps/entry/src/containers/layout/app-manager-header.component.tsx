@@ -8,6 +8,7 @@ import { useAppDispatch } from "@/store";
 import { setName } from "@/views/workspace/index.slice";
 import { useWorkspaceDetailQuery } from "@/http";
 import "./app-manager-header.style.scss";
+import { setCurrentWorkspaceId } from "@/views/app-manager/index.slice";
 
 interface EditHeaderProps {
   className?: string;
@@ -44,6 +45,11 @@ const AppManagerHeader: FC<EditHeaderProps> = ({ className }) => {
       dispatch(setName(workspace.name));
     }
   }, [workspace?.name]);
+  useEffect(() => {
+    if (workspaceId) {
+      dispatch(setCurrentWorkspaceId(+workspaceId));
+    }
+  }, [workspaceId]);
   return (
     <div className={classNames("app-manager-header", className && className)}>
       <div className="left" onClick={handleBack}>

@@ -20,12 +20,12 @@ const AppSetupConfig = () => {
 
   return (
     <div className="app-setup-config">
-      <Tabs defaultActiveKey="1" onChange={handleTasChange}>
-        <TabPane tab="应用设置" key="1">
-          <BasicSetupFormComponent ref={formRef} />
-        </TabPane>
-        <TabPane tab="菜单设置" key="2">
+      <Tabs defaultActiveKey="app" onChange={handleTasChange}>
+        <TabPane tab="菜单设置" key="menu">
           <MenuSetupComponent />
+        </TabPane>
+        <TabPane tab="应用设置" key="app">
+          <BasicSetupFormComponent ref={formRef} />
         </TabPane>
       </Tabs>
     </div>
