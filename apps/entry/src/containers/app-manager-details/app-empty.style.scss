@@ -11,7 +11,6 @@
     padding: 38px 20px;
     border: 1px solid rgba(24, 31, 67, 0.12);
     margin-right: 24px;
-    cursor: pointer;
     & > .title {
       font-size: 20px;
       font-weight: 500;
@@ -49,6 +48,9 @@
       & > .button {
         display: inline-block;
       }
+    }
+    & > .empty-modal {
+      top: 290px;
     }
   }
 }
