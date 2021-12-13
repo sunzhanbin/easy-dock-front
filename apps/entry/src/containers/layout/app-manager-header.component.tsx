@@ -1,14 +1,13 @@
 import { memo, FC, useState, useMemo, useEffect } from "react";
 import classNames from "classnames";
 import { Button } from "antd";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Icon, Text } from "@common/components";
 import useMemoCallback from "@common/hooks/use-memo-callback";
-import { useAppSelector } from "@/store";
-import { selectName } from "@/views/workspace/index.slice";
-import "./app-manager-header.style.scss";
-import { selectCurrentWorkspaceId } from "@/views/app-manager/index.slice";
+import { useAppDispatch } from "@/store";
+import { setName } from "@/views/workspace/index.slice";
 import { useWorkspaceDetailQuery } from "@/http";
+import "./app-manager-header.style.scss";
 
 interface EditHeaderProps {
   className?: string;
@@ -21,18 +20,28 @@ interface NavItem {
 
 const AppManagerHeader: FC<EditHeaderProps> = ({ className }) => {
   const navigate = useNavigate();
-  const workspaceId = useAppSelector(selectCurrentWorkspaceId);
-  const { data: workspace } = useWorkspaceDetailQuery(workspaceId);
+  const { workspaceId } = useParams();
+  const dispatch = useAppDispatch();
+  const { data: workspace } = useWorkspaceDetailQuery(+(workspaceId as string));
   const [activeNav, setActiveNav] = useState<string>("edit");
   const navList = useMemo<NavItem[]>(() => {
     return [{ key: "edit", title: "应用设计" }];
   }, []);
   const handleBack = useMemoCallback(() => {
-    navigate(`/app-manager`);
+    navigate("/app-manager");
+  });
+  const handlePreview = useMemoCallback(() => {
+    console.info("preview");
+  });
+  const handleSave = useMemoCallback(() => {
+    console.info("save");
+  });
+  const handlePublish = useMemoCallback(() => {
+    console.info("publish");
   });
   useEffect(() => {
     if (workspace?.name) {
-      // setName(workspace.name);
+      dispatch(setName(workspace.name));
     }
   }, [workspace?.name]);
   return (
@@ -57,11 +66,17 @@ const AppManagerHeader: FC<EditHeaderProps> = ({ className }) => {
         })}
       </div>
       <div className="right">
-        <div className="preview">
+        <div className="preview" onClick={handlePreview}>
           <Icon type="yulan" className="icon" />
           <div className="text">预览</div>
         </div>
-        <Button className="save" size="large" type="default" ghost>
+        <Button
+          className="save"
+          size="large"
+          type="default"
+          ghost
+          onClick={handleSave}
+        >
           保存
         </Button>
         <Button
@@ -69,6 +84,7 @@ const AppManagerHeader: FC<EditHeaderProps> = ({ className }) => {
           size="large"
           type="primary"
           icon={<Icon type="fabu" />}
+          onClick={handlePublish}
         >
           发布
         </Button>

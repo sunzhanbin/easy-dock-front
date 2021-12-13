@@ -14,7 +14,6 @@ export const appManagerSlice = createSlice({
   reducers: {
     setCurrentWorkspaceId: (state, action: PayloadAction<number>) => {
       state.currentWorkspaceId = action.payload;
-      console.log(current(state));
     },
   },
   extraReducers: (builder) => {
