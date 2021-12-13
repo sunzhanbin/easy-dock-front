@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "antd";
 import { useAppSelector } from "@/store";
 import {
@@ -21,6 +21,7 @@ import useMemoCallback from "@common/hooks/use-memo-callback";
 
 const AppInfoComponent: React.FC = () => {
   const projectId = useAppSelector(selectProjectId);
+  const navigate = useNavigate();
   const workspaceId = useAppSelector(selectCurrentWorkspaceId);
   const [modifyAppStatus] = useModifyAppStatusMutation();
   const { data: workspace } = useWorkspaceDetailQuery(workspaceId);
@@ -37,7 +38,7 @@ const AppInfoComponent: React.FC = () => {
   }, []);
 
   const handleCreate = useMemoCallback(() => {
-    console.info("create");
+    navigate(`/app-manager/${workspaceId}`);
   });
 
   return (

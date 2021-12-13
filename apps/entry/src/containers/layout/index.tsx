@@ -2,7 +2,6 @@ import { Layout as LayoutWrap } from "antd";
 import { Outlet, Routes, Route } from "react-router-dom";
 import HomeHeader from "@containers/layout/home-header.component";
 import AppManagerHeader from "@containers/layout/app-manager-header.component";
-
 import "@containers/layout/index.style";
 
 const { Content } = LayoutWrap;
