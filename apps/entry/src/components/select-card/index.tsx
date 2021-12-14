@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Select, Button, Input, Form } from "antd";
 import Icon from "@assets/icon";
 import { getPopupContainer } from "@utils/utils";
@@ -14,21 +14,33 @@ type FormValuesType = {
 
 type SelectCardProps = {
   type: { key: string; label: string };
-  list?: { [key: string]: string | number }[];
-  onSelect?: (v: string) => void;
+  list: { [key: string]: any }[] | [];
+  onSelect?: (v: string | number) => void;
+  onAdd?: (v: string | number) => any;
   selectedId?: string | number;
 };
-const SelectCard = ({ type, list, onSelect, selectedId }: SelectCardProps) => {
+const SelectCard = ({
+  type,
+  list,
+  onSelect,
+  selectedId,
+  onAdd,
+}: SelectCardProps) => {
   const [fieldName, setFieldName] = useState<string>("");
   const [showButton, setShowButton] = useState<boolean>(true);
   const [form] = Form.useForm<FormValuesType>();
-  const [fieldList, setFieldList] = useState(list || []);
+  const [fieldList, setFieldList] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (!list) return;
+    setFieldList(list as any);
+  }, [list]);
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFieldName(e.target.value);
   };
 
-  const handleSelectField = (field: any) => {
+  const handleSelectField = (field: string | number) => {
     onSelect && onSelect(field);
   };
 
@@ -37,14 +49,15 @@ const SelectCard = ({ type, list, onSelect, selectedId }: SelectCardProps) => {
   };
 
   const handleConfirmName = useCallback(async () => {
-    if (!fieldName) return;
-    const values = await form.validateFields();
-    if (!values.fieldName) return false;
-    setShowButton(true);
-    // todo 掉接口 fieldName 和fieldId加入
-    setFieldList([...fieldList]);
-    form.setFieldsValue({ fieldName: "" });
-  }, [fieldList, fieldName, form]);
+    try {
+      const values = await form.validateFields();
+      await onAdd?.(values.fieldName);
+      form.setFieldsValue({ fieldName: "" });
+      setShowButton(true);
+    } catch (e) {
+      console.log(e);
+    }
+  }, [fieldList, form]);
 
   const handleRevert = () => {
     form.resetFields();
@@ -116,7 +129,7 @@ const SelectCard = ({ type, list, onSelect, selectedId }: SelectCardProps) => {
           </>
         )}
       >
-        {list?.map((item: any) => (
+        {fieldList?.map((item: any) => (
           <Option key={item.id} value={item.id}>
             {item.name}
           </Option>

@@ -20,6 +20,13 @@ export const HomeManagerSlice = createSlice({
     setProjectId: (state, action: PayloadAction<number>) => {
       state.projectId = action.payload;
     },
+    setProjectList: (
+      state,
+      action: PayloadAction<{ [key: string]: any }[]>
+    ) => {
+      console.log(action.payload, "3333");
+      state.projectList = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addMatcher(
@@ -32,7 +39,7 @@ export const HomeManagerSlice = createSlice({
   },
 });
 
-export const { setProjectId } = HomeManagerSlice.actions;
+export const { setProjectId, setProjectList } = HomeManagerSlice.actions;
 
 export const selectProjectId = (state: RootState) => state.home.projectId;
 

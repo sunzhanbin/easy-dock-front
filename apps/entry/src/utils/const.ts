@@ -32,6 +32,8 @@ export const SCENE_IAMGES = {
   scene12: `scene12`,
 };
 
+/* -------home start ----------*/
+// 数据构建
 const CREATE_DATA_LIST = [
   {
     icon: "icon_shebei",
@@ -50,6 +52,7 @@ const CREATE_DATA_LIST = [
   },
 ];
 
+// 业务构建
 const CREATE_BUSINESS_LIST = [
   {
     icon: "icon_newform",
@@ -68,6 +71,7 @@ const CREATE_BUSINESS_LIST = [
   },
 ];
 
+// 可视化构建
 const CREATE_VIRTUAL_LIST = [
   {
     icon: "icon_newchart",
@@ -86,6 +90,7 @@ const CREATE_VIRTUAL_LIST = [
   },
 ];
 
+// 数据资产
 export const ASSETS_DATA_LIST = [
   {
     name: "接口数",
@@ -101,6 +106,7 @@ export const ASSETS_DATA_LIST = [
   },
 ];
 
+// 帮助文档
 export const HELP_LIST = [
   {
     name: "平台说明",
@@ -123,6 +129,7 @@ export const HELP_LIST = [
   },
 ];
 
+// 应用构建列表
 export const SUB_APP_LIST = [
   {
     name: "数据构建",
@@ -143,6 +150,8 @@ export const SUB_APP_LIST = [
     subList: CREATE_VIRTUAL_LIST,
   },
 ];
+
+/* -------home end ----------*/
 
 // 请输入1-30位的汉字、字母、数字、下划线
 export const nameRegexp = /^[\u4e00-\u9fa5_a-zA-Z0-9]{1,30}$/;

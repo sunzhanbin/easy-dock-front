@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback } from "react";
 import SelectCard from "@components/select-card";
-import { useGetProjectListQuery } from "@/http";
+import { useGetProjectListQuery, useNewProjectMutation } from "@/http";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { selectProjectId, setProjectId } from "@views/home/index.slice";
 
@@ -15,6 +15,8 @@ const ProjectComponent = () => {
       projectList: data?.filter(Boolean),
     }),
   });
+  const [addProject] = useNewProjectMutation();
+
   const projectId = useAppSelector(selectProjectId);
   const handleSelectProject = useCallback(
     (projectId) => {
@@ -22,14 +24,19 @@ const ProjectComponent = () => {
     },
     [dispatch]
   );
-
-  console.log(projectId);
+  const handleNewProject = useCallback(
+    (name: any) => {
+      return addProject({ name });
+    },
+    [addProject]
+  );
   return (
     <SelectCard
       type={SELECT_CARD_TYPE}
       list={projectList}
       onSelect={handleSelectProject}
       selectedId={projectId}
+      onAdd={handleNewProject}
     />
   );
 };
