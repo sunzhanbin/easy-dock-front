@@ -93,7 +93,7 @@ const NewSubAppModal = ({ modalInfo, visible, onOk, onCancel }: ModalProps) => {
             },
           ]}
         >
-          <SelectCard type={SELECT_CARD_TYPE} />
+          <SelectCard type={SELECT_CARD_TYPE} list={[]} />
         </Form.Item>
       </Form>
     </Modal>

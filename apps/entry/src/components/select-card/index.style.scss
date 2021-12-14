@@ -7,7 +7,7 @@
 
 
   .ant-select-dropdown {
-    .rc-virtual-list {
+    .rc-virtual-list .rc-virtual-list-holder .rc-virtual-list-holder-inner{
       max-height: 235px;
       overflow-y: auto;
     }

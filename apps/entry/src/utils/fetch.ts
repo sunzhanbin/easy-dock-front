@@ -8,7 +8,7 @@ export default createApi({
   baseQuery: axiosInstance({
     baseURL: `${process.env.REACT_APP_EASY_DOCK_BASE_SERVICE_ENDPOINT}/enc-oss-easydock/api/builder/v1`,
   }),
-  tagTypes: ["Workspace", "SubApps"],
+  tagTypes: ["Workspace", "SubApps", "Project"],
   endpoints: () => ({}),
 });
 
