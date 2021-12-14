@@ -1,6 +1,6 @@
-import baseFetch from "@utils/fetch";
+import baseFetch, { runTime } from "@utils/fetch";
 
-export const appManager = baseFetch.injectEndpoints({
+export const appManagerBuilder = baseFetch.injectEndpoints({
   endpoints: (build) => ({
     // 添加工作区；
     addWorkspace: build.mutation({
@@ -92,7 +92,7 @@ export const appManager = baseFetch.injectEndpoints({
     // 新增子应用
     createSupApp: build.mutation({
       query: (data: { appId: number; type: number; name: string }) =>
-        ({ url: `/subapp/`, method: "post", data } as any),
+        ({ url: `/subapp`, method: "post", data } as any),
       invalidatesTags: [{ type: "SubApps", id: "LIST" }],
     }),
     // 保存应用配置；
@@ -128,4 +128,14 @@ export const {
   useDeleteSupAppMutation,
   useCreateSupAppMutation,
   useSaveAppSetupMutation,
-} = appManager;
+} = appManagerBuilder;
+
+export const appManagerRunTime = runTime.injectEndpoints({
+  endpoints: (build) => ({
+    getCanvasId: build.mutation({
+      query: (subId: number) => `/subapp/canvas/${subId}`,
+    }),
+  }),
+});
+
+export const { useGetCanvasIdMutation } = appManagerRunTime;

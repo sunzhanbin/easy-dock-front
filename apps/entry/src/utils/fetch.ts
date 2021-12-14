@@ -15,3 +15,12 @@ export default createApi({
 export const axios = axiosInstance({
   baseURL: `${process.env.REACT_APP_EASY_DOCK_BASE_SERVICE_ENDPOINT}/enc-oss-easydock/api/runtime/v1`,
 });
+
+export const runTime = createApi({
+  reducerPath: "appsOrchestrationRuntimeApi",
+  baseQuery: axiosInstance({
+    baseURL: `${process.env.REACT_APP_EASY_DOCK_BASE_SERVICE_ENDPOINT}/enc-oss-easydock/api/runtime/v1`,
+  }),
+  tagTypes: ["Workspace", "SubApps", "Project"],
+  endpoints: () => ({}),
+});

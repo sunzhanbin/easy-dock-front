@@ -1,6 +1,9 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import appsOrchestrationApi from "@utils/fetch";
+import appsOrchestrationApi, {
+  runTime as appsOrchestrationRuntimeApi,
+} from "@utils/fetch";
+
 import appManagerSlice from "@views/app-manager/index.slice";
 import homeManageSlice from "@views/home/index.slice";
 import basicSetupSlice from "@views/app-setup/basic-setup.slice";
@@ -10,6 +13,8 @@ import workspaceSlice from "@views/workspace/index.slice";
 export const store = configureStore({
   reducer: {
     [appsOrchestrationApi.reducerPath]: appsOrchestrationApi.reducer,
+    [appsOrchestrationRuntimeApi.reducerPath]:
+      appsOrchestrationRuntimeApi.reducer,
     appManager: appManagerSlice,
     basicSetup: basicSetupSlice,
     menuSetup: menuSetupSlice,
