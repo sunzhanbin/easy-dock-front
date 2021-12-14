@@ -1,4 +1,9 @@
-import React, { useCallback, useImperativeHandle, useMemo } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+} from "react";
 import { Form, Input, Select } from "antd";
 import { Rule } from "antd/lib/form";
 import { UploadFile } from "antd/lib/upload/interface";
@@ -12,19 +17,18 @@ import Theme from "./theme.component";
 import UploadImage from "./upload-image.component";
 import "@containers/app-setup-config/basic-setup-form.style";
 
+interface BasicSetupFormProps {
+  workspaceList: { id: number; name: string }[];
+  initialBasicSetup?: any;
+}
 const { Option } = Select;
 
-const BasicSetupFormComponent = React.forwardRef<{
-  validateFields: () => Promise<any>;
-}>(function basicSetupForm(_, ref) {
-  const projectId = useAppSelector(selectProjectId);
-  const { data: workspaceList } = useFetchWorkspaceListQuery(projectId);
+const BasicSetupFormComponent = React.forwardRef(function basicSetupForm(
+  { workspaceList, initialBasicSetup }: BasicSetupFormProps,
+  ref
+) {
   const [form] = Form.useForm();
   const dispatch = useAppDispatch();
-
-  const handleValuesChange = useCallback((_, values: any) => {
-    dispatch(setBaseForm(values));
-  }, []);
 
   const iconRule = useMemo<Rule>(() => {
     return {
@@ -36,17 +40,32 @@ const BasicSetupFormComponent = React.forwardRef<{
       },
     };
   }, []);
+  const initialValues = useMemo(() => {
+    const values = {
+      navMode: "multi",
+      theme: "light",
+    };
+    return Object.assign({}, values, initialBasicSetup);
+  }, [initialBasicSetup]);
+
+  const handleValuesChange = useCallback((_, values: any) => {
+    dispatch(setBaseForm(values));
+  }, []);
 
   useImperativeHandle(ref, () => ({
     validateFields: () => form.validateFields(),
   }));
 
+  useEffect(() => {
+    form.setFieldsValue(initialValues);
+  }, [initialValues]);
+
   return (
     <div className="basic-setup-form-component">
       <Form
         layout="vertical"
-        form={form}
         autoComplete="off"
+        form={form}
         onValuesChange={handleValuesChange}
       >
         <Form.Item label="应用名称" name="name" required rules={[nameRule]}>
@@ -57,7 +76,7 @@ const BasicSetupFormComponent = React.forwardRef<{
           name="workspace"
           rules={[{ required: true, message: "请选择应用所属工作区!" }]}
         >
-          <Select size="large" placeholder="请选择" allowClear>
+          <Select size="large" placeholder="请选择" disabled allowClear>
             {(workspaceList ?? []).map(
               ({ id, name }: { id: number; name: string }) => (
                 <Option key={id} value={id}>

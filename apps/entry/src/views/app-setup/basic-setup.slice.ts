@@ -4,7 +4,7 @@ import { createSlice, PayloadAction, current } from "@reduxjs/toolkit";
 import { BasicSetupInitialState } from "@utils/types";
 
 const initialState: BasicSetupInitialState = {
-  theme: "theme1",
+  theme: "light",
   navMode: "multi", // 'single' | 'multi'
   logo: {}, // logo 需要上传，故需要记录，表单上传时使用；
   basicForm: {},
@@ -24,9 +24,11 @@ export const basicSetupSlice = createSlice({
       state.logo = action.payload;
     },
     setBaseForm: (state, action: PayloadAction<{ [key: string]: any }>) => {
-      const icon = action.payload.icon?.[0]?.response?.[0];
-      if (typeof action.payload === "object" && icon) {
+      const icon = action.payload.icon?.[0];
+      if (typeof action.payload === "object") {
         state.basicForm = JSON.parse(JSON.stringify(action.payload));
+      }
+      if (icon) {
         state.basicForm.icon = icon;
       }
     },
