@@ -14,6 +14,7 @@ import { Menu } from "@utils/types";
 
 import classnames from "classnames";
 import "@containers/app-setup-config/menu-setup-list.style";
+import { Icon } from "@common/components";
 
 // 菜单单元组件；
 const MenuItemComponent = ({ menu }: { menu: Menu }) => {
@@ -99,11 +100,17 @@ const MenuSetupListComponent = ({
 
   return (
     <div className="menu-setup-list-component">
-      <div className="header">菜单设置</div>
       <div className="list">
-        <div className="addMenu">
-          <Button onClick={handleAddMenu}>添加一级菜单</Button>
-        </div>
+        <Button
+          className="add"
+          type="primary"
+          size="large"
+          ghost
+          icon={<Icon type="xinzeng" />}
+          onClick={handleAddMenu}
+        >
+          添加一级菜单
+        </Button>
         <div className="menu">
           {menu?.map((child: any, index: number) => (
             <MenuComponent key={index} menu={child} />

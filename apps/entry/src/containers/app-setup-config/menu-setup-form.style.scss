@@ -1,3 +1,45 @@
+@import "@common/styles/var.scss";
 .menu-setup-form-component {
   width: 200px;
+  background: rgba(24, 39, 67, 0.04);
+  & > .header {
+    height: 52px;
+    line-height: 52px;
+    padding: 0 12px;
+    font-size: 18px;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.85);
+    border-bottom: 1px solid rgba(24, 31, 67, 0.08);
+  }
+  & > .form {
+    padding: 16px 12px;
+    .asset-item,
+    .app-item {
+      margin-bottom: 12px;
+    }
+    .asset-option {
+      // 覆盖antd默认样式
+      .ant-radio-button-wrapper {
+        padding: 0 12px;
+        font-size: 14px;
+        color: #181f43;
+        background: rgba(24, 39, 67, 0.04);
+        border-left-width: 1px;
+        &:not(:first-child)::before {
+          display: none;
+        }
+        &.ant-radio-button-wrapper-checked {
+          background-color: #fff;
+          color: $primary-color;
+          border-color: $primary-color;
+        }
+        &:first-child {
+          border-radius: 3px 0 0 3px;
+        }
+        &:last-child {
+          border-radius: 0 3px 3px 0;
+        }
+      }
+    }
+  }
 }

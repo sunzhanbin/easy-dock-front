@@ -1,10 +1,20 @@
-import React, { useCallback, useEffect, useImperativeHandle } from "react";
+import React, {
+  ReactNode,
+  useMemo,
+  useRef,
+  useEffect,
+  useCallback,
+  useImperativeHandle,
+} from "react";
 import { Form, Input, Select, Checkbox, Button, Radio } from "antd";
 import { selectMenuForm, setMenuForm } from "@views/app-setup/menu-setup.slice";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { MenuSetupForm } from "@utils/types";
+import { nameRule } from "@/consts";
 
 import "@containers/app-setup-config/menu-setup-form.style";
+import { Icon } from "@common/components";
+import useMemoCallback from "@common/hooks/use-memo-callback";
 
 const { Option } = Select;
 
@@ -18,6 +28,33 @@ const MenuSetupFormComponent = React.forwardRef<{
   const dispatch = useAppDispatch();
   const menuForm = useAppSelector(selectMenuForm);
   const [form] = Form.useForm();
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const iconList = useMemo<string[]>(() => {
+    return [
+      "shenhejilujinxingzhong",
+      "shouyecaidan",
+      "renwu",
+      "shujujicheng",
+      "jiankongliucheng",
+      "diaoduyilai",
+      "shujutancha",
+      "shujujianmo",
+      "shujubiao",
+      "shujuyuan",
+    ];
+  }, []);
+
+  const dropdownRender = useMemoCallback((originNode: ReactNode) => {
+    return <div className="dropdown-container">{originNode}</div>;
+  });
+
+  const options = useMemo(() => {
+    return [
+      { label: "已有资产", value: "exist" },
+      { label: "自定义URL", value: "custom" },
+    ];
+  }, []);
 
   const handleFormFinish = useCallback((values: MenuSetupForm) => {
     dispatch(setMenuForm(values));
@@ -28,53 +65,51 @@ const MenuSetupFormComponent = React.forwardRef<{
   }));
 
   useEffect(() => {
-    console.log("%c^_^ \n\n", "color: #C80815; font-weight: bolder", {
-      menuForm,
-    });
-
     form.setFieldsValue(menuForm);
   }, [menuForm]);
 
   return (
-    <div className="menu-setup-form-component">
+    <div className="menu-setup-form-component" ref={containerRef}>
       <div className="header">内容设置</div>
       <div className="form">
-        <Form form={form} layout="vertical" onFinish={handleFormFinish}>
-          <Form.Item
-            label="菜单名称"
-            name="name"
-            rules={[{ required: true, message: "Please input your username!" }]}
-          >
-            <Input />
+        <Form
+          form={form}
+          layout="vertical"
+          autoComplete="off"
+          onFinish={handleFormFinish}
+        >
+          <Form.Item label="菜单名称" name="name" required rules={[nameRule]}>
+            <Input size="large" placeholder="请输入" />
           </Form.Item>
-          <Form.Item name="showMenu" valuePropName="checked">
-            <Checkbox>显示菜单 icon</Checkbox>
-          </Form.Item>
-          <Form.Item
-            name="icon"
-            rules={[{ required: true, message: "Please input your password!" }]}
-          >
-            <Select placeholder="选择菜单 icon" allowClear>
-              <Option value="icon1">菜单icon1</Option>
-              <Option value="icon2">菜单icon2</Option>
-              <Option value="icon3">菜单icon3</Option>
+          <Form.Item label="菜单icon" name="icon">
+            <Select
+              size="large"
+              placeholder="请选择"
+              dropdownRender={dropdownRender}
+              suffixIcon={<Icon type="xiala" />}
+              getPopupContainer={() => containerRef.current!}
+            >
+              {iconList.map((icon) => (
+                <Option key={icon} value={icon}>
+                  <Icon type={icon} />
+                </Option>
+              ))}
             </Select>
           </Form.Item>
           <Form.Item label="查看方式" name="mode">
-            <Radio.Group>
+            <Radio.Group size="large">
               <Radio value={0}>当前页面打开</Radio>
               <Radio value={1}>新窗口打开</Radio>
             </Radio.Group>
           </Form.Item>
-          <Form.Item name="isHome" valuePropName="checked">
-            <Checkbox>设置为主页</Checkbox>
-          </Form.Item>
           <Form.Item label="内容设置">
-            <Form.Item name="asset">
-              <Radio.Group size="small">
-                <Radio.Button value="exist">使用已有资产</Radio.Button>
-                <Radio.Button value="custom">自定义 URL</Radio.Button>
-              </Radio.Group>
+            <Form.Item name="asset" className="asset-item">
+              <Radio.Group
+                size="large"
+                optionType="button"
+                className="asset-option"
+                options={options}
+              ></Radio.Group>
             </Form.Item>
             <Form.Item
               noStyle
@@ -83,18 +118,31 @@ const MenuSetupFormComponent = React.forwardRef<{
               {({ getFieldValue }) =>
                 getFieldValue("asset") === "custom" ? (
                   <Form.Item name={["assetConfig", "url"]}>
-                    <Input placeholder="请输入URL" />
+                    <Input size="large" placeholder="请输入URL" />
                   </Form.Item>
                 ) : (
                   <>
-                    <Form.Item name={["assetConfig", "app"]}>
-                      <Select placeholder="选择应用" allowClear>
+                    <Form.Item
+                      name={["assetConfig", "app"]}
+                      className="app-item"
+                    >
+                      <Select
+                        placeholder="选择应用"
+                        size="large"
+                        allowClear
+                        suffixIcon={<Icon type="xiala" />}
+                      >
                         <Option value="flow">流程</Option>
                         <Option value="screen">大屏</Option>
                       </Select>
                     </Form.Item>
                     <Form.Item name={["assetConfig", "subapp"]}>
-                      <Select placeholder="选择子应用" allowClear>
+                      <Select
+                        placeholder="选择子应用"
+                        size="large"
+                        allowClear
+                        suffixIcon={<Icon type="xiala" />}
+                      >
                         <Option value="absence">请假</Option>
                         <Option value="police">警务</Option>
                       </Select>
@@ -103,11 +151,6 @@ const MenuSetupFormComponent = React.forwardRef<{
                 )
               }
             </Form.Item>
-          </Form.Item>
-          <Form.Item {...tailLayout}>
-            <Button type="primary" htmlType="submit">
-              Submit
-            </Button>
           </Form.Item>
         </Form>
       </div>

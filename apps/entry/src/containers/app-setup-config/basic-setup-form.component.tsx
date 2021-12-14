@@ -7,11 +7,10 @@ import React, {
 import { Form, Input, Select } from "antd";
 import { Rule } from "antd/lib/form";
 import { UploadFile } from "antd/lib/upload/interface";
-import { useAppDispatch, useAppSelector } from "@/store";
-import { useFetchWorkspaceListQuery } from "@/http";
+import { useAppDispatch } from "@/store";
+import { Icon } from "@common/components";
 import { nameRule, remarkRule } from "@/consts";
 import { setBaseForm } from "@views/app-setup/basic-setup.slice";
-import { selectProjectId } from "@/views/home/index.slice";
 import NavMode from "./nav-mode.component";
 import Theme from "./theme.component";
 import UploadImage from "./upload-image.component";
@@ -76,7 +75,13 @@ const BasicSetupFormComponent = React.forwardRef(function basicSetupForm(
           name="workspace"
           rules={[{ required: true, message: "请选择应用所属工作区!" }]}
         >
-          <Select size="large" placeholder="请选择" disabled allowClear>
+          <Select
+            size="large"
+            placeholder="请选择"
+            disabled
+            allowClear
+            suffixIcon={<Icon type="xiala" />}
+          >
             {(workspaceList ?? []).map(
               ({ id, name }: { id: number; name: string }) => (
                 <Option key={id} value={id}>

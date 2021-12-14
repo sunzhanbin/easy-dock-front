@@ -1,8 +1,10 @@
 .menu-setup-list-component {
   flex: 1;
-  .header {}
+  padding: 18px 12px;
   .list {
-    .add {}
+    .add {
+      width: 100%;
+    }
     .menu {
       .menu-item {
         &.active {
@@ -13,16 +15,20 @@
         margin: 10px;
         padding: 10px;
         border: 1px solid cornflowerblue;
-        .text {}
+        .text {
+        }
         .acts {
           display: inline-flex;
           width: 100px;
           justify-content: space-evenly;
           .item {
             cursor: pointer;
-            &.add {}
-            &.remove {}
-            &.drag {}
+            &.add {
+            }
+            &.remove {
+            }
+            &.drag {
+            }
           }
         }
       }
