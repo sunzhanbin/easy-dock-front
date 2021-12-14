@@ -2,6 +2,9 @@ import { memo } from "react";
 import { Modal, Form, Input } from "antd";
 import { nameRegexp } from "@utils/const";
 import SelectCard from "@components/select-card";
+import { useAppSelector } from "@/store";
+import { selectProjectId } from "@views/home/index.slice";
+import { useFetchWorkspaceListQuery } from "@/http";
 
 type ModalProps = {
   modalInfo: { title: string; name: string };
@@ -17,7 +20,13 @@ const SELECT_CARD_TYPE = {
 
 const NewSubAppModal = ({ modalInfo, visible, onOk, onCancel }: ModalProps) => {
   const [form] = Form.useForm();
-
+  const projectId = useAppSelector(selectProjectId);
+  const { workspaceList } = useFetchWorkspaceListQuery(projectId, {
+    selectFromResult: ({ data }) => ({
+      workspaceList: data?.filter(Boolean),
+    }),
+  });
+  console.log(workspaceList, "data");
   const handleOk = async () => {
     try {
       const values = await form.validateFields();
@@ -93,7 +102,7 @@ const NewSubAppModal = ({ modalInfo, visible, onOk, onCancel }: ModalProps) => {
             },
           ]}
         >
-          <SelectCard type={SELECT_CARD_TYPE} list={[]} />
+          <SelectCard type={SELECT_CARD_TYPE} list={workspaceList} />
         </Form.Item>
       </Form>
     </Modal>
