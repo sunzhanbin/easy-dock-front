@@ -1,13 +1,15 @@
-import { memo } from "react";
+import React, { memo, useCallback } from "react";
 import { Modal, Form, Input } from "antd";
 import { nameRegexp } from "@utils/const";
 import SelectCard from "@components/select-card";
 import { useAppSelector } from "@/store";
 import { selectProjectId } from "@views/home/index.slice";
-import { useFetchWorkspaceListQuery } from "@/http";
+import "@components/select-card/index.style.scss";
+import { useFetchWorkspaceListQuery, useAddWorkspaceMutation } from "@/http";
+import { nameRule } from "@/consts";
 
 type ModalProps = {
-  modalInfo: { title: string; name: string };
+  modalInfo: { title: string; name: string; fieldKey: number };
   visible: boolean;
   onOk: (v: any) => void;
   onCancel: () => void;
@@ -21,18 +23,29 @@ const SELECT_CARD_TYPE = {
 const NewSubAppModal = ({ modalInfo, visible, onOk, onCancel }: ModalProps) => {
   const [form] = Form.useForm();
   const projectId = useAppSelector(selectProjectId);
+  const [addWorkspace] = useAddWorkspaceMutation();
   const { workspaceList } = useFetchWorkspaceListQuery(projectId, {
     selectFromResult: ({ data }) => ({
       workspaceList: data?.filter(Boolean),
     }),
   });
   console.log(workspaceList, "data");
+  const handleNewSubApp = useCallback(
+    (name: any) => {
+      return addWorkspace({ name, projectId });
+    },
+    [addWorkspace, projectId]
+  );
+  const handleSelectWorkspace = (value: any) => {
+    form.setFieldsValue({ appId: value });
+  };
   const handleOk = async () => {
     try {
       const values = await form.validateFields();
-      console.log(values, "values");
+      const type = modalInfo.fieldKey;
+      console.log(values, "values--modal");
+      onOk && onOk({ ...values, type });
       form.resetFields();
-      onOk && onOk(values);
     } catch (e) {
       console.log(e);
     }
@@ -65,47 +78,35 @@ const NewSubAppModal = ({ modalInfo, visible, onOk, onCancel }: ModalProps) => {
           label={`${modalInfo.name}名称`}
           name="name"
           required
-          rules={[
-            {
-              validator(_, value) {
-                if (!value || !value.trim()) {
-                  return Promise.reject(
-                    new Error(`请输入${modalInfo.name}名称`)
-                  );
-                }
-                if (!nameRegexp.test(value.trim())) {
-                  return Promise.reject(
-                    new Error("请输入1-30位的汉字、字母、数字、下划线")
-                  );
-                }
-                return Promise.resolve();
-              },
-            },
-          ]}
+          rules={[nameRule]}
         >
           <Input placeholder="请输入" size="large" />
         </Form.Item>
         <Form.Item
           label={`${modalInfo.name}所属工作区`}
-          name="space"
-          required
+          name="appId"
           rules={[
             {
-              validator(_, value) {
-                if (!value) {
-                  return Promise.reject(
-                    new Error(`请选择${modalInfo.name}所属工作区`)
-                  );
-                }
-                return Promise.resolve();
-              },
+              required: true,
+              message: `请选择${modalInfo.name}所属工作区`,
             },
           ]}
         >
-          <SelectCard type={SELECT_CARD_TYPE} list={workspaceList} />
+          <SelectCard
+            type={SELECT_CARD_TYPE}
+            list={workspaceList}
+            onAdd={handleNewSubApp}
+            onSelect={handleSelectWorkspace}
+          />
         </Form.Item>
       </Form>
     </Modal>
   );
 };
+
+const FormContainer = ({ children, ...rest }: any) => {
+  console.log(rest, "rest");
+  return React.cloneElement(children, rest);
+};
+
 export default memo(NewSubAppModal);

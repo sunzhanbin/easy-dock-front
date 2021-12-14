@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction, current } from "@reduxjs/toolkit";
-import { appManager } from "@/http";
+import { appManagerBuilder } from "@/http";
 import { RootState } from "@/store";
 import { WorkspaceInitialState } from "@utils/types";
 
@@ -163,7 +163,7 @@ export const workspaceSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addMatcher(
-      appManager.endpoints.workspaceDetail.matchFulfilled,
+      appManagerBuilder.endpoints.workspaceDetail.matchFulfilled,
       (state, action) => {
         console.log("workspaceDetail", current(state), action.payload);
       }

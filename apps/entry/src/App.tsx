@@ -23,7 +23,7 @@ const SuspenseWrap = ({ render }: { render: React.ReactNode }) => (
 
 const App: React.FC = () => {
   return (
-    <ConfigProvider locale={zh_CN}>
+    <ConfigProvider locale={zh_CN} virtual={false}>
       <Routes>
         <Route path="/*" element={<Layout />}>
           <Route index element={<Home />} />

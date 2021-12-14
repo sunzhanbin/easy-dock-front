@@ -1,4 +1,4 @@
-import { appManager } from "@/http";
+import { appManagerBuilder } from "@/http";
 import { RootState } from "@/store";
 import { createSlice, PayloadAction, current } from "@reduxjs/toolkit";
 import { MenuSetupInitialState, MenuSetupForm } from "@utils/types";
@@ -100,7 +100,7 @@ export const menuSetupSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addMatcher(
-      appManager.endpoints.workspaceDetail.matchFulfilled,
+      appManagerBuilder.endpoints.workspaceDetail.matchFulfilled,
       (state, action) => {
         console.log("workspaceDEtail", current(state), action.payload);
       }

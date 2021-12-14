@@ -41,6 +41,7 @@ const SelectCard = ({
   };
 
   const handleSelectField = (field: string | number) => {
+    console.log(field);
     onSelect && onSelect(field);
   };
 
