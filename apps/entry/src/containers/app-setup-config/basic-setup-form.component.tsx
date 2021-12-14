@@ -1,27 +1,18 @@
-import React, { useCallback, useImperativeHandle } from "react";
-import { Form, Input, Button, Select, Radio, Upload } from "antd";
+import React, { useCallback, useImperativeHandle, useMemo } from "react";
+import { Form, Input, Select } from "antd";
+import { Rule } from "antd/lib/form";
+import { UploadFile } from "antd/lib/upload/interface";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { useFetchWorkspaceListQuery } from "@/http";
 import { nameRule, remarkRule } from "@/consts";
-import {
-  setTheme,
-  setMode,
-  setBaseForm,
-} from "@views/app-setup/basic-setup.slice";
-import { axios } from "@utils/fetch";
-import { UploadOutlined } from "@ant-design/icons";
+import { setBaseForm } from "@views/app-setup/basic-setup.slice";
 import { selectProjectId } from "@/views/home/index.slice";
 import NavMode from "./nav-mode.component";
+import Theme from "./theme.component";
+import UploadImage from "./upload-image.component";
 import "@containers/app-setup-config/basic-setup-form.style";
 
 const { Option } = Select;
-
-const normFile = (e: any) => {
-  if (Array.isArray(e)) {
-    return e;
-  }
-  return e && e.fileList;
-};
 
 const BasicSetupFormComponent = React.forwardRef<{
   validateFields: () => Promise<any>;
@@ -31,37 +22,19 @@ const BasicSetupFormComponent = React.forwardRef<{
   const [form] = Form.useForm();
   const dispatch = useAppDispatch();
 
-  const handleFormFinish = useCallback((_, values: any) => {
+  const handleValuesChange = useCallback((_, values: any) => {
     dispatch(setBaseForm(values));
   }, []);
 
-  const handleNavChange = useCallback((event: any) => {
-    const { value } = event.target;
-    dispatch(setMode(value));
-  }, []);
-
-  const handleThemeChange = useCallback((event: any) => {
-    const { value } = event.target;
-    dispatch(setTheme(value));
-    console.log("theme::", value);
-  }, []);
-
-  const handleCustomRequest = useCallback(
-    ({ file, filename, onError, onSuccess }) => {
-      const formData = new FormData();
-      formData.append(filename, file);
-      axios
-        .post(`/file/batchUpload?controlType=1`, formData)
-        .then(({ data: response }: any) => {
-          onSuccess(response, file);
-        })
-        .catch(onError);
-    },
-    []
-  );
-
-  const handleLogoUploadChange = useCallback((props: any) => {
-    console.log("handleLogoUploadChange", props);
+  const iconRule = useMemo<Rule>(() => {
+    return {
+      validator(_, value: UploadFile[]) {
+        if (!value || value.length === 0) {
+          return Promise.reject(new Error("请上传应用LOGO!"));
+        }
+        return Promise.resolve();
+      },
+    };
   }, []);
 
   useImperativeHandle(ref, () => ({
@@ -74,7 +47,7 @@ const BasicSetupFormComponent = React.forwardRef<{
         layout="vertical"
         form={form}
         autoComplete="off"
-        onValuesChange={handleFormFinish}
+        onValuesChange={handleValuesChange}
       >
         <Form.Item label="应用名称" name="name" required rules={[nameRule]}>
           <Input size="large" placeholder="请输入" />
@@ -101,28 +74,10 @@ const BasicSetupFormComponent = React.forwardRef<{
           <NavMode />
         </Form.Item>
         <Form.Item label="应用主题" name="theme">
-          <Radio.Group onChange={handleThemeChange}>
-            <Radio value="theme1">主题 1</Radio>
-            <Radio value="theme2">主题 2</Radio>
-            <Radio value="theme3">主题 3</Radio>
-          </Radio.Group>
+          <Theme />
         </Form.Item>
-        <Form.Item
-          label="应用LOGO"
-          name="icon"
-          required
-          valuePropName="fileList"
-          getValueFromEvent={normFile}
-          // rules={[{ required: true, message: "Please input your password!" }]}
-        >
-          <Upload
-            name="files"
-            listType="picture"
-            customRequest={handleCustomRequest}
-            onChange={handleLogoUploadChange}
-          >
-            <Button icon={<UploadOutlined />}>Click to upload</Button>
-          </Upload>
+        <Form.Item label="应用LOGO" name="icon" required rules={[iconRule]}>
+          <UploadImage />
         </Form.Item>
       </Form>
     </div>
