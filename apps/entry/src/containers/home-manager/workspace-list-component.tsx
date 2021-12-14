@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
-import { List, message, Avatar, Skeleton, Divider } from "antd";
+import { List, Avatar, Skeleton } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Icon from "@assets/icon";
 import "@containers/home-manager/index.style.scss";
+import { useNavigate } from "react-router-dom";
 
 const HomeWorkspaceList = () => {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<any>([]);
 
@@ -25,6 +27,9 @@ const HomeWorkspaceList = () => {
         setLoading(false);
       });
   };
+  const toAppManage = () => {
+    navigate("/app-manager");
+  };
 
   useEffect(() => {
     loadMoreData();
@@ -34,7 +39,7 @@ const HomeWorkspaceList = () => {
     <div className="bottom_sider">
       <div className="workspace_info">
         <p className="text_recent_app">最近应用</p>
-        <p className="operation_all">
+        <p className="operation_all" onClick={toAppManage}>
           <span className="text">全部</span>
           <Icon className="icon" type="custom-icon-jinrujiantou" />
         </p>

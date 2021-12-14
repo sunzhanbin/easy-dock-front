@@ -32,7 +32,6 @@ const SelectCard = ({
   const [fieldList, setFieldList] = useState<any[]>([]);
 
   useEffect(() => {
-    console.log(list, "list");
     if (!list) return;
     setFieldList(list as any);
   }, [list]);
@@ -52,16 +51,7 @@ const SelectCard = ({
   const handleConfirmName = useCallback(async () => {
     try {
       const values = await form.validateFields();
-      const ret = await onAdd?.(values.fieldName);
-      // if (fieldList.find((item) => item.id === ret.data.id)) return;
-      // const list = [...fieldList];
-      // list.push(ret.data);
-      // list.push({
-      //   id: "2112",
-      //   name: "22222",
-      // });
-      // console.log(list, "list");
-      // setFieldList([...fieldList, values.fieldName]);
+      await onAdd?.(values.fieldName);
       form.setFieldsValue({ fieldName: "" });
       setShowButton(true);
     } catch (e) {
