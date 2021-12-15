@@ -50,8 +50,9 @@
 }
 
 .bottom_sider {
+  max-height: calc(100% - 280px);
   flex: 1;
-  padding: 0 24px;
+  padding: 0 0 0 24px;
   .workspace_info {
     display: inline-flex;
     justify-content: space-around;
@@ -69,6 +70,7 @@
     .operation_all {
       flex: 0 0 54px;
       cursor: pointer;
+      margin-right: 24px;
       .text {
         padding-right: 4px;
         font-size: 16px;
@@ -83,7 +85,7 @@
 
   .workspace_list {
     height: calc(100% - 60px);
-    padding-bottom: 20px;
+    padding-right: 24px;
     overflow-x: hidden;
     overflow-y: auto;
     .infinite-scroll-component {
