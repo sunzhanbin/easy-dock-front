@@ -3,7 +3,10 @@ import classNames from "classnames";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import LeftNav from "@assets/images/left-nav.png";
 import BothNav from "@assets/images/both-nav.png";
+import { useAppDispatch } from "@/store";
+import { setMode } from "@/views/app-setup/basic-setup.slice";
 import "./nav-mode.style.scss";
+import { NavModeType } from "@/consts";
 
 interface NavModeProps {
   value?: string;
@@ -11,19 +14,21 @@ interface NavModeProps {
 }
 
 interface ModeItem {
-  key: string;
+  key: NavModeType;
   label: string;
   image: string;
 }
 
 const NavMode: FC<NavModeProps> = ({ value, onChange }) => {
+  const dispatch = useAppDispatch();
   const modeList = useMemo<ModeItem[]>(() => {
     return [
-      { key: "multi", label: "双导航", image: BothNav },
-      { key: "single", label: "左导航", image: LeftNav },
+      { key: NavModeType.MULTI, label: "双导航", image: BothNav },
+      { key: NavModeType.SINGLE, label: "左导航", image: LeftNav },
     ];
   }, []);
-  const handleChangeNav = useMemoCallback((nav: string) => {
+  const handleChangeNav = useMemoCallback((nav: NavModeType) => {
+    dispatch(setMode(nav));
     onChange && onChange(nav);
   });
   return (

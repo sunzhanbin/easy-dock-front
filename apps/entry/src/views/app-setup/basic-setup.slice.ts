@@ -1,11 +1,12 @@
+import { NavModeType, ThemeType } from "@/consts";
 import { appManagerBuilder } from "@/http";
 import { RootState } from "@/store";
 import { createSlice, PayloadAction, current } from "@reduxjs/toolkit";
 import { BasicSetupInitialState } from "@utils/types";
 
 const initialState: BasicSetupInitialState = {
-  theme: "light",
-  navMode: "multi", // 'single' | 'multi'
+  theme: ThemeType.LIGHT,
+  navMode: NavModeType.MULTI,
   logo: {}, // logo 需要上传，故需要记录，表单上传时使用；
   basicForm: {},
 };
@@ -14,10 +15,10 @@ export const basicSetupSlice = createSlice({
   name: "basicSetup",
   initialState,
   reducers: {
-    setTheme: (state, action: PayloadAction<string>) => {
+    setTheme: (state, action: PayloadAction<ThemeType>) => {
       state.theme = action.payload;
     },
-    setMode: (state, action: PayloadAction<"single" | "multi">) => {
+    setMode: (state, action: PayloadAction<NavModeType>) => {
       state.navMode = action.payload;
     },
     setLogo: (state, action: PayloadAction<{ [key: string]: any }>) => {
