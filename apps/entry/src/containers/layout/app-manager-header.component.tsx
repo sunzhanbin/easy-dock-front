@@ -79,7 +79,7 @@ const AppManagerHeader: FC<EditHeaderProps> = ({ className }) => {
         <Button
           className="save"
           size="large"
-          type="default"
+          type="primary"
           ghost
           onClick={handleSave}
         >

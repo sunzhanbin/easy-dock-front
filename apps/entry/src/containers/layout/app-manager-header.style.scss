@@ -1,11 +1,12 @@
+@import "@common/styles/var.scss";
 .app-manager-header {
   display: flex;
   align-items: center;
   height: 56px;
   padding: 0 24px;
-  color: #fff;
-  background: #202023;
-  box-shadow: 0px 2px 8px 0px rgba(32, 32, 35, 0.08);
+  color: rgba(0, 0, 0, 0.85);
+  background: #fff;
+  box-shadow: 0px 2px 8px 0px rgba(24, 31, 67, 0.08);
   & > .left {
     width: 178px;
     display: flex;
@@ -13,7 +14,7 @@
     cursor: pointer;
     & > .back {
       width: 20px;
-      color: #fff;
+      color: #5e6576;
       font-size: 20px;
       margin-right: 12px;
     }
@@ -32,11 +33,11 @@
       padding: 0 26px;
       font-size: 16px;
       font-weight: 400;
-      color: rgba(255, 255, 255, 0.55);
+      color: rgba(24, 31, 67, 0.5);
       cursor: pointer;
       &.active {
         font-weight: bold;
-        color: #ffffff;
+        color: #181f43;
         &::after {
           content: "";
           display: block;
@@ -64,18 +65,14 @@
         margin-left: 4px;
       }
       &:hover {
+        color: $primary-color;
         & > .icon {
-          color: #fff;
+          color: $primary-color;
         }
       }
     }
     & > .save {
-      border: 1px solid rgba(255, 255, 255, 0.17);
       margin-left: 12px;
-      &:hover {
-        border-color: #fff;
-        color: #fff;
-      }
     }
     & > .publish {
       margin-left: 12px;
