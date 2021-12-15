@@ -1,36 +1,62 @@
+@import "@common/styles/var.scss";
 .menu-setup-list-component {
   flex: 1;
-  padding: 18px 12px;
-  .list {
-    .add {
+  max-width: 220px;
+  padding: 18px 0;
+  .create {
+    padding: 0 12px;
+    .button {
       width: 100%;
     }
-    .menu {
-      .menu-item {
-        &.active {
-          background: #89aded;
-        }
-        display: flex;
-        justify-content: space-around;
-        margin: 10px;
-        padding: 10px;
-        border: 1px solid cornflowerblue;
-        .text {
-        }
-        .acts {
-          display: inline-flex;
-          width: 100px;
-          justify-content: space-evenly;
-          .item {
-            cursor: pointer;
-            &.add {
-            }
-            &.remove {
-            }
-            &.drag {
+  }
+  .menu {
+    margin-top: 12px;
+    .menu-item {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      height: 40px;
+      font-size: 14px;
+      font-weight: 400;
+      color: #181f43;
+      padding: 0 12px;
+      margin-bottom: 4px;
+      cursor: pointer;
+      & > .text {
+        flex: 1;
+        max-width: calc(100% - 76px);
+      }
+      & > .operation {
+        width: 76px;
+        display: none;
+        .add,
+        .remove,
+        .drag {
+          width: 16px;
+          margin-right: 8px;
+          cursor: pointer;
+          svg {
+            font-size: 16px;
+          }
+          &:hover {
+            svg {
+              color: $primary-color;
             }
           }
         }
+        .drag {
+          margin-right: 12px;
+        }
+      }
+      &:hover {
+        background: rgba(24, 39, 67, 0.04);
+        & > .operation {
+          display: flex;
+        }
+      }
+      &.active {
+        background: rgba(24, 39, 67, 0.04);
+        color: $primary-color;
       }
     }
   }

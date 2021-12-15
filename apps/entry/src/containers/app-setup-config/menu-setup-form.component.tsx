@@ -70,7 +70,7 @@ const MenuSetupFormComponent = React.forwardRef<{
     ];
   }, []);
 
-  const handleFormFinish = useCallback((values: MenuSetupForm) => {
+  const handleValuesChange = useCallback((_, values: MenuSetupForm) => {
     dispatch(setMenuForm(values));
   }, []);
 
@@ -90,7 +90,7 @@ const MenuSetupFormComponent = React.forwardRef<{
           form={form}
           layout="vertical"
           autoComplete="off"
-          onFinish={handleFormFinish}
+          onValuesChange={handleValuesChange}
         >
           <Form.Item label="菜单名称" name="name" required rules={[nameRule]}>
             <Input size="large" placeholder="请输入" />

@@ -50,30 +50,30 @@ export const menuSetupSlice = createSlice({
       {
         state.currentId = childId;
         // 为了避免初始值为同一个默认值引用，每次新增都需要保证是新的对象；
-        state.menuForm = JSON.parse(JSON.stringify(defaultForm));
+        state.menuForm = JSON.parse(JSON.stringify(state.menuForm));
       }
       if (!currentId) {
-        return void state.menu.push({
+        state.menu.push({
           id: childId,
-          name: `一级菜单${(1000 * Math.random()).toFixed()}`,
+          name: state.menuForm.name,
           parentId: null,
           depth: 1,
           form: state.menuForm,
           children: [],
         });
+      } else {
+        const currentItem: any = findItem(currentId, state.menu);
+        currentItem.children.push({
+          id: childId,
+          parentId: currentItem.id,
+          name: state.menuForm.name,
+          depth: currentItem.depth + 1,
+          form: state.menuForm,
+          children: [],
+        });
       }
-
-      const currentItem: any = findItem(currentId, state.menu);
-      currentItem.children.push({
-        id: childId,
-        parentId: currentItem.id,
-        name: `${currentItem.depth + 1}子级菜单${(
-          1000 * Math.random()
-        ).toFixed()}`,
-        depth: currentItem.depth + 1,
-        form: state.menuForm,
-        children: [],
-      });
+      // 添加菜单之后,form要重置
+      state.menuForm = defaultForm;
     },
     // 删除菜单；
     remove: (state, action: PayloadAction<string>) => {

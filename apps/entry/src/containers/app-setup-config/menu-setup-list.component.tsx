@@ -1,6 +1,7 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { Button } from "antd";
-import { PlusOutlined, MenuOutlined, RestOutlined } from "@ant-design/icons";
+import { v4 as uuid } from "uuid";
+import classnames from "classnames";
 import { useAppDispatch, useAppSelector } from "@/store";
 import {
   selectMenu,
@@ -9,19 +10,30 @@ import {
   add,
   remove,
 } from "@views/app-setup/menu-setup.slice";
-import { v4 as uuid } from "uuid";
 import { Menu } from "@utils/types";
+import { Icon, Text } from "@common/components";
 
-import classnames from "classnames";
 import "@containers/app-setup-config/menu-setup-list.style";
-import { Icon } from "@common/components";
+
+type BeforeIdChange = () => void;
 
 // 菜单单元组件；
-const MenuItemComponent = ({ menu }: { menu: Menu }) => {
+const MenuItemComponent = ({
+  menu,
+  onBeforeIdChange,
+}: {
+  menu: Menu;
+  onBeforeIdChange: BeforeIdChange;
+}) => {
   const dispatch = useAppDispatch();
   const currentId = useAppSelector(selectCurrentId);
 
-  const handleAddMenu = useCallback((currentId: string) => {
+  const style = useMemo(() => {
+    return { paddingLeft: `${menu.depth * 12}px` };
+  }, [menu.depth]);
+
+  const handleAddMenu = useCallback(async (currentId: string) => {
+    await onBeforeIdChange();
     const childId = uuid();
     dispatch(add({ currentId, childId }));
   }, []);
@@ -33,50 +45,57 @@ const MenuItemComponent = ({ menu }: { menu: Menu }) => {
   const handleMenuClick = useCallback((currentId: string) => {
     dispatch(setCurrentMenu(currentId));
   }, []);
-
   return (
     <div
       className={classnames({
         "menu-item": true,
         active: currentId == menu.id,
       })}
+      style={style}
     >
-      <span className="text" onClick={handleMenuClick.bind(null, menu.id)}>
-        {menu.name}
-      </span>
-      <span className="acts">
-        <span className="item add" onClick={handleAddMenu.bind(null, menu.id)}>
-          <PlusOutlined />
-        </span>
-        <span
-          className="item remove"
-          onClick={handleRemoveMenu.bind(null, menu.id)}
-        >
-          <RestOutlined />
-        </span>
-        <span className="item drag">
-          <MenuOutlined />
-        </span>
-      </span>
+      <div className="text" onClick={handleMenuClick.bind(null, menu.id)}>
+        <Text text={menu.name} />
+      </div>
+      <div className="operation">
+        <div className="add" onClick={handleAddMenu.bind(null, menu.id)}>
+          <Icon type="xinzeng" />
+        </div>
+        <div className="remove" onClick={handleRemoveMenu.bind(null, menu.id)}>
+          <Icon type="shanchu" />
+        </div>
+        <div className="drag">
+          <Icon type="caidan" />
+        </div>
+      </div>
     </div>
   );
 };
 
 // 菜单嵌套逻辑组件；
-const MenuComponent = ({ menu }: { menu: Menu }) => {
+const MenuComponent = ({
+  menu,
+  onBeforeIdChange,
+}: {
+  menu: Menu;
+  onBeforeIdChange: BeforeIdChange;
+}) => {
   return (
     <div className="menu-component">
       {menu?.children?.length ? (
         <div className="men-wrap">
-          <MenuItemComponent menu={menu} />
+          <MenuItemComponent menu={menu} onBeforeIdChange={onBeforeIdChange} />
           <div className="children">
             {menu.children.map((item, index: number) => (
-              <MenuComponent key={index} menu={item} />
+              <MenuComponent
+                key={index}
+                menu={item}
+                onBeforeIdChange={onBeforeIdChange}
+              />
             ))}
           </div>
         </div>
       ) : (
-        <MenuItemComponent menu={menu} />
+        <MenuItemComponent menu={menu} onBeforeIdChange={onBeforeIdChange} />
       )}
     </div>
   );
@@ -86,7 +105,7 @@ const MenuComponent = ({ menu }: { menu: Menu }) => {
 const MenuSetupListComponent = ({
   onBeforeIdChange,
 }: {
-  onBeforeIdChange: () => void;
+  onBeforeIdChange: BeforeIdChange;
 }) => {
   const dispatch = useAppDispatch();
   const menu = useAppSelector(selectMenu);
@@ -100,9 +119,9 @@ const MenuSetupListComponent = ({
 
   return (
     <div className="menu-setup-list-component">
-      <div className="list">
+      <div className="create">
         <Button
-          className="add"
+          className="button"
           type="primary"
           size="large"
           ghost
@@ -111,11 +130,15 @@ const MenuSetupListComponent = ({
         >
           添加一级菜单
         </Button>
-        <div className="menu">
-          {menu?.map((child: any, index: number) => (
-            <MenuComponent key={index} menu={child} />
-          ))}
-        </div>
+      </div>
+      <div className="menu">
+        {menu?.map((child: any, index: number) => (
+          <MenuComponent
+            key={index}
+            menu={child}
+            onBeforeIdChange={onBeforeIdChange}
+          />
+        ))}
       </div>
     </div>
   );
