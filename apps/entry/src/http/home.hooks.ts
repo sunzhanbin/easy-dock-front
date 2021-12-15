@@ -1,14 +1,7 @@
-import baseFetch from "@utils/fetch";
+import baseFetch, { runTime } from "@utils/fetch";
 
-export const homeManage = baseFetch.injectEndpoints({
+export const homeManageBuilder = baseFetch.injectEndpoints({
   endpoints: (build) => ({
-    logout: build.query({
-      query: () =>
-        ({
-          url: "/app",
-          method: "post",
-        } as any),
-    }),
     getProjectList: build.query({
       query: () => "/project/list/all",
       providesTags: (result) =>
@@ -39,7 +32,28 @@ export const homeManage = baseFetch.injectEndpoints({
 
 export const {
   useGetProjectListQuery,
-  useLazyLogoutQuery,
   useNewProjectMutation,
   useGetRecentListMutation,
-} = homeManage;
+} = homeManageBuilder;
+
+export const homeManageRuntime = runTime.injectEndpoints({
+  endpoints: (build) => ({
+    getUserInfo: build.query({
+      query: () =>
+        ({
+          url: "/auth/current",
+          method: "get",
+          silence: true,
+        } as any),
+    }),
+    logout: build.mutation({
+      query: () =>
+        ({
+          url: "/auth/logout",
+          method: "delete",
+        } as any),
+    }),
+  }),
+});
+
+export const { useGetUserInfoQuery, useLogoutMutation } = homeManageRuntime;

@@ -10,7 +10,7 @@ views：页面；
 * 文件资源路径使用绝对路径，方便重构；
 
     ```JavaScript
-    /* 文件路径： D:\project\easy-dock-front\apps\entry\src\containers\workspace-running\index.tsx */
+    /* 文件路径： D:\project\easy-dock-front\apps\entry\src\containers\workspace-running\main.tsx */
     import { Routes, Route } from "react-router-dom";
     import NavComponent from "@containers/workspace-running/nav.component";
     import ContentComponent from "@containers/workspace-running/content.component";

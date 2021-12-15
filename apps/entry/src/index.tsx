@@ -1,22 +1,17 @@
-import ReactDOM from "react-dom";
-import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
-import reportWebVitals from "@/reportWebVitals";
-import { store } from "@/store";
-import App from "@/App";
-import "antd/dist/antd.css";
-import "@/index.scss";
+// import 方式加载 sso.js
+import Auth from "@enc/sso";
 
-ReactDOM.render(
-  <Provider store={store}>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </Provider>,
-  document.getElementById("root")
-);
+// 引入Auth后，需要调用 Auth.setConfig 配置 server
+Auth.setConfig({ server: process.env.SSO_LOGIN_URL });
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+(async () => {
+  // import 方式加载 sso.js
+  const token = await Auth.getToken(
+    true,
+    process.env.REACT_APP_EASY_DOCK_BASE_SERVICE_ENDPOINT as string
+  );
+
+  if (token) {
+    require("./main.tsx");
+  }
+})();

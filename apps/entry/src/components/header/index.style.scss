@@ -20,17 +20,22 @@
       }
     }
     .right {
-      display: inline-flex;
-      flex: 0 0 160px;
-      align-items: center;
+      //display: inline-flex;
+      //flex: 0 0 160px;
+      //align-items: center;
       .icon {
-        flex: 0 0 40px;
+        width: 40px;
+        display: inline-block;
         font-size: 24px;
         color: #5e6576;
         cursor: pointer;
+        vertical-align: middle;
+        text-align: center;
       }
       .user_info {
-        flex: 1;
+        display: inline-block;
+        vertical-align: middle;
+        margin-left: 10px;
         .login {
           text-align: center;
           color: #4c5cdb;
@@ -55,10 +60,6 @@
         }
 
         .menuItem.menuItem {
-          width: 120px;
-          height: 40px;
-          line-height: 40px;
-          padding: 0 0 0 20px;
           font-size: 14px;
           font-weight: 400;
           color: #181f43;

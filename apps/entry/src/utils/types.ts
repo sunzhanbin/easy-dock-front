@@ -1,6 +1,13 @@
 import { NavModeType, SubAppType, ThemeType } from "@/consts";
 import { SCENE_IAMGES } from "@utils/const";
 
+export type User = {
+  avatar: string; // 头像
+  username: string; // 中文名
+  id: number; //登录名
+  power?: number; //权限值
+  name?: string;
+};
 export interface workspaceShape {
   name: string;
   id: number;
