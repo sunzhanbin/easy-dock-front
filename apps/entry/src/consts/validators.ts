@@ -31,3 +31,19 @@ export const remarkRule: Rule = {
     return Promise.resolve();
   },
 };
+
+// eslint-disable-next-line
+export const urlRegex = /(^(http|https):\/\/([\w\-]+\.)+[\w\-]+(\/[\w\u4e00-\u9fa5\-\.\/?\@\%\!\&=\+\~\:\#\;\,]*)?)/;
+
+export const urlRule: Rule = {
+  validator(_, value: string) {
+    const url = value?.trim();
+    if (!url) {
+      return Promise.reject(new Error("请输入url"));
+    }
+    if (!urlRegex.test(url)) {
+      return Promise.reject(new Error("请输入正确的url"));
+    }
+    return Promise.resolve();
+  },
+};

@@ -13,7 +13,7 @@ import { useAppDispatch, useAppSelector } from "@/store";
 import { Icon } from "@common/components";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import { MenuSetupForm } from "@utils/types";
-import { nameRule, SubAppInfo, SubAppType } from "@/consts";
+import { nameRule, SubAppInfo, SubAppType, urlRule } from "@/consts";
 import { useFetchDeployedSubAppListQuery } from "@/http";
 import "@containers/app-setup-config/menu-setup-form.style";
 
@@ -136,7 +136,7 @@ const MenuSetupFormComponent = React.forwardRef<{
             >
               {({ getFieldValue }) =>
                 getFieldValue("asset") === "custom" ? (
-                  <Form.Item name={["assetConfig", "url"]}>
+                  <Form.Item name={["assetConfig", "url"]} rules={[urlRule]}>
                     <Input size="large" placeholder="请输入URL" />
                   </Form.Item>
                 ) : (
@@ -170,7 +170,21 @@ const MenuSetupFormComponent = React.forwardRef<{
                           "subAppType",
                         ]);
                         return (
-                          <Form.Item name={["assetConfig", "subAppId"]}>
+                          <Form.Item
+                            name={["assetConfig", "subAppId"]}
+                            rules={[
+                              {
+                                validator(_, value) {
+                                  if (!value) {
+                                    return Promise.reject(
+                                      new Error("请选择子应用!")
+                                    );
+                                  }
+                                  return Promise.resolve();
+                                },
+                              },
+                            ]}
+                          >
                             <Select
                               placeholder="选择子应用"
                               size="large"
