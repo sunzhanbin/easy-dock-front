@@ -8,7 +8,7 @@ import React, {
 import { Tabs, Input, Button, message } from "antd";
 import { useAppSelector } from "@/store";
 import {
-  useFetchsubAppListQuery,
+  useFetchSubAppListQuery,
   useWorkspaceDetailQuery,
   useCreateSupAppMutation,
 } from "@/http";
@@ -26,7 +26,7 @@ const { TabPane } = Tabs;
 const SubListComponent: React.FC = () => {
   const workspaceId = useAppSelector(selectCurrentWorkspaceId);
   const { data: workspace } = useWorkspaceDetailQuery(workspaceId);
-  const { data: subAppList } = useFetchsubAppListQuery(workspaceId);
+  const { data: subAppList } = useFetchSubAppListQuery(workspaceId);
   const [createSubApp] = useCreateSupAppMutation();
   const hasPublished = useMemo(() => workspace?.extension, [workspace]);
   const subAppCount = useMemo(() => subAppList?.length || 0, [subAppList]);

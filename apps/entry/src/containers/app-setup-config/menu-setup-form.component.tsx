@@ -6,33 +6,37 @@ import React, {
   useCallback,
   useImperativeHandle,
 } from "react";
-import { Form, Input, Select, Checkbox, Button, Radio } from "antd";
+import { Form, Input, Select, Radio } from "antd";
+import { useParams } from "react-router-dom";
 import { selectMenuForm, setMenuForm } from "@views/app-setup/menu-setup.slice";
 import { useAppDispatch, useAppSelector } from "@/store";
-import { MenuSetupForm } from "@utils/types";
-import { nameRule } from "@/consts";
-
-import "@containers/app-setup-config/menu-setup-form.style";
 import { Icon } from "@common/components";
 import useMemoCallback from "@common/hooks/use-memo-callback";
+import { MenuSetupForm } from "@utils/types";
+import { nameRule, SubAppInfo, SubAppType } from "@/consts";
+import { useFetchDeployedSubAppListQuery } from "@/http";
+import "@containers/app-setup-config/menu-setup-form.style";
 
 const { Option } = Select;
-
-const tailLayout = {
-  wrapperCol: { offset: 8, span: 16 },
+type SubAppTypeItem = {
+  type: SubAppType;
+  name: string;
 };
 
 const MenuSetupFormComponent = React.forwardRef<{
   validateFields: () => Promise<any>;
 }>(function menuSetupForm(_, ref) {
   const dispatch = useAppDispatch();
+  const { workspaceId } = useParams();
+  const appId = useMemo(() => Number(workspaceId), [workspaceId]);
+  const { data: subAppList } = useFetchDeployedSubAppListQuery(appId);
   const menuForm = useAppSelector(selectMenuForm);
   const [form] = Form.useForm();
   const containerRef = useRef<HTMLDivElement>(null);
 
   const iconList = useMemo<string[]>(() => {
     return [
-      "shenhejilujinxingzhong",
+      "wukongjian",
       "shouyecaidan",
       "renwu",
       "shujujicheng",
@@ -42,6 +46,16 @@ const MenuSetupFormComponent = React.forwardRef<{
       "shujujianmo",
       "shujubiao",
       "shujuyuan",
+    ];
+  }, []);
+
+  const subAppTypeList = useMemo<SubAppTypeItem[]>(() => {
+    return [
+      { type: SubAppType.FORM, name: "表单" },
+      { type: SubAppType.FLOW, name: "流程" },
+      { type: SubAppType.CHART, name: "报表" },
+      { type: SubAppType.CANVAS, name: "大屏" },
+      { type: SubAppType.SPACE, name: "空间" },
     ];
   }, []);
 
@@ -85,12 +99,17 @@ const MenuSetupFormComponent = React.forwardRef<{
             <Select
               size="large"
               placeholder="请选择"
+              optionLabelProp="label"
               dropdownRender={dropdownRender}
               suffixIcon={<Icon type="xiala" />}
               getPopupContainer={() => containerRef.current!}
             >
               {iconList.map((icon) => (
-                <Option key={icon} value={icon}>
+                <Option
+                  key={icon}
+                  value={icon}
+                  label={icon === "wukongjian" ? "无" : <Icon type={icon} />}
+                >
                   <Icon type={icon} />
                 </Option>
               ))}
@@ -98,8 +117,8 @@ const MenuSetupFormComponent = React.forwardRef<{
           </Form.Item>
           <Form.Item label="查看方式" name="mode">
             <Radio.Group size="large">
-              <Radio value={0}>当前页面打开</Radio>
-              <Radio value={1}>新窗口打开</Radio>
+              <Radio value="current">当前页面打开</Radio>
+              <Radio value="blank">新窗口打开</Radio>
             </Radio.Group>
           </Form.Item>
           <Form.Item label="内容设置">
@@ -123,29 +142,53 @@ const MenuSetupFormComponent = React.forwardRef<{
                 ) : (
                   <>
                     <Form.Item
-                      name={["assetConfig", "app"]}
+                      name={["assetConfig", "subAppType"]}
                       className="app-item"
                     >
                       <Select
                         placeholder="选择应用"
                         size="large"
-                        allowClear
                         suffixIcon={<Icon type="xiala" />}
                       >
-                        <Option value="flow">流程</Option>
-                        <Option value="screen">大屏</Option>
+                        {subAppTypeList.map(({ type, name }) => (
+                          <Option key={type} value={type}>
+                            {name}
+                          </Option>
+                        ))}
                       </Select>
                     </Form.Item>
-                    <Form.Item name={["assetConfig", "subapp"]}>
-                      <Select
-                        placeholder="选择子应用"
-                        size="large"
-                        allowClear
-                        suffixIcon={<Icon type="xiala" />}
-                      >
-                        <Option value="absence">请假</Option>
-                        <Option value="police">警务</Option>
-                      </Select>
+                    <Form.Item
+                      noStyle
+                      shouldUpdate={(prev, current) =>
+                        prev.assetConfig?.subAppType !==
+                        current.assetConfig?.subAppType
+                      }
+                    >
+                      {({ getFieldValue }) => {
+                        const subAppType = getFieldValue([
+                          "assetConfig",
+                          "subAppType",
+                        ]);
+                        return (
+                          <Form.Item name={["assetConfig", "subAppId"]}>
+                            <Select
+                              placeholder="选择子应用"
+                              size="large"
+                              suffixIcon={<Icon type="xiala" />}
+                            >
+                              {(subAppList || [])
+                                .filter(
+                                  (v: SubAppInfo) => v.type === subAppType
+                                )
+                                .map((v: SubAppInfo) => (
+                                  <Option key={v.id} value={v.id}>
+                                    {v.name}
+                                  </Option>
+                                ))}
+                            </Select>
+                          </Form.Item>
+                        );
+                      }}
                     </Form.Item>
                   </>
                 )

@@ -1,3 +1,4 @@
+import { SubAppType } from "@/consts";
 import { SCENE_IAMGES } from "@utils/const";
 
 export interface workspaceShape {
@@ -58,14 +59,12 @@ export interface Menu {
 
 export interface MenuSetupForm {
   name: string;
-  showMenu: boolean;
   icon: string;
   mode: "blank" | "current";
-  isHome: boolean;
   asset: "exist" | "custom";
   assetConfig: {
-    app?: string;
-    subapp?: string;
+    subAppType?: SubAppType;
+    subAppId?: string;
     url?: string;
   };
 }

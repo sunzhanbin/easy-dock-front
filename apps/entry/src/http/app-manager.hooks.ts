@@ -1,3 +1,4 @@
+import { SubAppType } from "@/consts";
 import baseFetch, { runTime } from "@utils/fetch";
 
 export const appManagerBuilder = baseFetch.injectEndpoints({
@@ -41,8 +42,27 @@ export const appManagerBuilder = baseFetch.injectEndpoints({
       invalidatesTags: [{ type: "SubApps", id: "LIST" }],
     }),
     // 子应用列表；
-    fetchsubAppList: build.query({
+    fetchSubAppList: build.query({
       query: (workspaceId: number) => `/subapp/${workspaceId}/list/all`,
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }: { id: number }) => ({
+                type: "SubApps" as const,
+                id,
+              })),
+              { type: "SubApps", id: "LIST" },
+            ]
+          : [{ type: "SubApps", id: "LIST" }],
+    }),
+    // 已发布的子应用列表
+    fetchDeployedSubAppList: build.query({
+      query: (appId: number, type?: SubAppType) =>
+        ({
+          url: `/subapp/${appId}/list/all/deployed`,
+          method: "get",
+          params: type ? { type } : {},
+        } as any),
       providesTags: (result) =>
         result
           ? [
@@ -121,7 +141,8 @@ export const {
   useFetchWorkspaceListQuery,
   useWorkspaceDetailQuery,
   useAddSubAppMutation,
-  useFetchsubAppListQuery,
+  useFetchSubAppListQuery,
+  useFetchDeployedSubAppListQuery,
   useModifyAppStatusMutation,
   useModifySubAppStatusMutation,
   useModifySubAppNameMutation,

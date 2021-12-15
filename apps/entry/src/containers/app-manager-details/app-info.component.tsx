@@ -6,7 +6,7 @@ import {
   useFetchWorkspaceListQuery,
   useModifyAppStatusMutation,
   useWorkspaceDetailQuery,
-  useFetchsubAppListQuery,
+  useFetchSubAppListQuery,
 } from "@http/app-manager.hooks";
 import { selectCurrentWorkspaceId } from "@views/app-manager/index.slice";
 import { Icon } from "@common/components";
@@ -23,7 +23,7 @@ const AppInfoComponent: React.FC = () => {
   const workspaceId = useAppSelector(selectCurrentWorkspaceId);
   const [modifyAppStatus] = useModifyAppStatusMutation();
   const { data: workspace } = useWorkspaceDetailQuery(workspaceId);
-  const { data: subAppList } = useFetchsubAppListQuery(workspaceId);
+  const { data: subAppList } = useFetchSubAppListQuery(workspaceId);
   const hasPublished = useMemo(() => workspace?.extension, [workspace]);
   const subAppCount = useMemo(() => subAppList?.length || 0, [subAppList]);
 

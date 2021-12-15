@@ -1,3 +1,4 @@
+import { SubAppType } from "@/consts";
 import { appManagerBuilder } from "@/http";
 import { RootState } from "@/store";
 import { createSlice, PayloadAction, current } from "@reduxjs/toolkit";
@@ -6,15 +7,11 @@ import { findItem } from "@utils/utils";
 
 const defaultForm: MenuSetupForm = {
   name: "",
-  showMenu: false,
-  icon: "icon1",
-  mode: "blank",
-  isHome: false,
+  icon: "wukongjian",
+  mode: "current",
   asset: "exist",
   assetConfig: {
-    app: "flow",
-    subapp: "absence",
-    url: "www.baidu.com",
+    subAppType: SubAppType.FORM,
   },
 };
 
