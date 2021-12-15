@@ -31,6 +31,9 @@ export const homeManage = baseFetch.injectEndpoints({
         } as any),
       invalidatesTags: [{ type: "Project", id: "LIST" }],
     }),
+    getRecentList: build.mutation({
+      query: (projectId: number) => `project/list/recent/${projectId}`,
+    }),
   }),
 });
 
@@ -38,4 +41,5 @@ export const {
   useGetProjectListQuery,
   useLazyLogoutQuery,
   useNewProjectMutation,
+  useGetRecentListMutation,
 } = homeManage;

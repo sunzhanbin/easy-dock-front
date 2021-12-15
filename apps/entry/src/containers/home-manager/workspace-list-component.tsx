@@ -1,44 +1,85 @@
-import { useState, useEffect } from "react";
-import { List, Avatar, Skeleton } from "antd";
+import { useState, useEffect, useCallback } from "react";
+import { List, Avatar, Skeleton, Tooltip } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Icon from "@assets/icon";
 import "@containers/home-manager/index.style.scss";
 import { useNavigate } from "react-router-dom";
+import { useGetRecentListMutation } from "@/http";
+import { useAppSelector } from "@/store";
+import { selectProjectId } from "@views/home/index.slice";
+import { HomeSubAppType, ResponseType } from "@/consts";
+import { ImageMap, NameMap } from "@utils/const";
+
+type ListItemType = {
+  id: number;
+  type: number;
+  name: string;
+  parentName: string;
+  isApp: boolean;
+};
 
 const HomeWorkspaceList = () => {
   const navigate = useNavigate();
+  const projectId = useAppSelector(selectProjectId);
+  const [getRecentList] = useGetRecentListMutation();
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<any>([]);
 
-  const loadMoreData = () => {
-    if (loading) {
-      return;
-    }
+  const loadMoreData = useCallback(() => {
+    if (loading || !projectId) return;
     setLoading(true);
-    fetch(
-      "https://randomuser.me/api/?results=10&inc=name,gender,email,nat,picture&noinfo"
-    )
-      .then((res) => res.json())
-      .then((body) => {
-        setData([...data, ...body.results]);
+    (async () => {
+      try {
+        const ret: ResponseType = await getRecentList(projectId);
         setLoading(false);
-      })
-      .catch(() => {
+        setData(ret.data);
+      } catch (e) {
         setLoading(false);
-      });
-  };
-  const toAppManage = () => {
+        console.log(e);
+      }
+    })();
+  }, [data, projectId]);
+  const toAppManage = useCallback(() => {
     navigate("/app-manager");
-  };
+  }, [navigate]);
+  const handleLinkTo = useCallback(
+    (item: ListItemType) => {
+      const { isApp, type, id } = item;
+      if (isApp) {
+        navigate(`/app-manager/${id}`);
+      } else if (type === HomeSubAppType.CANVAS) {
+        window.open(`http://10.19.248.238:28180/dashboard/${id}`);
+      } else if (type === HomeSubAppType.SPACE) {
+        window.open(`http://10.19.248.238:9003/#/scene/${id}`);
+      } else if (type === HomeSubAppType.FLOW) {
+        window.open(
+          `http://10.19.248.238:28303/builder/flow/bpm-editor/${id}/flow-design`
+        );
+      } else if (type === HomeSubAppType.FORM) {
+        window.open(
+          `http://10.19.248.238:28303/builder/flow/bpm-editor/${id}/form-design`
+        );
+      } else if (type === HomeSubAppType.DEVICE) {
+        // todo
+        window.open(`http://10.19.248.238:9003/#/scene/${id}`);
+      } else if (type === HomeSubAppType.INTERFACE) {
+        window.open(`http://10.19.248.238:28217/orch/${id}`);
+      } else if (type === HomeSubAppType.DATA_FISH) {
+        // todo
+        window.open(`http://10.19.248.238:9003/#/scene/${id}`);
+      }
+    },
+    [navigate]
+  );
 
   useEffect(() => {
     loadMoreData();
-  }, []);
+  }, [projectId]);
 
   return (
     <div className="bottom_sider">
       <div className="workspace_info">
-        <p className="text_recent_app">最近应用</p>
+        <p className="text_recent_app">最近更新</p>
         <p className="operation_all" onClick={toAppManage}>
           <span className="text">全部</span>
           <Icon className="icon" type="custom-icon-jinrujiantou" />
@@ -59,12 +100,26 @@ const HomeWorkspaceList = () => {
               column: 2,
             }}
             dataSource={data}
-            renderItem={(item: any) => (
-              <List.Item key={item.id}>
+            renderItem={(item: ListItemType) => (
+              <List.Item key={item.id} onClick={() => handleLinkTo(item)}>
                 <List.Item.Meta
-                  avatar={<Avatar src={item.picture.large} />}
-                  title={<a className="name">{item.name.last}665543252354</a>}
-                  description="应用｜工作区一"
+                  avatar={<Avatar src={ImageMap[item.type]} />}
+                  title={
+                    <Tooltip title={item.name}>
+                      <a className="name">{item.name}</a>
+                    </Tooltip>
+                  }
+                  description={
+                    <Tooltip
+                      title={`${item.isApp ? "应用" : NameMap[item.type]}｜${
+                        item.parentName
+                      }`}
+                    >
+                      <span>{`${item.isApp ? "应用" : NameMap[item.type]}｜${
+                        item.parentName
+                      }`}</span>
+                    </Tooltip>
+                  }
                 />
               </List.Item>
             )}

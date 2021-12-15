@@ -3,30 +3,29 @@ import Icon from "@assets/icon";
 import "@containers/home-manager/index.style.scss";
 import NewSubAppModal from "@containers/home-manager/new-subapp-modal";
 import { useNavigate } from "react-router-dom";
-import { useCreateSupAppMutation } from "@/http";
+import { useSaveAppSetupMutation } from "@/http";
 import { message } from "antd";
+import { APP_TYPE, ResponseType } from "@/consts";
 
 const APP_INFO = {
   title: "新建应用",
   name: "应用",
-  fieldKey: 0,
+  fieldKey: APP_TYPE,
 };
 
 const HomeNewAPP = () => {
   const navigate = useNavigate();
-  const [createSubApp] = useCreateSupAppMutation();
+  const [createApp] = useSaveAppSetupMutation();
   const [showModal, setShowModal] = useState<boolean>(false);
 
   const handleConfirm = async (values: any) => {
-    console.log(values, "----应用");
     try {
-      const ret = await createSubApp(values);
-      console.log(ret, "ret");
+      const { name, appId: id } = values;
+      const { data }: ResponseType = await createApp({ name, id });
+      if (!data) return;
       message.success("创建成功!");
       setShowModal(false);
-
-      // todo workspaceId获取
-      // navigate(`/app-manager/${workspaceId}`);
+      navigate(`/app-manager/${data.id}`);
     } catch (e) {
       console.log(e);
     }

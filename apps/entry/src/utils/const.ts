@@ -1,3 +1,5 @@
+import { HomeSubAppType } from "@/consts";
+
 export const NavMenu = [
   {
     name: "开始",
@@ -33,21 +35,58 @@ export const SCENE_IAMGES = {
 };
 
 /* -------home start ----------*/
+import DeviceImage from "@assets/images/device.png";
+import DataImage from "@assets/images/data-join.png";
+import DataFishImage from "@assets/images/data-model.png";
+import InterfaceImage from "@assets/images/interface.png";
+import CanvasImage from "@assets/images/canvas.png";
+import ChartImage from "@assets/images/chart.png";
+import FormImage from "@assets/images/form.png";
+import FlowImage from "@assets/images/flow.png";
+import SpaceImage from "@assets/images/space.png";
+
+export const ImageMap: { [k: number]: string } = {
+  [HomeSubAppType.CANVAS]: CanvasImage,
+  [HomeSubAppType.CHART]: ChartImage,
+  [HomeSubAppType.FORM]: FormImage,
+  [HomeSubAppType.FLOW]: FlowImage,
+  [HomeSubAppType.SPACE]: SpaceImage,
+  [HomeSubAppType.DEVICE]: DeviceImage,
+  [HomeSubAppType.DATA]: DataImage,
+  [HomeSubAppType.DATA_FISH]: DataFishImage,
+  [HomeSubAppType.INTERFACE]: InterfaceImage,
+};
+
+export const NameMap: { [k: number]: string } = {
+  [HomeSubAppType.CANVAS]: "大屏",
+  [HomeSubAppType.CHART]: "报表",
+  [HomeSubAppType.FORM]: "表单",
+  [HomeSubAppType.FLOW]: "流程",
+  [HomeSubAppType.SPACE]: "空间",
+  [HomeSubAppType.DEVICE]: "设备",
+  [HomeSubAppType.DATA]: "数据",
+  [HomeSubAppType.DATA_FISH]: "模型",
+  [HomeSubAppType.INTERFACE]: "接口",
+};
+
 // 数据构建
 const CREATE_DATA_LIST = [
   {
+    type: HomeSubAppType.DEVICE,
     icon: "icon_shebei",
     text: "接入设备",
     linkName: "设备",
   },
   {
+    type: HomeSubAppType.DATA,
     icon: "icon_shuju",
     text: "接入数据",
     linkName: "数据",
   },
   {
+    type: HomeSubAppType.DATA_FISH,
     icon: "icon_shujumoxing",
-    text: "新建数据模型",
+    text: "新建模型",
     linkName: "数据模型",
   },
 ];
@@ -55,16 +94,19 @@ const CREATE_DATA_LIST = [
 // 业务构建
 const CREATE_BUSINESS_LIST = [
   {
+    type: HomeSubAppType.FORM,
     icon: "icon_newform",
     text: "新建表单",
     linkName: "表单",
   },
   {
+    type: HomeSubAppType.FLOW,
     icon: "icon_newflow",
     text: "新建流程",
     linkName: "流程",
   },
   {
+    type: HomeSubAppType.INTERFACE,
     icon: "icon_newinterface",
     text: "新建接口",
     linkName: "接口",
@@ -74,16 +116,19 @@ const CREATE_BUSINESS_LIST = [
 // 可视化构建
 const CREATE_VIRTUAL_LIST = [
   {
+    type: HomeSubAppType.CHART,
     icon: "icon_newchart",
     text: "新建报表",
     linkName: "报表",
   },
   {
+    type: HomeSubAppType.CANVAS,
     icon: "icon_newcanvas",
     text: "新建大屏",
     linkName: "大屏",
   },
   {
+    type: HomeSubAppType.SPACE,
     icon: "icon_newspace",
     text: "新建空间",
     linkName: "空间",

@@ -1,6 +1,5 @@
 import { Menu } from "@utils/types";
 import { AbstractTooltipProps } from "antd/lib/tooltip";
-import { SubAppType } from "@/consts";
 
 export const getPopupContainer: AbstractTooltipProps["getPopupContainer"] = (
   container
@@ -37,22 +36,4 @@ export const keyPath = (id: string, menus: Menu[]) => {
   keyPath.pop();
 
   return keyPath;
-};
-
-// 1=大屏类，2=流程类，3=报表类，4=HoloScene，5=表单类
-export const getAppType = (type: string) => {
-  switch (type) {
-    case "icon_newform":
-      return SubAppType.FORM;
-    case "icon_newflow":
-      return SubAppType.FLOW;
-    case "icon_newchart":
-      return SubAppType.CHART;
-    case "icon_newcanvas":
-      return SubAppType.CANVAS;
-    case "icon_newspace":
-      return SubAppType.SPACE;
-    default:
-      return 0;
-  }
 };
