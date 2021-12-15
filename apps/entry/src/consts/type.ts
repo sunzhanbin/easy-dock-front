@@ -7,6 +7,21 @@ export enum SubAppType {
   FORM = 5,
 }
 
+// 1=大屏类，2=流程类，3=报表类，4=HoloScene，5=表单类 6=设备 7=数据 8= 模型 9=接口
+export enum HomeSubAppType {
+  CANVAS = 1,
+  FLOW = 2,
+  CHART = 3,
+  SPACE = 4,
+  FORM = 5,
+  DEVICE = 6,
+  DATA = 7,
+  DATA_FISH = 8,
+  INTERFACE = 9,
+}
+
+export const APP_TYPE = 0;
+
 export interface SubAppInfo {
   id: number;
   createTime: number;
@@ -20,3 +35,7 @@ export interface SubAppInfo {
     version: string;
   };
 }
+
+export type ResponseType = {
+  [key: string]: any;
+};

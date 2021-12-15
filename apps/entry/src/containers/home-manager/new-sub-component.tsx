@@ -4,21 +4,23 @@ import Icon from "@assets/icon";
 import { SUB_APP_LIST } from "@utils/const";
 import classnames from "classnames";
 import NewSubAppModal from "@containers/home-manager/new-subapp-modal";
-import { getAppType } from "@utils/utils";
 import { message } from "antd";
-import { useCreateSupAppMutation, useGetCanvasIdMutation } from "@/http";
-import { useNavigate } from "react-router-dom";
+import {
+  useCreateSupAppMutation,
+  useGetCanvasIdMutation,
+  useGetHolosceneIdMutation,
+} from "@/http";
+import { ResponseType, HomeSubAppType } from "@/consts";
 
 const NOT_SHOW_MODAL_SELECT = [
-  "icon_shuju",
-  "icon_shujumoxing",
-  "icon_newinterface",
-  "icon_shebei",
+  HomeSubAppType.DATA,
+  HomeSubAppType.DATA_FISH,
+  HomeSubAppType.DEVICE,
+  HomeSubAppType.INTERFACE,
 ];
 const HomeNewSub = () => {
-  const navigate = useNavigate();
-
   const [createSubApp] = useCreateSupAppMutation();
+  const [getHolosceneId] = useGetHolosceneIdMutation();
 
   const [getCanvasId] = useGetCanvasIdMutation();
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -33,15 +35,31 @@ const HomeNewSub = () => {
   });
 
   const handleConfirm = async (values: any) => {
-    console.log(values, "----子应用");
     try {
-      const { data }: { [key: string]: any } = await createSubApp(values);
-      const cas = await getCanvasId(data?.id as number);
+      const { data }: ResponseType = await createSubApp(values);
+      const { type = 0 } = values;
+      if (!data) return;
+      if (type === HomeSubAppType.CANVAS) {
+        const { data: canvasData }: ResponseType = await getCanvasId(data?.id);
+        if (!canvasData) return;
+        window.open(`http://10.19.248.238:28180/dashboard/${canvasData.id}`);
+      } else if (type === HomeSubAppType.SPACE) {
+        const { data: spaceData }: ResponseType = await getHolosceneId(
+          data?.id
+        );
+        if (!spaceData) return;
+        window.open(`http://10.19.248.238:9003/#/scene/${spaceData.id}`);
+      } else if (type === HomeSubAppType.FLOW) {
+        window.open(
+          `http://10.19.248.238:28303/builder/flow/bpm-editor/${data?.id}/flow-design`
+        );
+      } else if (type === HomeSubAppType.FORM) {
+        window.open(
+          `http://10.19.248.238:28303/builder/flow/bpm-editor/${data?.id}/form-design`
+        );
+      }
       message.success("创建成功!");
       setShowModal(false);
-      // console.log(cas, "csaaa");
-      // todo workspaceId获取
-      // navigate(`/app-manager/${workspaceId}`);
     } catch (e) {
       console.log(e);
     }
@@ -49,13 +67,25 @@ const HomeNewSub = () => {
   const handleCancel = () => {
     setShowModal(false);
   };
-  const handleNewSubAPP = (item: { [key: string]: string }) => {
-    if (NOT_SHOW_MODAL_SELECT.includes(item.icon)) return;
+  const handleNewSubAPP = (item: { [key: string]: any }) => {
+    const { type } = item;
+    if (NOT_SHOW_MODAL_SELECT.includes(type)) {
+      if (type === HomeSubAppType.DEVICE) {
+        // todo
+        // window.open(`http://10.19.248.238:9003/#/scene/${id}`);
+      } else if (type === HomeSubAppType.INTERFACE) {
+        window.open("http://10.19.248.238:28217/orch");
+      } else if (type === HomeSubAppType.DATA_FISH) {
+        // todo
+        // window.open(`http://10.19.248.238:9003/#/scene/${id}`);
+      }
+      return;
+    }
     setShowModal(true);
     setModalInfo({
       title: item.text,
       name: item.linkName,
-      fieldKey: getAppType(item.icon),
+      fieldKey: type,
     });
     console.log(item, "item");
   };

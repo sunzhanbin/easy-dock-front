@@ -120,11 +120,11 @@ export const appManagerBuilder = baseFetch.injectEndpoints({
       query: (params: {
         id: number;
         name: string;
-        icon: string;
-        meta: { [key: string]: any };
-        navMode: number;
-        remark: string;
-        theme: string;
+        icon?: string;
+        meta?: { [key: string]: any };
+        navMode?: number;
+        remark?: string;
+        theme?: string;
       }) =>
         ({
           url: "/app/extension",
@@ -156,7 +156,13 @@ export const appManagerRunTime = runTime.injectEndpoints({
     getCanvasId: build.mutation({
       query: (subId: number) => `/subapp/canvas/${subId}`,
     }),
+    getHolosceneId: build.mutation({
+      query: (subId: number) => `/subapp/holoscene/${subId}`,
+    }),
   }),
 });
 
-export const { useGetCanvasIdMutation } = appManagerRunTime;
+export const {
+  useGetCanvasIdMutation,
+  useGetHolosceneIdMutation,
+} = appManagerRunTime;
