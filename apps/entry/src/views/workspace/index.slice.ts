@@ -2,10 +2,11 @@ import { createSlice, PayloadAction, current } from "@reduxjs/toolkit";
 import { appManagerBuilder } from "@/http";
 import { RootState } from "@/store";
 import { WorkspaceInitialState } from "@utils/types";
+import { NavModeType } from "@/consts";
 
 const initialState: WorkspaceInitialState = {
   name: "",
-  navMode: "multi",
+  navMode: NavModeType.MULTI,
   menu: [
     {
       id: "05e23c5f-9bde-429c-8d8c-6f42fb64d59d",

@@ -1,5 +1,8 @@
 import { memo, FC, useMemo } from "react";
 import classNames from "classnames";
+import { ThemeType } from "@/consts";
+import { useAppDispatch } from "@/store";
+import { setTheme } from "@/views/app-setup/basic-setup.slice";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import lightTheme from "@assets/images/light-theme.png";
 import darkTheme from "@assets/images/dark-theme.png";
@@ -11,20 +14,22 @@ interface ThemeProps {
 }
 
 interface ThemeItem {
-  key: string;
+  key: ThemeType;
   label: string;
   image: string;
 }
 
 const Theme: FC<ThemeProps> = ({ value, onChange }) => {
+  const dispatch = useAppDispatch();
   const modeList = useMemo<ThemeItem[]>(() => {
     return [
-      { key: "light", label: "浅色", image: lightTheme },
-      { key: "dark", label: "深色", image: darkTheme },
+      { key: ThemeType.LIGHT, label: "浅色", image: lightTheme },
+      { key: ThemeType.DARK, label: "深色", image: darkTheme },
     ];
   }, []);
-  const handleChangeTheme = useMemoCallback((nav: string) => {
-    onChange && onChange(nav);
+  const handleChangeTheme = useMemoCallback((theme) => {
+    dispatch(setTheme(theme));
+    onChange && onChange(theme);
   });
   return (
     <div className="theme-container">

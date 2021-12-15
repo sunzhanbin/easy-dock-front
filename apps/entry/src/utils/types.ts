@@ -1,4 +1,4 @@
-import { SubAppType } from "@/consts";
+import { NavModeType, SubAppType, ThemeType } from "@/consts";
 import { SCENE_IAMGES } from "@utils/const";
 
 export type User = {
@@ -37,8 +37,8 @@ export interface AppManagerInitialState {
 }
 
 export interface BasicSetupInitialState {
-  theme: string;
-  navMode: "single" | "multi";
+  theme: ThemeType;
+  navMode: NavModeType;
   logo: { [key: string]: any };
   basicForm: { [key: string]: any };
 }
@@ -51,7 +51,7 @@ export interface MenuSetupInitialState {
 
 export interface WorkspaceInitialState {
   name: string;
-  navMode: "single" | "multi";
+  navMode: NavModeType;
   menu: Menu[];
 }
 
@@ -84,14 +84,15 @@ export interface baseMenuProps {
 
 export interface MenuComponentProps extends baseMenuProps {
   extra: React.ReactNode;
+  theme: ThemeType;
 }
 
 export interface NavMenuComponentProps extends baseMenuProps {
-  navMode: "single" | "multi";
+  navMode: NavModeType;
 }
 
 export interface WorkspaceMenuProps {
-  navMode: "single" | "multi";
+  navMode: NavModeType;
   dataSource: Menu[];
 }
 

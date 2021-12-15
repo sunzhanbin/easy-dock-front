@@ -19,6 +19,16 @@ export enum HomeSubAppType {
   DATA_FISH = 8,
   INTERFACE = 9,
 }
+// 导航方式  双导航  左导航
+export enum NavModeType {
+  MULTI = "multi",
+  SINGLE = "single",
+}
+
+export enum ThemeType {
+  DARK = "dark",
+  LIGHT = "light",
+}
 
 export const APP_TYPE = 0;
 
