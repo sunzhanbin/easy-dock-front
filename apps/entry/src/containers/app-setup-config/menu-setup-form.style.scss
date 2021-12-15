@@ -42,4 +42,16 @@
       }
     }
   }
+  .dropdown-container {
+    .rc-virtual-list-holder-inner {
+      width: 100%;
+      flex-direction: row !important;
+      flex-wrap: wrap;
+      .ant-select-item-option-selected {
+        svg {
+          color: $primary-color;
+        }
+      }
+    }
+  }
 }
