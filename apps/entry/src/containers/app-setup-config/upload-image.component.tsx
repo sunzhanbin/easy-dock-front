@@ -4,6 +4,9 @@ import { RcFile, UploadFile } from "antd/lib/upload/interface";
 import { axios } from "@utils/fetch";
 import { Icon } from "@common/components";
 import useMemoCallback from "@common/hooks/use-memo-callback";
+import { imgIdToUrl } from "@/utils/utils";
+import { useAppDispatch } from "@/store";
+import { setLogo } from "@/views/app-setup/basic-setup.slice";
 import "./upload-image.style.scss";
 
 interface UploadImageProps {
@@ -12,6 +15,7 @@ interface UploadImageProps {
 }
 
 const UploadImage: FC<UploadImageProps> = ({ value, onChange }) => {
+  const dispatch = useAppDispatch();
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   // 校验图片类型和大小
   const checkoutFile = useMemoCallback((file: RcFile) => {
@@ -45,6 +49,7 @@ const UploadImage: FC<UploadImageProps> = ({ value, onChange }) => {
   });
   const handleRemove = useMemoCallback((file: UploadFile) => {
     setFileList([]);
+    dispatch(setLogo({}));
     onChange && onChange(undefined);
   });
   const handleCustomRequest = useMemoCallback(
@@ -55,6 +60,9 @@ const UploadImage: FC<UploadImageProps> = ({ value, onChange }) => {
         .post(`/file/batchUpload?controlType=1`, formData)
         .then(({ data: response }: any) => {
           onSuccess(response, file);
+          if (Array.isArray(response) && response.length > 0) {
+            dispatch(setLogo(response[0]));
+          }
           onChange && onChange(response);
         })
         .catch(onError);
@@ -65,11 +73,7 @@ const UploadImage: FC<UploadImageProps> = ({ value, onChange }) => {
     if (!image.id) {
       return;
     }
-    const res = await axios.get(`/file/download/${image.id}`, {
-      responseType: "blob",
-    });
-    const blob = new Blob([res as any]);
-    const url: string = window.URL.createObjectURL(blob);
+    const url = await imgIdToUrl(image.id);
     const fileList = [
       {
         name: image.name,

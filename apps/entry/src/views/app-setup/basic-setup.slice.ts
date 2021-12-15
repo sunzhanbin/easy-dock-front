@@ -31,6 +31,8 @@ export const basicSetupSlice = createSlice({
       }
       if (icon) {
         state.basicForm.icon = icon;
+      } else {
+        state.basicForm.icon = null;
       }
     },
   },
@@ -52,4 +54,9 @@ export const selectNavMode = (state: RootState) => state.basicSetup.navMode;
 
 export const selectBasicForm = (state: RootState) => state.basicSetup.basicForm;
 
-export const { setTheme, setMode, setBaseForm } = basicSetupSlice.actions;
+export const {
+  setTheme,
+  setMode,
+  setLogo,
+  setBaseForm,
+} = basicSetupSlice.actions;

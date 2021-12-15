@@ -4,8 +4,12 @@ import { selectTheme, selectNavMode } from "@views/app-setup/basic-setup.slice";
 import { selectMenu, selectCurrentId } from "@views/app-setup/menu-setup.slice";
 import SingleNavComponent from "@containers/app-setup-preview/single-nav.component";
 import MultiNavComponent from "@containers/app-setup-preview/multi-nav.component";
-import { SingleNavAppInfo, MultiNavAppInfo } from "@components/app-info";
+import AppInfo, {
+  SingleNavAppInfo,
+  MultiNavAppInfo,
+} from "@components/app-info";
 import "@containers/app-setup-preview/index.style";
+import { NavModeType } from "@/consts";
 
 const AppSetupPreview = () => {
   const theme = useAppSelector(selectTheme);
@@ -35,14 +39,14 @@ const AppSetupPreview = () => {
           selectedKey={selectedKey}
           dataSource={menu}
           theme={theme}
-          extra={<MultiNavAppInfo />}
+          extra={<AppInfo navMode={NavModeType.MULTI} />}
         >
           {renderContent()}
         </MultiNavComponent>
       );
     }
     return null;
-  }, [navMode, theme]);
+  }, [navMode, theme, menu, selectedKey]);
 
   return <div className="app-setup-preview">{renderNavComponent}</div>;
 };

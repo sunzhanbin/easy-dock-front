@@ -1,4 +1,5 @@
 import { Menu } from "@utils/types";
+import { axios } from "@utils/fetch";
 import { AbstractTooltipProps } from "antd/lib/tooltip";
 
 export const getPopupContainer: AbstractTooltipProps["getPopupContainer"] = (
@@ -36,4 +37,14 @@ export const keyPath = (id: string, menus: Menu[]) => {
   keyPath.pop();
 
   return keyPath;
+};
+
+// 根据后端返回的图片id转化成图片url地址
+export const imgIdToUrl = async (id: string) => {
+  const res = await axios.get(`/file/download/${id}`, {
+    responseType: "blob",
+  });
+  const blob = new Blob([res as any]);
+  const url: string = window.URL.createObjectURL(blob);
+  return url;
 };

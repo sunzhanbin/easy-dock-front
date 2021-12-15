@@ -1,8 +1,11 @@
 import { useCallback, useMemo, useEffect } from "react";
 import { Menu } from "antd";
+import classNames from "classnames";
 import { keyPath } from "@utils/utils";
 import { Menu as IMenu, MenuComponentProps } from "@utils/types";
 import "@containers/app-setup-preview/multi-nav.style";
+import { Icon } from "@common/components";
+import useMemoCallback from "@common/hooks/use-memo-callback";
 
 const { SubMenu } = Menu;
 
@@ -11,6 +14,7 @@ const MultiNavComponent = ({
   extra,
   dataSource,
   selectedKey,
+  theme,
 }: MenuComponentProps) => {
   const submenu = useMemo(() => {
     const currentKey = keyPath(selectedKey, dataSource).shift() || selectedKey;
@@ -23,14 +27,6 @@ const MultiNavComponent = ({
     [selectedKey, dataSource]
   );
 
-  useEffect(() => {
-    console.log(
-      "%c^_^ \n\n",
-      "color: #C80815; font-weight: bolder",
-      JSON.stringify({ dataSource }, null, 2)
-    );
-  }, [dataSource]);
-
   const handleMainManu = useCallback(({ item, key, keyPath }) => {
     console.log("%c^_^ \n\n", "color: #C80815; font-weight: bolder", {
       item,
@@ -39,19 +35,27 @@ const MultiNavComponent = ({
     });
   }, []);
 
+  const renderIcon = useMemoCallback((icon) => {
+    if (!icon || icon === "wukongjian") {
+      return null;
+    }
+    return <Icon type={icon} />;
+  });
+
   return (
-    <div className="multi-nav-component">
+    <div className={classNames("multi-nav-component", theme)}>
       <div className="header">
         <div className="extra">{extra}</div>
         <div className="menu">
           <Menu
-            theme="dark"
             mode="horizontal"
             selectedKeys={[activeMainKey]}
             onClick={handleMainManu}
           >
             {dataSource.map((menu) => (
-              <Menu.Item key={menu.id}>{menu.name}</Menu.Item>
+              <Menu.Item key={menu.id} icon={renderIcon(menu?.form?.icon)}>
+                {menu.name}
+              </Menu.Item>
             ))}
           </Menu>
         </div>
@@ -73,7 +77,14 @@ const MultiNavComponent = ({
                       </SubMenu>
                     );
                   } else {
-                    return <Menu.Item key={menu.id}>{menu.name}</Menu.Item>;
+                    return (
+                      <Menu.Item
+                        key={menu.id}
+                        icon={renderIcon(menu?.form?.icon)}
+                      >
+                        {menu.name}
+                      </Menu.Item>
+                    );
                   }
                 });
               };

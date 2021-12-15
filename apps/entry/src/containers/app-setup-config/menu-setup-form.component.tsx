@@ -175,11 +175,11 @@ const MenuSetupFormComponent = React.forwardRef<{
                             rules={[
                               {
                                 validator(_, value) {
-                                  if (!value) {
-                                    return Promise.reject(
-                                      new Error("请选择子应用!")
-                                    );
-                                  }
+                                  // if (!value) {
+                                  //   return Promise.reject(
+                                  //     new Error("请选择子应用!")
+                                  //   );
+                                  // }
                                   return Promise.resolve();
                                 },
                               },

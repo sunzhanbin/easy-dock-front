@@ -1,3 +1,19 @@
 .app-info {
   background: transparent;
+  & > .multi {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 8px 24px;
+    & > .app-logo {
+      width: 40px;
+      margin-right: 12px;
+    }
+    & > .app-name {
+      flex: 1;
+      font-size: 18px;
+      font-weight: 600;
+      color: rgba(0, 0, 0, 0.85);
+    }
+  }
 }
