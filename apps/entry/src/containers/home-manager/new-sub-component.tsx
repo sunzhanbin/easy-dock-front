@@ -45,6 +45,7 @@ const HomeNewSub = () => {
         console.log(
           `http://10.19.248.238:28180/dashboard/${canvasData.id}?sso=true`
         );
+        // 大屏跳转需要拼sso=true保证用户信息不丢失
         window.open(
           `http://10.19.248.238:28180/dashboard/${canvasData.id}?sso=true`
         );
