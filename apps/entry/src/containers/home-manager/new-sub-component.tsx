@@ -42,7 +42,12 @@ const HomeNewSub = () => {
       if (type === HomeSubAppType.CANVAS) {
         const { data: canvasData }: ResponseType = await getCanvasId(data?.id);
         if (!canvasData) return;
-        window.open(`http://10.19.248.238:28180/dashboard/${canvasData.id}`);
+        console.log(
+          `http://10.19.248.238:28180/dashboard/${canvasData.id}?sso=true`
+        );
+        window.open(
+          `http://10.19.248.238:28180/dashboard/${canvasData.id}?sso=true`
+        );
       } else if (type === HomeSubAppType.SPACE) {
         const { data: spaceData }: ResponseType = await getHolosceneId(
           data?.id

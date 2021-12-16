@@ -49,9 +49,10 @@ export const HomeManagerSlice = createSlice({
     );
     builder.addMatcher(
       homeManageRuntime.endpoints.logout.matchFulfilled,
-      (state, action) => {
+      (state) => {
         console.log(runTime, "ffff");
-        Auth.logout(action.payload ? action.payload : undefined);
+        const url = process.env.REACT_APP_SSO_LOGIN_URL;
+        Auth.logout(url ? url : undefined);
         state.userInfo = null;
         delete axios.defaults.headers.auth;
         // 清掉cookie
