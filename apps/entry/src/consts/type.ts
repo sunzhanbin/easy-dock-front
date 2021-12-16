@@ -21,8 +21,8 @@ export enum HomeSubAppType {
 }
 // 导航方式  双导航  左导航
 export enum NavModeType {
-  MULTI = "multi",
-  SINGLE = "single",
+  MULTI = 1,
+  LEFT = 2,
 }
 
 export enum ThemeType {

@@ -1,7 +1,12 @@
-import { NavModeType, ThemeType } from "@/consts";
+import { NavModeType, ThemeType, validateName, validateRemark } from "@/consts";
 import { appManagerBuilder } from "@/http";
 import { RootState } from "@/store";
-import { createSlice, PayloadAction, current } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  createAsyncThunk,
+  PayloadAction,
+  current,
+} from "@reduxjs/toolkit";
 import { BasicSetupInitialState } from "@utils/types";
 
 const initialState: BasicSetupInitialState = {
@@ -9,6 +14,7 @@ const initialState: BasicSetupInitialState = {
   navMode: NavModeType.MULTI,
   logo: "", // logo 需要上传，故需要记录，表单上传时使用；
   basicForm: {},
+  errors: [], //保存错误信息
 };
 
 export const basicSetupSlice = createSlice({
@@ -24,6 +30,9 @@ export const basicSetupSlice = createSlice({
     setLogo: (state, action: PayloadAction<string>) => {
       state.logo = action.payload;
     },
+    setErrors: (state, action: PayloadAction<string[]>) => {
+      state.errors = action.payload;
+    },
     setBaseForm: (state, action: PayloadAction<{ [key: string]: any }>) => {
       const icon = action.payload.icon?.[0]?.id;
       if (typeof action.payload === "object") {
@@ -34,6 +43,7 @@ export const basicSetupSlice = createSlice({
       } else {
         state.basicForm.icon = null;
       }
+      state.errors = [];
     },
   },
   extraReducers: (builder) => {
@@ -54,9 +64,41 @@ export const selectNavMode = (state: RootState) => state.basicSetup.navMode;
 
 export const selectBasicForm = (state: RootState) => state.basicSetup.basicForm;
 
+export const basicErrorSelector = (state: RootState) => state.basicSetup.errors;
+
 export const {
   setTheme,
   setMode,
   setLogo,
+  setErrors,
   setBaseForm,
 } = basicSetupSlice.actions;
+
+// 校验基础表单,保存时需要校验
+export const validateBasicForm = createAsyncThunk<
+  void,
+  { [k: string]: string | number | null | undefined },
+  { state: RootState }
+>("basicForm/save", async (basicConfig, { getState, dispatch }) => {
+  const errors: string[] = [];
+  const { name, workspace, remark, icon } = basicConfig;
+  const nameError = validateName(name as string);
+  if (nameError) {
+    errors.push("应用名称错误");
+  }
+  const remarkError = validateRemark(remark as string);
+  if (remarkError) {
+    errors.push("应用描述错误");
+  }
+  if (!workspace) {
+    errors.push("请选择所属工作区");
+  }
+  if (!icon) {
+    errors.push("请上传logo");
+  }
+  if (errors.length > 0) {
+    dispatch(setErrors(errors));
+    return Promise.reject(new Error("请检查应用设置!"));
+  }
+  return Promise.resolve();
+});

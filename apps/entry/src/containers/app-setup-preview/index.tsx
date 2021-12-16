@@ -18,19 +18,19 @@ const AppSetupPreview = () => {
     return <>这里是内容区</>;
   }, []);
   const renderNavComponent = useMemo(() => {
-    if (navMode === "single") {
+    if (navMode === NavModeType.LEFT) {
       return (
         <SingleNavComponent
           selectedKey={selectedKey}
           dataSource={menu}
           theme={theme}
-          extra={<AppInfo navMode={NavModeType.SINGLE} />}
+          extra={<AppInfo navMode={NavModeType.LEFT} />}
         >
           {renderContent()}
         </SingleNavComponent>
       );
     }
-    if (navMode === "multi") {
+    if (navMode === NavModeType.MULTI) {
       return (
         <MultiNavComponent
           selectedKey={selectedKey}

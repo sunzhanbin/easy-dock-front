@@ -41,6 +41,7 @@ export interface BasicSetupInitialState {
   navMode: NavModeType;
   logo: string;
   basicForm: { [key: string]: any };
+  errors: string[];
 }
 
 export interface MenuSetupInitialState {
