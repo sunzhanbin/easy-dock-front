@@ -38,14 +38,14 @@ const NewSubAppPopoverComponent = () => {
         if (!canvasData) return;
         // 大屏跳转需要拼sso=true保证用户信息不丢失
         window.open(
-          `http://10.19.248.238:28180/dashboard/${canvasData.id}?sso=true`
+          `http://10.19.248.238:28180/dashboard/${canvasData.refId}?sso=true`
         );
       } else if (type === HomeSubAppType.SPACE) {
         const { data: spaceData }: ResponseType = await getHolosceneId(
           data?.id
         );
         if (!spaceData) return;
-        window.open(`http://10.19.248.238:9003/#/scene/${spaceData.id}`);
+        window.open(`http://10.19.248.238:9003/#/scene/${spaceData.refId}`);
       } else if (type === HomeSubAppType.FLOW) {
         window.open(
           `http://10.19.248.238:28303/builder/flow/bpm-editor/${data?.id}/flow-design`

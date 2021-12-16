@@ -149,7 +149,7 @@ const SelectCard = ({
         optionLabelProp="label"
         onDropdownVisibleChange={handleRevert}
         onChange={handleSelectField}
-        {...(type.key === "project" && { value: selectedId })}
+        {...(type.key === "project" && { value: selectedId || undefined })}
         {...(type.key === "project" && {
           getPopupContainer: getPopupContainer,
         })}
