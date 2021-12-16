@@ -1,8 +1,14 @@
 import React, { useCallback } from "react";
 import SelectCard from "@components/select-card";
-import { useGetProjectListQuery, useNewProjectMutation } from "@/http";
+import {
+  useGetProjectListQuery,
+  useNewProjectMutation,
+  useDeleteProjectMutation,
+  useEditProjectMutation,
+} from "@/http";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { selectProjectId, setProjectId } from "@views/home/index.slice";
+import { message } from "antd";
 
 const SELECT_CARD_TYPE = {
   key: "project",
@@ -16,6 +22,8 @@ const ProjectComponent = () => {
     }),
   });
   const [addProject] = useNewProjectMutation();
+  const [editProject] = useEditProjectMutation();
+  const [deleteProject] = useDeleteProjectMutation();
 
   const projectId = useAppSelector(selectProjectId);
   const handleSelectProject = useCallback(
@@ -25,10 +33,24 @@ const ProjectComponent = () => {
     [dispatch]
   );
   const handleNewProject = useCallback(
-    (name: any) => {
-      return addProject({ name });
+    ({ name, isEdit, id }) => {
+      console.log(id, isEdit);
+      if (!isEdit) {
+        addProject({ name });
+        message.success("创建成功");
+      } else {
+        editProject({ name, id });
+        message.success("修改成功");
+      }
     },
-    [addProject]
+    [editProject, addProject]
+  );
+  const handleDeleteProject = useCallback(
+    (id: number) => {
+      deleteProject(id);
+      message.success("删除成功");
+    },
+    [deleteProject]
   );
   return (
     <SelectCard
@@ -37,6 +59,7 @@ const ProjectComponent = () => {
       onSelect={handleSelectProject}
       selectedId={projectId}
       onAdd={handleNewProject}
+      onDelete={handleDeleteProject}
     />
   );
 };
