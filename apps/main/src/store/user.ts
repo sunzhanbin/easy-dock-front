@@ -44,7 +44,6 @@ export const getUserInfo = createAsyncThunk('main-app-user/get-user', (_, { disp
 export const logout = createAsyncThunk<void, string | undefined, { state: RootState }>(
   'main-app-user/logout',
   async (url, { dispatch }) => {
-    debugger
     // await runtimeAxios.delete('/auth/logout');
     if (window.Auth) {
       window.Auth.logout(url ? url : undefined);
