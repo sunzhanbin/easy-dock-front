@@ -7,7 +7,7 @@ import { BasicSetupInitialState } from "@utils/types";
 const initialState: BasicSetupInitialState = {
   theme: ThemeType.LIGHT,
   navMode: NavModeType.MULTI,
-  logo: {}, // logo 需要上传，故需要记录，表单上传时使用；
+  logo: "", // logo 需要上传，故需要记录，表单上传时使用；
   basicForm: {},
 };
 
@@ -21,11 +21,11 @@ export const basicSetupSlice = createSlice({
     setMode: (state, action: PayloadAction<NavModeType>) => {
       state.navMode = action.payload;
     },
-    setLogo: (state, action: PayloadAction<{ [key: string]: any }>) => {
+    setLogo: (state, action: PayloadAction<string>) => {
       state.logo = action.payload;
     },
     setBaseForm: (state, action: PayloadAction<{ [key: string]: any }>) => {
-      const icon = action.payload.icon?.[0];
+      const icon = action.payload.icon?.[0]?.id;
       if (typeof action.payload === "object") {
         state.basicForm = JSON.parse(JSON.stringify(action.payload));
       }

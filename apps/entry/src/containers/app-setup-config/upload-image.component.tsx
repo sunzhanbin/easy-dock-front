@@ -49,7 +49,7 @@ const UploadImage: FC<UploadImageProps> = ({ value, onChange }) => {
   });
   const handleRemove = useMemoCallback((file: UploadFile) => {
     setFileList([]);
-    dispatch(setLogo({}));
+    dispatch(setLogo(""));
     onChange && onChange(undefined);
   });
   const handleCustomRequest = useMemoCallback(
@@ -61,7 +61,7 @@ const UploadImage: FC<UploadImageProps> = ({ value, onChange }) => {
         .then(({ data: response }: any) => {
           onSuccess(response, file);
           if (Array.isArray(response) && response.length > 0) {
-            dispatch(setLogo(response[0]));
+            dispatch(setLogo(response[0]?.id));
           }
           onChange && onChange(response);
         })

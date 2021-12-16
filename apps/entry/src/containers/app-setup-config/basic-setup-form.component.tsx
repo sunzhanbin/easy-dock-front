@@ -47,8 +47,9 @@ const BasicSetupFormComponent = React.forwardRef(function basicSetupForm(
     return Object.assign({}, values, initialBasicSetup);
   }, [initialBasicSetup]);
 
-  const handleValuesChange = useCallback((_, values: any) => {
-    dispatch(setBaseForm(values));
+  const handleValuesChange = useCallback(() => {
+    const formValues = form.getFieldsValue();
+    dispatch(setBaseForm(formValues));
   }, []);
 
   useImperativeHandle(ref, () => ({

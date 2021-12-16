@@ -40,7 +40,7 @@ const AppInfo = ({ navMode }: { navMode: NavModeType }) => {
 
   useEffect(() => {
     (async () => {
-      const logoId = appBasicConfig?.icon?.id || "";
+      const logoId = appBasicConfig?.icon || "";
       if (logoId) {
         const url = await imgIdToUrl(logoId);
         setLogoUrl(url);
