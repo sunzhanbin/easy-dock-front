@@ -1,18 +1,19 @@
 import { ReactNode } from "react";
-import { Link } from "react-router-dom";
-// import classnames from "classnames";
+import { Link, useLocation } from "react-router-dom";
 import logo from "@assets/images/logo.png";
 import Icon from "@assets/icon";
 import UserComponent from "@components//header/user";
 import "@components/header/index.style.scss";
 import ProjectComponent from "@components/header/project";
+import NewSubAppPopover from "@components/header/new-subapp-popover.component";
 
 interface HeaderProps {
   children?: ReactNode;
 }
 
 export default function Header({ children }: HeaderProps) {
-  // const user = useAppSelector(userSelector);
+  const location = useLocation();
+  const showPopover = location.pathname !== "/";
   return (
     <div className="header_container">
       <div className="header_content">
@@ -22,6 +23,7 @@ export default function Header({ children }: HeaderProps) {
         <ProjectComponent />
         {children}
         <div className="right">
+          {showPopover ? <NewSubAppPopover /> : ""}
           <Icon className="icon" type="custom-icon-shezhi" />
           <Icon className="icon" type="custom-icon-shuoming" />
           <div className="user_info">

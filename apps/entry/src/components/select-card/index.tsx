@@ -92,10 +92,54 @@ const SelectCard = ({
     setShowButton(true);
   }, [form]);
 
-  // const handleDropdownVisible = () => {
-  //   form.resetFields();
-  //   setShowButton(true);
-  // };
+  const renderMenu = (menu: React.ReactNode) => (
+    <div className="dropdown-select-card">
+      {menu}
+      <Form form={form} name={type.key} className="footer_select">
+        <Form.Item>
+          {showButton ? (
+            <Form.Item noStyle>
+              <Button
+                className="btn_add_field"
+                size="large"
+                icon={<Icon type="custom-icon-xinzengjiacu" />}
+                onClick={addField}
+              >
+                创建{type.label}
+              </Button>
+            </Form.Item>
+          ) : (
+            <Form.Item noStyle name="fieldName" rules={[nameRule]}>
+              <Input
+                size="large"
+                onChange={handleNameChange}
+                placeholder={`请输入${type.label}名称`}
+                autoFocus
+                suffix={
+                  <>
+                    <Icon
+                      className={classnames(
+                        "tick_icon",
+                        !fieldName ? "disabled" : ""
+                      )}
+                      type="custom-icon-gou"
+                      onClick={handleConfirmName}
+                    />
+
+                    <Icon
+                      className="close"
+                      type="custom-icon-fanhuichexiao"
+                      onClick={handleRevert}
+                    />
+                  </>
+                }
+              />
+            </Form.Item>
+          )}
+        </Form.Item>
+      </Form>
+    </div>
+  );
   return (
     <div className="select-card">
       <Select
@@ -105,58 +149,11 @@ const SelectCard = ({
         optionLabelProp="label"
         onDropdownVisibleChange={handleRevert}
         onChange={handleSelectField}
-        {...(type.key === "project" && { value: selectedId })}
+        {...(type.key === "project" && { value: selectedId || undefined })}
         {...(type.key === "project" && {
           getPopupContainer: getPopupContainer,
         })}
-        dropdownRender={(menu) => (
-          <div className="dropdown-select-card">
-            {menu}
-            <Form form={form} name={type.key} className="footer_select">
-              <Form.Item>
-                {showButton ? (
-                  <Form.Item noStyle>
-                    <Button
-                      className="btn_add_field"
-                      size="large"
-                      icon={<Icon type="custom-icon-xinzengjiacu" />}
-                      onClick={addField}
-                    >
-                      创建{type.label}
-                    </Button>
-                  </Form.Item>
-                ) : (
-                  <Form.Item noStyle name="fieldName" rules={[nameRule]}>
-                    <Input
-                      size="large"
-                      onChange={handleNameChange}
-                      placeholder={`请输入${type.label}名称`}
-                      autoFocus
-                      suffix={
-                        <>
-                          <Icon
-                            className={classnames(
-                              "tick_icon",
-                              !fieldName ? "disabled" : ""
-                            )}
-                            type="custom-icon-gou"
-                            onClick={handleConfirmName}
-                          />
-
-                          <Icon
-                            className="close"
-                            type="custom-icon-fanhuichexiao"
-                            onClick={handleRevert}
-                          />
-                        </>
-                      }
-                    />
-                  </Form.Item>
-                )}
-              </Form.Item>
-            </Form>
-          </div>
-        )}
+        dropdownRender={renderMenu}
       >
         {fieldList?.map((item: any) => (
           <Option key={item.id} value={item.id} label={item.name}>
