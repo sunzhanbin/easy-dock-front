@@ -172,6 +172,26 @@ export const HELP_LIST = [
     name: "任务中心",
     desc: "任务中心展示该用户的待办任务、发起流程、已办任务、抄送、草稿等",
   },
+  {
+    name: "接口编排",
+    desc:
+      "自定义服务积木，使用第三方API服务，该API服务未导入到系统中，该积木会根据指定的Url、请求类型及请求参数，调用该API，返回调用该API的响应结果",
+  },
+  {
+    name: "报表编排",
+    desc:
+      "报表编排包括仪表盘、统计图表、数据接入、数据规则共四个模块，顶部提供各类统计图表，中间画布支持自由布局，点击图表进行数据源选择及规则配置",
+  },
+  {
+    name: "大屏编排",
+    desc:
+      "画布编辑、发布和数据源对接能力，需进行页面名称填写并设置分组，同时可以选择某个模板作为当前的编辑页面或者选择空白页作为当前页面",
+  },
+  {
+    name: "接入数据",
+    desc:
+      "模型组件用于对左侧源数据进行数据治理，通过组件自由组合实现，数据的灵活治理，包括结果输出、单表操作、多表操作",
+  },
 ];
 
 // 应用构建列表
@@ -194,6 +214,13 @@ export const SUB_APP_LIST = [
     className: "create_virtual",
     subList: CREATE_VIRTUAL_LIST,
   },
+];
+
+export const NOT_SHOW_MODAL_SELECT = [
+  HomeSubAppType.DATA,
+  HomeSubAppType.DATA_FISH,
+  HomeSubAppType.DEVICE,
+  HomeSubAppType.INTERFACE,
 ];
 
 /* -------home end ----------*/

@@ -1,14 +1,18 @@
 import { memo, FC, useState, useMemo, useEffect } from "react";
 import classNames from "classnames";
-import { Button } from "antd";
+import { Button, message } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 import { Icon, Text } from "@common/components";
 import useMemoCallback from "@common/hooks/use-memo-callback";
-import { useAppDispatch } from "@/store";
-import { setName } from "@/views/workspace/index.slice";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { selectMenu, setName } from "@/views/workspace/index.slice";
 import { useWorkspaceDetailQuery } from "@/http";
 import "./app-manager-header.style.scss";
 import { setCurrentWorkspaceId } from "@/views/app-manager/index.slice";
+import {
+  selectBasicForm,
+  validateBasicForm,
+} from "@/views/app-setup/basic-setup.slice";
 
 interface EditHeaderProps {
   className?: string;
@@ -24,6 +28,8 @@ const AppManagerHeader: FC<EditHeaderProps> = ({ className }) => {
   const { workspaceId } = useParams();
   const dispatch = useAppDispatch();
   const { data: workspace } = useWorkspaceDetailQuery(+(workspaceId as string));
+  const basicConfig = useAppSelector(selectBasicForm);
+  const menuList = useAppSelector(selectMenu);
   const [activeNav, setActiveNav] = useState<string>("edit");
   const navList = useMemo<NavItem[]>(() => {
     return [{ key: "edit", title: "应用设计" }];
@@ -34,8 +40,16 @@ const AppManagerHeader: FC<EditHeaderProps> = ({ className }) => {
   const handlePreview = useMemoCallback(() => {
     console.info("preview");
   });
-  const handleSave = useMemoCallback(() => {
-    console.info("save");
+  const handleSave = useMemoCallback(async () => {
+    const basicConfigResult = await dispatch(validateBasicForm(basicConfig));
+    if (basicConfigResult.meta.requestStatus === "rejected") {
+      message.error("请检查应用设置!");
+      return;
+    }
+    if (!menuList?.length) {
+      message.error("请添加菜单!");
+      return;
+    }
   });
   const handlePublish = useMemoCallback(() => {
     console.info("publish");

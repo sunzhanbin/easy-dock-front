@@ -7,10 +7,13 @@ import React, {
 import { Form, Input, Select } from "antd";
 import { Rule } from "antd/lib/form";
 import { UploadFile } from "antd/lib/upload/interface";
-import { useAppDispatch } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 import { Icon } from "@common/components";
-import { nameRule, remarkRule } from "@/consts";
-import { setBaseForm } from "@views/app-setup/basic-setup.slice";
+import { nameRule, NavModeType, remarkRule } from "@/consts";
+import {
+  basicErrorSelector,
+  setBaseForm,
+} from "@views/app-setup/basic-setup.slice";
 import NavMode from "./nav-mode.component";
 import Theme from "./theme.component";
 import UploadImage from "./upload-image.component";
@@ -28,6 +31,7 @@ const BasicSetupFormComponent = React.forwardRef(function basicSetupForm(
 ) {
   const [form] = Form.useForm();
   const dispatch = useAppDispatch();
+  const basicError = useAppSelector(basicErrorSelector);
 
   const iconRule = useMemo<Rule>(() => {
     return {
@@ -41,14 +45,15 @@ const BasicSetupFormComponent = React.forwardRef(function basicSetupForm(
   }, []);
   const initialValues = useMemo(() => {
     const values = {
-      navMode: "multi",
+      navMode: NavModeType.MULTI,
       theme: "light",
     };
     return Object.assign({}, values, initialBasicSetup);
   }, [initialBasicSetup]);
 
-  const handleValuesChange = useCallback((_, values: any) => {
-    dispatch(setBaseForm(values));
+  const handleValuesChange = useCallback(() => {
+    const formValues = form.getFieldsValue();
+    dispatch(setBaseForm(formValues));
   }, []);
 
   useImperativeHandle(ref, () => ({
@@ -58,6 +63,12 @@ const BasicSetupFormComponent = React.forwardRef(function basicSetupForm(
   useEffect(() => {
     form.setFieldsValue(initialValues);
   }, [initialValues]);
+
+  useEffect(() => {
+    if (basicError?.length > 0) {
+      form.validateFields();
+    }
+  }, [basicError]);
 
   return (
     <div className="basic-setup-form-component">

@@ -16,10 +16,27 @@ export const homeManageBuilder = baseFetch.injectEndpoints({
           : [{ type: "Project", id: "LIST" }],
     }),
     newProject: build.mutation({
-      query: (params: { name: number }) =>
+      query: (params: { name: string }) =>
         ({
           url: "/project",
           method: "post",
+          data: params,
+        } as any),
+      invalidatesTags: [{ type: "Project", id: "LIST" }],
+    }),
+    deleteProject: build.mutation({
+      query: (id: number) =>
+        ({
+          url: `/project/${id}`,
+          method: "delete",
+        } as any),
+      invalidatesTags: [{ type: "Project", id: "LIST" }],
+    }),
+    editProject: build.mutation({
+      query: (params: { name: string; id: number }) =>
+        ({
+          url: "/project",
+          method: "put",
           data: params,
         } as any),
       invalidatesTags: [{ type: "Project", id: "LIST" }],
@@ -34,6 +51,8 @@ export const {
   useGetProjectListQuery,
   useNewProjectMutation,
   useGetRecentListMutation,
+  useDeleteProjectMutation,
+  useEditProjectMutation,
 } = homeManageBuilder;
 
 export const homeManageRuntime = runTime.injectEndpoints({

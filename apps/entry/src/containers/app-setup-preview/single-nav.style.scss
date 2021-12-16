@@ -1,11 +1,166 @@
+@import "@common/styles/var.scss";
+
+$light-side-background-color: #f6f7f8;
+$light-text-color: #181f43;
+$light-content-background-color: #fff;
+$dark-text-color: #fff;
+$dark-side-background-color: #2d2d2f;
+$dark-content-background-color: #202023;
+
 .single-nav-component {
+  height: 100%;
   display: flex;
-  .sider {
+  & > .left {
+    display: flex;
+    flex-direction: column;
     width: 240px;
-    .extra {}
-    .submenu{}
+    border-right: 1px solid rgba(24, 31, 67, 0.12);
+    & > .extra {
+      height: 128px;
+    }
+    & > .menu {
+      flex: 1;
+      & > .ant-menu {
+        width: 239px !important;
+        height: 100%;
+        border-right: none;
+        .ant-menu-submenu {
+          width: 100%;
+        }
+        .ant-menu-submenu-title,
+        .ant-menu-item {
+          height: 48px;
+          line-height: 48px;
+          margin: 0;
+          font-size: 14px;
+          font-weight: 400;
+          &:hover {
+            color: $primary-color;
+            .ant-menu-item-icon {
+              color: $primary-color;
+            }
+          }
+        }
+        .ant-menu-item-selected {
+          color: $primary-color;
+          .ant-menu-item-icon {
+            color: $primary-color;
+          }
+          &::after {
+            border-right-color: $primary-color;
+            border-right-width: 5px;
+          }
+        }
+        .ant-menu-submenu-active {
+          .ant-menu-submenu-arrow {
+            color: $primary-color;
+          }
+        }
+      }
+    }
   }
-  .content {
+  & > .right {
     flex: 1;
+    & > .header {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      height: 56px;
+      padding-right: 18px;
+      // border-bottom: 1px solid rgba(24, 31, 67, 0.08);
+      box-shadow: 0px 2px 8px 0px rgba(24, 31, 67, 0.08);
+      & > .user-container {
+        pointer-events: none;
+        & > .user {
+          display: flex;
+          align-items: center;
+          & > .avatar {
+            margin-right: 4px;
+          }
+        }
+      }
+    }
+  }
+  // 浅色主题
+  &.light {
+    & > .left {
+      background: $light-side-background-color;
+      & > .menu {
+        & > .ant-menu {
+          background: $light-side-background-color;
+          .ant-menu-submenu-title,
+          .ant-menu-item {
+            color: $light-text-color;
+          }
+          .ant-menu-item-selected {
+            background-color: $light-content-background-color;
+            color: $primary-color;
+            .ant-menu-item-icon {
+              color: $primary-color;
+            }
+            &::after {
+              border-right-color: $primary-color;
+              border-right-width: 5px;
+            }
+          }
+          .ant-menu-submenu-active {
+            .ant-menu-submenu-arrow {
+              color: $primary-color;
+            }
+          }
+        }
+      }
+    }
+    & > .right {
+      background: $light-content-background-color;
+    }
+  }
+  // 深色主题
+  &.dark {
+    & > .left {
+      background: $dark-side-background-color;
+      border-right-color: rgba(255, 255, 255, 0.12);
+      .app-name {
+        color: $dark-text-color;
+      }
+      & > .menu {
+        & > .ant-menu {
+          background: $dark-side-background-color;
+          .ant-menu-submenu-title,
+          .ant-menu-item {
+            color: $dark-text-color;
+          }
+          .ant-menu-item-selected {
+            background-color: $dark-content-background-color;
+            color: $primary-color;
+            .ant-menu-item-icon {
+              color: $primary-color;
+            }
+            &::after {
+              border-right-color: $primary-color;
+              border-right-width: 5px;
+            }
+          }
+          .ant-menu-submenu-active {
+            .ant-menu-submenu-arrow {
+              color: $primary-color;
+            }
+          }
+        }
+      }
+    }
+    & > .right {
+      background: $dark-content-background-color;
+      & > .header {
+        background: $dark-side-background-color;
+        border-bottom-color: rgba(255, 255, 255, 0.12);
+        & > .user-container {
+          color: $dark-text-color;
+        }
+      }
+      & > .content {
+        color: $dark-text-color;
+      }
+    }
   }
 }

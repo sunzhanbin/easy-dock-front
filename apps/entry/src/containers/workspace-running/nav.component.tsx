@@ -4,6 +4,7 @@ import { selectMenu, selectNavMode } from "@/views/workspace/index.slice";
 import SingleNavComponent from "@containers/workspace-running/single-nav.component";
 import MultiNavComponent from "@containers/workspace-running/multi-nav.component";
 import "@containers/workspace-running/nav.style";
+import { NavModeType } from "@/consts";
 
 const NavComponent = () => {
   const menu = useAppSelector(selectMenu);
@@ -11,10 +12,10 @@ const NavComponent = () => {
 
   return (
     <div className="nav-component">
-      {navMode === "single" && (
+      {navMode === NavModeType.LEFT && (
         <SingleNavComponent dataSource={menu} extra={<SingleNavAppInfo />} />
       )}
-      {navMode === "multi" && (
+      {navMode === NavModeType.MULTI && (
         <MultiNavComponent dataSource={menu} extra={<MultiNavAppInfo />} />
       )}
     </div>

@@ -29,7 +29,6 @@ const NewSubAppModal = ({ modalInfo, visible, onOk, onCancel }: ModalProps) => {
       workspaceList: data?.filter(Boolean),
     }),
   });
-  console.log(workspaceList, "data");
   const handleNewSubApp = useCallback(
     (name: any) => {
       return addWorkspace({ name, projectId });
@@ -101,11 +100,6 @@ const NewSubAppModal = ({ modalInfo, visible, onOk, onCancel }: ModalProps) => {
       </Form>
     </Modal>
   );
-};
-
-const FormContainer = ({ children, ...rest }: any) => {
-  console.log(rest, "rest");
-  return React.cloneElement(children, rest);
 };
 
 export default memo(NewSubAppModal);

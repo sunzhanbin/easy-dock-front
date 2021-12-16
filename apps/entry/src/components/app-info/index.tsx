@@ -20,33 +20,36 @@ const AppInfo = ({ navMode }: { navMode: NavModeType }) => {
   const appName = useMemo(() => appBasicConfig?.name || "未命名站点", [
     appBasicConfig?.name,
   ]);
+  const classNameMap = useMemo<{ [k in NavModeType]: string }>(() => {
+    return {
+      [NavModeType.LEFT]: "single",
+      [NavModeType.MULTI]: "multi",
+    };
+  }, []);
+  const navModeClassName = useMemo<string>(() => classNameMap[navMode], [
+    navMode,
+  ]);
 
   const [logoUrl, setLogoUrl] = useState<string>("");
 
   const content = useMemo(() => {
-    if (navMode === NavModeType.SINGLE) {
-      return <div></div>;
-    }
-    if (navMode === NavModeType.MULTI) {
-      return (
-        <div className="multi">
-          <img
-            className="app-logo"
-            src={logoUrl ? logoUrl : defaultLogo}
-            alt="logo"
-          />
-          <div className="app-name">
-            <Text text={appName} />
-          </div>
+    return (
+      <div className={navModeClassName}>
+        <img
+          className="app-logo"
+          src={logoUrl ? logoUrl : defaultLogo}
+          alt="logo"
+        />
+        <div className="app-name">
+          <Text text={appName} />
         </div>
-      );
-    }
-    return null;
+      </div>
+    );
   }, [navMode, appName, logoUrl]);
 
   useEffect(() => {
     (async () => {
-      const logoId = appBasicConfig?.icon?.id || "";
+      const logoId = appBasicConfig?.icon || "";
       if (logoId) {
         const url = await imgIdToUrl(logoId);
         setLogoUrl(url);

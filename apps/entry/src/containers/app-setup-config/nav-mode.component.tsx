@@ -9,7 +9,7 @@ import "./nav-mode.style.scss";
 import { NavModeType } from "@/consts";
 
 interface NavModeProps {
-  value?: string;
+  value?: NavModeType;
   onChange?: (value: this["value"]) => void;
 }
 
@@ -24,7 +24,7 @@ const NavMode: FC<NavModeProps> = ({ value, onChange }) => {
   const modeList = useMemo<ModeItem[]>(() => {
     return [
       { key: NavModeType.MULTI, label: "双导航", image: BothNav },
-      { key: NavModeType.SINGLE, label: "左导航", image: LeftNav },
+      { key: NavModeType.LEFT, label: "左导航", image: LeftNav },
     ];
   }, []);
   const handleChangeNav = useMemoCallback((nav: NavModeType) => {

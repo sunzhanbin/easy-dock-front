@@ -39,8 +39,9 @@ export interface AppManagerInitialState {
 export interface BasicSetupInitialState {
   theme: ThemeType;
   navMode: NavModeType;
-  logo: { [key: string]: any };
+  logo: string;
   basicForm: { [key: string]: any };
+  errors: string[];
 }
 
 export interface MenuSetupInitialState {

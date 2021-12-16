@@ -4,7 +4,11 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import Icon from "@assets/icon";
 import "@containers/home-manager/index.style.scss";
 import { useNavigate } from "react-router-dom";
-import { useGetRecentListMutation } from "@/http";
+import {
+  useGetCanvasIdMutation,
+  useGetHolosceneIdMutation,
+  useGetRecentListMutation,
+} from "@/http";
 import { useAppSelector } from "@/store";
 import { selectProjectId } from "@views/home/index.slice";
 import { HomeSubAppType, ResponseType } from "@/consts";
@@ -22,6 +26,8 @@ const HomeWorkspaceList = () => {
   const navigate = useNavigate();
   const projectId = useAppSelector(selectProjectId);
   const [getRecentList] = useGetRecentListMutation();
+  const [getHolosceneId] = useGetHolosceneIdMutation();
+  const [getCanvasId] = useGetCanvasIdMutation();
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<any>([]);
 
@@ -43,14 +49,20 @@ const HomeWorkspaceList = () => {
     navigate("/app-manager");
   }, [navigate]);
   const handleLinkTo = useCallback(
-    (item: ListItemType) => {
+    async (item: ListItemType) => {
       const { isApp, type, id } = item;
       if (isApp) {
         navigate(`/app-manager/${id}`);
       } else if (type === HomeSubAppType.CANVAS) {
-        window.open(`http://10.19.248.238:28180/dashboard/${id}`);
+        const { data: canvasData }: ResponseType = await getCanvasId(id);
+        if (!canvasData) return;
+        window.open(
+          `http://10.19.248.238:28180/dashboard/${canvasData.refId}?sso=true`
+        );
       } else if (type === HomeSubAppType.SPACE) {
-        window.open(`http://10.19.248.238:9003/#/scene/${id}`);
+        const { data: spaceData }: ResponseType = await getHolosceneId(id);
+        if (!spaceData) return;
+        window.open(`http://10.19.248.238:9003/#/scene/${spaceData.refId}`);
       } else if (type === HomeSubAppType.FLOW) {
         window.open(
           `http://10.19.248.238:28303/builder/flow/bpm-editor/${id}/flow-design`
@@ -63,7 +75,7 @@ const HomeWorkspaceList = () => {
         // todo
         window.open(`http://10.19.248.238:9003/#/scene/${id}`);
       } else if (type === HomeSubAppType.INTERFACE) {
-        window.open(`http://10.19.248.238:28217/orch/${id}`);
+        window.open(`http://10.19.248.238:28217/orch`);
       } else if (type === HomeSubAppType.DATA_FISH) {
         // todo
         window.open(`http://10.19.248.238:9003/#/scene/${id}`);
