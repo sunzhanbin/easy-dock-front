@@ -1,30 +1,44 @@
 import { memo, useMemo, useCallback } from "react";
-import { useDispatch } from "react-redux";
+import Auth from "@enc/sso";
 import { Dropdown, Menu } from "antd";
-import { useLogoutMutation } from "@/http";
+import { useGetUserInfoQuery, useLogoutMutation } from "@/http";
 import { Avatar } from "@common/components";
 import Icon from "@assets/icon";
+// import { RoleEnum, AuthEnum } from "@utils/types";
 
 // import { userSelector, logout } from "@/store/user";
 import "@components/header/index.style.scss";
 
 function HeaderUser() {
-  const dispatch = useDispatch();
+  const [logout] = useLogoutMutation();
+  const { user } = useGetUserInfoQuery("", {
+    selectFromResult: ({ data }) => {
+      if (!data) return { user: null };
+      const { power, user } = data;
+      return {
+        user: {
+          avatar: user.avatar,
+          username: user.userName,
+          id: user.id,
+          power: power,
+        },
+      };
+    },
+  });
+
   const handleLogin = async () => {
-    //  todo
+    await Auth.getToken(true, window.EASY_DOCK_BASE_SERVICE_ENDPOINT);
   };
   const handleLogout = useCallback(() => {
-    useLogoutMutation();
-  }, [dispatch]);
+    logout("");
+  }, [logout]);
 
-  const user = {
-    info: {
-      avatar: "Cxx",
-      username: "Cxx",
-    },
-    cast: false,
-  };
-  const isAdmin = false;
+  // 当前角色是否是超管 v1.2.0暂时不加
+  // const isAdmin = useMemo(() => {
+  //   const power = user?.power || 0;
+  //   return (power & RoleEnum.ADMIN) === RoleEnum.ADMIN;
+  // }, [user]);
+
   const dropdownOverlay = useMemo(() => {
     return (
       <Menu>
@@ -36,11 +50,11 @@ function HeaderUser() {
         </Menu.Item>
       </Menu>
     );
-  }, [isAdmin, handleLogout]);
+  }, [handleLogout]);
 
   return (
     <>
-      {user.info ? (
+      {user ? (
         <Dropdown
           overlay={dropdownOverlay}
           getPopupContainer={(c) => c}
@@ -48,14 +62,9 @@ function HeaderUser() {
         >
           <div className="user">
             <div className="avatar">
-              <Avatar
-                round
-                size={32}
-                src={user.info.avatar}
-                name={user.info.username}
-              />
+              <Avatar round size={32} src={user.avatar} name={user.username} />
             </div>
-            <div className="name">{user.info.username}</div>
+            <div className="name">{user.username}</div>
           </div>
         </Dropdown>
       ) : (

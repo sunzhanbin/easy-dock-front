@@ -1,11 +1,12 @@
 import { createSlice, PayloadAction, current } from "@reduxjs/toolkit";
-import { appManager } from "@/http";
+import { appManagerBuilder } from "@/http";
 import { RootState } from "@/store";
 import { WorkspaceInitialState } from "@utils/types";
+import { NavModeType } from "@/consts";
 
 const initialState: WorkspaceInitialState = {
   name: "",
-  navMode: "multi",
+  navMode: NavModeType.MULTI,
   menu: [
     {
       id: "05e23c5f-9bde-429c-8d8c-6f42fb64d59d",
@@ -14,15 +15,11 @@ const initialState: WorkspaceInitialState = {
       depth: 1,
       form: {
         name: "",
-        showMenu: false,
-        icon: "icon1",
+        icon: "wukongjian",
         mode: "blank",
-        isHome: false,
         asset: "exist",
         assetConfig: {
-          app: "flow",
-          subapp: "absence",
-          url: "www.baidu.com",
+          subAppType: 1,
         },
       },
       children: [
@@ -33,15 +30,11 @@ const initialState: WorkspaceInitialState = {
           depth: 2,
           form: {
             name: "",
-            showMenu: false,
-            icon: "icon1",
+            icon: "wukongjian",
             mode: "blank",
-            isHome: false,
             asset: "exist",
             assetConfig: {
-              app: "flow",
-              subapp: "absence",
-              url: "www.baidu.com",
+              subAppType: 1,
             },
           },
           children: [
@@ -52,15 +45,11 @@ const initialState: WorkspaceInitialState = {
               depth: 3,
               form: {
                 name: "",
-                showMenu: false,
-                icon: "icon1",
+                icon: "wukongjian",
                 mode: "blank",
-                isHome: false,
                 asset: "exist",
                 assetConfig: {
-                  app: "flow",
-                  subapp: "absence",
-                  url: "www.baidu.com",
+                  subAppType: 1,
                 },
               },
               children: [],
@@ -74,15 +63,11 @@ const initialState: WorkspaceInitialState = {
           depth: 2,
           form: {
             name: "",
-            showMenu: false,
-            icon: "icon1",
+            icon: "wukongjian",
             mode: "blank",
-            isHome: false,
             asset: "exist",
             assetConfig: {
-              app: "flow",
-              subapp: "absence",
-              url: "www.baidu.com",
+              subAppType: 1,
             },
           },
           children: [],
@@ -94,15 +79,11 @@ const initialState: WorkspaceInitialState = {
           depth: 2,
           form: {
             name: "",
-            showMenu: false,
-            icon: "icon1",
+            icon: "wukongjian",
             mode: "blank",
-            isHome: false,
             asset: "exist",
             assetConfig: {
-              app: "flow",
-              subapp: "absence",
-              url: "www.baidu.com",
+              subAppType: 1,
             },
           },
           children: [
@@ -113,15 +94,11 @@ const initialState: WorkspaceInitialState = {
               depth: 3,
               form: {
                 name: "",
-                showMenu: false,
-                icon: "icon1",
+                icon: "wukongjian",
                 mode: "blank",
-                isHome: false,
                 asset: "exist",
                 assetConfig: {
-                  app: "flow",
-                  subapp: "absence",
-                  url: "www.baidu.com",
+                  subAppType: 1,
                 },
               },
               children: [],
@@ -137,15 +114,11 @@ const initialState: WorkspaceInitialState = {
       depth: 1,
       form: {
         name: "",
-        showMenu: false,
-        icon: "icon1",
+        icon: "wukongjian",
         mode: "blank",
-        isHome: false,
         asset: "exist",
         assetConfig: {
-          app: "flow",
-          subapp: "absence",
-          url: "www.baidu.com",
+          subAppType: 1,
         },
       },
       children: [],
@@ -160,14 +133,6 @@ export const workspaceSlice = createSlice({
     setName: (state, action: PayloadAction<string>) => {
       state.name = action.payload;
     },
-  },
-  extraReducers: (builder) => {
-    builder.addMatcher(
-      appManager.endpoints.workspaceDetail.matchFulfilled,
-      (state, action) => {
-        console.log("workspaceDetail", current(state), action.payload);
-      }
-    );
   },
 });
 

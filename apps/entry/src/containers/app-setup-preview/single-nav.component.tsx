@@ -1,8 +1,12 @@
 import { useCallback } from "react";
 import { Menu } from "antd";
+import classNames from "classnames";
 import { keyPath } from "@utils/utils";
 import { Menu as IMenu, MenuComponentProps } from "@utils/types";
 import "@containers/app-setup-preview/single-nav.style";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { Icon } from "@common/components";
+import UserComponent from "@components//header/user";
 
 const { SubMenu } = Menu;
 
@@ -11,7 +15,14 @@ const SingleNavComponent = ({
   extra,
   dataSource,
   selectedKey,
+  theme,
 }: MenuComponentProps) => {
+  const renderIcon = useMemoCallback((icon) => {
+    if (!icon || icon === "wukongjian") {
+      return null;
+    }
+    return <Icon type={icon} />;
+  });
   const handleMenuClick = useCallback(({ item, key, keyPath }) => {
     console.log("%c^_^ \n\n", "color: #C80815; font-weight: bolder", {
       item,
@@ -29,8 +40,8 @@ const SingleNavComponent = ({
   }, []);
 
   return (
-    <div className="single-nav-component">
-      <div className="sider">
+    <div className={classNames("single-nav-component", theme)}>
+      <div className="left">
         <div className="extra">{extra}</div>
         <div className="menu">
           <Menu
@@ -52,7 +63,14 @@ const SingleNavComponent = ({
                       </SubMenu>
                     );
                   } else {
-                    return <Menu.Item key={menu.id}>{menu.name}</Menu.Item>;
+                    return (
+                      <Menu.Item
+                        key={menu.id}
+                        icon={renderIcon(menu.form?.icon)}
+                      >
+                        {menu.name}
+                      </Menu.Item>
+                    );
                   }
                 });
               };
@@ -61,7 +79,14 @@ const SingleNavComponent = ({
           </Menu>
         </div>
       </div>
-      <div className="content">{children}</div>
+      <div className="right">
+        <div className="header">
+          <div className="user-container">
+            <UserComponent />
+          </div>
+        </div>
+        <div className="content">{children}</div>
+      </div>
     </div>
   );
 };

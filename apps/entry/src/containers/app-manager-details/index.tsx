@@ -8,7 +8,6 @@ const AppManagerDetails: React.FC = () => {
   return (
     <div className="app-manager-details">
       <AppInfoComponent />
-      <br />
       <SubListComponent />
     </div>
   );

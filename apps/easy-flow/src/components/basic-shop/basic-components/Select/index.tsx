@@ -29,7 +29,8 @@ const SelectComponent = (
     if (defaultValue) {
       prop.defaultValue = defaultValue;
     }
-    const result = Object.assign({}, props, prop);
+    const {options, ...others} = props
+    const result = Object.assign({}, others, prop);
     delete result.fieldName;
     delete result.colSpace;
     delete result.dataSource;

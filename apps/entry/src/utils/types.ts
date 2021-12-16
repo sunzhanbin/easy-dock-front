@@ -1,5 +1,13 @@
+import { NavModeType, SubAppType, ThemeType } from "@/consts";
 import { SCENE_IAMGES } from "@utils/const";
 
+export type User = {
+  avatar: string; // 头像
+  username: string; // 中文名
+  id: number; //登录名
+  power?: number; //权限值
+  name?: string;
+};
 export interface workspaceShape {
   name: string;
   id: number;
@@ -25,15 +33,15 @@ export interface SubAppInfo {
 }
 
 export interface AppManagerInitialState {
-  projectId: number;
   currentWorkspaceId: number;
 }
 
 export interface BasicSetupInitialState {
-  theme: string;
-  navMode: "single" | "multi";
-  logo: { [key: string]: any };
+  theme: ThemeType;
+  navMode: NavModeType;
+  logo: string;
   basicForm: { [key: string]: any };
+  errors: string[];
 }
 
 export interface MenuSetupInitialState {
@@ -44,7 +52,7 @@ export interface MenuSetupInitialState {
 
 export interface WorkspaceInitialState {
   name: string;
-  navMode: "single" | "multi";
+  navMode: NavModeType;
   menu: Menu[];
 }
 
@@ -59,14 +67,12 @@ export interface Menu {
 
 export interface MenuSetupForm {
   name: string;
-  showMenu: boolean;
   icon: string;
   mode: "blank" | "current";
-  isHome: boolean;
   asset: "exist" | "custom";
   assetConfig: {
-    app?: string;
-    subapp?: string;
+    subAppType?: SubAppType;
+    subAppId?: string;
     url?: string;
   };
 }
@@ -79,14 +85,15 @@ export interface baseMenuProps {
 
 export interface MenuComponentProps extends baseMenuProps {
   extra: React.ReactNode;
+  theme: ThemeType;
 }
 
 export interface NavMenuComponentProps extends baseMenuProps {
-  navMode: "single" | "multi";
+  navMode: NavModeType;
 }
 
 export interface WorkspaceMenuProps {
-  navMode: "single" | "multi";
+  navMode: NavModeType;
   dataSource: Menu[];
 }
 

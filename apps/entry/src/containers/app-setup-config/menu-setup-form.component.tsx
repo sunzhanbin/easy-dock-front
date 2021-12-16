@@ -1,26 +1,83 @@
-import React, { useCallback, useEffect, useImperativeHandle } from "react";
-import { Form, Input, Select, Checkbox, Button, Radio } from "antd";
+import React, {
+  ReactNode,
+  useMemo,
+  useRef,
+  useEffect,
+  useCallback,
+  useImperativeHandle,
+} from "react";
+import { Form, Input, Select, Radio } from "antd";
+import { useParams } from "react-router-dom";
 import { selectMenuForm, setMenuForm } from "@views/app-setup/menu-setup.slice";
 import { useAppDispatch, useAppSelector } from "@/store";
-import { MenuSetupForm } from "@utils/types";
-
+import { Icon } from "@common/components";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { nameRule, SubAppInfo, SubAppType, urlRule } from "@/consts";
+import { useFetchDeployedSubAppListQuery } from "@/http";
 import "@containers/app-setup-config/menu-setup-form.style";
 
 const { Option } = Select;
-
-const tailLayout = {
-  wrapperCol: { offset: 8, span: 16 },
+type SubAppTypeItem = {
+  type: SubAppType;
+  name: string;
 };
 
 const MenuSetupFormComponent = React.forwardRef<{
   validateFields: () => Promise<any>;
 }>(function menuSetupForm(_, ref) {
   const dispatch = useAppDispatch();
+  const { workspaceId } = useParams();
+  const appId = useMemo(() => Number(workspaceId), [workspaceId]);
+  const { data: subAppList } = useFetchDeployedSubAppListQuery(appId);
   const menuForm = useAppSelector(selectMenuForm);
   const [form] = Form.useForm();
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const handleFormFinish = useCallback((values: MenuSetupForm) => {
-    dispatch(setMenuForm(values));
+  const iconList = useMemo<string[]>(() => {
+    return [
+      "wukongjian",
+      "shouyecaidan",
+      "renwu",
+      "shujujicheng",
+      "jiankongliucheng",
+      "diaoduyilai",
+      "shujutancha",
+      "shujujianmo",
+      "shujubiao",
+      "shujuyuan",
+    ];
+  }, []);
+
+  const subAppTypeList = useMemo<SubAppTypeItem[]>(() => {
+    return [
+      { type: SubAppType.FORM, name: "表单" },
+      { type: SubAppType.FLOW, name: "流程" },
+      { type: SubAppType.CHART, name: "报表" },
+      { type: SubAppType.CANVAS, name: "大屏" },
+      { type: SubAppType.SPACE, name: "空间" },
+    ];
+  }, []);
+
+  const dropdownRender = useMemoCallback((originNode: ReactNode) => {
+    return <div className="dropdown-container">{originNode}</div>;
+  });
+
+  const options = useMemo(() => {
+    return [
+      { label: "已有资产", value: "exist" },
+      { label: "自定义URL", value: "custom" },
+    ];
+  }, []);
+
+  const handleValuesChange = useCallback((changedValue) => {
+    // 改变了子应用类型,子应用id要重置
+    if (changedValue?.assetConfig?.subAppType) {
+      const oldConfig = form.getFieldValue("assetConfig");
+      const assetConfig = Object.assign({}, oldConfig, { subAppId: undefined });
+      form.setFieldsValue({ assetConfig });
+    }
+    const formValues = form.getFieldsValue();
+    dispatch(setMenuForm(formValues));
   }, []);
 
   useImperativeHandle(ref, () => ({
@@ -28,53 +85,56 @@ const MenuSetupFormComponent = React.forwardRef<{
   }));
 
   useEffect(() => {
-    console.log("%c^_^ \n\n", "color: #C80815; font-weight: bolder", {
-      menuForm,
-    });
-
     form.setFieldsValue(menuForm);
   }, [menuForm]);
 
   return (
-    <div className="menu-setup-form-component">
+    <div className="menu-setup-form-component" ref={containerRef}>
       <div className="header">内容设置</div>
       <div className="form">
-        <Form form={form} layout="vertical" onFinish={handleFormFinish}>
-          <Form.Item
-            label="菜单名称"
-            name="name"
-            rules={[{ required: true, message: "Please input your username!" }]}
-          >
-            <Input />
+        <Form
+          form={form}
+          layout="vertical"
+          autoComplete="off"
+          onValuesChange={handleValuesChange}
+        >
+          <Form.Item label="菜单名称" name="name" required rules={[nameRule]}>
+            <Input size="large" placeholder="请输入" />
           </Form.Item>
-          <Form.Item name="showMenu" valuePropName="checked">
-            <Checkbox>显示菜单 icon</Checkbox>
-          </Form.Item>
-          <Form.Item
-            name="icon"
-            rules={[{ required: true, message: "Please input your password!" }]}
-          >
-            <Select placeholder="选择菜单 icon" allowClear>
-              <Option value="icon1">菜单icon1</Option>
-              <Option value="icon2">菜单icon2</Option>
-              <Option value="icon3">菜单icon3</Option>
+          <Form.Item label="菜单icon" name="icon">
+            <Select
+              size="large"
+              placeholder="请选择"
+              optionLabelProp="label"
+              dropdownRender={dropdownRender}
+              suffixIcon={<Icon type="xiala" />}
+              getPopupContainer={() => containerRef.current!}
+            >
+              {iconList.map((icon) => (
+                <Option
+                  key={icon}
+                  value={icon}
+                  label={icon === "wukongjian" ? "无" : <Icon type={icon} />}
+                >
+                  <Icon type={icon} />
+                </Option>
+              ))}
             </Select>
           </Form.Item>
           <Form.Item label="查看方式" name="mode">
-            <Radio.Group>
-              <Radio value={0}>当前页面打开</Radio>
-              <Radio value={1}>新窗口打开</Radio>
+            <Radio.Group size="large">
+              <Radio value="current">当前页面打开</Radio>
+              <Radio value="blank">新窗口打开</Radio>
             </Radio.Group>
           </Form.Item>
-          <Form.Item name="isHome" valuePropName="checked">
-            <Checkbox>设置为主页</Checkbox>
-          </Form.Item>
           <Form.Item label="内容设置">
-            <Form.Item name="asset">
-              <Radio.Group size="small">
-                <Radio.Button value="exist">使用已有资产</Radio.Button>
-                <Radio.Button value="custom">自定义 URL</Radio.Button>
-              </Radio.Group>
+            <Form.Item name="asset" className="asset-item">
+              <Radio.Group
+                size="large"
+                optionType="button"
+                className="asset-option"
+                options={options}
+              ></Radio.Group>
             </Form.Item>
             <Form.Item
               noStyle
@@ -82,32 +142,78 @@ const MenuSetupFormComponent = React.forwardRef<{
             >
               {({ getFieldValue }) =>
                 getFieldValue("asset") === "custom" ? (
-                  <Form.Item name={["assetConfig", "url"]}>
-                    <Input placeholder="请输入URL" />
+                  <Form.Item name={["assetConfig", "url"]} rules={[urlRule]}>
+                    <Input size="large" placeholder="请输入URL" />
                   </Form.Item>
                 ) : (
                   <>
-                    <Form.Item name={["assetConfig", "app"]}>
-                      <Select placeholder="选择应用" allowClear>
-                        <Option value="flow">流程</Option>
-                        <Option value="screen">大屏</Option>
+                    <Form.Item
+                      name={["assetConfig", "subAppType"]}
+                      className="app-item"
+                    >
+                      <Select
+                        placeholder="选择应用"
+                        size="large"
+                        suffixIcon={<Icon type="xiala" />}
+                      >
+                        {subAppTypeList.map(({ type, name }) => (
+                          <Option key={type} value={type}>
+                            {name}
+                          </Option>
+                        ))}
                       </Select>
                     </Form.Item>
-                    <Form.Item name={["assetConfig", "subapp"]}>
-                      <Select placeholder="选择子应用" allowClear>
-                        <Option value="absence">请假</Option>
-                        <Option value="police">警务</Option>
-                      </Select>
+                    <Form.Item
+                      noStyle
+                      shouldUpdate={(prev, current) =>
+                        prev.assetConfig?.subAppType !==
+                        current.assetConfig?.subAppType
+                      }
+                    >
+                      {({ getFieldValue }) => {
+                        const subAppType = getFieldValue([
+                          "assetConfig",
+                          "subAppType",
+                        ]);
+                        return (
+                          <Form.Item
+                            name={["assetConfig", "subAppId"]}
+                            rules={[
+                              {
+                                validator(_, value) {
+                                  if (!value) {
+                                    return Promise.reject(
+                                      new Error("请选择子应用!")
+                                    );
+                                  }
+                                  return Promise.resolve();
+                                },
+                              },
+                            ]}
+                          >
+                            <Select
+                              placeholder="选择子应用"
+                              size="large"
+                              suffixIcon={<Icon type="xiala" />}
+                            >
+                              {(subAppList || [])
+                                .filter(
+                                  (v: SubAppInfo) => v.type === subAppType
+                                )
+                                .map((v: SubAppInfo) => (
+                                  <Option key={v.id} value={v.id}>
+                                    {v.name}
+                                  </Option>
+                                ))}
+                            </Select>
+                          </Form.Item>
+                        );
+                      }}
                     </Form.Item>
                   </>
                 )
               }
             </Form.Item>
-          </Form.Item>
-          <Form.Item {...tailLayout}>
-            <Button type="primary" htmlType="submit">
-              Submit
-            </Button>
           </Form.Item>
         </Form>
       </div>

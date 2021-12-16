@@ -1,6 +1,9 @@
 import React, { Suspense } from "react";
+import { ConfigProvider } from "antd";
+import zh_CN from "antd/es/locale/zh_CN";
+import "moment/locale/zh-cn";
+
 import { Routes, Route } from "react-router-dom";
-import AntdProvider from "@common/components/antd-provider";
 import Layout from "@containers/layout";
 import Home from "@views/home";
 import "@/App.scss";
@@ -11,16 +14,28 @@ const AssetCentre = React.lazy(() => import("@views/asset-centre"));
 const TemplateMall = React.lazy(() => import("@views/template-mall"));
 const Workspace = React.lazy(() => import("@views/workspace"));
 const NoMatch = React.lazy(() => import("@views/no-match"));
+import Auth from "@enc/sso";
+import cookie from "js-cookie";
+import { registerTheme } from "@enc/theme-scheme/dist/utils.esm";
 
 const SuspenseWrap = ({ render }: { render: React.ReactNode }) => (
   <React.Fragment>
     <Suspense fallback={null}>{render}</Suspense>
   </React.Fragment>
 );
+Auth.setConfig({ server: process.env.REACT_APP_SSO_LOGIN_URL });
+const query = decodeURIComponent(window.location.href.split("?")[1]);
+const theme = new URLSearchParams(query).get("theme");
 
+if (theme) {
+  cookie.set("theme", theme);
+  registerTheme({
+    theme,
+  });
+}
 const App: React.FC = () => {
   return (
-    <AntdProvider>
+    <ConfigProvider locale={zh_CN} virtual={false}>
       <Routes>
         <Route path="/*" element={<Layout />}>
           <Route index element={<Home />} />
@@ -46,7 +61,7 @@ const App: React.FC = () => {
           <Route path="*" element={<SuspenseWrap render={<NoMatch />} />} />
         </Route>
       </Routes>
-    </AntdProvider>
+    </ConfigProvider>
   );
 };
 

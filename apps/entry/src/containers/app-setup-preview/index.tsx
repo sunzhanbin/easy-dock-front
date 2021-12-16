@@ -1,11 +1,12 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useAppSelector } from "@/store";
 import { selectTheme, selectNavMode } from "@views/app-setup/basic-setup.slice";
 import { selectMenu, selectCurrentId } from "@views/app-setup/menu-setup.slice";
 import SingleNavComponent from "@containers/app-setup-preview/single-nav.component";
 import MultiNavComponent from "@containers/app-setup-preview/multi-nav.component";
-import { SingleNavAppInfo, MultiNavAppInfo } from "@components/app-info";
+import AppInfo from "@components/app-info";
 import "@containers/app-setup-preview/index.style";
+import { NavModeType } from "@/consts";
 
 const AppSetupPreview = () => {
   const theme = useAppSelector(selectTheme);
@@ -13,40 +14,38 @@ const AppSetupPreview = () => {
   const menu = useAppSelector(selectMenu);
   const selectedKey = useAppSelector(selectCurrentId);
 
-  useEffect(() => {
-    console.log(
-      "%c^_^ \n\n",
-      "color: #C80815; font-weight: bolder",
-      JSON.stringify({ theme, navMode }, null, 2)
-    );
-  }, [theme, navMode]);
-
   const renderContent = useCallback(() => {
     return <>这里是内容区</>;
   }, []);
-
-  return (
-    <div className="app-setup-preview">
-      {navMode === "single" && (
+  const renderNavComponent = useMemo(() => {
+    if (navMode === NavModeType.LEFT) {
+      return (
         <SingleNavComponent
           selectedKey={selectedKey}
           dataSource={menu}
-          extra={<SingleNavAppInfo />}
+          theme={theme}
+          extra={<AppInfo navMode={NavModeType.LEFT} />}
         >
           {renderContent()}
         </SingleNavComponent>
-      )}
-      {navMode === "multi" && (
+      );
+    }
+    if (navMode === NavModeType.MULTI) {
+      return (
         <MultiNavComponent
           selectedKey={selectedKey}
           dataSource={menu}
-          extra={<MultiNavAppInfo />}
+          theme={theme}
+          extra={<AppInfo navMode={NavModeType.MULTI} />}
         >
           {renderContent()}
         </MultiNavComponent>
-      )}
-    </div>
-  );
+      );
+    }
+    return null;
+  }, [navMode, theme, menu, selectedKey]);
+
+  return <div className="app-setup-preview">{renderNavComponent}</div>;
 };
 
 export default AppSetupPreview;

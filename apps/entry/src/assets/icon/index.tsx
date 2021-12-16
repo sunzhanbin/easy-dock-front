@@ -12,7 +12,7 @@ interface IconProps {
 }
 
 const IconFont = createFromIconfontCN({
-  scriptUrl: "//at.alicdn.com/t/font_2473458_7hkekrj8mjg.js",
+  scriptUrl: "//at.alicdn.com/t/font_2473458_cnjakmjf7y.js",
 });
 
 export default function Icon(

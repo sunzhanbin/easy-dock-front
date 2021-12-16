@@ -1,60 +1,70 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-// import { fetchUser } from '@utils/apis';
+import { homeManageBuilder, homeManageRuntime } from "@/http";
+import { createSlice, PayloadAction, current } from "@reduxjs/toolkit";
+import { RootState } from "@/store";
+import { User } from "@utils/types";
+import cookie from "js-cookie";
+
+import Auth from "@enc/sso";
+import { axios, runTime } from "@utils/fetch";
 
 export interface HomeManagerState {
-  value: number;
-  status: "idle" | "loading" | "failed";
+  userInfo: User | null;
+  projectId: number; // 当前所属项目ID；
+  projectList: { [key: string]: any }[]; // 当前项目List；
 }
 
 const initialState: HomeManagerState = {
-  value: 0,
-  status: "idle",
+  userInfo: null,
+  projectId: 0,
+  projectList: [],
 };
 
-// The function below is called a thunk and allows us to perform async logic. It
-// can be dispatched like a regular action: `dispatch(incrementAsync(10))`. This
-// will call the thunk with the `dispatch` function as the first argument. Async
-// code can then be executed and other actions can be dispatched. Thunks are
-// typically used to make async requests.
-// export const incrementAsync = createAsyncThunk(
-//   'appManager/fetchUser',
-//   async (amount: number) => {
-//     const response = await fetchUser(amount);
-//     // The value we return becomes the `fulfilled` action payload
-//     return response.data;
-//   }
-// );
-
 export const HomeManagerSlice = createSlice({
-  name: "appManager",
+  name: "homeManager",
   initialState,
   reducers: {
-    increment: (state) => {
-      state.value += 1;
-    },
-    decrement: (state) => {
-      state.value -= 1;
-    },
-    incrementByAmount: (state, action: PayloadAction<number>) => {
-      state.value += action.payload;
+    setProjectId: (state, action: PayloadAction<number>) => {
+      state.projectId = action.payload;
     },
   },
-  // extraReducers: (builder) => {
-  //   builder
-  //     .addCase(incrementAsync.pending, (state) => {
-  //       state.status = 'loading';
-  //     })
-  //     .addCase(incrementAsync.fulfilled, (state, action) => {
-  //       state.status = 'idle';
-  //       state.value += action.payload;
-  //     });
-  // },
+  extraReducers: (builder) => {
+    builder.addMatcher(
+      homeManageBuilder.endpoints.getProjectList.matchFulfilled,
+      (state, action) => {
+        state.projectList = action.payload;
+        state.projectId = action.payload.length && action.payload[0].id;
+      }
+    );
+    builder.addMatcher(
+      homeManageRuntime.endpoints.getUserInfo.matchFulfilled,
+      (state, action) => {
+        const { power, user } = action.payload;
+        state.userInfo = {
+          avatar: user.avatar,
+          username: user.userName,
+          id: user.id,
+          power: power,
+        };
+      }
+    );
+    builder.addMatcher(
+      homeManageRuntime.endpoints.logout.matchFulfilled,
+      (state) => {
+        console.log(runTime, "ffff");
+        const url = process.env.REACT_APP_SSO_LOGIN_URL;
+        Auth.logout(url ? url : undefined);
+        state.userInfo = null;
+        delete axios.defaults.headers.auth;
+        // 清掉cookie
+        // cookie.remove("token");
+      }
+    );
+  },
 });
 
-export const {
-  increment,
-  decrement,
-  incrementByAmount,
-} = HomeManagerSlice.actions;
+export const { setProjectId } = HomeManagerSlice.actions;
+
+export const selectProjectId = (state: RootState) => state.home.projectId;
+export const selectUserInfo = (state: RootState) => state.home.userInfo;
 
 export default HomeManagerSlice.reducer;

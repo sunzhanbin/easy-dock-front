@@ -1,0 +1,118 @@
+.app-card-container {
+  position: relative;
+  height: 92px;
+  background: rgba(24, 39, 67, 0.03);
+  padding: 16px;
+  border-radius: 3px;
+  border-color: transparent;
+  cursor: pointer;
+  & > .app-card-base {
+    display: flex;
+    align-items: center;
+    & > .app-image {
+      width: 32px;
+      margin-right: 12px;
+    }
+    & > .name {
+      font-size: 16px;
+      font-weight: bold;
+      color: rgba(0, 0, 0, 0.85);
+    }
+  }
+  & > .app-card-more {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    & > .info {
+      flex: 1;
+      padding-left: 44px;
+      & > .version {
+        color: rgba(24, 31, 67, 0.75);
+        padding-right: 7px;
+        border-right: 1px solid rgba(24, 31, 67, 0.12);
+      }
+      & > .type {
+        color: rgba(24, 31, 67, 0.5);
+        padding-left: 7px;
+      }
+    }
+    & > .more {
+      position: relative;
+      display: none;
+      width: 20px;
+      height: 20px;
+      font-size: 20px;
+      cursor: pointer;
+      .operation {
+        position: absolute;
+        right: 0;
+        top: 40px;
+        z-index: 100;
+        width: 92px;
+        padding: 16px;
+        background: #3d3e41;
+        border-radius: 3px;
+        color: #fff;
+        .app_operation_item {
+          display: flex;
+          align-items: center;
+          height: 20px;
+          line-height: 20px;
+          margin-bottom: 16px;
+          cursor: pointer;
+          &:hover {
+            color: rgba(255, 255, 255, 0.8);
+            & > svg {
+              color: rgba(255, 255, 255, 0.8);
+            }
+          }
+          & > svg {
+            flex: 0 0 20px;
+            font-size: 18px;
+            margin-right: 12px;
+            color: #fff;
+          }
+          & > div {
+            flex: 1;
+            font-weight: 400;
+            font-size: 14px;
+          }
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
+      }
+    }
+  }
+  & > .status {
+    position: absolute;
+    top: 0;
+    right: 0;
+    text-align: center;
+    font-size: 10px;
+    font-weight: 400;
+    border-radius: 3px;
+    padding: 4px;
+    &.enable {
+      background: rgba(6, 196, 152, 0.12);
+      color: #03a882;
+    }
+    &.editing {
+      background: rgba(255, 153, 0, 0.12);
+      color: #f67a00;
+    }
+    &.disabled {
+      background: rgba(24, 31, 67, 0.3);
+      color: #fff;
+    }
+  }
+  &:hover {
+    background: #ffffff;
+    box-shadow: 0px 6px 24px 0px rgba(24, 31, 67, 0.1);
+    & > .app-card-more {
+      & > .more {
+        display: block;
+      }
+    }
+  }
+}

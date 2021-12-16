@@ -1,3 +1,14 @@
 .basic-setup-form-component {
   background: transparent;
+  padding: 0 24px;
+  margin-top: 16px;
+  .upload {
+    position: relative;
+    width: 100%;
+    min-height: 114px;
+    .icon {
+      color: rgba(24, 31, 67, 0.3);
+      font-size: 32px;
+    }
+  }
 }

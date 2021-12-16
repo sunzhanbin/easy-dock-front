@@ -1,3 +1,96 @@
-.sub-list-component {
-  background: transparent;
+@import "@common/styles/var.scss";
+
+.sub-list-component-container {
+  position: relative;
+  height: calc(100% - 90px);
+  overflow-y: hidden;
+  background: #fff;
+  border-radius: 6px;
+  margin: -46px 56px 0 56px;
+
+  // 覆盖ant-tabs的样式
+  .ant-tabs {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    .ant-tabs-nav {
+      padding: 0 24px;
+      padding-top: 16px;
+      .ant-tabs-nav-list {
+        .ant-tabs-tab {
+          height: 28px;
+          line-height: 28px;
+          font-size: 14px;
+          font-weight: 400;
+          color: rgba(24, 31, 67, 0.75);
+          &.ant-tabs-tab-active {
+            .ant-tabs-tab-btn {
+              font-size: 18px;
+              font-weight: 500;
+              color: rgba(0, 0, 0, 0.85);
+            }
+          }
+        }
+        .ant-tabs-ink-bar {
+          height: 5px;
+          background-color: $primary-color;
+        }
+      }
+      .ant-tabs-extra-content {
+        padding-right: 2px;
+      }
+      &::before {
+        border-color: transparent;
+      }
+    }
+    .ant-tabs-content-holder {
+      flex: 1;
+      height: calc(100% - 46px);
+      padding: 1px 24px;
+      overflow-y: auto;
+      margin-bottom: 24px;
+    }
+  }
+  .card-list {
+    display: grid;
+    grid-row-gap: 24px;
+    grid-column-gap: 24px;
+    .card {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 92px;
+      background: var(--custom-card-background, #fff);
+      border-radius: 3px;
+      border: 1px solid rgba(24, 31, 67, 0.12);
+      line-height: 22px;
+      color: #181f43;
+      font-size: 14px;
+      font-weight: 400;
+
+      .btn {
+        border-radius: 50%;
+        margin-right: 12px;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 1640px) and (max-width: 1919px) {
+  .card-list {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+@media screen and (max-width: 1639px) {
+  .card-list {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media screen and (min-width: 1920px) {
+  .card-list {
+    grid-template-columns: repeat(6, 1fr);
+  }
 }
