@@ -3,11 +3,13 @@ import Axios, { AxiosRequestConfig, AxiosInstance } from 'axios';
 
 import Auth from '@enc/sso';
 
+new Auth();
+
 function createAxios(config?: AxiosRequestConfig): AxiosInstance {
   const instance = Axios.create({
     ...config,
     headers: {
-      auth: window.Auth.getAuth(),
+      auth: window.Auth && window.Auth.getAuth(),
       ...(config ? config.headers : {}),
     },
   });
