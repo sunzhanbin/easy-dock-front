@@ -14,6 +14,7 @@ import { Menu } from "@utils/types";
 import { Icon, Text } from "@common/components";
 
 import "@containers/app-setup-config/menu-setup-list.style";
+import useMemoCallback from "@common/hooks/use-memo-callback";
 
 type BeforeIdChange = () => void;
 
@@ -31,6 +32,13 @@ const MenuItemComponent = ({
   const style = useMemo(() => {
     return { paddingLeft: `${menu.depth * 12}px` };
   }, [menu.depth]);
+
+  const renderIcon = useMemoCallback((icon) => {
+    if (!icon || icon === "wukongjian") {
+      return null;
+    }
+    return <Icon type={icon} className="icon" />;
+  });
 
   const handleAddMenu = useCallback(async (currentId: string) => {
     await onBeforeIdChange();
@@ -53,6 +61,7 @@ const MenuItemComponent = ({
       })}
       style={style}
     >
+      {renderIcon(menu?.form?.icon)}
       <div className="text" onClick={handleMenuClick.bind(null, menu.id)}>
         <Text text={menu.name} />
       </div>

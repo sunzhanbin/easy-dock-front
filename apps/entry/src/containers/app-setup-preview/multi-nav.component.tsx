@@ -27,6 +27,13 @@ const MultiNavComponent = ({
     () => keyPath(selectedKey, dataSource).shift() || selectedKey,
     [selectedKey, dataSource]
   );
+  // 是否有二级菜单
+  const hasSubMenu = useMemo(() => {
+    if (!Array.isArray(dataSource) || dataSource.length < 1) {
+      return false;
+    }
+    return dataSource.some((menu) => menu.children?.length > 0);
+  }, [dataSource]);
 
   const handleMainManu = useCallback(({ item, key, keyPath }) => {
     console.log("%c^_^ \n\n", "color: #C80815; font-weight: bolder", {
@@ -65,37 +72,39 @@ const MultiNavComponent = ({
         </div>
       </div>
       <div className="content">
-        <div className="submenu">
-          <Menu
-            mode="inline"
-            selectedKeys={[selectedKey]}
-            openKeys={keyPath(selectedKey, submenu)}
-          >
-            {((dataSource) => {
-              const recurse = (menus: IMenu[]) => {
-                return menus.map((menu) => {
-                  if (menu?.children?.length) {
-                    return (
-                      <SubMenu key={menu.id} title={menu.name}>
-                        {recurse(menu.children)}
-                      </SubMenu>
-                    );
-                  } else {
-                    return (
-                      <Menu.Item
-                        key={menu.id}
-                        icon={renderIcon(menu?.form?.icon)}
-                      >
-                        {menu.name}
-                      </Menu.Item>
-                    );
-                  }
-                });
-              };
-              return recurse(dataSource);
-            })(submenu)}
-          </Menu>
-        </div>
+        {hasSubMenu && (
+          <div className="submenu">
+            <Menu
+              mode="inline"
+              selectedKeys={[selectedKey]}
+              openKeys={keyPath(selectedKey, submenu)}
+            >
+              {((dataSource) => {
+                const recurse = (menus: IMenu[]) => {
+                  return menus.map((menu) => {
+                    if (menu?.children?.length) {
+                      return (
+                        <SubMenu key={menu.id} title={menu.name}>
+                          {recurse(menu.children)}
+                        </SubMenu>
+                      );
+                    } else {
+                      return (
+                        <Menu.Item
+                          key={menu.id}
+                          icon={renderIcon(menu?.form?.icon)}
+                        >
+                          {menu.name}
+                        </Menu.Item>
+                      );
+                    }
+                  });
+                };
+                return recurse(dataSource);
+              })(submenu)}
+            </Menu>
+          </div>
+        )}
         <div className="content">{children}</div>
       </div>
     </div>

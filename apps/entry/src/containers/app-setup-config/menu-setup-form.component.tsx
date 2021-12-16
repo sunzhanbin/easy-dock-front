@@ -12,7 +12,6 @@ import { selectMenuForm, setMenuForm } from "@views/app-setup/menu-setup.slice";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { Icon } from "@common/components";
 import useMemoCallback from "@common/hooks/use-memo-callback";
-import { MenuSetupForm } from "@utils/types";
 import { nameRule, SubAppInfo, SubAppType, urlRule } from "@/consts";
 import { useFetchDeployedSubAppListQuery } from "@/http";
 import "@containers/app-setup-config/menu-setup-form.style";
@@ -70,8 +69,15 @@ const MenuSetupFormComponent = React.forwardRef<{
     ];
   }, []);
 
-  const handleValuesChange = useCallback((_, values: MenuSetupForm) => {
-    dispatch(setMenuForm(values));
+  const handleValuesChange = useCallback((changedValue) => {
+    // 改变了子应用类型,子应用id要重置
+    if (changedValue?.assetConfig?.subAppType) {
+      const oldConfig = form.getFieldValue("assetConfig");
+      const assetConfig = Object.assign({}, oldConfig, { subAppId: undefined });
+      form.setFieldsValue({ assetConfig });
+    }
+    const formValues = form.getFieldsValue();
+    dispatch(setMenuForm(formValues));
   }, []);
 
   useImperativeHandle(ref, () => ({
@@ -175,11 +181,11 @@ const MenuSetupFormComponent = React.forwardRef<{
                             rules={[
                               {
                                 validator(_, value) {
-                                  // if (!value) {
-                                  //   return Promise.reject(
-                                  //     new Error("请选择子应用!")
-                                  //   );
-                                  // }
+                                  if (!value) {
+                                    return Promise.reject(
+                                      new Error("请选择子应用!")
+                                    );
+                                  }
                                   return Promise.resolve();
                                 },
                               },
