@@ -1,3 +1,5 @@
+@import "@common/styles/var.scss";
+
 .header_container {
   width: 100%;
   position: relative;
@@ -20,9 +22,22 @@
       }
     }
     .right {
-      //display: inline-flex;
-      //flex: 0 0 160px;
-      //align-items: center;
+      .add-icon {
+        width: 24px;
+        height: 24px;
+        border-radius: 2px;
+        background-color: $primary-color;
+        vertical-align: middle;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 10px;
+        .icon {
+          width: 14px;
+          color: #fff;
+          font-size: 14px;
+        }
+      }
       .icon {
         width: 40px;
         display: inline-block;

@@ -7,11 +7,13 @@
     justify-content: center;
     font-weight: 500;
     color: var(--custom-nav-menu-item-color, #181f43);
+    height: 100%;
 
     .nav {
       color: var(--custom-nav-menu-item-color, #181f43);
       padding: 16px;
       line-height: 20px;
+      height: 100%;
       .icon {
         font-size: 20px;
         display:  inline-block;

@@ -216,6 +216,13 @@ export const SUB_APP_LIST = [
   },
 ];
 
+export const NOT_SHOW_MODAL_SELECT = [
+  HomeSubAppType.DATA,
+  HomeSubAppType.DATA_FISH,
+  HomeSubAppType.DEVICE,
+  HomeSubAppType.INTERFACE,
+];
+
 /* -------home end ----------*/
 
 // 请输入1-30位的汉字、字母、数字、下划线

@@ -10,7 +10,6 @@ Auth.setConfig({ server: process.env.REACT_APP_SSO_LOGIN_URL });
     true,
     process.env.REACT_APP_EASY_DOCK_BASE_SERVICE_ENDPOINT as string
   );
-  console.log(token);
   if (token) {
     require("./main.tsx");
   }

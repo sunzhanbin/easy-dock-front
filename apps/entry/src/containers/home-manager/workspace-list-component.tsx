@@ -48,7 +48,7 @@ const HomeWorkspaceList = () => {
       if (isApp) {
         navigate(`/app-manager/${id}`);
       } else if (type === HomeSubAppType.CANVAS) {
-        window.open(`http://10.19.248.238:28180/dashboard/${id}`);
+        window.open(`http://10.19.248.238:28180/dashboard/${id}?sso=true`);
       } else if (type === HomeSubAppType.SPACE) {
         window.open(`http://10.19.248.238:9003/#/scene/${id}`);
       } else if (type === HomeSubAppType.FLOW) {
