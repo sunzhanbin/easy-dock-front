@@ -83,6 +83,7 @@ export enum AuditRecordType {
   BACK = 'BACK',
   FORM_FILL = 'FORM_FILL',
   RUNNING = 'RUNNING',
+  AUTO_PROCESS_TRIGGER = 'AUTO_PROCESS_TRIGGER'
 }
 
 export type AuditRecordSchema = {
