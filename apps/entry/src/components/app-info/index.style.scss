@@ -16,4 +16,25 @@
       color: rgba(0, 0, 0, 0.85);
     }
   }
+  & > .single {
+    width: 100%;
+    height: 128px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    padding: 20px 24px;
+    & > .app-logo {
+      width: 40px;
+      margin: 12px auto;
+    }
+    & > .app-name {
+      width: 100%;
+      height: 32px;
+      font-size: 20px;
+      font-weight: 500;
+      color: rgba(0, 0, 0, 0.85);
+      line-height: 32px;
+    }
+  }
 }

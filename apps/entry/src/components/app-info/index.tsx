@@ -24,24 +24,18 @@ const AppInfo = ({ navMode }: { navMode: NavModeType }) => {
   const [logoUrl, setLogoUrl] = useState<string>("");
 
   const content = useMemo(() => {
-    if (navMode === NavModeType.SINGLE) {
-      return <div></div>;
-    }
-    if (navMode === NavModeType.MULTI) {
-      return (
-        <div className="multi">
-          <img
-            className="app-logo"
-            src={logoUrl ? logoUrl : defaultLogo}
-            alt="logo"
-          />
-          <div className="app-name">
-            <Text text={appName} />
-          </div>
+    return (
+      <div className={navMode}>
+        <img
+          className="app-logo"
+          src={logoUrl ? logoUrl : defaultLogo}
+          alt="logo"
+        />
+        <div className="app-name">
+          <Text text={appName} />
         </div>
-      );
-    }
-    return null;
+      </div>
+    );
   }, [navMode, appName, logoUrl]);
 
   useEffect(() => {

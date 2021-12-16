@@ -6,6 +6,7 @@ import { Menu as IMenu, MenuComponentProps } from "@utils/types";
 import "@containers/app-setup-preview/multi-nav.style";
 import { Icon } from "@common/components";
 import useMemoCallback from "@common/hooks/use-memo-callback";
+import UserComponent from "@components//header/user";
 
 const { SubMenu } = Menu;
 
@@ -58,6 +59,9 @@ const MultiNavComponent = ({
               </Menu.Item>
             ))}
           </Menu>
+        </div>
+        <div className="user-container">
+          <UserComponent />
         </div>
       </div>
       <div className="content">

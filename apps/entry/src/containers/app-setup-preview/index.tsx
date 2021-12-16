@@ -4,10 +4,7 @@ import { selectTheme, selectNavMode } from "@views/app-setup/basic-setup.slice";
 import { selectMenu, selectCurrentId } from "@views/app-setup/menu-setup.slice";
 import SingleNavComponent from "@containers/app-setup-preview/single-nav.component";
 import MultiNavComponent from "@containers/app-setup-preview/multi-nav.component";
-import AppInfo, {
-  SingleNavAppInfo,
-  MultiNavAppInfo,
-} from "@components/app-info";
+import AppInfo from "@components/app-info";
 import "@containers/app-setup-preview/index.style";
 import { NavModeType } from "@/consts";
 
@@ -27,7 +24,7 @@ const AppSetupPreview = () => {
           selectedKey={selectedKey}
           dataSource={menu}
           theme={theme}
-          extra={<SingleNavAppInfo />}
+          extra={<AppInfo navMode={NavModeType.SINGLE} />}
         >
           {renderContent()}
         </SingleNavComponent>
