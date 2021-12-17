@@ -44,10 +44,7 @@
       "prettier --write",
       "eslint"
     ]
-  },
-  "husky": {
-    "hooks": {}
-  },
+  },  
   "workspaces": [
     "packages/core",
     "apps/*"
