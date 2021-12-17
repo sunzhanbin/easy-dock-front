@@ -29,7 +29,7 @@ export const basicSetupSlice = createSlice({
       state.errors = action.payload;
     },
     setBaseForm: (state, action: PayloadAction<{ [key: string]: any }>) => {
-      const icon = action.payload.icon?.[0]?.id;
+      const icon = action.payload.icon;
       if (typeof action.payload === "object") {
         state.basicForm = JSON.parse(JSON.stringify(action.payload));
       }
@@ -53,6 +53,9 @@ export const basicSetupSlice = createSlice({
           };
         } else {
           const { name, id, remark, navMode, theme, icon } = extension;
+          state.theme = theme;
+          state.navMode = navMode;
+          state.logo = icon;
           state.basicForm = {
             icon,
             name,

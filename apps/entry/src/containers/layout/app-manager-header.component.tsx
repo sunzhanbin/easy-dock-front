@@ -83,6 +83,7 @@ const AppManagerHeader: FC<EditHeaderProps> = ({ className }) => {
       await handleSave(false);
       await modifyAppStatus({ id: +(workspaceId as string), status: 1 });
       message.success("发布成功!");
+      navigate("/app-manager");
     } catch (error) {
       console.error(error);
     }

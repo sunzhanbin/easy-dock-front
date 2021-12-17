@@ -24,7 +24,7 @@ const AppSetupPreview = () => {
           selectedKey={selectedKey}
           dataSource={menu}
           theme={theme}
-          extra={<AppInfo navMode={NavModeType.LEFT} />}
+          extra={<AppInfo navMode={NavModeType.LEFT} theme={theme} />}
         >
           {renderContent()}
         </SingleNavComponent>
@@ -36,7 +36,7 @@ const AppSetupPreview = () => {
           selectedKey={selectedKey}
           dataSource={menu}
           theme={theme}
-          extra={<AppInfo navMode={NavModeType.MULTI} />}
+          extra={<AppInfo navMode={NavModeType.MULTI} theme={theme} />}
         >
           {renderContent()}
         </MultiNavComponent>
