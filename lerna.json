@@ -16,7 +16,7 @@
     "bootstrap": {
       "npmClient": "yarn",
       "useWorkspaces": true,
-      "npmClientArgs": ["--frozen-lockfile"]
+      "npmClientArgs": ["--frozen-lockfile", "--ignore-optional", "--ignore-platform"]
     }
   }
 }
