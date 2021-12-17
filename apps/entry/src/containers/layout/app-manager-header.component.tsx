@@ -5,8 +5,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Icon, Text } from "@common/components";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import { useAppDispatch, useAppSelector } from "@/store";
-import { selectMenu, setName } from "@/views/workspace/index.slice";
-import { useWorkspaceDetailQuery } from "@/http";
+import { setName } from "@/views/workspace/index.slice";
+import { selectMenu } from "@/views/app-setup/menu-setup.slice";
+import {
+  useWorkspaceDetailQuery,
+  useSaveAppSetupMutation,
+  useModifyAppStatusMutation,
+} from "@/http";
 import "./app-manager-header.style.scss";
 import { setCurrentWorkspaceId } from "@/views/app-manager/index.slice";
 import {
@@ -28,6 +33,8 @@ const AppManagerHeader: FC<EditHeaderProps> = ({ className }) => {
   const { workspaceId } = useParams();
   const dispatch = useAppDispatch();
   const { data: workspace } = useWorkspaceDetailQuery(+(workspaceId as string));
+  const [saveAppSetup] = useSaveAppSetupMutation();
+  const [modifyAppStatus] = useModifyAppStatusMutation();
   const basicConfig = useAppSelector(selectBasicForm);
   const menuList = useAppSelector(selectMenu);
   const [activeNav, setActiveNav] = useState<string>("edit");
@@ -40,19 +47,45 @@ const AppManagerHeader: FC<EditHeaderProps> = ({ className }) => {
   const handlePreview = useMemoCallback(() => {
     console.info("preview");
   });
-  const handleSave = useMemoCallback(async () => {
+  const handleSave = useMemoCallback(async (showTip = true) => {
     const basicConfigResult = await dispatch(validateBasicForm(basicConfig));
     if (basicConfigResult.meta.requestStatus === "rejected") {
       message.error("请检查应用设置!");
-      return;
+      return Promise.reject("error");
     }
     if (!menuList?.length) {
       message.error("请添加菜单!");
-      return;
+      return Promise.reject("error");
+    }
+    const { name, icon, remark, navMode, theme } = basicConfig;
+    const params = {
+      name,
+      icon,
+      navMode,
+      remark,
+      theme,
+      id: +(workspaceId as string),
+      meta: { menuList },
+    };
+    try {
+      const res = await saveAppSetup(params);
+      if ((res as { error: unknown }).error) {
+        return Promise.reject("error");
+      }
+      showTip && message.success("保存成功!");
+      return Promise.resolve("success");
+    } catch (error) {
+      return Promise.reject("error");
     }
   });
-  const handlePublish = useMemoCallback(() => {
-    console.info("publish");
+  const handlePublish = useMemoCallback(async () => {
+    try {
+      await handleSave(false);
+      await modifyAppStatus({ id: +(workspaceId as string), status: 1 });
+      message.success("发布成功!");
+    } catch (error) {
+      console.error(error);
+    }
   });
   useEffect(() => {
     if (workspace?.name) {

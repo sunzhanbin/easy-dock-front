@@ -30,6 +30,7 @@ export const appManagerBuilder = baseFetch.injectEndpoints({
     // 工作区详情；
     workspaceDetail: build.query({
       query: (workspaceId: number) => `/app/${workspaceId}`,
+      providesTags: [{ type: "Workspace", id: "DETAIL" }],
     }),
     // 添加子应用；
     addSubApp: build.mutation({
@@ -82,6 +83,7 @@ export const appManagerBuilder = baseFetch.injectEndpoints({
           method: "put",
           data: params,
         } as any),
+      invalidatesTags: [{ type: "Workspace", id: "DETAIL" }],
     }),
     // 修改子应用状态
     modifySubAppStatus: build.mutation({
