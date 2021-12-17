@@ -11,6 +11,7 @@ import {
   useGetHolosceneIdMutation,
 } from "@/http";
 import { ResponseType, HomeSubAppType } from "@/consts";
+import { JumpLinkToUrl } from "@utils/utils";
 
 const HomeNewSub = () => {
   const [createSubApp] = useCreateSupAppMutation();
@@ -32,28 +33,7 @@ const HomeNewSub = () => {
       const { data }: ResponseType = await createSubApp(values);
       const { type = 0 } = values;
       if (!data) return;
-      if (type === HomeSubAppType.CANVAS) {
-        const { data: canvasData }: ResponseType = await getCanvasId(data?.id);
-        if (!canvasData) return;
-        // 大屏跳转需要拼sso=true保证用户信息不丢失
-        window.open(
-          `http://10.19.248.238:28180/dashboard/${canvasData.refId}?sso=true`
-        );
-      } else if (type === HomeSubAppType.SPACE) {
-        const { data: spaceData }: ResponseType = await getHolosceneId(
-          data?.id
-        );
-        if (!spaceData) return;
-        window.open(`http://10.19.248.238:9003/#/scene/${spaceData.refId}`);
-      } else if (type === HomeSubAppType.FLOW) {
-        window.open(
-          `http://10.19.248.238:28303/builder/flow/bpm-editor/${data?.id}/flow-design`
-        );
-      } else if (type === HomeSubAppType.FORM) {
-        window.open(
-          `http://10.19.248.238:28303/builder/flow/bpm-editor/${data?.id}/form-design`
-        );
-      }
+      await JumpLinkToUrl(type, data?.id, getCanvasId, getHolosceneId);
       message.success("创建成功!");
       setShowModal(false);
     } catch (e) {

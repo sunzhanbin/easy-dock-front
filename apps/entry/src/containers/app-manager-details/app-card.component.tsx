@@ -8,11 +8,14 @@ import ChartImage from "@assets/images/chart.png";
 import CanvasImage from "@assets/images/canvas.png";
 import SpaceImage from "@assets/images/space.png";
 import { Icon, Text, PopoverConfirm } from "@common/components";
+import { JumpLinkToUrl } from "@utils/utils";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import {
   useModifySubAppNameMutation,
   useModifySubAppStatusMutation,
   useDeleteSupAppMutation,
+  useGetHolosceneIdMutation,
+  useGetCanvasIdMutation,
 } from "@/http/app-manager.hooks";
 import AppModal from "./app-modal.component";
 import "./app-card.style.scss";
@@ -27,7 +30,8 @@ const AppCard: FC<AppCardProps> = ({ subApp, className }) => {
   const [modifySubAppStatus] = useModifySubAppStatusMutation();
   const [modifySubAppName] = useModifySubAppNameMutation();
   const [deleteSubApp] = useDeleteSupAppMutation();
-
+  const [getHolosceneId] = useGetHolosceneIdMutation();
+  const [getCanvasId] = useGetCanvasIdMutation();
   const imageMap = useMemo<{ [k in SubAppType]: string }>(() => {
     return {
       [SubAppType.CANVAS]: CanvasImage,
@@ -144,7 +148,7 @@ const AppCard: FC<AppCardProps> = ({ subApp, className }) => {
           <PopoverConfirm
             title="提示"
             placement="bottom"
-            content="删除后不可恢复,请确认是否删除该子应用?"
+            content="删除后不可恢复,请确认是否删除该工作区?"
             getPopupContainer={getPopupContainer}
             onConfirm={handleDelete}
           >
@@ -158,11 +162,15 @@ const AppCard: FC<AppCardProps> = ({ subApp, className }) => {
     );
   }, [statusInfo, getPopupContainer]);
 
+  const handleJumpTo = useMemoCallback(async () => {
+    await JumpLinkToUrl(type, id, getCanvasId, getHolosceneId);
+  });
   return (
     <div
       ref={cardRef}
       className={classNames("app-card-container", className && className)}
       onMouseLeave={() => setShowPopup(false)}
+      onClick={handleJumpTo}
     >
       <div className="app-card-base">
         <img src={imageMap[type]} alt="icon" className="app-image" />
