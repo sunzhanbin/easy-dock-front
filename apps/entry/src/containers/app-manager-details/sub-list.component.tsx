@@ -5,17 +5,21 @@ import React, {
   useRef,
   useEffect,
 } from "react";
-import { Tabs, Input, Button, message } from "antd";
+import { Tabs, Input, Button, Switch, message } from "antd";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "@/store";
 import {
   useFetchSubAppListQuery,
   useWorkspaceDetailQuery,
   useCreateSupAppMutation,
+  useModifyAppStatusMutation,
 } from "@/http";
 import { selectCurrentWorkspaceId } from "@views/app-manager/index.slice";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import { SubAppInfo, SubAppType } from "@/consts";
 import { Icon } from "@common/components";
+import { imgIdToUrl } from "@/utils/utils";
 import AppModal from "./app-modal.component";
 import AppCard from "./app-card.component";
 import AppEmpty from "./app-empty.component";
@@ -28,9 +32,12 @@ const SubListComponent: React.FC = () => {
   const { data: workspace } = useWorkspaceDetailQuery(workspaceId);
   const { data: subAppList } = useFetchSubAppListQuery(workspaceId);
   const [createSubApp] = useCreateSupAppMutation();
-  const hasPublished = useMemo(() => workspace?.extension, [workspace]);
+  const [modifyAppStatus] = useModifyAppStatusMutation();
+  const navigate = useNavigate();
+  const extension = useMemo(() => workspace?.extension, [workspace]);
   const subAppCount = useMemo(() => subAppList?.length || 0, [subAppList]);
   const [showAppModal, setShowAppModal] = useState<boolean>(false);
+  const [logoUrl, setLogoUrl] = useState<string>("");
   const [initialSubAppList, setInitialSubAppList] = useState<SubAppInfo[]>([]);
   const [activeKey, setActiveKey] = useState<string>("all");
   const [keyword, setKeyword] = useState<string>("");
@@ -60,6 +67,24 @@ const SubListComponent: React.FC = () => {
     createSubApp({ appId: workspaceId, name, type }).then(() => {
       message.success("子应用创建成功!");
     });
+  });
+
+  const handleAppStatusChange = useMemoCallback(async (checked: boolean) => {
+    const params = { id: workspaceId, status: checked ? 1 : -1 };
+    try {
+      await modifyAppStatus(params);
+      message.success(checked ? "启用成功!" : "停用成功!");
+    } catch (error) {
+      console.error(error);
+    }
+  });
+
+  const handleEdit = useMemoCallback(() => {
+    navigate(`/app-manager/${workspaceId}`);
+  });
+
+  const handleCopySuccess = useMemoCallback(() => {
+    message.success("链接已复制到粘贴板!");
   });
 
   const formAppList = useMemo(() => {
@@ -107,16 +132,59 @@ const SubListComponent: React.FC = () => {
     }
   }, [subAppList, keyword]);
 
+  useEffect(() => {
+    (async () => {
+      if (extension?.icon) {
+        const url = await imgIdToUrl(extension.icon);
+        setLogoUrl(url);
+      }
+    })();
+  }, [extension]);
+
   return (
     <div
       className="sub-list-component-container"
       ref={containerRef}
       style={style}
     >
-      {hasPublished && (
+      {extension && (
         <div className="app-info">
-          <div className="left"></div>
-          <div className="right"></div>
+          <div className="logo">
+            <img src={logoUrl} alt="logo" />
+          </div>
+          <div className="content">
+            <div className="header">
+              <div className="left">
+                <div className="app">应用</div>
+                <div className="name">{extension.name}</div>
+              </div>
+              <div className="right">
+                <div className="version">v2.1</div>
+                <div className="preview">
+                  <Icon type="yulan" className="icon" />
+                  <div className="text">预览</div>
+                </div>
+                <div className="edit" onClick={handleEdit}>
+                  <Icon type="bianji" className="icon" />
+                  <div className="text">编辑</div>
+                </div>
+                <CopyToClipboard text={"www.exmple.com"}>
+                  <div className="copy-link" onClick={handleCopySuccess}>
+                    <Icon type="fuzhi" className="icon" />
+                    <div className="text">复制链接</div>
+                  </div>
+                </CopyToClipboard>
+                <Switch
+                  className="switch"
+                  checkedChildren="启用"
+                  unCheckedChildren="停用"
+                  defaultChecked={workspace?.status === 1}
+                  onChange={handleAppStatusChange}
+                />
+              </div>
+            </div>
+            <div className="remark">{extension.remark || "这是一个应用"}</div>
+          </div>
         </div>
       )}
       {subAppCount > 0 ? (
