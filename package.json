@@ -44,12 +44,12 @@
       "prettier --write",
       "eslint"
     ]
-  },  
+  },
   "workspaces": [
     "packages/core",
     "apps/*"
   ],
   "engines": {
-    "node": ">= 10.0"
+    "node": ">= 12.0"
   }
 }
