@@ -160,7 +160,19 @@ const AppCard: FC<AppCardProps> = ({ subApp, className }) => {
         )}
       </div>
     );
-  }, [statusInfo, getPopupContainer]);
+  }, [
+    statusInfo,
+    getPopupContainer,
+    handleStart,
+    handleStop,
+    handleEdit,
+    handleDelete,
+  ]);
+
+  const handleShowOperation = useMemoCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowPopup(true);
+  });
 
   const handleJumpTo = useMemoCallback(async () => {
     await JumpLinkToUrl(type, id, getCanvasId, getHolosceneId);
@@ -185,7 +197,7 @@ const AppCard: FC<AppCardProps> = ({ subApp, className }) => {
           )}
           <span className="type">{typeMap[type]}</span>
         </div>
-        <div className="more" onClick={() => setShowPopup(true)}>
+        <div className="more" onClick={(e) => handleShowOperation(e)}>
           <Icon type="gengduo" className="icon" />
           {showPopup && content}
         </div>

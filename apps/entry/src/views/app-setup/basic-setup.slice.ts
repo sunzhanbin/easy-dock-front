@@ -1,12 +1,7 @@
 import { NavModeType, ThemeType, validateName, validateRemark } from "@/consts";
 import { appManagerBuilder } from "@/http";
 import { RootState } from "@/store";
-import {
-  createSlice,
-  createAsyncThunk,
-  PayloadAction,
-  current,
-} from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { BasicSetupInitialState } from "@utils/types";
 
 const initialState: BasicSetupInitialState = {
@@ -50,7 +45,23 @@ export const basicSetupSlice = createSlice({
     builder.addMatcher(
       appManagerBuilder.endpoints.workspaceDetail.matchFulfilled,
       (state, action) => {
-        console.log("workspaceDetail", current(state), action.payload);
+        const extension = action.payload?.extension;
+        if (!extension) {
+          state.basicForm = {
+            navMode: NavModeType.MULTI,
+            theme: ThemeType.LIGHT,
+          };
+        } else {
+          const { name, id, remark, navMode, theme, icon } = extension;
+          state.basicForm = {
+            icon,
+            name,
+            theme,
+            remark,
+            navMode,
+            workspace: id,
+          };
+        }
       }
     );
   },

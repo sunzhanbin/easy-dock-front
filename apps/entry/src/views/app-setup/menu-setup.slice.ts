@@ -95,6 +95,24 @@ export const menuSetupSlice = createSlice({
       console.log({ state: current(state), action });
     },
   },
+  extraReducers: (builder) => {
+    builder.addMatcher(
+      appManagerBuilder.endpoints.workspaceDetail.matchFulfilled,
+      (state, action) => {
+        const extension = action.payload?.extension;
+        if (!extension?.meta) {
+          state.menu = [];
+        } else {
+          const menuList = extension.meta.menuList;
+          if (Array.isArray(menuList) && menuList.length > 0) {
+            state.menu = menuList;
+          } else {
+            state.menu = [];
+          }
+        }
+      }
+    );
+  },
 });
 
 export default menuSetupSlice.reducer;
