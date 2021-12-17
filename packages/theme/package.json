@@ -1,11 +1,12 @@
 {
   "name": "@enc/theme-scheme",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "theme scheme",
   "main": "pollen.css",
   "style": "pollen.css",
   "scripts": {
     "develop": "rollup -c -w",
+    "prepare": "npm run build",
     "build": "rollup -c"
   },
   "files": [
@@ -30,14 +31,21 @@
     "prettier": "^2.0.5",
     "rollup": "^2.7.6",
     "rollup-plugin-copy": "^3.4.0",
-    "rollup-plugin-postcss": "^3.1.1",
+    "rollup-plugin-postcss": "^3.1.8",
     "rollup-plugin-uglify": "^6.0.4",
     "stylelint": "^13.3.3",
     "typescript": "^3.8.3"
   },
   "dependencies": {
     "@ant-design/colors": "^6.0.0",
+    "@babel/plugin-proposal-optional-chaining": "^7.16.5",
     "@ctrl/tinycolor": "^3.4.0",
-    "css-vars-ponyfill": "^2.3.1"
+    "core-js": "^3.20.0",
+    "css-vars-ponyfill": "^2.3.1",
+    "rollup-plugin-terser": "^7.0.2"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "http://10.39.39.153:4837"
   }
 }
