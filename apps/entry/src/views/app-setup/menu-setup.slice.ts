@@ -95,14 +95,6 @@ export const menuSetupSlice = createSlice({
       console.log({ state: current(state), action });
     },
   },
-  extraReducers: (builder) => {
-    builder.addMatcher(
-      appManagerBuilder.endpoints.workspaceDetail.matchFulfilled,
-      (state, action) => {
-        console.log("workspaceDEtail", current(state), action.payload);
-      }
-    );
-  },
 });
 
 export default menuSetupSlice.reducer;

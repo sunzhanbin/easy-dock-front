@@ -13,6 +13,21 @@ export const appManagerBuilder = baseFetch.injectEndpoints({
         } as any),
       invalidatesTags: [{ type: "Workspace", id: "LIST" }],
     }),
+    // 编辑工作区
+    editWorkspace: build.mutation({
+      query: (params?: { name: string; id: number }) =>
+        ({
+          url: "/app",
+          method: "put",
+          data: params,
+        } as any),
+      invalidatesTags: [{ type: "Workspace", id: "LIST" }],
+    }),
+    // 删除工作区
+    deleteWorkspace: build.mutation({
+      query: (id: number) => ({ url: `/app/${id}`, method: "delete" } as any),
+      invalidatesTags: [{ type: "Workspace", id: "LIST" }],
+    }),
     // 工作区里列表；
     fetchWorkspaceList: build.query({
       query: (projectId: number) => `/app/${projectId}/list/all`,
@@ -143,6 +158,8 @@ export const {
   useFetchWorkspaceListQuery,
   useWorkspaceDetailQuery,
   useAddSubAppMutation,
+  useEditWorkspaceMutation,
+  useDeleteWorkspaceMutation,
   useFetchSubAppListQuery,
   useFetchDeployedSubAppListQuery,
   useModifyAppStatusMutation,

@@ -13,6 +13,7 @@ import { useAppSelector } from "@/store";
 import { selectProjectId } from "@views/home/index.slice";
 import { HomeSubAppType, ResponseType } from "@/consts";
 import { ImageMap, NameMap } from "@utils/const";
+import { JumpLinkToUrl } from "@utils/utils";
 
 type ListItemType = {
   id: number;
@@ -51,26 +52,9 @@ const HomeWorkspaceList = () => {
   const handleLinkTo = useCallback(
     async (item: ListItemType) => {
       const { isApp, type, id } = item;
+      await JumpLinkToUrl(type, id, getCanvasId, getHolosceneId);
       if (isApp) {
         navigate(`/app-manager/${id}`);
-      } else if (type === HomeSubAppType.CANVAS) {
-        const { data: canvasData }: ResponseType = await getCanvasId(id);
-        if (!canvasData) return;
-        window.open(
-          `http://10.19.248.238:28180/dashboard/${canvasData.refId}?sso=true`
-        );
-      } else if (type === HomeSubAppType.SPACE) {
-        const { data: spaceData }: ResponseType = await getHolosceneId(id);
-        if (!spaceData) return;
-        window.open(`http://10.19.248.238:9003/#/scene/${spaceData.refId}`);
-      } else if (type === HomeSubAppType.FLOW) {
-        window.open(
-          `http://10.19.248.238:28303/builder/flow/bpm-editor/${id}/flow-design`
-        );
-      } else if (type === HomeSubAppType.FORM) {
-        window.open(
-          `http://10.19.248.238:28303/builder/flow/bpm-editor/${id}/form-design`
-        );
       } else if (type === HomeSubAppType.DEVICE) {
         // todo
         window.open(`http://10.19.248.238:9003/#/scene/${id}`);

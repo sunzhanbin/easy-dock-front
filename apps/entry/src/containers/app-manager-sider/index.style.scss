@@ -30,6 +30,14 @@
         flex: 1;
         height: calc(100% - 80px);
         overflow-y: auto;
+        .icon-dropdown {
+          color: $primary-color;
+        }
+        .ant-menu-title-content {
+          display: inline-flex;
+          justify-content: space-between;
+          align-items: center;
+        }
       }
       .ant-menu-inline .ant-menu-item {
         width: auto !important;
@@ -61,4 +69,23 @@
       }
     }
   }
+}
+
+.dropdown-sider-container {
+  .ant-dropdown-menu {
+    max-width: 80px;
+    min-width: 80px;
+      .ant-dropdown-menu-item {
+        &:hover {
+          background-color: #fff;
+          .ant-dropdown-menu-item-icon {
+            color: $primary-color;
+          }
+          .ant-dropdown-menu-title-content {
+            color: $primary-color;
+          }
+      }
+    }
+  }
+
 }
