@@ -29,22 +29,30 @@ const user = createSlice({
 });
 
 export const getUserInfo = createAsyncThunk('main-app-user/get-user', (_, { dispatch }) => {
-  runtimeAxios.get('/auth/current', { silence: true }).then(({ data }) => {
-    dispatch(
-      setUser({
-        avatar: data.user.avatar,
-        username: data.user.userName,
-        id: data.user.id,
-        power: data.power,
-      }),
-    );
-  });
+  runtimeAxios.get('/auth/current', { silence: true }).then(
+    ({ data }) => {
+      dispatch(
+        setUser({
+          avatar: data.user.avatar,
+          username: data.user.userName,
+          id: data.user.id,
+          power: data.power,
+        }),
+      );
+    },
+    (error) => {
+      if (error && error.code === -1) {
+        if (Auth.removeAuth) {
+          Auth.removeAuth();
+        }
+      }
+    },
+  );
 });
 
 export const logout = createAsyncThunk<void, string | undefined, { state: RootState }>(
   'main-app-user/logout',
   async (url, { dispatch }) => {
-    debugger
     // await runtimeAxios.delete('/auth/logout');
     if (window.Auth) {
       window.Auth.logout(url ? url : undefined);
