@@ -176,21 +176,7 @@ const MenuSetupFormComponent = React.forwardRef<{
                           "subAppType",
                         ]);
                         return (
-                          <Form.Item
-                            name={["assetConfig", "subAppId"]}
-                            rules={[
-                              {
-                                validator(_, value) {
-                                  if (!value) {
-                                    return Promise.reject(
-                                      new Error("请选择子应用!")
-                                    );
-                                  }
-                                  return Promise.resolve();
-                                },
-                              },
-                            ]}
-                          >
+                          <Form.Item name={["assetConfig", "subAppId"]}>
                             <Select
                               placeholder="选择子应用"
                               size="large"
