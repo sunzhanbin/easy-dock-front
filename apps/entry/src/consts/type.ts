@@ -49,3 +49,9 @@ export interface SubAppInfo {
 export type ResponseType = {
   [key: string]: any;
 };
+
+export type CanvasResponseType = {
+  data: {
+    refId: string;
+  };
+};

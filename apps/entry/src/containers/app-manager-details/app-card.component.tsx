@@ -14,7 +14,7 @@ import {
   useModifySubAppNameMutation,
   useModifySubAppStatusMutation,
   useDeleteSupAppMutation,
-  useGetHolosceneIdMutation,
+  useGetHoloSceneIdMutation,
   useGetCanvasIdMutation,
 } from "@/http/app-manager.hooks";
 import AppModal from "./app-modal.component";
@@ -30,7 +30,7 @@ const AppCard: FC<AppCardProps> = ({ subApp, className }) => {
   const [modifySubAppStatus] = useModifySubAppStatusMutation();
   const [modifySubAppName] = useModifySubAppNameMutation();
   const [deleteSubApp] = useDeleteSupAppMutation();
-  const [getHolosceneId] = useGetHolosceneIdMutation();
+  const [getHoloSceneId] = useGetHoloSceneIdMutation();
   const [getCanvasId] = useGetCanvasIdMutation();
   const imageMap = useMemo<{ [k in SubAppType]: string }>(() => {
     return {
@@ -175,7 +175,7 @@ const AppCard: FC<AppCardProps> = ({ subApp, className }) => {
   });
 
   const handleJumpTo = useMemoCallback(async () => {
-    await JumpLinkToUrl(type, id, getCanvasId, getHolosceneId);
+    await JumpLinkToUrl(type, id, getCanvasId, getHoloSceneId);
   });
   return (
     <div

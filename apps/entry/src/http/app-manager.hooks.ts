@@ -175,7 +175,7 @@ export const appManagerRunTime = runTime.injectEndpoints({
     getCanvasId: build.mutation({
       query: (subId: number) => `/subapp/canvas/${subId}`,
     }),
-    getHolosceneId: build.mutation({
+    getHoloSceneId: build.mutation({
       query: (subId: number) => `/subapp/holoscene/${subId}`,
     }),
   }),
@@ -183,5 +183,5 @@ export const appManagerRunTime = runTime.injectEndpoints({
 
 export const {
   useGetCanvasIdMutation,
-  useGetHolosceneIdMutation,
+  useGetHoloSceneIdMutation,
 } = appManagerRunTime;

@@ -8,14 +8,14 @@ import { message } from "antd";
 import {
   useCreateSupAppMutation,
   useGetCanvasIdMutation,
-  useGetHolosceneIdMutation,
+  useGetHoloSceneIdMutation,
 } from "@/http";
 import { ResponseType, HomeSubAppType } from "@/consts";
 import { JumpLinkToUrl } from "@utils/utils";
 
 const HomeNewSub = () => {
   const [createSubApp] = useCreateSupAppMutation();
-  const [getHolosceneId] = useGetHolosceneIdMutation();
+  const [getHoloSceneId] = useGetHoloSceneIdMutation();
   const [getCanvasId] = useGetCanvasIdMutation();
   const [showModal, setShowModal] = useState<boolean>(false);
   const [modalInfo, setModalInfo] = useState<{
@@ -33,7 +33,7 @@ const HomeNewSub = () => {
       const { data }: ResponseType = await createSubApp(values);
       const { type = 0 } = values;
       if (!data) return;
-      await JumpLinkToUrl(type, data?.id, getCanvasId, getHolosceneId);
+      await JumpLinkToUrl(type, data?.id, getCanvasId, getHoloSceneId);
       message.success("创建成功!");
       setShowModal(false);
     } catch (e) {

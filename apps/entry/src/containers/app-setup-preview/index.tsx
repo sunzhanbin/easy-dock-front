@@ -1,12 +1,13 @@
-import { useCallback, useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { useAppSelector } from "@/store";
+import { NavModeType } from "@/consts";
 import { selectTheme, selectNavMode } from "@views/app-setup/basic-setup.slice";
 import { selectMenu, selectCurrentId } from "@views/app-setup/menu-setup.slice";
 import SingleNavComponent from "@containers/app-setup-preview/single-nav.component";
 import MultiNavComponent from "@containers/app-setup-preview/multi-nav.component";
 import AppInfo from "@components/app-info";
+import AppContent from "./app-content.component";
 import "@containers/app-setup-preview/index.style";
-import { NavModeType } from "@/consts";
 
 const AppSetupPreview = () => {
   const theme = useAppSelector(selectTheme);
@@ -14,9 +15,6 @@ const AppSetupPreview = () => {
   const menu = useAppSelector(selectMenu);
   const selectedKey = useAppSelector(selectCurrentId);
 
-  const renderContent = useCallback(() => {
-    return <>这里是内容区</>;
-  }, []);
   const renderNavComponent = useMemo(() => {
     if (navMode === NavModeType.LEFT) {
       return (
@@ -26,7 +24,11 @@ const AppSetupPreview = () => {
           theme={theme}
           extra={<AppInfo navMode={NavModeType.LEFT} theme={theme} />}
         >
-          {renderContent()}
+          <AppContent
+            selectedKey={selectedKey}
+            key={selectedKey}
+            theme={theme}
+          />
         </SingleNavComponent>
       );
     }
@@ -38,7 +40,11 @@ const AppSetupPreview = () => {
           theme={theme}
           extra={<AppInfo navMode={NavModeType.MULTI} theme={theme} />}
         >
-          {renderContent()}
+          <AppContent
+            selectedKey={selectedKey}
+            key={selectedKey}
+            theme={theme}
+          />
         </MultiNavComponent>
       );
     }

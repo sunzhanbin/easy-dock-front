@@ -55,14 +55,14 @@ export const imgIdToUrl = async (id: string) => {
  * @param type 子应用类型
  * @param id 子应用id
  * @param getCanvasId 大屏接口
- * @param getHolosceneId 空间接口
+ * @param getHoloSceneId 空间接口
  * @constructor
  */
 export const JumpLinkToUrl = async (
   type: number,
   id: number,
   getCanvasId: (v: number) => Promise<any>,
-  getHolosceneId: (v: number) => Promise<any>
+  getHoloSceneId: (v: number) => Promise<any>
 ) => {
   if (type === HomeSubAppType.CANVAS) {
     const { data: canvasData }: ResponseType = await getCanvasId(id);
@@ -72,7 +72,7 @@ export const JumpLinkToUrl = async (
       `http://10.19.248.238:28180/dashboard/${canvasData.refId}?sso=true`
     );
   } else if (type === HomeSubAppType.SPACE) {
-    const { data: spaceData }: ResponseType = await getHolosceneId(id);
+    const { data: spaceData }: ResponseType = await getHoloSceneId(id);
     if (!spaceData) return;
     window.open(`http://10.19.248.238:9003/#/scene/${spaceData.refId}`);
   } else if (type === HomeSubAppType.FLOW) {

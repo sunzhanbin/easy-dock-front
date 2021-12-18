@@ -6,7 +6,7 @@ import "@containers/home-manager/index.style.scss";
 import { useNavigate } from "react-router-dom";
 import {
   useGetCanvasIdMutation,
-  useGetHolosceneIdMutation,
+  useGetHoloSceneIdMutation,
   useGetRecentListMutation,
 } from "@/http";
 import { useAppSelector } from "@/store";
@@ -27,7 +27,7 @@ const HomeWorkspaceList = () => {
   const navigate = useNavigate();
   const projectId = useAppSelector(selectProjectId);
   const [getRecentList] = useGetRecentListMutation();
-  const [getHolosceneId] = useGetHolosceneIdMutation();
+  const [getHoloSceneId] = useGetHoloSceneIdMutation();
   const [getCanvasId] = useGetCanvasIdMutation();
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<any>([]);
@@ -52,7 +52,7 @@ const HomeWorkspaceList = () => {
   const handleLinkTo = useCallback(
     async (item: ListItemType) => {
       const { isApp, type, id } = item;
-      await JumpLinkToUrl(type, id, getCanvasId, getHolosceneId);
+      await JumpLinkToUrl(type, id, getCanvasId, getHoloSceneId);
       if (isApp) {
         navigate(`/app-manager/${id}`);
       } else if (type === HomeSubAppType.DEVICE) {

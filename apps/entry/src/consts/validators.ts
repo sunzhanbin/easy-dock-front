@@ -50,6 +50,10 @@ export const urlRegex = /(^((http|https):\/\/)?([\w\-]+\.)+[\w\-]+(\/[\w\u4e00-\
 export const urlRule: Rule = {
   validator(_, value: string) {
     const url = value?.trim();
+    // url非必填
+    if (!url) {
+      return Promise.resolve();
+    }
     if (!urlRegex.test(url)) {
       return Promise.reject(new Error("请输入正确的url"));
     }
