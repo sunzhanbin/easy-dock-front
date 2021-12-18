@@ -6,7 +6,6 @@ import {
   ThemeType,
   CANVAS_ENTRY,
   SPACE_ENTRY,
-  FLOW_ENTRY,
   CanvasResponseType,
 } from "@/consts";
 import {
@@ -19,6 +18,7 @@ import useMemoCallback from "@common/hooks/use-memo-callback";
 import { selectMenu } from "@/views/app-setup/menu-setup.slice";
 import lightEmptyImage from "@assets/images/light-empty.png";
 import darkEmptyImage from "@assets/images/dark-empty.png";
+import FlowAppContent from "@/components/flow-app-content";
 
 import "./app-content.style.scss";
 
@@ -116,9 +116,13 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
     }
     return "";
   }, [menu, isExistAsset]);
-  const renderIframe = useMemoCallback((url: string) => {
+  const renderIframe = useMemoCallback((url: string, className?: string) => {
     return (
-      <iframe className="iframe-container" src={url} frameBorder={0}></iframe>
+      <iframe
+        className={classNames("iframe-container", className && className)}
+        src={url}
+        frameBorder={0}
+      ></iframe>
     );
   });
   const renderContent = useMemoCallback(() => {
@@ -132,14 +136,18 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
     // 大屏子应用内容渲染
     if (subAppType === SubAppType.CANVAS && subAppId) {
       const url = `${CANVAS_ENTRY}/dashboard/${canvasId}?sso=true`;
-      return renderIframe(url);
+      return renderIframe(url, "canvas-container");
     }
     // 空间子应用内容渲染
     if (subAppType === SubAppType.SPACE && subAppId) {
       const url = `${SPACE_ENTRY}/#/scene/${holoSceneId}`;
-      return renderIframe(url);
+      return renderIframe(url, "space-container");
     }
-    return selectedKey;
+    // 流程子应用内容渲染
+    if (subAppType === SubAppType.FLOW && subAppId) {
+      return <FlowAppContent id={+subAppId} />;
+    }
+    return null;
   });
   useEffect(() => {
     console.info(menu, "menu");

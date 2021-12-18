@@ -1,0 +1,66 @@
+@import "@common/styles/var.scss";
+
+.flow-app-content {
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+  & > .start {
+    margin-bottom: 12px;
+  }
+  & > .header {
+    display: flex;
+    flex-direction: row;
+    & > .status-list {
+      display: flex;
+      align-items: center;
+      height: 40px;
+      & > .ant-checkbox-group {
+        height: 40px;
+        line-height: 40px;
+      }
+    }
+    & > .search {
+      flex: 1;
+      display: flex;
+      justify-content: flex-end;
+      margin-right: 12px;
+      & > .input {
+        width: 200px;
+      }
+    }
+    & > .operation {
+      display: flex;
+      align-items: center;
+      height: 40px;
+      & > .export {
+        display: flex;
+        cursor: pointer;
+        & > .icon {
+          font-size: 20px;
+          margin-right: 4px;
+        }
+        &:hover {
+          color: $primary-color;
+          & > .icon {
+            color: $primary-color;
+          }
+        }
+      }
+      & > .refresh {
+        margin-left: 12px;
+        cursor: pointer;
+        .icon {
+          font-size: 20px;
+        }
+        &:hover {
+          & > .icon {
+            color: $primary-color;
+          }
+        }
+      }
+    }
+  }
+  & > .table-container {
+    margin-top: 24px;
+  }
+}
