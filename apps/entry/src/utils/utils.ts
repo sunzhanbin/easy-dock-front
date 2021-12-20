@@ -85,3 +85,19 @@ export const JumpLinkToUrl = async (
     );
   }
 };
+
+export function exportFile(res: any, name: string, type?: string) {
+  const blobConfig = type ? { type } : {};
+  const blob = new Blob([res], blobConfig);
+  const urlObject = window.URL || window.webkitURL || window;
+  const save_link = document.createElementNS(
+    "http://www.w3.org/1999/xhtml",
+    "a"
+  ) as HTMLAnchorElement;
+
+  save_link.href = urlObject.createObjectURL(blob);
+  if (name) {
+    save_link.download = name;
+  }
+  save_link.click();
+}
