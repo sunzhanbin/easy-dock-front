@@ -1,5 +1,5 @@
-import { useCallback, useMemo, useRef, useState } from "react";
-import { Layout, Menu, Button, Input, Dropdown, message } from "antd";
+import React, { useCallback, useMemo, useRef, useState } from "react";
+import { Layout, Menu, Button, Popover, Input, Dropdown, message } from "antd";
 import { useDeleteWorkspaceMutation, useFetchWorkspaceListQuery } from "@/http";
 import { useAppDispatch, useAppSelector } from "@/store";
 import AddWorkspaceModal from "@components/add-workspace-modal";
@@ -61,6 +61,8 @@ const AppManagerSider = () => {
   const handleEditWorkspaceName = useMemoCallback((e, item) => {
     e.domEvent.stopPropagation;
     e.domEvent.preventDefault;
+    console.log(item, "workspace");
+
     modalRef.current.show();
     modalRef.current.setTitle("编辑");
     modalRef.current.setWorkspaceName(item.name);
@@ -82,7 +84,7 @@ const AppManagerSider = () => {
     }
   };
   const renderDropdownMenu = (workspace: { name: string; id: number }) => {
-    // console.log(workspace, "workspace");
+    console.log(workspace, "workspace");
     return (
       <Menu>
         <Menu.Item
@@ -135,12 +137,13 @@ const AppManagerSider = () => {
             onClick={handleMenuClick}
           >
             {workspaceList?.map((workspace: any) => (
-              <Menu.Item key={workspace.id} icon={renderMenuIcon(workspace.id)}>
+              <Menu.Item icon={renderMenuIcon(workspace.id)} key={workspace.id}>
                 {workspace.name}
                 <Dropdown
                   overlay={() => renderDropdownMenu(workspace)}
                   overlayClassName="dropdown-sider-container"
                   placement="bottomCenter"
+                  trigger={["click"]}
                 >
                   <a>
                     <Icon
