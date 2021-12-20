@@ -11,7 +11,7 @@
     "bootstrap": "yarn add husky --dev -W && husky install && lerna bootstrap",
     "publish": "lerna publish",
     "clean": "lerna clean",
-    "eslint": "eslint -c=.eslintrc apps/*/src --ext .js,.jsx,.ts,.tsx"
+    "eslint": "eslint apps/*/src --ext .js,.jsx,.ts,.tsx"
   },
   "devDependencies": {
     "@commitlint/cli": "12.1.1",
