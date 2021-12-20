@@ -72,3 +72,6 @@ yarn start
   ```sh
   taskkill /pid 4136 /t /f
   ```
+
+  ### 安装 husky
+  [husky文档](node_modules/husky/README.md)
