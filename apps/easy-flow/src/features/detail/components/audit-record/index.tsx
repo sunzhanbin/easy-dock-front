@@ -65,9 +65,16 @@ function mapActionInfo(type: AuditRecordType): { text: string; status: StatusTag
 
   if (type === AuditRecordType.AUTO_PROCESS_TRIGGER) {
     return {
-      text: '自动节点',
+      text: '自动节点-流程触发',
       status: 'primary',
-    }
+    };
+  }
+
+  if (type === AuditRecordType.AUTO_INTERFACE_PUSH) {
+    return {
+      text: '自动节点-数据连接',
+      status: 'primary',
+    };
   }
 
   return null as never;
