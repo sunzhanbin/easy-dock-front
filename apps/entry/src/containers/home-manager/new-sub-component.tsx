@@ -10,7 +10,12 @@ import {
   useGetCanvasIdMutation,
   useGetHoloSceneIdMutation,
 } from "@/http";
-import { ResponseType, HomeSubAppType } from "@/consts";
+import {
+  ResponseType,
+  HomeSubAppType,
+  WU_LIAN_ENTRY,
+  INTERFACE_ENTRY,
+} from "@/consts";
 import { JumpLinkToUrl } from "@utils/utils";
 
 const HomeNewSub = () => {
@@ -47,13 +52,9 @@ const HomeNewSub = () => {
     const { type } = item;
     if (NOT_SHOW_MODAL_SELECT.includes(type)) {
       if (type === HomeSubAppType.DEVICE) {
-        // todo
-        // window.open(`http://10.19.248.238:9003/#/scene/${id}`);
+        window.open(WU_LIAN_ENTRY);
       } else if (type === HomeSubAppType.INTERFACE) {
-        window.open("http://10.19.248.238:28217/orch");
-      } else if (type === HomeSubAppType.DATA_FISH) {
-        // todo
-        // window.open(`http://10.19.248.238:9003/#/scene/${id}`);
+        window.open(`${INTERFACE_ENTRY}/orch`);
       }
       return;
     }

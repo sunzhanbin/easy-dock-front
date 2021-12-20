@@ -31,6 +31,7 @@
         height: calc(100% - 80px);
         overflow-y: auto;
         .icon-dropdown {
+          display: none;
           color: $primary-color;
         }
         .ant-menu-title-content {
@@ -57,7 +58,10 @@
         &:hover {
           color: $primary-color;
           background: rgba(24, 39, 67, 0.04);
-        }
+          .icon-dropdown {
+            display: inline-block;
+          }
+          }
       }
 
       .add-workspace {

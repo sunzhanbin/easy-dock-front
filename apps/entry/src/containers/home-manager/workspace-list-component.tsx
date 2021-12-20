@@ -55,14 +55,6 @@ const HomeWorkspaceList = () => {
       await JumpLinkToUrl(type, id, getCanvasId, getHoloSceneId);
       if (isApp) {
         navigate(`/app-manager/${id}`);
-      } else if (type === HomeSubAppType.DEVICE) {
-        // todo
-        window.open(`http://10.19.248.238:9003/#/scene/${id}`);
-      } else if (type === HomeSubAppType.INTERFACE) {
-        window.open(`http://10.19.248.238:28217/orch`);
-      } else if (type === HomeSubAppType.DATA_FISH) {
-        // todo
-        window.open(`http://10.19.248.238:9003/#/scene/${id}`);
       }
     },
     [navigate]

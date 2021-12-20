@@ -36,6 +36,7 @@ const AddWorkspaceModal = React.forwardRef(function addWorkspace(_, ref) {
     },
     setWorkspaceName: (name: string) => {
       setInitialValues({ name });
+      form.setFieldsValue({ name });
     },
   }));
 
