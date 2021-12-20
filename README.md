@@ -72,3 +72,9 @@ yarn start
   ```sh
   taskkill /pid 4136 /t /f
   ```
+
+  ### 安装 husky
+
+  -目前较新版本的 Husky 不会在安装项目依赖的时候自动添加 git hook，如需要相关功能，需要参考 Husky 本地安装版本目录下 README 文件中的步骤：
+  [husky 文档](node_modules/husky/README.md)
+  安装成功后如遇到问题，可以参考 Husky 调用链排查：.git/hooks/pre-commit -> npm run precommit -> npx lint-staged -> eslint -c=.eslintrc apps/_/src/\*\*/_.{ts,tsx,js,jsx} -目前项目中的 eslint 需要通过 -c=.eslintrc 指定配置文件。
