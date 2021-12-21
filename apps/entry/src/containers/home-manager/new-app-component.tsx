@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Icon from "@assets/icon";
+import { Icon } from "@common/components";
 import "@containers/home-manager/index.style.scss";
 import NewSubAppModal from "@containers/home-manager/new-subapp-modal";
 import { useNavigate } from "react-router-dom";
@@ -40,7 +40,7 @@ const HomeNewAPP = () => {
     <div className="top_sider">
       <a className="new_app_wrapper" onClick={toApp}>
         <span className="icon_new_app">
-          <Icon type="custom-icon-xinzeng" />
+          <Icon type="xinzeng" />
         </span>
         <span className="text_new_app">创建应用</span>
       </a>

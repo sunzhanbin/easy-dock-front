@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useState } from "react";
 import { Form, Input, message } from "antd";
-import { PopoverConfirm } from "@common/components";
-import Icon from "@assets/icon";
+import { PopoverConfirm, Icon } from "@common/components";
+
 import classnames from "classnames";
 import { nameRule } from "@/consts";
 
@@ -86,13 +86,13 @@ const ProjectOption = ({
                     <>
                       <Icon
                         className={classnames("tick_icon")}
-                        type="custom-icon-gou"
+                        type="gou"
                         onClick={() => handleConfirm(item)}
                       />
 
                       <Icon
                         className="close"
-                        type="custom-icon-fanhuichexiao"
+                        type="fanhuichexiao"
                         onClick={onRevert}
                       />
                     </>
@@ -110,7 +110,7 @@ const ProjectOption = ({
               </span>
               <Icon
                 className="edit-icon"
-                type="custom-icon-bianji"
+                type="bianji"
                 onClick={(e) => handleEdit(e, item)}
               />
               <PopoverConfirm
@@ -122,7 +122,7 @@ const ProjectOption = ({
               >
                 <Icon
                   className="delete-icon"
-                  type="custom-icon-shanchu"
+                  type="shanchu"
                   onClick={(e) => handlePopOver(e)}
                 />
               </PopoverConfirm>

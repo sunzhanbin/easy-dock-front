@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { List, Avatar, Skeleton, Tooltip } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
-import Icon from "@assets/icon";
+import { Icon } from "@common/components";
 import "@containers/home-manager/index.style.scss";
 import { useNavigate } from "react-router-dom";
 import {
@@ -70,7 +70,7 @@ const HomeWorkspaceList = () => {
         <p className="text_recent_app">最近更新</p>
         <p className="operation_all" onClick={toAppManage}>
           <span className="text">全部</span>
-          <Icon className="icon" type="custom-icon-jinrujiantou" />
+          <Icon className="icon" type="jinrujiantou" />
         </p>
       </div>
       <div className="workspace_list" id="scrollableDiv">

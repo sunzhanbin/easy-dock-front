@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Select, Button, Input, Form } from "antd";
-import Icon from "@assets/icon";
+import { Icon } from "@common/components";
 import { getPopupContainer } from "@utils/utils";
 import "@components/select-card/index.style.scss";
 import ProjectOption from "@components/select-card/project-option";
@@ -153,7 +153,7 @@ const SelectCard = ({
               <Button
                 className="btn_add_field"
                 size="large"
-                icon={<Icon type="custom-icon-xinzengjiacu" />}
+                icon={<Icon type="xinzengjiacu" />}
                 onClick={addField}
               >
                 创建{type.label}
@@ -173,13 +173,13 @@ const SelectCard = ({
                         "tick_icon",
                         !fieldName ? "disabled" : ""
                       )}
-                      type="custom-icon-gou"
+                      type="gou"
                       onClick={handleAddName}
                     />
 
                     <Icon
                       className="close"
-                      type="custom-icon-fanhuichexiao"
+                      type="fanhuichexiao"
                       onClick={handleRevert}
                     />
                   </>

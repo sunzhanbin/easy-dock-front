@@ -1,6 +1,6 @@
 import "@containers/home-manager/new-sub.style.scss";
 import { useState } from "react";
-import Icon from "@assets/icon";
+import { Icon } from "@common/components";
 import { SUB_APP_LIST, NOT_SHOW_MODAL_SELECT } from "@utils/const";
 import classnames from "classnames";
 import NewSubAppModal from "@containers/home-manager/new-subapp-modal";
@@ -92,10 +92,7 @@ const HomeNewSub = () => {
                 <div className="container">
                   <i className={classnames("icon", item.icon)} />
                   <span className="text">{item.text}</span>
-                  <Icon
-                    className="icon_arrow"
-                    type="custom-icon-jinrujiantou"
-                  />
+                  <Icon className="icon_arrow" type="jinrujiantou" />
                 </div>
               </div>
             ))}
