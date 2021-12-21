@@ -177,7 +177,7 @@ const Card: FC<{
   }, [status, version]);
   const handleJump = useCallback(() => {
     if (type === 1) {
-      history.push(`${ChartMicroApp.route}/chart-editor/${id}/chart-design`);
+      // history.push(`${ChartMicroApp.route}/chart-editor/${id}/chart-design`);
     } else {
       history.push(`${FlowMicroApp.route}/bpm-editor/${id}/form-design`);
     }

@@ -45,7 +45,7 @@ const AppManagerHeader: FC<EditHeaderProps> = ({ className }) => {
     navigate("/app-manager");
   });
   const handlePreview = useMemoCallback(() => {
-    console.info("preview");
+    navigate(`/app-manager/preview/${workspaceId}`);
   });
   const handleSave = useMemoCallback(async (showTip = true) => {
     const basicConfigResult = await dispatch(validateBasicForm(basicConfig));

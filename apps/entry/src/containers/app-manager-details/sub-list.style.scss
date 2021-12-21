@@ -151,7 +151,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 92px;
+      height: 100px;
       background: var(--custom-card-background, #fff);
       border-radius: 3px;
       border: 1px solid rgba(24, 31, 67, 0.12);
@@ -170,18 +170,18 @@
 
 @media screen and (min-width: 1640px) and (max-width: 1919px) {
   .card-list {
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 
 @media screen and (max-width: 1639px) {
   .card-list {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
 @media screen and (min-width: 1920px) {
   .card-list {
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(5, 1fr);
   }
 }

@@ -1,7 +1,15 @@
 import { Menu } from "@utils/types";
 import { axios } from "@utils/fetch";
 import { AbstractTooltipProps } from "antd/lib/tooltip";
-import { HomeSubAppType, ResponseType } from "@/consts";
+import {
+  CANVAS_ENTRY,
+  FLOW_ENTRY,
+  HomeSubAppType,
+  INTERFACE_ENTRY,
+  ResponseType,
+  SPACE_ENTRY,
+  WU_LIAN_ENTRY,
+} from "@/consts";
 
 export const getPopupContainer: AbstractTooltipProps["getPopupContainer"] = (
   container
@@ -68,20 +76,37 @@ export const JumpLinkToUrl = async (
     const { data: canvasData }: ResponseType = await getCanvasId(id);
     if (!canvasData) return;
     // 大屏跳转需要拼sso=true保证用户信息不丢失
-    window.open(
-      `http://10.19.248.238:28180/dashboard/${canvasData.refId}?sso=true`
-    );
+    window.open(`${CANVAS_ENTRY}/dashboard/${canvasData.refId}?sso=true`);
   } else if (type === HomeSubAppType.SPACE) {
     const { data: spaceData }: ResponseType = await getHoloSceneId(id);
     if (!spaceData) return;
-    window.open(`http://10.19.248.238:9003/#/scene/${spaceData.refId}`);
+    window.open(`${SPACE_ENTRY}/#/scene/${spaceData.refId}`);
   } else if (type === HomeSubAppType.FLOW) {
-    window.open(
-      `http://10.19.248.238:28303/builder/flow/bpm-editor/${id}/flow-design`
-    );
+    window.open(`${FLOW_ENTRY}/builder/flow/bpm-editor/${id}/flow-design`);
   } else if (type === HomeSubAppType.FORM) {
-    window.open(
-      `http://10.19.248.238:28303/builder/flow/bpm-editor/${id}/form-design`
-    );
+    window.open(`${FLOW_ENTRY}/builder/flow/bpm-editor/${id}/form-design`);
+  } else if (type === HomeSubAppType.DEVICE) {
+    window.open(WU_LIAN_ENTRY);
+  } else if (type === HomeSubAppType.INTERFACE) {
+    window.open(`${INTERFACE_ENTRY}/orch`);
+  } else if (type === HomeSubAppType.DATA_FISH) {
+    // todo
+    window.open(`http://10.19.248.238:9003/#/scene/${id}`);
   }
 };
+
+export function exportFile(res: any, name: string, type?: string) {
+  const blobConfig = type ? { type } : {};
+  const blob = new Blob([res], blobConfig);
+  const urlObject = window.URL || window.webkitURL || window;
+  const save_link = document.createElementNS(
+    "http://www.w3.org/1999/xhtml",
+    "a"
+  ) as HTMLAnchorElement;
+
+  save_link.href = urlObject.createObjectURL(blob);
+  if (name) {
+    save_link.download = name;
+  }
+  save_link.click();
+}

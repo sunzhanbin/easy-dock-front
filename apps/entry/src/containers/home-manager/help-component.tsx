@@ -1,6 +1,6 @@
 import "@containers/home-manager/help.style.scss";
 import { List, Tooltip } from "antd";
-import Icon from "@assets/icon";
+import { Icon } from "@common/components";
 import { HELP_LIST } from "@utils/const";
 
 const HeaderHelp = () => {
@@ -17,7 +17,7 @@ const HeaderHelp = () => {
             <span className="text_recent_app">帮助文档</span>
             <p className="operation_all">
               <span className="text">全部</span>
-              <Icon className="icon" type="custom-icon-jinrujiantou" />
+              <Icon className="icon" type="jinrujiantou" />
             </p>
           </div>
         }
@@ -32,7 +32,7 @@ const HeaderHelp = () => {
                 </Tooltip>
               }
             />
-            <Icon className="icon icon-detail" type="custom-icon-jinru" />
+            <Icon className="icon icon-detail" type="jinru" />
           </List.Item>
         )}
       />
