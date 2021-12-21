@@ -547,7 +547,7 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
             onPopupScroll={handleScroll}
             onSearch={handleSearchUser}
             suffixIcon={<Icon type="xiala" />}
-            placeholder="请选择"
+            placeholder="请选择发起人"
             optionFilterProp="label"
             className="select"
             size="large"
