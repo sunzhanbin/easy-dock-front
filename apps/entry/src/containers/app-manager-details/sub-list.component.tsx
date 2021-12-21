@@ -69,6 +69,10 @@ const SubListComponent: React.FC = () => {
     });
   });
 
+  const handlePreview = useMemoCallback(() => {
+    navigate(`/app-manager/preview/${workspaceId}`);
+  });
+
   const handleAppStatusChange = useMemoCallback(async (checked: boolean) => {
     const params = { id: workspaceId, status: checked ? 1 : -1 };
     try {
@@ -159,8 +163,7 @@ const SubListComponent: React.FC = () => {
                 <div className="name">{extension.name}</div>
               </div>
               <div className="right">
-                <div className="version">v2.1</div>
-                <div className="preview">
+                <div className="preview" onClick={handlePreview}>
                   <Icon type="yulan" className="icon" />
                   <div className="text">预览</div>
                 </div>
