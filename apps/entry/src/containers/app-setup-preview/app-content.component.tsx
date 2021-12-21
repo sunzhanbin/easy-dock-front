@@ -159,9 +159,7 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
     }
     return null;
   });
-  useEffect(() => {
-    console.info(menu, "menu");
-  }, [menu]);
+
   useEffect(() => {
     (async () => {
       if (subAppType === SubAppType.CANVAS && subAppId) {

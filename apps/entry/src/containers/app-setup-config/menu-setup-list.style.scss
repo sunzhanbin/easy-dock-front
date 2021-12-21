@@ -11,15 +11,34 @@
   }
   .menu {
     margin-top: 12px;
+    .menu-component {
+
+      .menu-collapse {
+        .menu-collapse-panel {
+
+        }
+
+        .ant-collapse-header {
+          padding: 0;
+          .ant-collapse-arrow {
+            position: absolute;
+            top: 14px;
+          }
+        }
+        .ant-collapse-content-box {
+          padding: 0;
+        }
+      }
+    }
     .menu-item {
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      width: 100%;
+      width: calc(100% - 12px);
       height: 40px;
       font-size: 14px;
+      padding: 0 0 0 24px;
       font-weight: 400;
       color: #181f43;
-      padding: 0 12px;
       margin-bottom: 4px;
       cursor: pointer;
       & > .icon {

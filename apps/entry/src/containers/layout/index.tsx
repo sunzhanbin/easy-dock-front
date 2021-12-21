@@ -12,6 +12,7 @@ const Layout: React.FC = () => {
       <Routes>
         <Route path="app-manager/:id" element={<AppManagerHeader />} />
         <Route path="workspace/*" element={null} />
+        <Route path="app-manager/preview/*" element={null} />
         <Route path="*" element={<HomeHeader />} />
       </Routes>
       <Content>
