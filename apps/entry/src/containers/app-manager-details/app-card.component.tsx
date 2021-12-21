@@ -148,7 +148,7 @@ const AppCard: FC<AppCardProps> = ({ subApp, className }) => {
           <PopoverConfirm
             title="提示"
             placement="bottom"
-            content="删除后不可恢复,请确认是否删除该工作区?"
+            content="删除后不可恢复,请确认是否删除该子应用?"
             getPopupContainer={getPopupContainer}
             onConfirm={handleDelete}
           >

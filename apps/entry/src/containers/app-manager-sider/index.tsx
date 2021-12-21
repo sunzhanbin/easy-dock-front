@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "@/store";
 import AddWorkspaceModal from "@components/add-workspace-modal";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import Popconfirm from "@components/popconfirm";
-import Icon from "@assets/icon";
+import { Icon, Text } from "@common/components";
 import {
   selectCurrentWorkspaceId,
   setCurrentWorkspaceId,
@@ -33,6 +33,7 @@ const AppManagerSider = () => {
   }, [initWorkspaceList, name]);
   const modalRef = useRef<any>();
   const inputRef = useRef<any>();
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const handleMenuClick = useCallback(
     ({ key }) => {
@@ -49,33 +50,33 @@ const AppManagerSider = () => {
   const renderMenuIcon = useMemoCallback((id) => {
     return (
       <Icon
-        type={
-          +workspaceId === +id
-            ? "custom-icon-wenjianjiacaisedakai"
-            : "custom-icon-wenjianjiacaise"
-        }
+        type={+workspaceId === +id ? "wenjianjiacaisedakai" : "wenjianjiacaise"}
       />
     );
   });
 
-  const handleEditWorkspaceName = useMemoCallback((e, item) => {
-    e.domEvent.stopPropagation;
-    e.domEvent.preventDefault;
-    console.log(item, "workspace");
-
-    modalRef.current.show();
-    modalRef.current.setTitle("编辑");
-    modalRef.current.setWorkspaceName(item.name);
-  });
+  const handleEditWorkspaceName = useMemoCallback(
+    (e: React.MouseEvent, item) => {
+      e.stopPropagation();
+      modalRef.current.show();
+      modalRef.current.setTitle("编辑");
+      modalRef.current.setWorkspaceName(item.name);
+    }
+  );
 
   const handleSearch = useMemoCallback(() => {
     const name = inputRef.current.state.value;
     setName(name);
   });
 
-  const handleDeleteWorkspace = async (id: number) => {
-    console.log(id);
+  const handleDeleteWorkspace = async (
+    e: React.MouseEvent | undefined,
+    id: number
+  ) => {
     try {
+      if (e) {
+        e.stopPropagation();
+      }
       const ret: ResponseType = await deleteSubApp(id);
       if (ret && ret.error) return;
       message.success("删除     成功!");
@@ -84,27 +85,28 @@ const AppManagerSider = () => {
     }
   };
   const renderDropdownMenu = (workspace: { name: string; id: number }) => {
-    console.log(workspace, "workspace");
     return (
-      <Menu>
-        <Menu.Item
-          key="1"
-          icon={<Icon type="custom-icon-bianji" />}
+      <div className="workspace-operation">
+        <div
+          className="edit"
           onClick={(e) => handleEditWorkspaceName(e, workspace)}
         >
-          编辑
-        </Menu.Item>
-        <Menu.Item key="2" icon={<Icon type="custom-icon-shanchu" />}>
-          <Popconfirm
-            title="提示"
-            content="删除后不可恢复,请确认是否删除该子应用?"
-            placement="bottom"
-            onConfirm={() => handleDeleteWorkspace(workspace.id)}
-          >
-            删除
-          </Popconfirm>
-        </Menu.Item>
-      </Menu>
+          <Icon type="bianji" className="icon" />
+          <span className="text">编辑</span>
+        </div>
+        <Popconfirm
+          title="提示"
+          content="删除后不可恢复,请确认是否删除该子应用?"
+          placement="bottom"
+          onConfirm={(e) => handleDeleteWorkspace(e, workspace.id)}
+          onCancel={(e) => e?.stopPropagation()}
+        >
+          <div className="delete" onClick={(e) => e.stopPropagation()}>
+            <Icon type="shanchu" />
+            <span className="text">删除</span>
+          </div>
+        </Popconfirm>
+      </div>
     );
   };
 
@@ -120,7 +122,7 @@ const AppManagerSider = () => {
             placeholder="请输入工作区名称"
             prefix={
               <Icon
-                type="custom-icon-sousuo"
+                type="sousuo"
                 className="search-icon"
                 onClick={handleSearch}
               />
@@ -138,19 +140,18 @@ const AppManagerSider = () => {
           >
             {workspaceList?.map((workspace: any) => (
               <Menu.Item icon={renderMenuIcon(workspace.id)} key={workspace.id}>
-                {workspace.name}
+                <div className="text">
+                  <Text text={workspace.name} />
+                </div>
                 <Dropdown
-                  overlay={() => renderDropdownMenu(workspace)}
-                  overlayClassName="dropdown-sider-container"
-                  placement="bottomCenter"
                   trigger={["click"]}
+                  placement="bottomRight"
+                  overlayClassName="dropdown-sider-container"
+                  overlay={() => renderDropdownMenu(workspace)}
                 >
-                  <a>
-                    <Icon
-                      className="icon-dropdown"
-                      type="custom-icon-gengduo"
-                    />
-                  </a>
+                  <span onClick={(e) => e.stopPropagation()}>
+                    <Icon className="icon-dropdown" type="gengduo" />
+                  </span>
                 </Dropdown>
               </Menu.Item>
             ))}
@@ -161,7 +162,7 @@ const AppManagerSider = () => {
             className="button"
             size="large"
             type="default"
-            icon={<Icon type="custom-icon-xinzeng" />}
+            icon={<Icon type="xinzeng" />}
             onClick={handleAddWorkspaceVisible}
           >
             新增工作区

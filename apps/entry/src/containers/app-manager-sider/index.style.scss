@@ -31,13 +31,16 @@
         height: calc(100% - 80px);
         overflow-y: auto;
         .icon-dropdown {
-          display: none;
+          visibility: hidden;
           color: $primary-color;
         }
         .ant-menu-title-content {
           display: inline-flex;
           justify-content: space-between;
           align-items: center;
+          .text {
+            flex: 1;
+          }
         }
       }
       .ant-menu-inline .ant-menu-item {
@@ -55,13 +58,16 @@
             display: none;
           }
         }
+        &.ant-menu-item-active {
+          color: $primary-color;
+        }
         &:hover {
           color: $primary-color;
           background: rgba(24, 39, 67, 0.04);
           .icon-dropdown {
-            display: inline-block;
+            visibility: visible;
           }
-          }
+        }
       }
 
       .add-workspace {
@@ -74,22 +80,57 @@
     }
   }
 }
+.workspace-operation {
+  width: 92px;
+  padding: 16px;
+  background: #3d3e41;
+  border-radius: 3px;
+  color: #fff;
+  & > .edit,
+  & > .delete {
+    display: flex;
+    align-items: center;
+    height: 20px;
+    line-height: 20px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    &:hover {
+      color: rgba(255, 255, 255, 0.8);
+      & > svg {
+        color: rgba(255, 255, 255, 0.8);
+      }
+    }
+    & > svg {
+      flex: 0 0 20px;
+      font-size: 18px;
+      margin-right: 12px;
+      color: #fff;
+    }
+    & > div {
+      flex: 1;
+      font-weight: 400;
+      font-size: 14px;
+    }
+  }
+  & > .delete {
+    margin-bottom: 0;
+  }
+}
 
 .dropdown-sider-container {
   .ant-dropdown-menu {
     max-width: 80px;
     min-width: 80px;
-      .ant-dropdown-menu-item {
-        &:hover {
-          background-color: #fff;
-          .ant-dropdown-menu-item-icon {
-            color: $primary-color;
-          }
-          .ant-dropdown-menu-title-content {
-            color: $primary-color;
-          }
+    .ant-dropdown-menu-item {
+      &:hover {
+        background-color: #fff;
+        .ant-dropdown-menu-item-icon {
+          color: $primary-color;
+        }
+        .ant-dropdown-menu-title-content {
+          color: $primary-color;
+        }
       }
     }
   }
-
 }
