@@ -1,5 +1,5 @@
 import { memo, useState } from "react";
-import Icon from "@assets/icon";
+import { Icon } from "@common/components";
 import { Popover, message } from "antd";
 import { SUB_APP_LIST, NOT_SHOW_MODAL_SELECT } from "@utils/const";
 import classnames from "classnames";
@@ -79,10 +79,7 @@ const NewSubAppPopoverComponent = () => {
                   onClick={() => handleNewSubAPP(sub)}
                 >
                   <i className={classnames("sub-icon", sub.icon)} />
-                  <Icon
-                    className="icon_arrow"
-                    type="custom-icon-jinrujiantou"
-                  />
+                  <Icon className="icon_arrow" type="jinrujiantou" />
                   <span className="text">{sub.linkName}</span>
                 </div>
               ))}
@@ -101,7 +98,7 @@ const NewSubAppPopoverComponent = () => {
       getPopupContainer={getPopupContainer}
     >
       <a className="add-icon">
-        <Icon className="icon" type="custom-icon-xinzeng" />
+        <Icon className="icon" type="xinzeng" />
       </a>
       {showModal && (
         <NewSubAppModal

@@ -26,7 +26,7 @@ export default function Icon(
       aria-hidden="true"
       style={style}
       onClick={onClick}
-      type={type}
+      type={`custom-icon-${type}`}
     />
   );
 }

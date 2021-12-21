@@ -1,5 +1,5 @@
 import "@containers/home-manager/asset-data.style.scss";
-import Icon from "@assets/icon";
+import { Icon } from "@common/components";
 import { ASSETS_DATA_LIST } from "@utils/const";
 
 const HeaderAssetData = () => {
@@ -8,7 +8,7 @@ const HeaderAssetData = () => {
       <div className="name_wrapper">
         <p className="name">数据资产</p>
         <p className="info">
-          <Icon type="custom-icon-xuanzeshijian" className="icon" />
+          <Icon type="xuanzeshijian" className="icon" />
           数据资产，帮助您从全局的视角审视和管理平台内的数据源、数据模型及数据接口。
         </p>
       </div>
