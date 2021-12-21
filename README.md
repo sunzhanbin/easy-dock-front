@@ -75,6 +75,16 @@ yarn start
 
   ### 安装 husky
 
-  -目前较新版本的 Husky 不会在安装项目依赖的时候自动添加 git hook，如需要相关功能，需要参考 Husky 本地安装版本目录下 README 文件中的步骤：
-  [husky 文档](node_modules/husky/README.md)
+  ```sh
+  yarn add husky --dev -W
+  npx husky install
+
+  # 这步的内容会反应在 .husky/pre-commit 中，也可以直接修改这个shell文件
+  npx husky add .husky/pre-commit "npm run precommit"
+
+  git add .husky/pre-commit
+  ```
+
   安装成功后如遇到问题，可以参考 Husky 调用链排查：.git/hooks/pre-commit -> npm run precommit -> npx lint-staged -> eslint -c=.eslintrc apps/_/src/\*\*/_.{ts,tsx,js,jsx} -目前项目中的 eslint 需要通过 -c=.eslintrc 指定配置文件。
+
+  [husky 使用文档](node_modules/husky/README.md)
