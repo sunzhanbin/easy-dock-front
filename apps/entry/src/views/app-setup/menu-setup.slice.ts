@@ -17,8 +17,8 @@ const defaultForm: MenuSetupForm = {
 
 const initialState: MenuSetupInitialState = {
   currentId: "",
-  menu: [],
-  menuForm: defaultForm,
+  menu: [], // 菜单list
+  menuForm: defaultForm, // 菜单对应的内容设置
 };
 
 export const menuSetupSlice = createSlice({
@@ -39,6 +39,7 @@ export const menuSetupSlice = createSlice({
     setMenuForm: (state, action: PayloadAction<MenuSetupForm>) => {
       const currentItem: any = findItem(state.currentId, state.menu);
       currentItem.form = JSON.parse(JSON.stringify(action.payload));
+      currentItem.name = action.payload.name;
       state.menuForm = action.payload;
     },
     // 添加菜单；

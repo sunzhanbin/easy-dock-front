@@ -134,7 +134,7 @@ const MenuSetupFormComponent = React.forwardRef<{
                 optionType="button"
                 className="asset-option"
                 options={options}
-              ></Radio.Group>
+              />
             </Form.Item>
             <Form.Item
               noStyle

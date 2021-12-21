@@ -147,7 +147,6 @@ const MenuSetupListComponent = ({
 }) => {
   const dispatch = useAppDispatch();
   const menu = useAppSelector(selectMenu);
-
   const handleAddMenu = useCallback(async () => {
     await onBeforeIdChange();
 
