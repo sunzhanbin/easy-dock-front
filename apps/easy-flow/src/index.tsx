@@ -16,7 +16,6 @@ import App from './App';
 import cookie from 'js-cookie';
 // @ts-ignore
 //import { registerTheme } from '@enc/theme-scheme/dist/utils.esm';
-
 const APP_CONTAINER_ID = '#easy-flow-root';
 
 export async function mount(props?: { container: HTMLElement; basename: string; appId: string }) {
