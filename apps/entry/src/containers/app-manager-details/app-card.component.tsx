@@ -186,21 +186,21 @@ const AppCard: FC<AppCardProps> = ({ subApp, className }) => {
     >
       <div className="app-card-base">
         <img src={imageMap[type]} alt="icon" className="app-image" />
-        <div className="name">
-          <Text text={name} />
+        <div>
+          <Text text={name} className="name" />
+          <div className="app-card-more">
+            <div className="info">
+              {version?.version && (
+                <span className="version">{version?.version}</span>
+              )}
+              <span className="type">{typeMap[type]}</span>
+            </div>
+          </div>
         </div>
       </div>
-      <div className="app-card-more">
-        <div className="info">
-          {version?.version && (
-            <span className="version">{version?.version}</span>
-          )}
-          <span className="type">{typeMap[type]}</span>
-        </div>
-        <div className="more" onClick={(e) => handleShowOperation(e)}>
-          <Icon type="gengduo" className="icon" />
-          {showPopup && content}
-        </div>
+      <div className="more" onClick={(e) => handleShowOperation(e)}>
+        <Icon type="gengduo" className="icon" />
+        {showPopup && content}
       </div>
       {statusNode}
       {showModal && (
