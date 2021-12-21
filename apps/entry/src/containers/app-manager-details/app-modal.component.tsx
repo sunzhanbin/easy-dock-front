@@ -85,7 +85,12 @@ const AppModal: FC<AppModalProps> = ({
             required
             rules={[nameRule]}
           >
-            <Input autoFocus size="large" placeholder="请输入" />
+            <Input
+              autoFocus
+              size="large"
+              placeholder="请输入"
+              onClick={(e: React.MouseEvent) => e.stopPropagation()}
+            />
           </Form.Item>
           {mode === "create" && !type && (
             <Form.Item className="form-item" label="子应用类型" required>

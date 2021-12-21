@@ -9,6 +9,80 @@
 }
 
 .dropdown-select-card {
+  .tick_icon {
+    width: 20px;
+    height: 20px;
+    line-height: 23px;
+    background-color: #06C498;
+    border-radius: 3px;
+    margin-right: 10px;
+    font-size: 12px;
+    color: #fff;
+    cursor: pointer;
+
+    &.disabled {
+      cursor: not-allowed;
+      background-color: rgba(6, 196, 152, 0.3);
+    }
+  }
+  .close {
+    font-size: 12px;
+    cursor: pointer;
+    &:hover {
+      color: #4C5CDB;
+    }
+  }
+  .dropdown-select-project {
+
+    .field-option {
+      height: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      &.active {
+        color: #4C5CDB;
+        background: rgba(76, 92, 219, 0.08);
+      }
+      .tick_icon {
+        width: 18px;
+        height: 18px;
+        line-height: 21px;
+      }
+      .input-name {
+        background-color: transparent;
+      }
+      &:hover {
+
+        background: rgba(24, 39, 67, 0.04);
+        .edit-icon, .delete-icon {
+          display: inline-block;
+        }
+      }
+      .option-name {
+        padding: 0 8px;
+        flex: 1;
+      }
+      .edit-icon {
+        cursor: pointer;
+        color: #5E6576;
+        display: none;
+        margin-right: 12px;
+        &:hover {
+          color: #4C5CDB;
+        }
+      }
+      .delete-icon {
+        display: none;
+        margin-right: 8px;
+        color: #5E6576;
+        cursor: pointer;
+        &:hover {
+          color: #4C5CDB;
+        }
+      }
+    }
+  }
   .footer_select {
     display: flex;
     margin-top: 10px !important;
@@ -17,54 +91,6 @@
       width: 100%;
       .btn_add_field {
         width: 100%;
-      }
-    }
-
-    .tick_icon {
-      width: 20px;
-      height: 20px;
-      line-height: 23px;
-      background-color: #06C498;
-      border-radius: 3px;
-      margin-right: 10px;
-      font-size: 12px;
-      color: #fff;
-      cursor: pointer;
-
-      &.disabled {
-        cursor: not-allowed;
-        background-color: rgba(6, 196, 152, 0.3);
-      }
-    }
-    .close {
-      font-size: 14px;
-      cursor: pointer;
-      &:hover {
-        color: #4C5CDB;
-      }
-    }
-  }
-  .field-option {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    .option-name {
-      flex: 1;
-    }
-    .edit-icon {
-      cursor: pointer;
-      color: #5E6576;
-      display: inline-block;
-      margin-right: 6px;
-      &:hover {
-        color: #4C5CDB;
-      }
-    }
-    .delete-icon {
-      color: #5E6576;
-      cursor: pointer;
-      &:hover {
-        color: #4C5CDB;
       }
     }
   }

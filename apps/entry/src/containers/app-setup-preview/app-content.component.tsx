@@ -1,4 +1,5 @@
 import { memo, FC, useMemo, useEffect, useState, ReactNode } from "react";
+import { useParams } from "react-router-dom";
 import classNames from "classnames";
 import { useAppSelector } from "@/store";
 import {
@@ -11,6 +12,7 @@ import {
 import {
   useGetCanvasIdMutation,
   useGetHoloSceneIdMutation,
+  useWorkspaceDetailQuery,
 } from "@/http/app-manager.hooks";
 import { findItem } from "@/utils/utils";
 import { Menu } from "@/utils/types";
@@ -36,6 +38,8 @@ type ThemeMap = {
 
 const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
   const menuList = useAppSelector(selectMenu);
+  const { workspaceId } = useParams();
+  const { data: workspace } = useWorkspaceDetailQuery(+(workspaceId as string));
   const [getHoloSceneId] = useGetHoloSceneIdMutation();
   const [getCanvasId] = useGetCanvasIdMutation();
   const [canvasId, setCanvasId] = useState<string>("");
@@ -72,6 +76,12 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
       },
     };
   }, [theme]);
+  const projectId = useMemo<number>(() => {
+    if (workspace?.project?.id) {
+      return workspace.project.id;
+    }
+    return 0;
+  }, [workspace]);
   const empty = useMemo<ReactNode>(() => {
     const config = themeMap[theme];
     return (
@@ -135,7 +145,7 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
     }
     // 大屏子应用内容渲染
     if (subAppType === SubAppType.CANVAS && subAppId) {
-      const url = `${CANVAS_ENTRY}/dashboard/${canvasId}?sso=true`;
+      const url = `${CANVAS_ENTRY}/publish/${canvasId}`;
       return renderIframe(url, "canvas-container");
     }
     // 空间子应用内容渲染
@@ -145,7 +155,7 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
     }
     // 流程子应用内容渲染
     if (subAppType === SubAppType.FLOW && subAppId) {
-      return <FlowAppContent id={+subAppId} />;
+      return <FlowAppContent id={+subAppId} projectId={projectId} />;
     }
     return null;
   });

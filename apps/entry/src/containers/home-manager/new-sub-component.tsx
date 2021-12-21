@@ -1,6 +1,6 @@
 import "@containers/home-manager/new-sub.style.scss";
 import { useState } from "react";
-import Icon from "@assets/icon";
+import { Icon } from "@common/components";
 import { SUB_APP_LIST, NOT_SHOW_MODAL_SELECT } from "@utils/const";
 import classnames from "classnames";
 import NewSubAppModal from "@containers/home-manager/new-subapp-modal";
@@ -10,7 +10,12 @@ import {
   useGetCanvasIdMutation,
   useGetHoloSceneIdMutation,
 } from "@/http";
-import { ResponseType, HomeSubAppType } from "@/consts";
+import {
+  ResponseType,
+  HomeSubAppType,
+  WU_LIAN_ENTRY,
+  INTERFACE_ENTRY,
+} from "@/consts";
 import { JumpLinkToUrl } from "@utils/utils";
 
 const HomeNewSub = () => {
@@ -47,13 +52,9 @@ const HomeNewSub = () => {
     const { type } = item;
     if (NOT_SHOW_MODAL_SELECT.includes(type)) {
       if (type === HomeSubAppType.DEVICE) {
-        // todo
-        // window.open(`http://10.19.248.238:9003/#/scene/${id}`);
+        window.open(WU_LIAN_ENTRY);
       } else if (type === HomeSubAppType.INTERFACE) {
-        window.open("http://10.19.248.238:28217/orch");
-      } else if (type === HomeSubAppType.DATA_FISH) {
-        // todo
-        // window.open(`http://10.19.248.238:9003/#/scene/${id}`);
+        window.open(`${INTERFACE_ENTRY}/orch`);
       }
       return;
     }
@@ -91,10 +92,7 @@ const HomeNewSub = () => {
                 <div className="container">
                   <i className={classnames("icon", item.icon)} />
                   <span className="text">{item.text}</span>
-                  <Icon
-                    className="icon_arrow"
-                    type="custom-icon-jinrujiantou"
-                  />
+                  <Icon className="icon_arrow" type="jinrujiantou" />
                 </div>
               </div>
             ))}

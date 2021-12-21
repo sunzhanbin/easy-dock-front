@@ -218,7 +218,7 @@ const DataManage = () => {
       if (fieldResponse) {
         shouldReFetchFormFields.current = false;
         // 不展示的控件类型
-        const excludeTypeList: string[] = ['Attachment', 'DescText', 'Image', 'FlowData'];
+        const excludeTypeList: string[] = ['Attachment', 'DescText', 'Image', 'FlowData', 'Iframe'];
         currentFields = (fieldResponse.data || []).filter((field) => !excludeTypeList.includes(field.type));
 
         const dynamicColumns: TableProps<TableDataBase>['columns'] = currentFields.map((field) => {

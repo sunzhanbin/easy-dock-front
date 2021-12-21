@@ -14,11 +14,7 @@ const AddWorkspaceModal = React.forwardRef(function addWorkspace(_, ref) {
   const dispatch = useAppDispatch();
   const projectId = useAppSelector(selectProjectId);
   const workspaceId = useAppSelector(selectCurrentWorkspaceId);
-
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-  const [initialValues, setInitialValues] = useState<{
-    [key: string]: string;
-  }>({});
   const [title, setTitle] = useState<string>("");
   const [addWorkspace] = useAddWorkspaceMutation();
   const [editWorkspace] = useEditWorkspaceMutation();
@@ -35,7 +31,7 @@ const AddWorkspaceModal = React.forwardRef(function addWorkspace(_, ref) {
       setTitle(title);
     },
     setWorkspaceName: (name: string) => {
-      setInitialValues({ name });
+      form.setFieldsValue({ name });
     },
   }));
 
@@ -44,18 +40,24 @@ const AddWorkspaceModal = React.forwardRef(function addWorkspace(_, ref) {
   }, []);
 
   const handleOk = useMemoCallback(async () => {
-    form.validateFields().then(async ({ name }) => {
-      if (title === "新增") {
-        addWorkspace({ name, projectId });
-      } else {
-        await editWorkspace({ name, id: workspaceId });
-        dispatch(setCurrentWorkspaceId(workspaceId));
-      }
-      handleVisible(false);
-    });
+    form
+      .validateFields()
+      .then(async ({ name }) => {
+        if (title === "新增") {
+          addWorkspace({ name, projectId });
+        } else {
+          await editWorkspace({ name, id: workspaceId });
+          dispatch(setCurrentWorkspaceId(workspaceId));
+        }
+        handleVisible(false);
+      })
+      .then(() => {
+        form.resetFields();
+      });
   });
 
   const handleCancel = useCallback(() => {
+    form.resetFields();
     handleVisible(false);
   }, [handleVisible]);
 
@@ -67,8 +69,9 @@ const AddWorkspaceModal = React.forwardRef(function addWorkspace(_, ref) {
       visible={isModalVisible}
       onOk={handleOk}
       onCancel={handleCancel}
+      destroyOnClose={true}
     >
-      <Form form={form} initialValues={initialValues}>
+      <Form form={form}>
         <Form.Item name="name" label="工作区名称" required rules={[nameRule]}>
           <Input size="large" placeholder="请输入" />
         </Form.Item>

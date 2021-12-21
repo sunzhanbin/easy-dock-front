@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { List, Avatar, Skeleton, Tooltip } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
-import Icon from "@assets/icon";
+import { Icon } from "@common/components";
 import "@containers/home-manager/index.style.scss";
 import { useNavigate } from "react-router-dom";
+import { imgIdToUrl } from "@/utils/utils";
 import {
   useGetCanvasIdMutation,
   useGetHoloSceneIdMutation,
@@ -11,9 +12,10 @@ import {
 } from "@/http";
 import { useAppSelector } from "@/store";
 import { selectProjectId } from "@views/home/index.slice";
-import { HomeSubAppType, ResponseType } from "@/consts";
+import { ResponseType } from "@/consts";
 import { ImageMap, NameMap } from "@utils/const";
 import { JumpLinkToUrl } from "@utils/utils";
+import NoImage from "@assets/images/home/no-app.png";
 
 type ListItemType = {
   id: number;
@@ -21,6 +23,7 @@ type ListItemType = {
   name: string;
   parentName: string;
   isApp: boolean;
+  icon: string;
 };
 
 const HomeWorkspaceList = () => {
@@ -39,7 +42,12 @@ const HomeWorkspaceList = () => {
       try {
         const ret: ResponseType = await getRecentList(projectId);
         setLoading(false);
-        setData(ret.data);
+        const list = ret.data.map(async (item: ListItemType) => ({
+          ...item,
+          icon: item.isApp && item.icon ? await imgIdToUrl(item.icon) : null,
+        }));
+        const finalList = await Promise.all(list);
+        setData(finalList);
       } catch (e) {
         setLoading(false);
         console.log(e);
@@ -55,18 +63,20 @@ const HomeWorkspaceList = () => {
       await JumpLinkToUrl(type, id, getCanvasId, getHoloSceneId);
       if (isApp) {
         navigate(`/app-manager/${id}`);
-      } else if (type === HomeSubAppType.DEVICE) {
-        // todo
-        window.open(`http://10.19.248.238:9003/#/scene/${id}`);
-      } else if (type === HomeSubAppType.INTERFACE) {
-        window.open(`http://10.19.248.238:28217/orch`);
-      } else if (type === HomeSubAppType.DATA_FISH) {
-        // todo
-        window.open(`http://10.19.248.238:9003/#/scene/${id}`);
       }
     },
     [navigate]
   );
+  const renderIcon = (item: ListItemType): string => {
+    if (item.isApp) {
+      return item.icon ? item.icon : NoImage;
+    }
+    return ImageMap[item.type];
+  };
+
+  const renderName = (item: ListItemType) => {
+    return `${item.isApp ? "应用" : NameMap[item.type]}｜${item.parentName}`;
+  };
 
   useEffect(() => {
     loadMoreData();
@@ -78,7 +88,7 @@ const HomeWorkspaceList = () => {
         <p className="text_recent_app">最近更新</p>
         <p className="operation_all" onClick={toAppManage}>
           <span className="text">全部</span>
-          <Icon className="icon" type="custom-icon-jinrujiantou" />
+          <Icon className="icon" type="jinrujiantou" />
         </p>
       </div>
       <div className="workspace_list" id="scrollableDiv">
@@ -99,21 +109,15 @@ const HomeWorkspaceList = () => {
             renderItem={(item: ListItemType) => (
               <List.Item key={item.id} onClick={() => handleLinkTo(item)}>
                 <List.Item.Meta
-                  avatar={<Avatar src={ImageMap[item.type]} />}
+                  avatar={<Avatar src={renderIcon(item)} alt={""} />}
                   title={
                     <Tooltip title={item.name}>
                       <a className="name">{item.name}</a>
                     </Tooltip>
                   }
                   description={
-                    <Tooltip
-                      title={`${item.isApp ? "应用" : NameMap[item.type]}｜${
-                        item.parentName
-                      }`}
-                    >
-                      <span>{`${item.isApp ? "应用" : NameMap[item.type]}｜${
-                        item.parentName
-                      }`}</span>
+                    <Tooltip title={renderName(item)}>
+                      <span>{renderName(item)}</span>
                     </Tooltip>
                   }
                 />
