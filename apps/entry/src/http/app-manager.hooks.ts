@@ -30,7 +30,8 @@ export const appManagerBuilder = baseFetch.injectEndpoints({
     }),
     // 工作区里列表；
     fetchWorkspaceList: build.query({
-      query: (projectId: number) => `/app/${projectId}/list/all`,
+      query: (projectId: number) =>
+        projectId ? `/app/${projectId}/list/all` : "",
       providesTags: (result) =>
         result
           ? [
