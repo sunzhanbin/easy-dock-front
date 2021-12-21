@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useRef, useState } from "react";
-import { Layout, Menu, Button, Popover, Input, Dropdown, message } from "antd";
+import { Layout, Menu, Button, Input, Dropdown, message } from "antd";
 import { useDeleteWorkspaceMutation, useFetchWorkspaceListQuery } from "@/http";
 import { useAppDispatch, useAppSelector } from "@/store";
 import AddWorkspaceModal from "@components/add-workspace-modal";
@@ -33,7 +33,6 @@ const AppManagerSider = () => {
   }, [initWorkspaceList, name]);
   const modalRef = useRef<any>();
   const inputRef = useRef<any>();
-  const containerRef = useRef<HTMLDivElement>(null);
 
   const handleMenuClick = useCallback(
     ({ key }) => {
@@ -96,7 +95,7 @@ const AppManagerSider = () => {
         </div>
         <Popconfirm
           title="提示"
-          content="删除后不可恢复,请确认是否删除该子应用?"
+          content="删除后不可恢复,请确认是否删除该工作区?"
           placement="bottom"
           onConfirm={(e) => handleDeleteWorkspace(e, workspace.id)}
           onCancel={(e) => e?.stopPropagation()}
