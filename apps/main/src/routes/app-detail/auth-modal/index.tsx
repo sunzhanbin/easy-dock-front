@@ -293,10 +293,12 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: (value: AppAu
           {screenSubAppList.length > 0 && (
             <div className={styles['page-auth']}>
               <div className={styles.title}>页面</div>
-              {screenSubAppList.map((subApp) => {
-                const { id, name } = subApp;
-                return renderAppItem(String(id), name);
-              })}
+              <div className={styles['app-list']}>
+                {screenSubAppList.map((subApp) => {
+                  const { id, name } = subApp;
+                  return renderAppItem(String(id), name);
+                })}
+              </div>
             </div>
           )}
         </div>
