@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from "react";
-import { Button } from "antd";
+import { Button, Collapse } from "antd";
 import { v4 as uuid } from "uuid";
 import classnames from "classnames";
 import { useAppDispatch, useAppSelector } from "@/store";
@@ -16,6 +16,8 @@ import { Icon, Text } from "@common/components";
 import "@containers/app-setup-config/menu-setup-list.style";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 
+const { Panel } = Collapse;
+
 type BeforeIdChange = () => void;
 
 // 菜单单元组件；
@@ -30,7 +32,7 @@ const MenuItemComponent = ({
   const currentId = useAppSelector(selectCurrentId);
 
   const style = useMemo(() => {
-    return { paddingLeft: `${menu.depth * 12}px` };
+    return { paddingLeft: `${menu.depth * 12 + 18}px` };
   }, [menu.depth]);
 
   const renderIcon = useMemoCallback((icon) => {
@@ -88,21 +90,48 @@ const MenuComponent = ({
   menu: Menu;
   onBeforeIdChange: BeforeIdChange;
 }) => {
+  const style = useMemo(() => {
+    return { left: `${menu.depth * 12}px` };
+  }, [menu.depth]);
   return (
     <div className="menu-component">
       {menu?.children?.length ? (
-        <div className="men-wrap">
-          <MenuItemComponent menu={menu} onBeforeIdChange={onBeforeIdChange} />
-          <div className="children">
-            {menu.children.map((item, index: number) => (
-              <MenuComponent
-                key={index}
-                menu={item}
-                onBeforeIdChange={onBeforeIdChange}
-              />
-            ))}
-          </div>
-        </div>
+        <>
+          <Collapse
+            className="menu-collapse"
+            ghost
+            expandIcon={({ isActive }) =>
+              isActive ? (
+                <Icon type="xiasanjiao" style={style} />
+              ) : (
+                <Icon type="yousanjiao" style={style} />
+              )
+            }
+          >
+            <Panel
+              className="menu-collapse-panel"
+              header={
+                <MenuItemComponent
+                  menu={menu}
+                  onBeforeIdChange={onBeforeIdChange}
+                />
+              }
+              key="1"
+            >
+              <div className="men-wrap">
+                <div className="children">
+                  {menu.children.map((item, index: number) => (
+                    <MenuComponent
+                      key={index}
+                      menu={item}
+                      onBeforeIdChange={onBeforeIdChange}
+                    />
+                  ))}
+                </div>
+              </div>
+            </Panel>
+          </Collapse>
+        </>
       ) : (
         <MenuItemComponent menu={menu} onBeforeIdChange={onBeforeIdChange} />
       )}
@@ -118,7 +147,6 @@ const MenuSetupListComponent = ({
 }) => {
   const dispatch = useAppDispatch();
   const menu = useAppSelector(selectMenu);
-
   const handleAddMenu = useCallback(async () => {
     await onBeforeIdChange();
 
