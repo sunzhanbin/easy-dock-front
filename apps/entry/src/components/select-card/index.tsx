@@ -194,7 +194,6 @@ const SelectCard = ({
 
   // 下拉显隐控制
   const handleDropdownVisibleChange = useMemoCallback(async (status) => {
-    console.log("status", status);
     if (status === false) {
       setShowDropdown(false);
       const list = fieldList.map((field) => ({

@@ -25,19 +25,21 @@
     height: 164px;
     background: url('~@assets/images/home/newApp.png') 0 0 no-repeat;
     background-size: 181px 164px;
-    .icon_new_app {
+    .icon-new-app {
       width: 48px;
       height: 48px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      color: #fff;
       line-height: 1;
       background-color: var(--custom-primary-color, #4c5cdb);
       font-size: 14px;
       font-weight: 600;
       border-radius: 50%;
       margin: 0 auto 10px;
+      .icon-new {
+        color: #fff;
+      }
     }
     .text_new_app {
       font-size: 24px;
