@@ -91,7 +91,7 @@ const MenuSetupFormComponent = React.forwardRef<{
 
   return (
     <div className="menu-setup-form-component" ref={containerRef}>
-      <div className="header">内容设置</div>
+      <div className="header">菜单属性</div>
       <div className="form">
         <Form
           form={form}
