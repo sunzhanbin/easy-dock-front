@@ -100,4 +100,5 @@ export interface WorkspaceMenuProps {
 export interface WorkspaceBaseMenuProps {
   extra: React.ReactNode;
   dataSource: Menu[];
+  theme: ThemeType;
 }
