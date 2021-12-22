@@ -49,5 +49,4 @@ const AppSetupConfig = () => {
     </div>
   );
 };
-
 export default AppSetupConfig;
