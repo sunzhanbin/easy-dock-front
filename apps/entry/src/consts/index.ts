@@ -4,7 +4,7 @@ export * from "./type";
 export const CANVAS_ENTRY = process.env.REACT_APP_CANVAS_FRONTEND_ENTRY;
 export const SPACE_ENTRY = process.env.REACT_APP_SPACE_FRONTEND_ENTRY;
 export const FLOW_ENTRY = process.env.REACT_APP_FLOW_FRONTEND_ENTRY;
-export const WU_LIAN_ENTRY = process.env.REACT_APP_WULIAN_FRONTEND_ENTRY;
+export const WU_LIAN_ENTRY = process.env.REACT_APP_IOT_FRONTEND_ENTRY;
 export const INTERFACE_ENTRY = process.env.REACT_APP_INTERFACE_FRONTEND_ENTRY;
 
 export const TASK_STATE_LIST: { key: number; value: string }[] = [
