@@ -1,5 +1,11 @@
 @import "@common/styles/var.scss";
 
+$light-text-color: #181f43;
+$dark-text-color: #fff;
+$dark-header-background-color: #363639;
+$dark-side-background-color: #2d2d2f;
+$dark-content-background-color: #202023;
+
 .flow-app-content {
   display: flex;
   flex-direction: column;
@@ -62,5 +68,21 @@
   }
   & > .table-container {
     margin-top: 24px;
+  }
+  &.dark {
+    background: $dark-content-background-color;
+    & > .header {
+      & > .status-list {
+        .ant-checkbox-wrapper {
+          color: $dark-text-color;
+        }
+      }
+      & > .search {
+        .ant-select {
+          border-radius: 4px;
+          background-color: $dark-text-color;
+        }
+      }
+    }
   }
 }

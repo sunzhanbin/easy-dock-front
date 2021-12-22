@@ -34,12 +34,16 @@ export const appClient = runTime.injectEndpoints({
         size: number;
       }) => ({ url: "/user/search", method: "post", data: params } as any),
     }),
+    fetchSubApp: build.mutation({
+      query: (subAppId: number) => `/subapp/${subAppId}`,
+    }),
   }),
 });
 
 export const {
   useFetchUsersMutation,
   useSearchUserMutation,
+  useFetchSubAppMutation,
   useFetchFlowComponentsMutation,
   useFetchProcessDataManagerMutation,
 } = appClient;
