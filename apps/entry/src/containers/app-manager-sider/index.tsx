@@ -17,22 +17,20 @@ import { ResponseType } from "@/consts";
 const { Sider } = Layout;
 
 const AppManagerSider = () => {
+  const modalRef = useRef<any>();
+  const inputRef = useRef<any>();
+  const [name, setName] = useState<string>("");
   const dispatch = useAppDispatch();
   const projectId = useAppSelector(selectProjectId);
   const workspaceId = useAppSelector(selectCurrentWorkspaceId);
   const [deleteSubApp] = useDeleteWorkspaceMutation();
-  const { data: initWorkspaceList } = useFetchWorkspaceListQuery(projectId);
-  const [name, setName] = useState<string>("");
-  const workspaceList = useMemo(() => {
-    if (!Array.isArray(initWorkspaceList)) {
-      return [];
-    }
-    return initWorkspaceList.filter((workspace) =>
-      workspace.name.includes(name)
-    );
-  }, [initWorkspaceList, name]);
-  const modalRef = useRef<any>();
-  const inputRef = useRef<any>();
+  const { workspaceList } = useFetchWorkspaceListQuery(projectId, {
+    selectFromResult: ({ data }) => ({
+      workspaceList: data
+        ?.filter((workspace: any) => workspace.name.includes(name))
+        ?.filter(Boolean),
+    }),
+  });
 
   const handleMenuClick = useCallback(
     ({ key }) => {
