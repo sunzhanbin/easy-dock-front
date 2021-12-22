@@ -7,10 +7,6 @@ import App from "@/App";
 import "antd/dist/antd.css";
 import "@/index.scss";
 
-import microApp from "@micro-zoe/micro-app";
-
-microApp.start();
-
 ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
