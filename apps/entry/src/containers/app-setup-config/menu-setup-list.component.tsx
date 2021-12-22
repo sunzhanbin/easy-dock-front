@@ -12,7 +12,7 @@ import {
 } from "@views/app-setup/menu-setup.slice";
 import { Menu } from "@utils/types";
 import { Icon, Text, PopoverConfirm } from "@common/components";
-import { handleStopPropagation } from "@utils/utils";
+import { findItem, handleStopPropagation } from "@utils/utils";
 import "@containers/app-setup-config/menu-setup-list.style";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 
@@ -56,7 +56,8 @@ const MenuItemComponent = ({
     dispatch(remove(currentId));
   }, []);
 
-  const handleMenuClick = useCallback((currentId: string) => {
+  const handleMenuClick = useCallback(async (currentId: string) => {
+    await onBeforeIdChange();
     dispatch(setCurrentMenu(currentId));
   }, []);
   return (
@@ -104,6 +105,9 @@ const MenuComponent = ({
   menu: Menu;
   onBeforeIdChange: BeforeIdChange;
 }) => {
+  const currentId = useAppSelector(selectCurrentId);
+  const menuList = useAppSelector(selectMenu);
+  const currentItem: any = findItem(currentId, menuList);
   const style = useMemo(() => {
     return { left: `${menu.depth * 12}px` };
   }, [menu.depth]);
@@ -113,6 +117,7 @@ const MenuComponent = ({
         <>
           <Collapse
             className="menu-collapse"
+            defaultActiveKey={currentItem.parentId}
             ghost
             expandIcon={({ isActive }) =>
               isActive ? (

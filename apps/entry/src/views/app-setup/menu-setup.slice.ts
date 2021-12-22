@@ -3,7 +3,7 @@ import { appManagerBuilder } from "@/http";
 import { RootState } from "@/store";
 import { createSlice, PayloadAction, current } from "@reduxjs/toolkit";
 import { MenuSetupInitialState, MenuSetupForm } from "@utils/types";
-import { findItem } from "@utils/utils";
+import { deepSearch, findItem } from "@utils/utils";
 
 const defaultForm: MenuSetupForm = {
   name: "",
@@ -16,9 +16,9 @@ const defaultForm: MenuSetupForm = {
 };
 
 const initialState: MenuSetupInitialState = {
-  currentId: "",
+  currentId: "", // 当前active的菜单
   menu: [], // 菜单list
-  menuForm: defaultForm, // 菜单对应的内容设置
+  menuForm: defaultForm, // 菜单对应的菜单属性
 };
 
 export const menuSetupSlice = createSlice({
@@ -48,7 +48,7 @@ export const menuSetupSlice = createSlice({
       action: PayloadAction<{ currentId: string | null; childId: string }>
     ) => {
       const { currentId, childId } = action.payload;
-      console.log(currentId, "current", childId, "child", current(state));
+      // console.log(currentId, "current", childId, "child", current(state));
       {
         state.currentId = childId;
         // 为了避免初始值为同一个默认值引用，每次新增都需要保证是新的对象；
@@ -104,12 +104,19 @@ export const menuSetupSlice = createSlice({
         const extension = action.payload?.extension;
         if (!extension?.meta) {
           state.menu = [];
+          state.currentId = "";
+          state.menuForm = defaultForm;
         } else {
           const menuList = extension.meta.menuList;
           if (Array.isArray(menuList) && menuList.length > 0) {
             state.menu = menuList;
+            const currentItem = deepSearch(menuList);
+            state.currentId = currentItem.id;
+            state.menuForm = JSON.parse(JSON.stringify(currentItem.form));
           } else {
             state.menu = [];
+            state.currentId = "";
+            state.menuForm = defaultForm;
           }
         }
       }
