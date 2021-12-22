@@ -13,6 +13,7 @@ import {
 import "@containers/app-manager-sider/index.style";
 import { selectProjectId } from "@/views/home/index.slice";
 import { ResponseType } from "@/consts";
+import { handleStopPropagation } from "@utils/utils";
 
 const { Sider } = Layout;
 
@@ -98,7 +99,7 @@ const AppManagerSider = () => {
           onConfirm={(e) => handleDeleteWorkspace(e, workspace.id)}
           onCancel={(e) => e?.stopPropagation()}
         >
-          <div className="delete" onClick={(e) => e.stopPropagation()}>
+          <div className="delete" onClick={handleStopPropagation}>
             <Icon type="shanchu" />
             <span className="text">删除</span>
           </div>
@@ -146,7 +147,7 @@ const AppManagerSider = () => {
                   overlayClassName="dropdown-sider-container"
                   overlay={() => renderDropdownMenu(workspace)}
                 >
-                  <span onClick={(e) => e.stopPropagation()}>
+                  <span onClick={handleStopPropagation}>
                     <Icon className="icon-dropdown" type="gengduo" />
                   </span>
                 </Dropdown>

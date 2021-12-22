@@ -48,6 +48,7 @@ export const menuSetupSlice = createSlice({
       action: PayloadAction<{ currentId: string | null; childId: string }>
     ) => {
       const { currentId, childId } = action.payload;
+      console.log(currentId, "current", childId, "child", current(state));
       {
         state.currentId = childId;
         // 为了避免初始值为同一个默认值引用，每次新增都需要保证是新的对象；

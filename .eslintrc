@@ -49,6 +49,7 @@
         "pathGroupsExcludedImportTypes": ["builtin"],
         "groups": ["external", "builtin", "internal", "sibling", "parent"]
       }
-    ]
+    ],
+    "react/react-in-jsx-scope": 0
   }
 }

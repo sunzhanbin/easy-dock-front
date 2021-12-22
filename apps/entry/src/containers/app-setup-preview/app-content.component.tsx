@@ -44,6 +44,7 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
   const [getCanvasId] = useGetCanvasIdMutation();
   const [canvasId, setCanvasId] = useState<string>("");
   const [holoSceneId, setHoloSceneId] = useState<string>("");
+  const [holoSceneToken, setHoloSceneToken] = useState<string>("");
   const menu = useMemo<null | Menu>(() => {
     if (!menuList?.length) {
       return null;
@@ -145,19 +146,19 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
     }
     // 大屏子应用内容渲染
     if (subAppType === SubAppType.CANVAS && subAppId) {
-      const url = `${CANVAS_ENTRY}/publish/${canvasId}`;
+      const url = `${CANVAS_ENTRY}/publish/${canvasId}?sso=true`;
       return renderIframe(url, "canvas-container");
     }
     // 空间子应用内容渲染
     if (subAppType === SubAppType.SPACE && subAppId) {
-      const url = `${SPACE_ENTRY}/#/scene/${holoSceneId}`;
+      const url = `${SPACE_ENTRY}/preview.html?token=${holoSceneToken}&id=${holoSceneId}`;
       return renderIframe(url, "space-container");
     }
     // 流程子应用内容渲染
     if (subAppType === SubAppType.FLOW && subAppId) {
       return <FlowAppContent id={+subAppId} projectId={projectId} />;
     }
-    return null;
+    return empty;
   });
 
   useEffect(() => {
@@ -173,6 +174,7 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
           +subAppId
         )) as CanvasResponseType;
         holoSceneData?.refId && setHoloSceneId(holoSceneData.refId);
+        holoSceneData?.token && setHoloSceneToken(holoSceneData.token);
       }
     })();
   }, [subAppType, subAppId]);

@@ -1,3 +1,4 @@
+import React from "react";
 import { Menu } from "@utils/types";
 import { axios } from "@utils/fetch";
 import { AbstractTooltipProps } from "antd/lib/tooltip";
@@ -15,7 +16,7 @@ export const getPopupContainer: AbstractTooltipProps["getPopupContainer"] = (
   container
 ) => container;
 
-export const findItem = (id: string, menus: Menu[]) => {
+export const findItem = (id: string, menus: Menu[]): Menu => {
   let result = {} as Menu;
   let hasFind: boolean;
   menus.forEach((item) => {
@@ -46,6 +47,24 @@ export const keyPath = (id: string, menus: Menu[]) => {
   keyPath.pop();
 
   return keyPath;
+};
+// 找到菜单下子菜单中的第一个叶子节点,如果没有则返回菜单本身
+export const findFirstChild = (menu: Menu): Menu => {
+  if (menu?.children.length > 0) {
+    return findFirstChild(menu.children[0]);
+  }
+  return menu;
+};
+// 向上找到一级菜单的id
+export const findParentMenu = (id: string, menus: Menu[]): string => {
+  const menu = findItem(id, menus);
+  if (menu.depth === 1) {
+    return menu.id;
+  }
+  if (menu && menu.parentId) {
+    return findParentMenu(menu.parentId!, menus);
+  }
+  return "";
 };
 
 // 根据后端返回的图片id转化成图片url地址
@@ -110,3 +129,7 @@ export function exportFile(res: any, name: string, type?: string) {
   }
   save_link.click();
 }
+
+export const handleStopPropagation = (e: React.MouseEvent) => {
+  e.stopPropagation();
+};

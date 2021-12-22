@@ -56,9 +56,10 @@ const BasicSetupFormComponent = React.forwardRef(function basicSetupForm(
 
   useEffect(() => {
     if (basicConfig) {
-      form.setFieldsValue(basicConfig);
+      const values = { ...basicConfig, workspace: workspaceList?.[0]?.id };
+      form.setFieldsValue(values);
     }
-  }, [basicConfig]);
+  }, [basicConfig, workspaceList]);
 
   useEffect(() => {
     if (basicError?.length > 0) {

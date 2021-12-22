@@ -15,6 +15,7 @@ import useMemoCallback from "@common/hooks/use-memo-callback";
 import { nameRule, SubAppInfo, SubAppType, urlRule } from "@/consts";
 import { useFetchDeployedSubAppListQuery } from "@/http";
 import "@containers/app-setup-config/menu-setup-form.style";
+import { ImageMap } from "@utils/const";
 
 const { Option } = Select;
 type SubAppTypeItem = {
@@ -90,7 +91,7 @@ const MenuSetupFormComponent = React.forwardRef<{
 
   return (
     <div className="menu-setup-form-component" ref={containerRef}>
-      <div className="header">内容设置</div>
+      <div className="header">菜单属性</div>
       <div className="form">
         <Form
           form={form}
@@ -157,8 +158,17 @@ const MenuSetupFormComponent = React.forwardRef<{
                         suffixIcon={<Icon type="xiala" />}
                       >
                         {subAppTypeList.map(({ type, name }) => (
-                          <Option key={type} value={type}>
-                            {name}
+                          <Option
+                            key={type}
+                            value={type}
+                            className="sub-app-option"
+                          >
+                            <img
+                              className="sub-app-icon"
+                              src={ImageMap[type]}
+                              alt="logo"
+                            />
+                            <span>{name}</span>
                           </Option>
                         ))}
                       </Select>

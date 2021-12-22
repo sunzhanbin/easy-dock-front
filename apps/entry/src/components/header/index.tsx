@@ -23,7 +23,7 @@ export default function Header({ children }: HeaderProps) {
         <ProjectComponent />
         {children}
         <div className="right">
-          {showPopover ? <NewSubAppPopover /> : ""}
+          {showPopover ? <NewSubAppPopover /> : <a className="hidden" />}
           <Icon className="icon" type="shezhi" />
           <Icon className="icon" type="shuoming" />
           <div className="user_info">

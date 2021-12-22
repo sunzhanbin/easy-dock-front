@@ -40,11 +40,11 @@
   "lint-staged": {
     "packages/*/src/**/*.{ts,tsx,js,jsx}": [
       "prettier --write",
-      "eslint -c=.eslintrc"
+      "eslint -c=.eslintrc --fix"
     ],
     "apps/*/src/**/*.{ts,tsx,js,jsx}": [
       "prettier --write",
-      "eslint -c=.eslintrc"
+      "eslint -c=.eslintrc --fix"
     ]
   },
   "workspaces": [
