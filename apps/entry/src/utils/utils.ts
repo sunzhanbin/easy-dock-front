@@ -133,3 +133,15 @@ export function exportFile(res: any, name: string, type?: string) {
 export const handleStopPropagation = (e: React.MouseEvent) => {
   e.stopPropagation();
 };
+
+// 获取第一层叶子结点children
+export const deepSearch = (array: any[]) => {
+  const item = array[0];
+  for (const key in item) {
+    if (key === "children" && item.children && item.children.length) {
+      deepSearch(item.children);
+    } else {
+      return item.children.length ? item.children[0] : item;
+    }
+  }
+};

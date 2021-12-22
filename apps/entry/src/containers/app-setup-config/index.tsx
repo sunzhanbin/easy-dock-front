@@ -23,6 +23,7 @@ const AppSetupConfig = () => {
   const formRef = useRef<BasicSetupFormComponentHandle>(null);
 
   useEffect(() => {
+    console.log(workspace, "rrr");
     if (workspace?.id) {
       setWorkspaceList([{ id: workspace.id, name: workspace.name }]);
     }

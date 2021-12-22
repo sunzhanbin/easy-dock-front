@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import MenuSetupListComponent from "@containers/app-setup-config/menu-setup-list.component";
 import MenuSetupFormComponent from "@containers/app-setup-config/menu-setup-form.component";
 
