@@ -1,3 +1,4 @@
+import React from "react";
 import { Menu } from "@utils/types";
 import { axios } from "@utils/fetch";
 import { AbstractTooltipProps } from "antd/lib/tooltip";
@@ -110,3 +111,7 @@ export function exportFile(res: any, name: string, type?: string) {
   }
   save_link.click();
 }
+
+export const handleStopPropagation = (e: React.MouseEvent) => {
+  e.stopPropagation();
+};

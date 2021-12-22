@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import { Button, Collapse } from "antd";
 import { v4 as uuid } from "uuid";
 import classnames from "classnames";
@@ -11,8 +11,8 @@ import {
   remove,
 } from "@views/app-setup/menu-setup.slice";
 import { Menu } from "@utils/types";
-import { Icon, Text } from "@common/components";
-
+import { Icon, Text, PopoverConfirm } from "@common/components";
+import { handleStopPropagation } from "@utils/utils";
 import "@containers/app-setup-config/menu-setup-list.style";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 
@@ -42,11 +42,15 @@ const MenuItemComponent = ({
     return <Icon type={icon} className="icon" />;
   });
 
-  const handleAddMenu = useCallback(async (currentId: string) => {
-    await onBeforeIdChange();
-    const childId = uuid();
-    dispatch(add({ currentId, childId }));
-  }, []);
+  const handleAddMenu = useCallback(
+    async (e: React.MouseEvent, currentId: string) => {
+      e.stopPropagation();
+      await onBeforeIdChange();
+      const childId = uuid();
+      dispatch(add({ currentId, childId }));
+    },
+    []
+  );
 
   const handleRemoveMenu = useCallback((currentId: string) => {
     dispatch(remove(currentId));
@@ -68,12 +72,22 @@ const MenuItemComponent = ({
         <Text text={menu.name} />
       </div>
       <div className="operation">
-        <div className="add" onClick={handleAddMenu.bind(null, menu.id)}>
-          <Icon type="xinzeng" />
-        </div>
-        <div className="remove" onClick={handleRemoveMenu.bind(null, menu.id)}>
-          <Icon type="shanchu" />
-        </div>
+        {menu.depth < 2 && (
+          <div className="add" onClick={(e) => handleAddMenu(e, menu.id)}>
+            <Icon type="xinzeng" />
+          </div>
+        )}
+        <PopoverConfirm
+          title="提示"
+          placement="bottom"
+          content="删除后不可恢复,请确认是否删除该菜单?"
+          trigger={["hover"]}
+          onConfirm={handleRemoveMenu.bind(null, menu.id)}
+        >
+          <div className="remove" onClick={handleStopPropagation}>
+            <Icon type="shanchu" />
+          </div>
+        </PopoverConfirm>
         <div className="drag">
           <Icon type="caidan" />
         </div>
@@ -116,7 +130,7 @@ const MenuComponent = ({
                   onBeforeIdChange={onBeforeIdChange}
                 />
               }
-              key="1"
+              key={menu.id}
             >
               <div className="men-wrap">
                 <div className="children">
