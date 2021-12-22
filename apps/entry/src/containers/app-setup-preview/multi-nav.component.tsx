@@ -1,4 +1,4 @@
-import { useMemo, useEffect } from "react";
+import { useMemo } from "react";
 import { Menu } from "antd";
 import classNames from "classnames";
 import { useAppDispatch } from "@/store";
@@ -40,7 +40,7 @@ const MultiNavComponent = ({
     return menu && menu.children?.length > 0;
   }, [dataSource, selectedKey]);
 
-  const handleMainMenu = useMemoCallback(({ _, key }) => {
+  const handleMainMenuClick = useMemoCallback(({ _, key }) => {
     const menu = dataSource.find((v) => v.id === key);
     if (menu) {
       const subMenu = findFirstChild(menu);
@@ -50,6 +50,9 @@ const MultiNavComponent = ({
     }
   });
   const handleTitleClick = useMemoCallback(({ key }) => {
+    dispatch(setCurrentMenu(key));
+  });
+  const handleSubMenuClick = useMemoCallback(({ _, key }) => {
     dispatch(setCurrentMenu(key));
   });
 
@@ -68,7 +71,7 @@ const MultiNavComponent = ({
           <Menu
             mode="horizontal"
             selectedKeys={[activeMainKey]}
-            onClick={handleMainMenu}
+            onClick={handleMainMenuClick}
           >
             {dataSource.map((menu) => (
               <Menu.Item key={menu.id} icon={renderIcon(menu?.form?.icon)}>
@@ -108,7 +111,7 @@ const MultiNavComponent = ({
                         <Menu.Item
                           key={menu.id}
                           icon={renderIcon(menu?.form?.icon)}
-                          onClick={() => console.info(888)}
+                          onClick={handleSubMenuClick}
                         >
                           {menu.name}
                         </Menu.Item>

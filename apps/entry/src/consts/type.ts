@@ -53,6 +53,7 @@ export type ResponseType = {
 export type CanvasResponseType = {
   data: {
     refId: string;
+    token?: string;
   };
 };
 
