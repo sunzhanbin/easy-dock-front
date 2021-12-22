@@ -6,7 +6,7 @@ import { selectMenu, selectCurrentId } from "@views/app-setup/menu-setup.slice";
 import SingleNavComponent from "@containers/app-setup-preview/single-nav.component";
 import MultiNavComponent from "@containers/app-setup-preview/multi-nav.component";
 import AppInfo from "@components/app-info";
-import AppContent from "./app-content.component";
+import AppContent from "@containers/app-setup-preview/app-content.component";
 import "@containers/app-setup-preview/index.style";
 
 const AppSetupPreview = () => {

@@ -1,15 +1,21 @@
 import { Menu } from "antd";
+import classNames from "classnames";
 import { Outlet } from "react-router";
 import { NavLink } from "react-router-dom";
 import { WorkspaceBaseMenuProps, Menu as IMenu } from "@utils/types";
+import UserComponent from "@components//header/user";
 import "@containers/workspace-running/single-nav.style";
 
 const { SubMenu } = Menu;
 
-const SingleNavComponent = ({ extra, dataSource }: WorkspaceBaseMenuProps) => {
+const SingleNavComponent = ({
+  extra,
+  dataSource,
+  theme,
+}: WorkspaceBaseMenuProps) => {
   return (
-    <div className="single-nav-component">
-      <div className="sider">
+    <div className={classNames("single-nav-component", theme)}>
+      <div className="left">
         <div className="extra">{extra}</div>
         <div className="menu">
           <Menu mode="inline" style={{ width: 256 }}>
@@ -37,8 +43,15 @@ const SingleNavComponent = ({ extra, dataSource }: WorkspaceBaseMenuProps) => {
           </Menu>
         </div>
       </div>
-      <div className="content">
-        <Outlet />
+      <div className="right">
+        <div className="header">
+          <div className="user-container">
+            <UserComponent />
+          </div>
+        </div>
+        <div className="content">
+          <Outlet />
+        </div>
       </div>
     </div>
   );
