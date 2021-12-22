@@ -10,6 +10,7 @@ import ChartImage from "@assets/images/chart.png";
 import CanvasImage from "@assets/images/canvas.png";
 import SpaceImage from "@assets/images/space.png";
 import "./app-modal.style.scss";
+import { handleStopPropagation } from "@utils/utils";
 
 interface AppModalProps {
   mode: "create" | "edit";
@@ -68,6 +69,7 @@ const AppModal: FC<AppModalProps> = ({
   return (
     <div
       className={classNames("app-modal", className ? className : "")}
+      onClick={handleStopPropagation}
       style={containerStyle}
     >
       <div className="header">
@@ -89,7 +91,7 @@ const AppModal: FC<AppModalProps> = ({
               autoFocus
               size="large"
               placeholder="请输入"
-              onClick={(e: React.MouseEvent) => e.stopPropagation()}
+              onClick={handleStopPropagation}
             />
           </Form.Item>
           {mode === "create" && !type && (
