@@ -156,7 +156,13 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
     }
     // 流程子应用内容渲染
     if (subAppType === SubAppType.FLOW && subAppId) {
-      return <FlowAppContent id={+subAppId} projectId={projectId} />;
+      return (
+        <FlowAppContent
+          id={+subAppId}
+          projectId={projectId}
+          theme={themeMap[theme].className}
+        />
+      );
     }
     return empty;
   });

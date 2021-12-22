@@ -133,6 +133,7 @@ $dark-content-background-color: #202023;
           background: $dark-side-background-color;
           .ant-menu-submenu-title,
           .ant-menu-item {
+            background: $dark-side-background-color;
             color: $dark-text-color;
           }
           .ant-menu-item-selected {

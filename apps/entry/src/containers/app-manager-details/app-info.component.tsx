@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "antd";
 import { useAppSelector } from "@/store";
 import {
-  useModifyAppStatusMutation,
   useWorkspaceDetailQuery,
   useFetchSubAppListQuery,
 } from "@http/app-manager.hooks";
@@ -16,7 +15,6 @@ import useMemoCallback from "@common/hooks/use-memo-callback";
 const AppInfoComponent: React.FC = () => {
   const navigate = useNavigate();
   const workspaceId = useAppSelector(selectCurrentWorkspaceId);
-  const [modifyAppStatus] = useModifyAppStatusMutation();
   const { data: workspace } = useWorkspaceDetailQuery(workspaceId);
   const { data: subAppList } = useFetchSubAppListQuery(workspaceId);
   const hasPublished = useMemo(() => workspace?.extension, [workspace]);

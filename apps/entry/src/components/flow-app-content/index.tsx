@@ -24,6 +24,7 @@ import { Icon, StateTag, Text } from "@common/components";
 import {
   useFetchUsersMutation,
   useSearchUserMutation,
+  useFetchSubAppMutation,
   useFetchFlowComponentsMutation,
   useFetchProcessDataManagerMutation,
 } from "@/http/app-client.hooks";
@@ -34,6 +35,7 @@ import "./index.style.scss";
 interface FlowAppContentProps {
   id: number;
   projectId: number;
+  theme?: string;
   canOperation?: boolean; //是否可操作 预览时不可操作
 }
 interface TableColumn {
@@ -65,6 +67,7 @@ const { Option } = Select;
 const FlowAppContent: FC<FlowAppContentProps> = ({
   id,
   projectId,
+  theme = "light",
   canOperation = false,
 }) => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -74,6 +77,7 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
   const [total, setTotal] = useState<number>(0);
   const [keyword, setKeyword] = useState<string>("");
   const [userId, setUserId] = useState<string>("");
+  const [subAppName, setSubAppName] = useState<string>("");
   const [sortDirection, setSortDirection] = useState<SortDirection>(
     SortDirection.DESC
   );
@@ -128,6 +132,7 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
   const [fetchProcessDataManager] = useFetchProcessDataManagerMutation();
   const [fetchUsers] = useFetchUsersMutation();
   const [searchUser] = useSearchUserMutation();
+  const [fetchSubApp] = useFetchSubAppMutation();
 
   const renderMember = useMemoCallback((member?: number | number[]) => {
     if (!member) return null;
@@ -476,8 +481,7 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
       .post("/task/processDataManager/export", params, { responseType: "blob" })
       .then((res) => {
         const type = (res as any).type;
-        // TODO 文件名应为子应用名称
-        exportFile(res, `"file".xlsx`, type);
+        exportFile(res, `${subAppName || "file"}.xlsx`, type);
       });
   });
 
@@ -509,6 +513,14 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
   }, [id]);
 
   useEffect(() => {
+    if (id) {
+      fetchSubApp(id).then((res: any) => {
+        setSubAppName(res.data?.name);
+      });
+    }
+  }, [id]);
+
+  useEffect(() => {
     fetchDataSource();
     fetchOptionList(1, "");
   }, [id]);
@@ -524,7 +536,13 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
   ]);
 
   return (
-    <div className={classNames("flow-app-content", !canOperation && "preview")}>
+    <div
+      className={classNames(
+        "flow-app-content",
+        theme,
+        !canOperation && "preview"
+      )}
+    >
       <div className="start">
         <Button type="primary" size="large" className="button">
           发起流程

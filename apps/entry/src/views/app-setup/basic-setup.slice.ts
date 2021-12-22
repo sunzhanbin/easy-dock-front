@@ -93,7 +93,7 @@ export const validateBasicForm = createAsyncThunk<
   void,
   { [k: string]: string | number | null | undefined },
   { state: RootState }
->("basicForm/save", async (basicConfig, { getState, dispatch }) => {
+>("basicForm/save", async (basicConfig, { dispatch }) => {
   const errors: string[] = [];
   const { name, workspace, remark, icon } = basicConfig;
   const nameError = validateName(name as string);
