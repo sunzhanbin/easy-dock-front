@@ -5,6 +5,7 @@ import "moment/locale/zh-cn";
 
 import { Routes, Route } from "react-router-dom";
 import Layout from "@containers/layout";
+import SuspenseWrap from "@components/suspense-wrap";
 import Home from "@views/home";
 import "@/App.scss";
 
@@ -19,11 +20,6 @@ import Auth from "@enc/sso";
 import cookie from "js-cookie";
 import { registerTheme } from "@enc/theme-scheme/dist/utils.esm";
 
-const SuspenseWrap = ({ render }: { render: React.ReactNode }) => (
-  <React.Fragment>
-    <Suspense fallback={null}>{render}</Suspense>
-  </React.Fragment>
-);
 Auth.setConfig({ server: process.env.REACT_APP_SSO_LOGIN_URL });
 const query = decodeURIComponent(window.location.href.split("?")[1]);
 const theme = new URLSearchParams(query).get("theme");

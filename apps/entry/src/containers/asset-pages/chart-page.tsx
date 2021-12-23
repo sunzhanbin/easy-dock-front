@@ -2,13 +2,17 @@ import { useParams } from "react-router";
 import "@containers/workspace-running/content.style";
 // import microApp from "@micro-zoe/micro-app";
 
-const ContentComponent = () => {
+const ChartMicroPage = () => {
   const { workspaceId } = useParams();
+
+  console.log("报表应用", workspaceId);
+
   return (
     <div className="content-component">
       <micro-app
-        name="react17"
-        url={`http://localhost:3002/micro-app/react17`}
+        name="chart"
+        url={`http://localhost:8084`}
+        baseroute={`/workspace/${workspaceId}/chart`}
         data={{ from: "来自基座的数据" }}
         // onMounted={() => hideLoading(false)}
         // destroy
@@ -18,4 +22,4 @@ const ContentComponent = () => {
   );
 };
 
-export default ContentComponent;
+export default ChartMicroPage;

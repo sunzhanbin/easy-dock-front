@@ -2455,6 +2455,11 @@
     npmlog "^4.1.2"
     write-file-atomic "^3.0.3"
 
+"@micro-zoe/micro-app@^0.6.2":
+  version "0.6.2"
+  resolved "https://registry.npmmirror.com/@micro-zoe/micro-app/download/@micro-zoe/micro-app-0.6.2.tgz#470e2036cf84a9353354995862a7c160d708ab92"
+  integrity sha512-Qx3UzjRIuhAw7bxL9P9iD4KNQIn6tk3Paq66KZ/M+HlV7z1jL99khIqMRdLiQemHA/cFqi2B1n7BaWB2wb2aZQ==
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.nlark.com/@mrmlnc/readdir-enhanced/download/@mrmlnc/readdir-enhanced-2.2.1.tgz"

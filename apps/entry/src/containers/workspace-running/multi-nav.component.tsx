@@ -2,9 +2,12 @@ import { useCallback, useState, useMemo } from "react";
 import { Menu } from "antd";
 import { Icon } from "@common/components";
 import classNames from "classnames";
+import { useAppDispatch } from "@/store";
 import { Outlet } from "react-router";
-import { NavLink } from "react-router-dom";
-import { keyPath } from "@utils/utils";
+import { useNavigate } from "react-router-dom";
+import { setCurrentId } from "@/views/workspace/index.slice";
+import { keyPath, findFirstChild } from "@utils/utils";
+import { RouteMap } from "@utils/const";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import { WorkspaceBaseMenuProps, Menu as IMenu } from "@utils/types";
 import UserComponent from "@components//header/user";
@@ -16,7 +19,11 @@ const MultiNavComponent = ({
   extra,
   dataSource,
   theme,
+  selectedKey,
 }: WorkspaceBaseMenuProps) => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const [activeMainKey, setActiveMainKey] = useState<string>();
   const submenu = useMemo(() => {
     const currentKey =
@@ -27,6 +34,22 @@ const MultiNavComponent = ({
 
   const handleMainManu = useCallback(({ key }) => {
     setActiveMainKey(key);
+
+    const menu = dataSource.find((v) => v.id === key) || {};
+    const subMenu = findFirstChild(menu as IMenu);
+    dispatch(setCurrentId(subMenu.id));
+    const {
+      form: {
+        assetConfig: { subAppType },
+      },
+    } = subMenu;
+    if (subAppType) {
+      navigate(
+        `./${RouteMap[(subAppType as unknown) as keyof typeof RouteMap]}`
+      );
+    } else {
+      navigate(`./iframe`);
+    }
   }, []);
 
   const renderIcon = useMemoCallback((icon) => {
@@ -44,7 +67,7 @@ const MultiNavComponent = ({
           <Menu mode="horizontal" onClick={handleMainManu}>
             {dataSource.map((menu) => (
               <Menu.Item key={menu.id} icon={renderIcon(menu?.form?.icon)}>
-                <NavLink to={`${menu.id}`}>{menu.name}</NavLink>
+                {menu.name}
               </Menu.Item>
             ))}
           </Menu>
@@ -54,9 +77,9 @@ const MultiNavComponent = ({
         </div>
       </div>
       <div className="content">
-        {submenu?.length && (
+        {!!submenu?.length && (
           <div className="submenu">
-            <Menu mode="inline">
+            <Menu mode="inline" selectedKeys={[selectedKey]}>
               {((dataSource) => {
                 const recurse = (menus: IMenu[]) => {
                   return menus.map((menu) => {
@@ -67,11 +90,7 @@ const MultiNavComponent = ({
                         </SubMenu>
                       );
                     } else {
-                      return (
-                        <Menu.Item key={menu.id}>
-                          <NavLink to={`${menu.id}`}>{menu.name}</NavLink>
-                        </Menu.Item>
-                      );
+                      return <Menu.Item key={menu.id}>{menu.name}</Menu.Item>;
                     }
                   });
                 };

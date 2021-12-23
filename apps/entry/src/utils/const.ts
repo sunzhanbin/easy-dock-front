@@ -1,5 +1,13 @@
 import { HomeSubAppType } from "@/consts";
 
+export const RouteMap = {
+  1: "canvas",
+  2: "flow",
+  3: "chart",
+  4: "space",
+  5: "form",
+};
+
 export const NavMenu = [
   {
     name: "开始",

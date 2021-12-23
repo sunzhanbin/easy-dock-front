@@ -54,6 +54,9 @@ export interface WorkspaceInitialState {
   name: string;
   navMode: NavModeType;
   menu: Menu[];
+  currentId: string;
+  appId: string;
+  projectId: string;
 }
 
 export interface Menu {
@@ -101,4 +104,5 @@ export interface WorkspaceBaseMenuProps {
   extra: React.ReactNode;
   dataSource: Menu[];
   theme: ThemeType;
+  selectedKey: string;
 }
