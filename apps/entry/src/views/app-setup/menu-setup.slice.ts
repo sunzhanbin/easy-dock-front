@@ -12,6 +12,8 @@ const defaultForm: MenuSetupForm = {
   asset: "exist",
   assetConfig: {
     subAppType: SubAppType.FORM,
+    subAppId: undefined,
+    url: "",
   },
 };
 
@@ -38,6 +40,7 @@ export const menuSetupSlice = createSlice({
     // 关联菜单与表单信息；
     setMenuForm: (state, action: PayloadAction<MenuSetupForm>) => {
       const currentItem: any = findItem(state.currentId, state.menu);
+      // 为了避免初始值为同一个默认值引用，每次新增都需要保证是新的对象；
       currentItem.form = JSON.parse(JSON.stringify(action.payload));
       currentItem.name = action.payload.name;
       state.menuForm = action.payload;
@@ -48,11 +51,13 @@ export const menuSetupSlice = createSlice({
       action: PayloadAction<{ currentId: string | null; childId: string }>
     ) => {
       const { currentId, childId } = action.payload;
-      // console.log(currentId, "current", childId, "child", current(state));
+      const childMenuName = currentId ? "二级菜单" : "一级菜单";
       {
         state.currentId = childId;
-        // 为了避免初始值为同一个默认值引用，每次新增都需要保证是新的对象；
-        state.menuForm = JSON.parse(JSON.stringify(state.menuForm));
+        state.menuForm = {
+          ...defaultForm,
+          name: childMenuName,
+        };
       }
       if (!currentId) {
         state.menu.push({
@@ -74,8 +79,6 @@ export const menuSetupSlice = createSlice({
           children: [],
         });
       }
-      // 添加菜单之后,form要重置
-      state.menuForm = defaultForm;
     },
     // 删除菜单；
     remove: (state, action: PayloadAction<string>) => {
