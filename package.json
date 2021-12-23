@@ -16,7 +16,10 @@
   "dependencies": {
     "lerna": "^4.0.0",
     "typescript": "^4.2.4",
-    "yarn": "1.22.10"
+    "yarn": "1.22.10",
+    "mockjs": "1.1.0",
+    "filemanager-webpack-plugin": "^4.0.0",
+    "create-react-app": "^4.0.3"
   },
   "devDependencies": {
     "@commitlint/cli": "12.1.1",
@@ -26,14 +29,12 @@
     "@typescript-eslint/parser": "4.22.1",
     "@typescript-eslint/typescript-estree": "4.33.0",
     "babel-eslint": "10.1.0",
-    "create-react-app": "^4.0.3",
     "eslint": "7.25.0",
     "eslint-config-prettier": "8.3.0",
     "eslint-config-react-app": "6.0.0",
     "eslint-plugin-import": "^2.23.2",
     "eslint-plugin-react": "7.23.2",
     "eslint-plugin-react-hooks": "4.2.0",
-    "filemanager-webpack-plugin": "^4.0.0",
     "husky": "^7.0.4",
     "lint-staged": "10.5.4",
     "mockjs": "1.1.0",
