@@ -26,6 +26,16 @@
     ]
   },
   "dependencies": {
+    "@types/classnames": "^2.3.1",
+    "@types/lodash": "^4.14.168",
+    "@types/js-cookie": "^2.2.6",
+    "@types/styled-components": "^5.1.9",
+    "@types/webpack-env": "^1.16.0",
+    "@types/react": "^17.0.0",
+    "@types/react-beautiful-dnd": "^13.0.0",
+    "@types/react-dom": "^17.0.0",
+    "@types/react-redux": "^7.1.7",
+    "@types/react-router-dom": "^5.1.7",
     "@enc/sso": "^0.3.0-beta.1",
     "@enc/theme-scheme": "0.0.2",
     "@reduxjs/toolkit": "^1.5.1",
@@ -52,17 +62,5 @@
     "filemanager-webpack-plugin": "^4.0.0",
     "node-sass": "^5.0.0",
     "sass-loader": "^11.0.1"
-  },
-  "devDependencies": {
-    "@types/classnames": "^2.3.1",
-    "@types/js-cookie": "^2.2.6",
-    "@types/lodash": "^4.14.168",
-    "@types/react": "^17.0.0",
-    "@types/react-beautiful-dnd": "^13.0.0",
-    "@types/react-dom": "^17.0.0",
-    "@types/react-redux": "^7.1.7",
-    "@types/react-router-dom": "^5.1.7",
-    "@types/styled-components": "^5.1.9",
-    "@types/webpack-env": "^1.16.0"
   }
 }
