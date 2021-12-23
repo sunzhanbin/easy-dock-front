@@ -13,7 +13,7 @@ import {
 import {
   ResponseType,
   HomeSubAppType,
-  WU_LIAN_ENTRY,
+  IOT_ENTRY,
   INTERFACE_ENTRY,
 } from "@/consts";
 import { JumpLinkToUrl } from "@utils/utils";
@@ -52,7 +52,7 @@ const HomeNewSub = () => {
     const { type } = item;
     if (NOT_SHOW_MODAL_SELECT.includes(type)) {
       if (type === HomeSubAppType.DEVICE) {
-        window.open(WU_LIAN_ENTRY);
+        window.open(IOT_ENTRY);
       } else if (type === HomeSubAppType.INTERFACE) {
         window.open(`${INTERFACE_ENTRY}/orch`);
       }

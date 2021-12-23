@@ -9,7 +9,7 @@ import {
   INTERFACE_ENTRY,
   ResponseType,
   SPACE_ENTRY,
-  WU_LIAN_ENTRY,
+  IOT_ENTRY,
 } from "@/consts";
 
 export const getPopupContainer: AbstractTooltipProps["getPopupContainer"] = (
@@ -105,7 +105,7 @@ export const JumpLinkToUrl = async (
   } else if (type === HomeSubAppType.FORM) {
     window.open(`${FLOW_ENTRY}/builder/flow/bpm-editor/${id}/form-design`);
   } else if (type === HomeSubAppType.DEVICE) {
-    window.open(WU_LIAN_ENTRY);
+    window.open(IOT_ENTRY);
   } else if (type === HomeSubAppType.INTERFACE) {
     window.open(`${INTERFACE_ENTRY}/orch`);
   } else if (type === HomeSubAppType.DATA_FISH) {

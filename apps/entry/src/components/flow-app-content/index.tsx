@@ -14,6 +14,7 @@ import classNames from "classnames";
 import { omit, throttle, debounce } from "lodash";
 import { axios } from "@utils/fetch";
 import {
+  FLOW_ENTRY,
   Pagination,
   ProcessDataManagerParams,
   SortDirection,
@@ -34,6 +35,7 @@ import "./index.style.scss";
 
 interface FlowAppContentProps {
   id: number;
+  appId: number | string;
   projectId: number;
   theme?: string;
   canOperation?: boolean; //是否可操作 预览时不可操作
@@ -66,6 +68,7 @@ const { Option } = Select;
 
 const FlowAppContent: FC<FlowAppContentProps> = ({
   id,
+  appId,
   projectId,
   theme = "light",
   canOperation = true,
@@ -458,6 +461,10 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
     setUserId(id);
   });
 
+  const handleJumpToStartFlow = useMemoCallback(() => {
+    window.open(`${FLOW_ENTRY}/app/${appId}/process/start/flow/${id}`);
+  });
+
   const handleRefresh = useMemoCallback(debounce(fetchDataSource, 200));
   const handleExport = useMemoCallback(async () => {
     const { total } = pagination;
@@ -544,7 +551,12 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
       )}
     >
       <div className="start">
-        <Button type="primary" size="large" className="button">
+        <Button
+          type="primary"
+          size="large"
+          className="button"
+          onClick={handleJumpToStartFlow}
+        >
           发起流程
         </Button>
       </div>

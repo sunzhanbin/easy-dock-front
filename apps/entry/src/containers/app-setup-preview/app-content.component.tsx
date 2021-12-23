@@ -154,6 +154,7 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
       return (
         <FlowAppContent
           id={+subAppId}
+          appId={workspaceId || appId}
           projectId={projectId}
           theme={themeMap[theme].className}
         />
