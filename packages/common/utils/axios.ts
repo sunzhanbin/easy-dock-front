@@ -26,7 +26,7 @@ function createAxios(config?: AxiosRequestConfig): AxiosInstance {
       } else if (status === 403) {
         // import Auth 之后 Auth 的实例会放入 window.Auth 中
         if (window.Auth && window.Auth.getAuth()) {
-          window.Auth.logout();
+          window.Auth.logout(`${window.SSO_LOGIN_URL}/logout?redirectUri=${encodeURIComponent(location.href)}`);
         } 
 
         return Promise.reject({

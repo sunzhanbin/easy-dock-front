@@ -1492,10 +1492,10 @@
   resolved "https://registry.nlark.com/@emotion/unitless/download/@emotion/unitless-0.7.5.tgz"
   integrity sha1-dyESkcGQCnALinjPr9oxYNdpSe0=
 
-"@enc/sso@^0.3.0-beta.1":
-  version "0.3.0"
-  resolved "http://10.39.39.153:4837/@enc%2fsso/-/sso-0.3.0.tgz#ba906c4675de243856f7c374afc0bb39e44dc9f1"
-  integrity sha512-frD6SpjKxNOXGEjiepI9J3pV872qKHG7YYyihVK7vBaZpYZaKrw1BqpT1V6PBNUf5lSOL0RjsrYGcRyusqzdAA==
+"@enc/sso@0.4.1-beta.2":
+  version "0.4.1-beta.2"
+  resolved "http://10.39.39.153:4837/@enc%2fsso/-/sso-0.4.1-beta.2.tgz#b82c034262d3f5b07f04e3d68a1d5bd2f98cfc9b"
+  integrity sha512-tFgHKvCRGKIUtirhfdbg2ZXfClhNIT4gCVkbVvJ/9kKnbGGFfnpeGkiBhb5Aa+wd08ehg95rjvpQQkk1XDkp2g==
   dependencies:
     xss "^1.0.10"
 
@@ -3123,6 +3123,11 @@
   version "1.0.3"
   resolved "https://registry.nlark.com/@types/mockjs/download/@types/mockjs-1.0.3.tgz?cache=0&sync_timestamp=1621241984490&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40types%2Fmockjs%2Fdownload%2F%40types%2Fmockjs-1.0.3.tgz"
   integrity sha1-vY7jx8u9mhh4irZ3ueT5fI0LsL8=
+
+"@types/mockjs@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.npmmirror.com/@types/mockjs/download/@types/mockjs-1.0.4.tgz#e706951d5e33b4f0a4bb73b1f8b124e26f081de0"
+  integrity sha1-5waVHV4ztPCku3Ox+LEk4m8IHeA=
 
 "@types/node@*":
   version "15.12.2"
@@ -11117,7 +11122,7 @@ mkdirp@^1.0.3, mkdirp@^1.0.4:
   resolved "https://registry.nlark.com/mkdirp/download/mkdirp-1.0.4.tgz"
   integrity sha1-PrXtYmInVteaXw4qIh3+utdcL34=
 
-mockjs@1.1.0:
+mockjs@1.1.0, mockjs@^1.1.0:
   version "1.1.0"
   resolved "https://registry.npm.taobao.org/mockjs/download/mockjs-1.1.0.tgz"
   integrity sha1-5qDDeOkZBtuv8gkRzAJzs8fXWwY=
@@ -13021,7 +13026,7 @@ postcss@^8.1.0:
     nanoid "^3.1.23"
     source-map-js "^0.6.2"
 
-pre-commit@1.2.2:
+pre-commit@1.2.2, pre-commit@^1.2.2:
   version "1.2.2"
   resolved "https://registry.npmmirror.com/pre-commit/download/pre-commit-1.2.2.tgz?cache=0&sync_timestamp=1637537385574&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Fpre-commit%2Fdownload%2Fpre-commit-1.2.2.tgz#dbcee0ee9de7235e57f79c56d7ce94641a69eec6"
   integrity sha1-287g7p3nI15X95xW186UZBpp7sY=
