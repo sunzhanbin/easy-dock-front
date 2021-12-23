@@ -68,7 +68,7 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
   id,
   projectId,
   theme = "light",
-  canOperation = false,
+  canOperation = true,
 }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [statusList, setStatusList] = useState<number[]>([1, 2, 3, 4, 5, 6]);

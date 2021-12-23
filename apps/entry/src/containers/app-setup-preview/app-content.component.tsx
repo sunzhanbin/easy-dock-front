@@ -141,7 +141,7 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
     }
     // 大屏子应用内容渲染
     if (subAppType === SubAppType.CANVAS && subAppId) {
-      const url = `${CANVAS_ENTRY}/publish/${canvasId}?sso=true`;
+      const url = `${CANVAS_ENTRY}/publish/${canvasId}`;
       return renderIframe(url, "canvas-container");
     }
     // 空间子应用内容渲染
