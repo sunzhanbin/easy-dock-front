@@ -6,7 +6,6 @@ import React, {
   useEffect,
 } from "react";
 import { Tabs, Input, Button, Switch, message } from "antd";
-import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "@/store";
 import {
@@ -19,6 +18,7 @@ import { selectCurrentWorkspaceId } from "@views/app-manager/index.slice";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import { SubAppInfo, SubAppType } from "@/consts";
 import { Icon } from "@common/components";
+import AppPreviewModal from "@containers/app-preview-modal";
 import { imgIdToUrl } from "@/utils/utils";
 import AppModal from "./app-modal.component";
 import AppCard from "./app-card.component";
@@ -41,6 +41,7 @@ const SubListComponent: React.FC = () => {
   const [initialSubAppList, setInitialSubAppList] = useState<SubAppInfo[]>([]);
   const [activeKey, setActiveKey] = useState<string>("all");
   const [keyword, setKeyword] = useState<string>("");
+  const [showModal, setShowModal] = useState<boolean>(false);
   const containerRef = useRef<HTMLDivElement>(null);
   // 动态获取阴影的高度,实现嵌入的阴影效果
   const style = useMemo<React.CSSProperties>(() => {
@@ -70,7 +71,11 @@ const SubListComponent: React.FC = () => {
   });
 
   const handlePreview = useMemoCallback(() => {
-    navigate(`/app-manager/preview/${workspaceId}`);
+    setShowModal(true);
+  });
+
+  const handleModalClose = useMemoCallback(() => {
+    setShowModal(false);
   });
 
   const handleAppStatusChange = useMemoCallback(async (checked: boolean) => {
@@ -87,8 +92,8 @@ const SubListComponent: React.FC = () => {
     navigate(`/app-manager/${workspaceId}`);
   });
 
-  const handleCopySuccess = useMemoCallback(() => {
-    message.success("链接已复制到粘贴板!");
+  const handleJumpToClient = useMemoCallback(() => {
+    navigate(`/workspace/${workspaceId}`);
   });
 
   const formAppList = useMemo(() => {
@@ -171,12 +176,10 @@ const SubListComponent: React.FC = () => {
                   <Icon type="bianji" className="icon" />
                   <div className="text">编辑</div>
                 </div>
-                <CopyToClipboard text={"www.exmple.com"}>
-                  <div className="copy-link" onClick={handleCopySuccess}>
-                    <Icon type="fuzhi" className="icon" />
-                    <div className="text">复制链接</div>
-                  </div>
-                </CopyToClipboard>
+                <div className="edit" onClick={handleJumpToClient}>
+                  <Icon type="yingyonduandinglan" className="icon" />
+                  <div className="text">跳转应用端</div>
+                </div>
                 <Switch
                   className="switch"
                   checkedChildren="启用"
@@ -355,6 +358,7 @@ const SubListComponent: React.FC = () => {
       ) : (
         <AppEmpty />
       )}
+      <AppPreviewModal visible={showModal} onClose={handleModalClose} />
     </div>
   );
 };

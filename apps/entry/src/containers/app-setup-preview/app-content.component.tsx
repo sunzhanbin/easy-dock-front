@@ -23,6 +23,7 @@ import darkEmptyImage from "@assets/images/dark-empty.png";
 import FlowAppContent from "@/components/flow-app-content";
 
 import "./app-content.style.scss";
+import { selectCurrentWorkspaceId } from "@/views/app-manager/index.slice";
 
 interface AppContentProps {
   selectedKey: string;
@@ -38,8 +39,11 @@ type ThemeMap = {
 
 const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
   const menuList = useAppSelector(selectMenu);
+  const appId = useAppSelector(selectCurrentWorkspaceId);
   const { workspaceId } = useParams();
-  const { data: workspace } = useWorkspaceDetailQuery(+(workspaceId as string));
+  const { data: workspace } = useWorkspaceDetailQuery(
+    workspaceId ? +workspaceId : appId
+  );
   const [getHoloSceneId] = useGetHoloSceneIdMutation();
   const [getCanvasId] = useGetCanvasIdMutation();
   const [canvasId, setCanvasId] = useState<string>("");
@@ -146,7 +150,7 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
     }
     // 大屏子应用内容渲染
     if (subAppType === SubAppType.CANVAS && subAppId) {
-      const url = `${CANVAS_ENTRY}/publish/${canvasId}?sso=true`;
+      const url = `${CANVAS_ENTRY}/publish/${canvasId}`;
       return renderIframe(url, "canvas-container");
     }
     // 空间子应用内容渲染
