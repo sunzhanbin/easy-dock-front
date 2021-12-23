@@ -1,12 +1,7 @@
 import { NavModeType, ThemeType, validateName, validateRemark } from "@/consts";
 import { appManagerBuilder } from "@/http";
 import { RootState } from "@/store";
-import {
-  createSlice,
-  createAsyncThunk,
-  PayloadAction,
-  current,
-} from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { BasicSetupInitialState } from "@utils/types";
 
 const initialState: BasicSetupInitialState = {
@@ -34,7 +29,7 @@ export const basicSetupSlice = createSlice({
       state.errors = action.payload;
     },
     setBaseForm: (state, action: PayloadAction<{ [key: string]: any }>) => {
-      const icon = action.payload.icon?.[0]?.id;
+      const icon = action.payload.icon;
       if (typeof action.payload === "object") {
         state.basicForm = JSON.parse(JSON.stringify(action.payload));
       }
@@ -50,7 +45,26 @@ export const basicSetupSlice = createSlice({
     builder.addMatcher(
       appManagerBuilder.endpoints.workspaceDetail.matchFulfilled,
       (state, action) => {
-        console.log("workspaceDetail", current(state), action.payload);
+        const extension = action.payload?.extension;
+        if (!extension) {
+          state.basicForm = {
+            navMode: NavModeType.MULTI,
+            theme: ThemeType.LIGHT,
+          };
+        } else {
+          const { name, id, remark, navMode, theme, icon } = extension;
+          state.theme = theme;
+          state.navMode = navMode;
+          state.logo = icon;
+          state.basicForm = {
+            icon,
+            name,
+            theme,
+            remark,
+            navMode,
+            workspace: id,
+          };
+        }
       }
     );
   },
@@ -79,7 +93,7 @@ export const validateBasicForm = createAsyncThunk<
   void,
   { [k: string]: string | number | null | undefined },
   { state: RootState }
->("basicForm/save", async (basicConfig, { getState, dispatch }) => {
+>("basicForm/save", async (basicConfig, { dispatch }) => {
   const errors: string[] = [];
   const { name, workspace, remark, icon } = basicConfig;
   const nameError = validateName(name as string);

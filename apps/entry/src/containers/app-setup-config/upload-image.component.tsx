@@ -61,23 +61,24 @@ const UploadImage: FC<UploadImageProps> = ({ value, onChange }) => {
         .then(({ data: response }: any) => {
           onSuccess(response, file);
           if (Array.isArray(response) && response.length > 0) {
-            dispatch(setLogo(response[0]?.id));
+            const icon = response[0]?.id;
+            dispatch(setLogo(icon));
+            onChange && onChange(icon);
           }
-          onChange && onChange(response);
         })
         .catch(onError);
     }
   );
 
-  const downloadFile = useMemoCallback(async (image) => {
-    if (!image.id) {
+  const downloadFile = useMemoCallback(async (id) => {
+    if (!id) {
       return;
     }
-    const url = await imgIdToUrl(image.id);
+    const url = await imgIdToUrl(id);
     const fileList = [
       {
-        name: image.name,
-        uid: image.id,
+        name: "icon",
+        uid: id,
         url: url,
         thumbUrl: url,
       },
@@ -86,9 +87,8 @@ const UploadImage: FC<UploadImageProps> = ({ value, onChange }) => {
   });
 
   useEffect(() => {
-    if (value && value.length > 0) {
-      const imageFile = value[0];
-      downloadFile(imageFile);
+    if (value) {
+      downloadFile(value);
     }
   }, [value]);
 

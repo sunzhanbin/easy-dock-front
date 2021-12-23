@@ -1,9 +1,9 @@
-// import 'antd/dist/antd.css';
-// import './styles/base.scss';
-
-import '@enc/theme-scheme/dist/react/antd/antd.4.17-alpha.6.min.css'
+import 'antd/dist/antd.css';
 import './styles/base.scss';
-import '@enc/theme-scheme/dist/variable.css';
+
+//import '@enc/theme-scheme/dist/react/antd/antd.4.17-alpha.6.min.css'
+import './styles/base.scss';
+//import '@enc/theme-scheme/dist/variable.css';
 
 import appConfig from './init';
 import ReactDOM from 'react-dom';
@@ -15,25 +15,24 @@ import AntdProvider from '@common/components/antd-provider';
 import App from './App';
 import cookie from 'js-cookie';
 // @ts-ignore
-import {registerTheme} from '@enc/theme-scheme/dist/utils.esm';
-
+//import { registerTheme } from '@enc/theme-scheme/dist/utils.esm';
 const APP_CONTAINER_ID = '#easy-flow-root';
 
 export async function mount(props?: { container: HTMLElement; basename: string; appId: string }) {
   const { container, basename = '/', appId } = props || {};
   const history = createBrowserHistory({ basename });
 
-  const query = decodeURIComponent(window.location.href.split("?")[1])
-  const themeFromQuery = (new URLSearchParams(query)).get('theme');
+  const query = decodeURIComponent(window.location.href.split('?')[1]);
+  const themeFromQuery = new URLSearchParams(query).get('theme');
   const themeFromCookie = cookie.get('theme');
   const theme = themeFromQuery || themeFromCookie;
 
-  if(theme) {
+  /*   if (theme) {
     cookie.set('theme', theme);
     registerTheme({
-      theme
-    })
-  }
+      theme,
+    });
+  } */
 
   if (appId) {
     appConfig.appId = appId;

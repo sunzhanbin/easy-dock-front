@@ -62,6 +62,9 @@ const resetUrl = (codeAttr: string) => {
     if (search.length > 0) {
         newUrl += '?' + search.substring(0, search.length - 1);
     }
+    if (location.hash) {
+        newUrl += location.hash;
+    }
     window.history.pushState({}, '0', newUrl);
 };
 

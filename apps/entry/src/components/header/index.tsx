@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
 import logo from "@assets/images/logo.png";
-import Icon from "@assets/icon";
+import { Icon } from "@common/components";
 import UserComponent from "@components//header/user";
 import "@components/header/index.style.scss";
 import ProjectComponent from "@components/header/project";
@@ -23,9 +23,9 @@ export default function Header({ children }: HeaderProps) {
         <ProjectComponent />
         {children}
         <div className="right">
-          {showPopover ? <NewSubAppPopover /> : ""}
-          <Icon className="icon" type="custom-icon-shezhi" />
-          <Icon className="icon" type="custom-icon-shuoming" />
+          {showPopover ? <NewSubAppPopover /> : <a className="hidden" />}
+          <Icon className="icon" type="shezhi" />
+          <Icon className="icon" type="shuoming" />
           <div className="user_info">
             <UserComponent />
           </div>

@@ -1,5 +1,5 @@
-import { useCallback, useMemo } from "react";
-import { Button } from "antd";
+import React, { useCallback, useMemo } from "react";
+import { Button, Collapse } from "antd";
 import { v4 as uuid } from "uuid";
 import classnames from "classnames";
 import { useAppDispatch, useAppSelector } from "@/store";
@@ -11,10 +11,12 @@ import {
   remove,
 } from "@views/app-setup/menu-setup.slice";
 import { Menu } from "@utils/types";
-import { Icon, Text } from "@common/components";
-
+import { Icon, Text, PopoverConfirm } from "@common/components";
+import { findItem, handleStopPropagation } from "@utils/utils";
 import "@containers/app-setup-config/menu-setup-list.style";
 import useMemoCallback from "@common/hooks/use-memo-callback";
+
+const { Panel } = Collapse;
 
 type BeforeIdChange = () => void;
 
@@ -30,7 +32,7 @@ const MenuItemComponent = ({
   const currentId = useAppSelector(selectCurrentId);
 
   const style = useMemo(() => {
-    return { paddingLeft: `${menu.depth * 12}px` };
+    return { paddingLeft: `${menu.depth * 12 + 18}px` };
   }, [menu.depth]);
 
   const renderIcon = useMemoCallback((icon) => {
@@ -40,19 +42,28 @@ const MenuItemComponent = ({
     return <Icon type={icon} className="icon" />;
   });
 
-  const handleAddMenu = useCallback(async (currentId: string) => {
-    await onBeforeIdChange();
-    const childId = uuid();
-    dispatch(add({ currentId, childId }));
-  }, []);
+  const handleAddMenu = useCallback(
+    async (e: React.MouseEvent, currentId: string) => {
+      e.stopPropagation();
+      await onBeforeIdChange();
+      const childId = uuid();
+      dispatch(add({ currentId, childId }));
+    },
+    []
+  );
 
   const handleRemoveMenu = useCallback((currentId: string) => {
     dispatch(remove(currentId));
   }, []);
 
-  const handleMenuClick = useCallback((currentId: string) => {
-    dispatch(setCurrentMenu(currentId));
-  }, []);
+  const handleMenuClick = useCallback(
+    async (e: React.MouseEvent, currentId: string) => {
+      e.stopPropagation();
+      await onBeforeIdChange();
+      dispatch(setCurrentMenu(currentId));
+    },
+    []
+  );
   return (
     <div
       className={classnames({
@@ -62,16 +73,26 @@ const MenuItemComponent = ({
       style={style}
     >
       {renderIcon(menu?.form?.icon)}
-      <div className="text" onClick={handleMenuClick.bind(null, menu.id)}>
+      <div className="text" onClick={(e) => handleMenuClick(e, menu.id)}>
         <Text text={menu.name} />
       </div>
       <div className="operation">
-        <div className="add" onClick={handleAddMenu.bind(null, menu.id)}>
-          <Icon type="xinzeng" />
-        </div>
-        <div className="remove" onClick={handleRemoveMenu.bind(null, menu.id)}>
-          <Icon type="shanchu" />
-        </div>
+        {menu.depth < 2 && (
+          <div className="add" onClick={(e) => handleAddMenu(e, menu.id)}>
+            <Icon type="xinzeng" />
+          </div>
+        )}
+        <PopoverConfirm
+          title="提示"
+          placement="bottom"
+          content="删除后不可恢复,请确认是否删除该菜单?"
+          trigger={["hover"]}
+          onConfirm={handleRemoveMenu.bind(null, menu.id)}
+        >
+          <div className="remove" onClick={handleStopPropagation}>
+            <Icon type="shanchu" />
+          </div>
+        </PopoverConfirm>
         <div className="drag">
           <Icon type="caidan" />
         </div>
@@ -88,21 +109,50 @@ const MenuComponent = ({
   menu: Menu;
   onBeforeIdChange: BeforeIdChange;
 }) => {
+  const currentId = useAppSelector(selectCurrentId);
+  const menuList = useAppSelector(selectMenu);
+  const currentItem: any = findItem(currentId, menuList);
+  const style = useMemo(() => {
+    return { left: `${menu.depth * 12}px` };
+  }, [menu.depth]);
   return (
     <div className="menu-component">
       {menu?.children?.length ? (
-        <div className="men-wrap">
-          <MenuItemComponent menu={menu} onBeforeIdChange={onBeforeIdChange} />
-          <div className="children">
-            {menu.children.map((item, index: number) => (
-              <MenuComponent
-                key={index}
-                menu={item}
+        <Collapse
+          className="menu-collapse"
+          defaultActiveKey={currentItem.parentId}
+          ghost
+          expandIcon={({ isActive }) =>
+            isActive ? (
+              <Icon type="xiasanjiao" style={style} />
+            ) : (
+              <Icon type="yousanjiao" style={style} />
+            )
+          }
+        >
+          <Panel
+            key={menu.id}
+            className="menu-collapse-panel"
+            header={
+              <MenuItemComponent
+                menu={menu}
                 onBeforeIdChange={onBeforeIdChange}
               />
-            ))}
-          </div>
-        </div>
+            }
+          >
+            <div className="men-wrap">
+              <div className="children">
+                {menu.children.map((item, index: number) => (
+                  <MenuComponent
+                    key={index}
+                    menu={item}
+                    onBeforeIdChange={onBeforeIdChange}
+                  />
+                ))}
+              </div>
+            </div>
+          </Panel>
+        </Collapse>
       ) : (
         <MenuItemComponent menu={menu} onBeforeIdChange={onBeforeIdChange} />
       )}
@@ -118,7 +168,6 @@ const MenuSetupListComponent = ({
 }) => {
   const dispatch = useAppDispatch();
   const menu = useAppSelector(selectMenu);
-
   const handleAddMenu = useCallback(async () => {
     await onBeforeIdChange();
 

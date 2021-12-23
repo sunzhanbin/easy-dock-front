@@ -8,7 +8,7 @@
     "build": "lerna bootstrap && lerna run build",
     "build:dev": "lerna bootstrap && lerna run build:dev",
     "precommit": "lint-staged",
-    "bootstrap": "lerna bootstrap",
+    "bootstrap": "yarn add husky --dev -W && husky install && lerna bootstrap",
     "publish": "lerna publish",
     "clean": "lerna clean",
     "eslint": "eslint apps/*/src --ext .js,.jsx,.ts,.tsx"
@@ -19,6 +19,7 @@
     "@types/mockjs": "1.0.3",
     "@typescript-eslint/eslint-plugin": "^4.24.0",
     "@typescript-eslint/parser": "4.22.1",
+    "@typescript-eslint/typescript-estree": "^5.7.0",
     "babel-eslint": "10.1.0",
     "create-react-app": "^4.0.3",
     "eslint": "7.25.0",
@@ -28,31 +29,29 @@
     "eslint-plugin-react": "7.23.2",
     "eslint-plugin-react-hooks": "4.2.0",
     "filemanager-webpack-plugin": "^4.0.0",
-    "husky": "4.3.8",
+    "husky": "^7.0.4",
     "lerna": "^4.0.0",
     "lint-staged": "10.5.4",
     "mockjs": "1.1.0",
     "prettier": "2.2.1",
+    "typescript": "^4.2.4",
     "yarn": "1.22.10"
   },
   "lint-staged": {
-    "packages/**/*.{ts,tsx,js,jsx}": [
+    "packages/*/src/**/*.{ts,tsx,js,jsx}": [
       "prettier --write",
-      "eslint"
+      "eslint -c=.eslintrc --fix"
     ],
-    "main/**/*.{ts,tsx,js,jsx}": [
+    "apps/*/src/**/*.{ts,tsx,js,jsx}": [
       "prettier --write",
-      "eslint"
+      "eslint -c=.eslintrc --fix"
     ]
-  },
-  "husky": {
-    "hooks": {}
   },
   "workspaces": [
     "packages/core",
     "apps/*"
   ],
   "engines": {
-    "node": ">= 10.0"
+    "node": ">= 12.0"
   }
 }

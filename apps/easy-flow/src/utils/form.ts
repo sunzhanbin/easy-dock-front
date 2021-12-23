@@ -523,7 +523,7 @@ export async function uploadFile(values: any) {
     const componentType = values[key] && values[key]?.type;
 
     if (['Attachment', 'Image'].includes(componentType)) {
-      const fileList = values[key].fileList.filter((file: { originFileObj: File }) => file.originFileObj);
+      const fileList = (values[key]?.fileList||[]).filter((file: { originFileObj: File }) => file.originFileObj);
 
       if (componentType === 'Image') {
         fileIndexLocationRecord[key] = [imageFiles.length, imageFiles.length + fileList.length];

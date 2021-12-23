@@ -14,7 +14,7 @@ import {
   useModifySubAppNameMutation,
   useModifySubAppStatusMutation,
   useDeleteSupAppMutation,
-  useGetHolosceneIdMutation,
+  useGetHoloSceneIdMutation,
   useGetCanvasIdMutation,
 } from "@/http/app-manager.hooks";
 import AppModal from "./app-modal.component";
@@ -30,7 +30,7 @@ const AppCard: FC<AppCardProps> = ({ subApp, className }) => {
   const [modifySubAppStatus] = useModifySubAppStatusMutation();
   const [modifySubAppName] = useModifySubAppNameMutation();
   const [deleteSubApp] = useDeleteSupAppMutation();
-  const [getHolosceneId] = useGetHolosceneIdMutation();
+  const [getHoloSceneId] = useGetHoloSceneIdMutation();
   const [getCanvasId] = useGetCanvasIdMutation();
   const imageMap = useMemo<{ [k in SubAppType]: string }>(() => {
     return {
@@ -148,7 +148,7 @@ const AppCard: FC<AppCardProps> = ({ subApp, className }) => {
           <PopoverConfirm
             title="提示"
             placement="bottom"
-            content="删除后不可恢复,请确认是否删除该工作区?"
+            content="删除后不可恢复,请确认是否删除该子应用?"
             getPopupContainer={getPopupContainer}
             onConfirm={handleDelete}
           >
@@ -160,10 +160,22 @@ const AppCard: FC<AppCardProps> = ({ subApp, className }) => {
         )}
       </div>
     );
-  }, [statusInfo, getPopupContainer]);
+  }, [
+    statusInfo,
+    getPopupContainer,
+    handleStart,
+    handleStop,
+    handleEdit,
+    handleDelete,
+  ]);
+
+  const handleShowOperation = useMemoCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowPopup(true);
+  });
 
   const handleJumpTo = useMemoCallback(async () => {
-    await JumpLinkToUrl(type, id, getCanvasId, getHolosceneId);
+    await JumpLinkToUrl(type, id, getCanvasId, getHoloSceneId);
   });
   return (
     <div
@@ -174,21 +186,21 @@ const AppCard: FC<AppCardProps> = ({ subApp, className }) => {
     >
       <div className="app-card-base">
         <img src={imageMap[type]} alt="icon" className="app-image" />
-        <div className="name">
-          <Text text={name} />
+        <div>
+          <Text text={name} className="name" />
+          <div className="app-card-more">
+            <div className="info">
+              {version?.version && (
+                <span className="version">{version?.version}</span>
+              )}
+              <span className="type">{typeMap[type]}</span>
+            </div>
+          </div>
         </div>
       </div>
-      <div className="app-card-more">
-        <div className="info">
-          {version?.version && (
-            <span className="version">{version?.version}</span>
-          )}
-          <span className="type">{typeMap[type]}</span>
-        </div>
-        <div className="more" onClick={() => setShowPopup(true)}>
-          <Icon type="gengduo" className="icon" />
-          {showPopup && content}
-        </div>
+      <div className="more" onClick={(e) => handleShowOperation(e)}>
+        <Icon type="gengduo" className="icon" />
+        {showPopup && content}
       </div>
       {statusNode}
       {showModal && (

@@ -12,6 +12,7 @@ import { Icon } from "@common/components";
 import { nameRule, NavModeType, remarkRule } from "@/consts";
 import {
   basicErrorSelector,
+  selectBasicForm,
   setBaseForm,
 } from "@views/app-setup/basic-setup.slice";
 import NavMode from "./nav-mode.component";
@@ -21,17 +22,17 @@ import "@containers/app-setup-config/basic-setup-form.style";
 
 interface BasicSetupFormProps {
   workspaceList: { id: number; name: string }[];
-  initialBasicSetup?: any;
 }
 const { Option } = Select;
 
 const BasicSetupFormComponent = React.forwardRef(function basicSetupForm(
-  { workspaceList, initialBasicSetup }: BasicSetupFormProps,
+  { workspaceList }: BasicSetupFormProps,
   ref
 ) {
   const [form] = Form.useForm();
   const dispatch = useAppDispatch();
   const basicError = useAppSelector(basicErrorSelector);
+  const basicConfig = useAppSelector(selectBasicForm);
 
   const iconRule = useMemo<Rule>(() => {
     return {
@@ -43,13 +44,6 @@ const BasicSetupFormComponent = React.forwardRef(function basicSetupForm(
       },
     };
   }, []);
-  const initialValues = useMemo(() => {
-    const values = {
-      navMode: NavModeType.MULTI,
-      theme: "light",
-    };
-    return Object.assign({}, values, initialBasicSetup);
-  }, [initialBasicSetup]);
 
   const handleValuesChange = useCallback(() => {
     const formValues = form.getFieldsValue();
@@ -61,8 +55,11 @@ const BasicSetupFormComponent = React.forwardRef(function basicSetupForm(
   }));
 
   useEffect(() => {
-    form.setFieldsValue(initialValues);
-  }, [initialValues]);
+    if (basicConfig) {
+      const values = { ...basicConfig, workspace: workspaceList?.[0]?.id };
+      form.setFieldsValue(values);
+    }
+  }, [basicConfig, workspaceList]);
 
   useEffect(() => {
     if (basicError?.length > 0) {

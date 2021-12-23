@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState, useEffect } from "react";
+import { useCallback, useRef, useState, useEffect } from "react";
 import { Tabs } from "antd";
 import BasicSetupFormComponent from "@containers/app-setup-config/basic-setup-form.component";
 import MenuSetupComponent from "@containers/app-setup-config/menu-setup.component";
@@ -20,18 +20,10 @@ const AppSetupConfig = () => {
   const { workspaceId } = useParams();
   const { data: workspace } = useWorkspaceDetailQuery(+(workspaceId as string));
   const [workspaceList, setWorkspaceList] = useState<WorkspaceItem[]>([]);
-  const initialBasicSetup = useMemo(() => {
-    if (!workspace?.id) {
-      return {};
-    }
-    return Object.assign({}, workspace.extension, {
-      workspace: workspace.id,
-      icon: workspace.extension?.icon ? [workspace.extension?.icon] : undefined,
-    });
-  }, [workspace?.id]);
   const formRef = useRef<BasicSetupFormComponentHandle>(null);
 
   useEffect(() => {
+    console.log(workspace, "rrr");
     if (workspace?.id) {
       setWorkspaceList([{ id: workspace.id, name: workspace.name }]);
     }
@@ -52,12 +44,10 @@ const AppSetupConfig = () => {
           <BasicSetupFormComponent
             ref={formRef}
             workspaceList={workspaceList}
-            initialBasicSetup={initialBasicSetup}
           />
         </TabPane>
       </Tabs>
     </div>
   );
 };
-
 export default AppSetupConfig;

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useRef } from "react";
 import MenuSetupListComponent from "@containers/app-setup-config/menu-setup-list.component";
 import MenuSetupFormComponent from "@containers/app-setup-config/menu-setup-form.component";
 
@@ -26,12 +26,6 @@ const MenuSetupComponent = () => {
       }
     });
   }, [formRef.current]);
-
-  useEffect(() => {
-    console.log("%c^_^ \n\n", "color: #C80815; font-weight: bolder", {
-      formRef,
-    });
-  }, [formRef]);
 
   return (
     <div className="menu-setup-component">

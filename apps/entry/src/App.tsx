@@ -10,6 +10,7 @@ import "@/App.scss";
 
 const AppManager = React.lazy(() => import("@views/app-manager"));
 const AppSetup = React.lazy(() => import("@views/app-setup"));
+const AppPreview = React.lazy(() => import("@views/app-preview"));
 const AssetCentre = React.lazy(() => import("@views/asset-centre"));
 const TemplateMall = React.lazy(() => import("@views/template-mall"));
 const Workspace = React.lazy(() => import("@views/workspace"));
@@ -45,6 +46,10 @@ const App: React.FC = () => {
           />
           <Route path="app-manager">
             <Route index element={<SuspenseWrap render={<AppManager />} />} />
+            <Route
+              path="preview/:workspaceId"
+              element={<SuspenseWrap render={<AppPreview />} />}
+            />
             <Route
               path=":workspaceId"
               element={<SuspenseWrap render={<AppSetup />} />}

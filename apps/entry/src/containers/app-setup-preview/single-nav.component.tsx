@@ -1,12 +1,13 @@
-import { useCallback } from "react";
 import { Menu } from "antd";
 import classNames from "classnames";
-import { keyPath } from "@utils/utils";
+import { findFirstChild, keyPath } from "@utils/utils";
 import { Menu as IMenu, MenuComponentProps } from "@utils/types";
-import "@containers/app-setup-preview/single-nav.style";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import { Icon } from "@common/components";
 import UserComponent from "@components//header/user";
+import { useAppDispatch } from "@/store";
+import { setCurrentMenu } from "@/views/app-setup/menu-setup.slice";
+import "@containers/app-setup-preview/single-nav.style";
 
 const { SubMenu } = Menu;
 
@@ -17,27 +18,34 @@ const SingleNavComponent = ({
   selectedKey,
   theme,
 }: MenuComponentProps) => {
+  const dispatch = useAppDispatch();
   const renderIcon = useMemoCallback((icon) => {
     if (!icon || icon === "wukongjian") {
       return null;
     }
     return <Icon type={icon} />;
   });
-  const handleMenuClick = useCallback(({ item, key, keyPath }) => {
-    console.log("%c^_^ \n\n", "color: #C80815; font-weight: bolder", {
-      item,
-      key,
-      keyPath,
-    });
-  }, []);
-
-  const handleMenuSelect = useCallback(({ item, key, keyPath }) => {
-    console.log("%c^_^ \n\n", "color: #C80815; font-weight: bolder", {
-      item,
-      key,
-      keyPath,
-    });
-  }, []);
+  const handleMenuClick = useMemoCallback(({ _, key }) => {
+    const menu = dataSource.find((v) => v.id === key);
+    if (menu) {
+      const subMenu = findFirstChild(menu);
+      dispatch(setCurrentMenu(subMenu.id));
+    } else {
+      dispatch(setCurrentMenu(key));
+    }
+  });
+  const handleTitleClick = useMemoCallback(({ key }) => {
+    const menu = dataSource.find((v) => v.id === key);
+    if (menu) {
+      const subMenu = findFirstChild(menu);
+      dispatch(setCurrentMenu(subMenu.id));
+    } else {
+      dispatch(setCurrentMenu(key));
+    }
+  });
+  const handleSubMenuClick = useMemoCallback(({ _, key }) => {
+    dispatch(setCurrentMenu(key));
+  });
 
   return (
     <div className={classNames("single-nav-component", theme)}>
@@ -45,12 +53,12 @@ const SingleNavComponent = ({
         <div className="extra">{extra}</div>
         <div className="menu">
           <Menu
-            openKeys={keyPath(selectedKey, dataSource)}
-            onClick={handleMenuClick}
-            selectedKeys={[selectedKey]}
-            onSelect={handleMenuSelect}
             mode="inline"
             style={{ width: 256 }}
+            inlineCollapsed={false}
+            selectedKeys={[selectedKey]}
+            onClick={handleMenuClick}
+            openKeys={keyPath(selectedKey, dataSource)}
           >
             {/* @Todo 此处和菜单设置里的嵌套组件不同，antd 组件嵌套时，key 的数据丢失 */}
             {((dataSource) => {
@@ -58,7 +66,11 @@ const SingleNavComponent = ({
                 return menus.map((menu) => {
                   if (menu?.children?.length) {
                     return (
-                      <SubMenu key={menu.id} title={menu.name}>
+                      <SubMenu
+                        key={menu.id}
+                        title={menu.name}
+                        onTitleClick={handleTitleClick}
+                      >
                         {recurse(menu.children)}
                       </SubMenu>
                     );
@@ -67,6 +79,7 @@ const SingleNavComponent = ({
                       <Menu.Item
                         key={menu.id}
                         icon={renderIcon(menu.form?.icon)}
+                        onClick={handleSubMenuClick}
                       >
                         {menu.name}
                       </Menu.Item>

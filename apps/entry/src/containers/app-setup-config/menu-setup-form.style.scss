@@ -18,6 +18,15 @@
     .app-item {
       margin-bottom: 12px;
     }
+    .ant-select-selection-item {
+      display: inline-flex;
+      align-items: center;
+      .sub-app-icon {
+        width: 20px;
+        height: 20px;
+        margin-right: 4px;
+      }
+    }
     .asset-option {
       // 覆盖antd默认样式
       .ant-radio-button-wrapper {
@@ -75,4 +84,20 @@
       }
     }
   }
+}
+
+.sub-app-option {
+  .ant-select-item-option-content {
+    display: inline-flex;
+    align-items: center;
+    .sub-app-icon {
+      width: 20px;
+      height: 20px;
+      margin-right: 4px;
+    }
+    .sub-app-name {
+
+    }
+  }
+
 }
