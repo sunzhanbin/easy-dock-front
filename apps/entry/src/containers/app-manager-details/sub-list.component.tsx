@@ -6,7 +6,6 @@ import React, {
   useEffect,
 } from "react";
 import { Tabs, Input, Button, Switch, message } from "antd";
-import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "@/store";
 import {
@@ -72,7 +71,6 @@ const SubListComponent: React.FC = () => {
   });
 
   const handlePreview = useMemoCallback(() => {
-    // navigate(`/app-manager/preview/${workspaceId}`);
     setShowModal(true);
   });
 
@@ -94,8 +92,8 @@ const SubListComponent: React.FC = () => {
     navigate(`/app-manager/${workspaceId}`);
   });
 
-  const handleCopySuccess = useMemoCallback(() => {
-    message.success("链接已复制到粘贴板!");
+  const handleJumpToClient = useMemoCallback(() => {
+    navigate(`/workspace/${workspaceId}`);
   });
 
   const formAppList = useMemo(() => {
@@ -178,12 +176,10 @@ const SubListComponent: React.FC = () => {
                   <Icon type="bianji" className="icon" />
                   <div className="text">编辑</div>
                 </div>
-                <CopyToClipboard text={"www.exmple.com"}>
-                  <div className="copy-link" onClick={handleCopySuccess}>
-                    <Icon type="fuzhi" className="icon" />
-                    <div className="text">复制链接</div>
-                  </div>
-                </CopyToClipboard>
+                <div className="edit" onClick={handleJumpToClient}>
+                  <Icon type="yingyonduandinglan" className="icon" />
+                  <div className="text">跳转应用端</div>
+                </div>
                 <Switch
                   className="switch"
                   checkedChildren="启用"
