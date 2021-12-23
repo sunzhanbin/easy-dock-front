@@ -1,4 +1,5 @@
 import React, {
+  memo,
   ReactNode,
   useMemo,
   useRef,
@@ -7,29 +8,21 @@ import React, {
   useImperativeHandle,
 } from "react";
 import { Form, Input, Select, Radio } from "antd";
-import { useParams } from "react-router-dom";
 import { selectMenuForm, setMenuForm } from "@views/app-setup/menu-setup.slice";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { Icon } from "@common/components";
 import useMemoCallback from "@common/hooks/use-memo-callback";
-import { nameRule, SubAppInfo, SubAppType, urlRule } from "@/consts";
-import { useFetchDeployedSubAppListQuery } from "@/http";
+import { nameRule } from "@/consts";
 import "@containers/app-setup-config/menu-setup-form.style";
-import { ImageMap } from "@utils/const";
+import AssetConfigComponent from "@containers/app-setup-config/menu-setup-form-asset-config.component";
 
 const { Option } = Select;
-type SubAppTypeItem = {
-  type: SubAppType;
-  name: string;
-};
 
 const MenuSetupFormComponent = React.forwardRef<{
   validateFields: () => Promise<any>;
 }>(function menuSetupForm(_, ref) {
   const dispatch = useAppDispatch();
-  const { workspaceId } = useParams();
-  const appId = useMemo(() => Number(workspaceId), [workspaceId]);
-  const { data: subAppList } = useFetchDeployedSubAppListQuery(appId);
+
   const menuForm = useAppSelector(selectMenuForm);
   const [form] = Form.useForm();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -46,16 +39,6 @@ const MenuSetupFormComponent = React.forwardRef<{
       "shujujianmo",
       "shujubiao",
       "shujuyuan",
-    ];
-  }, []);
-
-  const subAppTypeList = useMemo<SubAppTypeItem[]>(() => {
-    return [
-      { type: SubAppType.FORM, name: "表单" },
-      { type: SubAppType.FLOW, name: "流程" },
-      { type: SubAppType.CHART, name: "报表" },
-      { type: SubAppType.CANVAS, name: "大屏" },
-      { type: SubAppType.SPACE, name: "空间" },
     ];
   }, []);
 
@@ -137,79 +120,7 @@ const MenuSetupFormComponent = React.forwardRef<{
                 options={options}
               />
             </Form.Item>
-            <Form.Item
-              noStyle
-              shouldUpdate={(prev, current) => prev.asset !== current.asset}
-            >
-              {({ getFieldValue }) =>
-                getFieldValue("asset") === "custom" ? (
-                  <Form.Item name={["assetConfig", "url"]} rules={[urlRule]}>
-                    <Input size="large" placeholder="请输入URL" />
-                  </Form.Item>
-                ) : (
-                  <>
-                    <Form.Item
-                      name={["assetConfig", "subAppType"]}
-                      className="app-item"
-                    >
-                      <Select
-                        placeholder="选择应用"
-                        size="large"
-                        suffixIcon={<Icon type="xiala" />}
-                      >
-                        {subAppTypeList.map(({ type, name }) => (
-                          <Option
-                            key={type}
-                            value={type}
-                            className="sub-app-option"
-                          >
-                            <img
-                              className="sub-app-icon"
-                              src={ImageMap[type]}
-                              alt="logo"
-                            />
-                            <span>{name}</span>
-                          </Option>
-                        ))}
-                      </Select>
-                    </Form.Item>
-                    <Form.Item
-                      noStyle
-                      shouldUpdate={(prev, current) =>
-                        prev.assetConfig?.subAppType !==
-                        current.assetConfig?.subAppType
-                      }
-                    >
-                      {({ getFieldValue }) => {
-                        const subAppType = getFieldValue([
-                          "assetConfig",
-                          "subAppType",
-                        ]);
-                        return (
-                          <Form.Item name={["assetConfig", "subAppId"]}>
-                            <Select
-                              placeholder="选择子应用"
-                              size="large"
-                              suffixIcon={<Icon type="xiala" />}
-                            >
-                              {(subAppList || [])
-                                .filter(
-                                  (v: SubAppInfo) => v.type === subAppType
-                                )
-                                .map((v: SubAppInfo) => (
-                                  <Option key={v.id} value={v.id}>
-                                    {v.name}
-                                  </Option>
-                                ))}
-                            </Select>
-                          </Form.Item>
-                        );
-                      }}
-                    </Form.Item>
-                  </>
-                )
-              }
-            </Form.Item>
+            <AssetConfigComponent form={form} />
           </Form.Item>
         </Form>
       </div>
@@ -217,4 +128,4 @@ const MenuSetupFormComponent = React.forwardRef<{
   );
 });
 
-export default MenuSetupFormComponent;
+export default memo(MenuSetupFormComponent);

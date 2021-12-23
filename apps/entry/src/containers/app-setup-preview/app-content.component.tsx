@@ -64,10 +64,7 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
     if (asset === "custom" && !assetConfig.url) {
       return true;
     }
-    if (asset === "exist" && !assetConfig.subAppId) {
-      return true;
-    }
-    return false;
+    return asset === "exist" && !assetConfig.subAppId;
   }, [menu]);
   const themeMap = useMemo<ThemeMap>(() => {
     return {
@@ -99,25 +96,19 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
   }, [isEmpty, themeMap]);
   // 是否是自定义url
   const isCustomUrl = useMemo<boolean>(() => {
-    if (
+    return !!(
       menu?.form &&
       menu.form.asset === "custom" &&
       menu.form.assetConfig?.url
-    ) {
-      return true;
-    }
-    return false;
+    );
   }, [menu]);
   // 是否是已有资产
   const isExistAsset = useMemo<boolean>(() => {
-    if (
+    return !!(
       menu?.form &&
       menu.form.asset === "exist" &&
       menu.form.assetConfig?.subAppId
-    ) {
-      return true;
-    }
-    return false;
+    );
   }, [menu]);
   const subAppType = useMemo<SubAppType | undefined>(() => {
     if (isExistAsset) {
@@ -137,7 +128,7 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
         className={classNames("iframe-container", className && className)}
         src={url}
         frameBorder={0}
-      ></iframe>
+      />
     );
   });
   const renderContent = useMemoCallback(() => {
@@ -163,6 +154,7 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
       return (
         <FlowAppContent
           id={+subAppId}
+          appId={workspaceId || appId}
           projectId={projectId}
           theme={themeMap[theme].className}
         />

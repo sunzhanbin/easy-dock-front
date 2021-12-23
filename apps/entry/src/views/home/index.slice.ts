@@ -26,6 +26,13 @@ export const HomeManagerSlice = createSlice({
     setProjectId: (state, action: PayloadAction<number>) => {
       state.projectId = action.payload;
     },
+    logout: (state) => {
+      Auth.logout();
+      state.userInfo = null;
+      delete axios.defaults.headers.auth;
+      // 清掉cookie
+      cookie.remove("token");
+    },
   },
   extraReducers: (builder) => {
     builder.addMatcher(
@@ -47,21 +54,10 @@ export const HomeManagerSlice = createSlice({
         };
       }
     );
-    builder.addMatcher(
-      homeManageRuntime.endpoints.logout.matchFulfilled,
-      (state) => {
-        const url = process.env.REACT_APP_SSO_LOGIN_URL;
-        Auth.logout(url ? url : undefined);
-        state.userInfo = null;
-        delete axios.defaults.headers.auth;
-        // 清掉cookie
-        cookie.remove("token");
-      }
-    );
   },
 });
 
-export const { setProjectId } = HomeManagerSlice.actions;
+export const { setProjectId, logout } = HomeManagerSlice.actions;
 
 export const selectProjectId = (state: RootState) => state.home.projectId;
 export const selectUserInfo = (state: RootState) => state.home.userInfo;

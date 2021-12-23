@@ -14,6 +14,7 @@ import classNames from "classnames";
 import { omit, throttle, debounce } from "lodash";
 import { axios } from "@utils/fetch";
 import {
+  FLOW_ENTRY,
   Pagination,
   ProcessDataManagerParams,
   SortDirection,
@@ -34,6 +35,7 @@ import "./index.style.scss";
 
 interface FlowAppContentProps {
   id: number;
+  appId: number | string;
   projectId: number;
   theme?: string;
   canOperation?: boolean; //是否可操作 预览时不可操作
@@ -66,6 +68,7 @@ const { Option } = Select;
 
 const FlowAppContent: FC<FlowAppContentProps> = ({
   id,
+  appId,
   projectId,
   theme = "light",
   canOperation = true,
@@ -228,6 +231,9 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
         if (field.type === "Tabs") {
           // eslint-disable-next-line
           tableColumn.render = (_: string, data: TableDataBase) => {
+            if (!data?.formData) {
+              return null;
+            }
             const components = (field as any).components;
             if (!components || components?.length === 0) {
               return null;
@@ -267,17 +273,26 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
           };
         } else if (field.type === "Member") {
           tableColumn.render = (_: string, data: TableDataBase) => {
+            if (!data?.formData) {
+              return null;
+            }
             const member = data.formData[field.field] || field.defaultValue;
             return renderMember(member as number | number[]);
           };
         } else if (field.type === "Date") {
           tableColumn.render = (_: string, data: TableDataBase) => {
+            if (!data?.formData) {
+              return null;
+            }
             const date = data.formData[field.field] || field.defaultValue || "";
             tableColumn.width = Array.isArray(date) ? 360 : 180;
             return renderDate(date as number | [number, number]);
           };
         } else {
           tableColumn.render = (_: string, data: TableDataBase) => {
+            if (!data?.formData) {
+              return null;
+            }
             const value =
               data.formData[field.field] || field.defaultValue || "";
             return renderText(value as string | string[]);
@@ -297,6 +312,9 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
     });
 
     data.forEach((item: any) => {
+      if (!item.formData) {
+        return;
+      }
       Object.keys(item.formData).forEach((key) => {
         const field = fieldsMap[key];
         if (!field) return;
@@ -458,6 +476,10 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
     setUserId(id);
   });
 
+  const handleJumpToStartFlow = useMemoCallback(() => {
+    window.open(`${FLOW_ENTRY}/app/${appId}/process/start/flow/${id}`);
+  });
+
   const handleRefresh = useMemoCallback(debounce(fetchDataSource, 200));
   const handleExport = useMemoCallback(async () => {
     const { total } = pagination;
@@ -514,9 +536,13 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
 
   useEffect(() => {
     if (id) {
-      fetchSubApp(id).then((res: any) => {
-        setSubAppName(res.data?.name);
-      });
+      fetchSubApp(id)
+        .then((res: any) => {
+          setSubAppName(res.data?.name);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
   }, [id]);
 
@@ -544,7 +570,12 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
       )}
     >
       <div className="start">
-        <Button type="primary" size="large" className="button">
+        <Button
+          type="primary"
+          size="large"
+          className="button"
+          onClick={handleJumpToStartFlow}
+        >
           发起流程
         </Button>
       </div>
