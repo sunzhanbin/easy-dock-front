@@ -231,6 +231,9 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
         if (field.type === "Tabs") {
           // eslint-disable-next-line
           tableColumn.render = (_: string, data: TableDataBase) => {
+            if (!data?.formData) {
+              return null;
+            }
             const components = (field as any).components;
             if (!components || components?.length === 0) {
               return null;
@@ -270,17 +273,26 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
           };
         } else if (field.type === "Member") {
           tableColumn.render = (_: string, data: TableDataBase) => {
+            if (!data?.formData) {
+              return null;
+            }
             const member = data.formData[field.field] || field.defaultValue;
             return renderMember(member as number | number[]);
           };
         } else if (field.type === "Date") {
           tableColumn.render = (_: string, data: TableDataBase) => {
+            if (!data?.formData) {
+              return null;
+            }
             const date = data.formData[field.field] || field.defaultValue || "";
             tableColumn.width = Array.isArray(date) ? 360 : 180;
             return renderDate(date as number | [number, number]);
           };
         } else {
           tableColumn.render = (_: string, data: TableDataBase) => {
+            if (!data?.formData) {
+              return null;
+            }
             const value =
               data.formData[field.field] || field.defaultValue || "";
             return renderText(value as string | string[]);
@@ -300,6 +312,9 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
     });
 
     data.forEach((item: any) => {
+      if (!item.formData) {
+        return;
+      }
       Object.keys(item.formData).forEach((key) => {
         const field = fieldsMap[key];
         if (!field) return;
@@ -521,9 +536,13 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
 
   useEffect(() => {
     if (id) {
-      fetchSubApp(id).then((res: any) => {
-        setSubAppName(res.data?.name);
-      });
+      fetchSubApp(id)
+        .then((res: any) => {
+          setSubAppName(res.data?.name);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
   }, [id]);
 
