@@ -18,14 +18,6 @@ export const workspaceSlice = createSlice({
       state.name = action.payload;
     },
   },
-  extraReducers: (builder) => {
-    builder.addMatcher(
-      appManagerBuilder.endpoints.workspaceDetail.matchFulfilled,
-      (state, action) => {
-        console.log("workspaceDetail", current(state), action.payload);
-      }
-    );
-  },
 });
 
 export default workspaceSlice.reducer;

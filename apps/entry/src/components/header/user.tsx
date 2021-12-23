@@ -1,16 +1,14 @@
 import { memo, useMemo, useCallback } from "react";
 import Auth from "@enc/sso";
 import { Dropdown, Menu } from "antd";
-import { useGetUserInfoQuery, useLogoutMutation } from "@/http";
+import { useGetUserInfoQuery } from "@/http";
 import { Avatar, Icon } from "@common/components";
-
-// import { RoleEnum, AuthEnum } from "@utils/types";
-
-// import { userSelector, logout } from "@/store/user";
+import { logout } from "@views/home/index.slice";
 import "@components/header/index.style.scss";
+import { useDispatch } from "react-redux";
 
 function HeaderUser() {
-  const [logout] = useLogoutMutation();
+  const dispatch = useDispatch();
   const { user } = useGetUserInfoQuery("", {
     selectFromResult: ({ data }) => {
       if (!data) return { user: null };
@@ -29,9 +27,10 @@ function HeaderUser() {
   const handleLogin = async () => {
     await Auth.getToken(true, window.EASY_DOCK_BASE_SERVICE_ENDPOINT);
   };
+
   const handleLogout = useCallback(() => {
-    logout("");
-  }, [logout]);
+    dispatch(logout());
+  }, [dispatch]);
 
   // 当前角色是否是超管 v1.2.0暂时不加
   // const isAdmin = useMemo(() => {

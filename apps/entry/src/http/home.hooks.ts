@@ -65,14 +65,7 @@ export const homeManageRuntime = runTime.injectEndpoints({
           silence: true,
         } as any),
     }),
-    logout: build.mutation({
-      query: () =>
-        ({
-          url: "/auth/logout",
-          method: "delete",
-        } as any),
-    }),
   }),
 });
 
-export const { useGetUserInfoQuery, useLogoutMutation } = homeManageRuntime;
+export const { useGetUserInfoQuery } = homeManageRuntime;

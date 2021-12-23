@@ -23,20 +23,19 @@ const AppSetupConfig = () => {
   const formRef = useRef<BasicSetupFormComponentHandle>(null);
 
   useEffect(() => {
-    console.log(workspace, "rrr");
     if (workspace?.id) {
       setWorkspaceList([{ id: workspace.id, name: workspace.name }]);
     }
   }, [workspace?.id]);
 
   // 左边预览点击菜单可能需要关联到这里的菜单设置；
-  const handleTasChange = useCallback((activeKey: string) => {
-    console.log("activeKey", activeKey);
-  }, []);
+  // const handleTasChange = useCallback((activeKey: string) => {
+  //   console.log("activeKey", activeKey);
+  // }, []);
 
   return (
     <div className="app-setup-config">
-      <Tabs defaultActiveKey="app" onChange={handleTasChange}>
+      <Tabs defaultActiveKey="app">
         <TabPane tab="菜单设置" key="menu">
           <MenuSetupComponent />
         </TabPane>

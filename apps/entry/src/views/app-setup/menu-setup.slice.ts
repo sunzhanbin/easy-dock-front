@@ -41,6 +41,7 @@ export const menuSetupSlice = createSlice({
     setMenuForm: (state, action: PayloadAction<MenuSetupForm>) => {
       const currentItem: any = findItem(state.currentId, state.menu);
       // 为了避免初始值为同一个默认值引用，每次新增都需要保证是新的对象；
+      // console.log(action.payload, "action.payload");
       currentItem.form = JSON.parse(JSON.stringify(action.payload));
       currentItem.name = action.payload.name;
       state.menuForm = action.payload;
