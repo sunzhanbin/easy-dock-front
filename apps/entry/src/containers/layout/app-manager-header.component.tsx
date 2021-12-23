@@ -1,23 +1,24 @@
 import { memo, FC, useState, useMemo, useEffect } from "react";
-import classNames from "classnames";
-import { Button, message } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
+import { Button, message } from "antd";
+import classNames from "classnames";
 import { Icon, Text } from "@common/components";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import { useAppDispatch, useAppSelector } from "@/store";
-import { setName } from "@/views/workspace/index.slice";
-import { selectMenu } from "@/views/app-setup/menu-setup.slice";
 import {
   useWorkspaceDetailQuery,
   useSaveAppSetupMutation,
   useModifyAppStatusMutation,
 } from "@/http";
-import "./app-manager-header.style.scss";
+import { setName } from "@/views/workspace/index.slice";
+import { selectMenu } from "@/views/app-setup/menu-setup.slice";
 import { setCurrentWorkspaceId } from "@/views/app-manager/index.slice";
 import {
   selectBasicForm,
   validateBasicForm,
 } from "@/views/app-setup/basic-setup.slice";
+import AppPreviewModal from "@containers/app-preview-modal";
+import "./app-manager-header.style.scss";
 
 interface EditHeaderProps {
   className?: string;
@@ -38,6 +39,7 @@ const AppManagerHeader: FC<EditHeaderProps> = ({ className }) => {
   const basicConfig = useAppSelector(selectBasicForm);
   const menuList = useAppSelector(selectMenu);
   const [activeNav, setActiveNav] = useState<string>("edit");
+  const [showModal, setShowModal] = useState<boolean>(false);
   const navList = useMemo<NavItem[]>(() => {
     return [{ key: "edit", title: "应用设计" }];
   }, []);
@@ -45,7 +47,11 @@ const AppManagerHeader: FC<EditHeaderProps> = ({ className }) => {
     navigate("/app-manager");
   });
   const handlePreview = useMemoCallback(() => {
-    navigate(`/app-manager/preview/${workspaceId}`);
+    // navigate(`/app-manager/preview/${workspaceId}`);
+    setShowModal(true);
+  });
+  const handleModalClose = useMemoCallback(() => {
+    setShowModal(false);
   });
   const handleSave = useMemoCallback(async (showTip = true) => {
     const basicConfigResult = await dispatch(validateBasicForm(basicConfig));
@@ -143,6 +149,7 @@ const AppManagerHeader: FC<EditHeaderProps> = ({ className }) => {
           发布
         </Button>
       </div>
+      <AppPreviewModal visible={showModal} onClose={handleModalClose} />
     </div>
   );
 };

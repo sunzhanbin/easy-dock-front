@@ -19,6 +19,7 @@ import { selectCurrentWorkspaceId } from "@views/app-manager/index.slice";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import { SubAppInfo, SubAppType } from "@/consts";
 import { Icon } from "@common/components";
+import AppPreviewModal from "@containers/app-preview-modal";
 import { imgIdToUrl } from "@/utils/utils";
 import AppModal from "./app-modal.component";
 import AppCard from "./app-card.component";
@@ -41,6 +42,7 @@ const SubListComponent: React.FC = () => {
   const [initialSubAppList, setInitialSubAppList] = useState<SubAppInfo[]>([]);
   const [activeKey, setActiveKey] = useState<string>("all");
   const [keyword, setKeyword] = useState<string>("");
+  const [showModal, setShowModal] = useState<boolean>(false);
   const containerRef = useRef<HTMLDivElement>(null);
   // 动态获取阴影的高度,实现嵌入的阴影效果
   const style = useMemo<React.CSSProperties>(() => {
@@ -70,7 +72,12 @@ const SubListComponent: React.FC = () => {
   });
 
   const handlePreview = useMemoCallback(() => {
-    navigate(`/app-manager/preview/${workspaceId}`);
+    // navigate(`/app-manager/preview/${workspaceId}`);
+    setShowModal(true);
+  });
+
+  const handleModalClose = useMemoCallback(() => {
+    setShowModal(false);
   });
 
   const handleAppStatusChange = useMemoCallback(async (checked: boolean) => {
@@ -355,6 +362,7 @@ const SubListComponent: React.FC = () => {
       ) : (
         <AppEmpty />
       )}
+      <AppPreviewModal visible={showModal} onClose={handleModalClose} />
     </div>
   );
 };
