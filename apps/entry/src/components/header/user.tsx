@@ -2,8 +2,8 @@ import { memo, useMemo, useCallback } from "react";
 import Auth from "@enc/sso";
 import { Dropdown, Menu } from "antd";
 import { useGetUserInfoQuery, useLogoutMutation } from "@/http";
-import { Avatar } from "@common/components";
-import Icon from "@assets/icon";
+import { Avatar, Icon } from "@common/components";
+
 // import { RoleEnum, AuthEnum } from "@utils/types";
 
 // import { userSelector, logout } from "@/store/user";
@@ -44,7 +44,7 @@ function HeaderUser() {
       <Menu>
         <Menu.Item key="logout" onClick={handleLogout} className="menuItem">
           <span>
-            <Icon type="custom-icon-tuichudenglu" className="icon" />
+            <Icon type="tuichudenglu" className="icon" />
             退出登录
           </span>
         </Menu.Item>

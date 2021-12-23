@@ -3,7 +3,7 @@ import { appManagerBuilder } from "@/http";
 import { RootState } from "@/store";
 import { createSlice, PayloadAction, current } from "@reduxjs/toolkit";
 import { MenuSetupInitialState, MenuSetupForm } from "@utils/types";
-import { findItem } from "@utils/utils";
+import { deepSearch, findItem } from "@utils/utils";
 
 const defaultForm: MenuSetupForm = {
   name: "",
@@ -12,13 +12,15 @@ const defaultForm: MenuSetupForm = {
   asset: "exist",
   assetConfig: {
     subAppType: SubAppType.FORM,
+    subAppId: undefined,
+    url: "",
   },
 };
 
 const initialState: MenuSetupInitialState = {
-  currentId: "",
-  menu: [],
-  menuForm: defaultForm,
+  currentId: "", // 当前active的菜单
+  menu: [], // 菜单list
+  menuForm: defaultForm, // 菜单对应的菜单属性
 };
 
 export const menuSetupSlice = createSlice({
@@ -38,7 +40,9 @@ export const menuSetupSlice = createSlice({
     // 关联菜单与表单信息；
     setMenuForm: (state, action: PayloadAction<MenuSetupForm>) => {
       const currentItem: any = findItem(state.currentId, state.menu);
+      // 为了避免初始值为同一个默认值引用，每次新增都需要保证是新的对象；
       currentItem.form = JSON.parse(JSON.stringify(action.payload));
+      currentItem.name = action.payload.name;
       state.menuForm = action.payload;
     },
     // 添加菜单；
@@ -47,10 +51,13 @@ export const menuSetupSlice = createSlice({
       action: PayloadAction<{ currentId: string | null; childId: string }>
     ) => {
       const { currentId, childId } = action.payload;
+      const childMenuName = currentId ? "二级菜单" : "一级菜单";
       {
         state.currentId = childId;
-        // 为了避免初始值为同一个默认值引用，每次新增都需要保证是新的对象；
-        state.menuForm = JSON.parse(JSON.stringify(state.menuForm));
+        state.menuForm = {
+          ...defaultForm,
+          name: childMenuName,
+        };
       }
       if (!currentId) {
         state.menu.push({
@@ -72,8 +79,6 @@ export const menuSetupSlice = createSlice({
           children: [],
         });
       }
-      // 添加菜单之后,form要重置
-      state.menuForm = defaultForm;
     },
     // 删除菜单；
     remove: (state, action: PayloadAction<string>) => {
@@ -94,6 +99,31 @@ export const menuSetupSlice = createSlice({
     insert: (state, action: PayloadAction<{ [key: string]: any }>) => {
       console.log({ state: current(state), action });
     },
+  },
+  extraReducers: (builder) => {
+    builder.addMatcher(
+      appManagerBuilder.endpoints.workspaceDetail.matchFulfilled,
+      (state, action) => {
+        const extension = action.payload?.extension;
+        if (!extension?.meta) {
+          state.menu = [];
+          state.currentId = "";
+          state.menuForm = defaultForm;
+        } else {
+          const menuList = extension.meta.menuList;
+          if (Array.isArray(menuList) && menuList.length > 0) {
+            state.menu = menuList;
+            const currentItem = deepSearch(menuList);
+            state.currentId = currentItem.id;
+            state.menuForm = JSON.parse(JSON.stringify(currentItem.form));
+          } else {
+            state.menu = [];
+            state.currentId = "";
+            state.menuForm = defaultForm;
+          }
+        }
+      }
+    );
   },
 });
 

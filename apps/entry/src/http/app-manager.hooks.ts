@@ -45,6 +45,7 @@ export const appManagerBuilder = baseFetch.injectEndpoints({
     // 工作区详情；
     workspaceDetail: build.query({
       query: (workspaceId: number) => `/app/${workspaceId}`,
+      providesTags: [{ type: "Workspace", id: "DETAIL" }],
     }),
     // 添加子应用；
     addSubApp: build.mutation({
@@ -97,6 +98,7 @@ export const appManagerBuilder = baseFetch.injectEndpoints({
           method: "put",
           data: params,
         } as any),
+      invalidatesTags: [{ type: "Workspace", id: "DETAIL" }],
     }),
     // 修改子应用状态
     modifySubAppStatus: build.mutation({
@@ -173,7 +175,7 @@ export const appManagerRunTime = runTime.injectEndpoints({
     getCanvasId: build.mutation({
       query: (subId: number) => `/subapp/canvas/${subId}`,
     }),
-    getHolosceneId: build.mutation({
+    getHoloSceneId: build.mutation({
       query: (subId: number) => `/subapp/holoscene/${subId}`,
     }),
   }),
@@ -181,5 +183,5 @@ export const appManagerRunTime = runTime.injectEndpoints({
 
 export const {
   useGetCanvasIdMutation,
-  useGetHolosceneIdMutation,
+  useGetHoloSceneIdMutation,
 } = appManagerRunTime;

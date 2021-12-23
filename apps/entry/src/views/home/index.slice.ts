@@ -1,11 +1,11 @@
 import { homeManageBuilder, homeManageRuntime } from "@/http";
-import { createSlice, PayloadAction, current } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "@/store";
 import { User } from "@utils/types";
 import cookie from "js-cookie";
 
 import Auth from "@enc/sso";
-import { axios, runTime } from "@utils/fetch";
+import { axios } from "@utils/fetch";
 
 export interface HomeManagerState {
   userInfo: User | null;
@@ -50,13 +50,12 @@ export const HomeManagerSlice = createSlice({
     builder.addMatcher(
       homeManageRuntime.endpoints.logout.matchFulfilled,
       (state) => {
-        console.log(runTime, "ffff");
         const url = process.env.REACT_APP_SSO_LOGIN_URL;
         Auth.logout(url ? url : undefined);
         state.userInfo = null;
         delete axios.defaults.headers.auth;
         // 清掉cookie
-        // cookie.remove("token");
+        cookie.remove("token");
       }
     );
   },

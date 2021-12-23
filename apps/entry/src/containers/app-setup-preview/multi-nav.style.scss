@@ -24,7 +24,9 @@ $dark-content-background-color: #202023;
       & > .ant-menu-horizontal {
         border-bottom: none;
         & > .ant-menu-item {
-          width: 88px;
+          min-width: 88px;
+          max-width: 188px;
+          width: auto;
           height: 56px;
           line-height: 56px;
           text-align: center;

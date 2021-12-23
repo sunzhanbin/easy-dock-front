@@ -34,7 +34,6 @@ const ProjectComponent = () => {
   );
   const handleNewProject = useCallback(
     ({ name, isEdit, id }) => {
-      console.log(id, isEdit);
       if (!isEdit) {
         addProject({ name });
         message.success("创建成功");

@@ -72,7 +72,7 @@ export interface MenuSetupForm {
   asset: "exist" | "custom";
   assetConfig: {
     subAppType?: SubAppType;
-    subAppId?: string;
+    subAppId?: string | undefined;
     url?: string;
   };
 }
@@ -100,4 +100,5 @@ export interface WorkspaceMenuProps {
 export interface WorkspaceBaseMenuProps {
   extra: React.ReactNode;
   dataSource: Menu[];
+  theme: ThemeType;
 }

@@ -1,4 +1,4 @@
-import { memo, FC, useMemo, useState } from "react";
+import React, { memo, FC, useMemo, useState } from "react";
 import { Button, Form, Input } from "antd";
 import classNames from "classnames";
 import { Icon } from "@common/components";
@@ -10,6 +10,7 @@ import ChartImage from "@assets/images/chart.png";
 import CanvasImage from "@assets/images/canvas.png";
 import SpaceImage from "@assets/images/space.png";
 import "./app-modal.style.scss";
+import { handleStopPropagation } from "@utils/utils";
 
 interface AppModalProps {
   mode: "create" | "edit";
@@ -53,10 +54,12 @@ const AppModal: FC<AppModalProps> = ({
     ];
   }, []);
   const [selectType, setSelectType] = useState<SubAppType>(SubAppType.FORM);
-  const handleClose = useMemoCallback(() => {
+  const handleClose = useMemoCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
     onClose();
   });
-  const handleOk = useMemoCallback(() => {
+  const handleOk = useMemoCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
     form.validateFields().then(({ name }) => {
       const subAppType = type ? type : selectType;
       onOk(name, subAppType);
@@ -66,6 +69,7 @@ const AppModal: FC<AppModalProps> = ({
   return (
     <div
       className={classNames("app-modal", className ? className : "")}
+      onClick={handleStopPropagation}
       style={containerStyle}
     >
       <div className="header">
@@ -83,7 +87,12 @@ const AppModal: FC<AppModalProps> = ({
             required
             rules={[nameRule]}
           >
-            <Input autoFocus size="large" placeholder="请输入" />
+            <Input
+              autoFocus
+              size="large"
+              placeholder="请输入"
+              onClick={handleStopPropagation}
+            />
           </Form.Item>
           {mode === "create" && !type && (
             <Form.Item className="form-item" label="子应用类型" required>
@@ -114,11 +123,11 @@ const AppModal: FC<AppModalProps> = ({
             type="text"
             size="large"
             className="cancel"
-            onClick={handleClose}
+            onClick={(e) => handleClose(e)}
           >
             取消
           </Button>
-          <Button type="primary" size="large" onClick={handleOk}>
+          <Button type="primary" size="large" onClick={(e) => handleOk(e)}>
             确定
           </Button>
         </div>

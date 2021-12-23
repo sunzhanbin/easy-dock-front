@@ -72,3 +72,19 @@ yarn start
   ```sh
   taskkill /pid 4136 /t /f
   ```
+
+  ### 安装 husky
+
+  ```sh
+  yarn add husky --dev -W
+  npx husky install
+
+  # 这步的内容会反应在 .husky/pre-commit 中，也可以直接修改这个shell文件
+  npx husky add .husky/pre-commit "npm run precommit"
+
+  git add .husky/pre-commit
+  ```
+
+  安装成功后如遇到问题，可以参考 Husky 调用链排查：.git/hooks/pre-commit -> npm run precommit -> npx lint-staged -> eslint -c=.eslintrc apps/_/src/\*\*/_.{ts,tsx,js,jsx} -目前项目中的 eslint 需要通过 -c=.eslintrc 指定配置文件。
+
+  [husky 使用文档](node_modules/husky/README.md)

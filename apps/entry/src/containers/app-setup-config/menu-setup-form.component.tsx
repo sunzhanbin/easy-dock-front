@@ -15,6 +15,7 @@ import useMemoCallback from "@common/hooks/use-memo-callback";
 import { nameRule, SubAppInfo, SubAppType, urlRule } from "@/consts";
 import { useFetchDeployedSubAppListQuery } from "@/http";
 import "@containers/app-setup-config/menu-setup-form.style";
+import { ImageMap } from "@utils/const";
 
 const { Option } = Select;
 type SubAppTypeItem = {
@@ -90,7 +91,7 @@ const MenuSetupFormComponent = React.forwardRef<{
 
   return (
     <div className="menu-setup-form-component" ref={containerRef}>
-      <div className="header">内容设置</div>
+      <div className="header">菜单属性</div>
       <div className="form">
         <Form
           form={form}
@@ -134,7 +135,7 @@ const MenuSetupFormComponent = React.forwardRef<{
                 optionType="button"
                 className="asset-option"
                 options={options}
-              ></Radio.Group>
+              />
             </Form.Item>
             <Form.Item
               noStyle
@@ -157,8 +158,17 @@ const MenuSetupFormComponent = React.forwardRef<{
                         suffixIcon={<Icon type="xiala" />}
                       >
                         {subAppTypeList.map(({ type, name }) => (
-                          <Option key={type} value={type}>
-                            {name}
+                          <Option
+                            key={type}
+                            value={type}
+                            className="sub-app-option"
+                          >
+                            <img
+                              className="sub-app-icon"
+                              src={ImageMap[type]}
+                              alt="logo"
+                            />
+                            <span>{name}</span>
                           </Option>
                         ))}
                       </Select>
@@ -176,21 +186,7 @@ const MenuSetupFormComponent = React.forwardRef<{
                           "subAppType",
                         ]);
                         return (
-                          <Form.Item
-                            name={["assetConfig", "subAppId"]}
-                            rules={[
-                              {
-                                validator(_, value) {
-                                  if (!value) {
-                                    return Promise.reject(
-                                      new Error("请选择子应用!")
-                                    );
-                                  }
-                                  return Promise.resolve();
-                                },
-                              },
-                            ]}
-                          >
+                          <Form.Item name={["assetConfig", "subAppId"]}>
                             <Select
                               placeholder="选择子应用"
                               size="large"

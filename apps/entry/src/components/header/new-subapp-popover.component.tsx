@@ -1,5 +1,5 @@
 import { memo, useState } from "react";
-import Icon from "@assets/icon";
+import { Icon } from "@common/components";
 import { Popover, message } from "antd";
 import { SUB_APP_LIST, NOT_SHOW_MODAL_SELECT } from "@utils/const";
 import classnames from "classnames";
@@ -9,13 +9,18 @@ import NewSubAppModal from "@containers/home-manager/new-subapp-modal";
 import {
   useCreateSupAppMutation,
   useGetCanvasIdMutation,
-  useGetHolosceneIdMutation,
+  useGetHoloSceneIdMutation,
 } from "@/http";
-import { HomeSubAppType, ResponseType } from "@/consts";
+import {
+  HomeSubAppType,
+  INTERFACE_ENTRY,
+  ResponseType,
+  WU_LIAN_ENTRY,
+} from "@/consts";
 
 const NewSubAppPopoverComponent = () => {
   const [createSubApp] = useCreateSupAppMutation();
-  const [getHolosceneId] = useGetHolosceneIdMutation();
+  const [getHoloSceneId] = useGetHoloSceneIdMutation();
   const [getCanvasId] = useGetCanvasIdMutation();
   const [showModal, setShowModal] = useState<boolean>(false);
   const [modalInfo, setModalInfo] = useState<{
@@ -33,7 +38,7 @@ const NewSubAppPopoverComponent = () => {
       const { data }: ResponseType = await createSubApp(values);
       const { type = 0 } = values;
       if (!data) return;
-      await JumpLinkToUrl(type, data?.id, getCanvasId, getHolosceneId);
+      await JumpLinkToUrl(type, data?.id, getCanvasId, getHoloSceneId);
       message.success("创建成功!");
       setShowModal(false);
     } catch (e) {
@@ -47,13 +52,9 @@ const NewSubAppPopoverComponent = () => {
     const { type } = item;
     if (NOT_SHOW_MODAL_SELECT.includes(type)) {
       if (type === HomeSubAppType.DEVICE) {
-        // todo
-        // window.open(`http://10.19.248.238:9003/#/scene/${id}`);
+        window.open(WU_LIAN_ENTRY);
       } else if (type === HomeSubAppType.INTERFACE) {
-        window.open("http://10.19.248.238:28217/orch");
-      } else if (type === HomeSubAppType.DATA_FISH) {
-        // todo
-        // window.open(`http://10.19.248.238:9003/#/scene/${id}`);
+        window.open(`${INTERFACE_ENTRY}/orch`);
       }
       return;
     }
@@ -78,10 +79,7 @@ const NewSubAppPopoverComponent = () => {
                   onClick={() => handleNewSubAPP(sub)}
                 >
                   <i className={classnames("sub-icon", sub.icon)} />
-                  <Icon
-                    className="icon_arrow"
-                    type="custom-icon-jinrujiantou"
-                  />
+                  <Icon className="icon_arrow" type="jinrujiantou" />
                   <span className="text">{sub.linkName}</span>
                 </div>
               ))}
@@ -100,7 +98,7 @@ const NewSubAppPopoverComponent = () => {
       getPopupContainer={getPopupContainer}
     >
       <a className="add-icon">
-        <Icon className="icon" type="custom-icon-xinzeng" />
+        <Icon className="icon" type="xinzeng" />
       </a>
       {showModal && (
         <NewSubAppModal
