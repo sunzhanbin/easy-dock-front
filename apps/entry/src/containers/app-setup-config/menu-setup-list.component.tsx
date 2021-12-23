@@ -56,10 +56,14 @@ const MenuItemComponent = ({
     dispatch(remove(currentId));
   }, []);
 
-  const handleMenuClick = useCallback(async (currentId: string) => {
-    await onBeforeIdChange();
-    dispatch(setCurrentMenu(currentId));
-  }, []);
+  const handleMenuClick = useCallback(
+    async (e: React.MouseEvent, currentId: string) => {
+      e.stopPropagation();
+      await onBeforeIdChange();
+      dispatch(setCurrentMenu(currentId));
+    },
+    []
+  );
   return (
     <div
       className={classnames({
@@ -69,7 +73,7 @@ const MenuItemComponent = ({
       style={style}
     >
       {renderIcon(menu?.form?.icon)}
-      <div className="text" onClick={handleMenuClick.bind(null, menu.id)}>
+      <div className="text" onClick={(e) => handleMenuClick(e, menu.id)}>
         <Text text={menu.name} />
       </div>
       <div className="operation">
@@ -114,43 +118,41 @@ const MenuComponent = ({
   return (
     <div className="menu-component">
       {menu?.children?.length ? (
-        <>
-          <Collapse
-            className="menu-collapse"
-            defaultActiveKey={currentItem.parentId}
-            ghost
-            expandIcon={({ isActive }) =>
-              isActive ? (
-                <Icon type="xiasanjiao" style={style} />
-              ) : (
-                <Icon type="yousanjiao" style={style} />
-              )
+        <Collapse
+          className="menu-collapse"
+          defaultActiveKey={currentItem.parentId}
+          ghost
+          expandIcon={({ isActive }) =>
+            isActive ? (
+              <Icon type="xiasanjiao" style={style} />
+            ) : (
+              <Icon type="yousanjiao" style={style} />
+            )
+          }
+        >
+          <Panel
+            key={menu.id}
+            className="menu-collapse-panel"
+            header={
+              <MenuItemComponent
+                menu={menu}
+                onBeforeIdChange={onBeforeIdChange}
+              />
             }
           >
-            <Panel
-              className="menu-collapse-panel"
-              header={
-                <MenuItemComponent
-                  menu={menu}
-                  onBeforeIdChange={onBeforeIdChange}
-                />
-              }
-              key={menu.id}
-            >
-              <div className="men-wrap">
-                <div className="children">
-                  {menu.children.map((item, index: number) => (
-                    <MenuComponent
-                      key={index}
-                      menu={item}
-                      onBeforeIdChange={onBeforeIdChange}
-                    />
-                  ))}
-                </div>
+            <div className="men-wrap">
+              <div className="children">
+                {menu.children.map((item, index: number) => (
+                  <MenuComponent
+                    key={index}
+                    menu={item}
+                    onBeforeIdChange={onBeforeIdChange}
+                  />
+                ))}
               </div>
-            </Panel>
-          </Collapse>
-        </>
+            </div>
+          </Panel>
+        </Collapse>
       ) : (
         <MenuItemComponent menu={menu} onBeforeIdChange={onBeforeIdChange} />
       )}

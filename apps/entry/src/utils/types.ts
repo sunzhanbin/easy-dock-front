@@ -72,7 +72,7 @@ export interface MenuSetupForm {
   asset: "exist" | "custom";
   assetConfig: {
     subAppType?: SubAppType;
-    subAppId?: string;
+    subAppId?: string | undefined;
     url?: string;
   };
 }
