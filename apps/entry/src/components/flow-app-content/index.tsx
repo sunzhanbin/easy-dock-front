@@ -549,7 +549,7 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
   useEffect(() => {
     fetchDataSource();
     fetchOptionList(1, "");
-  }, [id]);
+  }, [id, projectId]);
 
   useEffect(() => {
     fetchDataSource();

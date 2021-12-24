@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { Menu } from "antd";
 import classNames from "classnames";
-import { Outlet } from "react-router";
+import { Outlet, useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "@/store";
 import { RouteMap } from "@utils/const";
@@ -11,6 +11,16 @@ import { setCurrentId } from "@/views/workspace/index.slice";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import { findFirstChild, findItem } from "@utils/utils";
 import "@containers/workspace-running/single-nav.style";
+import {
+  CanvasResponseType,
+  CANVAS_ENTRY,
+  SPACE_ENTRY,
+  SubAppType,
+} from "@/consts";
+import {
+  useGetCanvasIdMutation,
+  useGetHoloSceneIdMutation,
+} from "@/http/app-manager.hooks";
 
 const { SubMenu } = Menu;
 
@@ -20,21 +30,55 @@ const SingleNavComponent = ({
   theme,
   selectedKey,
 }: WorkspaceBaseMenuProps) => {
+  const { workspaceId: appId } = useParams();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const navigateFn = useCallback((menu: IMenu) => {
+  const [getCanvasId] = useGetCanvasIdMutation();
+  const [getHoloSceneId] = useGetHoloSceneIdMutation();
+
+  const navigateFn = useCallback(async (menu: IMenu) => {
     const {
       form: {
-        assetConfig: { subAppType },
+        assetConfig: { subAppType, subAppId, url: customUrl },
+        mode,
       },
     } = menu;
-    if (subAppType) {
-      navigate(
-        `./${RouteMap[(subAppType as unknown) as keyof typeof RouteMap]}`
-      );
+    let url = "";
+    if (mode === "current") {
+      // 当前窗口打开
+      if (subAppType && subAppId) {
+        url = `./${RouteMap[(subAppType as unknown) as keyof typeof RouteMap]}`;
+      } else {
+        url = "./iframe";
+      }
+      navigate(url);
     } else {
-      navigate(`./iframe`);
+      // 新窗口打开
+      if (subAppType && subAppId) {
+        if (subAppType === SubAppType.CANVAS) {
+          const res = (await getCanvasId(+subAppId)) as CanvasResponseType;
+          const canvasId = res.data.refId;
+          url = `${CANVAS_ENTRY}/publish/${canvasId}`;
+        } else if (subAppType === SubAppType.SPACE) {
+          const res = (await getHoloSceneId(+subAppId)) as CanvasResponseType;
+          const token = res.data.token!;
+          const id = res.data.refId;
+          url = `${SPACE_ENTRY}/preview.html?token=${token}&id=${id}`;
+        } else if (subAppType === SubAppType.FLOW) {
+          const origin = window.location.origin;
+          if (!appId) {
+            return;
+          }
+          url = `${origin}/app/${appId}/flow-app/${subAppId}`;
+        } else {
+          // 表单子应用和报表子应用暂时没有这两种场景,直接返回
+          return;
+        }
+      } else {
+        url = customUrl!;
+      }
+      window.open(url);
     }
   }, []);
 
@@ -42,14 +86,18 @@ const SingleNavComponent = ({
     const menu = dataSource.find((v) => v.id === key);
     if (menu) {
       const subMenu = findFirstChild(menu);
-      dispatch(setCurrentId(subMenu.id));
       navigateFn(subMenu);
+      if (subMenu && subMenu.form?.mode === "current") {
+        dispatch(setCurrentId(subMenu.id));
+      }
     }
   });
   const handleSubMenuClick = useMemoCallback(({ _, key }) => {
-    dispatch(setCurrentId(key));
     const menu = findItem(key, dataSource);
     navigateFn(menu);
+    if (menu && menu.form?.mode === "current") {
+      dispatch(setCurrentId(key));
+    }
   });
 
   return (

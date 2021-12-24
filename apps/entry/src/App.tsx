@@ -14,6 +14,7 @@ import { auth } from "./consts";
 const AppManager = React.lazy(() => import("@views/app-manager"));
 const AppSetup = React.lazy(() => import("@views/app-setup"));
 const AppPreview = React.lazy(() => import("@views/app-preview"));
+const FlowApp = React.lazy(() => import("@views/flow-app"));
 const AssetCentre = React.lazy(() => import("@views/asset-centre"));
 const TemplateMall = React.lazy(() => import("@views/template-mall"));
 const Workspace = React.lazy(() => import("@views/workspace"));
@@ -50,6 +51,11 @@ const App: React.FC = () => {
               element={<SuspenseWrap render={<AppSetup />} />}
             />
           </Route>
+          {/*因为要支持新窗口打开流程子应用,故加这么一个路由  */}
+          <Route
+            path="app/:appId/flow-app/:subAppId"
+            element={<SuspenseWrap render={<FlowApp />} />}
+          />
           <Route
             path="template-mall"
             element={<SuspenseWrap render={<TemplateMall />} />}
