@@ -3,7 +3,7 @@ import { appManagerBuilder } from "@/http";
 import { RootState } from "@/store";
 import { createSlice, PayloadAction, current } from "@reduxjs/toolkit";
 import { MenuSetupInitialState, MenuSetupForm } from "@utils/types";
-import { deepSearch, filterAssetConfig, findItem } from "@utils/utils";
+import { deepSearch, findItem } from "@utils/utils";
 
 const defaultForm: MenuSetupForm = {
   name: "",

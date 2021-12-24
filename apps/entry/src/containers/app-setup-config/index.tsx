@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Tabs } from "antd";
 import BasicSetupFormComponent from "@containers/app-setup-config/basic-setup-form.component";
 import MenuSetupComponent from "@containers/app-setup-config/menu-setup.component";
@@ -27,11 +27,6 @@ const AppSetupConfig = () => {
       setWorkspaceList([{ id: workspace.id, name: workspace.name }]);
     }
   }, [workspace?.id]);
-
-  // 左边预览点击菜单可能需要关联到这里的菜单设置；
-  // const handleTasChange = useCallback((activeKey: string) => {
-  //   console.log("activeKey", activeKey);
-  // }, []);
 
   return (
     <div className="app-setup-config">
