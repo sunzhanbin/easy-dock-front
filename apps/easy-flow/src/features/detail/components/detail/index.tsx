@@ -1,4 +1,4 @@
-import { forwardRef, memo, useEffect, useState } from 'react';
+import { forwardRef, memo, useEffect, useState, useMemo } from 'react';
 import { FormInstance } from 'antd';
 import classnames from 'classnames';
 import { runtimeAxios } from '@utils';
@@ -16,6 +16,7 @@ import {
   Datasource,
 } from '@type/detail';
 import styles from './index.module.scss';
+import moment from 'moment';
 
 interface DetailProps {
   className?: string;
@@ -49,6 +50,7 @@ const Detail = forwardRef(function Detail(props: DetailProps, ref: React.Forward
 
   useEffect(() => {
     if (!flow || !form) return;
+    console.log(form.value, 'form.meta');
     loadDatasource(
       form.meta,
       flow.node.fieldsAuths,
@@ -58,7 +60,17 @@ const Detail = forwardRef(function Detail(props: DetailProps, ref: React.Forward
       setDatasource(values);
     });
   }, [flow, form]);
-
+  const initialValue = useMemo(() => {
+    const dateFields = form.meta.components.filter(item => item.config.type === 'Date').map(item => item.props.id)
+    const valueMap = {...form.value}
+    Object.values(dateFields).map(field => {
+      if(!Object.keys(form.value).includes(field)){
+        valueMap[field] = moment().valueOf()
+      }
+    })
+    console.log(valueMap, 'valueMap')
+    return valueMap
+  }, [form.value, form.meta]);
   return (
     <div className={classnames(styles.main, className)}>
       <div className={styles.content}>
@@ -72,7 +84,7 @@ const Detail = forwardRef(function Detail(props: DetailProps, ref: React.Forward
               ref={ref}
               data={form.meta}
               projectId={flow.instance.subapp.app.project.id}
-              initialValue={form.value}
+              initialValue={initialValue}
               fieldsAuths={flow.node.fieldsAuths}
               nodeType="detail"
             />
