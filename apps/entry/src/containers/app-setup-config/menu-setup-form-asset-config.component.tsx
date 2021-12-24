@@ -1,10 +1,11 @@
-import { memo, useMemo, useEffect } from "react";
+import { memo, useMemo } from "react";
 import { Form, Input, Select } from "antd";
 import { SubAppInfo, SubAppType, urlRule } from "@/consts";
 import { ImageMap } from "@utils/const";
 import { Icon } from "@common/components";
 import { useFetchDeployedSubAppListQuery } from "@/http";
 import { useParams } from "react-router-dom";
+import { FormInstance } from "antd/es";
 
 type SubAppTypeItem = {
   type: SubAppType;
@@ -12,7 +13,7 @@ type SubAppTypeItem = {
 };
 
 type AssetConfigProps = {
-  form: any;
+  form: FormInstance<any>;
 };
 
 const { Option } = Select;

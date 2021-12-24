@@ -1,6 +1,5 @@
 import React, { memo, useCallback } from "react";
 import { Modal, Form, Input } from "antd";
-import { nameRegexp } from "@utils/const";
 import SelectCard from "@components/select-card";
 import { useAppSelector } from "@/store";
 import { selectProjectId } from "@views/home/index.slice";

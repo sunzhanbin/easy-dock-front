@@ -1,13 +1,15 @@
-import React, { Suspense } from "react";
+import React from "react";
 import { ConfigProvider } from "antd";
 import zh_CN from "antd/es/locale/zh_CN";
 import "moment/locale/zh-cn";
-
 import { Routes, Route } from "react-router-dom";
 import Layout from "@containers/layout";
 import SuspenseWrap from "@components/suspense-wrap";
 import Home from "@views/home";
 import "@/App.scss";
+import cookie from "js-cookie";
+import { registerTheme } from "@enc/theme-scheme/dist/utils.esm";
+import { auth } from "./consts";
 
 const AppManager = React.lazy(() => import("@views/app-manager"));
 const AppSetup = React.lazy(() => import("@views/app-setup"));
@@ -16,9 +18,6 @@ const AssetCentre = React.lazy(() => import("@views/asset-centre"));
 const TemplateMall = React.lazy(() => import("@views/template-mall"));
 const Workspace = React.lazy(() => import("@views/workspace"));
 const NoMatch = React.lazy(() => import("@views/no-match"));
-import cookie from "js-cookie";
-import { registerTheme } from "@enc/theme-scheme/dist/utils.esm";
-import { auth } from "./consts";
 
 auth.setConfig({ server: process.env.REACT_APP_SSO_LOGIN_URL });
 const query = decodeURIComponent(window.location.href.split("?")[1]);
