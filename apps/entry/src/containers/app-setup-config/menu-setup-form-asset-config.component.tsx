@@ -1,4 +1,4 @@
-import { memo, useMemo } from "react";
+import { memo, useMemo, useEffect } from "react";
 import { Form, Input, Select } from "antd";
 import { SubAppInfo, SubAppType, urlRule } from "@/consts";
 import { ImageMap } from "@utils/const";

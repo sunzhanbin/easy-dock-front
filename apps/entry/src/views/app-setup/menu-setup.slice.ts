@@ -3,7 +3,7 @@ import { appManagerBuilder } from "@/http";
 import { RootState } from "@/store";
 import { createSlice, PayloadAction, current } from "@reduxjs/toolkit";
 import { MenuSetupInitialState, MenuSetupForm } from "@utils/types";
-import { deepSearch, findItem } from "@utils/utils";
+import { deepSearch, filterAssetConfig, findItem } from "@utils/utils";
 
 const defaultForm: MenuSetupForm = {
   name: "",
@@ -31,7 +31,15 @@ export const menuSetupSlice = createSlice({
       const currentItem: any = findItem(action.payload, state.menu);
       {
         state.currentId = action.payload;
-        state.menuForm = JSON.parse(JSON.stringify(currentItem))?.form || {};
+        // 由于菜单切换的时候 没有选择子应用的菜单会带上一个菜单的值  此处需要重置
+        let form = JSON.parse(JSON.stringify(currentItem))?.form;
+        form = Object.assign({}, form, {
+          assetConfig: {
+            ...form.assetConfig,
+            subAppId: form.assetConfig.subAppId || undefined,
+          },
+        });
+        state.menuForm = form || {};
       }
     },
     setMenu: (state, action: PayloadAction<any[]>) => {
@@ -41,7 +49,6 @@ export const menuSetupSlice = createSlice({
     setMenuForm: (state, action: PayloadAction<MenuSetupForm>) => {
       const currentItem: any = findItem(state.currentId, state.menu);
       // 为了避免初始值为同一个默认值引用，每次新增都需要保证是新的对象；
-      // console.log(action.payload, "action.payload");
       currentItem.form = JSON.parse(JSON.stringify(action.payload));
       currentItem.name = action.payload.name;
       state.menuForm = action.payload;
@@ -88,13 +95,21 @@ export const menuSetupSlice = createSlice({
       const { parentId } = currentItem;
       if (!parentId) {
         state.menu = state.menu?.filter((item) => item.id !== currentId);
-        return;
+      } else {
+        const parentItem: any = findItem(parentId, state.menu);
+        parentItem.children = parentItem.children?.filter(
+          (item: any) => item.id !== currentId
+        );
       }
-
-      const parentItem: any = findItem(parentId, state.menu);
-      parentItem.children = parentItem.children?.filter(
-        (item: any) => item.id !== currentId
-      );
+      // 删除后定位到第一个菜单的叶子结点
+      const redirectItem = deepSearch(state.menu);
+      if (redirectItem) {
+        state.currentId = redirectItem.id;
+        state.menuForm = JSON.parse(JSON.stringify(redirectItem.form));
+      } else {
+        state.currentId = "";
+        state.menuForm = defaultForm;
+      }
     },
     // 插入菜单；拖拽时预留；
     insert: (state, action: PayloadAction<{ [key: string]: any }>) => {

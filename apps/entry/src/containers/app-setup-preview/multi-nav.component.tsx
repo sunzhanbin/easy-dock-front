@@ -5,7 +5,7 @@ import { useAppDispatch } from "@/store";
 import { setCurrentMenu } from "@/views/app-setup/menu-setup.slice";
 import { findFirstChild, findParentMenu, keyPath } from "@utils/utils";
 import { Menu as IMenu, MenuComponentProps } from "@utils/types";
-import { Icon } from "@common/components";
+import { Icon, Text } from "@common/components";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import UserComponent from "@components//header/user";
 import "@containers/app-setup-preview/multi-nav.style";
@@ -75,7 +75,7 @@ const MultiNavComponent = ({
           >
             {dataSource.map((menu) => (
               <Menu.Item key={menu.id} icon={renderIcon(menu?.form?.icon)}>
-                {menu.name}
+                <Text>{menu.name}</Text>
               </Menu.Item>
             ))}
           </Menu>

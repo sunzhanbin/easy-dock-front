@@ -133,7 +133,7 @@ const AppManagerSider = () => {
             theme="light"
             mode="inline"
             className="menu-list"
-            defaultSelectedKeys={[`${workspaceId}`]}
+            selectedKeys={[`${workspaceId}`]}
             onClick={handleMenuClick}
           >
             {workspaceList?.map((workspace: any) => (

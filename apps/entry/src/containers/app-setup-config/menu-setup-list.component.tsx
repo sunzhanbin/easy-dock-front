@@ -169,11 +169,12 @@ const MenuSetupListComponent = ({
   const dispatch = useAppDispatch();
   const menu = useAppSelector(selectMenu);
   const handleAddMenu = useCallback(async () => {
-    await onBeforeIdChange();
-
+    if (menu.length) {
+      await onBeforeIdChange();
+    }
     const childId = uuid();
     dispatch(add({ currentId: null, childId }));
-  }, []);
+  }, [menu]);
 
   return (
     <div className="menu-setup-list-component">
