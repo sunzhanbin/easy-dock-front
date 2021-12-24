@@ -1,3 +1,5 @@
+import Auth from "@enc/sso";
+
 export * from "./validators";
 export * from "./type";
 
@@ -6,6 +8,8 @@ export const SPACE_ENTRY = process.env.REACT_APP_SPACE_FRONTEND_ENTRY;
 export const FLOW_ENTRY = process.env.REACT_APP_FLOW_FRONTEND_ENTRY;
 export const IOT_ENTRY = process.env.REACT_APP_IOT_FRONTEND_ENTRY;
 export const INTERFACE_ENTRY = process.env.REACT_APP_INTERFACE_FRONTEND_ENTRY;
+
+export const auth = new Auth();
 
 export const TASK_STATE_LIST: { key: number; value: string }[] = [
   { key: 1, value: "进行中" },

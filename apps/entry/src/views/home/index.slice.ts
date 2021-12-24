@@ -4,7 +4,7 @@ import { RootState } from "@/store";
 import { User } from "@utils/types";
 import cookie from "js-cookie";
 
-import Auth from "@enc/sso";
+import { auth } from "@/consts";
 import { axios } from "@utils/fetch";
 
 export interface HomeManagerState {
@@ -27,7 +27,7 @@ export const HomeManagerSlice = createSlice({
       state.projectId = action.payload;
     },
     logout: (state) => {
-      Auth.logout();
+      auth.logout();
       state.userInfo = null;
       delete axios.defaults.headers.auth;
       // 清掉cookie

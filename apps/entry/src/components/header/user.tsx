@@ -1,6 +1,6 @@
 import { memo, useMemo, useCallback } from "react";
-import Auth from "@enc/sso";
 import { Dropdown, Menu } from "antd";
+import { auth } from "@/consts";
 import { useGetUserInfoQuery } from "@/http";
 import { Avatar, Icon } from "@common/components";
 import { logout } from "@views/home/index.slice";
@@ -25,7 +25,7 @@ function HeaderUser() {
   });
 
   const handleLogin = async () => {
-    await Auth.getToken(true, window.EASY_DOCK_BASE_SERVICE_ENDPOINT);
+    await auth.getToken(true, window.EASY_DOCK_BASE_SERVICE_ENDPOINT);
   };
 
   const handleLogout = useCallback(() => {

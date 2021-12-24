@@ -22,6 +22,13 @@ const FlowMicroPage = () => {
     }),
   });
 
+  const appId = useMemo(() => {
+    if (workspaceId) {
+      return +workspaceId;
+    }
+    return 0;
+  }, [workspaceId]);
+
   const appInfo = useMemo(() => {
     const menuInfo = findItem(selectedKey, menu);
     return {
@@ -34,7 +41,11 @@ const FlowMicroPage = () => {
 
   return (
     <div className="content-component">
-      <FlowAppContent id={+appInfo.subAppId} projectId={+projectId} />
+      <FlowAppContent
+        id={+appInfo.subAppId}
+        appId={appId}
+        projectId={+projectId}
+      />
     </div>
   );
 };

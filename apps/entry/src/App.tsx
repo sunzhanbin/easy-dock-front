@@ -16,11 +16,11 @@ const AssetCentre = React.lazy(() => import("@views/asset-centre"));
 const TemplateMall = React.lazy(() => import("@views/template-mall"));
 const Workspace = React.lazy(() => import("@views/workspace"));
 const NoMatch = React.lazy(() => import("@views/no-match"));
-import Auth from "@enc/sso";
 import cookie from "js-cookie";
 import { registerTheme } from "@enc/theme-scheme/dist/utils.esm";
+import { auth } from "./consts";
 
-Auth.setConfig({ server: process.env.REACT_APP_SSO_LOGIN_URL });
+auth.setConfig({ server: process.env.REACT_APP_SSO_LOGIN_URL });
 const query = decodeURIComponent(window.location.href.split("?")[1]);
 const theme = new URLSearchParams(query).get("theme");
 
