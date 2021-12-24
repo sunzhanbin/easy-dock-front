@@ -40,10 +40,11 @@ const MultiNavComponent = ({
     dispatch(setCurrentId(subMenu.id));
     const {
       form: {
-        assetConfig: { subAppType },
+        assetConfig: { subAppType, subAppId },
       },
     } = subMenu;
-    if (subAppType) {
+    console.info(subMenu, "888");
+    if (subAppType && subAppId) {
       navigate(
         `./${RouteMap[(subAppType as unknown) as keyof typeof RouteMap]}`
       );
