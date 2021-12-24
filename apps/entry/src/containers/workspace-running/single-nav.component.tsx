@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { Menu } from "antd";
 import classNames from "classnames";
-import { Outlet } from "react-router";
+import { Outlet, useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "@/store";
 import { RouteMap } from "@utils/const";
@@ -30,6 +30,7 @@ const SingleNavComponent = ({
   theme,
   selectedKey,
 }: WorkspaceBaseMenuProps) => {
+  const { workspaceId: appId } = useParams();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -65,7 +66,11 @@ const SingleNavComponent = ({
           const id = res.data.refId;
           url = `${SPACE_ENTRY}/preview.html?token=${token}&id=${id}`;
         } else if (subAppType === SubAppType.FLOW) {
-          console.info("flow");
+          const origin = window.location.origin;
+          if (!appId) {
+            return;
+          }
+          url = `${origin}/app/${appId}/flow-app/${subAppId}`;
         } else {
           // 表单子应用和报表子应用暂时没有这两种场景,直接返回
           return;
