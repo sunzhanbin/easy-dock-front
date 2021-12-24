@@ -21,6 +21,7 @@ type SelectCardProps = {
   onAdd?: (v: { name: string; isEdit: boolean; id?: number }) => any;
   onDelete?: (v: number) => any;
   selectedId?: string | number;
+  isAdmin?: boolean;
 };
 const SelectCard = ({
   type,
@@ -29,6 +30,7 @@ const SelectCard = ({
   selectedId,
   onAdd,
   onDelete,
+  isAdmin,
 }: SelectCardProps) => {
   const [fieldName, setFieldName] = useState<string>(""); // 新增字段名称
   const [showButton, setShowButton] = useState<boolean>(true); // 判断是否显示新增按钮
@@ -61,13 +63,6 @@ const SelectCard = ({
   const handleFocusSelect = () => {
     setShowDropdown(true);
   };
-
-  // const handleBlur = () => {
-  //   setTimeout(() => {
-  //     setShowDropdown(true);
-  //     console.log("onBlur");
-  //   }, 500);
-  // };
 
   // option支持点击编辑
   const editField = useMemoCallback(
@@ -133,7 +128,7 @@ const SelectCard = ({
 
   const renderMenu = (menu: React.ReactNode) => (
     <div className="dropdown-select-card">
-      {type.key === "project" ? (
+      {type.key === "project" && isAdmin ? (
         <ProjectOption
           onDelete={deleteField}
           onEdit={editField}
@@ -146,49 +141,51 @@ const SelectCard = ({
       ) : (
         menu
       )}
-      <Form form={form} name={type.key} className="footer_select">
-        <Form.Item>
-          {showButton ? (
-            <Form.Item noStyle>
-              <Button
-                className="btn_add_field"
-                size="large"
-                icon={<Icon type="xinzengjiacu" />}
-                onClick={addField}
-              >
-                创建{type.label}
-              </Button>
-            </Form.Item>
-          ) : (
-            <Form.Item noStyle name="fieldName" rules={[nameRule]}>
-              <Input
-                size="large"
-                onChange={handleNameChange}
-                placeholder={`请输入${type.label}名称`}
-                autoFocus
-                suffix={
-                  <>
-                    <Icon
-                      className={classnames(
-                        "tick_icon",
-                        !fieldName ? "disabled" : ""
-                      )}
-                      type="gou"
-                      onClick={handleAddName}
-                    />
+      {((isAdmin && type.key === "project") || type.key !== "project") && (
+        <Form form={form} name={type.key} className="footer_select">
+          <Form.Item>
+            {showButton ? (
+              <Form.Item noStyle>
+                <Button
+                  className="btn_add_field"
+                  size="large"
+                  icon={<Icon type="xinzengjiacu" />}
+                  onClick={addField}
+                >
+                  创建{type.label}
+                </Button>
+              </Form.Item>
+            ) : (
+              <Form.Item noStyle name="fieldName" rules={[nameRule]}>
+                <Input
+                  size="large"
+                  onChange={handleNameChange}
+                  placeholder={`请输入${type.label}名称`}
+                  autoFocus
+                  suffix={
+                    <>
+                      <Icon
+                        className={classnames(
+                          "tick_icon",
+                          !fieldName ? "disabled" : ""
+                        )}
+                        type="gou"
+                        onClick={handleAddName}
+                      />
 
-                    <Icon
-                      className="close"
-                      type="fanhuichexiao"
-                      onClick={handleRevert}
-                    />
-                  </>
-                }
-              />
-            </Form.Item>
-          )}
-        </Form.Item>
-      </Form>
+                      <Icon
+                        className="close"
+                        type="fanhuichexiao"
+                        onClick={handleRevert}
+                      />
+                    </>
+                  }
+                />
+              </Form.Item>
+            )}
+          </Form.Item>
+        </Form>
+      )}
     </div>
   );
 
@@ -226,7 +223,8 @@ const SelectCard = ({
       >
         {fieldList?.map((item: any) => (
           <Option key={item.id} value={item.id} label={item.name}>
-            {type.key !== "project" && (
+            {(type.key !== "project" ||
+              (type.key === "project" && !isAdmin)) && (
               <span className="option-name">{item.name}</span>
             )}
           </Option>

@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import SelectCard from "@components/select-card";
 import {
   useGetProjectListQuery,
@@ -7,8 +7,13 @@ import {
   useEditProjectMutation,
 } from "@/http";
 import { useAppDispatch, useAppSelector } from "@/store";
-import { selectProjectId, setProjectId } from "@views/home/index.slice";
+import {
+  selectProjectId,
+  setProjectId,
+  selectUserInfo,
+} from "@views/home/index.slice";
 import { message } from "antd";
+import { RoleEnum } from "@utils/types";
 
 const SELECT_CARD_TYPE = {
   key: "project",
@@ -24,8 +29,8 @@ const ProjectComponent = () => {
   const [addProject] = useNewProjectMutation();
   const [editProject] = useEditProjectMutation();
   const [deleteProject] = useDeleteProjectMutation();
-
   const projectId = useAppSelector(selectProjectId);
+  const userInfo = useAppSelector(selectUserInfo);
   const handleSelectProject = useCallback(
     (projectId) => {
       dispatch(setProjectId(projectId));
@@ -51,6 +56,10 @@ const ProjectComponent = () => {
     },
     [deleteProject]
   );
+  const isAdmin = useMemo(() => {
+    const power = userInfo?.power || 0;
+    return (power & RoleEnum.ADMIN) === RoleEnum.ADMIN;
+  }, [userInfo]);
   return (
     <SelectCard
       type={SELECT_CARD_TYPE}
@@ -59,6 +68,7 @@ const ProjectComponent = () => {
       selectedId={projectId}
       onAdd={handleNewProject}
       onDelete={handleDeleteProject}
+      isAdmin={isAdmin}
     />
   );
 };

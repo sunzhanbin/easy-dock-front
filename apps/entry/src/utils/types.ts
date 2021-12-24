@@ -8,6 +8,18 @@ export type User = {
   power?: number; //权限值
   name?: string;
 };
+
+export enum RoleEnum {
+  TENEMENT = 1, //普通租户
+  APP_MANAGER = 2, //应用管理员
+  PROJECT_MANAGER = 4, //项目管理员
+  ADMIN = 8, //超管
+}
+export enum AuthEnum {
+  ADMIN = 1, //管理员权限
+  DATA = 2, //数据权限
+  VISIT = 4, //访问权限
+}
 export interface workspaceShape {
   name: string;
   id: number;
