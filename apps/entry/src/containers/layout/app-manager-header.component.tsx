@@ -19,6 +19,7 @@ import {
 } from "@/views/app-setup/basic-setup.slice";
 import AppPreviewModal from "@containers/app-preview-modal";
 import "./app-manager-header.style.scss";
+import { filterAssetConfig } from "@utils/utils";
 
 interface EditHeaderProps {
   className?: string;
@@ -63,6 +64,7 @@ const AppManagerHeader: FC<EditHeaderProps> = ({ className }) => {
       message.error("请添加菜单!");
       return Promise.reject("error");
     }
+    const menus = filterAssetConfig(JSON.parse(JSON.stringify(menuList)));
     const { name, icon, remark, navMode, theme } = basicConfig;
     const params = {
       name,
@@ -71,7 +73,7 @@ const AppManagerHeader: FC<EditHeaderProps> = ({ className }) => {
       remark,
       theme,
       id: +(workspaceId as string),
-      meta: { menuList },
+      meta: { menuList: menus },
     };
     try {
       const res = await saveAppSetup(params);

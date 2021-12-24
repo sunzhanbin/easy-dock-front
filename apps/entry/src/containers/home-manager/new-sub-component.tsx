@@ -52,7 +52,7 @@ const HomeNewSub = () => {
     const { type } = item;
     if (NOT_SHOW_MODAL_SELECT.includes(type)) {
       if (type === HomeSubAppType.DEVICE) {
-        window.open(IOT_ENTRY);
+        window.open(`${IOT_ENTRY}/product`);
       } else if (type === HomeSubAppType.INTERFACE) {
         window.open(`${INTERFACE_ENTRY}/orch`);
       }
@@ -64,7 +64,6 @@ const HomeNewSub = () => {
       name: item.linkName,
       fieldKey: type,
     });
-    console.log(item, "item");
   };
   return (
     <div className="banner">

@@ -10,6 +10,7 @@ import {
   ResponseType,
   SPACE_ENTRY,
   IOT_ENTRY,
+  SubAppType,
 } from "@/consts";
 
 export const getPopupContainer: AbstractTooltipProps["getPopupContainer"] = (
@@ -105,7 +106,7 @@ export const JumpLinkToUrl = async (
   } else if (type === HomeSubAppType.FORM) {
     window.open(`${FLOW_ENTRY}/builder/flow/bpm-editor/${id}/form-design`);
   } else if (type === HomeSubAppType.DEVICE) {
-    window.open(IOT_ENTRY);
+    window.open(`${IOT_ENTRY}/product`);
   } else if (type === HomeSubAppType.INTERFACE) {
     window.open(`${INTERFACE_ENTRY}/orch`);
   } else if (type === HomeSubAppType.DATA_FISH) {
@@ -144,4 +145,34 @@ export const deepSearch = (array: any[]) => {
       return item.children.length ? item.children[0] : item;
     }
   }
+};
+
+// 已有资产/自定义URL保存时过滤只保留一个生效 另一个恢复到初始状态
+export const filterAssetConfig = (menuList: any[]) => {
+  const menu = [...menuList];
+  for (const i in menu) {
+    const menuItem = menu[i];
+    let { form: menuForm } = menuItem;
+    if (menuForm.asset === "exist") {
+      menuForm = Object.assign({}, menuForm, {
+        assetConfig: {
+          ...menuForm.assetConfig,
+          url: "",
+        },
+      });
+    } else {
+      menuForm = Object.assign({}, menuForm, {
+        assetConfig: {
+          ...menuForm.assetConfig,
+          subAppType: SubAppType.FORM,
+          subAppId: undefined,
+        },
+      });
+    }
+    menuItem.form = JSON.parse(JSON.stringify(menuForm));
+    if (menuItem.children && menuItem.children.length) {
+      filterAssetConfig(menuItem.children);
+    }
+  }
+  return menu;
 };

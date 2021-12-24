@@ -42,7 +42,6 @@ const NewSubAppModal = ({ modalInfo, visible, onOk, onCancel }: ModalProps) => {
     try {
       const values = await form.validateFields();
       const type = modalInfo.fieldKey;
-      console.log(values, "values--modal", type);
       onOk && onOk({ ...values, type });
       form.resetFields();
     } catch (e) {

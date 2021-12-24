@@ -116,11 +116,11 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
     }
     return undefined;
   }, [menu, isExistAsset]);
-  const subAppId = useMemo<string>(() => {
+  const subAppId = useMemo<string | undefined>(() => {
     if (isExistAsset) {
-      return menu?.form.assetConfig?.subAppId || "";
+      return menu?.form.assetConfig?.subAppId || undefined;
     }
-    return "";
+    return undefined;
   }, [menu, isExistAsset]);
   const renderIframe = useMemoCallback((url: string, className?: string) => {
     return (
