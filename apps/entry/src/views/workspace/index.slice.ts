@@ -34,7 +34,6 @@ export const workspaceSlice = createSlice({
         } = action.payload;
         state.appId = id;
         state.projectId = projectId;
-        console.log("workspaceDetail", current(state), action.payload);
       }
     );
   },
