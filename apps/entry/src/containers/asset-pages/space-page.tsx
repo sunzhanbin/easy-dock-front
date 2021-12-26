@@ -8,6 +8,7 @@ import {
 import { selectCurrentId } from "@views/workspace/index.slice";
 import { findItem } from "@utils/utils";
 import { SPACE_ENTRY } from "@/consts";
+import "./space-page.style.scss";
 
 const SpaceMicroPage = () => {
   const { workspaceId } = useParams();
