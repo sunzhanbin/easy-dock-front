@@ -1,26 +1,9 @@
-import { useEffect, useMemo } from "react";
+import { useMemo, useRef, useEffect } from "react";
 import { useParams } from "react-router";
-import { useAppSelector } from "@/store";
-import {
-  selectAppId,
-  selectProjectId,
-  selectCurrentId,
-} from "@views/workspace/index.slice";
-import { useWorkspaceDetailQuery } from "@http/app-manager.hooks";
-import FlowAppContent from "@/components/flow-app-content";
-
-import { findItem } from "@utils/utils";
-// import microApp from "@micro-zoe/micro-app";
+import { loadMicroApp } from "qiankun";
 
 const FlowMicroPage = () => {
   const { workspaceId } = useParams();
-  const selectedKey = useAppSelector(selectCurrentId);
-  const projectId = useAppSelector(selectProjectId);
-  const { menu } = useWorkspaceDetailQuery(+(workspaceId as string), {
-    selectFromResult: ({ data }) => ({
-      menu: data?.extension?.meta?.menuList,
-    }),
-  });
 
   const appId = useMemo(() => {
     if (workspaceId) {
@@ -29,25 +12,35 @@ const FlowMicroPage = () => {
     return 0;
   }, [workspaceId]);
 
-  const appInfo = useMemo(() => {
-    const menuInfo = findItem(selectedKey, menu);
-    return {
-      subAppId: menuInfo?.form?.assetConfig?.subAppId || 0,
-      subAppType: menuInfo?.form?.assetConfig?.subAppType,
-    };
-  }, [selectedKey, menu]);
-
   console.log("流程应用", workspaceId);
 
-  return (
-    <div className="content-component">
-      <FlowAppContent
-        id={+appInfo.subAppId}
-        appId={appId}
-        projectId={+projectId}
-      />
-    </div>
-  );
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      const app = loadMicroApp({
+        name: "easy-flow",
+        entry: "http://localhost:8083",
+        container: containerRef.current,
+        props: {
+          basename: `/workspace/${appId}/flow` || "",
+        },
+      });
+
+      // app.mountPromise.finally(() => {
+      //   // 防止页面跳走后才加载成功时setstate的警告;
+      //   if (containerRef.current) {
+      //     setLoading(false);
+      //   }
+      // });
+
+      return () => {
+        app.unmount();
+      };
+    }
+  }, []);
+
+  return <div className="flow-page" ref={containerRef}></div>;
 };
 
 export default FlowMicroPage;

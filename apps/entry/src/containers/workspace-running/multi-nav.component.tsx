@@ -11,6 +11,8 @@ import { RouteMap } from "@utils/const";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import { WorkspaceBaseMenuProps, Menu as IMenu } from "@utils/types";
 import UserComponent from "@components//header/user";
+import { SubAppType } from "@/consts/type";
+
 import "@containers/workspace-running/multi-nav.style";
 
 const { SubMenu } = Menu;
@@ -44,7 +46,13 @@ const MultiNavComponent = ({
       },
     } = subMenu;
     console.info(subMenu, "888");
-    if (subAppType && subAppId) {
+    if (subAppType === SubAppType.FLOW && subAppId) {
+      navigate(
+        `./${
+          RouteMap[(subAppType as unknown) as keyof typeof RouteMap]
+        }/instance/${subAppId}`
+      );
+    } else if (subAppId) {
       navigate(
         `./${RouteMap[(subAppType as unknown) as keyof typeof RouteMap]}`
       );

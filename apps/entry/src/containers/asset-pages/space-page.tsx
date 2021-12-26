@@ -32,8 +32,9 @@ const SpaceMicroPage = () => {
       const { subAppId } = appInfo;
       getHoloSceneId(+subAppId).then((res) => {
         const data = (res as { data: any }).data;
-        const id = data.refId;
-        const token = data.token;
+        const id = data?.refId;
+        const token = data?.token;
+        if (!id || !token) return;
         const src = `${SPACE_ENTRY}/preview.html?token=${token}&id=${id}`;
         setSrc(src);
       });

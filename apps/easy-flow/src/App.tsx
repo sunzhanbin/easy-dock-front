@@ -7,6 +7,7 @@ import StartFlow from './features/detail/start-flow';
 import TaskCenter from './features/task-center';
 import StartDetail from './features/detail/start-detail';
 import ProcessDataManage from './features/process-data-manage';
+import FlowAppContent from './features/flow-app-content';
 import appConfig from '@/init';
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
         path={appConfig.appId ? ROUTES.PROCESS_DATA_MANAGE_WITH_NO_APPID : ROUTES.PROCESS_DATA_MANAGE}
         component={ProcessDataManage}
       ></Route>
+      <Route path={ROUTES.FLOW_INSTANCE_LIST} component={FlowAppContent} ></Route>
     </Switch>
   );
 }

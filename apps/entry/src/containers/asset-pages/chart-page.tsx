@@ -7,19 +7,7 @@ const ChartMicroPage = () => {
 
   console.log("报表应用", workspaceId);
 
-  return (
-    <div className="content-component">
-      <micro-app
-        name="chart"
-        url={`http://localhost:8084`}
-        baseroute={`/workspace/${workspaceId}/chart`}
-        data={{ from: "来自基座的数据" }}
-        // onMounted={() => hideLoading(false)}
-        // destroy
-        // inline
-      />
-    </div>
-  );
+  return <div className="content-component"></div>;
 };
 
 export default ChartMicroPage;

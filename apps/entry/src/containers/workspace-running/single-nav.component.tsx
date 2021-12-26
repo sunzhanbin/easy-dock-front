@@ -47,12 +47,19 @@ const SingleNavComponent = ({
     let url = "";
     if (mode === "current") {
       // 当前窗口打开
-      if (subAppType && subAppId) {
-        url = `./${RouteMap[(subAppType as unknown) as keyof typeof RouteMap]}`;
+      if (subAppType === SubAppType.FLOW && subAppId) {
+        navigate(
+          `./${
+            RouteMap[(subAppType as unknown) as keyof typeof RouteMap]
+          }/instance/${subAppId}`
+        );
+      } else if (subAppId) {
+        navigate(
+          `./${RouteMap[(subAppType as unknown) as keyof typeof RouteMap]}`
+        );
       } else {
-        url = "./iframe";
+        navigate(`./iframe`);
       }
-      navigate(url);
     } else {
       // 新窗口打开
       if (subAppType && subAppId) {
@@ -62,8 +69,9 @@ const SingleNavComponent = ({
           url = `${CANVAS_ENTRY}/publish/${canvasId}`;
         } else if (subAppType === SubAppType.SPACE) {
           const res = (await getHoloSceneId(+subAppId)) as CanvasResponseType;
-          const token = res.data.token!;
-          const id = res.data.refId;
+          const token = res?.data?.token;
+          const id = res?.data?.refId;
+          if (!token || !id) return;
           url = `${SPACE_ENTRY}/preview.html?token=${token}&id=${id}`;
         } else if (subAppType === SubAppType.FLOW) {
           const origin = window.location.origin;

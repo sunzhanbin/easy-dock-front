@@ -36,7 +36,7 @@ const WorkspaceRunning = () => {
               element={<SuspenseWrap render={<CanvasMicroPage />} />}
             ></Route>
             <Route
-              path="flow"
+              path="flow/*"
               element={<SuspenseWrap render={<FlowMicroPage />} />}
             ></Route>
             <Route

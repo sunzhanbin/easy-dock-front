@@ -7,19 +7,7 @@ const FormMicroPage = () => {
 
   console.log("表单应用", workspaceId);
 
-  return (
-    <div className="content-component">
-      <micro-app
-        name="form"
-        url={`http://localhost:8084`}
-        baseroute={`/workspace/${workspaceId}/form`}
-        data={{ from: "来自基座的数据" }}
-        // onMounted={() => hideLoading(false)}
-        // destroy
-        // inline
-      />
-    </div>
-  );
+  return <div className="content-component"></div>;
 };
 
 export default FormMicroPage;
