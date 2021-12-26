@@ -37,7 +37,9 @@ const WorkspaceRunning = () => {
             ></Route>
             <Route
               path="flow/*"
-              element={<SuspenseWrap render={<FlowMicroPage />} />}
+              element={
+                <SuspenseWrap render={<FlowMicroPage mode="running" />} />
+              }
             ></Route>
             <Route
               path="chart"

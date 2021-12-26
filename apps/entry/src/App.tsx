@@ -47,7 +47,7 @@ const App: React.FC = () => {
               element={<SuspenseWrap render={<AppPreview />} />}
             />
             <Route
-              path=":workspaceId"
+              path=":workspaceId/*"
               element={<SuspenseWrap render={<AppSetup />} />}
             />
           </Route>

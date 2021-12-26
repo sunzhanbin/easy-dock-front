@@ -20,7 +20,7 @@ import useMemoCallback from "@common/hooks/use-memo-callback";
 import { selectMenu } from "@/views/app-setup/menu-setup.slice";
 import lightEmptyImage from "@assets/images/light-empty.png";
 import darkEmptyImage from "@assets/images/dark-empty.png";
-import FlowAppContent from "@/components/flow-app-content";
+import FlowMicroPage from "@containers/asset-pages/flow-page";
 
 import "./app-content.style.scss";
 import { selectCurrentWorkspaceId } from "@/views/app-manager/index.slice";
@@ -151,14 +151,7 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
     }
     // 流程子应用内容渲染
     if (subAppType === SubAppType.FLOW && subAppId) {
-      return (
-        <FlowAppContent
-          id={+subAppId}
-          appId={workspaceId || appId}
-          projectId={projectId}
-          theme={themeMap[theme].className}
-        />
-      );
+      return <FlowMicroPage mode="preview" />;
     }
     return empty;
   });
