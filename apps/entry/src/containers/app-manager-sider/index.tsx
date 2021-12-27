@@ -75,9 +75,8 @@ const AppManagerSider = () => {
       if (e) {
         e.stopPropagation();
       }
-      const ret: ResponseType = await deleteSubApp(id);
-      if (ret && ret.error) return;
-      message.success("删除     成功!");
+      await deleteSubApp(id);
+      message.success("删除成功!");
     } catch (e) {
       console.log(e);
     }
