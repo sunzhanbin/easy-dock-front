@@ -1,37 +1,19 @@
-import { memo, FC, useState, useEffect, useMemo, useRef } from "react";
-import {
-  Button,
-  Checkbox,
-  Tooltip,
-  Table,
-  TableProps,
-  Popover,
-  Select,
-  message,
-} from "antd";
-import moment from "moment";
-import classNames from "classnames";
-import { omit, throttle, debounce } from "lodash";
-import {
-  Pagination,
-  ProcessDataManagerParams,
-  SortDirection,
-  TASK_STATE_LIST,
-  UserItem,
-} from "@/consts";
-import { Icon, StateTag, Text } from "@common/components";
+import { memo, FC, useState, useEffect, useMemo, useRef } from 'react';
+import { Button, Checkbox, Tooltip, Table, TableProps, Popover, Select, message } from 'antd';
+import moment from 'moment';
+import classNames from 'classnames';
+import { omit, throttle, debounce } from 'lodash';
+import { Pagination, ProcessDataManagerParams, SortDirection, TASK_STATE_LIST, UserItem } from '@/consts';
+import { Icon, StateTag, Text } from '@common/components';
 
-import useMemoCallback from "@common/hooks/use-memo-callback";
-import useSubapp from "@/hooks/use-subapp";
-import { runtimeAxios, builderAxios, exportFile, axios } from "@/utils";
-import { useHistory, useLocation } from 'react-router-dom';
+import useMemoCallback from '@common/hooks/use-memo-callback';
+import useSubapp from '@/hooks/use-subapp';
+import { runtimeAxios, builderAxios, exportFile, axios } from '@/utils';
+import { useHistory, useLocation , useParams } from 'react-router-dom';
 import { dynamicRoutes } from '@/consts/route';
-import "./index.style.scss";
+import './index.style.scss';
 
 
-import {
-  useParams
-} from "react-router-dom";
 
 interface FlowAppContentProps {
   id: number;
@@ -66,25 +48,27 @@ type FieldItem = {
 
 const { Option } = Select;
 
-const FlowAppContent: FC<FlowAppContentProps> = ({
-  appId,
-  projectId,
-  theme = "light",
-  canOperation = true,
-}) => {
+const FlowAppContent: FC<FlowAppContentProps> = ({ theme = 'light', canOperation = true }) => {
   const history = useHistory();
-  const {subAppId: id} = useParams<any>();
-  
+  const { subAppId: id } = useParams<any>();
+
   const { data: subApp } = useSubapp(String(id));
 
-  let location = useLocation();
+  const projectId = useMemo(() => {
+    if (!subApp) {
+      return 0;
+    }
+    return subApp.app?.project?.id || 0;
+  }, [subApp]);
+
+  const location = useLocation();
 
   useEffect(() => {
-    console.log('location', location)
-  }, [location])
+    console.log('location', location);
+  }, [location]);
 
   useEffect(() => {
-    console.log("data::", subApp);
+    console.log('data::', subApp);
   }, [subApp]);
 
   const [loading, setLoading] = useState<boolean>(true);
@@ -92,12 +76,10 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
   const [dataSource, setDataSource] = useState<any[]>();
   const [optionList, setOptionList] = useState<UserItem[]>([]);
   const [total, setTotal] = useState<number>(0);
-  const [keyword, setKeyword] = useState<string>("");
-  const [userId, setUserId] = useState<string>("");
-  const [subAppName, setSubAppName] = useState<string>("");
-  const [sortDirection, setSortDirection] = useState<SortDirection>(
-    SortDirection.DESC
-  );
+  const [keyword, setKeyword] = useState<string>('');
+  const [userId, setUserId] = useState<string>('');
+  const [subAppName, setSubAppName] = useState<string>('');
+  const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.DESC);
   const [pagination, setPagination] = useState<Pagination>({
     pageSize: 10,
     current: 1,
@@ -110,12 +92,12 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
     [id: string]: { name: string; avatar?: string; id: number | string };
   }>({});
 
-  const baseColumns: TableProps<TableDataBase>["columns"] = useMemo(() => {
+  const baseColumns: TableProps<TableDataBase>['columns'] = useMemo(() => {
     return [
       {
-        key: "state",
-        dataIndex: "state",
-        title: "流程状态",
+        key: 'state',
+        dataIndex: 'state',
+        title: '流程状态',
         width: 100,
         render(_, data: TableDataBase) {
           const { state } = data;
@@ -123,21 +105,21 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
         },
       },
       {
-        key: "starter",
-        dataIndex: "starter",
+        key: 'starter',
+        dataIndex: 'starter',
         width: 100,
-        title: "发起人",
+        title: '发起人',
       },
       {
-        key: "startTime",
-        dataIndex: "startTime",
-        title: "发起时间",
-        sortDirections: ["descend", "ascend"],
+        key: 'startTime',
+        dataIndex: 'startTime',
+        title: '发起时间',
+        sortDirections: ['descend', 'ascend'],
         sorter: true,
-        defaultSortOrder: "descend",
+        defaultSortOrder: 'descend',
         width: 180,
         render(_, data: TableDataBase) {
-          return moment(data.startTime).format("yyyy-MM-DD HH:mm");
+          return moment(data.startTime).format('yyyy-MM-DD HH:mm');
         },
       },
     ];
@@ -149,24 +131,20 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
     if (!member) return null;
     let text;
     if (Array.isArray(member)) {
-      text = member.map((id) => membersCacheRef.current[id].name).join(",");
+      text = member.map((id) => membersCacheRef.current[id].name).join(',');
     } else {
-      text = membersCacheRef.current[member]?.name || "";
+      text = membersCacheRef.current[member]?.name || '';
     }
-    return (
-      <Text className="dynamic-cell" text={String(text)} getContainer={false} />
-    );
+    return <Text className="dynamic-cell" text={String(text)} getContainer={false} />;
   });
 
   const renderDate = useMemoCallback((date: number | [number, number]) => {
     if (!date) return null;
 
     if (Array.isArray(date)) {
-      return date
-        .map((ts) => moment(ts).format("yyyy-MM-DD HH:mm:ss"))
-        .join("至");
+      return date.map((ts) => moment(ts).format('yyyy-MM-DD HH:mm:ss')).join('至');
     }
-    return moment(date).format("yyyy-MM-DD HH:mm:ss");
+    return moment(date).format('yyyy-MM-DD HH:mm:ss');
   });
 
   const renderText = useMemoCallback((value: string | string[]) => {
@@ -175,20 +153,15 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
     }
     let text;
     if (Array.isArray(value)) {
-      text = value.join(",");
+      text = value.join(',');
     } else {
       text = value;
     }
-    return (
-      <Text className="dynamic-cell" text={String(text)} getContainer={false} />
-    );
+    return <Text className="dynamic-cell" text={String(text)} getContainer={false} />;
   });
 
   const renderContent = useMemoCallback(
-    (
-      data: { [k: string]: any }[],
-      componentList: { field: string; type: string }[]
-    ) => {
+    (data: { [k: string]: any }[], componentList: { field: string; type: string }[]) => {
       const nameMap = data.shift() || {};
       const dataSource = data;
       const columns: TableColumn[] = [];
@@ -199,10 +172,10 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
           title: nameMap[field],
           width: 120,
           render(_, data) {
-            if (type === "Member") {
+            if (type === 'Member') {
               const member = data[field];
               return renderMember(member);
-            } else if (type === "Date") {
+            } else if (type === 'Date') {
               const date = data[field];
               return renderDate(date);
             } else {
@@ -214,102 +187,90 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
       });
       return (
         <div className="pop-container">
-          <Table
-            dataSource={dataSource}
-            columns={columns}
-            rowKey="key"
-            pagination={false}
-          ></Table>
+          <Table dataSource={dataSource} columns={columns} rowKey="key" pagination={false}></Table>
         </div>
       );
-    }
+    },
   );
 
   // 获取表格动态的列,源自于流程表单的控件
-  const getDynamicColumns = useMemoCallback(
-    (currentFields: any[]): TableProps<TableDataBase>["columns"] => {
-      return currentFields.map((field) => {
-        const tableKey = `formData.${field.field}`;
-        const tableColumn: typeof baseColumns[number] = {
-          key: tableKey,
-          title: <Text className="dynamic-cell" text={field.name} />,
-          dataIndex: tableKey,
-          width: 150,
+  const getDynamicColumns = useMemoCallback((currentFields: any[]): TableProps<TableDataBase>['columns'] => {
+    return currentFields.map((field) => {
+      const tableKey = `formData.${field.field}`;
+      const tableColumn: typeof baseColumns[number] = {
+        key: tableKey,
+        title: <Text className="dynamic-cell" text={field.name} />,
+        dataIndex: tableKey,
+        width: 150,
+      };
+      if (field.type === 'Tabs') {
+        // eslint-disable-next-line
+        tableColumn.render = (_: string, data: TableDataBase) => {
+          if (!data?.formData) {
+            return null;
+          }
+          const components = (field as any).components;
+          if (!components || components?.length === 0) {
+            return null;
+          }
+          const tabData: any[] = [];
+          const nameMap: { [k: string]: string } = {};
+          const keyList: string[] = [];
+          const componentList: { field: string; type: string }[] = [];
+          components.forEach((com: any) => {
+            nameMap[com.field] = com.name;
+            keyList.push(com.field);
+            componentList.push({ field: com.field, type: com.type });
+          });
+          tabData.push(nameMap);
+          let fieldData = data.formData?.[field.field];
+          if (!fieldData) {
+            return null;
+          }
+          fieldData = Array.isArray(fieldData) ? fieldData : JSON.parse(fieldData as string);
+          const compData = ((fieldData as any[]) || []).map((item) => omit(item, ['__title__']));
+          tabData.push(...compData);
+          return (
+            <Popover
+              placement="topLeft"
+              trigger="click"
+              title={null}
+              content={renderContent(tabData, componentList)}
+              getPopupContainer={() => containerRef.current as HTMLDivElement}
+            >
+              <div className="tab-detail">查看详情</div>
+            </Popover>
+          );
         };
-        if (field.type === "Tabs") {
-          // eslint-disable-next-line
-          tableColumn.render = (_: string, data: TableDataBase) => {
-            if (!data?.formData) {
-              return null;
-            }
-            const components = (field as any).components;
-            if (!components || components?.length === 0) {
-              return null;
-            }
-            const tabData: any[] = [];
-            const nameMap: { [k: string]: string } = {};
-            const keyList: string[] = [];
-            const componentList: { field: string; type: string }[] = [];
-            components.forEach((com: any) => {
-              nameMap[com.field] = com.name;
-              keyList.push(com.field);
-              componentList.push({ field: com.field, type: com.type });
-            });
-            tabData.push(nameMap);
-            let fieldData = data.formData?.[field.field];
-            if (!fieldData) {
-              return null;
-            }
-            fieldData = Array.isArray(fieldData)
-              ? fieldData
-              : JSON.parse(fieldData as string);
-            const compData = ((fieldData as any[]) || []).map((item) =>
-              omit(item, ["__title__"])
-            );
-            tabData.push(...compData);
-            return (
-              <Popover
-                placement="topLeft"
-                trigger="click"
-                title={null}
-                content={renderContent(tabData, componentList)}
-                getPopupContainer={() => containerRef.current as HTMLDivElement}
-              >
-                <div className="tab-detail">查看详情</div>
-              </Popover>
-            );
-          };
-        } else if (field.type === "Member") {
-          tableColumn.render = (_: string, data: TableDataBase) => {
-            if (!data?.formData) {
-              return null;
-            }
-            const member = data.formData[field.field] || field.defaultValue;
-            return renderMember(member as number | number[]);
-          };
-        } else if (field.type === "Date") {
-          tableColumn.render = (_: string, data: TableDataBase) => {
-            if (!data?.formData) {
-              return null;
-            }
-            const date = data.formData[field.field] || field.defaultValue || "";
-            tableColumn.width = Array.isArray(date) ? 360 : 180;
-            return renderDate(date as number | [number, number]);
-          };
-        } else {
-          tableColumn.render = (_: string, data: TableDataBase) => {
-            if (!data?.formData) {
-              return null;
-            }
-            const value =
-              data.formData[field.field] || field.defaultValue || "";
-            return renderText(value as string | string[]);
-          };
-        }
-        return tableColumn;
-      });
-    }
-  );
+      } else if (field.type === 'Member') {
+        tableColumn.render = (_: string, data: TableDataBase) => {
+          if (!data?.formData) {
+            return null;
+          }
+          const member = data.formData[field.field] || field.defaultValue;
+          return renderMember(member as number | number[]);
+        };
+      } else if (field.type === 'Date') {
+        tableColumn.render = (_: string, data: TableDataBase) => {
+          if (!data?.formData) {
+            return null;
+          }
+          const date = data.formData[field.field] || field.defaultValue || '';
+          tableColumn.width = Array.isArray(date) ? 360 : 180;
+          return renderDate(date as number | [number, number]);
+        };
+      } else {
+        tableColumn.render = (_: string, data: TableDataBase) => {
+          if (!data?.formData) {
+            return null;
+          }
+          const value = data.formData[field.field] || field.defaultValue || '';
+          return renderText(value as string | string[]);
+        };
+      }
+      return tableColumn;
+    });
+  });
   // 缓存人员
   const cacheMembers = useMemoCallback(async (data) => {
     // 搜集人员字段的值方便后面拉取人员列表
@@ -326,7 +287,7 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
       Object.keys(item.formData).forEach((key) => {
         const field = fieldsMap[key];
         if (!field) return;
-        if (field.type === "Member") {
+        if (field.type === 'Member') {
           const mValue = item.formData[key];
           if (Array.isArray(mValue)) {
             mValue.forEach((id) => {
@@ -339,10 +300,10 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
               ids.add(mValue);
             }
           }
-        } else if (field.type === "Tabs") {
+        } else if (field.type === 'Tabs') {
           const tabData = item.formData[key];
           const memberKeys = (field as any).components
-            .filter((v: { type: string }) => v.type === "Member")
+            .filter((v: { type: string }) => v.type === 'Member')
             .map((v: { field: string }) => v.field);
           if (Array.isArray(tabData)) {
             tabData.forEach((item) => {
@@ -369,45 +330,41 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
       const params = {
         userIds: Array.from(ids),
       };
-      const userResponse = (await runtimeAxios.post('/user/query/owner',params)) ;
-      (userResponse.data.users || []).forEach(
-        (user: { id: number; userName: string; avatar?: string }) => {
-          membersCacheRef.current[user.id] = {
-            id: user.id,
-            name: user.userName,
-            avatar: user.avatar,
-          };
-        }
-      );
+      const userResponse = await runtimeAxios.post('/user/query/owner', params);
+      (userResponse.data.users || []).forEach((user: { id: number; userName: string; avatar?: string }) => {
+        membersCacheRef.current[user.id] = {
+          id: user.id,
+          name: user.userName,
+          avatar: user.avatar,
+        };
+      });
     }
   });
 
-  const fetchOptionList = useMemoCallback(
-    async (pageNum: number, keyword: string) => {
-      if (projectId) {
-        const params = {
-          size: 20,
-          index: pageNum,
-          keyword,
-          projectId,
-        };
-        const res = (await runtimeAxios.post('/user/search',params)) as any;
-        const list = res.data?.data || [];
-        const total = res.data?.recordTotal;
-        const index = res.data?.pageIndex;
-        setOptionList((val) => {
-          // 从第一页搜索时覆盖原数组
-          if (pageNum === 1) {
-            return list;
-          }
-          return val.concat(list);
-        });
-        // 更新当前页数
-        pageNumberRef.current = index;
-        setTotal(total);
-      }
+  const fetchOptionList = useMemoCallback(async (pageNum: number, keyword: string) => {
+    if (projectId) {
+      const params = {
+        size: 20,
+        index: pageNum,
+        keyword,
+        projectId,
+      };
+      const res = (await runtimeAxios.post('/user/search', params)) as any;
+      const list = res.data?.data || [];
+      const total = res.data?.recordTotal;
+      const index = res.data?.pageIndex;
+      setOptionList((val) => {
+        // 从第一页搜索时覆盖原数组
+        if (pageNum === 1) {
+          return list;
+        }
+        return val.concat(list);
+      });
+      // 更新当前页数
+      pageNumberRef.current = index;
+      setTotal(total);
     }
-  );
+  });
 
   const handleScroll = useMemoCallback(
     throttle((event: React.UIEvent<HTMLDivElement, UIEvent>) => {
@@ -416,22 +373,19 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
 
       const container = event.target as HTMLDivElement;
 
-      if (
-        container.scrollHeight - container.offsetHeight - container.scrollTop <
-        20
-      ) {
+      if (container.scrollHeight - container.offsetHeight - container.scrollTop < 20) {
         if (loading) return;
 
         fetchOptionList(pageNumberRef.current + 1, keyword);
       }
-    }, 300)
+    }, 300),
   );
   const handleSearchUser = useMemoCallback(
     debounce((val) => {
       setKeyword(val);
       pageNumberRef.current = 1;
       fetchOptionList(1, val);
-    }, 500)
+    }, 500),
   );
 
   const fetchDataSource = useMemoCallback(async () => {
@@ -447,13 +401,9 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
       if (userId) {
         params.startUserId = userId;
       }
-      const res = (await runtimeAxios.post(`/task/processDataManager/list`,params)) as { data: any };
+      const res = (await runtimeAxios.post(`/task/processDataManager/list`, params)) as { data: any };
       const dataSource = res?.data;
-      if (
-        canOperation &&
-        Array.isArray(dataSource?.data) &&
-        dataSource?.data.length > 0
-      ) {
+      if (canOperation && Array.isArray(dataSource?.data) && dataSource?.data.length > 0) {
         cacheMembers(dataSource.data);
         setDataSource(dataSource.data);
       }
@@ -466,16 +416,12 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
     }
   });
 
-  const handleTableChange = useMemoCallback(
-    (newPagination, filters, sorter) => {
-      sorter.order === "ascend"
-        ? setSortDirection(SortDirection.ASC)
-        : setSortDirection(SortDirection.DESC);
-      setPagination((pagination) => {
-        return { ...pagination, ...newPagination };
-      });
-    }
-  );
+  const handleTableChange = useMemoCallback((newPagination, filters, sorter) => {
+    sorter.order === 'ascend' ? setSortDirection(SortDirection.ASC) : setSortDirection(SortDirection.DESC);
+    setPagination((pagination) => {
+      return { ...pagination, ...newPagination };
+    });
+  });
 
   const handleStatusChange = useMemoCallback((list) => {
     setStatusList(list);
@@ -494,7 +440,7 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
   const handleExport = useMemoCallback(async () => {
     const { total } = pagination;
     if (total > 10000) {
-      message.info("当前数据多余10000条,只能导出10000条数据!");
+      message.info('当前数据多余10000条,只能导出10000条数据!');
       return;
     }
     const params = {
@@ -509,12 +455,10 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
         sortDirection,
       },
     };
-    axios
-      .post("/task/processDataManager/export", params, { responseType: "blob" })
-      .then((res) => {
-        const type = (res as any).type;
-        exportFile(res, `${subAppName || "file"}.xlsx`, type);
-      });
+    axios.post('/task/processDataManager/export', params, { responseType: 'blob' }).then((res) => {
+      const type = (res as any).type;
+      exportFile(res, `${subAppName || 'file'}.xlsx`, type);
+    });
   });
 
   useEffect(() => {
@@ -523,16 +467,8 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
       const res = (await runtimeAxios.get(`/form/subapp/${id}/all/components`)) as { data: any[] };
       if (Array.isArray(res?.data) && res.data.length > 0) {
         // 不展示的控件类型
-        const excludeTypeList: string[] = [
-          "Attachment",
-          "DescText",
-          "Image",
-          "FlowData",
-          "Iframe",
-        ];
-        const currentFields = (res.data || []).filter(
-          (field) => !excludeTypeList.includes(field.type)
-        );
+        const excludeTypeList: string[] = ['Attachment', 'DescText', 'Image', 'FlowData', 'Iframe'];
+        const currentFields = (res.data || []).filter((field) => !excludeTypeList.includes(field.type));
         const dynamicColumns = getDynamicColumns(currentFields);
         if (dynamicColumns?.length) {
           setTableColumns(() => {
@@ -546,7 +482,8 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
 
   useEffect(() => {
     if (id) {
-      builderAxios.get(`/subapp/${id}`)
+      builderAxios
+        .get(`/subapp/${id}`)
         .then((res: any) => {
           setSubAppName(res.data?.name);
         })
@@ -558,34 +495,17 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
 
   useEffect(() => {
     fetchDataSource();
-    fetchOptionList(1, "");
+    fetchOptionList(1, '');
   }, [id, projectId]);
 
   useEffect(() => {
     fetchDataSource();
-  }, [
-    statusList,
-    userId,
-    pagination.pageSize,
-    pagination.current,
-    sortDirection,
-  ]);
+  }, [statusList, userId, pagination.pageSize, pagination.current, sortDirection]);
 
   return (
-    <div
-      className={classNames(
-        "flow-app-content",
-        theme,
-        !canOperation && "preview"
-      )}
-    >
+    <div className={classNames('flow-app-content', theme, !canOperation && 'preview')}>
       <div className="start">
-        <Button
-          type="primary"
-          size="large"
-          className="button"
-          onClick={handleJumpToStartFlow}
-        >
+        <Button type="primary" size="large" className="button" onClick={handleJumpToStartFlow}>
           发起流程
         </Button>
       </div>
