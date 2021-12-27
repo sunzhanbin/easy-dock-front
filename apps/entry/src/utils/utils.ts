@@ -104,7 +104,7 @@ export const JumpLinkToUrl = async (
   } else if (type === HomeSubAppType.FLOW) {
     window.open(`${FLOW_ENTRY}/builder/flow/bpm-editor/${id}/flow-design`);
   } else if (type === HomeSubAppType.FORM) {
-    window.open(`${FLOW_ENTRY}/builder/flow/bpm-editor/${id}/form-design`);
+    // window.open(`${FLOW_ENTRY}/builder/flow/bpm-editor/${id}/form-design`);
   } else if (type === HomeSubAppType.DEVICE) {
     window.open(`${IOT_ENTRY}/product`);
   } else if (type === HomeSubAppType.INTERFACE) {

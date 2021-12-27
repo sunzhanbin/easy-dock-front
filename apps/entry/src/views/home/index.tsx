@@ -11,21 +11,19 @@ const { Sider, Content, Footer } = Layout;
 const Start = () => {
   return (
     <Layout className="home_layout">
-      <div className="home-content-container">
-        <Content className="home_content">
-          <HomeNewSub />
-          <HeaderAssetData />
-          <HeaderHelp />
-          <Footer className="footer">
-            Copyright©2018 新智认知数字科技股份有限公司 桂公网安备
-            45050302000074号桂ICP备14001670号-4
-          </Footer>
-        </Content>
-        <Sider className="home_sider">
-          <HomeNewAPP />
-          <HomeWorkspaceList />
-        </Sider>
-      </div>
+      <Content className="home_content">
+        <HomeNewSub />
+        <HeaderAssetData />
+        <HeaderHelp />
+        <Footer className="footer">
+          Copyright©2018 新智认知数字科技股份有限公司 桂公网安备
+          45050302000074号桂ICP备14001670号-4
+        </Footer>
+      </Content>
+      <Sider className="home_sider">
+        <HomeNewAPP />
+        <HomeWorkspaceList />
+      </Sider>
     </Layout>
   );
 };

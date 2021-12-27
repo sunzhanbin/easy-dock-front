@@ -1,6 +1,7 @@
 import { useMemo, useRef, useEffect } from "react";
 import { useParams } from "react-router";
 import { loadMicroApp } from "qiankun";
+import { FLOW_ENTRY } from "@/consts";
 
 const FlowMicroPage = ({ mode }: { mode: "preview" | "running" }) => {
   const { workspaceId } = useParams();
@@ -27,7 +28,7 @@ const FlowMicroPage = ({ mode }: { mode: "preview" | "running" }) => {
     if (containerRef.current) {
       const app = loadMicroApp({
         name: "easy-flow",
-        entry: "http://localhost:8083",
+        entry: FLOW_ENTRY as string,
         container: containerRef.current,
         props: {
           basename: baseName || "",
