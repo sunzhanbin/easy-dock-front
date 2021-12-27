@@ -53,15 +53,17 @@ export const basicSetupSlice = createSlice({
           };
         } else {
           const { name, id, remark, navMode, theme, icon } = extension;
-          state.theme = theme;
-          state.navMode = navMode;
+          const defaultNavMode = navMode || NavModeType.MULTI;
+          const defaultTheme = theme || ThemeType.LIGHT;
+          state.theme = defaultTheme;
+          state.navMode = defaultNavMode;
           state.logo = icon;
           state.basicForm = {
             icon,
             name,
-            theme,
             remark,
-            navMode,
+            theme: defaultTheme,
+            navMode: defaultNavMode,
             workspace: id,
           };
         }

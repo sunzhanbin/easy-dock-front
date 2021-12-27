@@ -2,9 +2,10 @@ import { memo } from 'react';
 import { Form, Checkbox, InputNumber, Select } from 'antd';
 import { Icon } from '@common/components';
 import { AuthType, IDueConfig } from '@/type/flow';
+import styles from './index.module.scss';
 import MemberSelector from '../member-selector';
 import TimeoutAction from '../timeout-action';
-import styles from './index.module.scss';
+import BackFillComponent from '../back-fill-component';
 
 export interface DueConfigProps {
   name: string;
@@ -143,9 +144,14 @@ const DueConfig = ({ name, showAction = false }: DueConfigProps) => {
                   <div className={styles.text}>再次通知</div>
                 </div>
                 {showAction && (
-                  <Form.Item noStyle shouldUpdate name={[name, 'action']}>
-                    <TimeoutAction hasRequired={hasRequired} />
-                  </Form.Item>
+                  <>
+                    <Form.Item noStyle shouldUpdate name={[name, 'action']}>
+                      <TimeoutAction hasRequired={hasRequired} />
+                    </Form.Item>
+                    <Form.Item noStyle shouldUpdate name={[name, 'component']}>
+                      <BackFillComponent />
+                    </Form.Item>
+                  </>
                 )}
               </>
             );

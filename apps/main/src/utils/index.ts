@@ -5,7 +5,7 @@ export { default as history } from './history';
 export function getSceneImageUrl(type: keyof typeof SCENE_IAMGES) {
   const publicPath = process.env.PUBLIC_URL;
 
-  return `${publicPath}/images/scenes/${SCENE_IAMGES[type || 'scene1']}.png`;
+  return `${publicPath}/images/scenes/${SCENE_IAMGES[type || 'scene1'] || 'scene1'}.png`;
 }
 
 // 文字超出9个显示...

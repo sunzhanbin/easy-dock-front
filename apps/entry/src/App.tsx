@@ -9,6 +9,7 @@ import Home from "@views/home";
 import "@/App.scss";
 import cookie from "js-cookie";
 import { registerTheme } from "@enc/theme-scheme/dist/utils.esm";
+import Empty from "@common/components/empty";
 import { auth } from "./consts";
 
 const AppManager = React.lazy(() => import("@views/app-manager"));
@@ -32,7 +33,7 @@ if (theme) {
 }
 const App: React.FC = () => {
   return (
-    <ConfigProvider locale={zh_CN} virtual={false}>
+    <ConfigProvider locale={zh_CN} virtual={false} renderEmpty={Empty}>
       <Routes>
         <Route path="/*" element={<Layout />}>
           <Route index element={<Home />} />
