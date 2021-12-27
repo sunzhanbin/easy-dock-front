@@ -31,6 +31,9 @@ const FlowMicroPage = ({ mode }: { mode: "preview" | "running" }) => {
         container: containerRef.current,
         props: {
           basename: baseName || "",
+          extra: {
+            mode: mode,
+          },
         },
       });
 

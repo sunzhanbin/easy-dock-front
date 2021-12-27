@@ -1,19 +1,17 @@
 import { memo, FC, useState, useEffect, useMemo, useRef } from 'react';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { Button, Checkbox, Tooltip, Table, TableProps, Popover, Select, message } from 'antd';
 import moment from 'moment';
 import classNames from 'classnames';
 import { omit, throttle, debounce } from 'lodash';
 import { Pagination, ProcessDataManagerParams, SortDirection, TASK_STATE_LIST, UserItem } from '@/consts';
 import { Icon, StateTag, Text } from '@common/components';
-
+import { extra } from '@/init';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import useSubapp from '@/hooks/use-subapp';
 import { runtimeAxios, builderAxios, exportFile, axios } from '@/utils';
-import { useHistory, useLocation , useParams } from 'react-router-dom';
 import { dynamicRoutes } from '@/consts/route';
 import './index.style.scss';
-
-
 
 interface FlowAppContentProps {
   id: number;
@@ -64,7 +62,7 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ theme = 'light', canOperation
   const location = useLocation();
 
   useEffect(() => {
-    console.log('location', location);
+    console.log('location', location, extra);
   }, [location]);
 
   useEffect(() => {
@@ -495,8 +493,17 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ theme = 'light', canOperation
 
   useEffect(() => {
     fetchDataSource();
-    fetchOptionList(1, '');
-  }, [id, projectId]);
+  }, [id]);
+
+  useEffect(() => {
+    if (projectId) {
+      fetchOptionList(1, '');
+    }
+  }, [projectId]);
+
+  useEffect(() => {
+    console.info(theme, 'theme');
+  }, [theme]);
 
   useEffect(() => {
     fetchDataSource();

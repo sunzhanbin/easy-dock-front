@@ -2,24 +2,30 @@ import 'antd/dist/antd.css';
 import './styles/base.scss';
 
 //import '@enc/theme-scheme/dist/react/antd/antd.4.17-alpha.6.min.css'
-import './styles/base.scss';
+// import './styles/base.scss';
 //import '@enc/theme-scheme/dist/variable.css';
 
-import appConfig from './init';
 import ReactDOM from 'react-dom';
 import { Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { createBrowserHistory } from 'history';
-import { store } from './app/store';
 import AntdProvider from '@common/components/antd-provider';
-import App from './App';
 import cookie from 'js-cookie';
-// @ts-ignore
+import { store } from './app/store';
+import App from './App';
+import appConfig from './init';
 //import { registerTheme } from '@enc/theme-scheme/dist/utils.esm';
 const APP_CONTAINER_ID = '#easy-flow-root';
 
-export async function mount(props?: { container: HTMLElement; basename: string; appId: string }) {
-  const { container, basename = '/', appId } = props || {};
+interface AppProps {
+  container: HTMLElement;
+  basename: string;
+  appId: string;
+  extra?: any;
+}
+
+export async function mount(props?: AppProps) {
+  const { container, basename = '/', appId, extra } = props || {};
   const history = createBrowserHistory({ basename });
 
   const query = decodeURIComponent(window.location.href.split('?')[1]);
@@ -38,6 +44,9 @@ export async function mount(props?: { container: HTMLElement; basename: string; 
     appConfig.appId = appId;
   }
 
+  if (extra) {
+    appConfig.extra = extra;
+  }
   ReactDOM.render(
     <AntdProvider>
       <Provider store={store}>
@@ -54,7 +63,9 @@ if (!appConfig.micro) {
   mount();
 }
 
-export async function bootstrap() {}
+export async function bootstrap() {
+  console.log(111);
+}
 
 export async function unmount(props: { container: HTMLElement }) {
   const { container } = props;
