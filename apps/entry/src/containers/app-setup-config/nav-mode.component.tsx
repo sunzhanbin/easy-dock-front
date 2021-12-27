@@ -23,8 +23,8 @@ const NavMode: FC<NavModeProps> = ({ value, onChange }) => {
   const dispatch = useAppDispatch();
   const modeList = useMemo<ModeItem[]>(() => {
     return [
-      { key: NavModeType.MULTI, label: "双导航", image: BothNav },
       { key: NavModeType.LEFT, label: "左导航", image: LeftNav },
+      { key: NavModeType.MULTI, label: "双导航", image: BothNav },
     ];
   }, []);
   const handleChangeNav = useMemoCallback((nav: NavModeType) => {
