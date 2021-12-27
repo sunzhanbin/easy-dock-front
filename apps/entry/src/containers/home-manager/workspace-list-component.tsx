@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-import { List, Avatar, Skeleton, Tooltip } from "antd";
-import { Icon, Loading } from "@common/components";
+import { List, Avatar, Tooltip } from "antd";
+import { Icon, Loading, Text } from "@common/components";
 import "@containers/home-manager/index.style.scss";
 import { useNavigate } from "react-router-dom";
 import { imgIdToUrl } from "@/utils/utils";
@@ -107,12 +107,12 @@ const HomeWorkspaceList = () => {
                   avatar={<Avatar src={renderIcon(item)} alt={""} />}
                   title={
                     <Tooltip title={item.name}>
-                      <a className="name">{item.name}</a>
+                      <Text>{item.name}</Text>
                     </Tooltip>
                   }
                   description={
                     <Tooltip title={renderName(item)}>
-                      <span>{renderName(item)}</span>
+                      <Text>{renderName(item)}</Text>
                     </Tooltip>
                   }
                 />
