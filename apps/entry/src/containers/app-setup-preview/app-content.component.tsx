@@ -8,6 +8,7 @@ import {
   CANVAS_ENTRY,
   SPACE_ENTRY,
   CanvasResponseType,
+  FLOW_ENTRY,
 } from "@/consts";
 import {
   useGetCanvasIdMutation,
@@ -41,9 +42,6 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
   const menuList = useAppSelector(selectMenu);
   const appId = useAppSelector(selectCurrentWorkspaceId);
   const { workspaceId } = useParams();
-  const { data: workspace } = useWorkspaceDetailQuery(
-    workspaceId ? +workspaceId : appId
-  );
   const [getHoloSceneId] = useGetHoloSceneIdMutation();
   const [getCanvasId] = useGetCanvasIdMutation();
   const [canvasId, setCanvasId] = useState<string>("");
@@ -78,14 +76,8 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
       },
     };
   }, [theme]);
-  const projectId = useMemo<number>(() => {
-    if (workspace?.project?.id) {
-      return workspace.project.id;
-    }
-    return 0;
-  }, [workspace]);
   const empty = useMemo<ReactNode>(() => {
-    const config = themeMap[theme];
+    const config = themeMap[theme] || themeMap[ThemeType.LIGHT];
     return (
       <div className={classNames("empty-container", config.className)}>
         <img src={config.imageUrl} alt="empty" className="image" />
@@ -93,7 +85,7 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
         <div className="tip">在右侧面板添加一个吧~</div>
       </div>
     );
-  }, [isEmpty, themeMap]);
+  }, [isEmpty, themeMap, theme]);
   // 是否是自定义url
   const isCustomUrl = useMemo<boolean>(() => {
     return !!(
@@ -151,7 +143,11 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
     }
     // 流程子应用内容渲染
     if (subAppType === SubAppType.FLOW && subAppId) {
-      return <FlowMicroPage mode="preview" />;
+      const url = `${FLOW_ENTRY}/app/${
+        workspaceId || appId
+      }/process/instance/${subAppId}`;
+      // return <FlowMicroPage mode="preview" />;
+      return renderIframe(url, "flow-container");
     }
     return empty;
   });
