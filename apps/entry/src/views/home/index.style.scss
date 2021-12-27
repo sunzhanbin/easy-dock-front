@@ -1,25 +1,11 @@
 .home_layout {
-  position: relative;
-  height: calc(100vh - 60px);
-
-  .home-content-container {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-  }
+  height: 993px;
+  overflow-y: hidden;
   .home_content {
-    width: calc(100% - 360px);
-    position: absolute;
-    transform-origin: left top;
     display: flex;
     flex-direction: column;
   }
   .home_sider {
-    position: absolute;
-    right: 0;
     flex: 0 0 360px !important;
     width: 360px !important;
     max-width: 360px !important;

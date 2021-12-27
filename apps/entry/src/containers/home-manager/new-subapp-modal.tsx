@@ -5,7 +5,7 @@ import { useAppSelector } from "@/store";
 import { selectProjectId } from "@views/home/index.slice";
 import "@components/select-card/index.style.scss";
 import { useFetchWorkspaceListQuery, useAddWorkspaceMutation } from "@/http";
-import { nameRule } from "@/consts";
+import { APP_TYPE, nameRule } from "@/consts";
 
 type ModalProps = {
   modalInfo: { title: string; name: string; fieldKey: number };
@@ -25,7 +25,13 @@ const NewSubAppModal = ({ modalInfo, visible, onOk, onCancel }: ModalProps) => {
   const [addWorkspace] = useAddWorkspaceMutation();
   const { workspaceList } = useFetchWorkspaceListQuery(projectId, {
     selectFromResult: ({ data }) => ({
-      workspaceList: data?.filter(Boolean),
+      workspaceList: data?.filter(Boolean).filter((item: any) => {
+        // 一个工作区只能关联一个应用
+        if (modalInfo.fieldKey === APP_TYPE) {
+          return !item.extension && item;
+        }
+        return item;
+      }),
     }),
   });
   const handleNewSubApp = useCallback(
