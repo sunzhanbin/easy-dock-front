@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { List, Avatar, Skeleton, Tooltip } from "antd";
-import InfiniteScroll from "react-infinite-scroll-component";
-import { Icon } from "@common/components";
+import { Icon, Loading } from "@common/components";
 import "@containers/home-manager/index.style.scss";
 import { useNavigate } from "react-router-dom";
 import { imgIdToUrl } from "@/utils/utils";
@@ -91,14 +90,10 @@ const HomeWorkspaceList = () => {
           <Icon className="icon" type="jinrujiantou" />
         </p>
       </div>
-      <div className="workspace_list" id="scrollableDiv">
-        <InfiniteScroll
-          dataLength={data.length}
-          next={loadMoreData}
-          hasMore={false}
-          loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
-          scrollableTarget="scrollableDiv"
-        >
+      <div className="workspace_list">
+        {loading ? (
+          <Loading />
+        ) : (
           <List
             className="list"
             grid={{
@@ -124,7 +119,7 @@ const HomeWorkspaceList = () => {
               </List.Item>
             )}
           />
-        </InfiniteScroll>
+        )}
       </div>
     </div>
   );
