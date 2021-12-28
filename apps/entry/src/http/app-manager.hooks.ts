@@ -148,6 +148,7 @@ export const appManagerBuilder = baseFetch.injectEndpoints({
           method: "put",
           data: params,
         } as any),
+      invalidatesTags: [{ type: "Workspace", id: "DETAIL" }],
     }),
   }),
   // overrideExisting: false,
