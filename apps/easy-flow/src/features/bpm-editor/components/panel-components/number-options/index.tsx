@@ -49,7 +49,8 @@ const NumberOption = (props: NumberOptionProps) => {
     if (!fieldNumber) return;
     const { defaultNumber } = fieldNumber;
     setType(defaultNumber?.type || 'custom');
-    setCustomData(defaultNumber?.customData || undefined);
+    const number_default = (defaultNumber?.customData || defaultNumber?.customData === 0) ? defaultNumber?.customData: undefined;
+    setCustomData(number_default);
     setCalcType(defaultNumber?.calcType);
     setCalculateData(defaultNumber?.calculateData || []);
   }, [fieldNumber]);
