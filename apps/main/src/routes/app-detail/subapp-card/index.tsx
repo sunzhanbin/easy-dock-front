@@ -6,11 +6,11 @@ import { axios, getShorterText } from '@/utils';
 import { Popconfirm, Icon } from '@components';
 import classNames from 'classnames';
 import { useHistory } from 'react-router-dom';
-import { FlowMicroApp, ChartMicroApp } from '@/consts';
+import { FlowMicroApp } from '@/consts';
 import { message, Tooltip } from 'antd';
-import AppModel from '../app-model';
 import { stopPropagation } from '@consts';
 import useMemoCallback from '@common/hooks/use-memo-callback';
+import AppModel from '../app-model';
 
 const CardContainer = styled.div`
   position: relative;
@@ -155,13 +155,22 @@ const Card: FC<{
   type: 1 | 2;
   className?: string;
   version?: { id: number; remark: string; version: string } | null | undefined;
-  onChange: Function;
+  onChange: () => void;
 }> = ({ id, containerId, name, status, type, className, version, onChange }) => {
   const [isShowOperation, setIsShowOperation] = useState<boolean>(false);
   const [isShowModel, setIsShowModel] = useState<boolean>(false);
   const [position, setPosition] = useState<'left' | 'right'>('left');
   const history = useHistory();
   const containerRef = useRef<HTMLDivElement>(null);
+  const typeMap = useMemo(() => {
+    return {
+      1: '大屏',
+      2: '流程',
+      3: '报表',
+      4: '空间',
+      5: '表单',
+    };
+  }, []);
   const statusObj: StatusMap = useMemo(() => {
     // 未发布(没有版本信息)的子应用为编排中状态
     if (!version) {
@@ -176,9 +185,8 @@ const Card: FC<{
       : { className: 'stoped', text: '已停用', status: -1 };
   }, [status, version]);
   const handleJump = useCallback(() => {
-    if (type === 1) {
-      // history.push(`${ChartMicroApp.route}/chart-editor/${id}/chart-design`);
-    } else {
+    if (type === 2) {
+      // 只有流程类子应用才跳转
       history.push(`${FlowMicroApp.route}/bpm-editor/${id}/form-design`);
     }
   }, [id, type, history]);
@@ -313,7 +321,7 @@ const Card: FC<{
         </div>
         <div className="footer">
           <div className={classNames('status', statusObj.className)}>{statusObj.text}</div>
-          <div className="type">{type === 1 ? '大屏' : '流程'}</div>
+          <div className="type">{typeMap[type]}</div>
         </div>
         {isShowModel && (
           <AppModel
