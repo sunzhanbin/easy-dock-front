@@ -17,7 +17,8 @@ interface ContainerProps {
   nodeType: string;
 }
 
-export const Container = React.memo(function containerFn({ children, rules, fieldName, form, type, nodeType }: ContainerProps) {
+// eslint-disable-next-line
+export const Container = React.memo(({ children, rules, fieldName, form, type, nodeType }: ContainerProps) => {
   const visibleRules = useMemo(() => rules?.filter((item) => item?.subtype === EventType.Visible), [rules]);
   const [visible, setVisible] = useState<boolean>(true);
   const [reFreshKey, setReFreshKey] = useState<number>(0);
@@ -81,8 +82,8 @@ export const Container = React.memo(function containerFn({ children, rules, fiel
     </ContainerProvider>
   );
 });
-
-const wrapContainer = React.memo(function wrapContainerFn({ children, rules, fieldName, form, type, nodeType }: ContainerProps) {
+// eslint-disable-next-line
+const wrapContainer = React.memo(({ children, rules, fieldName, form, type, nodeType }: ContainerProps) => {
   const isLeaf = Array.isArray(rules);
 
   return (
