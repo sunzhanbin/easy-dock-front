@@ -31,6 +31,7 @@ module.exports = {
     config.output.libraryTarget = 'umd';
     config.output.jsonpFunction = `webpackJsonp_${name}`;
     config.output.globalObject = 'window';
+    config.output.publicPath = process.env.REACT_APP_IS_RELATIVE === 'true' ? '/main/' : '/';
 
     // 路径别名, 和 ./paths.json对应
     config.resolve.alias = {
