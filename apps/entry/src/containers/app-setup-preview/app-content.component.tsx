@@ -142,7 +142,7 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
     }
     // 流程子应用内容渲染
     if (subAppType === SubAppType.FLOW && subAppId) {
-      const url = `${MAIN_ENTRY}/app/${
+      const url = `${MAIN_ENTRY}/main/app/${
         workspaceId || appId
       }/process/instance/${subAppId}?theme=${theme}&mode=preview`;
       return renderIframe(url, "flow-container");
