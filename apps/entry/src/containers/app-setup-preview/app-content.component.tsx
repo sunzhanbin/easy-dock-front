@@ -22,6 +22,7 @@ import lightEmptyImage from "@assets/images/light-empty.png";
 import darkEmptyImage from "@assets/images/dark-empty.png";
 import { selectCurrentWorkspaceId } from "@/views/app-manager/index.slice";
 import "./app-content.style.scss";
+import { TASK_CENTER_TYPE } from "@utils/const";
 
 interface AppContentProps {
   selectedKey: string;
@@ -99,7 +100,7 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
       menu.form.assetConfig?.subAppId
     );
   }, [menu]);
-  const subAppType = useMemo<SubAppType | undefined>(() => {
+  const subAppType = useMemo(() => {
     if (isExistAsset) {
       return menu?.form.assetConfig.subAppType;
     }
@@ -144,6 +145,12 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
         workspaceId || appId
       }/process/instance/${subAppId}?theme=${theme}&mode=preview`;
       return renderIframe(url, "flow-container");
+    }
+    // 任务中心内容渲染
+    if (subAppType === TASK_CENTER_TYPE && subAppId) {
+      const url = `${FLOW_ENTRY}/app/${workspaceId}/process/task-center`;
+      console.log(url, "url");
+      return renderIframe(url, "space-container");
     }
     return empty;
   });

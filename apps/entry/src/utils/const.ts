@@ -52,6 +52,7 @@ import ChartImage from "@assets/images/chart.png";
 import FormImage from "@assets/images/form.png";
 import FlowImage from "@assets/images/flow.png";
 import SpaceImage from "@assets/images/space.png";
+import TaskImage from "@assets/images/home/no-app.png";
 
 export const ImageMap: { [k: number]: string } = {
   [HomeSubAppType.CANVAS]: CanvasImage,
@@ -63,6 +64,7 @@ export const ImageMap: { [k: number]: string } = {
   [HomeSubAppType.DATA]: DataImage,
   [HomeSubAppType.DATA_FISH]: DataFishImage,
   [HomeSubAppType.INTERFACE]: InterfaceImage,
+  [HomeSubAppType.TASK_CENTER]: TaskImage,
 };
 
 export const NameMap: { [k: number]: string } = {
@@ -75,7 +77,10 @@ export const NameMap: { [k: number]: string } = {
   [HomeSubAppType.DATA]: "数据",
   [HomeSubAppType.DATA_FISH]: "模型",
   [HomeSubAppType.INTERFACE]: "接口",
+  [HomeSubAppType.TASK_CENTER]: "任务中心",
 };
+
+export const TASK_CENTER_TYPE = 10;
 
 // 数据构建
 const CREATE_DATA_LIST = [

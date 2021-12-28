@@ -42,7 +42,12 @@ export const homeManageBuilder = baseFetch.injectEndpoints({
       invalidatesTags: [{ type: "Project", id: "LIST" }],
     }),
     getRecentList: build.mutation({
-      query: (projectId: number) => `project/list/recent/${projectId}`,
+      query: (params: { id: number; size: number }) =>
+        ({
+          url: `project/list/recent/${params.id}`,
+          method: "get",
+          params,
+        } as any),
     }),
   }),
 });
