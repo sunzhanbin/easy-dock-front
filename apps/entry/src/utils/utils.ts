@@ -4,7 +4,7 @@ import { axios } from "@utils/fetch";
 import { AbstractTooltipProps } from "antd/lib/tooltip";
 import {
   CANVAS_ENTRY,
-  FLOW_ENTRY,
+  MAIN_ENTRY,
   HomeSubAppType,
   INTERFACE_ENTRY,
   ResponseType,
@@ -102,9 +102,9 @@ export const JumpLinkToUrl = async (
     if (!spaceData) return;
     window.open(`${SPACE_ENTRY}/#/scene/${spaceData.refId}`);
   } else if (type === HomeSubAppType.FLOW) {
-    window.open(`${FLOW_ENTRY}/builder/flow/bpm-editor/${id}/flow-design`);
+    window.open(`${MAIN_ENTRY}/builder/flow/bpm-editor/${id}/flow-design`);
   } else if (type === HomeSubAppType.FORM) {
-    // window.open(`${FLOW_ENTRY}/builder/flow/bpm-editor/${id}/form-design`);
+    // window.open(`${MAIN_ENTRY}/builder/flow/bpm-editor/${id}/form-design`);
   } else if (type === HomeSubAppType.DEVICE) {
     window.open(`${IOT_ENTRY}/product`);
   } else if (type === HomeSubAppType.INTERFACE) {

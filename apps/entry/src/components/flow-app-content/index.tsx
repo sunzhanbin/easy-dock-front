@@ -14,7 +14,7 @@ import classNames from "classnames";
 import { omit, throttle, debounce } from "lodash";
 import { axios } from "@utils/fetch";
 import {
-  FLOW_ENTRY,
+  MAIN_ENTRY,
   Pagination,
   ProcessDataManagerParams,
   SortDirection,
@@ -477,7 +477,7 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
   });
 
   const handleJumpToStartFlow = useMemoCallback(() => {
-    window.open(`${FLOW_ENTRY}/app/${appId}/process/start/flow/${id}`);
+    window.open(`${MAIN_ENTRY}/app/${appId}/process/start/flow/${id}`);
   });
 
   const handleRefresh = useMemoCallback(debounce(fetchDataSource, 200));
