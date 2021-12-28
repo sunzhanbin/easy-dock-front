@@ -29,7 +29,7 @@ const InputNumberComponent = (
       prop.max = numlimit.numrange.max;
     }
     const el = document.getElementById('edit-form');
-    if (defaultNumber?.customData) {
+    if (defaultNumber?.customData !== null && defaultNumber?.customData !== undefined) {
       prop.defaultValue = +defaultNumber?.customData;
       if (el?.contains(containerRef?.current)) {
         prop.value = +defaultNumber?.customData;

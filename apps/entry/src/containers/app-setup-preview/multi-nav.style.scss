@@ -99,6 +99,7 @@ $dark-content-background-color: #202023;
         }
         &:hover {
           background: rgba(24, 39, 67, 0.04);
+          color: $primary-color !important;
         }
       }
     }
