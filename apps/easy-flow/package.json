@@ -68,6 +68,12 @@
     "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },
+  "eslintConfig": {
+    "extends": "react-app",
+    "rules": {
+      "@typescript-eslint/consistent-type-assertions": "off"
+    }
+  },
   "browserslist": {
     "production": [
       "last 1 chrome version",

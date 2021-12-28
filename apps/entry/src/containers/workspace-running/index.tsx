@@ -24,6 +24,9 @@ const IframeMicroPage = React.lazy(
 const SpaceMicroPage = React.lazy(
   () => import("@containers/asset-pages/space-page")
 );
+const TaskCenterMicroPage = React.lazy(
+  () => import("@containers/asset-pages/task-center-page")
+);
 
 const WorkspaceRunning = () => {
   return (
@@ -56,6 +59,10 @@ const WorkspaceRunning = () => {
             <Route
               path="iframe"
               element={<SuspenseWrap render={<IframeMicroPage />} />}
+            ></Route>
+            <Route
+              path="task-center"
+              element={<SuspenseWrap render={<TaskCenterMicroPage />} />}
             ></Route>
           </Route>
         </Route>
