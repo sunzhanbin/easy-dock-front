@@ -1,12 +1,7 @@
 import React, { memo, FC, ReactNode, useMemo, useRef, useState } from "react";
 import classNames from "classnames";
 import { message } from "antd";
-import { SubAppInfo, SubAppType } from "@/consts";
-import FormImage from "@assets/images/form.png";
-import FlowImage from "@assets/images/flow.png";
-import ChartImage from "@assets/images/chart.png";
-import CanvasImage from "@assets/images/canvas.png";
-import SpaceImage from "@assets/images/space.png";
+import { SubAppInfo } from "@/consts";
 import { Icon, Text, PopoverConfirm } from "@common/components";
 import { JumpLinkToUrl } from "@utils/utils";
 import useMemoCallback from "@common/hooks/use-memo-callback";
@@ -17,6 +12,7 @@ import {
   useGetHoloSceneIdMutation,
   useGetCanvasIdMutation,
 } from "@/http/app-manager.hooks";
+import { ImageMap, NameMap } from "@utils/const";
 import AppModal from "./app-modal.component";
 import "./app-card.style.scss";
 
@@ -32,24 +28,6 @@ const AppCard: FC<AppCardProps> = ({ subApp, className }) => {
   const [deleteSubApp] = useDeleteSupAppMutation();
   const [getHoloSceneId] = useGetHoloSceneIdMutation();
   const [getCanvasId] = useGetCanvasIdMutation();
-  const imageMap = useMemo<{ [k in SubAppType]: string }>(() => {
-    return {
-      [SubAppType.CANVAS]: CanvasImage,
-      [SubAppType.CHART]: ChartImage,
-      [SubAppType.FORM]: FormImage,
-      [SubAppType.FLOW]: FlowImage,
-      [SubAppType.SPACE]: SpaceImage,
-    };
-  }, []);
-  const typeMap = useMemo<{ [k in SubAppType]: string }>(() => {
-    return {
-      [SubAppType.CANVAS]: "大屏",
-      [SubAppType.CHART]: "报表",
-      [SubAppType.FORM]: "表单",
-      [SubAppType.FLOW]: "流程",
-      [SubAppType.SPACE]: "空间",
-    };
-  }, []);
   const cardRef = useRef<HTMLDivElement>(null);
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -185,7 +163,7 @@ const AppCard: FC<AppCardProps> = ({ subApp, className }) => {
       onClick={handleJumpTo}
     >
       <div className="app-card-base">
-        <img src={imageMap[type]} alt="icon" className="app-image" />
+        <img src={ImageMap[type]} alt="icon" className="app-image" />
         <div>
           <Text text={name} className="name" />
           <div className="app-card-more">
@@ -193,7 +171,7 @@ const AppCard: FC<AppCardProps> = ({ subApp, className }) => {
               {version?.version && (
                 <span className="version">{version?.version}</span>
               )}
-              <span className="type">{typeMap[type]}</span>
+              <span className="type">{NameMap[type]}</span>
             </div>
           </div>
         </div>

@@ -21,7 +21,7 @@ const IframeMicroPage = () => {
 
   return (
     <div className="iframe-page">
-      <iframe className="iframe" src={url} frameBorder={0}></iframe>
+      <iframe className="iframe" src={url} frameBorder={0} />
     </div>
   );
 };

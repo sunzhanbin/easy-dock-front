@@ -1,5 +1,5 @@
 import { NavModeType, SubAppType, ThemeType } from "@/consts";
-import { SCENE_IAMGES } from "@utils/const";
+import { SCENE_IAMGES, TASK_CENTER_TYPE } from "@utils/const";
 
 export type User = {
   avatar: string; // 头像
@@ -86,7 +86,7 @@ export interface MenuSetupForm {
   mode: "blank" | "current";
   asset: "exist" | "custom";
   assetConfig: {
-    subAppType?: SubAppType;
+    subAppType?: SubAppType | 10;
     subAppId?: string | undefined;
     url?: string;
   };

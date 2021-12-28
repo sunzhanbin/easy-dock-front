@@ -8,6 +8,7 @@ import {
   CANVAS_ENTRY,
   SPACE_ENTRY,
   CanvasResponseType,
+  MAIN_ENTRY,
 } from "@/consts";
 import {
   useGetCanvasIdMutation,
@@ -19,9 +20,9 @@ import useMemoCallback from "@common/hooks/use-memo-callback";
 import { selectMenu } from "@/views/app-setup/menu-setup.slice";
 import lightEmptyImage from "@assets/images/light-empty.png";
 import darkEmptyImage from "@assets/images/dark-empty.png";
-import FlowMicroPage from "@containers/asset-pages/flow-page";
-
+import { selectCurrentWorkspaceId } from "@/views/app-manager/index.slice";
 import "./app-content.style.scss";
+import { TASK_CENTER_TYPE } from "@utils/const";
 
 interface AppContentProps {
   selectedKey: string;
@@ -37,6 +38,8 @@ type ThemeMap = {
 
 const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
   const menuList = useAppSelector(selectMenu);
+  const appId = useAppSelector(selectCurrentWorkspaceId);
+  const { workspaceId } = useParams();
   const [getHoloSceneId] = useGetHoloSceneIdMutation();
   const [getCanvasId] = useGetCanvasIdMutation();
   const [canvasId, setCanvasId] = useState<string>("");
@@ -97,7 +100,7 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
       menu.form.assetConfig?.subAppId
     );
   }, [menu]);
-  const subAppType = useMemo<SubAppType | undefined>(() => {
+  const subAppType = useMemo(() => {
     if (isExistAsset) {
       return menu?.form.assetConfig.subAppType;
     }
@@ -138,7 +141,16 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
     }
     // 流程子应用内容渲染
     if (subAppType === SubAppType.FLOW && subAppId) {
-      return <FlowMicroPage mode="preview" />;
+      const url = `${MAIN_ENTRY}/app/${
+        workspaceId || appId
+      }/process/instance/${subAppId}?theme=${theme}&mode=preview`;
+      return renderIframe(url, "flow-container");
+    }
+    // 任务中心内容渲染
+    if (subAppType === TASK_CENTER_TYPE && subAppId) {
+      const url = `${MAIN_ENTRY}/app/${workspaceId}/process/task-center`;
+      console.log(url, "url");
+      return renderIframe(url, "space-container");
     }
     return empty;
   });

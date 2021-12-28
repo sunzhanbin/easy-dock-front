@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import { FormInstance, message } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { AsyncButton, Loading, PopoverConfirm } from '@common/components';
-import { runtimeAxios, validateTabs } from '@utils';
+import { runtimeAxios, validateTabs , uploadFile } from '@utils';
 import { dynamicRoutes } from '@consts';
 import { loadDatasource, deleteDraft } from '@apis/detail';
 import { StartNode } from '@type/flow';
@@ -12,11 +12,12 @@ import { FormMeta, FormValue, Datasource } from '@type/detail';
 import Form from '@components/form-engine';
 import Header from '@components/header';
 import useSubapp from '@/hooks/use-subapp';
-import styles from './index.module.scss';
 import titleImage from '@/assets/title.png';
 import leftImage from '@assets/background_left.png';
 import rightImage from '@assets/background_right.png';
-import { uploadFile } from '@utils';
+
+import { useLocation } from 'react-router-dom';
+import styles from './index.module.scss';
 
 type DataType = {
   processMeta: StartNode;
@@ -27,6 +28,7 @@ type DataType = {
 function StartFlow() {
   const { subAppId } = useParams<{ subAppId: string }>();
   const history = useHistory();
+  const location = useLocation();
   const [data, setData] = useState<DataType>();
   const [loading, setLoading] = useState(true);
   const { data: subApp } = useSubapp(subAppId);
@@ -38,6 +40,14 @@ function StartFlow() {
       return subApp.app?.project?.id;
     }
   }, [subApp]);
+
+  const mode = useMemo(() => {
+    if (location.search) {
+      const params = new URLSearchParams(location.search.slice(1));
+      return params.get('mode') || 'running';
+    }
+    return 'running';
+  }, [location.search]);
 
   useEffect(() => {
     if (!subApp) return;
@@ -147,22 +157,24 @@ function StartFlow() {
       {loading && <Loading />}
 
       <Header className={styles.header} backText="发起流程">
-        <div className={styles.btns}>
-          {showDelete && (
-            <PopoverConfirm title="确认删除" content="确认删除该草稿吗?" onConfirm={handleDeleteDraft}>
-              <AsyncButton disabled={!data} className={styles.save} size="large">
-                删除
-              </AsyncButton>
-            </PopoverConfirm>
-          )}
-          <AsyncButton disabled={!data} className={styles.save} onClick={handleSave} size="large">
-            保存
-          </AsyncButton>
+        {mode === 'running' && (
+          <div className={styles.btns}>
+            {showDelete && (
+              <PopoverConfirm title="确认删除" content="确认删除该草稿吗?" onConfirm={handleDeleteDraft}>
+                <AsyncButton disabled={!data} className={styles.save} size="large">
+                  删除
+                </AsyncButton>
+              </PopoverConfirm>
+            )}
+            <AsyncButton disabled={!data} className={styles.save} onClick={handleSave} size="large">
+              保存
+            </AsyncButton>
 
-          <AsyncButton disabled={!data} className={styles.submit} onClick={handleSubmit} size="large">
-            提交
-          </AsyncButton>
-        </div>
+            <AsyncButton disabled={!data} className={styles.submit} onClick={handleSubmit} size="large">
+              提交
+            </AsyncButton>
+          </div>
+        )}
       </Header>
       <div className={styles.background}>
         <div className={styles.left} style={{ backgroundImage: `url(${leftImage})` }}></div>

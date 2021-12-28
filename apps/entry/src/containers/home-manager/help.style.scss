@@ -30,17 +30,15 @@
     border: 0 none;
   }
   .list {
-
     .icon-detail {
       font-size: 12px;
-
+      position: absolute;
+      bottom: 0;
+      left: 12px;
     }
 
     .ant-row {
       padding: 0 24px;
-      .ant-list-item-meta-content {
-        margin-bottom: 24px;
-      }
       .ant-list-item-meta-description {
         font-size: 12px;
         color: rgba(24, 31, 67, 0.5);
@@ -59,12 +57,17 @@
       .ant-col {
         padding-left: 12px !important;
         padding-right: 12px !important;
+        >.ant-list-item {
+          height: 82px;
+          border-right: 1px solid rgba(24, 31, 67, 0.08);
+          margin-bottom: 60px;
+        }
       }
-      .ant-list-item {
-        border-right: 1px solid rgba(24, 31, 67, 0.08);
-        margin-bottom: 50px;
+      @media screen and (min-height: 768px) and (max-height: 1000px) {
+        .ant-list-item {
+          margin-bottom: 24px !important;
+        }
       }
-
       >div:nth-child(4n) {
         .ant-list-item {
           border: 0 none;

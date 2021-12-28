@@ -1,4 +1,4 @@
-@import "@common/styles/var.scss";
+@import '@common/styles/var.scss';
 
 $light-text-color: #181f43;
 $dark-text-color: #fff;
@@ -81,6 +81,29 @@ $dark-content-background-color: #202023;
         .ant-select {
           border-radius: 4px;
           background-color: $dark-text-color;
+        }
+      }
+      & > .operation {
+        & > .export {
+          color: $dark-text-color;
+        }
+      }
+    }
+    & > .table-container {
+      .ant-pagination-options-size-changer {
+        color: rgba($dark-text-color, 0.66);
+        &.ant-select-focused {
+          .ant-select-selector {
+            background-color: transparent;
+          }
+        }
+      }
+      .ant-select.ant-select-single:not(.ant-select-customize-input) {
+        .ant-select-selector {
+          &:hover,
+          &:active {
+            background-color: transparent;
+          }
         }
       }
     }
