@@ -1,7 +1,7 @@
 import { memo, useMemo } from "react";
 import { Form, Input, Select } from "antd";
-import { HomeSubAppType, SubAppInfo, SubAppType, urlRule } from "@/consts";
-import { ImageMap } from "@utils/const";
+import { HomeSubAppType, SubAppInfo, urlRule } from "@/consts";
+import { NameMap } from "@utils/const";
 import { Icon } from "@common/components";
 import { useFetchDeployedSubAppListQuery } from "@/http";
 import { useParams } from "react-router-dom";
@@ -60,12 +60,10 @@ const MenuSetupFormAssetConfigComponent = ({ form }: AssetConfigProps) => {
           >
             {(subAppList || []).map((v: SubAppInfo) => (
               <Option key={v.id} value={v.id} className="sub-app-option">
-                <img
-                  className="sub-app-icon"
-                  src={ImageMap[v.type]}
-                  alt="logo"
-                />
-                <span>{v.name}</span>
+                <>
+                  <span className="sub-app-type">{NameMap[v.type]}</span>
+                  <span className="sub-app-name">{v.name}</span>
+                </>
               </Option>
             ))}
           </Select>

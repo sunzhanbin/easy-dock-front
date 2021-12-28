@@ -128,12 +128,17 @@ const MultiNavComponent = ({
     return <Icon type={icon} />;
   });
 
+  console.log(selectedKey, "selectedKey");
   return (
     <div className={classNames("multi-nav-component", theme)}>
       <div className="header">
         <div className="extra">{extra}</div>
         <div className="menu">
-          <Menu mode="horizontal" onClick={handleMainMenuClick}>
+          <Menu
+            selectedKeys={[selectedKey]}
+            mode="horizontal"
+            onClick={handleMainMenuClick}
+          >
             {dataSource.map((menu) => (
               <Menu.Item key={menu.id} icon={renderIcon(menu?.form?.icon)}>
                 {menu.name}

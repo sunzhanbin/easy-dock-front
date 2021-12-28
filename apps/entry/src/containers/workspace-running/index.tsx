@@ -37,33 +37,33 @@ const WorkspaceRunning = () => {
             <Route
               path="canvas"
               element={<SuspenseWrap render={<CanvasMicroPage />} />}
-            ></Route>
+            />
             <Route
               path="flow/*"
               element={
                 <SuspenseWrap render={<FlowMicroPage mode="running" />} />
               }
-            ></Route>
+            />
             <Route
               path="chart"
               element={<SuspenseWrap render={<ChartMicroPage />} />}
-            ></Route>
+            />
             <Route
               path="space"
               element={<SuspenseWrap render={<SpaceMicroPage />} />}
-            ></Route>
+            />
             <Route
               path="form"
               element={<SuspenseWrap render={<FormMicroPage />} />}
-            ></Route>
+            />
             <Route
               path="iframe"
               element={<SuspenseWrap render={<IframeMicroPage />} />}
-            ></Route>
+            />
             <Route
               path="task-center"
               element={<SuspenseWrap render={<TaskCenterMicroPage />} />}
-            ></Route>
+            />
           </Route>
         </Route>
       </Routes>

@@ -52,8 +52,18 @@
       }
     }
     .ant-select-selection-item {
-      svg {
-        font-size: 20px;
+      display: inline-flex;
+      align-items: center;
+      .sub-app-type {
+        color: rgba(24, 31, 67, 0.75);
+        margin-right: 8px;
+        font-size: 12px;
+        display: inline-block;
+        height: 24px;
+        line-height: 24px;
+        padding: 0 6px;
+        border-radius: 3px;
+        border: 1px solid rgba(24, 31, 67, 0.12);
       }
     }
   }
@@ -90,13 +100,16 @@
   .ant-select-item-option-content {
     display: inline-flex;
     align-items: center;
-    .sub-app-icon {
-      width: 20px;
-      height: 20px;
-      margin-right: 4px;
-    }
-    .sub-app-name {
-
+    .sub-app-type {
+      color: rgba(24, 31, 67, 0.75);
+      margin-right: 8px;
+      font-size: 12px;
+      display: inline-block;
+      height: 24px;
+      line-height: 24px;
+      padding: 0 6px;
+      border-radius: 3px;
+      border: 1px solid rgba(24, 31, 67, 0.12);
     }
   }
 

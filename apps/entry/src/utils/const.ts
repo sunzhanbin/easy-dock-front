@@ -78,7 +78,7 @@ export const NameMap: { [k: number]: string } = {
   [HomeSubAppType.DATA]: "数据",
   [HomeSubAppType.DATA_FISH]: "模型",
   [HomeSubAppType.INTERFACE]: "接口",
-  [HomeSubAppType.TASK_CENTER]: "任务中心",
+  [HomeSubAppType.TASK_CENTER]: "默认",
 };
 
 export const TASK_CENTER_TYPE = 10;
