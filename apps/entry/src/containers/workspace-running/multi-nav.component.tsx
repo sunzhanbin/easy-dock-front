@@ -128,7 +128,6 @@ const MultiNavComponent = ({
     return <Icon type={icon} />;
   });
 
-  console.log(selectedKey, "selectedKey");
   return (
     <div className={classNames("multi-nav-component", theme)}>
       <div className="header">
@@ -169,7 +168,11 @@ const MultiNavComponent = ({
                       );
                     } else {
                       return (
-                        <Menu.Item key={menu.id} onClick={handleSubMenuClick}>
+                        <Menu.Item
+                          key={menu.id}
+                          icon={renderIcon(menu?.form?.icon)}
+                          onClick={handleSubMenuClick}
+                        >
                           {menu.name}
                         </Menu.Item>
                       );

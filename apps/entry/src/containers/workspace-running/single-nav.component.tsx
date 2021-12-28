@@ -23,6 +23,7 @@ import {
   useGetCanvasIdMutation,
   useGetHoloSceneIdMutation,
 } from "@/http/app-manager.hooks";
+import { Icon } from "@common/components";
 
 const { SubMenu } = Menu;
 
@@ -38,6 +39,13 @@ const SingleNavComponent = ({
 
   const [getCanvasId] = useGetCanvasIdMutation();
   const [getHoloSceneId] = useGetHoloSceneIdMutation();
+
+  const renderIcon = useMemoCallback((icon) => {
+    if (!icon || icon === "wukongjian") {
+      return null;
+    }
+    return <Icon type={icon} />;
+  });
 
   const navigateFn = useCallback(async (menu: IMenu) => {
     const {
@@ -137,7 +145,11 @@ const SingleNavComponent = ({
                     );
                   } else {
                     return (
-                      <Menu.Item key={menu.id} onClick={handleSubMenuClick}>
+                      <Menu.Item
+                        key={menu.id}
+                        icon={renderIcon(menu.form?.icon)}
+                        onClick={handleSubMenuClick}
+                      >
                         {menu.name}
                       </Menu.Item>
                     );
