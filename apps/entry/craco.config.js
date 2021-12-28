@@ -1,6 +1,6 @@
 const babelInclude = require("@dealmore/craco-plugin-babel-include");
 const FileManagerPlugin = require("filemanager-webpack-plugin");
-const { whenDev } = require("@craco/craco");
+const { whenProd } = require("@craco/craco");
 const path = require("path");
 const { name, version } = require("./package.json");
 
@@ -102,7 +102,7 @@ module.exports = {
         ...webpackConfig.resolve.extensions,
         ...[".scss", ".css"],
       ];
-      if (!whenDev) {
+      whenProd(() => {
         webpackConfig.plugins = webpackConfig.plugins.concat(
           new FileManagerPlugin({
             events: {
@@ -147,8 +147,7 @@ module.exports = {
             runTasksInSeries: true,
           })
         );
-      }
-      // console.log("webpackConfig", { webpackConfig });
+      });
       return webpackConfig;
     },
   },
