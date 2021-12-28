@@ -7,6 +7,7 @@ const { TextArea } = Input;
 const TextareaComponent = (props: TextAreaProps) => {
   const { defaultValue, onChange } = props;
   const propList = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/ban-types
     const prop: { [k: string]: string | number | boolean | undefined | Function } = {
       rows: 4,
       maxLength: 1000, //最大长度200 v1.0.0暂定

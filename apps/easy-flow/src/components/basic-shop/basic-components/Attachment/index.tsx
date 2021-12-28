@@ -3,8 +3,8 @@ import { Upload, message } from 'antd';
 import { UploadChangeParam, UploadFile, UploadProps } from 'antd/lib/upload/interface';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { Icon } from '@common/components';
-import styles from './index.module.scss';
 import { downloadFile } from '@utils';
+import styles from './index.module.scss';
 
 type FileValue = {
   type: 'Attachment';

@@ -7,16 +7,16 @@ import { AllComponentType, Datasource, EventType, FormRuleItem } from '@type';
 import { AuthType, FieldAuthsMap } from '@type/flow';
 import { FormMeta, FormValue } from '@type/detail';
 import { analysisFormChangeRule, runtimeAxios } from '@/utils';
-import LabelContent from '../label-content';
-import styles from './index.module.scss';
 import { Loading } from '@common/components';
 import { DataConfig, ParamSchem } from '@/type/api';
 import PubSub from 'pubsub-js';
-import Container from './container';
-import { convertFormRules, validateRules } from './utils';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { debounce, omit } from 'lodash';
 import { getFilesType } from '@apis/form';
+import { convertFormRules, validateRules } from './utils';
+import Container from './container';
+import styles from './index.module.scss';
+import LabelContent from '../label-content';
 
 type FieldsVisible = { [fieldId: string]: boolean };
 

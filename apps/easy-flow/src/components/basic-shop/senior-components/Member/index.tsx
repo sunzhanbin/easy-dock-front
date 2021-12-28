@@ -30,11 +30,13 @@ const Member = (
     }, 500),
   );
   const propList = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/ban-types
     const prop: { [k: string]: string | boolean | Function | ReactNode } = {
       size: 'large',
       showSearch: showSearch as boolean,
       placeholder: '请选择',
       suffixIcon: <Icon type="xiala" />,
+      // eslint-disable-next-line @typescript-eslint/ban-types
       onChange: onChange as Function,
     };
     if (multiple) {

@@ -4,8 +4,6 @@ import { Rule, FormInstance } from 'antd/lib/form';
 import { AllComponentType, CompConfig, Datasource, EventType } from '@/type';
 import useLoadComponents from '@/hooks/use-load-components';
 import { fetchDataSource } from '@/apis/detail';
-import LabelContent from '../../../label-content';
-import styles from './index.module.scss';
 import { AuthType, FieldAuthsMap } from '@/type/flow';
 import { useContainerContext } from '@/components/form-engine/context';
 import PubSub from 'pubsub-js';
@@ -14,6 +12,8 @@ import { formRulesItem, formRulesReturn, validateRules } from '@/components/form
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { getFilesTypeList } from '@/components/form-engine';
 import { omit } from 'lodash';
+import styles from './index.module.scss';
+import LabelContent from '../../../label-content';
 
 interface FormListProps {
   fields: CompConfig[];

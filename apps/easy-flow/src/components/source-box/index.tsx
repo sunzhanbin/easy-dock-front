@@ -1,15 +1,15 @@
-import { AllComponentType, FormField, MoveConfig, RadioField, TConfigItem } from '@/type';
-import { Tooltip } from 'antd';
-import LabelContent from '../label-content';
-import { Icon, Loading } from '@common/components';
 import React, { memo, FC, useMemo, useCallback, useRef, useEffect } from 'react';
-import { exchange, comAdded, comDeleted } from '@/features/bpm-editor/form-design/formdesign-slice';
+import { Icon, Loading } from '@common/components';
+import { Tooltip } from 'antd';
+import { AllComponentType, FormField, MoveConfig, RadioField, TConfigItem } from '@/type';
+import { exchange, comAdded, comDeleted , moveUpAction, moveDownAction } from '@/features/bpm-editor/form-design/formdesign-slice';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import useLoadComponents from '@/hooks/use-load-components';
-import styles from './index.module.scss';
 import { formDesignSelector, selectedFieldSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
-import { moveUpAction, moveDownAction } from '@/features/bpm-editor/form-design/formdesign-slice';
+
 import useDataSource from '@/hooks/use-data-source';
+import styles from './index.module.scss';
+import LabelContent from '../label-content';
 
 type Component = React.FC | React.ComponentClass;
 const SourceBox: FC<{

@@ -3,13 +3,13 @@ import { Form, Input, FormInstance, Tooltip, Popconfirm } from 'antd';
 import classNames from 'classnames';
 import { Icon, Text } from '@common/components';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import styles from './index.module.scss';
 import { CompConfig } from '@/type';
-import FormList from './form-list';
 import { FieldAuthsMap } from '@/type/flow';
 import { omit } from 'lodash';
 import PubSub from 'pubsub-js';
 import { nameRegexp } from '@/utils';
+import FormList from './form-list';
+import styles from './index.module.scss';
 
 interface TabProps {
   fieldName: string;

@@ -2,9 +2,9 @@ import { memo, useContext, useMemo } from 'react';
 import { Form, Input, Button, Select } from 'antd';
 import classnames from 'classnames';
 import { Icon } from '@common/components';
+import { ParamType } from '@type/api';
 import { ParamName, FieldMap } from './components';
 import DataContext from './context';
-import { ParamType } from '@type/api';
 import styles from './index.module.scss';
 import { AutoSelector } from './components/map';
 

@@ -1,8 +1,8 @@
+import { memo, FC, useState, useEffect, useMemo } from 'react';
 import { loadSrc } from '@/apis/detail';
 import { useContainerContext } from '@/components/form-engine/context';
 import { urlRegex } from '@/features/bpm-editor/form-design/validate';
 import { UrlOptionItem } from '@/type';
-import { memo, FC, useState, useEffect, useMemo } from 'react';
 import styles from './index.module.scss';
 
 const Iframe: FC<{ url: UrlOptionItem; height?: number }> = ({ url, height }) => {

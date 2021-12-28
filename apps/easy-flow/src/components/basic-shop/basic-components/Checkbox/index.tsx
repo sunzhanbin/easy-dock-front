@@ -9,8 +9,10 @@ const CheckboxComponent = (props: CheckboxGroupProps & { options: OptionItem[] }
     return (options || []).map((item: OptionItem) => item.value);
   }, [options]);
   const propList = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/ban-types
     const prop: { [k: string]: string | boolean | string[] | Function } = {
       options: optionList,
+      // eslint-disable-next-line @typescript-eslint/ban-types
       onChange: onChange as Function,
     };
     const result = Object.assign({}, props, prop);

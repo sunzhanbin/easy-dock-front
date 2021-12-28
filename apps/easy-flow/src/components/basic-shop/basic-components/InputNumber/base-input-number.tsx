@@ -2,8 +2,8 @@ import { memo, useMemo, useRef, useEffect } from 'react';
 import { InputNumber } from 'antd';
 import { Icon } from '@common/components';
 import { InputNumberProps } from 'antd/lib/input-number';
-import styles from './index.module.scss';
 import { InputNumberField } from '@type';
+import styles from './index.module.scss';
 
 const InputNumberComponent = (
   props: InputNumberProps & {
@@ -16,6 +16,7 @@ const InputNumberComponent = (
   const { onChange, decimal, numlimit, defaultNumber } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const propList = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/ban-types
     const prop: { [k: string]: string | number | boolean | undefined | Function } = {
       size: 'large',
       placeholder: '请输入',

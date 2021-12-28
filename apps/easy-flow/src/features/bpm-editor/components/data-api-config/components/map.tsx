@@ -1,8 +1,8 @@
 import { memo, useContext, useMemo } from 'react';
 import { Form, Input, Dropdown, Menu, Select } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import DataContext from '../context';
 import styles from './index.module.scss';
+import DataContext from '../context';
 
 interface FieldMapProps {
   name: (string | number)[];

@@ -1,9 +1,9 @@
 import { memo, useCallback, useMemo } from 'react';
 import { Tooltip, Button } from 'antd';
 import classnames from 'classnames';
-import FormList from './form-list';
 import { Icon } from '@common/components';
 import { fieldRule, FormField } from '@/type';
+import FormList from './form-list';
 import styles from './index.module.scss';
 
 interface EditProps {

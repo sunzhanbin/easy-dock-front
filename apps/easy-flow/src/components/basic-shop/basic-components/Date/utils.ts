@@ -220,6 +220,7 @@ const getDisabledDateRule = ({ rules, current, formValue, id, range, format }: R
     //   (range.min && current.valueOf() < moment(range.min).valueOf()) ||
     //   (range.max && current.valueOf() > moment(range.max).valueOf());
   }
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   return rules1 || rules2 || rules3 || rules4 || rules5 || rule6 || rule7;
 };

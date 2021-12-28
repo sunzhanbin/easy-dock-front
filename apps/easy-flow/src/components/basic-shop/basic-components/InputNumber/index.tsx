@@ -1,8 +1,8 @@
 import { memo, useMemo } from 'react';
-import BaseInputNumber from './base-input-number';
 import { InputNumberProps } from 'antd/lib/input-number';
 import EventHoc from '@/components/form-engine/eventHoc';
 import { useContainerContext } from '@/components/form-engine/context';
+import BaseInputNumber from './base-input-number';
 import { getCalculateNum } from './utils';
 
 const InputNumberContainer = (props: InputNumberProps & { [key: string]: any }) => {

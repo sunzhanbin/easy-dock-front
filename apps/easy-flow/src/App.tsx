@@ -1,5 +1,6 @@
 import { memo } from 'react';
 import { Switch, Route } from 'react-router-dom';
+import appConfig from '@/init';
 import { ROUTES } from './consts';
 import BpmEditor from './features/bpm-editor';
 import TaskDetail from './features/detail/task-detail';
@@ -8,7 +9,6 @@ import TaskCenter from './features/task-center';
 import StartDetail from './features/detail/start-detail';
 import ProcessDataManage from './features/process-data-manage';
 import FlowAppContent from './features/flow-app-content';
-import appConfig from '@/init';
 
 function App() {
   return (

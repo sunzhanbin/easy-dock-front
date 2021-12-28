@@ -32,7 +32,7 @@ export const dynamicRoutes = {
     return staticRoutes.TASK_CENTER.replace(/:appId/, String(appId));
   },
   toFlowInstanceList(subAppId: number) {
-    return staticRoutes.FLOW_INSTANCE_LIST.replace(/:subAppId/, String(subAppId))
+    return staticRoutes.FLOW_INSTANCE_LIST.replace(/:subAppId/, String(subAppId));
   }
 };
 

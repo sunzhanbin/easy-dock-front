@@ -16,11 +16,13 @@ const SelectComponent = (
   const { defaultValue, multiple, showSearch, options, onChange } = props;
 
   const propList = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/ban-types
     const prop: { [k: string]: string | boolean | Function | ReactNode } = {
       size: 'large',
       showSearch: showSearch as boolean,
       placeholder: '请选择',
       suffixIcon: <Icon type="xiala" />,
+      // eslint-disable-next-line @typescript-eslint/ban-types
       onChange: onChange as Function,
     };
     if (multiple) {
@@ -29,7 +31,7 @@ const SelectComponent = (
     if (defaultValue) {
       prop.defaultValue = defaultValue;
     }
-    const {options, ...others} = props
+    const {options, ...others} = props;
     const result = Object.assign({}, others, prop);
     delete result.fieldName;
     delete result.colSpace;

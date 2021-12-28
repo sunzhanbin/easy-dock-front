@@ -1,5 +1,5 @@
-import PubSub from 'pubsub-js';
 import { useCallback } from 'react';
+import PubSub from 'pubsub-js';
 import { useContainerContext } from './context';
 
 const EventHoc = ({ children }: { children: React.ReactNode }) => {

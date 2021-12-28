@@ -8,6 +8,7 @@ import { getPopupContainer } from '@utils';
 const DateComponent = (props: DatePickerProps & { onChange: (value?: number) => void }) => {
   const { format, defaultValue, value, onChange, disabledDate } = props;
   const propList = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/ban-types
     const prop: { [k: string]: string | boolean | Function | Moment | ReactNode } = {
       size: 'large',
       suffixIcon: <Icon type="riqi" />,
@@ -17,7 +18,7 @@ const DateComponent = (props: DatePickerProps & { onChange: (value?: number) => 
         onChange && onChange(val ? moment(time).valueOf() : undefined);
       },
     };
-    let formatStr: string = '';
+    let formatStr = '';
     if (format === 'yyyy-MM-DD HH:mm:ss') {
       prop.showTime = true;
       formatStr = 'yyyy-MM-DD HH:mm:ss';

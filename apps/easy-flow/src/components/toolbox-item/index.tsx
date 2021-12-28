@@ -2,11 +2,11 @@ import { FC, memo, useCallback } from 'react';
 import classNames from 'classnames';
 import { useAppDispatch, useAppSelector } from '@/app/hooks';
 import { configSelector, formDesignSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
-import { comAdded, comInserted } from '../../features/bpm-editor/form-design/formdesign-slice';
 import { FieldType, FormField } from '@/type';
 import { Icon } from '@common/components';
-import styles from './index.module.scss';
 import { useDrag } from 'react-dnd';
+import styles from './index.module.scss';
+import { comAdded, comInserted } from '../../features/bpm-editor/form-design/formdesign-slice';
 
 interface DropResult {
   rowIndex: number;

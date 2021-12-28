@@ -1,7 +1,7 @@
 import { memo } from 'react';
-import BaseInput from './base-input';
 import { InputProps } from 'antd/lib/input';
 import EventHoc from '@/components/form-engine/eventHoc';
+import BaseInput from './base-input';
 
 const InputComponent = (props: InputProps & { unique: boolean } & { [key: string]: any }) => {
   return (

@@ -1,4 +1,5 @@
 import { nameRegexp } from '@/utils';
+
 const fieldName = {
   key: 'fieldName',
   defaultValue: '',

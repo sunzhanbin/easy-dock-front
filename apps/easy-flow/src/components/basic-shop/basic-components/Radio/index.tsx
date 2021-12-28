@@ -11,6 +11,7 @@ const RadioComponent = (props: RadioGroupProps & { options: OptionItem[] }) => {
 
   const propList = useMemo(() => {
     return Object.assign({}, props, {
+      // eslint-disable-next-line @typescript-eslint/ban-types
       onChange: onChange as Function,
       options: optionList,
     });

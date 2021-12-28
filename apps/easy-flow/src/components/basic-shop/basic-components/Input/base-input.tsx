@@ -5,6 +5,7 @@ import { InputProps } from 'antd/lib/input';
 const InputComponent = (props: InputProps & { unique: boolean }) => {
   const { defaultValue, unique, onChange } = props;
   const propList = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/ban-types
     const prop: { [k: string]: string | boolean | number | undefined | null | Function } = {
       size: 'large',
       placeholder: '请输入',

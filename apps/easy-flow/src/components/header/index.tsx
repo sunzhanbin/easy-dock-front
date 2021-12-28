@@ -9,6 +9,7 @@ interface DetailHeaderProps {
   backClassName?: string;
   children?: ReactNode;
   className?: string;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   goBack?: Function;
 }
 
