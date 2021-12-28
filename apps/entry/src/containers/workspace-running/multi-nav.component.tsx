@@ -83,7 +83,7 @@ const MultiNavComponent = ({
           if (!appId) {
             return;
           }
-          url = `${origin}/app/${appId}/flow-app/${subAppId}`;
+          url = `${origin}/main/app/${appId}/flow-app/${subAppId}`;
         } else {
           // 表单子应用和报表子应用暂时没有这两种场景,直接返回
           return;

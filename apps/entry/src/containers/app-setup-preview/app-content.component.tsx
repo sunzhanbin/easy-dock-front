@@ -8,7 +8,7 @@ import {
   CANVAS_ENTRY,
   SPACE_ENTRY,
   CanvasResponseType,
-  FLOW_ENTRY,
+  MAIN_ENTRY,
 } from "@/consts";
 import {
   useGetCanvasIdMutation,
@@ -141,14 +141,14 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
     }
     // 流程子应用内容渲染
     if (subAppType === SubAppType.FLOW && subAppId) {
-      const url = `${FLOW_ENTRY}/app/${
+      const url = `${MAIN_ENTRY}/app/${
         workspaceId || appId
       }/process/instance/${subAppId}?theme=${theme}&mode=preview`;
       return renderIframe(url, "flow-container");
     }
     // 任务中心内容渲染
     if (subAppType === TASK_CENTER_TYPE && subAppId) {
-      const url = `${FLOW_ENTRY}/app/${workspaceId}/process/task-center`;
+      const url = `${MAIN_ENTRY}/app/${workspaceId}/process/task-center`;
       console.log(url, "url");
       return renderIframe(url, "space-container");
     }

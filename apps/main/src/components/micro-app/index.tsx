@@ -26,7 +26,7 @@ function MicroApp(props: MicroAppProps) {
         entry: entry.replace(/\/$/, '') + `?ts=${Date.now()}`,
         container: containerRef.current,
         props: {
-          basename: basename || matchedRoute,
+          basename: basename || `/main${matchedRoute}`,
           ...extra,
         },
       });
