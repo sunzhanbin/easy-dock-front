@@ -23,18 +23,18 @@ function randomString() {
   return Math.random().toString(36).slice(2);
 }
 
-export function uuid(group: number = 3) {
+export function uuid(group = 3) {
   const strarr = Array.from(new Array(group)).map(() => randomString());
 
   return strarr.join('-');
 }
 
-export function fielduuid(group: number = 3) {
+export function fielduuid(group = 3) {
   // 应后端要求字段id不能以数字开头
   return `flow-node-${uuid(group)}`;
 }
 
-export function branchuuid(group: number = 3) {
+export function branchuuid(group = 3) {
   // 应后端要求字段id不能以数字开头
   return `flow-branch-${uuid(group)}`;
 }
@@ -173,7 +173,7 @@ export function trimInputValue(event: React.ChangeEvent<HTMLInputElement>) {
 }
 
 export function flowUpdate(data: AllNode[], targetId: string, newNode: AllNode | null): AllNode[] {
-  let tIndex = data.findIndex((subNode) => subNode.id === targetId);
+  const tIndex = data.findIndex((subNode) => subNode.id === targetId);
 
   if (tIndex >= 0) {
     // 删除
@@ -259,8 +259,11 @@ export function valid(data: AllNode[], validRes: ValidResultType) {
 
         const isInvalid = branch.conditions.some((row) => {
           return row.some((col) => {
-            for (let key in col) {
-              if (!col[key as keyof typeof col] && !['parentId', 'valueType'].includes(key)) {
+            for (const key in col) {
+              if (
+                (col[key as keyof typeof col] === null || col[key as keyof typeof col] === undefined) &&
+                !['parentId', 'valueType'].includes(key)
+              ) {
                 errors.push('条件配置不合法');
 
                 return true;
@@ -355,7 +358,7 @@ type PrevNodeType = Exclude<AllNode, BranchNode>;
 
 export const findPrevNodes = (flow: AllNode[], targetId: string): PrevNodeType[] => {
   function findPrevNodes(flow: AllNode[], targetId: string): [PrevNodeType[], boolean] {
-    let finded = false;
+    const finded = false;
     let prevs: PrevNodeType[] = [];
 
     const targetNodeIndex = flow.findIndex((node) => {
