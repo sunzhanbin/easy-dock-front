@@ -8,6 +8,7 @@ import {
   CANVAS_ENTRY,
   SPACE_ENTRY,
   CanvasResponseType,
+  FLOW_ENTRY,
 } from "@/consts";
 import {
   useGetCanvasIdMutation,
@@ -19,8 +20,7 @@ import useMemoCallback from "@common/hooks/use-memo-callback";
 import { selectMenu } from "@/views/app-setup/menu-setup.slice";
 import lightEmptyImage from "@assets/images/light-empty.png";
 import darkEmptyImage from "@assets/images/dark-empty.png";
-import FlowMicroPage from "@containers/asset-pages/flow-page";
-
+import { selectCurrentWorkspaceId } from "@/views/app-manager/index.slice";
 import "./app-content.style.scss";
 
 interface AppContentProps {
@@ -37,6 +37,8 @@ type ThemeMap = {
 
 const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
   const menuList = useAppSelector(selectMenu);
+  const appId = useAppSelector(selectCurrentWorkspaceId);
+  const { workspaceId } = useParams();
   const [getHoloSceneId] = useGetHoloSceneIdMutation();
   const [getCanvasId] = useGetCanvasIdMutation();
   const [canvasId, setCanvasId] = useState<string>("");
@@ -138,7 +140,10 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
     }
     // 流程子应用内容渲染
     if (subAppType === SubAppType.FLOW && subAppId) {
-      return <FlowMicroPage mode="preview" />;
+      const url = `${FLOW_ENTRY}/app/${
+        workspaceId || appId
+      }/process/instance/${subAppId}?theme=${theme}&mode=preview`;
+      return renderIframe(url, "flow-container");
     }
     return empty;
   });

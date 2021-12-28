@@ -6,7 +6,6 @@ import classNames from 'classnames';
 import { omit, throttle, debounce } from 'lodash';
 import { Pagination, ProcessDataManagerParams, SortDirection, TASK_STATE_LIST, UserItem } from '@/consts';
 import { Icon, StateTag, Text } from '@common/components';
-import { extra } from '@/init';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import useSubapp from '@/hooks/use-subapp';
 import { runtimeAxios, builderAxios, exportFile, axios } from '@/utils';
@@ -46,7 +45,7 @@ type FieldItem = {
 
 const { Option } = Select;
 
-const FlowAppContent: FC<FlowAppContentProps> = ({ theme = 'light', canOperation = true }) => {
+const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
   const history = useHistory();
   const { subAppId: id } = useParams<any>();
 
@@ -61,13 +60,21 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ theme = 'light', canOperation
 
   const location = useLocation();
 
-  useEffect(() => {
-    console.log('location', location, extra);
-  }, [location]);
+  const theme = useMemo<string>(() => {
+    if (location.search) {
+      const params = new URLSearchParams(location.search.slice(1));
+      return params.get('theme') || 'light';
+    }
+    return 'light';
+  }, [location.search]);
 
-  useEffect(() => {
-    console.log('data::', subApp);
-  }, [subApp]);
+  const mode = useMemo(() => {
+    if (location.search) {
+      const params = new URLSearchParams(location.search.slice(1));
+      return params.get('mode') || 'running';
+    }
+    return 'running';
+  }, [location.search]);
 
   const [loading, setLoading] = useState<boolean>(true);
   const [statusList, setStatusList] = useState<number[]>([1, 2, 3, 4, 5, 6]);
@@ -429,9 +436,8 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ theme = 'light', canOperation
   });
 
   const handleJumpToStartFlow = useMemoCallback(() => {
-    // window.open(`${FLOW_ENTRY}/app/${appId}/process/start/flow/${id}`);
     const path = dynamicRoutes.toStartFlow(id);
-    history.push(path);
+    history.push(`${path}/?mode=${mode}`);
   });
 
   const handleRefresh = useMemoCallback(debounce(fetchDataSource, 200));
@@ -500,10 +506,6 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ theme = 'light', canOperation
       fetchOptionList(1, '');
     }
   }, [projectId]);
-
-  useEffect(() => {
-    console.info(theme, 'theme');
-  }, [theme]);
 
   useEffect(() => {
     fetchDataSource();
