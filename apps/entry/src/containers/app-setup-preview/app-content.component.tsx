@@ -9,6 +9,7 @@ import {
   SPACE_ENTRY,
   CanvasResponseType,
   MAIN_ENTRY,
+  FLOW_ENTRY,
 } from "@/consts";
 import {
   useGetCanvasIdMutation,
@@ -148,8 +149,9 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
     }
     // 任务中心内容渲染
     if (subAppType === TASK_CENTER_TYPE && subAppId) {
-      const url = `${MAIN_ENTRY}/app/${workspaceId}/process/task-center`;
-      console.log(url, "url");
+      const url = `${FLOW_ENTRY}/task-center/${
+        workspaceId || appId
+      }?theme=${theme}&mode=preview`;
       return renderIframe(url, "space-container");
     }
     return empty;
