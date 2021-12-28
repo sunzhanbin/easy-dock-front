@@ -1,6 +1,7 @@
 .home_layout {
-  overflow-y: hidden;
+  overflow-y: auto;
   height: 100%;
+  min-height: 900px !important;
   .home_content {
     display: flex;
     flex-direction: column;
