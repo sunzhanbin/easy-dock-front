@@ -6,6 +6,7 @@ export const RouteMap = {
   3: "chart",
   4: "space",
   5: "form",
+  10: "task-center",
 };
 
 export const NavMenu = [
