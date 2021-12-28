@@ -50,7 +50,7 @@ function SidebarLayout() {
     return matched.url.replace(/\/+$/, '');
   }, [matched.url]);
   const microBasename = useMemo(() => {
-    return ROUTES.APP_PROCESS.replace(':appId', appId);
+    return `/main${ROUTES.APP_PROCESS.replace(':appId', appId)}`;
   }, [appId]);
 
   return (

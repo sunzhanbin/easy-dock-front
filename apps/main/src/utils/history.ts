@@ -1,7 +1,7 @@
 import { createBrowserHistory } from 'history';
 
 const history = createBrowserHistory({
-  basename: '/',
+  basename: '/main/',
   getUserConfirmation(a, b) {
     console.log(a, b);
   },

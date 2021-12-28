@@ -102,7 +102,7 @@ export const JumpLinkToUrl = async (
     if (!spaceData) return;
     window.open(`${SPACE_ENTRY}/#/scene/${spaceData.refId}`);
   } else if (type === HomeSubAppType.FLOW) {
-    window.open(`${FLOW_ENTRY}/builder/flow/bpm-editor/${id}/flow-design`);
+    window.open(`${FLOW_ENTRY}/main/builder/flow/bpm-editor/${id}/flow-design`);
   } else if (type === HomeSubAppType.FORM) {
     // window.open(`${FLOW_ENTRY}/builder/flow/bpm-editor/${id}/form-design`);
   } else if (type === HomeSubAppType.DEVICE) {

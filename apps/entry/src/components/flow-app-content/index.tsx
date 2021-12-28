@@ -477,7 +477,7 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
   });
 
   const handleJumpToStartFlow = useMemoCallback(() => {
-    window.open(`${FLOW_ENTRY}/app/${appId}/process/start/flow/${id}`);
+    window.open(`${FLOW_ENTRY}/main/app/${appId}/process/start/flow/${id}`);
   });
 
   const handleRefresh = useMemoCallback(debounce(fetchDataSource, 200));
