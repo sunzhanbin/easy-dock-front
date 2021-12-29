@@ -3,7 +3,7 @@ import classNames from "classnames";
 import { findFirstChild, keyPath } from "@utils/utils";
 import { Menu as IMenu, MenuComponentProps } from "@utils/types";
 import useMemoCallback from "@common/hooks/use-memo-callback";
-import { Icon } from "@common/components";
+import { Icon, Text } from "@common/components";
 import UserComponent from "@components//header/user";
 import { useAppDispatch } from "@/store";
 import { setCurrentMenu } from "@/views/app-setup/menu-setup.slice";
@@ -81,7 +81,7 @@ const SingleNavComponent = ({
                         icon={renderIcon(menu.form?.icon)}
                         onClick={handleSubMenuClick}
                       >
-                        {menu.name}
+                        <Text>{menu.name}</Text>
                       </Menu.Item>
                     );
                   }

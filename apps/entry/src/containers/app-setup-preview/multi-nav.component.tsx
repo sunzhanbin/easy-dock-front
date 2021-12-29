@@ -3,7 +3,12 @@ import { Menu } from "antd";
 import classNames from "classnames";
 import { useAppDispatch } from "@/store";
 import { setCurrentMenu } from "@/views/app-setup/menu-setup.slice";
-import { findFirstChild, findParentMenu, keyPath } from "@utils/utils";
+import {
+  findFirstChild,
+  findParentMenu,
+  keyPath,
+  getPopupContainer,
+} from "@utils/utils";
 import { Menu as IMenu, MenuComponentProps } from "@utils/types";
 import { Icon, Text } from "@common/components";
 import useMemoCallback from "@common/hooks/use-memo-callback";
@@ -72,6 +77,7 @@ const MultiNavComponent = ({
             mode="horizontal"
             selectedKeys={[activeMainKey]}
             onClick={handleMainMenuClick}
+            getPopupContainer={getPopupContainer}
           >
             {dataSource.map((menu) => (
               <Menu.Item key={menu.id} icon={renderIcon(menu?.form?.icon)}>

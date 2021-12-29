@@ -74,7 +74,7 @@ const MenuItemComponent = ({
     >
       {renderIcon(menu?.form?.icon)}
       <div className="text" onClick={(e) => handleMenuClick(e, menu.id)}>
-        <Text text={menu.name} />
+        <Text text={menu.name} getContainer={false} />
       </div>
       <div className="operation">
         {menu.depth < 2 && (

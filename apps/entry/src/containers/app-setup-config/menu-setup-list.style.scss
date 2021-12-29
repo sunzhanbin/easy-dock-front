@@ -11,6 +11,8 @@
   }
   .menu {
     margin-top: 12px;
+    height: calc(100% - 50px);
+    overflow-y: auto;
     .menu-component {
 
       .menu-collapse {
