@@ -102,7 +102,8 @@ module.exports = {
         ...webpackConfig.resolve.extensions,
         ...[".scss", ".css"],
       ];
-      whenProd(() => {
+
+      if (env !== "development") {
         webpackConfig.plugins = webpackConfig.plugins.concat(
           new FileManagerPlugin({
             events: {
@@ -116,10 +117,6 @@ module.exports = {
                   {
                     source: path.resolve("template"),
                     destination: `zip/${name}/template`,
-                  },
-                  {
-                    source: path.resolve(__dirname, `conf.template.js`),
-                    destination: `zip/${name}/template/config.js`,
                   },
                 ],
                 archive: [
@@ -147,7 +144,7 @@ module.exports = {
             runTasksInSeries: true,
           })
         );
-      });
+      }
       return webpackConfig;
     },
   },
