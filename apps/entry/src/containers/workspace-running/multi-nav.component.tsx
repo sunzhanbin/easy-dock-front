@@ -1,4 +1,4 @@
-import { useCallback, useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { Menu } from "antd";
 import { Icon } from "@common/components";
 import classNames from "classnames";
@@ -113,7 +113,7 @@ const MultiNavComponent = ({
       dispatch(setCurrentId(key));
     }
   });
-  const handleSubMenuClick = useMemoCallback(({ _, key }) => {
+  const handleSubMenuClick = useMemoCallback(({ key }) => {
     const menu = findItem(key, dataSource);
     navigateFn(menu);
     if (menu && menu.form?.mode === "current") {

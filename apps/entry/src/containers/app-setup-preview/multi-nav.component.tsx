@@ -40,7 +40,7 @@ const MultiNavComponent = ({
     return menu && menu.children?.length > 0;
   }, [dataSource, selectedKey]);
 
-  const handleMainMenuClick = useMemoCallback(({ _, key }) => {
+  const handleMainMenuClick = useMemoCallback(({ key }) => {
     const menu = dataSource.find((v) => v.id === key);
     if (menu) {
       const subMenu = findFirstChild(menu);
@@ -52,7 +52,7 @@ const MultiNavComponent = ({
   const handleTitleClick = useMemoCallback(({ key }) => {
     dispatch(setCurrentMenu(key));
   });
-  const handleSubMenuClick = useMemoCallback(({ _, key }) => {
+  const handleSubMenuClick = useMemoCallback(({ key }) => {
     dispatch(setCurrentMenu(key));
   });
 

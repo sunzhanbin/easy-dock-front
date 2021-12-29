@@ -93,7 +93,7 @@ const SubListComponent: React.FC = () => {
   });
 
   const handleJumpToClient = useMemoCallback(() => {
-    navigate(`/workspace/${workspaceId}`);
+    window.open(`/workspace/${workspaceId}`);
   });
 
   const formAppList = useMemo(() => {
