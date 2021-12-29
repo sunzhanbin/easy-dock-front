@@ -71,6 +71,7 @@
     margin-top: 24px;
   }
   &.dark {
+    background-color: $dark-content-background-color;
     .header {
       .left {
         .title {

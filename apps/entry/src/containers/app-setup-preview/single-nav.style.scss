@@ -1,11 +1,5 @@
 @import "@common/styles/var.scss";
-
-$light-side-background-color: #f6f7f8;
-$light-text-color: #181f43;
-$light-content-background-color: #fff;
-$dark-text-color: #fff;
-$dark-side-background-color: #2d2d2f;
-$dark-content-background-color: #202023;
+@import '@common/styles/theme-color.scss';
 
 .single-nav-component {
   height: 100%;

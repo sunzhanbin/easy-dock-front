@@ -66,6 +66,7 @@
   }
   &.dark {
     background: $dark-content-background-color;
+    height: 100%;
     & > .header {
       & > .status-list {
         .ant-checkbox-wrapper {
