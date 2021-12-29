@@ -53,13 +53,16 @@
         background-color: transparent;
       }
       &:hover {
-
+        .option-name {
+          max-width: calc(100% - 52px);
+        }
         background: rgba(24, 39, 67, 0.04);
         .edit-icon, .delete-icon {
           display: inline-block;
         }
       }
       .option-name {
+        max-width: 100%;
         padding: 0 8px;
         flex: 1;
       }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Select, Button, Input, Form } from "antd";
-import { Icon } from "@common/components";
+import { Icon, Text } from "@common/components";
 import { getPopupContainer } from "@utils/utils";
 import "@components/select-card/index.style.scss";
 import ProjectOption from "@components/select-card/project-option";
@@ -225,7 +225,7 @@ const SelectCard = ({
           <Option key={item.id} value={item.id} label={item.name}>
             {(type.key !== "project" ||
               (type.key === "project" && !isAdmin)) && (
-              <span className="option-name">{item.name}</span>
+              <Text text={item.name} className="option-name" />
             )}
           </Option>
         ))}
