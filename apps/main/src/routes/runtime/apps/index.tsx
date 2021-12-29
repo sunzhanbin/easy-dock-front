@@ -46,7 +46,7 @@ function App() {
   }, []);
 
   const handleClickCard = useMemoCallback((app: AppSchema) => {
-    window.open(dynamicRoutes.toAppTaskCenter(String(app.id)));
+    window.open(`/main${dynamicRoutes.toAppTaskCenter(String(app.id))}`);
   });
 
   return (
