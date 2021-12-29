@@ -1,6 +1,7 @@
 import { memo, useEffect, useState, useMemo, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Table, TableProps, message } from 'antd';
+import classNames from 'classnames';
 import { TablePaginationConfig } from 'antd/lib/table';
 import { debounce } from 'lodash';
 import { Icon, PopoverConfirm } from '@common/components';
@@ -25,6 +26,15 @@ interface DraftData {
 
 function Draft() {
   const appId = useAppId();
+  const location = useLocation();
+  const theme = useMemo<string>(() => {
+    // 以iframe方式接入,参数在location中
+    if (location.search) {
+      const params = new URLSearchParams(location.search.slice(1));
+      return params.get('theme') || 'light';
+    }
+    return 'light';
+  }, [location.search]);
   const [draftData, setDraftData] = useState<DraftData[]>([]);
   const [activeDataId, setActiveDataId] = useState<number>();
   const [loading, setLoading] = useState(false);
@@ -154,7 +164,7 @@ function Draft() {
 
   return (
     <Table
-      className={styles.table}
+      className={classNames(styles.table, styles[theme])}
       columns={columns}
       dataSource={draftData}
       rowKey="subappId"

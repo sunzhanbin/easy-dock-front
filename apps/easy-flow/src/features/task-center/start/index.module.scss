@@ -1,4 +1,5 @@
 @import '@common/styles/var.scss';
+@import '@common/styles/theme-color.scss';
 .container {
   .header {
     .searchContainer {
@@ -91,6 +92,38 @@
         cursor: pointer;
         &:hover {
           color: $primary-color;
+        }
+      }
+    }
+  }
+  &.dark {
+    .header {
+      .searchContainer {
+        :global {
+          #start_form {
+            .ant-form-item-label > label {
+              color: $dark-text-color;
+            }
+            .ant-input,
+            .ant-picker,
+            .ant-select.ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+              background-color: rgba($dark-text-color, 0.04);
+            }
+            .ant-picker-separator {
+              color: rgba($dark-text-color, 0.88);
+            }
+          }
+        }
+      }
+      .operationContainer {
+        .operation {
+          .reset {
+            border-color: rgba($dark-text-color, 0.12);
+            color: rgba($dark-text-color, 0.66);
+            &:hover {
+              border-color: rgba($dark-text-color, 0.3);
+            }
+          }
         }
       }
     }

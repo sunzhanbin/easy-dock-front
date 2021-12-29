@@ -1,25 +1,35 @@
 import { memo, FC, useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import { Form, Input, Select, Button, DatePicker, Table, Popover } from 'antd';
-import styles from './index.module.scss';
-import { currentNodeItem, Pagination, StartItem } from '../type';
 import { getStayTime, getPassedTime, runtimeAxios } from '@/utils';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import moment from 'moment';
+import classNames from 'classnames';
 import { dynamicRoutes } from '@/consts/route';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import useAppId from '@/hooks/use-app-id';
 import { Icon } from '@common/components';
 import StateTag from '@/features/bpm-editor/components/state-tag';
 import { TASK_STATE_LIST } from '@/utils/const';
+import styles from './index.module.scss';
+import { currentNodeItem, Pagination, StartItem } from '../type';
 import TimeoutState from '../components/timeout-state';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
-const Start: FC<{}> = () => {
+const Start: FC = () => {
   const [form] = Form.useForm();
   const history = useHistory();
   const appId = useAppId();
+  const location = useLocation();
+  const theme = useMemo<string>(() => {
+    // 以iframe方式接入,参数在location中
+    if (location.search) {
+      const params = new URLSearchParams(location.search.slice(1));
+      return params.get('theme') || 'light';
+    }
+    return 'light';
+  }, [location.search]);
   const tableRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [sortDirection, setSortDirection] = useState<'DESC' | 'ASC'>('DESC');
@@ -75,8 +85,8 @@ const Start: FC<{}> = () => {
         dataIndex: 'startTime',
         key: 'startTime',
         width: '15%',
-        sortDirections: ['ascend' as 'ascend', 'descend' as 'descend', 'ascend' as 'ascend'],
-        defaultSortOrder: 'descend' as 'descend',
+        sortDirections: ['ascend' as const, 'descend' as const, 'ascend' as const],
+        defaultSortOrder: 'descend' as const,
         sorter: true,
         render(_: string, record: StartItem) {
           const { startTime } = record;
@@ -168,8 +178,8 @@ const Start: FC<{}> = () => {
       const formValues = form.getFieldsValue(true);
       const { current: pageIndex, pageSize } = pagination;
       const { flowName = '', state = '', timeRange = [] } = formValues;
-      let startTime: number = 0;
-      let endTime: number = 0;
+      let startTime = 0;
+      let endTime = 0;
       if (timeRange && timeRange[0]) {
         startTime = moment(timeRange[0]._d).valueOf();
       }
@@ -236,7 +246,7 @@ const Start: FC<{}> = () => {
     appId && fetchData();
   }, [appId, fetchData]);
   return (
-    <div className={styles.container}>
+    <div className={classNames(styles.container, styles[theme])}>
       <div className={styles.header}>
         <div className={styles.searchContainer}>
           <Form

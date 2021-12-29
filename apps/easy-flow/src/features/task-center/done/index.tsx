@@ -1,8 +1,7 @@
 import { memo, FC, useMemo, useState, useCallback, useEffect, useRef } from 'react';
-import styles from './index.module.scss';
 import { Form, Input, Select, Button, DatePicker, Table } from 'antd';
-import { useHistory } from 'react-router-dom';
-import { DoneItem, Pagination, UserItem } from '../type';
+import { useHistory, useLocation } from 'react-router-dom';
+import classNames from 'classnames';
 import { getPassedTime } from '@utils/index';
 import { runtimeAxios } from '@/utils';
 import moment from 'moment';
@@ -10,18 +9,29 @@ import { dynamicRoutes } from '@/consts/route';
 import useAppId from '@/hooks/use-app-id';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { useAppSelector } from '@/app/hooks';
-import { appSelector } from '../taskcenter-slice';
 import { Icon } from '@common/components';
 import { debounce, throttle } from 'lodash';
+import styles from './index.module.scss';
+import { appSelector } from '../taskcenter-slice';
+import { DoneItem, Pagination, UserItem } from '../type';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
-const Done: FC<{}> = () => {
+const Done: FC = () => {
   const [form] = Form.useForm();
   const history = useHistory();
   const appId = useAppId();
   const app = useAppSelector(appSelector);
+  const location = useLocation();
+  const theme = useMemo<string>(() => {
+    // 以iframe方式接入,参数在location中
+    if (location.search) {
+      const params = new URLSearchParams(location.search.slice(1));
+      return params.get('theme') || 'light';
+    }
+    return 'light';
+  }, [location.search]);
   const [loading, setLoading] = useState<boolean>(false);
   const [pagination, setPagination] = useState<Pagination>({
     pageSize: 10,
@@ -82,8 +92,8 @@ const Done: FC<{}> = () => {
         title: '办理时间',
         dataIndex: 'endTime',
         key: 'endTime',
-        sortDirections: ['ascend' as 'ascend', 'descend' as 'descend', 'ascend' as 'ascend'],
-        defaultSortOrder: 'descend' as 'descend',
+        sortDirections: ['ascend' as const, 'descend' as const, 'ascend' as const],
+        defaultSortOrder: 'descend' as const,
         sorter: true,
         width: '20%',
         render(_: string, record: DoneItem) {
@@ -106,8 +116,8 @@ const Done: FC<{}> = () => {
       const { current: pageIndex, pageSize } = pagination;
       const formValues = form.getFieldsValue(true);
       const { name = '', starter = '', timeRange = [] } = formValues;
-      let startTime: number = 0;
-      let endTime: number = 0;
+      let startTime = 0;
+      let endTime = 0;
       if (timeRange && timeRange[0]) {
         startTime = moment(timeRange[0]._d).valueOf();
       }
@@ -218,7 +228,7 @@ const Done: FC<{}> = () => {
     appId && fetchData();
   }, [appId, fetchData]);
   return (
-    <div className={styles.container}>
+    <div className={classNames(styles.container, styles[theme])}>
       <div className={styles.header}>
         <div className={styles.search}>
           <Form

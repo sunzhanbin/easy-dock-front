@@ -1,28 +1,39 @@
 import { memo, FC, useState, useRef, useMemo, useEffect } from 'react';
 import { Form, Input, Button, DatePicker, Select, Table, Popover } from 'antd';
-import styles from './index.module.scss';
+import { useLocation } from 'react-router-dom';
+import classNames from 'classnames';
 import { Icon } from '@common/components';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { debounce, throttle } from 'lodash';
-import { CopyItem, Pagination, UserItem } from '../type';
 import { getPassedTime, runtimeAxios, getStayTime } from '@/utils';
 import { useAppSelector } from '@/app/hooks';
-import { appSelector } from '../taskcenter-slice';
 import { useHistory } from 'react-router';
 import { dynamicRoutes } from '@/consts';
 import moment from 'moment';
 import useAppId from '@/hooks/use-app-id';
 import StateTag from '@/features/bpm-editor/components/state-tag';
 import { TASK_STATE_LIST } from '@/utils/const';
+import styles from './index.module.scss';
+import { appSelector } from '../taskcenter-slice';
+import { CopyItem, Pagination, UserItem } from '../type';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
-const Copy: FC<{}> = () => {
+const Copy: FC = () => {
   const [form] = Form.useForm();
   const app = useAppSelector(appSelector);
   const appId = useAppId();
   const history = useHistory();
+  const location = useLocation();
+  const theme = useMemo<string>(() => {
+    // 以iframe方式接入,参数在location中
+    if (location.search) {
+      const params = new URLSearchParams(location.search.slice(1));
+      return params.get('theme') || 'light';
+    }
+    return 'light';
+  }, [location.search]);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [optionList, setOptionList] = useState<UserItem[]>([]);
@@ -131,8 +142,8 @@ const Copy: FC<{}> = () => {
         dataIndex: 'copyTime',
         key: 'copyTime',
         width: '15%',
-        sortDirections: ['ascend' as 'ascend', 'descend' as 'descend', 'ascend' as 'ascend'],
-        defaultSortOrder: 'descend' as 'descend',
+        sortDirections: ['ascend' as const, 'descend' as const, 'ascend' as const],
+        defaultSortOrder: 'descend' as const,
         sorter: true,
         render(_: string, record: CopyItem) {
           const { copyTime } = record;
@@ -145,7 +156,10 @@ const Copy: FC<{}> = () => {
   const handleSearch = useMemoCallback(() => {
     fetchData();
   });
-  const handleReset = useMemoCallback(() => {});
+  const handleReset = useMemoCallback(() => {
+    form.resetFields();
+    fetchData();
+  });
   const handleScroll = useMemoCallback(
     throttle((event: React.UIEvent<HTMLDivElement, UIEvent>) => {
       // 全部加载完了就不加载了
@@ -184,8 +198,8 @@ const Copy: FC<{}> = () => {
       const { current, pageSize } = pagination;
       const formValues = form.getFieldsValue(true);
       const { instanceName = '', starter = '', timeRange = [], state } = formValues;
-      let startTime: number = 0;
-      let endTime: number = 0;
+      let startTime = 0;
+      let endTime = 0;
       if (timeRange && timeRange[0]) {
         startTime = moment(timeRange[0]._d).valueOf();
       }
@@ -252,7 +266,7 @@ const Copy: FC<{}> = () => {
     appId && fetchData();
   }, [fetchData, appId]);
   return (
-    <div className={styles.container}>
+    <div className={classNames(styles.container, styles[theme])}>
       <div className={styles.header}>
         <Form
           form={form}

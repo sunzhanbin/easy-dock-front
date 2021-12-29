@@ -1,4 +1,5 @@
 @import '@common/styles/var.scss';
+@import '@common/styles/theme-color.scss';
 .container {
   height: 100%;
   padding: 24px 56px;
@@ -68,6 +69,26 @@
   }
   .content {
     margin-top: 24px;
+  }
+  &.dark {
+    .header {
+      .left {
+        .title {
+          color: rgba($dark-text-color, 0.85);
+        }
+        .line {
+          border-color: rgba($dark-text-color, 0.12);
+        }
+        .navLink {
+          .nav {
+            color: rgba($dark-text-color, 0.66);
+            &.active {
+              color: rgba($dark-text-color, 0.85);
+            }
+          }
+        }
+      }
+    }
   }
 }
 .footer {
