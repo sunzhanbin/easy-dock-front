@@ -10,6 +10,7 @@ import useMemoCallback from '@common/hooks/use-memo-callback';
 import useSubapp from '@/hooks/use-subapp';
 import { runtimeAxios, builderAxios, exportFile, axios } from '@/utils';
 import { dynamicRoutes } from '@/consts/route';
+import appConfig from '@/init';
 import './index.style.scss';
 
 interface FlowAppContentProps {
@@ -61,20 +62,28 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
   const location = useLocation();
 
   const theme = useMemo<string>(() => {
+    // 以iframe方式接入,参数在location中
     if (location.search) {
       const params = new URLSearchParams(location.search.slice(1));
       return params.get('theme') || 'light';
     }
+    // 以微前端方式接入,参数在extra中
+    if (appConfig?.extra?.theme) {
+      return appConfig.extra.theme;
+    }
     return 'light';
-  }, [location.search]);
+  }, [location.search, appConfig?.extra?.theme]);
 
   const mode = useMemo(() => {
     if (location.search) {
       const params = new URLSearchParams(location.search.slice(1));
       return params.get('mode') || 'running';
     }
+    if (appConfig?.extra?.mode) {
+      return appConfig.extra.mode;
+    }
     return 'running';
-  }, [location.search]);
+  }, [location.search, appConfig?.extra?.mode]);
 
   const [loading, setLoading] = useState<boolean>(true);
   const [statusList, setStatusList] = useState<number[]>([1, 2, 3, 4, 5, 6]);
@@ -96,6 +105,10 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
   const membersCacheRef = useRef<{
     [id: string]: { name: string; avatar?: string; id: number | string };
   }>({});
+
+  useEffect(() => {
+    console.info(appConfig, 'appConfig');
+  }, []);
 
   const baseColumns: TableProps<TableDataBase>['columns'] = useMemo(() => {
     return [

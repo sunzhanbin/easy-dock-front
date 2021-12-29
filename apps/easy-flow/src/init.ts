@@ -3,7 +3,7 @@ const appConfig = {
   basename: '/',
   publicPath: process.env.PUBLIC_URL,
   appId: '',
-  extra: {},
+  extra: { theme: '', mode: '' },
 };
 console.log(`__webpack_public_path__: default`);
 // 微前端里的配置

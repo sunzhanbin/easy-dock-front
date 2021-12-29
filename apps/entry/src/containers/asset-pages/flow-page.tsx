@@ -2,9 +2,15 @@ import { useMemo, useRef, useEffect } from "react";
 import { useParams } from "react-router";
 import { loadMicroApp } from "qiankun";
 import { FLOW_ENTRY } from "@/consts";
+import { useWorkspaceDetailQuery } from "@/http";
 
 const FlowMicroPage = ({ mode }: { mode: "preview" | "running" }) => {
   const { workspaceId } = useParams();
+  const { theme } = useWorkspaceDetailQuery(+(workspaceId as string), {
+    selectFromResult: ({ data }) => ({
+      theme: data?.extension?.theme || "light",
+    }),
+  });
   const appId = useMemo(() => {
     if (workspaceId) {
       return +workspaceId;
@@ -20,8 +26,6 @@ const FlowMicroPage = ({ mode }: { mode: "preview" | "running" }) => {
     return modeMap[mode];
   }, [mode, appId]);
 
-  console.log("流程应用", workspaceId);
-
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -33,7 +37,8 @@ const FlowMicroPage = ({ mode }: { mode: "preview" | "running" }) => {
         props: {
           basename: baseName || "",
           extra: {
-            mode: mode,
+            mode,
+            theme,
           },
         },
       });

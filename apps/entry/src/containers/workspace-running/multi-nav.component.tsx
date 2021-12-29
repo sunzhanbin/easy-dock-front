@@ -7,7 +7,7 @@ import { Outlet, useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
 import { setCurrentId } from "@/views/workspace/index.slice";
 import { keyPath, findFirstChild, findItem } from "@utils/utils";
-import { RouteMap } from "@utils/const";
+import { RouteMap, TASK_CENTER_TYPE } from "@utils/const";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import { WorkspaceBaseMenuProps, Menu as IMenu } from "@utils/types";
 import UserComponent from "@components//header/user";
@@ -15,6 +15,8 @@ import "@containers/workspace-running/multi-nav.style";
 import {
   CanvasResponseType,
   CANVAS_ENTRY,
+  FLOW_ENTRY,
+  MAIN_ENTRY,
   SPACE_ENTRY,
   SubAppType,
 } from "@/consts";
@@ -79,11 +81,12 @@ const MultiNavComponent = ({
           const id = res.data.refId;
           url = `${SPACE_ENTRY}/preview.html?token=${token}&id=${id}`;
         } else if (subAppType === SubAppType.FLOW) {
-          const origin = window.location.origin;
           if (!appId) {
             return;
           }
-          url = `${origin}/main/app/${appId}/flow-app/${subAppId}`;
+          url = `${MAIN_ENTRY}/main/app/${appId}/process/instance/${subAppId}?theme=${theme}&mode=running`;
+        } else if (subAppType === TASK_CENTER_TYPE) {
+          url = `${FLOW_ENTRY}/task-center/${appId}?theme=${theme}&mode=running`;
         } else {
           // 表单子应用和报表子应用暂时没有这两种场景,直接返回
           return;

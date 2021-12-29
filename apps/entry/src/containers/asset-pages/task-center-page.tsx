@@ -1,13 +1,19 @@
 import { useMemo } from "react";
 import { useParams } from "react-router";
 import { FLOW_ENTRY } from "@/consts";
+import { useWorkspaceDetailQuery } from "@/http/app-manager.hooks";
 import "@containers/asset-pages/task-center-page.style";
 
 const TaskCenterMicroPage = () => {
   const { workspaceId } = useParams();
+  const { theme } = useWorkspaceDetailQuery(+(workspaceId as string), {
+    selectFromResult: ({ data }) => ({
+      theme: data?.extension?.theme || "light",
+    }),
+  });
   const url = useMemo(() => {
-    return `${FLOW_ENTRY}/task-center/${workspaceId}?mode=preview`;
-  }, []);
+    return `${FLOW_ENTRY}/task-center/${workspaceId}?mode=running&theme=${theme}`;
+  }, [theme]);
 
   return (
     <div className="task-center-page">
