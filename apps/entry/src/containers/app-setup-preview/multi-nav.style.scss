@@ -55,11 +55,24 @@ $dark-content-background-color: #202023;
         &:hover::after {
           border-bottom: 0 none;
         }
-        .ant-menu-submenu-title {
-          display: inline-flex;
-          justify-content: center;
-          align-items: center;
+        .ant-menu-submenu-popup {
+          top: 10px !important;
+          >.ant-menu-sub {
+            display: inline-flex;
+            flex-direction: column;
+            justify-content: center;
+            >li {
+              display: inline-flex;
+              align-items: center;
+              margin: 0;
+            }
+          }
         }
+        //.ant-menu-submenu-title {
+        //  display: inline-flex;
+        //  justify-content: center;
+        //  align-items: center;
+        //}
       }
     }
     & > .user-container {
@@ -111,7 +124,6 @@ $dark-content-background-color: #202023;
       background: #fff;
       .ant-menu-submenu-title {
         color: $primary-color;
-
       }
       .ant-menu-item {
         color: $light-text-color;
@@ -156,6 +168,9 @@ $dark-content-background-color: #202023;
       background: $dark-header-background-color;
       // box-shadow: 0px 2px 8px 0px rgba(32, 32, 35, 0.08);
       // border-color: rgba(32, 32, 35, 0.08);
+      .ant-menu-submenu-title {
+        color: $primary-color;
+      }
       .app-name {
         color: $dark-text-color;
       }

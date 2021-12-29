@@ -45,6 +45,7 @@
         overflow-y: auto;
         & > .app-setup-preview {
           height: calc(100vh - 56px);
+          width: 100%;
         }
       }
     }
