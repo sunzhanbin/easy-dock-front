@@ -2,7 +2,7 @@ import { memo, useMemo, useCallback } from "react";
 import { Dropdown, Menu } from "antd";
 import { auth } from "@/consts";
 import { useGetUserInfoQuery } from "@/http";
-import { Avatar, Icon } from "@common/components";
+import { Avatar, Icon, Text } from "@common/components";
 import { logout } from "@views/home/index.slice";
 import "@components/header/index.style.scss";
 import { useDispatch } from "react-redux";
@@ -63,7 +63,7 @@ function HeaderUser() {
             <div className="avatar">
               <Avatar round size={32} src={user.avatar} name={user.username} />
             </div>
-            <div className="name">{user.username}</div>
+            <Text className="name">{user.username}</Text>
           </div>
         </Dropdown>
       ) : (

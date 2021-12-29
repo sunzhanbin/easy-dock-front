@@ -2,7 +2,7 @@ import { memo, useMemo } from "react";
 import { Form, Input, Select } from "antd";
 import { HomeSubAppType, SubAppInfo, urlRule } from "@/consts";
 import { NameMap } from "@utils/const";
-import { Icon } from "@common/components";
+import { Icon, Text } from "@common/components";
 import { useFetchDeployedSubAppListQuery } from "@/http";
 import { useParams } from "react-router-dom";
 import { FormInstance } from "antd/es";
@@ -62,7 +62,9 @@ const MenuSetupFormAssetConfigComponent = ({ form }: AssetConfigProps) => {
               <Option key={v.id} value={v.id} className="sub-app-option">
                 <>
                   <span className="sub-app-type">{NameMap[v.type]}</span>
-                  <span className="sub-app-name">{v.name}</span>
+                  <Text className="sub-app-name" getContainer={false}>
+                    {v.name}
+                  </Text>
                 </>
               </Option>
             ))}
