@@ -43,8 +43,8 @@ function HeaderUser() {
       <Menu>
         <Menu.Item key="logout" onClick={handleLogout} className="menuItem">
           <span>
-            <Icon type="tuichudenglu" className="icon" />
-            退出登录
+            <Icon type="tuichudenglu" className="icon-exit" />
+            <span className="text-exit">退出登录</span>
           </span>
         </Menu.Item>
       </Menu>

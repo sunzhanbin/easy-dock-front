@@ -86,9 +86,13 @@
           font-size: 14px;
           font-weight: 400;
           color: #181f43;
-          .icon {
+          .icon-exit {
             font-size: 16px;
             margin-right: 8px;
+            vertical-align: middle;
+          }
+          .text-exit {
+            vertical-align: middle;
           }
           &.line {
             height: 17px;

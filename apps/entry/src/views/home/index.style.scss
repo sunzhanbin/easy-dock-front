@@ -5,6 +5,7 @@
   .home_content {
     display: flex;
     flex-direction: column;
+    overflow-y: hidden;
   }
   .home_sider {
     flex: 0 0 360px !important;
