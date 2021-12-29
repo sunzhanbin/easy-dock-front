@@ -1,7 +1,6 @@
 import React, { memo, useCallback, useState } from "react";
 import { Form, Input, message } from "antd";
-import { PopoverConfirm, Icon } from "@common/components";
-
+import { PopoverConfirm, Icon, Text } from "@common/components";
 import classnames from "classnames";
 import { nameRule } from "@/consts";
 
@@ -106,7 +105,7 @@ const ProjectOption = ({
                 className="option-name"
                 onClick={() => handleSelectField(item, index)}
               >
-                {item.name}
+                <Text text={item.name} />
               </span>
               <Icon
                 className="edit-icon"
