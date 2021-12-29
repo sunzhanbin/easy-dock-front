@@ -9,7 +9,7 @@ import { Rule } from "antd/lib/form";
 import { UploadFile } from "antd/lib/upload/interface";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { Icon } from "@common/components";
-import { nameRule, NavModeType, remarkRule } from "@/consts";
+import { nameRule, remarkRule } from "@/consts";
 import {
   basicErrorSelector,
   selectBasicForm,

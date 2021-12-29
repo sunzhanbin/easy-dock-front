@@ -12,7 +12,6 @@ import {
 } from "@views/app-manager/index.slice";
 import "@containers/app-manager-sider/index.style";
 import { selectProjectId } from "@/views/home/index.slice";
-import { ResponseType } from "@/consts";
 import { handleStopPropagation } from "@utils/utils";
 
 const { Sider } = Layout;

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useParams } from "react-router";
 import { useAppSelector } from "@/store";
 import AppInfo from "@components/app-info";
@@ -6,11 +7,13 @@ import MultiNavComponent from "@containers/workspace-running/multi-nav.component
 import { useWorkspaceDetailQuery } from "@http/app-manager.hooks";
 import { selectCurrentId } from "@views/workspace/index.slice";
 import "@containers/workspace-running/nav.style";
-
+import { RouteMap } from "@utils/const";
 import { NavModeType } from "@/consts";
+import { useNavigate } from "react-router-dom";
 
 const NavComponent = () => {
   const { workspaceId } = useParams();
+  const navigate = useNavigate();
   const selectedKey = useAppSelector(selectCurrentId);
   const { navMode, theme, menu } = useWorkspaceDetailQuery(
     +(workspaceId as string),
@@ -22,6 +25,21 @@ const NavComponent = () => {
       }),
     }
   );
+
+  useEffect(() => {
+    if (!menu || !menu.length) return;
+    const activeMenuForm = menu[0]?.form;
+    const { assetConfig } = activeMenuForm;
+    if (assetConfig?.url) {
+      navigate(`./iframe`);
+    } else {
+      navigate(
+        `./${
+          RouteMap[(assetConfig.subAppType as unknown) as keyof typeof RouteMap]
+        }`
+      );
+    }
+  }, [menu, workspaceId]);
 
   return (
     <div className="nav-component">

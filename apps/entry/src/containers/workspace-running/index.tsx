@@ -1,7 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import NavComponent from "@containers/workspace-running/nav.component";
-import ContentComponent from "@containers/workspace-running/content.component";
 import SuspenseWrap from "@components/suspense-wrap";
 import "@containers/workspace-running/index.style";
 

@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction, current } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { appManagerBuilder } from "@/http";
 import { RootState } from "@/store";
 import { WorkspaceInitialState } from "@utils/types";
@@ -31,12 +31,12 @@ export const workspaceSlice = createSlice({
         const {
           id,
           project: { id: projectId },
-          extension: { meta },
+          extension,
         } = action.payload;
         state.appId = id;
         state.projectId = projectId;
-        if (meta) {
-          const { menuList } = meta;
+        if (extension?.meta) {
+          const { menuList } = extension.meta;
           state.menu = menuList;
           state.currentId = menuList.length && menuList[0].id;
         }
