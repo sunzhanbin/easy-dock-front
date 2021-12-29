@@ -49,7 +49,7 @@ function AutoNodeEditor(props: AutoNodeEditorProps) {
   const fields = useMemo(() => {
     return (formMeta?.components || [])
       .filter((item) => !['DescText', 'Tabs'].includes(item.config.type))
-      .map((item) => ({ name: item.config.label as string, id: item.config.id }));
+      .map((item) => ({ name: item.config.label as string, id: item.config.fieldName }));
   }, [formMeta]);
 
   return (
