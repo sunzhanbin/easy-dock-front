@@ -106,6 +106,30 @@ $dark-content-background-color: #202023;
           }
         }
       }
+      .ant-table {
+        background-color: $dark-content-background-color;
+        color: $dark-text-color;
+        .ant-table-thead {
+          & > tr {
+            & > th {
+              background-color: $dark-content-background-color;
+              color: $dark-text-color;
+            }
+          }
+        }
+        td.ant-table-column-sort {
+          background-color: $dark-content-background-color;
+        }
+        .ant-table-tbody {
+          .ant-table-row {
+            &:hover {
+              & > td {
+                background-color: rgba($dark-side-background-color, 1);
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
