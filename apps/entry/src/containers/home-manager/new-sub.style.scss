@@ -32,7 +32,6 @@
         height: 8px;
         border-radius: 50%;
         border: 2px solid #fff;
-
       }
     }
     .info {
@@ -41,7 +40,6 @@
       margin-bottom: 50px;
       color: rgba(255, 255, 255, 0.55);
     }
-
     .data_info_bottom {
       height: 160px;
       background-color: #fff;
@@ -82,7 +80,6 @@
         }
         &.orange:after {
           background: #D55F3C;
-
         }
         &:hover {
           background: rgba(24, 39, 67, 0.04);
@@ -160,7 +157,7 @@
         width: calc(100%/2 - 45px);
         top: 50%;
         right: 0;
-        border-bottom: 1px dashed rgba(24, 31, 67, 0.12);
+        border-bottom: 1px dashed rgba(255, 255, 255, 0.17);
       }
     }
   }

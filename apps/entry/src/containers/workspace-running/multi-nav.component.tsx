@@ -6,7 +6,12 @@ import { useAppDispatch } from "@/store";
 import { Outlet, useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
 import { setCurrentId } from "@/views/workspace/index.slice";
-import { keyPath, findFirstChild, findItem } from "@utils/utils";
+import {
+  keyPath,
+  findFirstChild,
+  findItem,
+  getPopupContainer,
+} from "@utils/utils";
 import { RouteMap, TASK_CENTER_TYPE } from "@utils/const";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import { WorkspaceBaseMenuProps, Menu as IMenu } from "@utils/types";
@@ -140,6 +145,7 @@ const MultiNavComponent = ({
             selectedKeys={[selectedKey]}
             mode="horizontal"
             onClick={handleMainMenuClick}
+            getPopupContainer={getPopupContainer}
           >
             {dataSource.map((menu) => (
               <Menu.Item key={menu.id} icon={renderIcon(menu?.form?.icon)}>

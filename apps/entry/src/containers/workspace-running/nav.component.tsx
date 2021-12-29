@@ -8,7 +8,7 @@ import { useWorkspaceDetailQuery } from "@http/app-manager.hooks";
 import { selectCurrentId } from "@views/workspace/index.slice";
 import "@containers/workspace-running/nav.style";
 import { RouteMap } from "@utils/const";
-import { NavModeType } from "@/consts";
+import { NavModeType, SubAppType } from "@/consts";
 import { useNavigate } from "react-router-dom";
 
 const NavComponent = () => {
@@ -30,14 +30,25 @@ const NavComponent = () => {
     if (!menu || !menu.length) return;
     const activeMenuForm = menu[0]?.form;
     const { assetConfig } = activeMenuForm;
-    if (assetConfig?.url) {
+    const { subAppType, subAppId, url } = assetConfig;
+    if (url) {
       navigate(`./iframe`);
     } else {
-      navigate(
-        `./${
-          RouteMap[(assetConfig.subAppType as unknown) as keyof typeof RouteMap]
-        }`
-      );
+      if (subAppType === SubAppType.FLOW && subAppId) {
+        navigate(
+          `./${
+            RouteMap[(subAppType as unknown) as keyof typeof RouteMap]
+          }/instance/${subAppId}`
+        );
+      } else {
+        navigate(
+          `./${
+            RouteMap[
+              (assetConfig.subAppType as unknown) as keyof typeof RouteMap
+            ]
+          }`
+        );
+      }
     }
   }, [menu, workspaceId]);
 
