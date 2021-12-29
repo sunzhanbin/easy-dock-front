@@ -101,9 +101,11 @@
 
   // 覆盖ant-tabs的样式
   .ant-tabs {
-    height: 100%;
+    height: calc(100% - 128px);
     display: flex;
     flex-direction: column;
+    margin-bottom: 24px;
+
     .ant-tabs-nav {
       padding: 0 24px;
       padding-top: 16px;
@@ -136,10 +138,9 @@
     }
     .ant-tabs-content-holder {
       flex: 1;
-      height: calc(100% - 46px);
+      height: calc(100% - 72px);
       padding: 1px 24px;
       overflow-y: auto;
-      margin-bottom: 24px;
     }
   }
   .card-list {
