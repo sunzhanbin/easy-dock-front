@@ -31,13 +31,15 @@ export const workspaceSlice = createSlice({
         const {
           id,
           project: { id: projectId },
-          extension: {
-            meta: { menuList },
-          },
+          extension: { meta },
         } = action.payload;
         state.appId = id;
         state.projectId = projectId;
-        state.currentId = menuList.length && menuList[0].id;
+        if (meta) {
+          const { menuList } = meta;
+          state.menu = menuList;
+          state.currentId = menuList.length && menuList[0].id;
+        }
       }
     );
   },
