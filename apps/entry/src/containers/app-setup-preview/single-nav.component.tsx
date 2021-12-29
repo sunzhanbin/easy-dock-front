@@ -25,7 +25,7 @@ const SingleNavComponent = ({
     }
     return <Icon type={icon} />;
   });
-  const handleMenuClick = useMemoCallback(({ _, key }) => {
+  const handleMenuClick = useMemoCallback(({ key }) => {
     const menu = dataSource.find((v) => v.id === key);
     if (menu) {
       const subMenu = findFirstChild(menu);
@@ -43,7 +43,7 @@ const SingleNavComponent = ({
       dispatch(setCurrentMenu(key));
     }
   });
-  const handleSubMenuClick = useMemoCallback(({ _, key }) => {
+  const handleSubMenuClick = useMemoCallback(({ key }) => {
     dispatch(setCurrentMenu(key));
   });
 

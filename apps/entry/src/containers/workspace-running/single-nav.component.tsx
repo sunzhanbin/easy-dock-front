@@ -111,7 +111,7 @@ const SingleNavComponent = ({
       }
     }
   });
-  const handleSubMenuClick = useMemoCallback(({ _, key }) => {
+  const handleSubMenuClick = useMemoCallback(({ key }) => {
     const menu = findItem(key, dataSource);
     navigateFn(menu);
     if (menu && menu.form?.mode === "current") {

@@ -47,7 +47,7 @@ const UploadImage: FC<UploadImageProps> = ({ value, onChange }) => {
     }
     return true;
   });
-  const handleRemove = useMemoCallback((file: UploadFile) => {
+  const handleRemove = useMemoCallback(() => {
     setFileList([]);
     dispatch(setLogo(""));
     onChange && onChange(undefined);

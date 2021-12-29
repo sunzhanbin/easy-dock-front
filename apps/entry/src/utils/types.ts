@@ -1,5 +1,5 @@
 import { NavModeType, SubAppType, ThemeType } from "@/consts";
-import { SCENE_IAMGES, TASK_CENTER_TYPE } from "@utils/const";
+import { SCENE_IAMGES } from "@utils/const";
 
 export type User = {
   avatar: string; // 头像
