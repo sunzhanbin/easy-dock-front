@@ -1,14 +1,19 @@
-import { useMemo, useRef, useEffect } from "react";
+import { useMemo } from "react";
 import { useParams } from "react-router";
-import { loadMicroApp } from "qiankun";
-import { FLOW_ENTRY } from "@/consts";
+import { MAIN_ENTRY } from "@/consts";
 import { useWorkspaceDetailQuery } from "@/http";
+import { useAppSelector } from "@/store";
+import { selectCurrentId } from "@views/workspace/index.slice";
+import { findItem } from "@utils/utils";
+import "@containers/asset-pages/flow-page.style";
 
 const FlowMicroPage = ({ mode }: { mode: "preview" | "running" }) => {
   const { workspaceId } = useParams();
-  const { theme } = useWorkspaceDetailQuery(+(workspaceId as string), {
+  const selectedKey = useAppSelector(selectCurrentId);
+  const { theme, menu } = useWorkspaceDetailQuery(+(workspaceId as string), {
     selectFromResult: ({ data }) => ({
       theme: data?.extension?.theme || "light",
+      menu: data?.extension?.meta?.menuList,
     }),
   });
   const appId = useMemo(() => {
@@ -18,45 +23,25 @@ const FlowMicroPage = ({ mode }: { mode: "preview" | "running" }) => {
     return 0;
   }, [workspaceId]);
 
-  const baseName = useMemo(() => {
-    const modeMap = {
-      preview: `/app-manager/${appId}/flow`,
-      running: `/workspace/${appId}/flow`,
+  const appInfo = useMemo(() => {
+    const menuInfo = findItem(selectedKey, menu);
+    return {
+      subAppId: menuInfo?.form?.assetConfig?.subAppId || 0,
+      subAppType: menuInfo?.form?.assetConfig?.subAppType,
     };
-    return modeMap[mode];
-  }, [mode, appId]);
+  }, [selectedKey, menu]);
 
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (containerRef.current) {
-      const app = loadMicroApp({
-        name: "easy-flow",
-        entry: FLOW_ENTRY as string,
-        container: containerRef.current,
-        props: {
-          basename: baseName || "",
-          extra: {
-            mode,
-            theme,
-          },
-        },
-      });
-
-      // app.mountPromise.finally(() => {
-      //   // 防止页面跳走后才加载成功时setstate的警告;
-      //   if (containerRef.current) {
-      //     setLoading(false);
-      //   }
-      // });
-
-      return () => {
-        app.unmount();
-      };
-    }
-  }, []);
-
-  return <div className="flow-page" ref={containerRef}></div>;
+  return (
+    <div className="flow-page">
+      <iframe
+        className="iframe"
+        src={`${MAIN_ENTRY}/main/app/${workspaceId || appId}/process/instance/${
+          appInfo?.subAppId
+        }?theme=${theme}&mode=running`}
+        frameBorder={0}
+      />
+    </div>
+  );
 };
 
 export default FlowMicroPage;

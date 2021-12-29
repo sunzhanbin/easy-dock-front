@@ -5,7 +5,7 @@
   "scripts": {
     "start": "rescripts start",
     "build:test": "sh -ac '. .env.staging; rescripts build'",
-    "build": "cross-env REACT_APP_TARGET_ENV=staging rescripts build",
+    "build": "cross-env PUBLIC_URL=/main/ REACT_APP_TARGET_ENV=staging rescripts build",
     "build:dev": "cross-env REACT_APP_TARGET_ENV=dev rescripts build",
     "build:cluster": "cross-env REACT_APP_TARGET_ENV=cluster rescripts build",
     "eject": "rescripts eject"

@@ -58,7 +58,7 @@ export default function AppHeader({ children }: AppHeaderProps) {
               </a>
             ) : null
           ) : canGoApp ? (
-            <a href={ROUTES.INDEX} target="_blank" rel="noreferrer" className={styles.appClient}>
+            <a href={`/main${ROUTES.INDEX}`} target="_blank" rel="noreferrer" className={styles.appClient}>
               <Icon type="yingyonduandinglan" className={styles.icon} />
               <span className={styles.text}>应用端</span>
             </a>

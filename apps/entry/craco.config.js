@@ -147,8 +147,6 @@ module.exports = {
             runTasksInSeries: true,
           })
         );
-
-        webpackConfig.output.publicPath = '/entry/';
       });
       return webpackConfig;
     },

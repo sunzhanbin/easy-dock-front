@@ -10,7 +10,7 @@ import "@/index.scss";
 
 ReactDOM.render(
   <Provider store={store}>
-    <BrowserRouter basename="/entry/">
+    <BrowserRouter>
       <App />
     </BrowserRouter>
   </Provider>,
