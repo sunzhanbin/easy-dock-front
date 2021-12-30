@@ -14,7 +14,6 @@ import { Menu } from "@utils/types";
 import { Icon, Text, PopoverConfirm } from "@common/components";
 import { findItem, handleStopPropagation } from "@utils/utils";
 import "@containers/app-setup-config/menu-setup-list.style";
-import useMemoCallback from "@common/hooks/use-memo-callback";
 
 const { Panel } = Collapse;
 
@@ -34,14 +33,6 @@ const MenuItemComponent = ({
   const style = useMemo(() => {
     return { paddingLeft: `${menu.depth * 12 + 18}px` };
   }, [menu.depth]);
-
-  const renderIcon = useMemoCallback((icon) => {
-    if (!icon || icon === "wukongjian") {
-      return null;
-    }
-    return <Icon type={icon} className="icon" />;
-  });
-
   const handleAddMenu = useCallback(
     async (e: React.MouseEvent, currentId: string) => {
       e.stopPropagation();
@@ -72,7 +63,6 @@ const MenuItemComponent = ({
       })}
       style={style}
     >
-      {renderIcon(menu?.form?.icon)}
       <div className="text" onClick={(e) => handleMenuClick(e, menu.id)}>
         <Text text={menu.name} getContainer={false} />
       </div>

@@ -32,6 +32,9 @@
           margin: 0;
           padding: 0 12px;
           overflow: hidden;
+          .ant-menu-item-icon {
+            font-size: 20px;
+          }
           .ant-menu-title-content {
             max-width: 140px;
           }
@@ -100,6 +103,9 @@
           padding: 0 24px;
           font-size: 14px;
           font-weight: 400;
+        }
+        .ant-menu-item-icon {
+          font-size: 20px;
         }
         .ant-menu-submenu-title {
           height: 48px;
