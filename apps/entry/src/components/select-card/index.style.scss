@@ -1,14 +1,20 @@
+@import '@common/styles/var.scss';
+
 .select-card {
-  .select_field {
-    min-width: 264px;
+  .select_project {
+    min-width: 200px;
     max-width: 264px;
-    &.select_project.ant-select.ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
+    &.ant-select-selector {
+      border: 1px solid transparent;
+    }
+    &.ant-select:not(.ant-select-disabled):hover .ant-select-selector, &.ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector,
+    {
+      box-shadow: none;
+      border: 1px solid transparent;
+    }
+    &.ant-select.ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
       background-color: transparent !important;
     }
-  }
-  .ant-select:not(.ant-select-disabled):hover .ant-select-selector, .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector {
-    box-shadow: none;
-    border: 0 none;
   }
 }
 
@@ -72,7 +78,7 @@
       }
       .edit-icon {
         cursor: pointer;
-        color: #5E6576;
+        color: $icon-color;
         display: none;
         margin-right: 12px;
         &:hover {
@@ -82,7 +88,7 @@
       .delete-icon {
         display: none;
         margin-right: 8px;
-        color: #5E6576;
+        color: $icon-color;
         cursor: pointer;
         &:hover {
           color: #4C5CDB;

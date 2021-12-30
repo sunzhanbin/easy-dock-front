@@ -172,7 +172,6 @@ const SelectCard = ({
                         type="gou"
                         onClick={handleAddName}
                       />
-
                       <Icon
                         className="close"
                         type="fanhuichexiao"
@@ -220,6 +219,7 @@ const SelectCard = ({
           getPopupContainer: getPopupContainer,
         })}
         dropdownRender={renderMenu}
+        suffixIcon={<Icon type="xiala" />}
       >
         {fieldList?.map((item: any) => (
           <Option key={item.id} value={item.id} label={item.name}>

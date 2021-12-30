@@ -1,3 +1,5 @@
+@import '@common/styles/var.scss';
+
 .header_help {
   flex: 1;
   background-color: #fff;
@@ -22,7 +24,7 @@
       }
       .icon {
         font-size: 16px;
-        color: #5e6576;
+        color: $icon-color;
       }
     }
   }
@@ -31,6 +33,7 @@
   }
   .list {
     .icon-detail {
+      color: $icon-color;
       font-size: 12px;
       position: absolute;
       bottom: 0;
