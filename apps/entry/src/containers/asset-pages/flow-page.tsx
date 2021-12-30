@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { useParams } from "react-router";
+import classNames from "classnames";
 import { MAIN_ENTRY } from "@/consts";
 import { useWorkspaceDetailQuery } from "@/http";
 import { useAppSelector } from "@/store";
@@ -32,7 +33,7 @@ const FlowMicroPage = ({ mode }: { mode: "preview" | "running" }) => {
   }, [selectedKey, menu]);
 
   return (
-    <div className="flow-page">
+    <div className={classNames("flow-page", theme)}>
       <iframe
         className="iframe"
         src={`${MAIN_ENTRY}/main/app/${workspaceId || appId}/process/instance/${
