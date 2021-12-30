@@ -1,4 +1,5 @@
 @import '@common/styles/var.scss';
+@import '@common/styles/theme-color.scss';
 
 .link {
   color: inherit;
@@ -30,12 +31,51 @@
       }
     }
   }
-
-  // :global(.ant-table-row) {
-  //   &:hover {
-  //     .del {
-  //       display: flex;
-  //     }
-  //   }
-  // }
+  &.dark {
+    color: $dark-text-color;
+    :global {
+      .ant-table-container {
+        color: $dark-text-color;
+        .ant-table-cell {
+          background-color: $dark-content-background-color;
+          color: $dark-text-color;
+          border-color: $dark-text-color;
+        }
+        .ant-pagination-item-link {
+          border-color: transparent;
+          background-color: transparent;
+          color: $dark-text-color;
+        }
+        .ant-pagination-item {
+          border-color: transparent;
+          background-color: transparent;
+          color: $dark-text-color;
+        }
+        .ant-pagination-options-size-changer {
+          color: $dark-text-color;
+          &.ant-select-focused {
+            .ant-select-selector {
+              background-color: transparent;
+            }
+          }
+          .ant-select-selector {
+            background-color: transparent;
+            border-color: transparent;
+            box-shadow: none;
+          }
+        }
+        .ant-select.ant-select-single:not(.ant-select-customize-input) {
+          .ant-select-selector {
+            &:hover,
+            &:active {
+              background-color: transparent;
+            }
+          }
+        }
+        .ant-empty-description {
+          color: $dark-text-color;
+        }
+      }
+    }
+  }
 }

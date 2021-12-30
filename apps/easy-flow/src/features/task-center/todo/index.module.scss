@@ -90,6 +90,20 @@
     }
   }
   &.dark {
+    :global {
+      .ant-select-dropdown,
+      .ant-select-clear {
+        background-color: rgba($dark-content-background-color, 1) !important;
+      }
+      .ant-select-item-option,
+      .ant-select-selection-item,
+      .ant-select-clear {
+        color: $dark-text-color !important;
+      }
+      .ant-select-item-option-active {
+        background-color: rgba(76, 92, 219, 0.08) !important;
+      }
+    }
     .header {
       .search {
         :global {
@@ -116,6 +130,52 @@
             &:hover {
               border-color: rgba($dark-text-color, 0.3);
             }
+          }
+        }
+      }
+    }
+    .content {
+      :global {
+        .ant-table-wrapper {
+          color: $dark-text-color;
+          .ant-table-cell {
+            background-color: $dark-content-background-color;
+            color: $dark-text-color;
+            border-color: $dark-text-color;
+          }
+          .ant-pagination-item-link {
+            border-color: transparent;
+            background-color: transparent;
+            color: $dark-text-color;
+          }
+          .ant-pagination-item {
+            border-color: transparent;
+            background-color: transparent;
+            color: $dark-text-color;
+          }
+          .ant-pagination-options-size-changer {
+            color: $dark-text-color;
+            &.ant-select-focused {
+              .ant-select-selector {
+                background-color: transparent;
+              }
+            }
+            .ant-select-selector {
+              background-color: transparent;
+              border-color: transparent;
+              box-shadow: none;
+            }
+          }
+          .ant-select.ant-select-single:not(.ant-select-customize-input) {
+            .ant-select-selector {
+              &:hover,
+              &:active {
+                background-color: transparent;
+              }
+            }
+          }
+          .ant-empty-description {
+            color: $dark-text-color;
           }
         }
       }

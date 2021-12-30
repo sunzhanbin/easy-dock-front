@@ -292,6 +292,7 @@ const Copy: FC = () => {
                 placeholder="请选择"
                 suffixIcon={<Icon type="xiala" />}
                 onChange={handleSearch}
+                getPopupContainer={(node) => node}
                 allowClear
               >
                 {TASK_STATE_LIST.map(({ key, value }) => (
