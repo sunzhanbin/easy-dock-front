@@ -2,4 +2,21 @@
 
 .user-container {
   pointer-events: initial !important;
+  .icon-exit {
+    margin-right: 4px;
+  }
+}
+.dark {
+  .ant-dropdown {
+    .ant-dropdown-menu {
+      background: rgba(#2d2d2f, 1);
+      .ant-dropdown-menu-item {
+        color: rgba($dark-text-color, 0.85);
+        &:hover {
+          background-color: rgba(#2d2d2f, 0.6);
+          color: rgba($dark-text-color, 1);
+        }
+      }
+    }
+  }
 }
