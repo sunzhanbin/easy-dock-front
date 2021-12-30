@@ -22,7 +22,6 @@ export const appManagerSlice = createSlice({
         const {
           payload: [defualtWorkspace],
         } = action;
-        console.log(action.payload, "0000");
         state.currentWorkspaceId = defualtWorkspace?.id;
       }
     );
