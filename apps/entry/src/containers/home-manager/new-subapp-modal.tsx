@@ -1,5 +1,5 @@
 import React, { memo, useCallback } from "react";
-import { Modal, Form, Input } from "antd";
+import { Modal, Form, Input, message } from "antd";
 import SelectCard from "@components/select-card";
 import { useAppSelector } from "@/store";
 import { selectProjectId } from "@views/home/index.slice";
@@ -35,8 +35,10 @@ const NewSubAppModal = ({ modalInfo, visible, onOk, onCancel }: ModalProps) => {
     }),
   });
   const handleNewSubApp = useCallback(
-    (name: any) => {
-      return addWorkspace({ name, projectId });
+    ({ name }) => {
+      const ret = addWorkspace({ name, projectId });
+      message.success("创建成功");
+      return ret;
     },
     [addWorkspace, projectId]
   );

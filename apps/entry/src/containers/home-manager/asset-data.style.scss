@@ -1,10 +1,10 @@
 @import '@common/styles/var.scss';
 
 .header_asset_data {
-  height: 306px;
+  height: 320px;
   min-height: 268px;
   width: 100%;
-  padding: 24px;
+  padding: 90px 24px 40px  44px;
   background: url('~@assets/images/home/asset.png') 0 65% no-repeat;
   background-size: cover;
   display: flex;
@@ -45,6 +45,19 @@
         line-height: 48px;
       }
     }
+  }
+}
+
+@media screen and (max-height: 900px) {
+  .header_asset_data {
+    max-height: 268px;
+    padding: 90px 24px 40px  44px;
+  }
+}
+
+@media screen and (max-height: 1152px) {
+  .header_asset_data {
+    padding: 120px 24px 40px  44px;
   }
 }
 
