@@ -3,6 +3,7 @@ import { appManagerBuilder } from "@/http";
 import { RootState } from "@/store";
 import { WorkspaceInitialState } from "@utils/types";
 import { NavModeType } from "@/consts";
+import { HomeManagerSlice } from "@views/home/index.slice";
 
 const initialState: WorkspaceInitialState = {
   name: "",
@@ -25,6 +26,12 @@ export const workspaceSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    builder.addCase(
+      HomeManagerSlice.actions.setProjectId.type,
+      (state, action: PayloadAction<string>) => {
+        state.projectId = action.payload;
+      }
+    );
     builder.addMatcher(
       appManagerBuilder.endpoints.workspaceDetail.matchFulfilled,
       (state, action) => {
