@@ -37,7 +37,11 @@ const NewSubAppModal = ({ modalInfo, visible, onOk, onCancel }: ModalProps) => {
   const handleNewSubApp = useCallback(
     ({ name }) => {
       const ret = addWorkspace({ name, projectId });
-      message.success("创建成功");
+      ret.then((res: any) => {
+        if (res?.data) {
+          message.success("创建成功");
+        }
+      });
       return ret;
     },
     [addWorkspace, projectId]
