@@ -58,7 +58,6 @@ const SingleNavComponent = ({
             inlineCollapsed={false}
             selectedKeys={[selectedKey]}
             onClick={handleMenuClick}
-            openKeys={keyPath(selectedKey, dataSource)}
           >
             {/* @Todo 此处和菜单设置里的嵌套组件不同，antd 组件嵌套时，key 的数据丢失 */}
             {((dataSource) => {
