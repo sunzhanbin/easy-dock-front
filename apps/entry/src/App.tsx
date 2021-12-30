@@ -20,6 +20,9 @@ const AssetCentre = React.lazy(() => import("@views/asset-centre"));
 const TemplateMall = React.lazy(() => import("@views/template-mall"));
 const Workspace = React.lazy(() => import("@views/workspace"));
 const NoMatch = React.lazy(() => import("@views/no-match"));
+const EmptyPage = React.lazy(
+  () => import("@containers/asset-pages/empty-page")
+);
 
 auth.setConfig({ server: process.env.REACT_APP_SSO_LOGIN_URL });
 const query = decodeURIComponent(window.location.href.split("?")[1]);
@@ -56,6 +59,11 @@ const App: React.FC = () => {
           <Route
             path="app/:appId/flow-app/:subAppId"
             element={<SuspenseWrap render={<FlowApp />} />}
+          />
+          {/*因为要支持新窗口打开空状态的应用，故加这么一个理由  */}
+          <Route
+            path="app/:workspaceId/empty"
+            element={<SuspenseWrap render={<EmptyPage />} />}
           />
           <Route
             path="template-mall"
