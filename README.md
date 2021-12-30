@@ -58,6 +58,7 @@ yarn start
 ### 给 npm-client 传递参数
 
 可以通过 `--` 后添加选项, 设置 npm cient 的参数。
+默认使用生产构建可以节省构建所用时间。开发环境本地安装时，推荐使用 npm run bootstrap-dev 命令，这样会安装 devDependencies
 
 ### 开发过程中 Windows 端口被占用解决办法
 

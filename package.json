@@ -10,6 +10,7 @@
     "build:dev": "lerna bootstrap && lerna run build:dev",
     "precommit": "lint-staged",
     "bootstrap": "yarn add husky --dev -W && husky install && lerna bootstrap",
+    "bootstrap-dev": "yarn add husky --dev -W && husky install && lerna bootstrap -- --dev",
     "publish": "lerna publish",
     "clean": "lerna clean",
     "eslint": "eslint apps/*/src --ext .js,.jsx,.ts,.tsx"
