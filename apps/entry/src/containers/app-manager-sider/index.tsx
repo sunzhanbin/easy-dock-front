@@ -30,6 +30,7 @@ const AppManagerSider = () => {
         ?.filter((workspace: any) => workspace.name.includes(name))
         ?.filter(Boolean),
     }),
+    refetchOnMountOrArgChange: true,
   });
 
   const handleMenuClick = useCallback(
@@ -126,7 +127,7 @@ const AppManagerSider = () => {
             onPressEnter={handleSearch}
           />
         </div>
-        {workspaceId && (
+        {workspaceId ? (
           <Menu
             theme="light"
             mode="inline"
@@ -152,6 +153,8 @@ const AppManagerSider = () => {
               </Menu.Item>
             ))}
           </Menu>
+        ) : (
+          <div className="menu-list" />
         )}
         <div className="add-workspace">
           <Button

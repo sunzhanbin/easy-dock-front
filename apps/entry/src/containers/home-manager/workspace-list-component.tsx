@@ -41,7 +41,7 @@ const HomeWorkspaceList = () => {
       try {
         const ret: ResponseType = await getRecentList({
           id: projectId,
-          size: 10,
+          size: 14,
         });
         setLoading(false);
         const list = ret.data.map(async (item: ListItemType) => ({
