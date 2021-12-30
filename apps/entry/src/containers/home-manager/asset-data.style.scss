@@ -1,3 +1,5 @@
+@import '@common/styles/var.scss';
+
 .header_asset_data {
   height: 306px;
   min-height: 268px;
@@ -21,6 +23,8 @@
       .icon {
         display: inline-block;
         margin-right: 6px;
+        font-size: 18px;
+        color: $icon-color;
       }
     }
   }
