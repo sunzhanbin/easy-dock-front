@@ -114,8 +114,9 @@ const AppManagerHeader: FC<EditHeaderProps> = ({ className }) => {
           <Text text={workspace?.name} />
         </div>
       </div>
+      {/* 只有一个应用编排,暂时干掉 */}
       <div className="nav-list">
-        {navList.map(({ key, title }) => {
+        {/* {navList.map(({ key, title }) => {
           return (
             <div
               key={key}
@@ -125,7 +126,7 @@ const AppManagerHeader: FC<EditHeaderProps> = ({ className }) => {
               {title}
             </div>
           );
-        })}
+        })} */}
       </div>
       <div className="right">
         <div className="preview" onClick={handlePreview}>
