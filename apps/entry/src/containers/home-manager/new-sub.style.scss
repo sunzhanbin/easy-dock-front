@@ -1,8 +1,7 @@
 @import '@common/styles/var.scss';
 
 .banner {
-  height: 280px;
-  min-height: 280px;
+  min-height: 254px;
   width: 100%;
   padding: 24px 0 24px 24px;
   background: url('~@assets/images/home/banner.png') 0 0 no-repeat;
@@ -13,7 +12,7 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    padding-top: 44px;
+    padding-top: 30px;
     position: relative;
     .text_wrapper {
       width: 100%;
@@ -37,21 +36,30 @@
     .info {
       text-align: center;
       font-size: 14px;
-      margin-bottom: 50px;
       color: rgba(255, 255, 255, 0.55);
+    }
+    .icon-wrapper {
+      text-align: center;
+      margin-top: 8px;
+      margin-bottom: 32px;
+
+      .icon-direction {
+        font-size: 16px;
+        color: $icon-color;
+      }
     }
     .data_info_bottom {
       height: 160px;
       background-color: #fff;
-      border-radius: 3px;
+      border-radius: 6px;
       box-shadow: 0 13px 12px -12px rgba(255, 255, 255, 0.17);
       position: absolute;
       width: 96%;
-      top: 175px;
+      top: 150px;
       display: flex;
       .operation_wrapper {
         flex: 1;
-        border: 1px solid rgba(24, 31, 67, 0.08);
+        border-right: 1px solid rgba(24, 31, 67, 0.08);
         display: inline-flex;
         justify-content: center;
         align-items: center;
@@ -63,6 +71,7 @@
           flex-direction: column;
           align-items: center;
           .icon_arrow {
+            color: $icon-color;
             font-size: 16px;
             height: 0;
             transition: all 0.5s;
@@ -134,13 +143,12 @@
           background: url('~@assets/images/space.png') 0 0 no-repeat;
           background-size: cover;
         }
-
         .text {
           color: $primary-text-color;
           font-size: 14px;
           margin-bottom: 12px;
         }
-        &:nth-child(2){
+        &:nth-child(3){
           border-right: 0 none;
         }
       }
@@ -197,6 +205,24 @@
       }
       &:after {
         right: 0;
+      }
+    }
+  }
+}
+
+@media screen and (min-height: 968px) and (max-height: 1152px) {
+  .banner {
+    min-height: 320px;
+    .banner_content {
+      padding-top: 62px;
+      .icon-wrapper {
+        text-align: center;
+        margin-top: 20px;
+        margin-bottom: 43px;
+      }
+      .data_info_bottom {
+        height: 200px;
+        top: 200px;
       }
     }
   }

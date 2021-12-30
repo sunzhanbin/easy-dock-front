@@ -55,21 +55,22 @@ const SingleNavComponent = ({
       },
     } = menu;
     let url = "";
+    // 当前窗口打开
     if (mode === "current") {
-      // 当前窗口打开
+      // 流程类子应用
       if (subAppType === SubAppType.FLOW && subAppId) {
-        navigate(
-          `./${
-            RouteMap[(subAppType as unknown) as keyof typeof RouteMap]
-          }/instance/${subAppId}`
-        );
+        url = `./${
+          RouteMap[(subAppType as unknown) as keyof typeof RouteMap]
+        }/instance/${subAppId}`;
       } else if (subAppId) {
-        navigate(
-          `./${RouteMap[(subAppType as unknown) as keyof typeof RouteMap]}`
-        );
+        url = `./${RouteMap[(subAppType as unknown) as keyof typeof RouteMap]}`;
+      } else if (customUrl) {
+        url = "./iframe";
       } else {
-        navigate(`./iframe`);
+        // 如果没有子应用id和自定义url,则显示空状态
+        url = "./empty";
       }
+      navigate(url);
     } else {
       // 新窗口打开
       if (subAppType && subAppId) {
@@ -94,8 +95,10 @@ const SingleNavComponent = ({
           // 表单子应用和报表子应用暂时没有这两种场景,直接返回
           return;
         }
+      } else if (customUrl) {
+        url = customUrl;
       } else {
-        url = customUrl!;
+        url = `/app/${appId}/empty`;
       }
       window.open(url);
     }

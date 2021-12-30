@@ -69,8 +69,10 @@ const MultiNavComponent = ({
         }/instance/${subAppId}`;
       } else if (subAppId) {
         url = `./${RouteMap[(subAppType as unknown) as keyof typeof RouteMap]}`;
-      } else {
+      } else if (customUrl) {
         url = "./iframe";
+      } else {
+        url = "./empty";
       }
       navigate(url);
     } else {
@@ -96,8 +98,10 @@ const MultiNavComponent = ({
           // 表单子应用和报表子应用暂时没有这两种场景,直接返回
           return;
         }
+      } else if (customUrl) {
+        url = customUrl;
       } else {
-        url = customUrl!;
+        url = `/app/${appId}/empty`;
       }
       window.open(url);
     }

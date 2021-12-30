@@ -75,6 +75,10 @@ const HomeNewSub = () => {
               <span className="circle" />
             </p>
             <p className="info">{sub.desc}</p>
+
+            <p className="icon-wrapper">
+              <Icon type="xialafuza" className="icon-direction" />
+            </p>
           </div>
           <div className="data_info_bottom">
             {sub.subList.map((item, index) => (

@@ -1,16 +1,16 @@
 .app-empty {
-  display: flex;
   padding: 48px 24px;
+  display: grid;
+  grid-column-gap: 24px;
+  grid-template-columns: repeat(5, 1fr);
   & > .empty-item {
     position: relative;
-    width: 174px;
     height: 286px;
     background: #ffffff;
     text-align: center;
     border-radius: 3px;
     padding: 38px 20px;
     border: 1px solid rgba(24, 31, 67, 0.12);
-    margin-right: 24px;
     & > .title {
       font-size: 20px;
       font-weight: 500;
