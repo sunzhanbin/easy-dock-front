@@ -168,6 +168,9 @@
       .ant-empty-description {
         color: $dark-text-color;
       }
+      .ant-table-tbody > tr.ant-table-placeholder:hover > td {
+        background-color: rgba($dark-content-background-color, 1);
+      }
     }
   }
 }
