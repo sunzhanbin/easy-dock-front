@@ -159,6 +159,13 @@
             border-color: transparent;
             background-color: transparent;
             color: rgba($dark-text-color, 0.55);
+            a {
+              color: inherit;
+            }
+            &.ant-pagination-item-active,
+            &:hover {
+              background: rgba(76, 92, 219, 0.12);
+            }
           }
           .ant-pagination-options-size-changer {
             color: rgba($dark-text-color, 0.55);

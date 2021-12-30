@@ -133,9 +133,9 @@
   &.dark {
     & > .left {
       background: $dark-side-background-color;
-      border-right-color: rgba(255, 255, 255, 0.08);
+      border-right-color: rgba($dark-text-color, 0.08);
       .app-name {
-        color: $dark-text-color;
+        color: rgba($dark-text-color, 0.8);
       }
       & > .menu {
         & > .ant-menu {
@@ -143,7 +143,7 @@
           .ant-menu-submenu-title,
           .ant-menu-item {
             background: $dark-side-background-color;
-            color: $dark-text-color;
+            color: rgba($dark-text-color, 0.8);
           }
           .ant-menu-item-selected {
             background-color: $dark-content-background-color;
@@ -163,7 +163,7 @@
           }
         }
         .ant-menu-submenu-arrow {
-          color: #fff;
+          color: rgba($dark-text-color, 0.8);
         }
       }
     }
@@ -171,13 +171,13 @@
       background: $dark-content-background-color;
       & > .header {
         background: $dark-side-background-color;
-        border-bottom-color: rgba(255, 255, 255, 0.12);
+        border-bottom-color: rgba($dark-text-color, 0.08);
         & > .user-container {
-          color: $dark-text-color;
+          color: rgba($dark-text-color, 0.8);
         }
       }
       & > .content {
-        color: $dark-text-color;
+        color: rgba($dark-text-color, 0.8);
       }
     }
   }
