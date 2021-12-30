@@ -106,10 +106,6 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
     [id: string]: { name: string; avatar?: string; id: number | string };
   }>({});
 
-  useEffect(() => {
-    console.info(appConfig, 'appConfig');
-  }, []);
-
   const baseColumns: TableProps<TableDataBase>['columns'] = useMemo(() => {
     return [
       {
@@ -219,7 +215,7 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
         key: tableKey,
         title: <Text className="dynamic-cell" text={field.name} />,
         dataIndex: tableKey,
-        width: 150,
+        width: 180,
       };
       if (field.type === 'Tabs') {
         // eslint-disable-next-line
@@ -525,7 +521,7 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
   }, [statusList, userId, pagination.pageSize, pagination.current, sortDirection]);
 
   return (
-    <div className={classNames('flow-app-content', theme, !canOperation && 'preview')}>
+    <div className={classNames('flow-app-content', theme, !canOperation && 'preview')} ref={containerRef}>
       <div className="start">
         <Button type="primary" size="large" className="button" onClick={handleJumpToStartFlow}>
           发起流程
@@ -580,6 +576,8 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
           pagination={pagination}
           columns={tableColumns}
           dataSource={dataSource}
+          scroll={{ scrollToFirstRowOnChange: true, x: '100%', y: '100%' }}
+          getPopupContainer={() => containerRef.current!}
           onChange={handleTableChange}
         />
       </div>
