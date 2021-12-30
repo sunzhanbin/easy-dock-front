@@ -1,1 +1,5 @@
-@import '@containers/app-setup-preview/multi-nav.style';
+@import "@containers/app-setup-preview/multi-nav.style";
+
+.user-container {
+  pointer-events: initial !important;
+}
