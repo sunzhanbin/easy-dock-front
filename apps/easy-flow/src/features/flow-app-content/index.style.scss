@@ -23,10 +23,14 @@
     & > .search {
       flex: 1;
       display: flex;
-      justify-content: flex-end;
       margin-right: 12px;
       & > .select {
         width: 200px;
+        & > .ant-select-selector {
+          background-color: transparent;
+          border-color: transparent;
+          box-shadow: none;
+        }
       }
     }
     & > .operation {
@@ -40,6 +44,10 @@
           font-size: 20px;
           margin-right: 4px;
         }
+        & > .text {
+          padding-right: 8px;
+          border-right: 1px solid rgba(24, 31, 67, 0.12);
+        }
         &:hover {
           color: $primary-color;
           & > .icon {
@@ -48,7 +56,7 @@
         }
       }
       & > .refresh {
-        margin-left: 12px;
+        margin: 0 24px 0 12px;
         cursor: pointer;
         .icon {
           font-size: 20px;
@@ -67,27 +75,41 @@
   &.dark {
     background: $dark-content-background-color;
     height: 100%;
+    .ant-select-dropdown,
+    .ant-select-clear {
+      background-color: rgba($dark-content-background-color, 1);
+    }
+    .ant-select-item-option,
+    .ant-select-selection-item,
+    .ant-select-clear {
+      color: $dark-text-color;
+    }
+    .ant-select-item-option-active {
+      background-color: rgba(76, 92, 219, 0.08);
+    }
+    .ant-select-selector {
+      background-color: transparent;
+      border-color: transparent;
+      box-shadow: none;
+    }
     & > .header {
       & > .status-list {
         .ant-checkbox-wrapper {
           color: $dark-text-color;
         }
       }
-      & > .search {
-        .ant-select {
-          border-radius: 4px;
-          background-color: $dark-text-color;
-        }
-      }
       & > .operation {
         & > .export {
           color: $dark-text-color;
+          .text {
+            border-color: rgba(255, 255, 255, 0.17);
+          }
         }
       }
     }
     & > .table-container {
       .ant-pagination-options-size-changer {
-        color: rgba($dark-text-color, 0.66);
+        color: $dark-text-color;
         &.ant-select-focused {
           .ant-select-selector {
             background-color: transparent;
@@ -110,7 +132,11 @@
             & > th {
               background-color: $dark-content-background-color;
               color: $dark-text-color;
+              border-bottom-color: $dark-text-color;
             }
+          }
+          .ant-table-cell-scrollbar {
+            display: none;
           }
         }
         td.ant-table-column-sort {
@@ -124,7 +150,20 @@
               }
             }
           }
+          .ant-table-cell {
+            border-bottom-color: $dark-text-color;
+          }
         }
+      }
+      .ant-pagination-item-link {
+        border-color: transparent;
+        background-color: transparent;
+        color: $dark-text-color;
+      }
+      .ant-pagination-item {
+        border-color: transparent;
+        background-color: transparent;
+        color: $dark-text-color;
       }
     }
   }

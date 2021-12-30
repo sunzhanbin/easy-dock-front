@@ -522,11 +522,6 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
 
   return (
     <div className={classNames('flow-app-content', theme, !canOperation && 'preview')} ref={containerRef}>
-      <div className="start">
-        <Button type="primary" size="large" className="button" onClick={handleJumpToStartFlow}>
-          发起流程
-        </Button>
-      </div>
       <div className="header">
         <div className="status-list">
           <Checkbox.Group value={statusList} onChange={handleStatusChange}>
@@ -543,6 +538,7 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
             onChange={handleStarterChange}
             onPopupScroll={handleScroll}
             onSearch={handleSearchUser}
+            getPopupContainer={(node) => node}
             suffixIcon={<Icon type="xiala" />}
             placeholder="请选择发起人"
             optionFilterProp="label"
@@ -567,6 +563,9 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
               <Icon type="chongpao" className="icon" />
             </div>
           </Tooltip>
+          <Button type="primary" size="large" className="button" onClick={handleJumpToStartFlow}>
+            发起流程
+          </Button>
         </div>
       </div>
       <div className="table-container">
