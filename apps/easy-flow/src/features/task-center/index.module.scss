@@ -75,16 +75,16 @@
     .header {
       .left {
         .title {
-          color: rgba($dark-text-color, 0.85);
+          color: rgba($dark-text-color, 0.8);
         }
         .line {
           border-color: rgba($dark-text-color, 0.12);
         }
         .navLink {
           .nav {
-            color: rgba($dark-text-color, 0.66);
+            color: rgba($dark-text-color, 0.6);
             &.active {
-              color: rgba($dark-text-color, 0.85);
+              color: rgba($dark-text-color, 0.8);
             }
           }
         }

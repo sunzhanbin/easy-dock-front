@@ -82,7 +82,7 @@
     .ant-select-item-option,
     .ant-select-selection-item,
     .ant-select-clear {
-      color: $dark-text-color;
+      color: rgba($dark-text-color, 0.8);
     }
     .ant-select-item-option-active {
       background-color: rgba(76, 92, 219, 0.08);
@@ -95,12 +95,12 @@
     & > .header {
       & > .status-list {
         .ant-checkbox-wrapper {
-          color: $dark-text-color;
+          color: rgba($dark-text-color, 0.8);
         }
       }
       & > .operation {
         & > .export {
-          color: $dark-text-color;
+          color: rgba($dark-text-color, 0.8);
           .text {
             border-color: rgba(255, 255, 255, 0.17);
           }
@@ -109,7 +109,7 @@
     }
     & > .table-container {
       .ant-pagination-options-size-changer {
-        color: $dark-text-color;
+        color: rgba($dark-text-color, 0.55);
         &.ant-select-focused {
           .ant-select-selector {
             background-color: transparent;
@@ -126,13 +126,13 @@
       }
       .ant-table {
         background-color: $dark-content-background-color;
-        color: $dark-text-color;
+        color: rgba($dark-text-color, 0.55);
         .ant-table-thead {
           & > tr {
             & > th {
               background-color: $dark-content-background-color;
-              color: $dark-text-color;
-              border-bottom-color: $dark-text-color;
+              color: rgba($dark-text-color, 0.55);
+              border-bottom-color: rgba($dark-text-color, 0.1);
             }
           }
           .ant-table-cell-scrollbar {
@@ -151,22 +151,22 @@
             }
           }
           .ant-table-cell {
-            border-bottom-color: $dark-text-color;
+            border-bottom-color: rgba($dark-text-color, 0.1);
           }
         }
       }
       .ant-pagination-item-link {
         border-color: transparent;
         background-color: transparent;
-        color: $dark-text-color;
+        color: rgba($dark-text-color, 0.55);
       }
       .ant-pagination-item {
         border-color: transparent;
         background-color: transparent;
-        color: $dark-text-color;
+        color: rgba($dark-text-color, 0.55);
       }
       .ant-empty-description {
-        color: $dark-text-color;
+        color: rgba($dark-text-color, 0.55);
       }
       .ant-table-tbody > tr.ant-table-placeholder:hover > td {
         background-color: rgba($dark-content-background-color, 1);
