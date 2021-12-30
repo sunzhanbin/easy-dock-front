@@ -446,7 +446,7 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
 
   const handleJumpToStartFlow = useMemoCallback(() => {
     const path = dynamicRoutes.toStartFlow(id);
-    history.push(`${path}/?mode=${mode}`);
+    history.push(`${path}/?mode=${mode}&type=app`);
   });
 
   const handleRefresh = useMemoCallback(debounce(fetchDataSource, 200));
