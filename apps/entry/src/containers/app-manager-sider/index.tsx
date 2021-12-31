@@ -25,7 +25,6 @@ const AppManagerSider = () => {
     selectFromResult: ({ data }) => ({
       workspaceList: data?.filter((workspace: any) => workspace.name.includes(name))?.filter(Boolean),
     }),
-    refetchOnMountOrArgChange: 30,
   });
 
   const handleMenuClick = useCallback(

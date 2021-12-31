@@ -1,14 +1,14 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "@/store";
-import { appManagerBuilder } from "@/http";
-import { AppManagerInitialState } from "@utils/types";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from '@/store';
+import { appManagerBuilder } from '@/http';
+import { AppManagerInitialState } from '@utils/types';
 
 const initialState: AppManagerInitialState = {
   currentWorkspaceId: 0, // 当前工作ID；
 };
 
 export const appManagerSlice = createSlice({
-  name: "appManager",
+  name: 'appManager',
   initialState,
   reducers: {
     setCurrentWorkspaceId: (state, action: PayloadAction<number>) => {
@@ -16,15 +16,19 @@ export const appManagerSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addMatcher(
-      appManagerBuilder.endpoints.fetchWorkspaceList.matchFulfilled,
-      (state, action) => {
+    builder
+      .addMatcher(appManagerBuilder.endpoints.fetchWorkspaceList.matchFulfilled, (state, action) => {
         const {
           payload: [defualtWorkspace],
         } = action;
         state.currentWorkspaceId = defualtWorkspace?.id;
-      }
-    );
+      })
+      .addMatcher(appManagerBuilder.endpoints.updateWorkspaceList.matchFulfilled, (state, action) => {
+        const {
+          payload: [defualtWorkspace],
+        } = action;
+        state.currentWorkspaceId = defualtWorkspace?.id;
+      });
   },
 });
 
@@ -32,5 +36,4 @@ export default appManagerSlice.reducer;
 
 export const { setCurrentWorkspaceId } = appManagerSlice.actions;
 
-export const selectCurrentWorkspaceId = (state: RootState) =>
-  state.appManager.currentWorkspaceId;
+export const selectCurrentWorkspaceId = (state: RootState) => state.appManager.currentWorkspaceId;
