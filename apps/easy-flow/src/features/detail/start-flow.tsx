@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import { FormInstance, message } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { AsyncButton, Loading, PopoverConfirm } from '@common/components';
-import { runtimeAxios, validateTabs , uploadFile } from '@utils';
+import { runtimeAxios, validateTabs, uploadFile } from '@utils';
 import { dynamicRoutes } from '@consts';
 import { loadDatasource, deleteDraft } from '@apis/detail';
 import { StartNode } from '@type/flow';
@@ -47,6 +47,14 @@ function StartFlow() {
       return params.get('mode') || 'running';
     }
     return 'running';
+  }, [location.search]);
+
+  const type = useMemo(() => {
+    if (location.search) {
+      const params = new URLSearchParams(location.search.slice(1));
+      return params.get('type') || 'task-center';
+    }
+    return 'task-center';
   }, [location.search]);
 
   useEffect(() => {
@@ -121,8 +129,12 @@ function StartFlow() {
     message.success('提交成功');
 
     setTimeout(() => {
-      // 回任务中心我的发起
-      history.replace(`${dynamicRoutes.toTaskCenter(subApp.app.id)}/start`);
+      if (type === 'app') {
+        history.goBack();
+      } else {
+        // 回任务中心我的发起
+        history.replace(`${dynamicRoutes.toTaskCenter(subApp.app.id)}/start`);
+      }
     }, 1500);
   });
 
@@ -146,8 +158,12 @@ function StartFlow() {
 
     if (subApp) {
       setTimeout(() => {
-        // 回任务中心草稿列表
-        history.replace(`${dynamicRoutes.toTaskCenter(subApp.app.id)}/draft`);
+        if (type === 'app') {
+          history.goBack();
+        } else {
+          // 回任务中心草稿列表
+          history.replace(`${dynamicRoutes.toTaskCenter(subApp.app.id)}/draft`);
+        }
       }, 1500);
     }
   });

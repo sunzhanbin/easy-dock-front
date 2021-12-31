@@ -18,6 +18,7 @@ import { selectCurrentWorkspaceId } from "@views/app-manager/index.slice";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import { SubAppInfo, SubAppType } from "@/consts";
 import { Icon } from "@common/components";
+import classnames from "classnames";
 import AppPreviewModal from "@containers/app-preview-modal";
 import { imgIdToUrl } from "@/utils/utils";
 import AppModal from "./app-modal.component";
@@ -36,6 +37,7 @@ const SubListComponent: React.FC = () => {
   const navigate = useNavigate();
   const extension = useMemo(() => workspace?.extension, [workspace]);
   const subAppCount = useMemo(() => subAppList?.length || 0, [subAppList]);
+  const theme = useMemo(() => extension?.theme || "light", [extension]);
   const [showAppModal, setShowAppModal] = useState<boolean>(false);
   const [logoUrl, setLogoUrl] = useState<string>("");
   const [initialSubAppList, setInitialSubAppList] = useState<SubAppInfo[]>([]);
@@ -51,7 +53,7 @@ const SubListComponent: React.FC = () => {
     }
     const height = el.getBoundingClientRect().height;
     return {
-      boxShadow: `0px ${80 - height}px 24px 0px rgba(24, 31, 67, 0.08)`,
+      // boxShadow: `0px ${80 - height}px 24px 0px rgba(24, 31, 67, 0.08)`,
     };
   }, [containerRef.current]);
 
@@ -195,6 +197,7 @@ const SubListComponent: React.FC = () => {
       )}
       {subAppCount > 0 ? (
         <Tabs
+          className={classnames(!extension ? "sub-app-tab" : "")}
           activeKey={activeKey}
           onChange={handleTabsChange}
           tabBarExtraContent={renderExtra}
@@ -358,7 +361,11 @@ const SubListComponent: React.FC = () => {
       ) : (
         <AppEmpty />
       )}
-      <AppPreviewModal visible={showModal} onClose={handleModalClose} />
+      <AppPreviewModal
+        visible={showModal}
+        theme={theme}
+        onClose={handleModalClose}
+      />
     </div>
   );
 };

@@ -33,7 +33,7 @@ const StateTag: FC<{ state: number }> = ({ state }) => {
   const status = useMemo(() => {
     return stateMap[state];
   }, [state]);
-  return <div className={classNames(styles.status, styles[status.className])}>{status.text}</div>;
+  return <div className={classNames(styles.status, styles[status.className], `status-${status.className}`)}>{status.text}</div>;
 };
 
 export default memo(StateTag);

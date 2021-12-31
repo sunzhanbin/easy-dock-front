@@ -266,9 +266,8 @@ const ToDo: FC = () => {
             <Form.Item label="发起人" name="starter" className="starter">
               <Select
                 showSearch
-                onChange={() => {
-                  fetchData();
-                }}
+                onChange={() => fetchData()}
+                getPopupContainer={(node) => node}
                 onPopupScroll={handleScroll}
                 onSearch={handleSearchUser}
                 style={{ width: '100%' }}

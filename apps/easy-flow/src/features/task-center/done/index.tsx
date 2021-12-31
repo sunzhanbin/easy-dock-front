@@ -256,6 +256,7 @@ const Done: FC = () => {
                 onChange={() => {
                   fetchData();
                 }}
+                getPopupContainer={(node) => node}
               >
                 {optionList.map(({ id, userName }) => (
                   <Option key={id} value={id} label={userName}>

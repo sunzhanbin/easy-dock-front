@@ -152,7 +152,11 @@ const AppManagerHeader: FC<EditHeaderProps> = ({ className }) => {
           发布
         </Button>
       </div>
-      <AppPreviewModal visible={showModal} onClose={handleModalClose} />
+      <AppPreviewModal
+        visible={showModal}
+        theme={basicConfig?.theme || "light"}
+        onClose={handleModalClose}
+      />
     </div>
   );
 };

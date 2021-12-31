@@ -271,6 +271,7 @@ const Start: FC = () => {
                 onChange={() => {
                   fetchData();
                 }}
+                getPopupContainer={(node) => node}
               >
                 {TASK_STATE_LIST.map(({ key, value }) => (
                   <Option key={key} value={key}>

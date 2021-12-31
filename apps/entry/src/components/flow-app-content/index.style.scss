@@ -1,5 +1,5 @@
 @import "@common/styles/var.scss";
-@import '@common/styles/theme-color.scss';
+@import "@common/styles/theme-color.scss";
 
 .flow-app-content {
   display: flex;
@@ -69,7 +69,7 @@
     & > .header {
       & > .status-list {
         .ant-checkbox-wrapper {
-          color: $dark-text-color;
+          color: rgba($dark-text-color, 0.8);
         }
       }
       & > .search {

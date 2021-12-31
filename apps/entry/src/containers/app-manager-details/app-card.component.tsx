@@ -122,7 +122,7 @@ const AppCard: FC<AppCardProps> = ({ subApp, className }) => {
           <Icon type="bianji" />
           <div>编辑</div>
         </div>
-        {statusInfo.text === "已启用" && (
+        {statusInfo.text === "已停用" && (
           <PopoverConfirm
             title="提示"
             placement="bottom"
