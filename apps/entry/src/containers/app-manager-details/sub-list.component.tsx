@@ -18,6 +18,7 @@ import { selectCurrentWorkspaceId } from "@views/app-manager/index.slice";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import { SubAppInfo, SubAppType } from "@/consts";
 import { Icon } from "@common/components";
+import classnames from "classnames";
 import AppPreviewModal from "@containers/app-preview-modal";
 import { imgIdToUrl } from "@/utils/utils";
 import AppModal from "./app-modal.component";
@@ -51,7 +52,7 @@ const SubListComponent: React.FC = () => {
     }
     const height = el.getBoundingClientRect().height;
     return {
-      boxShadow: `0px ${80 - height}px 24px 0px rgba(24, 31, 67, 0.08)`,
+      // boxShadow: `0px ${80 - height}px 24px 0px rgba(24, 31, 67, 0.08)`,
     };
   }, [containerRef.current]);
 
@@ -195,6 +196,7 @@ const SubListComponent: React.FC = () => {
       )}
       {subAppCount > 0 ? (
         <Tabs
+          className={classnames(!extension ? "sub-app-tab" : "")}
           activeKey={activeKey}
           onChange={handleTabsChange}
           tabBarExtraContent={renderExtra}
