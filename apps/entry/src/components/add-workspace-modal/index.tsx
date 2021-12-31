@@ -68,7 +68,7 @@ const AddWorkspaceModal = React.forwardRef(function AddWorkspace(_, ref) {
       onCancel={handleCancel}
       destroyOnClose={true}
     >
-      <Form form={form}>
+      <Form form={form} autoComplete="off">
         <Form.Item name="name" label="工作区名称" required rules={[nameRule]}>
           <Input size="large" placeholder="请输入" />
         </Form.Item>
