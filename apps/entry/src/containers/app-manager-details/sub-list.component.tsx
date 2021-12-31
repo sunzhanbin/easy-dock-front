@@ -36,6 +36,7 @@ const SubListComponent: React.FC = () => {
   const navigate = useNavigate();
   const extension = useMemo(() => workspace?.extension, [workspace]);
   const subAppCount = useMemo(() => subAppList?.length || 0, [subAppList]);
+  const theme = useMemo(() => extension?.theme || "light", [extension]);
   const [showAppModal, setShowAppModal] = useState<boolean>(false);
   const [logoUrl, setLogoUrl] = useState<string>("");
   const [initialSubAppList, setInitialSubAppList] = useState<SubAppInfo[]>([]);
@@ -358,7 +359,11 @@ const SubListComponent: React.FC = () => {
       ) : (
         <AppEmpty />
       )}
-      <AppPreviewModal visible={showModal} onClose={handleModalClose} />
+      <AppPreviewModal
+        visible={showModal}
+        theme={theme}
+        onClose={handleModalClose}
+      />
     </div>
   );
 };
