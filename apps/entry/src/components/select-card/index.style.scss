@@ -4,6 +4,15 @@
   .select_project {
     min-width: 200px;
     max-width: 264px;
+    &:before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 12px;
+      width: 1px;
+      height: 16px;
+      border: 1px solid rgba(24, 31, 67, 0.12);
+    }
     &.ant-select-selector {
       border: 1px solid transparent;
     }

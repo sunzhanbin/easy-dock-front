@@ -41,13 +41,13 @@
           display: flex;
           align-items: center;
           height: 16px;
-          overflow: hidden;
           font-size: 16px;
           font-weight: bold;
           color: rgba(0, 0, 0, 0.85);
           & > .app {
             padding-right: 8px;
             border-right: 2px solid #262626;
+            line-height: 15px;
           }
           & > .name {
             margin-left: 8px;
