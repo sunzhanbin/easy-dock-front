@@ -159,7 +159,7 @@ const TaskCenter: FC = () => {
                     placeholder="搜索子应用名称"
                     bordered={false}
                     className={styles.search}
-                    onChange={(e) => {
+                    onChange={(e: { target: { value: any; }; }) => {
                       setKeyWord(e.target.value);
                     }}
                     prefix={<Icon type="sousuo" className={styles.icon} />}
