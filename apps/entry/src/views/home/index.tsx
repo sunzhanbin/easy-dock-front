@@ -7,6 +7,9 @@ import HomeNewSub from "@containers/home-manager/new-sub-component";
 import HeaderAssetData from "@containers/home-manager/asset-data-component";
 import HeaderHelp from "@containers/home-manager/help-component";
 
+
+console.log('test')
+
 const { Sider, Content, Footer } = Layout;
 const Start = () => {
   return (
