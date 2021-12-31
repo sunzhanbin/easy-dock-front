@@ -75,6 +75,30 @@
   &.dark {
     background: $dark-content-background-color;
     height: 100%;
+    .ant-btn-primary {
+      background: $dark-btn-background-color;
+      color: rgba($dark-text-color, 0.8);
+    }
+    .status-doing {
+      background: rgba(76, 92, 219, 0.3);
+      color: #7582E3;
+    }
+    .status-stop {
+      background: rgba(255, 101, 118, 0.12);      
+      color: #FF7C8A;
+    }
+    .status-reject {
+      background: rgba(255, 163, 25, 0.12);
+      color: #FFB13B;
+    }
+    .status-done {
+      background: rgba(31, 201, 162, 0.12);
+      color: #40D1B0;
+    }
+    .status-recall {
+      background: rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.55);
+    }
     .ant-select-dropdown,
     .ant-select-clear {
       background-color: rgba($dark-content-background-color, 1);
