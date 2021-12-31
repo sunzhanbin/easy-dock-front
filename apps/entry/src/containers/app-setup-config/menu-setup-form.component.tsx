@@ -20,7 +20,7 @@ const { Option } = Select;
 
 const MenuSetupFormComponent = React.forwardRef<{
   validateFields: () => Promise<any>;
-}>(function menuSetupForm(_, ref) {
+}>(function MenuSetupForm(_, ref) {
   const dispatch = useAppDispatch();
 
   const menuForm = useAppSelector(selectMenuForm);

@@ -10,7 +10,7 @@ import {
   setCurrentWorkspaceId,
 } from "@views/app-manager/index.slice";
 
-const AddWorkspaceModal = React.forwardRef(function addWorkspace(_, ref) {
+const AddWorkspaceModal = React.forwardRef(function AddWorkspace(_, ref) {
   const dispatch = useAppDispatch();
   const projectId = useAppSelector(selectProjectId);
   const workspaceId = useAppSelector(selectCurrentWorkspaceId);
