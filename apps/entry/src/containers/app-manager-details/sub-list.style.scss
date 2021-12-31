@@ -3,7 +3,6 @@
 .sub-list-component-container {
   position: relative;
   height: calc(100% - 90px);
-  overflow-y: hidden;
   background: #fff;
   border-radius: 6px;
   margin: -46px 56px 0 56px;
@@ -16,7 +15,7 @@
     background-color: #fff;
     padding: 20px 24px;
     border-radius: 6px;
-    box-shadow: 0px 6px 24px 0px rgba(24, 31, 67, 0.08);
+    box-shadow:  0 0 10px rgba(24, 31, 67, 0.08);
     margin-bottom: 12px;
     & > .logo {
       width: 56px;
@@ -99,16 +98,20 @@
     }
   }
 
+  .sub-app-tab {
+    .ant-tabs-nav {
+      box-shadow: 5px 0 5px -5px rgba(24, 31, 67, 0.08), -5px 0 5px -5px rgba(24, 31, 67, 0.08);
+    }
+  }
   // 覆盖ant-tabs的样式
   .ant-tabs {
     height: calc(100% - 128px);
     display: flex;
     flex-direction: column;
     margin-bottom: 24px;
-
+    overflow: visible;
     .ant-tabs-nav {
-      padding: 0 24px;
-      padding-top: 16px;
+      padding: 20px 24px 0 16px;
       .ant-tabs-nav-list {
         .ant-tabs-tab {
           height: 28px;
