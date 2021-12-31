@@ -288,6 +288,7 @@ const ToDo: FC = () => {
                 showTime={{ format: 'HH:mm' }}
                 format="yyyy-MM-DD HH:mm"
                 style={{ width: '100%' }}
+                getPopupContainer={(node) => node}
                 suffixIcon={<Icon type="riqi" />}
                 onChange={() => {
                   fetchData();
