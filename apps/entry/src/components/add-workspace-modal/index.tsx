@@ -55,6 +55,7 @@ const AddWorkspaceModal = React.forwardRef(function AddWorkspace(_, ref) {
 
   const handleCancel = useCallback(() => {
     form.resetFields();
+    console.info(111);
     handleVisible(false);
   }, [handleVisible]);
 
