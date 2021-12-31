@@ -1,5 +1,17 @@
 import { HomeSubAppType } from "@/consts";
 
+/* -------home start ----------*/
+import DeviceImage from "@assets/images/device.png";
+import DataImage from "@assets/images/data-join.png";
+import DataFishImage from "@assets/images/data-model.png";
+import InterfaceImage from "@assets/images/interface.png";
+import CanvasImage from "@assets/images/canvas.png";
+import ChartImage from "@assets/images/chart.png";
+import FormImage from "@assets/images/form.png";
+import FlowImage from "@assets/images/flow.png";
+import SpaceImage from "@assets/images/space.png";
+import TaskImage from "@assets/images/home/no-app.png";
+
 export const RouteMap = {
   1: "canvas",
   2: "flow",
@@ -43,17 +55,6 @@ export const SCENE_IAMGES = {
   scene12: `scene12`,
 };
 
-/* -------home start ----------*/
-import DeviceImage from "@assets/images/device.png";
-import DataImage from "@assets/images/data-join.png";
-import DataFishImage from "@assets/images/data-model.png";
-import InterfaceImage from "@assets/images/interface.png";
-import CanvasImage from "@assets/images/canvas.png";
-import ChartImage from "@assets/images/chart.png";
-import FormImage from "@assets/images/form.png";
-import FlowImage from "@assets/images/flow.png";
-import SpaceImage from "@assets/images/space.png";
-import TaskImage from "@assets/images/home/no-app.png";
 
 export const ImageMap: { [k: number]: string } = {
   [HomeSubAppType.CANVAS]: CanvasImage,

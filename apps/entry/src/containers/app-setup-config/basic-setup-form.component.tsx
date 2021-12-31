@@ -25,7 +25,7 @@ interface BasicSetupFormProps {
 }
 const { Option } = Select;
 
-const BasicSetupFormComponent = React.forwardRef(function basicSetupForm(
+const BasicSetupFormComponent = React.forwardRef(function BasicSetupForm(
   { workspaceList }: BasicSetupFormProps,
   ref
 ) {
