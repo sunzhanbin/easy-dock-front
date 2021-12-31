@@ -40,7 +40,7 @@ const MenuSetupFormComponent = React.forwardRef<{
       "yingyongsheji2",
       "yingyongsheji5",
       "shouyecaidanxian",
-      "lineyonghujiedian1",
+      "lineyonghujiedianyuan",
       "chakanshujuliang",
       "jiekou",
       "bianpai",

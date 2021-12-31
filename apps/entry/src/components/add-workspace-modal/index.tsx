@@ -1,21 +1,18 @@
-import React, { useCallback, useState, useImperativeHandle } from "react";
-import { useAppDispatch, useAppSelector } from "@/store";
-import { useAddWorkspaceMutation, useEditWorkspaceMutation } from "@/http";
-import { selectProjectId } from "@views/home/index.slice";
-import { Modal, Form, Input } from "antd";
-import useMemoCallback from "@common/hooks/use-memo-callback";
-import { nameRule } from "@/consts";
-import {
-  selectCurrentWorkspaceId,
-  setCurrentWorkspaceId,
-} from "@views/app-manager/index.slice";
+import React, { useCallback, useState, useImperativeHandle } from 'react';
+import { selectProjectId } from '@views/home/index.slice';
+import { Modal, Form, Input } from 'antd';
+import useMemoCallback from '@common/hooks/use-memo-callback';
+import { selectCurrentWorkspaceId, setCurrentWorkspaceId } from '@views/app-manager/index.slice';
+import { nameRule } from '@/consts';
+import { useAddWorkspaceMutation, useEditWorkspaceMutation } from '@/http';
+import { useAppDispatch, useAppSelector } from '@/store';
 
 const AddWorkspaceModal = React.forwardRef(function AddWorkspace(_, ref) {
   const dispatch = useAppDispatch();
   const projectId = useAppSelector(selectProjectId);
   const workspaceId = useAppSelector(selectCurrentWorkspaceId);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-  const [title, setTitle] = useState<string>("");
+  const [title, setTitle] = useState<string>('');
   const [addWorkspace] = useAddWorkspaceMutation();
   const [editWorkspace] = useEditWorkspaceMutation();
   const [form] = Form.useForm();
@@ -43,7 +40,7 @@ const AddWorkspaceModal = React.forwardRef(function AddWorkspace(_, ref) {
     form
       .validateFields()
       .then(async ({ name }) => {
-        if (title === "新增") {
+        if (title === '新增') {
           addWorkspace({ name, projectId });
         } else {
           await editWorkspace({ name, id: workspaceId });
