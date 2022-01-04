@@ -25,7 +25,8 @@ function SidebarLayout() {
       return params.get('content') || 'false';
     }
     return 'false';
-  }, [search]);
+  // eslint-disable-next-line
+  }, []);
   const showHeader = useMemo(() => {
     if(onlyShowContent==='true'){
       return false;

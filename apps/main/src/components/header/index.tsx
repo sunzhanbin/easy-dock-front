@@ -52,7 +52,7 @@ export default function AppHeader({ children }: AppHeaderProps) {
         <div className={styles.right}>
           {match.url === '/' ? (
             canGoBuilder ? (
-              <a href={ROUTES.BUILDER} target="_blank" rel="noreferrer" className={styles.appClient}>
+              <a href={`/main${ROUTES.BUILDER}`} target="_blank" rel="noreferrer" className={styles.appClient}>
                 <Icon type="yingyonduandinglan" className={styles.icon} />
                 <span className={styles.text}>构建端</span>
               </a>
