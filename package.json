@@ -5,6 +5,8 @@
     "start": "lerna run start",
     "start:flow": "lerna run start --scope=easy-flow-front --stream",
     "start:chart": "lerna run start --scope=easy-chart-front",
+    "start:entry": "lerna run start --scope=easy-entry-front",
+  
     "build": "lerna bootstrap && lerna run build",
     "build:entry": "lerna bootstrap && lerna run build --scope=easy-entry-front",
     "build:dev": "lerna bootstrap && lerna run build:dev",
