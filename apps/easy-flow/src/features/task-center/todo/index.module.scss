@@ -132,7 +132,7 @@
           color: $dark-btn-background-color !important;
         }
         .ant-picker-cell-inner, .ant-picker-time-panel-cell-inner {
-          color: rgba($dark-text-color, 0.55) !important;
+          color: rgba($dark-text-color, 0.8) !important;
         }
         .ant-picker-year-btn, .ant-picker-month-btn, .ant-picker-header-view {
           color: rgba($dark-text-color, 0.8) !important;
@@ -201,9 +201,9 @@
         }
 
         .ant-picker-decade-panel .ant-picker-cell-disabled .ant-picker-cell-inner, .ant-picker-year-panel .ant-picker-cell-disabled .ant-picker-cell-inner, .ant-picker-quarter-panel .ant-picker-cell-disabled .ant-picker-cell-inner, .ant-picker-month-panel .ant-picker-cell-disabled .ant-picker-cell-inner {
-          background: rgba(255, 255, 255, 0.06);
+          background: transparent;
           cursor: not-allowed;
-          color: rgba($dark-text-color, 0.8) !important;
+          color: rgba($dark-text-color, 0.35) !important;
         }
         .ant-picker-prev-icon::before, .ant-picker-next-icon::before, .ant-picker-super-prev-icon::before, .ant-picker-super-next-icon::before {
           border: rgba($dark-text-color, 0.65) !important;
