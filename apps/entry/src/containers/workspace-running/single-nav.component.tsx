@@ -90,7 +90,8 @@ const SingleNavComponent = ({
           }
           url = `${MAIN_ENTRY}/main/app/${appId}/process/instance/${subAppId}?theme=${theme}&mode=running`;
         } else if (subAppType === TASK_CENTER_TYPE) {
-          url = `${FLOW_ENTRY}/task-center/${appId}?theme=${theme}&mode=running`;
+          // url = `${FLOW_ENTRY}/task-center/${appId}?theme=${theme}&mode=running`;
+          url=`${MAIN_ENTRY}/main/app/${appId}/process/task-center?theme=${theme}&mode=running&content=true`;
         } else {
           // 表单子应用和报表子应用暂时没有这两种场景,直接返回
           return;

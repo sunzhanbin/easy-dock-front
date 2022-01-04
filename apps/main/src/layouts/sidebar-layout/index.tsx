@@ -14,14 +14,25 @@ function SidebarLayout() {
   const dispatch = useDispatch();
   const matched = useRouteMatch();
   const { appId } = useParams<{ appId: string }>();
-  const { pathname } = useLocation();
+  const { pathname,search } = useLocation();
   const [appDetail, setAppDetail] = useState<AppSchema>();
   const [loading, setLoading] = useState(false);
   const [showDataManage, setShowDataManage] = useState<boolean>(false);
+  const onlyShowContent = useMemo<string>(() => {
+    // 以iframe方式接入,参数在location中
+    if (search) {
+      const params = new URLSearchParams(search.slice(1));
+      return params.get('content') || 'false';
+    }
+    return 'false';
+  }, [search]);
   const showHeader = useMemo(() => {
+    if(onlyShowContent==='true'){
+      return false;
+    }
     const path = pathname.replace(ROUTES.APP_PROCESS.replace(':appId', appId), '');
     return path.startsWith('/task-center') || path === '/data-manage';
-  }, [pathname, appId]);
+  }, [pathname, appId,onlyShowContent]);
 
   useEffect(() => {
     if (!showHeader) return;

@@ -149,9 +149,9 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
     }
     // 任务中心内容渲染
     if (subAppType === TASK_CENTER_TYPE && subAppId) {
-      const url = `${FLOW_ENTRY}/task-center/${
+      const url = `${MAIN_ENTRY}/main/app/${
         workspaceId || appId
-      }?theme=${theme}&mode=preview`;
+      }/process/task-center?theme=${theme}&mode=preview&content=true`;
       return renderIframe(url, "space-container");
     }
     return empty;
