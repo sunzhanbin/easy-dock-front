@@ -1,22 +1,13 @@
-import { memo, useState } from "react";
-import { Icon } from "@common/components";
-import { Popover, message } from "antd";
-import { SUB_APP_LIST, NOT_SHOW_MODAL_SELECT } from "@utils/const";
-import classnames from "classnames";
-import "@components/header/new-subapp-popover.style.scss";
-import { getPopupContainer, JumpLinkToUrl } from "@utils/utils";
-import NewSubAppModal from "@containers/home-manager/new-subapp-modal";
-import {
-  useCreateSupAppMutation,
-  useGetCanvasIdMutation,
-  useGetHoloSceneIdMutation,
-} from "@/http";
-import {
-  HomeSubAppType,
-  INTERFACE_ENTRY,
-  ResponseType,
-  IOT_ENTRY,
-} from "@/consts";
+import { memo, useState } from 'react';
+import { Icon } from '@common/components';
+import { Popover, message } from 'antd';
+import { SUB_APP_LIST, NOT_SHOW_MODAL_SELECT } from '@utils/const';
+import classnames from 'classnames';
+import '@components/header/new-subapp-popover.style.scss';
+import { getPopupContainer, JumpLinkToUrl } from '@utils/utils';
+import NewSubAppModal from '@containers/home-manager/new-subapp-modal';
+import { useCreateSupAppMutation, useGetCanvasIdMutation, useGetHoloSceneIdMutation } from '@/http';
+import { HomeSubAppType, INTERFACE_ENTRY, ResponseType, IOT_ENTRY, DATA_FISH_ENTRY } from '@/consts';
 
 const NewSubAppPopoverComponent = () => {
   const [createSubApp] = useCreateSupAppMutation();
@@ -28,8 +19,8 @@ const NewSubAppPopoverComponent = () => {
     name: string;
     fieldKey: number;
   }>({
-    title: "",
-    name: "",
+    title: '',
+    name: '',
     fieldKey: 0,
   });
 
@@ -39,7 +30,7 @@ const NewSubAppPopoverComponent = () => {
       const { type = 0 } = values;
       if (!data) return;
       await JumpLinkToUrl(type, data?.id, getCanvasId, getHoloSceneId);
-      message.success("创建成功!");
+      message.success('创建成功!');
       setShowModal(false);
     } catch (e) {
       console.log(e);
@@ -55,6 +46,8 @@ const NewSubAppPopoverComponent = () => {
         window.open(`${IOT_ENTRY}/product`);
       } else if (type === HomeSubAppType.INTERFACE) {
         window.open(`${INTERFACE_ENTRY}/orch`);
+      } else if (type === HomeSubAppType.DATA_FISH) {
+        window.open(`${DATA_FISH_ENTRY}/#/modelManagement?theme=light`);
       }
       return;
     }
@@ -73,12 +66,8 @@ const NewSubAppPopoverComponent = () => {
             <p className="sub-name">{item.name}</p>
             <div className="sub-list-container">
               {item.subList.map((sub, key) => (
-                <div
-                  className="container-list"
-                  key={key}
-                  onClick={() => handleNewSubAPP(sub)}
-                >
-                  <i className={classnames("sub-icon", sub.icon)} />
+                <div className="container-list" key={key} onClick={() => handleNewSubAPP(sub)}>
+                  <i className={classnames('sub-icon', sub.icon)} />
                   <Icon className="icon_arrow" type="jinrujiantou" />
                   <span className="text">{sub.linkName}</span>
                 </div>
@@ -101,12 +90,7 @@ const NewSubAppPopoverComponent = () => {
         <Icon className="icon" type="xinzeng" />
       </a>
       {showModal && (
-        <NewSubAppModal
-          modalInfo={modalInfo}
-          visible={showModal}
-          onOk={handleConfirm}
-          onCancel={handleCancel}
-        />
+        <NewSubAppModal modalInfo={modalInfo} visible={showModal} onOk={handleConfirm} onCancel={handleCancel} />
       )}
     </Popover>
   );

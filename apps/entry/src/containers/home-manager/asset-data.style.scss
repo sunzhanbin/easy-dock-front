@@ -48,14 +48,14 @@
   }
 }
 
-@media screen and (max-height: 900px) {
+@media screen and (max-width: 1366px) {
   .header_asset_data {
     max-height: 268px;
     padding: 90px 24px 40px  44px;
   }
 }
 
-@media screen and (max-height: 1152px) {
+@media screen and (max-width: 2042px) {
   .header_asset_data {
     padding: 120px 24px 40px  44px;
   }
