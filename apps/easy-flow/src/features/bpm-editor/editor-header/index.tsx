@@ -104,7 +104,7 @@ const EditorHeader: FC = () => {
     message.success('发布成功');
 
     setTimeout(() => {
-      window.location.replace(`/builder/app/${appId}`);
+      window.location.replace(`/main/builder/app/${appId}`);
     }, 1500);
   }, [bpmId, dispatch, appId]);
 
