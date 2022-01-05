@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
-import logo from "@assets/images/logo.png";
+import logo from "@assets/images/logo.svg";
 import { Icon } from "@common/components";
 import UserComponent from "@components//header/user";
 import "@components/header/index.style.scss";

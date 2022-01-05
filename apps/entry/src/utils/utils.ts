@@ -1,7 +1,7 @@
-import React from 'react';
-import { Menu } from '@utils/types';
-import { axios } from '@utils/fetch';
-import { AbstractTooltipProps } from 'antd/lib/tooltip';
+import React from "react";
+import { Menu } from "@utils/types";
+import { axios } from "@utils/fetch";
+import { AbstractTooltipProps } from "antd/lib/tooltip";
 import {
   CANVAS_ENTRY,
   MAIN_ENTRY,
@@ -12,9 +12,9 @@ import {
   IOT_ENTRY,
   SubAppType,
   DATA_FISH_ENTRY,
-} from '@/consts';
+} from "@/consts";
 
-export const getPopupContainer: AbstractTooltipProps['getPopupContainer'] = (container) => container;
+export const getPopupContainer: AbstractTooltipProps["getPopupContainer"] = (container) => container;
 
 export const findItem = (id: string, menus: Menu[]): Menu => {
   let result = {} as Menu;
@@ -64,13 +64,13 @@ export const findParentMenu = (id: string, menus: Menu[]): string => {
   if (menu && menu.parentId) {
     return findParentMenu(menu.parentId!, menus);
   }
-  return '';
+  return "";
 };
 
 // 根据后端返回的图片id转化成图片url地址
 export const imgIdToUrl = async (id: string) => {
   const res = await axios.get(`/file/download/${id}`, {
-    responseType: 'blob',
+    responseType: "blob",
   });
   const blob = new Blob([res as any]);
   const url: string = window.URL.createObjectURL(blob);
@@ -117,7 +117,7 @@ export function exportFile(res: any, name: string, type?: string) {
   const blobConfig = type ? { type } : {};
   const blob = new Blob([res], blobConfig);
   const urlObject = window.URL || window.webkitURL || window;
-  const save_link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a') as HTMLAnchorElement;
+  const save_link = document.createElementNS("http://www.w3.org/1999/xhtml", "a") as HTMLAnchorElement;
 
   save_link.href = urlObject.createObjectURL(blob);
   if (name) {
@@ -134,7 +134,7 @@ export const handleStopPropagation = (e: React.MouseEvent) => {
 export const deepSearch = (array: any[]) => {
   const item = array[0];
   for (const key in item) {
-    if (key === 'children' && item.children && item.children.length) {
+    if (key === "children" && item.children && item.children.length) {
       deepSearch(item.children);
     } else {
       return item.children.length ? item.children[0] : item;
@@ -148,11 +148,11 @@ export const filterAssetConfig = (menuList: any[]) => {
   for (const i in menu) {
     const menuItem = menu[i];
     let { form: menuForm } = menuItem;
-    if (menuForm.asset === 'exist') {
+    if (menuForm.asset === "exist") {
       menuForm = Object.assign({}, menuForm, {
         assetConfig: {
           ...menuForm.assetConfig,
-          url: '',
+          url: "",
         },
       });
     } else {
