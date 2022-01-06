@@ -121,7 +121,7 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
       {
         key: 'starter',
         dataIndex: 'starter',
-        width: 100,
+        width: 120,
         title: '发起人',
       },
       {
