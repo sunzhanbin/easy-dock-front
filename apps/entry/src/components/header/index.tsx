@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
 import logo from "@assets/images/logo.svg";
 import { Icon } from "@common/components";
+import classnames from "classnames";
 import UserComponent from "@components//header/user";
 import "@components/header/index.style.scss";
 import ProjectComponent from "@components/header/project";
@@ -13,9 +14,10 @@ interface HeaderProps {
 
 export default function Header({ children }: HeaderProps) {
   const location = useLocation();
-  const showPopover = location.pathname !== "/";
+  const showProject = location.pathname !== "/";
+  const showPopover = location.pathname !== "/home";
   return (
-    <div className="header_container">
+    <div className={classnames("header_container", location.pathname === "/" ? 'main-header' : '')}>
       <div className="header_content">
         <Link to="/" className="logo">
           <img src={logo} alt="logo" />

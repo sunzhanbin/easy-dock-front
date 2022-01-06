@@ -1,5 +1,5 @@
-import { SubAppType } from '@/consts';
-import baseFetch, { runTime } from '@utils/fetch';
+import { SubAppType } from "@/consts";
+import baseFetch, { runTime } from "@utils/fetch";
 
 export const appManagerBuilder = baseFetch.injectEndpoints({
   endpoints: (build) => ({
@@ -7,18 +7,18 @@ export const appManagerBuilder = baseFetch.injectEndpoints({
     addWorkspace: build.mutation({
       query: (params?: { name: string; projectId: number }) =>
         ({
-          url: '/app',
-          method: 'post',
+          url: "/app",
+          method: "post",
           data: params,
         } as any),
-      invalidatesTags: [{ type: 'Workspace', id: 'LIST' }],
+      invalidatesTags: [{ type: "Workspace", id: "LIST" }],
     }),
     // 编辑工作区
     editWorkspace: build.mutation({
       query: (params?: { name: string; id: number }) =>
         ({
-          url: '/app',
-          method: 'put',
+          url: "/app",
+          method: "put",
           data: params,
         } as any),
       invalidatesTags: [{ type: 'Workspace', id: 'LIST' }],

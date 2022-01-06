@@ -171,3 +171,7 @@ export const filterAssetConfig = (menuList: any[]) => {
   }
   return menu;
 };
+
+export const getRndInteger = (min: number, max: number) => {
+  return Math.floor(Math.random() * (max - min)) + min;
+}

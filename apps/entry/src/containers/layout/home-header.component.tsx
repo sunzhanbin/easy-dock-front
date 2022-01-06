@@ -1,16 +1,18 @@
-import React from 'react';
-import classnames from 'classnames';
-import { NavLink } from 'react-router-dom';
-import Header from '@components/header';
-import { Icon } from '@common/components';
+import React from "react";
+import classnames from "classnames";
+import { NavLink, useLocation } from "react-router-dom";
+import Header from "@components/header";
+import { Icon } from "@common/components";
 import '@containers/layout/home-header.style';
 
 const HomeHeader: React.FC = () => {
+  const location = useLocation();
+  const mainEntry = location.pathname === '/';
   return (
-    <div className="home_header">
+    <div className={classnames('home_header', mainEntry ? 'main-header': '')}>
       <Header>
         <nav className="nav_menu">
-          <NavLink className={({ isActive }) => classnames({ nav: true, active: isActive })} to="/">
+          <NavLink className={({ isActive }) => classnames({ nav: true, active: isActive })} to="/home">
             <Icon className="icon" type="gongzuotai" />
             工作台
           </NavLink>
