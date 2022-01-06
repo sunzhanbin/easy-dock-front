@@ -22,12 +22,14 @@ export default function Header({ children }: HeaderProps) {
         <Link to="/" className="logo">
           <img src={logo} alt="logo" />
         </Link>
-        { showProject && <ProjectComponent/>}
+        { showProject ? <ProjectComponent/>: <div className="no-project"></div>}
         {children}
         <div className="right">
-          {showPopover ? <NewSubAppPopover /> : <a className="hidden" />}
-          <Icon className="icon" type="shezhi" />
-          <Icon className="icon" type="shuoming" />
+          { showProject ? <>
+            {showPopover ? <NewSubAppPopover /> : <a className="hidden" />}
+            <Icon className="icon" type="shezhi"/>
+            <Icon className="icon" type="shuoming" />
+          </> : <div className="right-no-content" /> }
           <div className="user_info">
             <UserComponent />
           </div>

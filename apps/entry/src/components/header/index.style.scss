@@ -17,15 +17,19 @@
     align-items: center;
     justify-content: space-between;
     height: 56px;
+    .no-project {
+      width: 200px;
+    }
     .logo {
       margin-right: 12px;
       font-size: 0;
-
       img {
         height: 42px;
       }
     }
     .right {
+      width: 234px;
+      text-align: right;
       .hidden {
         display: inline-block;
         width: 24px;
