@@ -43,7 +43,6 @@ const Main = () => {
             )}
           </div>
         </div>
-
       </SwiperSlide>
     </Swiper>
   </>;

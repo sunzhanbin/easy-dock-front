@@ -22,7 +22,7 @@ export default function Header({ children }: HeaderProps) {
         <Link to="/" className="logo">
           <img src={logo} alt="logo" />
         </Link>
-        <ProjectComponent />
+        { showProject && <ProjectComponent/>}
         {children}
         <div className="right">
           {showPopover ? <NewSubAppPopover /> : <a className="hidden" />}
