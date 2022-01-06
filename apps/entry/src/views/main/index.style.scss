@@ -131,7 +131,7 @@
           background: url('~@assets/images/main/circle-2.png') 0 0 no-repeat;
           background-size: 100%;
           position: absolute;
-          left: 10.99%;
+          left: 12.99%;
           z-index: 10;
         }
         .circle-3 {
@@ -164,6 +164,7 @@
           background: url('~@assets/images/main/circle-6.png') 0 0 no-repeat;
           background-size: cover;
           position: absolute;
+          z-index: 10;
           left: 65%;
         }
         .circle-7 {
@@ -207,7 +208,7 @@
       .slide-screen-second {
         .sub-text {
           font-size: 15px !important;
-          left: 6px;
+          left: 6px !important;
         }
         .circle-1 {
           width: 516px !important;
