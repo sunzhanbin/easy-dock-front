@@ -1,17 +1,21 @@
-import { memo, Fragment } from 'react';
+import { memo, useState } from 'react';
 import classnames from "classnames";
 import "swiper/swiper.scss";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { Mousewheel } from "swiper";
 import ASCIIGalaxy from "@views/main/ascii-galaxy.component";
+import AnimateScreenScroll from "@views/main/animate-screen-scroll";
 import BubbleSvgComponent from "@views/main/bubble-svg.component";
 import '@views/main/index.style.scss';
-import { MAIN_SUB_APP_LIST } from "@utils/const";
 SwiperCore.use([Mousewheel]);
 
 const Main = () => {
+  const [screenIndex, setScreenIndex] = useState(0); // 当前是第几屏
+  const handleSlideChange = (swiper: any) => {
+    setScreenIndex(swiper.realIndex)
+  }
   return <>
-    <Swiper direction={'vertical'} slidesPerView={1} spaceBetween={30} mousewheel={true} className="mySwiper">
+    <Swiper direction={'vertical'} slidesPerView={1} speed={800} spaceBetween={30} mousewheel={true} className="mySwiper" onSlideChange={handleSlideChange}>
       <SwiperSlide>
         <div className="slide-screen-one">
           <ASCIIGalaxy />
@@ -24,24 +28,7 @@ const Main = () => {
       </SwiperSlide>
       <SwiperSlide>
         <div className="slide-screen-second">
-          <div className="bubble-list-wrapper">
-            {
-              MAIN_SUB_APP_LIST.map((circle, index) =>
-                  <Fragment key={index}>
-                    <div className={classnames(`circle-${index+1}`, "circle")}>
-                      {(index + 1 === 8) && <span className="circle-text">创建应用</span>}
-                    </div>
-                  </Fragment>
-            )}
-          </div>
-          <div className="sub-app-wrapper">
-            { MAIN_SUB_APP_LIST.map((sub, index) =>
-                <div className="sub-app-item" key={index}>
-                  <i className={classnames(sub.icon, "sub-icon")}></i>
-                  <span className="sub-text">{sub.text}</span>
-                </div>
-            )}
-          </div>
+          {screenIndex === 1 && <AnimateScreenScroll />}
         </div>
       </SwiperSlide>
     </Swiper>
