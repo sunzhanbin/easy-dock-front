@@ -460,7 +460,7 @@ const components = {
     baseInfo: {
       name: '人员',
       icon: 'jibenxinxi',
-      category: '高级控件',
+      category: '布局控件',
       version: '1.0',
       type: 'Member',
     },
@@ -470,7 +470,7 @@ const components = {
     baseInfo: {
       name: '部门',
       icon: 'bumencaise',
-      category: '高级控件',
+      category: '布局控件',
       version: '1.0',
       type: 'Department',
     },
@@ -480,22 +480,82 @@ const components = {
     baseInfo: {
       name: '关联流程',
       icon: 'liuchengcaise',
-      category: '高级控件',
+      category: '布局控件',
       version: '1.0',
       type: 'FlowData',
     },
     config: [fieldName, getLabel('关联流程'), flows, colSpace],
   },
+  Title: {
+    baseInfo: {
+      name: '分组标题',
+      icon: 'fenzubiaoti',
+      category: '布局控件',
+      version: '1.0',
+      type: 'Title',
+    },
+    config: [getLabel('iframe'), desc, height, urlOption],
+  },
   Iframe: {
     baseInfo: {
       name: 'iframe',
       icon: 'wangyebuju',
-      category: '高级控件',
+      category: '布局控件',
       version: '1.0',
       type: 'Iframe',
     },
     config: [getLabel('iframe'), desc, height, urlOption],
   },
+  Data: {
+    baseInfo: {
+      name: '数据关联',
+      icon: 'shujuguanlian',
+      category: '布局控件',
+      version: '1.0',
+      type: 'Data',
+    },
+    config: [getLabel('iframe'), desc, height, urlOption],
+  },
+  text: {
+    baseInfo: {
+      name: '文字识别',
+      icon: 'wenzishibie',
+      category: '布局控件',
+      version: '1.0',
+      type: 'text',
+    },
+    config: [getLabel('iframe'), desc, height, urlOption],
+  },
+  location: {
+    baseInfo: {
+      name: '定位',
+      icon: 'dingweicaise',
+      category: '业务控件',
+      version: '1.0',
+      type: 'location',
+    },
+    config: [getLabel('iframe'), desc, height, urlOption],
+  },
+  ocr: {
+    baseInfo: {
+      name: 'ocr识别',
+      icon: 'ocrshibie',
+      category: '业务控件',
+      version: '1.0',
+      type: 'ocr',
+    },
+    config: [getLabel('iframe'), desc, height, urlOption],
+  },
+  face: {
+    baseInfo: {
+      name: '人像识别',
+      icon: 'renxiangshibie',
+      category: '业务控件',
+      version: '1.0',
+      type: 'face',
+    },
+    config: [getLabel('iframe'), desc, height, urlOption],
+  }
 };
 
 export default components;
