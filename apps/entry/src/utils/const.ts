@@ -306,3 +306,9 @@ export const bubbleList = [
     ]
   },
 ];
+
+export enum AuthEnum {
+  ADMIN = 1, //管理员权限
+  DATA = 2, //数据权限
+  VISIT = 4, //访问权限
+};

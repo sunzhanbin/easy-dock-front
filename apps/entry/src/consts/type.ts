@@ -21,15 +21,18 @@ export enum HomeSubAppType {
   TASK_CENTER = 10,
   INSTANCE_MANAGER = 11,
 }
-// 导航方式  双导航  左导航
+// 导航方式  双导航  左导航 顶部导航
 export enum NavModeType {
   MULTI = 1,
   LEFT = 2,
+  TOP = 3,
 }
 
 export enum ThemeType {
   DARK = "dark",
   LIGHT = "light",
+  ORANGE = "orange",
+  BLUE = "blue",
 }
 
 export const APP_TYPE = 0;

@@ -3,6 +3,7 @@ import classNames from "classnames";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import LeftNav from "@assets/images/left-nav.png";
 import BothNav from "@assets/images/both-nav.png";
+import TopNav from "@assets/images/top-nav.png";
 import { useAppDispatch } from "@/store";
 import { setMode } from "@/views/app-setup/basic-setup.slice";
 import "./nav-mode.style.scss";
@@ -25,6 +26,7 @@ const NavMode: FC<NavModeProps> = ({ value, onChange }) => {
     return [
       { key: NavModeType.LEFT, label: "左导航", image: LeftNav },
       { key: NavModeType.MULTI, label: "双导航", image: BothNav },
+      { key: NavModeType.TOP, label: "顶部导航", image: TopNav },
     ];
   }, []);
   const handleChangeNav = useMemoCallback((nav: NavModeType) => {

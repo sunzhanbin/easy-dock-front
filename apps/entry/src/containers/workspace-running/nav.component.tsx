@@ -7,7 +7,8 @@ import MultiNavComponent from "@containers/workspace-running/multi-nav.component
 import { useWorkspaceDetailQuery } from "@http/app-manager.hooks";
 import { selectCurrentId } from "@views/workspace/index.slice";
 import "@containers/workspace-running/nav.style";
-import { RouteMap } from "@utils/const";
+import { RouteMap, AuthEnum } from "@utils/const";
+// import { filterItem } from "@utils/utils";
 import { NavModeType, SubAppType } from "@/consts";
 import { useNavigate } from "react-router-dom";
 
@@ -15,14 +16,18 @@ const NavComponent = () => {
   const { workspaceId } = useParams();
   const navigate = useNavigate();
   const selectedKey = useAppSelector(selectCurrentId);
-  const { navMode, theme, menu } = useWorkspaceDetailQuery(
+  const { navMode, theme, menu, showInstanceMangerMenu } = useWorkspaceDetailQuery(
     +(workspaceId as string),
     {
-      selectFromResult: ({ data }) => ({
-        theme: data?.extension?.theme,
-        navMode: data?.extension?.navMode,
-        menu: data?.extension?.meta?.menuList,
-      }),
+      selectFromResult: ({ data }) => {
+        const showInstanceMangerMenu = (data?.power & AuthEnum.DATA) === AuthEnum.DATA;
+        return  {
+          theme: data?.extension?.theme,
+          navMode: data?.extension?.navMode,
+          menu: data?.extension?.meta?.menuList,
+          showInstanceMangerMenu
+        }
+      }
     }
   );
 

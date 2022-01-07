@@ -23,6 +23,7 @@ const AppInfo = ({
     return {
       [NavModeType.LEFT]: "single",
       [NavModeType.MULTI]: "multi",
+      [NavModeType.TOP]: "top",
     };
   }, []);
   const navModeClassName = useMemo<string>(() => classNameMap[navMode], [

@@ -6,6 +6,8 @@ import { setTheme } from "@/views/app-setup/basic-setup.slice";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import lightTheme from "@assets/images/light-theme.png";
 import darkTheme from "@assets/images/dark-theme.png";
+import orangeTheme from "@assets/images/orange-theme.png";
+import blueTheme from "@assets/images/blue-theme.png";
 import "./theme.style.scss";
 
 interface ThemeProps {
@@ -25,6 +27,8 @@ const Theme: FC<ThemeProps> = ({ value, onChange }) => {
     return [
       { key: ThemeType.LIGHT, label: "浅色", image: lightTheme },
       { key: ThemeType.DARK, label: "深色", image: darkTheme },
+      { key: ThemeType.ORANGE, label: "活力橙", image: orangeTheme },
+      { key: ThemeType.BLUE, label: "商务蓝", image: blueTheme },
     ];
   }, []);
   const handleChangeTheme = useMemoCallback((theme) => {

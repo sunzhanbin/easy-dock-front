@@ -17,6 +17,8 @@ const EmptyPage: FC = () => {
     return {
       [ThemeType.DARK]: darkEmptyImage,
       [ThemeType.LIGHT]: lightEmptyImage,
+      [ThemeType.ORANGE]: lightEmptyImage,
+      [ThemeType.BLUE]: lightEmptyImage,
     };
   }, []);
   const imageUrl = useMemo<string>(() => {

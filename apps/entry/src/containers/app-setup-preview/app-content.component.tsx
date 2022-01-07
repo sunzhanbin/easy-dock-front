@@ -73,6 +73,14 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
         imageUrl: darkEmptyImage,
         className: "dark",
       },
+      [ThemeType.ORANGE]: {
+        imageUrl: darkEmptyImage,
+        className: "orange",
+      },
+      [ThemeType.BLUE]: {
+        imageUrl: darkEmptyImage,
+        className: "blue",
+      },
     };
   }, [theme]);
   const empty = useMemo<ReactNode>(() => {
