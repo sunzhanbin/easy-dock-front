@@ -1,14 +1,14 @@
-import React, { useCallback, useMemo } from 'react';
-import SelectCard from '@components/select-card';
+import React, { useCallback, useMemo } from "react";
+import SelectCard from "@components/select-card";
 import {
   useGetProjectListQuery,
   useNewProjectMutation,
   useDeleteProjectMutation,
   useEditProjectMutation,
   useUpdateWorkspaceListMutation,
-} from '@/http';
-import { useAppDispatch, useAppSelector } from '@/store';
-import { selectProjectId, setProjectId, selectUserInfo } from '@views/home/index.slice';
+} from "@/http";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { selectProjectId, setProjectId, selectUserInfo } from "@views/home/index.slice";
 import { message } from 'antd';
 import { RoleEnum } from '@utils/types';
 

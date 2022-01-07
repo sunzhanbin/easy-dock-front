@@ -1,14 +1,18 @@
 import { Layout as LayoutWrap } from "antd";
+import { useLocation } from "react-router-dom";
 import { Outlet, Routes, Route } from "react-router-dom";
 import HomeHeader from "@containers/layout/home-header.component";
 import AppManagerHeader from "@containers/layout/app-manager-header.component";
 import "@containers/layout/index.style";
+import classnames from "classnames";
 
 const { Content } = LayoutWrap;
 
 const Layout: React.FC = () => {
+    const location = useLocation();
+    const mainEntry = location.pathname === '/';
   return (
-    <LayoutWrap>
+    <LayoutWrap className={classnames(mainEntry ? "main-layout": "")}>
       <Routes>
         <Route path="app-manager/:id" element={<AppManagerHeader />} />
         <Route path="workspace/*" element={null} />

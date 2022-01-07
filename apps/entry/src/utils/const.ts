@@ -1,10 +1,10 @@
-import { HomeSubAppType } from '@/consts';
+import { HomeSubAppType } from "@/consts";
 
 /* -------home start ----------*/
-import DeviceImage from '@assets/images/device.png';
-import DataImage from '@assets/images/data-join.png';
-import DataFishImage from '@assets/images/data-model.png';
-import InterfaceImage from '@assets/images/interface.png';
+import DeviceImage from "@assets/images/device.png";
+import DataImage from "@assets/images/data-join.png";
+import DataFishImage from "@assets/images/data-model.png";
+import InterfaceImage from "@assets/images/interface.png";
 import CanvasImage from '@assets/images/canvas.png';
 import ChartImage from '@assets/images/chart.png';
 import FormImage from '@assets/images/form.png';
@@ -153,6 +153,11 @@ const CREATE_VIRTUAL_LIST = [
   },
 ];
 
+export const MAIN_SUB_APP_LIST = [
+    ...CREATE_DATA_LIST,
+    ...CREATE_BUSINESS_LIST,
+    ...CREATE_VIRTUAL_LIST,
+]
 // 数据资产
 export const ASSETS_DATA_LIST = [
   {
@@ -243,3 +248,61 @@ export const NOT_SHOW_MODAL_SELECT = [
 
 // 请输入1-30位的汉字、字母、数字、下划线
 export const nameRegexp = /^[\u4e00-\u9fa5_a-zA-Z0-9]{1,30}$/;
+
+export const bubbleList = [
+  {
+    id: 'bubble1',
+    colorList: [
+      {
+        offset: "0%",
+        stopColor: "#B3BAE7",
+        stopOpacity: 1
+      },
+      {
+        offset: "60%",
+        stopColor: "#CED0E0",
+        stopOpacity: 1
+      },
+      {
+        offset: "100%",
+        stopColor: "#CACDE4",
+        stopOpacity: 0.4
+      }
+    ]
+  },
+  {
+    id: 'bubble2',
+    colorList: [
+      {
+        offset: "0%",
+        stopColor: "#A7C1FF",
+        stopOpacity: 1
+      },
+      {
+        offset: "100%",
+        stopColor: "#FFAF7C",
+        stopOpacity: 1
+      }
+    ]
+  },
+  {
+    id: 'bubble3',
+    colorList: [
+      {
+        offset: "0%",
+        stopColor: "#5D6679",
+        stopOpacity: 1
+      },
+      {
+        offset: "60%",
+        stopColor: "#B4B4B4",
+        stopOpacity: 1
+      },
+      {
+        offset: "100%",
+        stopColor: "#FFFFFF",
+        stopOpacity: 0.1
+      }
+    ]
+  },
+];
