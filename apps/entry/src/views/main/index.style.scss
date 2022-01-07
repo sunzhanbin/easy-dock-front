@@ -46,9 +46,20 @@
         display: inline-flex;
         flex-direction: row;
         padding-left: 5.5%;
+        &.sub-fade-in {
+          .sub-app-item {
+            height: 117px;
+            .sub-icon {
+              display: inline-block;
+            }
+            .sub-text {
+              display: inline-block;
+            }
+          }
+        }
         .sub-app-item {
           width: 102px;
-          height: 117px;
+          height: 0;
           background: url("'~@assets/images/main/polygon.png") 0 0 no-repeat;
           background-size: 100%;
           margin-right: 3.5%;
@@ -57,10 +68,11 @@
           align-items: center;
           justify-content: center;
           position: relative;
+          transition: all 1s;
           .sub-icon {
             width: 42px;
             height: 42px;
-            display: inline-block;
+            display: none;
             &.icon_shebei {
               background: url('~@assets/images/main/device.png') 0 0 no-repeat;
               background-size: cover;
@@ -99,6 +111,7 @@
             }
           }
           .sub-text {
+            display: none;
             position: absolute;
             bottom: -32px;
             left: 11px;
@@ -118,11 +131,16 @@
         display: inline-flex;
         flex-direction: row;
         align-items: center;
+        transition: all 0.5s;
         .circle-1 {
           width: 714px;
           height: 718px;
+          filter: blur(30px);
           background: url('~@assets/images/main/circle-1.png') 0 0 no-repeat;
           background-size: cover;
+          &.no-filter {
+            filter: none;
+          }
         }
         .circle-2 {
           width: 764px;
@@ -130,16 +148,23 @@
           background: url('~@assets/images/main/circle-2.png') 0 0 no-repeat;
           background-size: 100%;
           position: absolute;
-          left: 12.99%;
+          left: 0;
+          //left: 12.99%;
           z-index: 10;
         }
         .circle-3 {
           width: 468px;
           height: 486px;
+          filter: blur(50px);
           background: url('~@assets/images/main/circle-3.png') 0 0 no-repeat;
           background-size: cover;
           position: absolute;
-          left: 29.43%;
+          left: 10%;
+          z-index: 1;
+          &.no-filter {
+            filter: none;
+          }
+          //left: 29.43%;
         }
         .circle-4 {
           width: 445px;
@@ -147,7 +172,12 @@
           background: url('~@assets/images/main/circle-4.png') 0 0 no-repeat;
           background-size: cover;
           position: absolute;
-          left: 41%;
+          left: 10%;
+          filter: blur(10px);
+          &.no-filter {
+            filter: none;
+          }
+          //left: 41%;
         }
         .circle-5 {
           width: 572px;
@@ -155,7 +185,12 @@
           background: url('~@assets/images/main/circle-5.png') 0 0 no-repeat;
           background-size: cover;
           position: absolute;
-          left: 50%;
+          filter: blur(20px);
+          left: 10%;
+          &.no-filter {
+            filter: none;
+          }
+          //left: 50%;
         }
         .circle-6 {
           width: 299px;
@@ -164,7 +199,12 @@
           background-size: cover;
           position: absolute;
           z-index: 10;
-          left: 65%;
+          left: 16%;
+          filter: blur(30px);
+          &.no-filter {
+            filter: none;
+          }
+          //left: 65%;
         }
         .circle-7 {
           width: 307px;
@@ -172,7 +212,13 @@
           background: url('~@assets/images/main/circle-7.png') 0 0 no-repeat;
           background-size: cover;
           position: absolute;
-          left: 72.92%;
+          left: 17%;
+          //z-index: 10;
+          filter: blur(30px);
+          &.no-filter {
+            filter: none;
+          }
+          //left: 72.92%;
         }
         .circle-8 {
           width: 200px;
@@ -180,13 +226,21 @@
           background: url('~@assets/images/main/circle-8.png') 0 0 no-repeat;
           background-size: cover;
           position: absolute;
-          left: 83.33%;
+          left: 20%;
+          //left: 83.33%;
           display: inline-flex;
           align-items: center;
           justify-content: center;
           .circle-text {
             font-size: 24px;
             color: $dark-text-color;
+            display: none;
+          }
+          &.has-text {
+            z-index: 15;
+            .circle-text {
+              display: inline-block;
+            }
           }
         }
       }
@@ -212,11 +266,12 @@
         .circle-1 {
           width: 516px !important;
           height: 519px !important;
+          margin-left: 20px;
         }
         .circle-2 {
           width: 530px !important;
           height: 526px !important;
-          left: 12% !important;
+          left: 2% !important;
         }
         .circle-3 {
           width: 337px !important;
@@ -225,27 +280,27 @@
         .circle-4 {
           width: 323px !important;
           height: 312px !important;
-          left: 43% !important;
+          //left: 43% !important;
         }
         .circle-5 {
           width: 473px !important;
           height: 464px !important;
-          left: 52% !important;
+          left: 0 !important;
         }
         .circle-6 {
           width: 212px !important;
           height: 220px !important;
-          left: 68% !important;
+          left: 18% !important;
         }
         .circle-7 {
           width: 218px !important;
           height: 202px !important;
-          left: 76% !important;
+          left: 20% !important;
         }
         .circle-8 {
           width: 142px !important;
           height: 142px !important;
-          left: 85% !important;
+          left: 22% !important;
         }
         .circle-text {
           font-size: 18px !important;
@@ -253,39 +308,31 @@
         .sub-app-wrapper {
           .sub-app-item {
             width: 72px;
-            height: 83px;
             margin-right: 4.5%;
+          }
+          &.sub-fade-in {
+            .sub-app-item {
+              height: 83px;
+            }
           }
         }
       }
     }
   }
 }
-@media screen and (min-width: 1300px) and (max-width: 1460px) {
-  .sub-app-wrapper {
-    padding-left: 6% !important;
-
-    .sub-app-item {
-      margin-right: 4% !important;
-    }
+@media screen and (min-width: 1300px) and (max-width: 1450px) {
+  .bubble-list-wrapper {
+    left: -100px !important;
   }
 }
-@media screen and (min-width: 1680px) and (max-width: 1920px) {
-  .sub-app-wrapper {
-    padding-left: 6% !important;
-
-    .sub-app-item {
-      margin-right: 3% !important;
-    }
+@media screen and (min-width: 1679px) and (max-width: 1920px) {
+  .bubble-list-wrapper {
+    left: -200px !important;
   }
 }
-
+//
 @media screen and (min-width: 1920px) and (max-width: 2048px) {
-  .sub-app-wrapper {
-    padding-left: 10% !important;
-
-    .sub-app-item {
-      margin-right: 3.5% !important;
-    }
+  .bubble-list-wrapper {
+    left: -100px !important;
   }
 }
