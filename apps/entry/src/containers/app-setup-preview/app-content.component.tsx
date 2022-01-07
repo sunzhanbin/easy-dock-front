@@ -23,7 +23,7 @@ import lightEmptyImage from "@assets/images/light-empty.png";
 import darkEmptyImage from "@assets/images/dark-empty.png";
 import { selectCurrentWorkspaceId } from "@/views/app-manager/index.slice";
 import "./app-content.style.scss";
-import { TASK_CENTER_TYPE } from "@utils/const";
+import { TASK_CENTER_TYPE, INSTANCE_MANAGER_TYPE } from "@utils/const";
 
 interface AppContentProps {
   selectedKey: string;
@@ -153,6 +153,14 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
         workspaceId || appId
       }/process/task-center?theme=${theme}&mode=preview&content=true`;
       return renderIframe(url, "space-container");
+    }
+
+    // 流程数据管理
+    if (subAppType === INSTANCE_MANAGER_TYPE) {
+      const url = `${MAIN_ENTRY}/main/instance/${
+        workspaceId || appId
+      }/data-manage?theme=${theme}&mode=preview`;
+      return renderIframe(url, "flow-manager-container");
     }
     return empty;
   });

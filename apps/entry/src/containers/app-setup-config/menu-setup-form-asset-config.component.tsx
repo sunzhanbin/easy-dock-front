@@ -22,11 +22,15 @@ const MenuSetupFormAssetConfigComponent = ({ form }: AssetConfigProps) => {
   const { subAppList } = useFetchDeployedSubAppListQuery(appId, {
     selectFromResult: ({ data }) => {
       return {
-        subAppList: data?.concat({
+        subAppList: data?.concat([{
           name: "任务中心",
           type: HomeSubAppType.TASK_CENTER,
           id: workspaceId,
-        }),
+        }, {
+          name: "流程数据管理",
+          type: HomeSubAppType.INSTANCE_MANAGER,
+          id: (workspaceId && workspaceId! + 1),
+        }]),
       };
     },
   });

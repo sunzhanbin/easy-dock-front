@@ -13,6 +13,7 @@ const staticRoutes = {
   BUILDER_INDEX: '/builder/app',
   BUILDER_APP: '/builder/app/:appId',
   APP_RUNTIME_DETAIL: '/app/:appId',
+  INSTANCE_APP: '/instance/:appId',
   APP_PROCESS: '/app/:appId/process',
   APP_PROCESS_DATA_MANAGE: '/app/:appId/process/data-manage',
   APP_TASK_CENTER: '/app/:appId/process/task-center',

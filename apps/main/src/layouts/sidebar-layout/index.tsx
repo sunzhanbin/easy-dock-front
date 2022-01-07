@@ -1,5 +1,5 @@
 import React, { useEffect, useState, Suspense, useMemo } from 'react';
-import { Route, useParams, NavLink, useRouteMatch, useLocation } from 'react-router-dom';
+import { Route, useParams, NavLink, useRouteMatch, useLocation, Switch } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import UserComponent from '@components/header/user';
 import MicroApp from '@components/micro-app';
@@ -127,4 +127,28 @@ function SidebarLayout() {
   );
 }
 
-export default React.memo(SidebarLayout);
+// export default React.memo(SidebarLayout);
+
+
+export function Instancelayout () {
+  const { appId } = useParams<{ appId: string }>();
+  const microExtra = useMemo(() => ({ appId }), [appId]);
+  const microBasename = useMemo(() => {
+    return `/main${ROUTES.INSTANCE_APP.replace(':appId', appId)}`;
+  }, [appId]);
+  return (
+    <div className={styles.instanceManager}>
+      <MicroApp
+        className={styles.micro}
+        entry={envs.EASY_FLOW_FRONTEND_ENTRY}
+        name="easy-flow"
+        basename={microBasename}
+        extra={microExtra}
+      />
+    </div>
+  )
+}
+
+
+
+export default React.memo(SidebarLayout); 

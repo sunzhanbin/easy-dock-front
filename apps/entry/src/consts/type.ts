@@ -7,7 +7,7 @@ export enum SubAppType {
   FORM = 5,
 }
 
-// 1=大屏类，2=流程类，3=报表类，4=HoloScene，5=表单类 6=设备 7=数据 8= 模型 9=接口 10=任务中心
+// 1=大屏类，2=流程类，3=报表类，4=HoloScene，5=表单类 6=设备 7=数据 8= 模型 9=接口 10=任务中心 11=流程数据管理
 export enum HomeSubAppType {
   CANVAS = 1,
   FLOW = 2,
@@ -19,6 +19,7 @@ export enum HomeSubAppType {
   DATA_FISH = 8,
   INTERFACE = 9,
   TASK_CENTER = 10,
+  INSTANCE_MANAGER = 11,
 }
 // 导航方式  双导航  左导航
 export enum NavModeType {

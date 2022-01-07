@@ -14,6 +14,8 @@ import { Icon } from '@common/components';
 import StateTag from '@/features/bpm-editor/components/state-tag';
 import { TASK_STATE_LIST } from '@/utils/const';
 import { omit } from 'lodash';
+import { useLocation } from 'react-router-dom';
+import classNames from 'classnames';
 import styles from './index.module.scss';
 
 const useMock = false;
@@ -109,6 +111,25 @@ const DataManage = () => {
       },
     ];
   }, []);
+
+  const location = useLocation();
+
+  const theme = useMemo<string>(() => {
+    // 以iframe方式接入,参数在location中
+    if (location.search) {
+      const params = new URLSearchParams(location.search.slice(1));
+      return params.get('theme') || 'light';
+    }
+    return 'light';
+  }, [location.search]);
+
+  const mode = useMemo(() => {
+    if (location.search) {
+      const params = new URLSearchParams(location.search.slice(1));
+      return params.get('mode') || 'running';
+    }
+    return 'running';
+  }, [location.search]);
 
   const [tableColumns, setTableColumns] = useState(baseColumns);
 
@@ -451,19 +472,23 @@ const DataManage = () => {
   });
 
   return (
-    <div className={styles.container} ref={containerRef}>
+    <div className={classNames(styles.container, styles[theme])} ref={containerRef}>
       <div className={styles.header}>流程数据管理</div>
-      <div className={styles.operation}>
-        <div className={styles.export} onClick={handleExport}>
-          <Icon type="daochu" className={styles.icon} />
-          <span className={styles.text}>导出</span>
-        </div>
-        <Tooltip title="刷新">
-          <div className={styles.refresh} onClick={handleRefresh}>
-            <Icon type="chongpao" className={styles.icon} />
+      {
+        mode !== "preview" && (
+          <div className={styles.operation}>
+            <div className={styles.export} onClick={handleExport}>
+              <Icon type="daochu" className={styles.icon} />
+              <span className={styles.text}>导出</span>
+            </div>
+            <Tooltip title="刷新">
+              <div className={styles.refresh} onClick={handleRefresh}>
+                <Icon type="chongpao" className={styles.icon} />
+              </div>
+            </Tooltip>
           </div>
-        </Tooltip>
-      </div>
+        )
+      }
       <Form
         className={styles.form}
         form={form}

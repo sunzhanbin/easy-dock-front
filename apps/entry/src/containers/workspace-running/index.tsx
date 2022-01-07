@@ -26,6 +26,9 @@ const SpaceMicroPage = React.lazy(
 const TaskCenterMicroPage = React.lazy(
   () => import("@containers/asset-pages/task-center-page")
 );
+const InstanceManagerMicroPage = React.lazy(
+  () => import("@containers/asset-pages/instance-manager-page")
+);
 const EmptyMicroPage = React.lazy(
   () => import("@containers/asset-pages/empty-page")
 );
@@ -65,6 +68,10 @@ const WorkspaceRunning = () => {
             <Route
               path="task-center"
               element={<SuspenseWrap render={<TaskCenterMicroPage />} />}
+            />
+            <Route
+              path="instance-manager"
+              element={<SuspenseWrap render={<InstanceManagerMicroPage />} />}
             />
             <Route
               path="empty"

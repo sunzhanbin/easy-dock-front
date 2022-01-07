@@ -19,6 +19,7 @@ export const RouteMap = {
   4: 'space',
   5: 'form',
   10: 'task-center',
+  11: 'instance-manager',
 };
 
 export const NavMenu = [
@@ -79,9 +80,12 @@ export const NameMap: { [k: number]: string } = {
   [HomeSubAppType.DATA_FISH]: '模型',
   [HomeSubAppType.INTERFACE]: '接口',
   [HomeSubAppType.TASK_CENTER]: '默认',
+  [HomeSubAppType.INSTANCE_MANAGER]: '默认',
 };
 
 export const TASK_CENTER_TYPE = 10;
+export const INSTANCE_MANAGER_TYPE = 11;
+
 
 // 数据构建
 const CREATE_DATA_LIST = [
