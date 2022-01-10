@@ -3,6 +3,7 @@ import { MAIN_SUB_APP_LIST } from "@utils/const";
 import classnames from "classnames";
 import '@views/main/index.style.scss';
 import anime from "animejs";
+import { Link } from "react-router-dom";
 
 const list = new Array(8).fill(0);
 
@@ -16,17 +17,17 @@ const AnimateScreenScroll = () => {
             easing: 'easeInOutSine',
         })
             .add({
-            targets: '.circle-8',
-            translateX: '685%',
-            begin: () => {
-                circleList.forEach(circle => {
-                    circle.classList.add("no-filter");
-                })
-            },
-            complete: (a: any) => {
-                circle8.classList.add("has-text");
-                subAppWrapper.classList.add("sub-fade-in");
-            }
+                targets: '.circle-8',
+                translateX: '685%',
+                begin: () => {
+                    circleList.forEach(circle => {
+                        circle.classList.add("no-filter");
+                    })
+                },
+                complete: (a: any) => {
+                    circle8.classList.add("has-text");
+                    subAppWrapper.classList.add("sub-fade-in");
+                }
             }, 400)
             .add({
                 targets: '.circle-7',
@@ -61,17 +62,17 @@ const AnimateScreenScroll = () => {
                     list.map((circle, index) =>
                         <Fragment key={index}>
                             <div className={classnames(`circle-${index+1}`, "circle")}>
-                                {(index + 1 === list.length) && <span className="circle-text">创建应用</span>}
+                                {(index + 1 === list.length) && <Link to="/home" className="circle-text">创建应用</Link>}
                             </div>
                         </Fragment>
                     )}
             </div>
             <div className="sub-app-wrapper">
                 { MAIN_SUB_APP_LIST.map((sub, index) =>
-                    <div className="sub-app-item" key={index}>
+                    <Link to="/home" className="sub-app-item" key={index}>
                         <i className={classnames(sub.icon, "sub-icon")}></i>
                         <span className="sub-text">{sub.text}</span>
-                    </div>
+                    </Link>
                 )}
             </div>
         </>

@@ -7,11 +7,15 @@ import { logout } from "@views/home/index.slice";
 import "@components/header/index.style.scss";
 import { useDispatch } from "react-redux";
 
-function HeaderUser() {
+type HeaderUserProps = {
+  showProject?: boolean;
+}
+function HeaderUser({showProject}: HeaderUserProps) {
   const dispatch = useDispatch();
-  const { user } = useGetUserInfoQuery("", {
+  const skip = auth.getAuth() ? false : true;
+  const { user } = useGetUserInfoQuery(undefined, {
     selectFromResult: ({ data }) => {
-      if (!data) return { user: null };
+      if (!data) return {user: null};
       const { power, user } = data;
       return {
         user: {
@@ -22,6 +26,7 @@ function HeaderUser() {
         },
       };
     },
+    skip
   });
 
   const handleLogin = async () => {
@@ -29,6 +34,7 @@ function HeaderUser() {
   };
 
   const handleLogout = useCallback(() => {
+    console.log()
     dispatch(logout());
   }, [dispatch]);
 
@@ -60,9 +66,12 @@ function HeaderUser() {
           placement="bottomLeft"
         >
           <div className="user">
-            <div className="avatar">
-              <Avatar round size={32} src={user.avatar} name={user.username} />
-            </div>
+            {
+              showProject &&
+              <div className="avatar">
+                <Avatar round size={32} src={user.avatar} name={user.username}/>
+              </div>
+            }
             <Text className="name">{user.username}</Text>
           </div>
         </Dropdown>

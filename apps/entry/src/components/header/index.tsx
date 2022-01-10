@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import logo from "@assets/images/logo.svg";
 import { Icon } from "@common/components";
 import classnames from "classnames";
-import UserComponent from "@components//header/user";
+import UserComponent from "@components/header/user";
 import "@components/header/index.style.scss";
 import ProjectComponent from "@components/header/project";
 import NewSubAppPopover from "@components/header/new-subapp-popover.component";
@@ -22,18 +22,26 @@ export default function Header({ children }: HeaderProps) {
         <Link to="/" className="logo">
           <img src={logo} alt="logo" />
         </Link>
-        { showProject ? <ProjectComponent/>: <div className="no-project"></div>}
-        {children}
+        { showProject ? <ProjectComponent/>: <div className="no-project" />}
+        {showProject && children}
         <div className="right">
-          { showProject ? <>
-            {showPopover ? <NewSubAppPopover /> : <a className="hidden" />}
-            <Icon className="icon" type="shezhi"/>
-            <Icon className="icon" type="shuoming" />
-          </> : <div className="right-no-content" /> }
-          <div className="user_info">
-            <UserComponent />
-          </div>
-        </div>
+          { showProject ?
+              <>
+                {showPopover ? <NewSubAppPopover /> : <a className="hidden" />}
+                <Icon className="icon" type="shezhi" />
+                <Icon className="icon" type="shuoming" />
+              </>
+              :
+              <div className="right-no-content">
+                  <Link to="/home" className="workspace-link">
+                      工作台
+                  </Link>
+              </div>
+          }
+                <div className="user_info">
+                  <UserComponent showProject={showProject}/>
+                </div>
+              </div>
       </div>
     </div>
   );
