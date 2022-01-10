@@ -12,7 +12,7 @@ const InstanceManagerMicroPage = () => {
     }),
   });
   const url = useMemo(() => {
-    return `${MAIN_ENTRY}/main/instance/${workspaceId}/data-manage?theme=${theme}&mode=running&content=true`;
+    return `${MAIN_ENTRY}/main/instance/${workspaceId}/data-manage?theme=${theme}&mode=running`;
   }, [theme]);
 
   return (

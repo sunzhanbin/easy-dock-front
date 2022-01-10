@@ -13,7 +13,6 @@ const HomeHeader: React.FC = () => {
       <Header>
         <nav className="nav_menu">
           <NavLink className={({ isActive }) => classnames({ nav: true, active: isActive })} to="/home">
-            <Icon className="icon" type="gongzuotai" />
             工作台
           </NavLink>
           <NavLink className={({ isActive }) => classnames({ nav: true, active: isActive })} to="/asset-centre">

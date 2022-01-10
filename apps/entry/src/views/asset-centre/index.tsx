@@ -1,7 +1,8 @@
-import React from "react";
+import { memo, FC } from 'react';
+import Coding from '@containers/coding';
 
-const AssetCentre = () => {
-  return <React.Fragment>这里是资产中心</React.Fragment>;
+const AssetCentre: FC = () => {
+  return <Coding title="资产中心" />;
 };
 
-export default AssetCentre;
+export default memo(AssetCentre);

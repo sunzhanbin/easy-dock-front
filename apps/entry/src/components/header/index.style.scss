@@ -63,13 +63,31 @@
         vertical-align: middle;
         text-align: center;
       }
+      .right-no-content {
+        display: inline-block;
+        margin-right: 30px;
+        &:hover {
+          .workspace-link {
+            color: #fff;
+          }
+        }
+        .workspace-link {
+          color: rgba(0, 0, 0, 0.85);
+        }
+      }
       .user_info {
+        min-width: 100px;
         display: inline-block;
         vertical-align: middle;
         margin-left: 10px;
+        &:hover {
+          .login {
+            color: #fff;
+          }
+        }
         .login {
           text-align: center;
-          color: #4c5cdb;
+          //color: #4c5cdb;
           cursor: pointer;
         }
         .user {
