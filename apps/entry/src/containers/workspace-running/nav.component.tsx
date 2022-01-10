@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useParams } from "react-router";
 import { useAppSelector } from "@/store";
 import AppInfo from "@components/app-info";
@@ -8,7 +8,7 @@ import { useWorkspaceDetailQuery } from "@http/app-manager.hooks";
 import { selectCurrentId } from "@views/workspace/index.slice";
 import "@containers/workspace-running/nav.style";
 import { RouteMap, AuthEnum } from "@utils/const";
-// import { filterItem } from "@utils/utils";
+import { filterItem } from "@utils/utils";
 import { NavModeType, SubAppType } from "@/consts";
 import { useNavigate } from "react-router-dom";
 
@@ -31,9 +31,15 @@ const NavComponent = () => {
     }
   );
 
+  const authMenu = useMemo(() => {
+    if (showInstanceMangerMenu) return menu;
+    const aothmenu = menu?.length && filterItem("流程数据管理", "name", menu);
+    return aothmenu;
+  }, [menu, showInstanceMangerMenu])
+
   useEffect(() => {
-    if (!menu || !menu.length) return;
-    const activeMenuForm = menu[0]?.form;
+    if (!authMenu || !authMenu.length) return;
+    const activeMenuForm = authMenu[0]?.form;
     const { assetConfig } = activeMenuForm;
     const { subAppType, subAppId, url } = assetConfig;
     if (url) {
@@ -55,14 +61,14 @@ const NavComponent = () => {
         );
       }
     }
-  }, [menu, workspaceId]);
+  }, [authMenu, workspaceId]);
 
   return (
     <div className="nav-component">
       {navMode === NavModeType.LEFT && (
         <SingleNavComponent
           selectedKey={selectedKey}
-          dataSource={menu}
+          dataSource={authMenu}
           theme={theme}
           extra={<AppInfo navMode={NavModeType.LEFT} theme={theme} />}
         />
