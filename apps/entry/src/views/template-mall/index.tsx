@@ -1,5 +1,8 @@
-import React from "react";
+import { memo, FC } from 'react';
+import Coding from '@containers/coding';
 
-const TemplateMall = () => <React.Fragment>这里是模板商城</React.Fragment>;
+const TemplateMall: FC = () => {
+  return <Coding title="模板商城" />;
+};
 
-export default TemplateMall;
+export default memo(TemplateMall);

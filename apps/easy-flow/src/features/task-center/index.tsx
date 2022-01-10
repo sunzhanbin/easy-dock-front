@@ -52,14 +52,6 @@ const TaskCenter: FC = () => {
     }
     return 'running';
   }, [location.search]);
-  const onlyShowContent = useMemo<string>(() => {
-    // 以iframe方式接入,参数在location中
-    if (location.search) {
-      const params = new URLSearchParams(location.search.slice(1));
-      return params.get('content') || 'false';
-    }
-    return 'false';
-  }, [location.search]);
 
   useEffect(() => {
     if (isShowDrawer && appId) {
@@ -80,7 +72,7 @@ const TaskCenter: FC = () => {
           <div className={styles.line}></div>
           <div className={styles.navLink}>
             <NavLink
-              to={`${matchedUrl}?theme=${theme}&mode=${mode}&content=${onlyShowContent}`}
+              to={`${matchedUrl}?theme=${theme}&mode=${mode}`}
               replace
               exact
               className={styles.nav}
@@ -90,7 +82,7 @@ const TaskCenter: FC = () => {
               {location.pathname === `${matchedUrl}` && todoNum > 0 && <div className={styles.todoNum}>{todoNum}</div>}
             </NavLink>
             <NavLink
-              to={`${matchedUrl}/start?theme=${theme}&mode=${mode}&content=${onlyShowContent}`}
+              to={`${matchedUrl}/start?theme=${theme}&mode=${mode}`}
               replace
               className={styles.nav}
               activeClassName={styles.active}
@@ -98,7 +90,7 @@ const TaskCenter: FC = () => {
               我的发起
             </NavLink>
             <NavLink
-              to={`${matchedUrl}/done?theme=${theme}&mode=${mode}&content=${onlyShowContent}`}
+              to={`${matchedUrl}/done?theme=${theme}&mode=${mode}`}
               replace
               className={styles.nav}
               activeClassName={styles.active}
@@ -106,14 +98,14 @@ const TaskCenter: FC = () => {
               我的已办
             </NavLink>
             <NavLink
-              to={`${matchedUrl}/copy?theme=${theme}&mode=${mode}&content=${onlyShowContent}`}
+              to={`${matchedUrl}/copy?theme=${theme}&mode=${mode}`}
               className={styles.nav}
               activeClassName={styles.active}
             >
               抄送我的
             </NavLink>
             <NavLink
-              to={`${matchedUrl}/draft?theme=${theme}&mode=${mode}&content=${onlyShowContent}`}
+              to={`${matchedUrl}/draft?theme=${theme}&mode=${mode}`}
               replace
               className={styles.nav}
               activeClassName={styles.active}
@@ -159,7 +151,7 @@ const TaskCenter: FC = () => {
                     placeholder="搜索子应用名称"
                     bordered={false}
                     className={styles.search}
-                    onChange={(e: { target: { value: any; }; }) => {
+                    onChange={(e: { target: { value: any } }) => {
                       setKeyWord(e.target.value);
                     }}
                     prefix={<Icon type="sousuo" className={styles.icon} />}

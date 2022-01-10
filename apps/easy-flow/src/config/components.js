@@ -494,7 +494,7 @@ const components = {
       version: '1.0',
       type: 'Title',
     },
-    config: [getLabel('iframe'), desc, height, urlOption],
+    config: [fieldName, getLabel('分组标题'), desc, colSpace],
   },
   Iframe: {
     baseInfo: {
@@ -514,48 +514,48 @@ const components = {
       version: '1.0',
       type: 'Data',
     },
-    config: [getLabel('iframe'), desc, height, urlOption],
+    config: [fieldName, getLabel('数据关联'), desc, colSpace],
   },
-  text: {
+  Text: {
     baseInfo: {
       name: '文字识别',
       icon: 'wenzishibie',
       category: '布局控件',
       version: '1.0',
-      type: 'text',
+      type: 'Text',
     },
-    config: [getLabel('iframe'), desc, height, urlOption],
+    config: [fieldName, getLabel('文字识别'), desc, colSpace],
   },
-  location: {
+  Location: {
     baseInfo: {
       name: '定位',
       icon: 'dingweicaise',
       category: '业务控件',
       version: '1.0',
-      type: 'location',
+      type: 'Location',
     },
-    config: [getLabel('iframe'), desc, height, urlOption],
+    config: [fieldName, getLabel('定位'), desc, colSpace],
   },
-  ocr: {
+  Ocr: {
     baseInfo: {
       name: 'ocr识别',
       icon: 'ocrshibie',
       category: '业务控件',
       version: '1.0',
-      type: 'ocr',
+      type: 'Ocr',
     },
-    config: [getLabel('iframe'), desc, height, urlOption],
+    config: [fieldName, getLabel('ocr识别'), desc, colSpace],
   },
-  face: {
+  Face: {
     baseInfo: {
       name: '人像识别',
       icon: 'renxiangshibie',
       category: '业务控件',
       version: '1.0',
-      type: 'face',
+      type: 'Face',
     },
-    config: [getLabel('iframe'), desc, height, urlOption],
-  }
+    config: [fieldName, getLabel('人像识别'), desc, colSpace],
+  },
 };
 
 export default components;
