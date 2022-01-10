@@ -1,4 +1,3 @@
-import React from "react";
 import { Layout } from "antd";
 import "@views/home/index.style.scss";
 import HomeNewAPP from "@containers/home-manager/new-app-component";

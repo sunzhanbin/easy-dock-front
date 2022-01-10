@@ -3,8 +3,8 @@ import { useAppSelector } from "@/store";
 import AppManagerSider from "@containers/app-manager-sider";
 import AppManagerDetails from "@containers/app-manager-details";
 import { selectCurrentWorkspaceId } from "@views/app-manager/index.slice";
-import "./index.style.scss";
 import { selectProjectId } from "@views/home/index.slice";
+import "@views/app-manager/index.style.scss";
 
 const { Content } = Layout;
 

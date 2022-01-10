@@ -12,10 +12,6 @@ const InstanceManagerMicroPage = () => {
     }),
   });
   const url = useMemo(() => {
-    // const url = `${FLOW_ENTRY}/main/app/${
-    // workspaceId || appId
-    // }/process/task-center?theme=${theme}&mode=preview&content=true`;
-    // return `${FLOW_ENTRY}/task-center/${workspaceId}?mode=running&theme=${theme}`;
     return `${MAIN_ENTRY}/main/instance/${workspaceId}/data-manage?theme=${theme}&mode=running&content=true`;
   }, [theme]);
 

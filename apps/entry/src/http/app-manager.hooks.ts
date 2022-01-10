@@ -48,6 +48,7 @@ export const appManagerBuilder = baseFetch.injectEndpoints({
     // 工作区详情；
     workspaceDetail: build.query({
       query: (workspaceId: number) => `/app/${workspaceId}`,
+      keepUnusedDataFor: 0,
       providesTags: [{ type: 'Workspace', id: 'DETAIL' }],
     }),
     // 添加子应用；
