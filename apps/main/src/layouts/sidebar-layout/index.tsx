@@ -14,26 +14,14 @@ function SidebarLayout() {
   const dispatch = useDispatch();
   const matched = useRouteMatch();
   const { appId } = useParams<{ appId: string }>();
-  const { pathname,search } = useLocation();
+  const { pathname } = useLocation();
   const [appDetail, setAppDetail] = useState<AppSchema>();
   const [loading, setLoading] = useState(false);
   const [showDataManage, setShowDataManage] = useState<boolean>(false);
-  const onlyShowContent = useMemo<string>(() => {
-    // 以iframe方式接入,参数在location中
-    if (search) {
-      const params = new URLSearchParams(search.slice(1));
-      return params.get('content') || 'false';
-    }
-    return 'false';
-  // eslint-disable-next-line
-  }, []);
   const showHeader = useMemo(() => {
-    if(onlyShowContent==='true'){
-      return false;
-    }
     const path = pathname.replace(ROUTES.APP_PROCESS.replace(':appId', appId), '');
     return path.startsWith('/task-center') || path === '/data-manage';
-  }, [pathname, appId,onlyShowContent]);
+  }, [pathname, appId]);
 
   useEffect(() => {
     if (!showHeader) return;
@@ -129,8 +117,7 @@ function SidebarLayout() {
 
 // export default React.memo(SidebarLayout);
 
-
-export function Instancelayout () {
+export function Instancelayout() {
   const { appId } = useParams<{ appId: string }>();
   const microExtra = useMemo(() => ({ appId }), [appId]);
   const microBasename = useMemo(() => {
@@ -146,9 +133,7 @@ export function Instancelayout () {
         extra={microExtra}
       />
     </div>
-  )
+  );
 }
 
-
-
-export default React.memo(SidebarLayout); 
+export default React.memo(SidebarLayout);

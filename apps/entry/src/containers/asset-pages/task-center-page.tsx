@@ -12,11 +12,7 @@ const TaskCenterMicroPage = () => {
     }),
   });
   const url = useMemo(() => {
-    // const url = `${FLOW_ENTRY}/main/app/${
-    // workspaceId || appId
-    // }/process/task-center?theme=${theme}&mode=preview&content=true`;
-    // return `${FLOW_ENTRY}/task-center/${workspaceId}?mode=running&theme=${theme}`;
-    return `${MAIN_ENTRY}/main/app/${workspaceId}/process/task-center?theme=${theme}&mode=running&content=true`;
+    return `${MAIN_ENTRY}/main/instance/${workspaceId}/task-center?theme=${theme}&mode=running`;
   }, [theme]);
 
   return (
