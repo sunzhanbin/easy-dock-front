@@ -20,7 +20,6 @@ import "@containers/workspace-running/multi-nav.style";
 import {
   CanvasResponseType,
   CANVAS_ENTRY,
-  FLOW_ENTRY,
   MAIN_ENTRY,
   SPACE_ENTRY,
   SubAppType,

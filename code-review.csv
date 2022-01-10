@@ -1,0 +1,4 @@
+sha,filename,url,lines,title,comment,priority,category,additional,id,private
+"83028b5850dd71c3ea7e5b77583efa11660a0862","\apps\entry\src\views\workspace\index.slice.ts","","30:9-30:9","应用端和构建端状态共享","应用端和构建端是独立的，所以状态不应该共享\n\n后期如果有权限把控，两端数据是不共存的","3","Error Handling","","828c492d-92f6-49d2-9049-c3a754db737b","0"
+"83028b5850dd71c3ea7e5b77583efa11660a0862","\apps\entry\src\views\workspace\index.slice.ts","","47:2-47:2","重复存储menu","rtk query 已有缓存的功能，非必要不需要再次存储menu。","2","Best Practices","","5124a34a-9c95-44ce-b729-683da09b885a","0"
+"bcecc19abd3003c8cac08fee780c9a8efa4fadab","\apps\entry\src\containers\workspace-running\multi-nav.component.tsx","","55:8-55:18","navigateFn ","此处逻辑和兄弟文件 `multi-nav.component.tsx` navigateFn 重复；\n\n逻辑重新整理一下，策略模式，字典map，if else 不够清晰；","2","","","b34d8ae8-5f29-44db-9827-3f006b680b15","0"
