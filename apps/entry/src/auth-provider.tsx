@@ -8,6 +8,7 @@ function AuthProvider({ children }: { children: JSX.Element }) {
         (async () => {
             await auth.getToken(true, window.EASY_DOCK_BASE_SERVICE_ENDPOINT);
         })();
+        return null;
     };
     return children;
 }

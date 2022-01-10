@@ -34,7 +34,6 @@ function HeaderUser({showProject}: HeaderUserProps) {
   };
 
   const handleLogout = useCallback(() => {
-    console.log()
     dispatch(logout());
   }, [dispatch]);
 
