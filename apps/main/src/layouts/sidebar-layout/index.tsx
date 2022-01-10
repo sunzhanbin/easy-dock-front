@@ -1,5 +1,5 @@
 import React, { useEffect, useState, Suspense, useMemo } from 'react';
-import { Route, useParams, NavLink, useRouteMatch, useLocation, Switch } from 'react-router-dom';
+import { Route, useParams, NavLink, useRouteMatch, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import UserComponent from '@components/header/user';
 import MicroApp from '@components/micro-app';
