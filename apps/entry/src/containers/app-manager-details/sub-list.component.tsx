@@ -186,7 +186,7 @@ const SubListComponent: React.FC = () => {
                   className="switch"
                   checkedChildren="启用"
                   unCheckedChildren="停用"
-                  defaultChecked={workspace?.status === 1}
+                  checked={workspace?.status === 1}
                   onChange={handleAppStatusChange}
                 />
               </div>
