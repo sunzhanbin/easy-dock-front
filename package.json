@@ -47,7 +47,7 @@
     "babel-eslint": "10.1.0",
     "husky": "^7.0.4",
     "lint-staged": "10.5.4",
-    "mockjs": "1.1.0",
+    "mockjs": "1.1.0"
   },
   "lint-staged": {
     "packages/*/src/**/*.{ts,tsx,js,jsx}": [

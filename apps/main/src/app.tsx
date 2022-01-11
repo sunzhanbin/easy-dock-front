@@ -1,15 +1,15 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { Router } from 'react-router-dom';
 import history from '@utils/history';
 import { Provider } from 'react-redux';
 import App from './main';
+import ReactDOM from 'react-dom';
 
 import { store } from './store';
 
 ReactDOM.render(
-  <Provider store={          store}>
-    <Router history={        history}>
+  <Provider store={store}>
+    <Router history={history}>
       <App />
     </Router>
   </Provider>,
