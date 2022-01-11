@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-domf';
+import ReactDOM from 'react-dom';
 import { Router } from 'react-router-dom';
 import history from '@utils/history';
 import { Provider } from 'react-redux';
