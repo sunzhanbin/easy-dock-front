@@ -14,10 +14,11 @@ import CanvasImage from "@assets/images/canvas.png";
 import AppModal from "./app-modal.component";
 import "./app-empty.style.scss";
 
-interface TypeItem {
+type TypeItem = {
   type: SubAppType;
   title: string;
   desc: string;
+  position: "left" | "right";
   children: ReactNode;
   showModal: boolean;
 }
@@ -44,6 +45,7 @@ const AppEmpty: FC = () => {
         type: SubAppType.FORM,
         title: "新建表单",
         desc: "配置表单、列表",
+        position: "left",
         children: <img src={FormImage} alt="图片" className="image" />,
         showModal: showModal[SubAppType.FORM],
       },
@@ -51,6 +53,7 @@ const AppEmpty: FC = () => {
         type: SubAppType.FLOW,
         title: "新建流程",
         desc: "配置流程",
+        position: "left",
         children: <img src={FlowImage} alt="图片" className="image" />,
         showModal: showModal[SubAppType.FLOW],
       },
@@ -58,6 +61,7 @@ const AppEmpty: FC = () => {
         type: SubAppType.CHART,
         title: "新建报表",
         desc: "配置业务统计报表",
+        position: "left",
         children: <img src={ChartImage} alt="图片" className="image" />,
         showModal: showModal[SubAppType.CHART],
       },
@@ -65,6 +69,7 @@ const AppEmpty: FC = () => {
         type: SubAppType.CANVAS,
         title: "新建大屏",
         desc: "配置可视化大屏",
+        position: "left",
         children: <img src={CanvasImage} alt="图片" className="image" />,
         showModal: showModal[SubAppType.CANVAS],
       },
@@ -72,6 +77,7 @@ const AppEmpty: FC = () => {
         type: SubAppType.SPACE,
         title: "新建空间",
         desc: "配置3D空间、动画等",
+        position: "right",
         children: <img src={SpaceImage} alt="图片" className="image" />,
         showModal: showModal[SubAppType.SPACE],
       },
@@ -91,7 +97,7 @@ const AppEmpty: FC = () => {
   });
   return (
     <div className="app-empty">
-      {typeList.map(({ type, title, desc, children, showModal }) => {
+      {typeList.map(({ type, title, desc, children, showModal, position }) => {
         return (
           <div className="empty-item" key={type}>
             <div className="title">{title}</div>
@@ -112,6 +118,7 @@ const AppEmpty: FC = () => {
                 mode="create"
                 className="empty-modal"
                 type={type}
+                position={position}
                 onClose={handleClose}
                 onOk={(name, type) => handleOk(name, type)}
               />
