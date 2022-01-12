@@ -1,13 +1,13 @@
-import "@containers/home-manager/new-sub.style.scss";
-import { useState } from "react";
-import { Icon } from "@common/components";
-import { SUB_APP_LIST, NOT_SHOW_MODAL_SELECT } from "@utils/const";
-import classnames from "classnames";
-import NewSubAppModal from "@containers/home-manager/new-subapp-modal";
-import { message } from "antd";
-import { useCreateSupAppMutation, useGetCanvasIdMutation, useGetHoloSceneIdMutation } from "@/http";
-import { ResponseType, HomeSubAppType, IOT_ENTRY, INTERFACE_ENTRY, DATA_FISH_ENTRY } from "@/consts";
-import { JumpLinkToUrl } from "@utils/utils";
+import '@containers/home-manager/new-sub.style.scss';
+import { useState } from 'react';
+import { Icon } from '@common/components';
+import { SUB_APP_LIST, NOT_SHOW_MODAL_SELECT } from '@utils/const';
+import classnames from 'classnames';
+import NewSubAppModal from '@containers/home-manager/new-subapp-modal';
+import { message } from 'antd';
+import { useCreateSupAppMutation, useGetCanvasIdMutation, useGetHoloSceneIdMutation } from '@/http';
+import { ResponseType, HomeSubAppType, IOT_ENTRY, INTERFACE_ENTRY, DATA_FISH_ENTRY } from '@/consts';
+import { JumpLinkToUrl } from '@utils/utils';
 
 const HomeNewSub = () => {
   const [createSubApp] = useCreateSupAppMutation();
@@ -19,18 +19,18 @@ const HomeNewSub = () => {
     name: string;
     fieldKey: number;
   }>({
-    title: "",
-    name: "",
+    title: '',
+    name: '',
     fieldKey: 0,
   });
 
   const handleConfirm = async (values: any) => {
     try {
-      const { data }: ResponseType = await createSubApp(values);
+      const { data }: ResponseType = await createSubApp(values).unwrap();
       const { type = 0 } = values;
       if (!data) return;
       await JumpLinkToUrl(type, data?.id, getCanvasId, getHoloSceneId);
-      message.success("创建成功!");
+      message.success('创建成功!');
       setShowModal(false);
     } catch (e) {
       console.log(e);
@@ -61,7 +61,7 @@ const HomeNewSub = () => {
   return (
     <div className="banner">
       {SUB_APP_LIST.map((sub, key) => (
-        <div className={classnames(sub.className, "banner_content")} key={key}>
+        <div className={classnames(sub.className, 'banner_content')} key={key}>
           <div className="data_info_top">
             <p className="text_wrapper">
               <span className="text">{sub.name}</span>
@@ -77,14 +77,14 @@ const HomeNewSub = () => {
             {sub.subList.map((item, index) => (
               <div
                 className={classnames(
-                  "operation_wrapper",
-                  sub.className === "create_virtual" && index !== 0 ? "orange" : "",
+                  'operation_wrapper',
+                  sub.className === 'create_virtual' && index !== 0 ? 'orange' : '',
                 )}
                 key={index}
                 onClick={() => handleNewSubAPP(item)}
               >
                 <div className="container">
-                  <i className={classnames("icon", item.icon)} />
+                  <i className={classnames('icon', item.icon)} />
                   <span className="text">{item.text}</span>
                   <Icon className="icon_arrow" type="jinrujiantou" />
                 </div>

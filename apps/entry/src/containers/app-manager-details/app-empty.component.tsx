@@ -1,18 +1,18 @@
-import { memo, FC, ReactNode, useMemo, useState } from "react";
-import { message, Button } from "antd";
-import { SubAppType } from "@/consts";
-import { Icon } from "@common/components";
-import useMemoCallback from "@common/hooks/use-memo-callback";
-import { useAppSelector } from "@/store";
-import SpaceImage from "@assets/images/space.png";
-import { selectCurrentWorkspaceId } from "@/views/app-manager/index.slice";
-import { useCreateSupAppMutation } from "@/http/app-manager.hooks";
-import FormImage from "@assets/images/form.png";
-import FlowImage from "@assets/images/flow.png";
-import ChartImage from "@assets/images/chart.png";
-import CanvasImage from "@assets/images/canvas.png";
-import AppModal from "./app-modal.component";
-import "./app-empty.style.scss";
+import { memo, FC, ReactNode, useMemo, useState } from 'react';
+import { message, Button } from 'antd';
+import { SubAppType } from '@/consts';
+import { Icon } from '@common/components';
+import useMemoCallback from '@common/hooks/use-memo-callback';
+import { useAppSelector } from '@/store';
+import SpaceImage from '@assets/images/space.png';
+import { selectCurrentWorkspaceId } from '@/views/app-manager/index.slice';
+import { useCreateSupAppMutation } from '@/http/app-manager.hooks';
+import FormImage from '@assets/images/form.png';
+import FlowImage from '@assets/images/flow.png';
+import ChartImage from '@assets/images/chart.png';
+import CanvasImage from '@assets/images/canvas.png';
+import AppModal from './app-modal.component';
+import './app-empty.style.scss';
 
 interface TypeItem {
   type: SubAppType;
@@ -42,36 +42,36 @@ const AppEmpty: FC = () => {
     return [
       {
         type: SubAppType.FORM,
-        title: "新建表单",
-        desc: "配置表单、列表",
+        title: '新建表单',
+        desc: '配置表单、列表',
         children: <img src={FormImage} alt="图片" className="image" />,
         showModal: showModal[SubAppType.FORM],
       },
       {
         type: SubAppType.FLOW,
-        title: "新建流程",
-        desc: "配置流程",
+        title: '新建流程',
+        desc: '配置流程',
         children: <img src={FlowImage} alt="图片" className="image" />,
         showModal: showModal[SubAppType.FLOW],
       },
       {
         type: SubAppType.CHART,
-        title: "新建报表",
-        desc: "配置业务统计报表",
+        title: '新建报表',
+        desc: '配置业务统计报表',
         children: <img src={ChartImage} alt="图片" className="image" />,
         showModal: showModal[SubAppType.CHART],
       },
       {
         type: SubAppType.CANVAS,
-        title: "新建大屏",
-        desc: "配置可视化大屏",
+        title: '新建大屏',
+        desc: '配置可视化大屏',
         children: <img src={CanvasImage} alt="图片" className="image" />,
         showModal: showModal[SubAppType.CANVAS],
       },
       {
         type: SubAppType.SPACE,
-        title: "新建空间",
-        desc: "配置3D空间、动画等",
+        title: '新建空间',
+        desc: '配置3D空间、动画等',
         children: <img src={SpaceImage} alt="图片" className="image" />,
         showModal: showModal[SubAppType.SPACE],
       },
@@ -85,9 +85,11 @@ const AppEmpty: FC = () => {
     setShowModal(initialShowModal);
   });
   const handleOk = useMemoCallback((name: string, type: SubAppType) => {
-    createSubApp({ appId: workspaceId, name, type }).then(() => {
-      message.success("子应用创建成功!");
-    });
+    createSubApp({ appId: workspaceId, name, type })
+      .unwrap()
+      .then(() => {
+        message.success('子应用创建成功!');
+      });
   });
   return (
     <div className="app-empty">

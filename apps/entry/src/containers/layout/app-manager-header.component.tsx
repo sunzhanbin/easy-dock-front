@@ -1,25 +1,18 @@
-import { memo, FC, useState, useMemo, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { Button, message } from "antd";
-import classNames from "classnames";
-import { Icon, Text } from "@common/components";
-import useMemoCallback from "@common/hooks/use-memo-callback";
-import { useAppDispatch, useAppSelector } from "@/store";
-import {
-  useWorkspaceDetailQuery,
-  useSaveAppSetupMutation,
-  useModifyAppStatusMutation,
-} from "@/http";
-import { setName } from "@/views/workspace/index.slice";
-import { selectMenu } from "@/views/app-setup/menu-setup.slice";
-import { setCurrentWorkspaceId } from "@/views/app-manager/index.slice";
-import {
-  selectBasicForm,
-  validateBasicForm,
-} from "@/views/app-setup/basic-setup.slice";
-import AppPreviewModal from "@containers/app-preview-modal";
-import "./app-manager-header.style.scss";
-import { filterAssetConfig } from "@utils/utils";
+import { memo, FC, useState, useMemo, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Button, message } from 'antd';
+import classNames from 'classnames';
+import { Icon, Text } from '@common/components';
+import useMemoCallback from '@common/hooks/use-memo-callback';
+import { useAppDispatch, useAppSelector } from '@/store';
+import { useWorkspaceDetailQuery, useSaveAppSetupMutation, useModifyAppStatusMutation } from '@/http';
+import { setName } from '@/views/workspace/index.slice';
+import { selectMenu } from '@/views/app-setup/menu-setup.slice';
+import { setCurrentWorkspaceId } from '@/views/app-manager/index.slice';
+import { selectBasicForm, validateBasicForm } from '@/views/app-setup/basic-setup.slice';
+import AppPreviewModal from '@containers/app-preview-modal';
+import './app-manager-header.style.scss';
+import { filterAssetConfig } from '@utils/utils';
 
 interface EditHeaderProps {
   className?: string;
@@ -39,13 +32,13 @@ const AppManagerHeader: FC<EditHeaderProps> = ({ className }) => {
   const [modifyAppStatus] = useModifyAppStatusMutation();
   const basicConfig = useAppSelector(selectBasicForm);
   const menuList = useAppSelector(selectMenu);
-  const [activeNav, setActiveNav] = useState<string>("edit");
+  const [activeNav, setActiveNav] = useState<string>('edit');
   const [showModal, setShowModal] = useState<boolean>(false);
   const navList = useMemo<NavItem[]>(() => {
-    return [{ key: "edit", title: "应用设计" }];
+    return [{ key: 'edit', title: '应用设计' }];
   }, []);
   const handleBack = useMemoCallback(() => {
-    navigate("/app-manager");
+    navigate('/app-manager');
   });
   const handlePreview = useMemoCallback(() => {
     // navigate(`/app-manager/preview/${workspaceId}`);
@@ -56,13 +49,13 @@ const AppManagerHeader: FC<EditHeaderProps> = ({ className }) => {
   });
   const handleSave = useMemoCallback(async (showTip = true) => {
     const basicConfigResult = await dispatch(validateBasicForm(basicConfig));
-    if (basicConfigResult.meta.requestStatus === "rejected") {
-      message.error("请检查应用设置!");
-      return Promise.reject("error");
+    if (basicConfigResult.meta.requestStatus === 'rejected') {
+      message.error('请检查应用设置!');
+      return Promise.reject('error');
     }
     if (!menuList?.length) {
-      message.error("请添加菜单!");
-      return Promise.reject("error");
+      message.error('请添加菜单!');
+      return Promise.reject('error');
     }
     const menus = filterAssetConfig(JSON.parse(JSON.stringify(menuList)));
     const { name, icon, remark, navMode, theme } = basicConfig;
@@ -76,22 +69,19 @@ const AppManagerHeader: FC<EditHeaderProps> = ({ className }) => {
       meta: { menuList: menus },
     };
     try {
-      const res = await saveAppSetup(params);
-      if ((res as { error: unknown }).error) {
-        return Promise.reject("error");
-      }
-      showTip && message.success("保存成功!");
-      return Promise.resolve("success");
+      await saveAppSetup(params).unwrap();
+      showTip && message.success('保存成功!');
+      return Promise.resolve('success');
     } catch (error) {
-      return Promise.reject("error");
+      return Promise.reject('error');
     }
   });
   const handlePublish = useMemoCallback(async () => {
     try {
       await handleSave(false);
-      await modifyAppStatus({ id: +(workspaceId as string), status: 1 });
-      message.success("发布成功!");
-      navigate("/app-manager");
+      await modifyAppStatus({ id: +(workspaceId as string), status: 1 }).unwrap();
+      message.success('发布成功!');
+      navigate('/app-manager');
     } catch (error) {
       console.error(error);
     }
@@ -107,7 +97,7 @@ const AppManagerHeader: FC<EditHeaderProps> = ({ className }) => {
     }
   }, [workspaceId]);
   return (
-    <div className={classNames("app-manager-header", className && className)}>
+    <div className={classNames('app-manager-header', className && className)}>
       <div className="left" onClick={handleBack}>
         <Icon type="fanhui" className="back" />
         <div className="workspace-name">
@@ -133,30 +123,14 @@ const AppManagerHeader: FC<EditHeaderProps> = ({ className }) => {
           <Icon type="yulan" className="icon" />
           <div className="text">预览</div>
         </div>
-        <Button
-          className="save"
-          size="large"
-          type="primary"
-          ghost
-          onClick={handleSave}
-        >
+        <Button className="save" size="large" type="primary" ghost onClick={handleSave}>
           保存
         </Button>
-        <Button
-          className="publish"
-          size="large"
-          type="primary"
-          icon={<Icon type="fabu" />}
-          onClick={handlePublish}
-        >
+        <Button className="publish" size="large" type="primary" icon={<Icon type="fabu" />} onClick={handlePublish}>
           发布
         </Button>
       </div>
-      <AppPreviewModal
-        visible={showModal}
-        theme={basicConfig?.theme || "light"}
-        onClose={handleModalClose}
-      />
+      <AppPreviewModal visible={showModal} theme={basicConfig?.theme || 'light'} onClose={handleModalClose} />
     </div>
   );
 };

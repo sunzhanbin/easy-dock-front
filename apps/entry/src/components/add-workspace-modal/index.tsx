@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useImperativeHandle } from 'react';
 import { selectProjectId } from '@views/home/index.slice';
-import { Modal, Form, Input } from 'antd';
+import { Modal, Form, Input, message } from 'antd';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { selectCurrentWorkspaceId, setCurrentWorkspaceId } from '@views/app-manager/index.slice';
 import { nameRule } from '@/consts';
@@ -41,9 +41,11 @@ const AddWorkspaceModal = React.forwardRef(function AddWorkspace(_, ref) {
       .validateFields()
       .then(async ({ name }) => {
         if (title === '新增') {
-          addWorkspace({ name, projectId });
+          await addWorkspace({ name, projectId }).unwrap();
+          message.success('新增成功!');
         } else {
-          await editWorkspace({ name, id: workspaceId });
+          await editWorkspace({ name, id: workspaceId }).unwrap();
+          message.success('修改成功!');
           dispatch(setCurrentWorkspaceId(workspaceId));
         }
         handleVisible(false);

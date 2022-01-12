@@ -1,31 +1,29 @@
-import { SubAppType } from "@/consts";
-import baseFetch, { runTime } from "@utils/fetch";
+import { SubAppType } from '@/consts';
+import baseFetch, { runTime } from '@utils/fetch';
 
 export const appManagerBuilder = baseFetch.injectEndpoints({
   endpoints: (build) => ({
     // 添加工作区；
     addWorkspace: build.mutation({
-      query: (params?: { name: string; projectId: number }) =>
-        ({
-          url: "/app",
-          method: "post",
-          data: params,
-        } as any),
-      invalidatesTags: [{ type: "Workspace", id: "LIST" }],
+      query: (params?: { name: string; projectId: number }) => ({
+        url: '/app',
+        method: 'post',
+        body: params,
+      }),
+      invalidatesTags: [{ type: 'Workspace', id: 'LIST' }],
     }),
     // 编辑工作区
     editWorkspace: build.mutation({
-      query: (params?: { name: string; id: number }) =>
-        ({
-          url: "/app",
-          method: "put",
-          data: params,
-        } as any),
+      query: (params?: { name: string; id: number }) => ({
+        url: '/app',
+        method: 'put',
+        body: params,
+      }),
       invalidatesTags: [{ type: 'Workspace', id: 'LIST' }],
     }),
     // 删除工作区
     deleteWorkspace: build.mutation({
-      query: (id: number) => ({ url: `/app/${id}`, method: 'delete' } as any),
+      query: (id: number) => ({ url: `/app/${id}`, method: 'delete' }),
       invalidatesTags: [{ type: 'Workspace', id: 'LIST' }],
     }),
     // 工作区里列表；
@@ -53,12 +51,11 @@ export const appManagerBuilder = baseFetch.injectEndpoints({
     }),
     // 添加子应用；
     addSubApp: build.mutation({
-      query: (params: { appId: number; name: string; type: number }) =>
-        ({
-          url: '/subapp',
-          method: 'post',
-          data: params,
-        } as any),
+      query: (params: { appId: number; name: string; type: number }) => ({
+        url: '/subapp',
+        method: 'post',
+        body: params,
+      }),
       invalidatesTags: [{ type: 'SubApps', id: 'LIST' }],
     }),
     // 子应用列表；
@@ -77,12 +74,11 @@ export const appManagerBuilder = baseFetch.injectEndpoints({
     }),
     // 已发布的子应用列表
     fetchDeployedSubAppList: build.query({
-      query: (appId: number, type?: SubAppType) =>
-        ({
-          url: `/subapp/${appId}/list/all/deployed`,
-          method: 'get',
-          params: type ? { type } : {},
-        } as any),
+      query: (appId: number, type?: SubAppType) => ({
+        url: `/subapp/${appId}/list/all/deployed`,
+        method: 'get',
+        params: type ? { type } : {},
+      }),
       providesTags: (result) =>
         result
           ? [
@@ -96,42 +92,43 @@ export const appManagerBuilder = baseFetch.injectEndpoints({
     }),
     // 修改应用状态 & 发布应用配置；
     modifyAppStatus: build.mutation({
-      query: (params: { status: number; id: number }) =>
-        ({
-          url: `/app/status`,
-          method: 'put',
-          data: params,
-        } as any),
+      query: (params: { status: number; id: number }) => ({
+        url: `/app/status`,
+        method: 'put',
+        body: params,
+      }),
       invalidatesTags: [{ type: 'Workspace', id: 'DETAIL' }],
     }),
     // 修改子应用状态
-    modifySubAppStatus: build.mutation({
-      query: (params: { status: number; id: number }) =>
-        ({
-          url: '/subapp/status',
-          method: 'put',
-          data: params,
-        } as any),
+    modifySubAppStatus: build.mutation<boolean, { status: number; id: number }>({
+      query: (params) => ({
+        url: '/subapp/status',
+        method: 'put',
+        body: params,
+      }),
       invalidatesTags: [{ type: 'SubApps', id: 'LIST' }],
     }),
     // 修改子应用名称
     modifySubAppName: build.mutation({
-      query: (params: { name: string; id: number }) =>
-        ({
-          url: '/subapp',
-          method: 'put',
-          data: params,
-        } as any),
+      query: (params: { name: string; id: number }) => ({
+        url: '/subapp',
+        method: 'put',
+        body: params,
+      }),
       invalidatesTags: [{ type: 'SubApps', id: 'LIST' }],
     }),
     // 删除子应用
     deleteSupApp: build.mutation({
-      query: (id: number) => ({ url: `/subapp/${id}`, method: 'delete' } as any),
+      query: (id: number) => ({ url: `/subapp/${id}`, method: 'delete' }),
       invalidatesTags: [{ type: 'SubApps', id: 'LIST' }],
     }),
     // 新增子应用
     createSupApp: build.mutation({
-      query: (data: { appId: number; type: number; name: string }) => ({ url: `/subapp`, method: 'post', data } as any),
+      query: (params: { appId: number; type: number; name: string }) => ({
+        url: `/subapp`,
+        method: 'post',
+        body: params,
+      }),
       invalidatesTags: [{ type: 'SubApps', id: 'LIST' }],
     }),
     // 保存应用配置；
@@ -144,12 +141,11 @@ export const appManagerBuilder = baseFetch.injectEndpoints({
         navMode?: number;
         remark?: string;
         theme?: string;
-      }) =>
-        ({
-          url: '/app/extension',
-          method: 'put',
-          data: params,
-        } as any),
+      }) => ({
+        url: '/app/extension',
+        method: 'put',
+        body: params,
+      }),
       invalidatesTags: [{ type: 'Workspace', id: 'DETAIL' }],
     }),
   }),

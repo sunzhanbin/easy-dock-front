@@ -1,14 +1,13 @@
-import baseFetch from "@utils/fetch";
+import baseFetch from '@utils/fetch';
 
 export const assetCentre = baseFetch.injectEndpoints({
   endpoints: (build) => ({
     addAsset: build.mutation({
-      query: (params?: { name: string; projectId: number }) =>
-        ({
-          url: "/app",
-          method: "post",
-          data: params,
-        } as any),
+      query: (params?: { name: string; projectId: number }) => ({
+        url: '/app',
+        method: 'post',
+        body: params,
+      }),
       // invalidatesTags: ['AssetCentre']
     }),
   }),

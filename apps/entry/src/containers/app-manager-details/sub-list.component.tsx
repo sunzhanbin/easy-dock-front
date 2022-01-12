@@ -1,30 +1,24 @@
-import React, {
-  useCallback,
-  useMemo,
-  useState,
-  useRef,
-  useEffect,
-} from "react";
-import { Tabs, Input, Button, Switch, message } from "antd";
-import { useNavigate } from "react-router-dom";
-import { useAppSelector } from "@/store";
+import React, { useCallback, useMemo, useState, useRef, useEffect } from 'react';
+import { Tabs, Input, Button, Switch, message } from 'antd';
+import { useNavigate } from 'react-router-dom';
+import { useAppSelector } from '@/store';
 import {
   useFetchSubAppListQuery,
   useWorkspaceDetailQuery,
   useCreateSupAppMutation,
   useModifyAppStatusMutation,
-} from "@/http";
-import { selectCurrentWorkspaceId } from "@views/app-manager/index.slice";
-import useMemoCallback from "@common/hooks/use-memo-callback";
-import { SubAppInfo, SubAppType } from "@/consts";
-import { Icon } from "@common/components";
-import classnames from "classnames";
-import AppPreviewModal from "@containers/app-preview-modal";
-import { imgIdToUrl } from "@/utils/utils";
-import AppModal from "./app-modal.component";
-import AppCard from "./app-card.component";
-import AppEmpty from "./app-empty.component";
-import "@containers/app-manager-details/sub-list.style";
+} from '@/http';
+import { selectCurrentWorkspaceId } from '@views/app-manager/index.slice';
+import useMemoCallback from '@common/hooks/use-memo-callback';
+import { SubAppInfo, SubAppType } from '@/consts';
+import { Icon } from '@common/components';
+import classnames from 'classnames';
+import AppPreviewModal from '@containers/app-preview-modal';
+import { imgIdToUrl } from '@/utils/utils';
+import AppModal from './app-modal.component';
+import AppCard from './app-card.component';
+import AppEmpty from './app-empty.component';
+import '@containers/app-manager-details/sub-list.style';
 
 const { TabPane } = Tabs;
 
@@ -37,12 +31,12 @@ const SubListComponent: React.FC = () => {
   const navigate = useNavigate();
   const extension = useMemo(() => workspace?.extension, [workspace]);
   const subAppCount = useMemo(() => subAppList?.length || 0, [subAppList]);
-  const theme = useMemo(() => extension?.theme || "light", [extension]);
+  const theme = useMemo(() => extension?.theme || 'light', [extension]);
   const [showAppModal, setShowAppModal] = useState<boolean>(false);
-  const [logoUrl, setLogoUrl] = useState<string>("");
+  const [logoUrl, setLogoUrl] = useState<string>('');
   const [initialSubAppList, setInitialSubAppList] = useState<SubAppInfo[]>([]);
-  const [activeKey, setActiveKey] = useState<string>("all");
-  const [keyword, setKeyword] = useState<string>("");
+  const [activeKey, setActiveKey] = useState<string>('all');
+  const [keyword, setKeyword] = useState<string>('');
   const [showModal, setShowModal] = useState<boolean>(false);
   const containerRef = useRef<HTMLDivElement>(null);
   // 动态获取阴影的高度,实现嵌入的阴影效果
@@ -67,9 +61,11 @@ const SubListComponent: React.FC = () => {
   });
 
   const handleOk = useMemoCallback((name, type) => {
-    createSubApp({ appId: workspaceId, name, type }).then(() => {
-      message.success("子应用创建成功!");
-    });
+    createSubApp({ appId: workspaceId, name, type })
+      .unwrap()
+      .then(() => {
+        message.success('子应用创建成功!');
+      });
   });
 
   const handlePreview = useMemoCallback(() => {
@@ -83,8 +79,8 @@ const SubListComponent: React.FC = () => {
   const handleAppStatusChange = useMemoCallback(async (checked: boolean) => {
     const params = { id: workspaceId, status: checked ? 1 : -1 };
     try {
-      await modifyAppStatus(params);
-      message.success(checked ? "启用成功!" : "停用成功!");
+      await modifyAppStatus(params).unwrap();
+      message.success(checked ? '启用成功!' : '停用成功!');
     } catch (error) {
       console.error(error);
     }
@@ -153,11 +149,7 @@ const SubListComponent: React.FC = () => {
   }, [extension]);
 
   return (
-    <div
-      className="sub-list-component-container"
-      ref={containerRef}
-      style={style}
-    >
+    <div className="sub-list-component-container" ref={containerRef} style={style}>
       {extension && (
         <div className="app-info">
           <div className="logo">
@@ -191,13 +183,13 @@ const SubListComponent: React.FC = () => {
                 />
               </div>
             </div>
-            <div className="remark">{extension.remark || "这是一个应用"}</div>
+            <div className="remark">{extension.remark || '这是一个应用'}</div>
           </div>
         </div>
       )}
       {subAppCount > 0 ? (
         <Tabs
-          className={classnames(!extension ? "sub-app-tab" : "")}
+          className={classnames(!extension ? 'sub-app-tab' : '')}
           activeKey={activeKey}
           onChange={handleTabsChange}
           tabBarExtraContent={renderExtra}
@@ -361,11 +353,7 @@ const SubListComponent: React.FC = () => {
       ) : (
         <AppEmpty />
       )}
-      <AppPreviewModal
-        visible={showModal}
-        theme={theme}
-        onClose={handleModalClose}
-      />
+      <AppPreviewModal visible={showModal} theme={theme} onClose={handleModalClose} />
     </div>
   );
 };

@@ -1,11 +1,11 @@
-import React, { memo, useCallback } from "react";
-import { Modal, Form, Input, message } from "antd";
-import SelectCard from "@components/select-card";
-import { useAppSelector } from "@/store";
-import { selectProjectId } from "@views/home/index.slice";
-import "@components/select-card/index.style.scss";
-import { useFetchWorkspaceListQuery, useAddWorkspaceMutation } from "@/http";
-import { APP_TYPE, nameRule } from "@/consts";
+import React, { memo, useCallback } from 'react';
+import { Modal, Form, Input, message } from 'antd';
+import SelectCard from '@components/select-card';
+import { useAppSelector } from '@/store';
+import { selectProjectId } from '@views/home/index.slice';
+import '@components/select-card/index.style.scss';
+import { useFetchWorkspaceListQuery, useAddWorkspaceMutation } from '@/http';
+import { APP_TYPE, nameRule } from '@/consts';
 
 type ModalProps = {
   modalInfo: { title: string; name: string; fieldKey: number };
@@ -15,8 +15,8 @@ type ModalProps = {
 };
 
 const SELECT_CARD_TYPE = {
-  key: "workspace",
-  label: "工作区",
+  key: 'workspace',
+  label: '工作区',
 };
 
 const NewSubAppModal = ({ modalInfo, visible, onOk, onCancel }: ModalProps) => {
@@ -36,15 +36,13 @@ const NewSubAppModal = ({ modalInfo, visible, onOk, onCancel }: ModalProps) => {
   });
   const handleNewSubApp = useCallback(
     ({ name }) => {
-      const ret = addWorkspace({ name, projectId });
-      ret.then((res: any) => {
-        if (res?.data) {
-          message.success("创建成功");
-        }
+      const ret = addWorkspace({ name, projectId }).unwrap();
+      ret.then(() => {
+        message.success('创建成功');
       });
       return ret;
     },
-    [addWorkspace, projectId]
+    [addWorkspace, projectId],
   );
   const handleSelectWorkspace = (value: any) => {
     form.setFieldsValue({ appId: value });
@@ -75,19 +73,8 @@ const NewSubAppModal = ({ modalInfo, visible, onOk, onCancel }: ModalProps) => {
       width={400}
       maskClosable={false}
     >
-      <Form
-        form={form}
-        className="form"
-        layout="vertical"
-        autoComplete="off"
-        preserve={false}
-      >
-        <Form.Item
-          label={`${modalInfo.name}名称`}
-          name="name"
-          required
-          rules={[nameRule]}
-        >
+      <Form form={form} className="form" layout="vertical" autoComplete="off" preserve={false}>
+        <Form.Item label={`${modalInfo.name}名称`} name="name" required rules={[nameRule]}>
           <Input placeholder="请输入" size="large" />
         </Form.Item>
         <Form.Item

@@ -1,8 +1,8 @@
-import React, { useCallback, useRef, useState } from "react";
-import { Layout, Menu, Button, Input, Dropdown, message } from "antd";
-import { useDeleteWorkspaceMutation, useFetchWorkspaceListQuery } from "@/http";
-import { useAppDispatch, useAppSelector } from "@/store";
-import AddWorkspaceModal from "@components/add-workspace-modal";
+import React, { useCallback, useRef, useState } from 'react';
+import { Layout, Menu, Button, Input, Dropdown, message } from 'antd';
+import { useDeleteWorkspaceMutation, useFetchWorkspaceListQuery } from '@/http';
+import { useAppDispatch, useAppSelector } from '@/store';
+import AddWorkspaceModal from '@components/add-workspace-modal';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import Popconfirm from '@components/popconfirm';
 import { Icon, Text } from '@common/components';
@@ -60,7 +60,7 @@ const AppManagerSider = () => {
       if (e) {
         e.stopPropagation();
       }
-      await deleteSubApp(id);
+      await deleteSubApp(id).unwrap();
       message.success('删除成功!');
     } catch (e) {
       console.log(e);

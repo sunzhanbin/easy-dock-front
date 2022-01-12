@@ -1,5 +1,5 @@
-import { runTime } from "@utils/fetch";
-import { ProcessDataManagerParams } from "@/consts";
+import { runTime } from '@utils/fetch';
+import { ProcessDataManagerParams } from '@/consts';
 
 // 应用端相关接口
 export const appClient = runTime.injectEndpoints({
@@ -10,29 +10,27 @@ export const appClient = runTime.injectEndpoints({
     }),
     // 获取流程数据管理的数据
     fetchProcessDataManager: build.mutation({
-      query: (params: ProcessDataManagerParams) =>
-        ({
-          url: "/task/processDataManager/list",
-          method: "post",
-          data: params,
-        } as any),
+      query: (params: ProcessDataManagerParams) => ({
+        url: '/task/processDataManager/list',
+        method: 'post',
+        body: params,
+      }),
     }),
     // 批量获取用户、角色、部门
     fetchUsers: build.mutation({
-      query: (params: {
-        deptIds?: number[];
-        roleIds?: number[];
-        userIds?: number[];
-      }) => ({ url: "/user/query/owner", method: "post", data: params } as any),
+      query: (params: { deptIds?: number[]; roleIds?: number[]; userIds?: number[] }) => ({
+        url: '/user/query/owner',
+        method: 'post',
+        body: params,
+      }),
     }),
     // 搜索项目用户
     searchUser: build.mutation({
-      query: (params: {
-        projectId: number;
-        keyword?: string;
-        index: number;
-        size: number;
-      }) => ({ url: "/user/search", method: "post", data: params } as any),
+      query: (params: { projectId: number; keyword?: string; index: number; size: number }) => ({
+        url: '/user/search',
+        method: 'post',
+        body: params,
+      }),
     }),
     fetchSubApp: build.mutation({
       query: (subAppId: number) => `/subapp/${subAppId}`,
