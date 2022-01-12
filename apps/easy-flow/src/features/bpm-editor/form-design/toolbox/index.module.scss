@@ -1,7 +1,8 @@
 .container {
   width: 288px;
-  padding: 25px 24px;
+  padding: 25px 21px;
   height: calc(100vh - 64px);
+  overflow-y: auto;
   background: rgba(24, 39, 67, 0.04);
   .component_list {
     display: flex;
