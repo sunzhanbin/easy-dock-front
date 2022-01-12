@@ -125,11 +125,12 @@ const SubListComponent: React.FC = () => {
         allowClear
         size="large"
         placeholder="搜索子应用名称"
+        value={keyword}
         prefix={<Icon type="sousuo" className="search-icon" />}
         onChange={(e) => setKeyword(e.target.value)}
       />
     );
-  }, []);
+  }, [keyword]);
 
   useEffect(() => {
     if (subAppList?.length > 0) {
@@ -145,6 +146,7 @@ const SubListComponent: React.FC = () => {
         const url = await imgIdToUrl(extension.icon);
         setLogoUrl(url);
       }
+      setKeyword("");
     })();
   }, [extension]);
 
@@ -178,7 +180,7 @@ const SubListComponent: React.FC = () => {
                   className="switch"
                   checkedChildren="启用"
                   unCheckedChildren="停用"
-                  defaultChecked={workspace?.status === 1}
+                  checked={workspace?.status === 1}
                   onChange={handleAppStatusChange}
                 />
               </div>

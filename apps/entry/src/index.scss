@@ -14,7 +14,7 @@ code {
   min-height: inherit;
   >.ant-layout-content {
     height: calc(100% - 56px);
-    overflow: hidden;
+    overflow: auto;
   }
   &.main-layout {
     background: linear-gradient(90deg, #D1D2E2 0%, rgba(220, 220, 224, 0.82) 61%, #D4D6E0 100%);

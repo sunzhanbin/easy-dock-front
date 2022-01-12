@@ -70,7 +70,7 @@ const NavComponent = () => {
       )}
       {navMode === NavModeType.MULTI && (
         <MultiNavComponent
-          dataSource={menu}
+          dataSource={authMenu}
           selectedKey={selectedKey}
           theme={theme}
           extra={<AppInfo navMode={NavModeType.MULTI} theme={theme} />}

@@ -45,9 +45,10 @@ const AppManagerSider = () => {
 
   const handleEditWorkspaceName = useMemoCallback((e: React.MouseEvent, item) => {
     e.stopPropagation();
+    const { name, id } = item;
     modalRef.current.show();
     modalRef.current.setTitle('编辑');
-    modalRef.current.setWorkspaceName(item.name);
+    modalRef.current.setWorkspace({name, id});
   });
 
   const handleSearch = useMemoCallback(() => {

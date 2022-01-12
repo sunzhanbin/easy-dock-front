@@ -7,7 +7,8 @@ export function init(svgRef: SVGSVGElement, lineD3: any) {
     svg = svgRef;
     line = lineD3;
     for (var i = 0; i < 3; i++) {
-        const b = blob(Math.round(3 + rnd(5)), rnd(window.innerWidth), rnd(window.innerHeight), window.innerWidth / 3 > 500? 500: window.innerWidth / 3, 0.2, 50, i);
+        const radius = (window.innerHeight / 2) > 550 ? 550 : (window.innerHeight / 2 );
+        const b = blob(Math.round(3 + rnd(5)), rnd(window.innerWidth), rnd(window.innerHeight), radius, 0.2, 50, i);
         anime({
             targets: b.path,
             d: b.d2,
