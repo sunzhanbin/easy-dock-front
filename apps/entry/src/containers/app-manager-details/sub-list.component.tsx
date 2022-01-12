@@ -137,7 +137,6 @@ const SubListComponent: React.FC = () => {
   }, [keyword]);
 
   useEffect(() => {
-    console.log(keyword, 'dddd');
     if (subAppList?.length > 0) {
       setInitialSubAppList(() => {
         return subAppList.filter((v: SubAppInfo) => v.name.includes(keyword));
@@ -146,7 +145,6 @@ const SubListComponent: React.FC = () => {
   }, [subAppList, keyword]);
 
   useEffect(() => {
-    console.log(111);
     (async () => {
       if (extension?.icon) {
         const url = await imgIdToUrl(extension.icon);
