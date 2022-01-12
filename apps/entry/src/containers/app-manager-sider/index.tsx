@@ -20,7 +20,7 @@ const AppManagerSider = () => {
   const dispatch = useAppDispatch();
   const projectId = useAppSelector(selectProjectId);
   const workspaceId = useAppSelector(selectCurrentWorkspaceId);
-  const [deleteSubApp] = useDeleteWorkspaceMutation();
+  const [deleteWorkspace] = useDeleteWorkspaceMutation();
   const { workspaceList } = useFetchWorkspaceListQuery(projectId, {
     selectFromResult: ({ data }) => ({
       workspaceList: data?.filter((workspace: any) => workspace.name.includes(name))?.filter(Boolean),
@@ -48,7 +48,7 @@ const AppManagerSider = () => {
     const { name, id } = item;
     modalRef.current.show();
     modalRef.current.setTitle('编辑');
-    modalRef.current.setWorkspace({name, id});
+    modalRef.current.setWorkspace({ name, id });
   });
 
   const handleSearch = useMemoCallback(() => {
@@ -58,10 +58,10 @@ const AppManagerSider = () => {
 
   const handleDeleteWorkspace = async (e: React.MouseEvent | undefined, id: number) => {
     try {
-      if (e) {
-        e.stopPropagation();
-      }
-      await deleteSubApp(id).unwrap();
+      // if (e) {
+      //   e.stopPropagation();
+      // }
+      await deleteWorkspace(id).unwrap();
       message.success('删除成功!');
     } catch (e) {
       console.log(e);
