@@ -129,13 +129,15 @@ const SubListComponent: React.FC = () => {
         allowClear
         size="large"
         placeholder="搜索子应用名称"
+        value={keyword}
         prefix={<Icon type="sousuo" className="search-icon" />}
         onChange={(e) => setKeyword(e.target.value)}
       />
     );
-  }, []);
+  }, [keyword]);
 
   useEffect(() => {
+    console.log(keyword, 'dddd');
     if (subAppList?.length > 0) {
       setInitialSubAppList(() => {
         return subAppList.filter((v: SubAppInfo) => v.name.includes(keyword));
@@ -144,11 +146,13 @@ const SubListComponent: React.FC = () => {
   }, [subAppList, keyword]);
 
   useEffect(() => {
+    console.log(111);
     (async () => {
       if (extension?.icon) {
         const url = await imgIdToUrl(extension.icon);
         setLogoUrl(url);
       }
+      setKeyword("");
     })();
   }, [extension]);
 
