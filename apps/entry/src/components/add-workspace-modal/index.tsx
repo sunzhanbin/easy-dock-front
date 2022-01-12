@@ -10,8 +10,8 @@ import { useAppDispatch, useAppSelector } from '@/store';
 const AddWorkspaceModal = React.forwardRef(function AddWorkspace(_, ref) {
   const dispatch = useAppDispatch();
   const projectId = useAppSelector(selectProjectId);
-  const workspaceId = useAppSelector(selectCurrentWorkspaceId);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [workspaceId, setWorkspaceId] = useState<number>(0);
   const [title, setTitle] = useState<string>('');
   const [addWorkspace] = useAddWorkspaceMutation();
   const [editWorkspace] = useEditWorkspaceMutation();
@@ -27,8 +27,9 @@ const AddWorkspaceModal = React.forwardRef(function AddWorkspace(_, ref) {
     setTitle: (title: string) => {
       setTitle(title);
     },
-    setWorkspaceName: (name: string) => {
+    setWorkspace: ({name, id} : {name: string, id: number}) => {
       form.setFieldsValue({ name });
+      setWorkspaceId(id);
     },
   }));
 
