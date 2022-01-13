@@ -1,26 +1,20 @@
-import { Menu } from "antd";
-import classNames from "classnames";
-import { findFirstChild, keyPath } from "@utils/utils";
-import { Menu as IMenu, MenuComponentProps } from "@utils/types";
-import useMemoCallback from "@common/hooks/use-memo-callback";
-import { Icon, Text } from "@common/components";
-import UserComponent from "@components//header/user";
-import { useAppDispatch } from "@/store";
-import { setCurrentMenu } from "@/views/app-setup/menu-setup.slice";
-import "@containers/app-setup-preview/single-nav.style";
+import { Menu } from 'antd';
+import classNames from 'classnames';
+import { findFirstChild, keyPath } from '@utils/utils';
+import { Menu as IMenu, MenuComponentProps } from '@utils/types';
+import useMemoCallback from '@common/hooks/use-memo-callback';
+import { Icon, Text } from '@common/components';
+import UserComponent from '@components//header/user';
+import { useAppDispatch } from '@/store';
+import { setCurrentMenu } from '@/views/app-setup/menu-setup.slice';
+import '@containers/app-setup-preview/single-nav.style';
 
 const { SubMenu } = Menu;
 
-const SingleNavComponent = ({
-  children,
-  extra,
-  dataSource,
-  selectedKey,
-  theme,
-}: MenuComponentProps) => {
+const SingleNavComponent = ({ children, extra, dataSource, selectedKey, theme }: MenuComponentProps) => {
   const dispatch = useAppDispatch();
   const renderIcon = useMemoCallback((icon) => {
-    if (!icon || icon === "wukongjian") {
+    if (!icon || icon === 'wukongjian') {
       return null;
     }
     return <Icon type={icon} />;
@@ -48,7 +42,7 @@ const SingleNavComponent = ({
   });
 
   return (
-    <div className={classNames("single-nav-component", theme)}>
+    <div className={classNames('single-nav-component', theme)}>
       <div className="left">
         <div className="extra">{extra}</div>
         <div className="menu">
@@ -65,21 +59,13 @@ const SingleNavComponent = ({
                 return menus.map((menu) => {
                   if (menu?.children?.length) {
                     return (
-                      <SubMenu
-                        key={menu.id}
-                        title={menu.name}
-                        onTitleClick={handleTitleClick}
-                      >
+                      <SubMenu key={menu.id} title={menu.name} onTitleClick={handleTitleClick}>
                         {recurse(menu.children)}
                       </SubMenu>
                     );
                   } else {
                     return (
-                      <Menu.Item
-                        key={menu.id}
-                        icon={renderIcon(menu.form?.icon)}
-                        onClick={handleSubMenuClick}
-                      >
+                      <Menu.Item key={menu.id} icon={renderIcon(menu.form?.icon)} onClick={handleSubMenuClick}>
                         <Text>{menu.name}</Text>
                       </Menu.Item>
                     );
@@ -94,7 +80,7 @@ const SingleNavComponent = ({
       <div className="right">
         <div className="header">
           <div className="user-container">
-            <UserComponent />
+            <UserComponent showProject={true} />
           </div>
         </div>
         <div className="content">{children}</div>

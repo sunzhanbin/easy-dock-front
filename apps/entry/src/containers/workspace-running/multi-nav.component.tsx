@@ -1,42 +1,23 @@
-import { useState, useMemo } from "react";
-import { Menu } from "antd";
-import { Icon } from "@common/components";
-import classNames from "classnames";
-import { useAppDispatch } from "@/store";
-import { Outlet, useParams } from "react-router";
-import { useNavigate } from "react-router-dom";
-import { setCurrentId } from "@/views/workspace/index.slice";
-import {
-  keyPath,
-  findFirstChild,
-  findItem,
-  getPopupContainer,
-} from "@utils/utils";
-import { RouteMap, TASK_CENTER_TYPE } from "@utils/const";
-import useMemoCallback from "@common/hooks/use-memo-callback";
-import { WorkspaceBaseMenuProps, Menu as IMenu } from "@utils/types";
-import UserComponent from "@components//header/user";
-import "@containers/workspace-running/multi-nav.style";
-import {
-  CanvasResponseType,
-  CANVAS_ENTRY,
-  MAIN_ENTRY,
-  SPACE_ENTRY,
-  SubAppType,
-} from "@/consts";
-import {
-  useGetCanvasIdMutation,
-  useGetHoloSceneIdMutation,
-} from "@/http/app-manager.hooks";
+import { useState, useMemo } from 'react';
+import { Menu } from 'antd';
+import { Icon } from '@common/components';
+import classNames from 'classnames';
+import { useAppDispatch } from '@/store';
+import { Outlet, useParams } from 'react-router';
+import { useNavigate } from 'react-router-dom';
+import { setCurrentId } from '@/views/workspace/index.slice';
+import { keyPath, findFirstChild, findItem, getPopupContainer } from '@utils/utils';
+import { RouteMap, TASK_CENTER_TYPE } from '@utils/const';
+import useMemoCallback from '@common/hooks/use-memo-callback';
+import { WorkspaceBaseMenuProps, Menu as IMenu } from '@utils/types';
+import UserComponent from '@components//header/user';
+import '@containers/workspace-running/multi-nav.style';
+import { CanvasResponseType, CANVAS_ENTRY, MAIN_ENTRY, SPACE_ENTRY, SubAppType } from '@/consts';
+import { useGetCanvasIdMutation, useGetHoloSceneIdMutation } from '@/http/app-manager.hooks';
 
 const { SubMenu } = Menu;
 
-const MultiNavComponent = ({
-  extra,
-  dataSource,
-  theme,
-  selectedKey,
-}: WorkspaceBaseMenuProps) => {
+const MultiNavComponent = ({ extra, dataSource, theme, selectedKey }: WorkspaceBaseMenuProps) => {
   const { workspaceId: appId } = useParams();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -46,8 +27,7 @@ const MultiNavComponent = ({
 
   const [activeMainKey, setActiveMainKey] = useState<string>();
   const submenu = useMemo(() => {
-    const currentKey =
-      keyPath(activeMainKey!, dataSource).shift() || activeMainKey;
+    const currentKey = keyPath(activeMainKey!, dataSource).shift() || activeMainKey;
     const selectMenu = dataSource.find((item) => item.id === currentKey);
     return selectMenu?.children || [];
   }, [dataSource, activeMainKey]);
@@ -59,19 +39,17 @@ const MultiNavComponent = ({
         mode,
       },
     } = menu;
-    let url = "";
-    if (mode === "current") {
+    let url = '';
+    if (mode === 'current') {
       // 当前窗口打开
       if (subAppType === SubAppType.FLOW && subAppId) {
-        url = `./${
-          RouteMap[(subAppType as unknown) as keyof typeof RouteMap]
-        }/instance/${subAppId}`;
+        url = `./${RouteMap[(subAppType as unknown) as keyof typeof RouteMap]}/instance/${subAppId}`;
       } else if (subAppId) {
         url = `./${RouteMap[(subAppType as unknown) as keyof typeof RouteMap]}`;
       } else if (customUrl) {
-        url = "./iframe";
+        url = './iframe';
       } else {
-        url = "./empty";
+        url = './empty';
       }
       navigate(url);
     } else {
@@ -93,7 +71,7 @@ const MultiNavComponent = ({
           url = `${MAIN_ENTRY}/main/app/${appId}/process/instance/${subAppId}?theme=${theme}&mode=running`;
         } else if (subAppType === TASK_CENTER_TYPE) {
           // url = `${FLOW_ENTRY}/task-center/${appId}?theme=${theme}&mode=running`;
-          url=`${MAIN_ENTRY}/main/app/${appId}/process/task-center?theme=${theme}&mode=running&content=true`;
+          url = `${MAIN_ENTRY}/main/app/${appId}/process/task-center?theme=${theme}&mode=running&content=true`;
         } else {
           // 表单子应用和报表子应用暂时没有这两种场景,直接返回
           return;
@@ -113,7 +91,7 @@ const MultiNavComponent = ({
     const menu = dataSource.find((v) => v.id === key) || {};
     const subMenu = findFirstChild(menu as IMenu);
     navigateFn(subMenu);
-    if (subMenu && subMenu.form?.mode === "current") {
+    if (subMenu && subMenu.form?.mode === 'current') {
       dispatch(setCurrentId(subMenu.id));
     }
   });
@@ -121,27 +99,27 @@ const MultiNavComponent = ({
   const handleTitleClick = useMemoCallback(({ key }) => {
     const menu = findItem(key, dataSource);
     navigateFn(menu);
-    if (menu && menu.form?.mode === "current") {
+    if (menu && menu.form?.mode === 'current') {
       dispatch(setCurrentId(key));
     }
   });
   const handleSubMenuClick = useMemoCallback(({ key }) => {
     const menu = findItem(key, dataSource);
     navigateFn(menu);
-    if (menu && menu.form?.mode === "current") {
+    if (menu && menu.form?.mode === 'current') {
       dispatch(setCurrentId(key));
     }
   });
 
   const renderIcon = useMemoCallback((icon) => {
-    if (!icon || icon === "wukongjian") {
+    if (!icon || icon === 'wukongjian') {
       return null;
     }
     return <Icon type={icon} />;
   });
 
   return (
-    <div className={classNames("multi-nav-component", theme)}>
+    <div className={classNames('multi-nav-component', theme)}>
       <div className="header">
         <div className="extra">{extra}</div>
         <div className="menu">
@@ -159,7 +137,7 @@ const MultiNavComponent = ({
           </Menu>
         </div>
         <div className="user-container">
-          <UserComponent />
+          <UserComponent showProject={true} />
         </div>
       </div>
       <div className="content">
@@ -171,21 +149,13 @@ const MultiNavComponent = ({
                   return menus.map((menu) => {
                     if (menu?.children?.length) {
                       return (
-                        <SubMenu
-                          key={menu.id}
-                          title={menu.name}
-                          onTitleClick={handleTitleClick}
-                        >
+                        <SubMenu key={menu.id} title={menu.name} onTitleClick={handleTitleClick}>
                           {recurse(menu.children)}
                         </SubMenu>
                       );
                     } else {
                       return (
-                        <Menu.Item
-                          key={menu.id}
-                          icon={renderIcon(menu?.form?.icon)}
-                          onClick={handleSubMenuClick}
-                        >
+                        <Menu.Item key={menu.id} icon={renderIcon(menu?.form?.icon)} onClick={handleSubMenuClick}>
                           {menu.name}
                         </Menu.Item>
                       );
