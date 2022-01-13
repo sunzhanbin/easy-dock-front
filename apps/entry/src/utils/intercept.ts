@@ -60,13 +60,18 @@ const createBaseQuery = (mode: 'builder' | 'runtime') => {
   });
 };
 
-const createQueryWithIntercept = (result: QueryReturnValue<any, FetchBaseQueryError, FetchBaseQueryMeta>): any => {
+const createQueryWithIntercept = (
+  result: QueryReturnValue<any, FetchBaseQueryError, FetchBaseQueryMeta>,
+  silence?: boolean,
+) => {
   const { data, error } = result;
   let resultMessage = data?.resultMessage;
   if (error) {
     const { status, data } = error as FetchBaseQueryError;
     resultMessage = handleHttpError(status, (data as { resultMessage: string })?.resultMessage);
-    message.error(resultMessage);
+    if (!silence) {
+      message.error(resultMessage);
+    }
   }
   if (Object.is(data?.resultCode, 0)) {
     return data;
@@ -87,12 +92,14 @@ export const builderQueryWithIntercept: BaseQueryFn<string | FetchArgs, unknown,
   api,
   extraOptions,
 ) => {
+  console.info(args, 'args');
   const result: QueryReturnValue<any, FetchBaseQueryError, FetchBaseQueryMeta> = await builderQuery(
     args,
     api,
     extraOptions,
   );
-  return createQueryWithIntercept(result);
+  const silence = ((args as unknown) as { silence: boolean })?.silence ?? false;
+  return createQueryWithIntercept(result, silence);
 };
 
 export const runtimeQueryWithIntercept: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
@@ -105,5 +112,6 @@ export const runtimeQueryWithIntercept: BaseQueryFn<string | FetchArgs, unknown,
     api,
     extraOptions,
   );
-  return createQueryWithIntercept(result);
+  const silence = ((args as unknown) as { silence: boolean })?.silence ?? false;
+  return createQueryWithIntercept(result, silence);
 };
