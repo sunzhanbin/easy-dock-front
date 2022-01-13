@@ -40,7 +40,7 @@ const HomeWorkspaceList = () => {
           size: 14,
         }).unwrap();
         setLoading(false);
-        const list = ret.data.map(async (item: ListItemType) => ({
+        const list = ret.map(async (item: ListItemType) => ({
           ...item,
           icon: item.isApp && item.icon ? await imgIdToUrl(item.icon) : null,
         }));

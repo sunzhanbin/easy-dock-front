@@ -42,7 +42,7 @@ const NewSubAppModal = ({ modalInfo, visible, onOk, onCancel }: ModalProps) => {
       });
       return ret;
     },
-    [addWorkspace, projectId],
+    [addWorkspace, projectId]
   );
   const handleSelectWorkspace = (value: any) => {
     form.setFieldsValue({ appId: value });

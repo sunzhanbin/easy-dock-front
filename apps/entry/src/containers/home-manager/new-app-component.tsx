@@ -21,11 +21,10 @@ const HomeNewAPP = () => {
   const handleConfirm = async (values: any) => {
     try {
       const { name, appId: id } = values;
-      const { data }: ResponseType = await createApp({ name, id }).unwrap();
-      if (!data) return;
+      const ret: ResponseType = await createApp({ name, id }).unwrap();
       message.success('创建成功!');
       setShowModal(false);
-      navigate(`/app-manager/${data.id}`);
+      navigate(`/app-manager/${ret.id}`);
     } catch (e) {
       console.log(e);
     }
