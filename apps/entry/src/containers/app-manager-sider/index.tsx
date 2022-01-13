@@ -58,9 +58,9 @@ const AppManagerSider = () => {
 
   const handleDeleteWorkspace = async (e: React.MouseEvent | undefined, id: number) => {
     try {
-      // if (e) {
-      //   e.stopPropagation();
-      // }
+      if (e) {
+        e.stopPropagation();
+      }
       await deleteWorkspace(id).unwrap();
       message.success('删除成功!');
     } catch (e) {
