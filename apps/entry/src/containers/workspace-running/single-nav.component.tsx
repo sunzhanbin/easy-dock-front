@@ -1,37 +1,23 @@
-import { useCallback } from "react";
-import { Menu } from "antd";
-import classNames from "classnames";
-import { Outlet, useParams } from "react-router";
-import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "@/store";
-import { RouteMap, TASK_CENTER_TYPE } from "@utils/const";
-import { WorkspaceBaseMenuProps, Menu as IMenu } from "@utils/types";
-import UserComponent from "@components//header/user";
-import { setCurrentId } from "@/views/workspace/index.slice";
-import useMemoCallback from "@common/hooks/use-memo-callback";
-import { findFirstChild, findItem } from "@utils/utils";
-import "@containers/workspace-running/single-nav.style";
-import {
-  CanvasResponseType,
-  CANVAS_ENTRY,
-  MAIN_ENTRY,
-  SPACE_ENTRY,
-  SubAppType,
-} from "@/consts";
-import {
-  useGetCanvasIdMutation,
-  useGetHoloSceneIdMutation,
-} from "@/http/app-manager.hooks";
-import { Icon } from "@common/components";
+import { useCallback } from 'react';
+import { Menu } from 'antd';
+import classNames from 'classnames';
+import { Outlet, useParams } from 'react-router';
+import { useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '@/store';
+import { RouteMap, TASK_CENTER_TYPE } from '@utils/const';
+import { WorkspaceBaseMenuProps, Menu as IMenu } from '@utils/types';
+import UserComponent from '@components//header/user';
+import { setCurrentId } from '@/views/workspace/index.slice';
+import useMemoCallback from '@common/hooks/use-memo-callback';
+import { findFirstChild, findItem } from '@utils/utils';
+import '@containers/workspace-running/single-nav.style';
+import { CanvasResponseType, CANVAS_ENTRY, MAIN_ENTRY, SPACE_ENTRY, SubAppType } from '@/consts';
+import { useGetCanvasIdMutation, useGetHoloSceneIdMutation } from '@/http/app-manager.hooks';
+import { Icon } from '@common/components';
 
 const { SubMenu } = Menu;
 
-const SingleNavComponent = ({
-  extra,
-  dataSource,
-  theme,
-  selectedKey,
-}: WorkspaceBaseMenuProps) => {
+const SingleNavComponent = ({ extra, dataSource, theme, selectedKey }: WorkspaceBaseMenuProps) => {
   const { workspaceId: appId } = useParams();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -40,7 +26,7 @@ const SingleNavComponent = ({
   const [getHoloSceneId] = useGetHoloSceneIdMutation();
 
   const renderIcon = useMemoCallback((icon) => {
-    if (!icon || icon === "wukongjian") {
+    if (!icon || icon === 'wukongjian') {
       return null;
     }
     return <Icon type={icon} />;
@@ -53,21 +39,19 @@ const SingleNavComponent = ({
         mode,
       },
     } = menu;
-    let url = "";
+    let url = '';
     // 当前窗口打开
-    if (mode === "current") {
+    if (mode === 'current') {
       // 流程类子应用
       if (subAppType === SubAppType.FLOW && subAppId) {
-        url = `./${
-          RouteMap[(subAppType as unknown) as keyof typeof RouteMap]
-        }/instance/${subAppId}`;
+        url = `./${RouteMap[(subAppType as unknown) as keyof typeof RouteMap]}/instance/${subAppId}`;
       } else if (subAppId) {
         url = `./${RouteMap[(subAppType as unknown) as keyof typeof RouteMap]}`;
       } else if (customUrl) {
-        url = "./iframe";
+        url = './iframe';
       } else {
         // 如果没有子应用id和自定义url,则显示空状态
-        url = "./empty";
+        url = './empty';
       }
       navigate(url);
     } else {
@@ -90,7 +74,7 @@ const SingleNavComponent = ({
           url = `${MAIN_ENTRY}/main/app/${appId}/process/instance/${subAppId}?theme=${theme}&mode=running`;
         } else if (subAppType === TASK_CENTER_TYPE) {
           // url = `${FLOW_ENTRY}/task-center/${appId}?theme=${theme}&mode=running`;
-          url=`${MAIN_ENTRY}/main/app/${appId}/process/task-center?theme=${theme}&mode=running&content=true`;
+          url = `${MAIN_ENTRY}/main/app/${appId}/process/task-center?theme=${theme}&mode=running&content=true`;
         } else {
           // 表单子应用和报表子应用暂时没有这两种场景,直接返回
           return;
@@ -109,7 +93,7 @@ const SingleNavComponent = ({
     if (menu) {
       const subMenu = findFirstChild(menu);
       navigateFn(subMenu);
-      if (subMenu && subMenu.form?.mode === "current") {
+      if (subMenu && subMenu.form?.mode === 'current') {
         dispatch(setCurrentId(subMenu.id));
       }
     }
@@ -118,42 +102,30 @@ const SingleNavComponent = ({
     const menu = findItem(key, dataSource);
     if (selectedKey === key) return;
     navigateFn(menu);
-    if (menu && menu.form?.mode === "current") {
+    if (menu && menu.form?.mode === 'current') {
       dispatch(setCurrentId(key));
     }
   });
 
   return (
-    <div className={classNames("single-nav-component", theme)}>
+    <div className={classNames('single-nav-component', theme)}>
       <div className="left">
         <div className="extra">{extra}</div>
         <div className="menu">
-          <Menu
-            mode="inline"
-            style={{ width: 256 }}
-            selectedKeys={[selectedKey]}
-          >
+          <Menu mode="inline" style={{ width: 256 }} selectedKeys={[selectedKey]}>
             {/* @Todo 此处和菜单设置里的嵌套组件不同，antd 组件嵌套时，key 的数据丢失 */}
             {((dataSource) => {
               const recurse = (menus: IMenu[]) => {
                 return menus.map((menu) => {
                   if (menu?.children?.length) {
                     return (
-                      <SubMenu
-                        key={menu.id}
-                        title={menu.name}
-                        onTitleClick={handleTitleClick}
-                      >
+                      <SubMenu key={menu.id} title={menu.name} onTitleClick={handleTitleClick}>
                         {recurse(menu.children)}
                       </SubMenu>
                     );
                   } else {
                     return (
-                      <Menu.Item
-                        key={menu.id}
-                        icon={renderIcon(menu.form?.icon)}
-                        onClick={handleSubMenuClick}
-                      >
+                      <Menu.Item key={menu.id} icon={renderIcon(menu.form?.icon)} onClick={handleSubMenuClick}>
                         {menu.name}
                       </Menu.Item>
                     );
@@ -168,7 +140,7 @@ const SingleNavComponent = ({
       <div className="right">
         <div className="header">
           <div className="user-container">
-            <UserComponent />
+            <UserComponent showProject={true} />
           </div>
         </div>
         <div className="content">
