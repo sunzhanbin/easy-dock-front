@@ -2,6 +2,7 @@ import { memo, useEffect, useState, useMemo, useRef } from 'react';
 import { useParams, useHistory } from 'react-router';
 import classnames from 'classnames';
 import { FormInstance, message } from 'antd';
+import { throttle, debounce } from 'lodash';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { AsyncButton, Loading, PopoverConfirm } from '@common/components';
 import { runtimeAxios, validateTabs, uploadFile } from '@utils';
@@ -115,58 +116,64 @@ function StartFlow() {
     );
   }, [data, datasource, projectId]);
 
-  const handleSubmit = useMemoCallback(async () => {
-    if (!formRef.current || !subApp) return;
-    validateTabs(formRef.current);
-    const values = await formRef.current.validateFields();
-    const formValues = await uploadFile(values);
-    // 上传文件成功之后再提交表单
-    await runtimeAxios.post(`/process_instance/start`, {
-      formData: formValues,
-      versionId: subApp.version.id,
-    });
+  const handleSubmit = useMemoCallback(
+    debounce(async () => {
+      if (!formRef.current || !subApp) return;
+      validateTabs(formRef.current);
+      const values = await formRef.current.validateFields();
+      const formValues = await uploadFile(values);
+      // 上传文件成功之后再提交表单
+      await runtimeAxios.post(`/process_instance/start`, {
+        formData: formValues,
+        versionId: subApp.version.id,
+      });
 
-    message.success('提交成功');
+      message.success('提交成功');
 
-    setTimeout(() => {
-      if (type === 'app') {
-        history.goBack();
-      } else {
-        // 回任务中心我的发起
-        history.replace(`${dynamicRoutes.toTaskCenter(subApp.app.id)}/start`);
-      }
-    }, 1500);
-  });
-
-  const handleSave = useMemoCallback(async () => {
-    if (!formRef.current || !subApp) return;
-    const values = await formRef.current.getFieldsValue(true);
-    const formValues = await uploadFile(values);
-
-    await runtimeAxios.post(`/task/draft/add`, {
-      formData: formValues,
-      subappId: subApp.id,
-    });
-
-    message.success('保存成功');
-  });
-
-  const handleDeleteDraft = useMemoCallback(async () => {
-    await deleteDraft(subAppId);
-
-    message.success('删除成功');
-
-    if (subApp) {
       setTimeout(() => {
         if (type === 'app') {
           history.goBack();
         } else {
-          // 回任务中心草稿列表
-          history.replace(`${dynamicRoutes.toTaskCenter(subApp.app.id)}/draft`);
+          // 回任务中心我的发起
+          history.replace(`${dynamicRoutes.toTaskCenter(subApp.app.id)}/start`);
         }
-      }, 1500);
-    }
-  });
+      }, 1000);
+    }, 500),
+  );
+
+  const handleSave = useMemoCallback(
+    debounce(async () => {
+      if (!formRef.current || !subApp) return;
+      const values = await formRef.current.getFieldsValue(true);
+      const formValues = await uploadFile(values);
+
+      await runtimeAxios.post(`/task/draft/add`, {
+        formData: formValues,
+        subappId: subApp.id,
+      });
+
+      message.success('保存成功');
+    }, 500),
+  );
+
+  const handleDeleteDraft = useMemoCallback(
+    debounce(async () => {
+      await deleteDraft(subAppId);
+
+      message.success('删除成功');
+
+      if (subApp) {
+        setTimeout(() => {
+          if (type === 'app') {
+            history.goBack();
+          } else {
+            // 回任务中心草稿列表
+            history.replace(`${dynamicRoutes.toTaskCenter(subApp.app.id)}/draft`);
+          }
+        }, 1500);
+      }
+    }, 500),
+  );
 
   return (
     <div className={styles.container}>
