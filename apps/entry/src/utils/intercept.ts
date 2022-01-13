@@ -92,7 +92,6 @@ export const builderQueryWithIntercept: BaseQueryFn<string | FetchArgs, unknown,
   api,
   extraOptions,
 ) => {
-  console.info(args, 'args');
   const result: QueryReturnValue<any, FetchBaseQueryError, FetchBaseQueryMeta> = await builderQuery(
     args,
     api,

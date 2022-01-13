@@ -1,4 +1,4 @@
-import { memo, useCallback, useMemo } from 'react';
+import { memo, useCallback, useMemo, useEffect } from 'react';
 import { Tooltip, Button } from 'antd';
 import classnames from 'classnames';
 import { Icon } from '@common/components';
@@ -34,6 +34,9 @@ const Condition = ({
   isFormRule = true,
 }: EditProps) => {
   const ruleList = useMemo(() => {
+    if (value?.length === 1 && value[0]?.length === 0) {
+      return [[{ fieldName: undefined, symbol: undefined }]];
+    }
     if (value && value.length > 0) {
       return value;
     }
@@ -134,6 +137,11 @@ const Condition = ({
     },
     [ruleList, onChange],
   );
+  useEffect(() => {
+    if (value?.length === 1 && value[0]?.length === 0) {
+      onChange && onChange([]);
+    }
+  }, [value, onChange]);
   return (
     <div className={classnames(styles.condition, className ? className : '')}>
       <div className={styles.ruleList}>
