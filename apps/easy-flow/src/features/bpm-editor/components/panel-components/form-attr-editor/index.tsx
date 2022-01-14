@@ -9,6 +9,8 @@ import { useAppSelector, useAppDispatch } from '@/app/hooks';
 import { componentPropsSelector, formRulesSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
 import { setFormRules } from '@/features/bpm-editor/form-design/formdesign-slice';
 import FieldAttrEditor from '@/features/bpm-editor/components/panel-components/field-attr-editor';
+import { queryApis } from '../../data-api-config/util';
+import useMemoCallback from '@common/hooks/use-memo-callback';
 
 const FormAttrEditor = () => {
   const byId = useAppSelector(componentPropsSelector);
@@ -19,6 +21,7 @@ const FormAttrEditor = () => {
   const [editIndex, setEditIndex] = useState<number>(0);
   const [type, setType] = useState<'add' | 'edit'>('add');
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [apiMap, setApiMap] = useState<{ [k: number]: string }>({});
   const handleClose = useCallback(() => {
     setShowModal(false);
   }, []);
@@ -95,6 +98,15 @@ const FormAttrEditor = () => {
     },
     [rules],
   );
+  const getInterfaceName = useMemoCallback((config): string => {
+    if (config?.id) {
+      return apiMap[config.id];
+    }
+    if (config?.url) {
+      return config.url;
+    }
+    return '';
+  });
   useEffect(() => {
     dispatch(setFormRules({ formRules: rules }));
   }, [rules, dispatch]);
@@ -103,6 +115,15 @@ const FormAttrEditor = () => {
       setRules(formRules);
     }
   }, [formRules]);
+  useEffect(() => {
+    queryApis().then((apis) => {
+      const map: { [k: number]: string } = {};
+      (apis || []).forEach(({ id, name }) => {
+        map[id] = name;
+      });
+      setApiMap(map);
+    });
+  }, []);
   return (
     <div className={styles.container}>
       <div className={styles.rules}>
@@ -238,7 +259,7 @@ const FormAttrEditor = () => {
               // 值改变时调用接口
               if (item.subtype === EventType.Interface) {
                 const interfaceConfig = item.formChangeRule?.interfaceConfig;
-                const interfaceName = interfaceConfig?.id || interfaceConfig?.url || '';
+                const interfaceName = getInterfaceName(interfaceConfig);
                 return (
                   <div className={styles.ruleItem} key={index}>
                     <div className={styles.content}>
@@ -309,13 +330,14 @@ const FormAttrEditor = () => {
               }
               return null;
             } else if (item.type === 'init') {
+              const interfaceName = getInterfaceName(item.formInitRule);
               return (
                 <div className={styles.ruleItem} key={index}>
                   <div className={styles.content}>
                     <span>当</span>
                     <span className={styles.fieldName}>进入表单时</span>
                     <span>读取接口</span>
-                    <span className={styles.fieldName}>{item.formInitRule?.id || item.formInitRule?.url}</span>
+                    <span className={styles.fieldName}>{interfaceName}</span>
                     <span>数据</span>
                   </div>
                   <div className={styles.operation}>

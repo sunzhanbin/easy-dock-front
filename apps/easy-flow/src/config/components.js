@@ -499,7 +499,7 @@ const components = {
   Iframe: {
     baseInfo: {
       name: 'iframe',
-      icon: 'wangyebuju',
+      icon: 'iframe',
       category: '布局控件',
       version: '1.0',
       type: 'Iframe',
