@@ -86,8 +86,8 @@ const MultiNavComponent = ({ extra, dataSource, theme, selectedKey }: WorkspaceB
   });
 
   const handleMainMenuClick = useMemoCallback(({ key }) => {
+    if (selectedKey === key) return;
     setActiveMainKey(key);
-
     const menu = dataSource.find((v) => v.id === key) || {};
     const subMenu = findFirstChild(menu as IMenu);
     navigateFn(subMenu);
