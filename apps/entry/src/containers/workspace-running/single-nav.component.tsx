@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { Menu } from 'antd';
 import classNames from 'classnames';
 import { Outlet, useParams } from 'react-router';
@@ -9,7 +9,7 @@ import { WorkspaceBaseMenuProps, Menu as IMenu } from '@utils/types';
 import UserComponent from '@components//header/user';
 import { setCurrentId } from '@/views/workspace/index.slice';
 import useMemoCallback from '@common/hooks/use-memo-callback';
-import { findFirstChild, findItem } from '@utils/utils';
+import { findFirstChild, findItem, keyPath } from '@utils/utils';
 import '@containers/workspace-running/single-nav.style';
 import { CanvasResponseType, CANVAS_ENTRY, MAIN_ENTRY, SPACE_ENTRY, SubAppType } from '@/consts';
 import { useGetCanvasIdMutation, useGetHoloSceneIdMutation } from '@/http/app-manager.hooks';
@@ -88,11 +88,18 @@ const SingleNavComponent = ({ extra, dataSource, theme, selectedKey }: Workspace
     }
   }, []);
 
+  const activeMainKey = useMemo(() => keyPath(selectedKey, dataSource).shift() || selectedKey, [
+    selectedKey,
+    dataSource,
+  ]);
+
   const handleTitleClick = useMemoCallback(({ key }) => {
     const menu = dataSource.find((v) => v.id === key);
     if (menu) {
       const subMenu = findFirstChild(menu);
-      navigateFn(subMenu);
+      if (subMenu.id !== selectedKey) {
+        navigateFn(subMenu);
+      }
       if (subMenu && subMenu.form?.mode === 'current') {
         dispatch(setCurrentId(subMenu.id));
       }
@@ -100,8 +107,10 @@ const SingleNavComponent = ({ extra, dataSource, theme, selectedKey }: Workspace
   });
   const handleSubMenuClick = useMemoCallback(({ key }) => {
     const menu = findItem(key, dataSource);
-    if (selectedKey === key) return;
-    navigateFn(menu);
+    if (selectedKey !== key) {
+      navigateFn(menu);
+    };
+
     if (menu && menu.form?.mode === 'current') {
       dispatch(setCurrentId(key));
     }
