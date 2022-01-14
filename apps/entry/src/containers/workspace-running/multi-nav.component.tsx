@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Menu } from 'antd';
 import { Icon } from '@common/components';
 import classNames from 'classnames';
@@ -25,12 +25,21 @@ const MultiNavComponent = ({ extra, dataSource, theme, selectedKey }: WorkspaceB
   const [getCanvasId] = useGetCanvasIdMutation();
   const [getHoloSceneId] = useGetHoloSceneIdMutation();
 
-  const [activeMainKey, setActiveMainKey] = useState<string>();
+  const [activeMainKey, setActiveMainKey] = useState<string>("");
   const submenu = useMemo(() => {
     const currentKey = keyPath(activeMainKey!, dataSource).shift() || activeMainKey;
     const selectMenu = dataSource.find((item) => item.id === currentKey);
     return selectMenu?.children || [];
   }, [dataSource, activeMainKey]);
+
+  useEffect(() => {
+    const menu = dataSource.length ? dataSource[0] : null;
+    setActiveMainKey(menu?.id || "");
+    const subMenu = findFirstChild(menu as IMenu);
+    if (subMenu && subMenu.form?.mode === 'current') {
+      dispatch(setCurrentId(subMenu.id));
+    }
+  }, [dataSource]);
 
   const navigateFn = useMemoCallback(async (menu: IMenu) => {
     const {
@@ -86,18 +95,25 @@ const MultiNavComponent = ({ extra, dataSource, theme, selectedKey }: WorkspaceB
   });
 
   const handleMainMenuClick = useMemoCallback(({ key }) => {
-    if (selectedKey === key) return;
     setActiveMainKey(key);
-    const menu = dataSource.find((v) => v.id === key) || {};
+    const menu = dataSource.find((v) => v.id === key);
     const subMenu = findFirstChild(menu as IMenu);
-    navigateFn(subMenu);
-    if (subMenu && subMenu.form?.mode === 'current') {
-      dispatch(setCurrentId(subMenu.id));
+    if (menu?.id !== key) {
+      navigateFn(subMenu);
     }
+    if(menu){
+      if (subMenu && subMenu.form?.mode === 'current') {
+        dispatch(setCurrentId(subMenu.id));
+      }
+    } else {
+      dispatch(setCurrentId(key));
+    }
+    console.log(22222233111)
   });
 
   const handleTitleClick = useMemoCallback(({ key }) => {
     const menu = findItem(key, dataSource);
+    console.log(2222);
     navigateFn(menu);
     if (menu && menu.form?.mode === 'current') {
       dispatch(setCurrentId(key));
@@ -105,7 +121,10 @@ const MultiNavComponent = ({ extra, dataSource, theme, selectedKey }: WorkspaceB
   });
   const handleSubMenuClick = useMemoCallback(({ key }) => {
     const menu = findItem(key, dataSource);
-    navigateFn(menu);
+    console.log(selectedKey, key);
+    if (selectedKey !== key) {
+      navigateFn(menu);
+    }
     if (menu && menu.form?.mode === 'current') {
       dispatch(setCurrentId(key));
     }
@@ -124,7 +143,7 @@ const MultiNavComponent = ({ extra, dataSource, theme, selectedKey }: WorkspaceB
         <div className="extra">{extra}</div>
         <div className="menu">
           <Menu
-            selectedKeys={[selectedKey]}
+            selectedKeys={[activeMainKey]}
             mode="horizontal"
             onClick={handleMainMenuClick}
             getPopupContainer={getPopupContainer}
@@ -156,7 +175,7 @@ const MultiNavComponent = ({ extra, dataSource, theme, selectedKey }: WorkspaceB
                     } else {
                       return (
                         <Menu.Item key={menu.id} icon={renderIcon(menu?.form?.icon)} onClick={handleSubMenuClick}>
-                          {menu.name}
+                          {menu.name}1111
                         </Menu.Item>
                       );
                     }
