@@ -146,6 +146,8 @@ const SubListComponent: React.FC = () => {
       if (extension?.icon) {
         const url = await imgIdToUrl(extension.icon);
         setLogoUrl(url);
+      }else{
+        setLogoUrl('')
       }
       setKeyword('');
     })();

@@ -79,7 +79,9 @@ const UploadImage: FC<UploadImageProps> = ({ value, onChange }) => {
     if (value) {
       downloadFile(value);
     } else {
-      handleRemove();
+      setTimeout(() => {
+        setFileList([]);
+      }, 100);
     }
   }, [value]);
 
