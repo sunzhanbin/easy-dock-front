@@ -18,6 +18,7 @@ import { imgIdToUrl } from '@/utils/utils';
 import AppModal from './app-modal.component';
 import AppCard from './app-card.component';
 import AppEmpty from './app-empty.component';
+import lightDefaultLogo from '@assets/images/light-default-logo.png';
 import '@containers/app-manager-details/sub-list.style';
 
 const { TabPane } = Tabs;
@@ -145,8 +146,10 @@ const SubListComponent: React.FC = () => {
       if (extension?.icon) {
         const url = await imgIdToUrl(extension.icon);
         setLogoUrl(url);
+      }else{
+        setLogoUrl('')
       }
-      setKeyword("");
+      setKeyword('');
     })();
   }, [extension]);
 
@@ -155,7 +158,7 @@ const SubListComponent: React.FC = () => {
       {extension && (
         <div className="app-info">
           <div className="logo">
-            <img src={logoUrl} alt="logo" />
+            <img src={logoUrl || lightDefaultLogo} alt="logo" />
           </div>
           <div className="content">
             <div className="header">
