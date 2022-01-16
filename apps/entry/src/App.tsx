@@ -1,6 +1,6 @@
 import React from 'react';
 import { ConfigProvider } from 'antd';
-import AuthProvider from "./auth-provider";
+import AuthProvider from './auth-provider';
 import zh_CN from 'antd/es/locale/zh_CN';
 import 'swiper/swiper-bundle.css';
 import 'moment/locale/zh-cn';
@@ -39,16 +39,28 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/*" element={<Layout />}>
           <Route index element={<Main />} />
-          <Route path="home" element={<AuthProvider><Home/></AuthProvider>} />
+          <Route
+            path="home"
+            element={
+              <AuthProvider>
+                <Home />
+              </AuthProvider>
+            }
+          />
           <Route path="asset-centre" element={<SuspenseWrap render={<AssetCentre />} />} />
           <Route path="app-manager">
             <Route index element={<SuspenseWrap render={<AppManager />} />} />
             <Route path="preview/:workspaceId" element={<SuspenseWrap render={<AppPreview />} />} />
             <Route path=":workspaceId/*" element={<SuspenseWrap render={<AppSetup />} />} />
           </Route>
+          <Route path="app-manager/project/:projectId/workspace/:workspaceId">
+            <Route index element={<SuspenseWrap render={<AppManager />} />} />
+            <Route path="preview" element={<SuspenseWrap render={<AppPreview />} />} />
+            <Route path="setup" element={<SuspenseWrap render={<AppSetup />} />} />
+          </Route>
           {/*因为要支持新窗口打开流程子应用,故加这么一个路由  */}
           <Route path="app/:appId/flow-app/:subAppId" element={<SuspenseWrap render={<FlowApp />} />} />
-          {/*因为要支持新窗口打开空状态的应用，故加这么一个理由  */}
+          {/*因为要支持新窗口打开空状态的应用，故加这么一个路由  */}
           <Route path="app/:workspaceId/empty" element={<SuspenseWrap render={<EmptyPage />} />} />
           <Route path="template-mall" element={<SuspenseWrap render={<TemplateMall />} />} />
           <Route path="workspace/*" element={<SuspenseWrap render={<Workspace />} />} />
