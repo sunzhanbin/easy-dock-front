@@ -4,7 +4,7 @@ import componentSchema from '@/config/components';
 
 const categoryList: { key: string; value: string }[] = [
   { key: '基础控件', value: 'basic-components' },
-  { key: '布局控件', value: 'senior-components' },
+  { key: '高级控件', value: 'senior-components' },
   { key: '业务控件', value: 'business-components' },
 ];
 type ComponentCommonProps = {

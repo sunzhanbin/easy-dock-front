@@ -460,7 +460,7 @@ const components = {
     baseInfo: {
       name: '人员',
       icon: 'jibenxinxi',
-      category: '布局控件',
+      category: '高级控件',
       version: '1.0',
       type: 'Member',
     },
@@ -470,7 +470,7 @@ const components = {
     baseInfo: {
       name: '部门',
       icon: 'bumencaise',
-      category: '布局控件',
+      category: '高级控件',
       version: '1.0',
       type: 'Department',
     },
@@ -480,7 +480,7 @@ const components = {
     baseInfo: {
       name: '关联流程',
       icon: 'liuchengcaise',
-      category: '布局控件',
+      category: '高级控件',
       version: '1.0',
       type: 'FlowData',
     },
@@ -490,7 +490,7 @@ const components = {
     baseInfo: {
       name: '分组标题',
       icon: 'fenzubiaoti',
-      category: '布局控件',
+      category: '高级控件',
       version: '1.0',
       type: 'Title',
     },
@@ -500,7 +500,7 @@ const components = {
     baseInfo: {
       name: 'iframe',
       icon: 'iframe',
-      category: '布局控件',
+      category: '高级控件',
       version: '1.0',
       type: 'Iframe',
     },
@@ -510,7 +510,7 @@ const components = {
     baseInfo: {
       name: '数据关联',
       icon: 'shujuguanlian',
-      category: '布局控件',
+      category: '高级控件',
       version: '1.0',
       type: 'Data',
     },
@@ -520,7 +520,7 @@ const components = {
     baseInfo: {
       name: '文字识别',
       icon: 'wenzishibie',
-      category: '布局控件',
+      category: '高级控件',
       version: '1.0',
       type: 'Text',
     },
