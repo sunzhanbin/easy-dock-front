@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import { useSaveAppSetupMutation } from '@/http';
 import { message } from 'antd';
 import { APP_TYPE, ResponseType } from '@/consts';
+import { useAppDispatch } from '@/store';
+import { setBaseForm } from '@/views/app-setup/basic-setup.slice';
 
 const APP_INFO = {
   title: '新建应用',
@@ -15,6 +17,7 @@ const APP_INFO = {
 
 const HomeNewAPP = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [createApp] = useSaveAppSetupMutation();
   const [showModal, setShowModal] = useState<boolean>(false);
 
@@ -24,6 +27,8 @@ const HomeNewAPP = () => {
       const ret: ResponseType = await createApp({ name, id }).unwrap();
       message.success('创建成功!');
       setShowModal(false);
+      // 清空应用基础配置,防止二次赋值引起的bug
+      dispatch(setBaseForm({}))
       navigate(`/app-manager/${ret.id}`);
     } catch (e) {
       console.log(e);

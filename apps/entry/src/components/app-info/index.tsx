@@ -46,9 +46,7 @@ const AppInfo = ({ navMode, theme }: { navMode: NavModeType; theme: ThemeType })
         const url = await imgIdToUrl(logoId);
         setLogoUrl(url);
       } else {
-        setTimeout(() => {
-          setLogoUrl('');
-        }, 100);
+        setLogoUrl('');
       }
     })();
   }, [appBasicConfig?.icon]);
