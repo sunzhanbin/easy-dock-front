@@ -78,10 +78,10 @@ const UploadImage: FC<UploadImageProps> = ({ value, onChange }) => {
   useEffect(() => {
     if (value) {
       downloadFile(value);
-    } else {
+    } else if (value === null) {
       setTimeout(() => {
         setFileList([]);
-      }, 100);
+      }, 200);
     }
   }, [value]);
 

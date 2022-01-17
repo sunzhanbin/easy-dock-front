@@ -1,39 +1,29 @@
-import { useMemo, useState, useEffect } from "react";
-import { useAppSelector } from "@/store";
-import { selectBasicForm } from "@/views/app-setup/basic-setup.slice";
-import { imgIdToUrl } from "@/utils/utils";
-import lightDefaultLogo from "@assets/images/light-default-logo.png";
-import darkDefaultLogo from "@assets/images/dark-default-logo.png";
-import { NavModeType, ThemeType } from "@/consts";
-import { Text } from "@common/components";
-import "@components/app-info/index.style";
+import { useMemo, useState, useEffect } from 'react';
+import { useAppSelector } from '@/store';
+import { selectBasicForm } from '@/views/app-setup/basic-setup.slice';
+import { imgIdToUrl } from '@/utils/utils';
+import lightDefaultLogo from '@assets/images/light-default-logo.png';
+import darkDefaultLogo from '@assets/images/dark-default-logo.png';
+import { NavModeType, ThemeType } from '@/consts';
+import { Text } from '@common/components';
+import '@components/app-info/index.style';
 
-const AppInfo = ({
-  navMode,
-  theme,
-}: {
-  navMode: NavModeType;
-  theme: ThemeType;
-}) => {
+const AppInfo = ({ navMode, theme }: { navMode: NavModeType; theme: ThemeType }) => {
   const appBasicConfig = useAppSelector(selectBasicForm);
-  const appName = useMemo(() => appBasicConfig?.name || "未命名站点", [
-    appBasicConfig?.name,
-  ]);
+  const appName = useMemo(() => appBasicConfig?.name || '未命名站点', [appBasicConfig?.name]);
   const classNameMap = useMemo<{ [k in NavModeType]: string }>(() => {
     return {
-      [NavModeType.LEFT]: "single",
-      [NavModeType.MULTI]: "multi",
-      [NavModeType.TOP]: "top",
+      [NavModeType.LEFT]: 'single',
+      [NavModeType.MULTI]: 'multi',
+      [NavModeType.TOP]: 'top',
     };
   }, []);
-  const navModeClassName = useMemo<string>(() => classNameMap[navMode], [
-    navMode,
-  ]);
+  const navModeClassName = useMemo<string>(() => classNameMap[navMode], [navMode]);
 
-  const [logoUrl, setLogoUrl] = useState<string>("");
+  const [logoUrl, setLogoUrl] = useState<string>('');
 
   const content = useMemo(() => {
-    let src = "";
+    let src = '';
     if (logoUrl) {
       src = logoUrl;
     } else {
@@ -51,12 +41,14 @@ const AppInfo = ({
 
   useEffect(() => {
     (async () => {
-      const logoId = appBasicConfig?.icon || "";
+      const logoId = appBasicConfig?.icon || '';
       if (logoId) {
         const url = await imgIdToUrl(logoId);
         setLogoUrl(url);
       } else {
-        setLogoUrl("");
+        setTimeout(() => {
+          setLogoUrl('');
+        }, 100);
       }
     })();
   }, [appBasicConfig?.icon]);
