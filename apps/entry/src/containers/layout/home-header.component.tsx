@@ -2,7 +2,6 @@ import React from "react";
 import classnames from "classnames";
 import { NavLink, useLocation } from "react-router-dom";
 import Header from "@components/header";
-import { Icon } from "@common/components";
 import '@containers/layout/home-header.style';
 
 const HomeHeader: React.FC = () => {
