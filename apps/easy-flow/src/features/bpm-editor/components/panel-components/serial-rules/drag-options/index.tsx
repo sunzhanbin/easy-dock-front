@@ -156,7 +156,7 @@ function DraggableOption(props: DraggableOptionProps) {
             className={classNames(!data?.chars ? styles.inputBorder : '')}
             size="large"
             onChange={handleInputBlur}
-            defaultValue={data?.chars}
+            value={data?.chars}
             disabled={disabled}
             maxLength={10}
             placeholder="请输入"
@@ -230,14 +230,12 @@ function DraggableOption(props: DraggableOptionProps) {
         )}
       </div>
       {data?.type && (
-        <>
           <IncNumModal
             showIncModal={showIncModal}
             onCancel={() => setShowIncModal(false)}
             onSubmit={handleSubmit}
             data={data}
           />
-        </>
       )}
     </div>
   );

@@ -57,14 +57,14 @@ const SerialRules = (props: RulesProps) => {
   useEffect(() => {
     if (!fieldSerial) return;
     const { serialId, serialMata } = fieldSerial;
+    setRuleName(serialMata?.ruleName || '');
     setRules(serialMata?.rules || initialRules);
     const filterMata = filterRules(serialMata?.changeRules, fields);
-    setChangeRules(filterMata || []);
-    setRuleName(serialMata?.ruleName || '');
-    setChangeRuleName(serialMata?.changeRuleName || '');
     setSerialId(serialId || '');
     setEditStatus(serialMata?.editStatus);
-    setType(serialMata?.type || (serialId ? SERIAL_TYPE.INJECT_TYPE : SERIAL_TYPE.CUSTOM_TYPE));
+    if (!serialId){
+      setType(SERIAL_TYPE.CUSTOM_TYPE);
+    }
   }, [fieldSerial, fields]);
 
   useEffect(() => {
@@ -81,18 +81,22 @@ const SerialRules = (props: RulesProps) => {
   useEffect(() => {
     (async () => {
       try {
-        if (!serialId) return;
-        const ret = await getSerialInfo(serialId);
+        if (!fieldSerial?.serialId) return;
+        const ret = await getSerialInfo(fieldSerial.serialId);
         const { data } = ret;
         setRuleStatus(data.status === 0 ? 0 : 1);
         const filterMata = filterRules(data.mata, fields);
+        setChangeRules(filterMata);
+        setChangeRuleName(data.name);
         setResetRules(filterMata);
         setResetRuleName(data.name);
+        setType(SERIAL_TYPE.INJECT_TYPE);
+
       } catch (e) {
         console.log(e);
       }
     })();
-  }, [serialId, fields]);
+  }, []);
 
   // 自定义规则/引用规则
   const handleTypeChange = (type: string) => {
@@ -104,6 +108,8 @@ const SerialRules = (props: RulesProps) => {
     const filterMata = filterRules(mata, fields);
     setResetRules(filterMata);
     setResetRuleName(name);
+    setChangeRules(filterMata);
+    setChangeRuleName(name);
     setRuleStatus(status);
     setEditStatus(false);
     onChange &&
@@ -131,8 +137,8 @@ const SerialRules = (props: RulesProps) => {
           type,
           ruleName,
           rules,
-          changeRuleName,
-          changeRules,
+          changeRuleName: resetRuleName,
+          changeRules: resetRules,
           editStatus: true,
         },
       });
@@ -153,8 +159,8 @@ const SerialRules = (props: RulesProps) => {
             type,
             ruleName: formName,
             rules: formRule,
-            changeRuleName,
-            changeRules,
+            changeRuleName: resetRuleName,
+            changeRules: resetRules,
             editStatus,
           },
         });
@@ -163,6 +169,8 @@ const SerialRules = (props: RulesProps) => {
         (item: { type: string; chars?: string }) => item.type === 'fixedChars' && !item.chars,
       );
       setErrors(hasChars);
+      setChangeRules(formRule);
+      setChangeRuleName(formName);
       onChange &&
         onChange({
           serialId,
@@ -171,8 +179,8 @@ const SerialRules = (props: RulesProps) => {
             type,
             ruleName,
             rules,
-            changeRuleName: formName,
-            changeRules: formRule,
+            changeRuleName: resetRuleName,
+            changeRules: resetRules,
             editStatus,
           },
         });
@@ -183,9 +191,10 @@ const SerialRules = (props: RulesProps) => {
     message.success('保存成功');
     const { mata, status, name } = serialMap;
     const filterMata = filterRules(mata, fields);
-
     setResetRules(filterMata);
     setResetRuleName(name);
+    setChangeRules(filterMata);
+    setChangeRuleName(name);
     if (type === 'inject') {
       setEditStatus(false);
       setErrors(false);
@@ -195,7 +204,6 @@ const SerialRules = (props: RulesProps) => {
     handleTypeChange('inject');
     setEditStatus(false);
     setErrorsCustom(false);
-
     setRuleStatus(status);
     injectRef.current.reset(name);
     onChange &&
@@ -217,6 +225,8 @@ const SerialRules = (props: RulesProps) => {
     injectRef.current.reset(resetRuleName);
     setEditStatus(false);
     setErrors(false);
+    setChangeRules(resetRules);
+    setChangeRuleName(resetRuleName);
     onChange &&
       onChange({
         serialId,

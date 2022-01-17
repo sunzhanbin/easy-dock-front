@@ -11,6 +11,10 @@ export const store = configureStore({
     flow: flowSlice.reducer,
     subapp: subapp.reducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
   devTools: process.env.NODE_ENV === 'development',
 });
 

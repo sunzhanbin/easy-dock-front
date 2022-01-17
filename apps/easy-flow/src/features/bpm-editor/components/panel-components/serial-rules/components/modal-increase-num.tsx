@@ -45,7 +45,7 @@ const IncNumModal = (props: IncNumProps) => {
       maskClosable={false}
       getContainer={false}
     >
-      <Form form={form} layout="vertical" autoComplete="off" initialValues={props.data}>
+      <Form component="div" form={form} layout="vertical" autoComplete="off" initialValues={props.data}>
         <Form.Item
           label="计数位数"
           name="digitsNum"
