@@ -1,22 +1,16 @@
-import React, { useMemo } from "react";
-import { useNavigate } from "react-router-dom";
-import { Button } from "antd";
-import { useAppSelector } from "@/store";
-import {
-  useWorkspaceDetailQuery,
-  useFetchSubAppListQuery,
-} from "@http/app-manager.hooks";
-import { selectCurrentWorkspaceId } from "@views/app-manager/index.slice";
-import { Icon } from "@common/components";
-
-import "@containers/app-manager-details/app-info.style";
-import useMemoCallback from "@common/hooks/use-memo-callback";
+import React, { useMemo } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Button } from 'antd';
+import { useWorkspaceDetailQuery, useFetchSubAppListQuery } from '@http/app-manager.hooks';
+import { Icon } from '@common/components';
+import useMemoCallback from '@common/hooks/use-memo-callback';
+import '@containers/app-manager-details/app-info.style';
 
 const AppInfoComponent: React.FC = () => {
   const navigate = useNavigate();
-  const workspaceId = useAppSelector(selectCurrentWorkspaceId);
-  const { data: workspace } = useWorkspaceDetailQuery(workspaceId);
-  const { data: subAppList } = useFetchSubAppListQuery(workspaceId);
+  const { workspaceId } = useParams();
+  const { data: workspace } = useWorkspaceDetailQuery(Number(workspaceId), { skip: !workspaceId });
+  const { data: subAppList } = useFetchSubAppListQuery(Number(workspaceId), { skip: !workspaceId });
   const hasPublished = useMemo(() => workspace?.extension, [workspace]);
   const subAppCount = useMemo(() => subAppList?.length || 0, [subAppList]);
 

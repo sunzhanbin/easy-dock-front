@@ -1,14 +1,12 @@
 import React, { useCallback, useMemo, useState, useRef, useEffect } from 'react';
 import { Tabs, Input, Button, Switch, message } from 'antd';
-import { useNavigate } from 'react-router-dom';
-import { useAppSelector } from '@/store';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   useFetchSubAppListQuery,
   useWorkspaceDetailQuery,
   useCreateSupAppMutation,
   useModifyAppStatusMutation,
 } from '@/http';
-import { selectCurrentWorkspaceId } from '@views/app-manager/index.slice';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import { SubAppInfo, SubAppType } from '@/consts';
 import { Icon } from '@common/components';
@@ -24,9 +22,9 @@ import '@containers/app-manager-details/sub-list.style';
 const { TabPane } = Tabs;
 
 const SubListComponent: React.FC = () => {
-  const workspaceId = useAppSelector(selectCurrentWorkspaceId);
-  const { data: workspace } = useWorkspaceDetailQuery(workspaceId);
-  const { data: subAppList } = useFetchSubAppListQuery(workspaceId);
+  const { workspaceId } = useParams();
+  const { data: workspace } = useWorkspaceDetailQuery(Number(workspaceId), { skip: !workspaceId });
+  const { data: subAppList } = useFetchSubAppListQuery(Number(workspaceId), { skip: !workspaceId });
   const [createSubApp] = useCreateSupAppMutation();
   const [modifyAppStatus] = useModifyAppStatusMutation();
   const navigate = useNavigate();
@@ -62,7 +60,7 @@ const SubListComponent: React.FC = () => {
   });
 
   const handleOk = useMemoCallback((name, type) => {
-    createSubApp({ appId: workspaceId, name, type })
+    createSubApp({ appId: Number(workspaceId), name, type })
       .unwrap()
       .then(() => {
         message.success('子应用创建成功!');
@@ -78,7 +76,7 @@ const SubListComponent: React.FC = () => {
   });
 
   const handleAppStatusChange = useMemoCallback(async (checked: boolean) => {
-    const params = { id: workspaceId, status: checked ? 1 : -1 };
+    const params = { id: Number(workspaceId), status: checked ? 1 : -1 };
     try {
       await modifyAppStatus(params).unwrap();
       message.success(checked ? '启用成功!' : '停用成功!');
@@ -146,8 +144,8 @@ const SubListComponent: React.FC = () => {
       if (extension?.icon) {
         const url = await imgIdToUrl(extension.icon);
         setLogoUrl(url);
-      }else{
-        setLogoUrl('')
+      } else {
+        setLogoUrl('');
       }
       setKeyword('');
     })();

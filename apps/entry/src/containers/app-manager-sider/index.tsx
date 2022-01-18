@@ -1,15 +1,15 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Layout, Menu, Button, Input, Dropdown, message } from 'antd';
 import { useDeleteWorkspaceMutation, useFetchWorkspaceListQuery } from '@/http';
-import { useAppDispatch, useAppSelector } from '@/store';
+import { useAppDispatch } from '@/store';
 import AddWorkspaceModal from '@components/add-workspace-modal';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import Popconfirm from '@components/popconfirm';
 import { Icon, Text } from '@common/components';
-import { selectCurrentWorkspaceId, setCurrentWorkspaceId } from '@views/app-manager/index.slice';
+import { setCurrentWorkspaceId } from '@views/app-manager/index.slice';
 import '@containers/app-manager-sider/index.style';
-import { selectProjectId } from '@/views/home/index.slice';
 import { handleStopPropagation } from '@utils/utils';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const { Sider } = Layout;
 
@@ -18,29 +18,28 @@ const AppManagerSider = () => {
   const inputRef = useRef<any>();
   const [name, setName] = useState<string>('');
   const dispatch = useAppDispatch();
-  const projectId = useAppSelector(selectProjectId);
-  const workspaceId = useAppSelector(selectCurrentWorkspaceId);
+  const navigate = useNavigate();
+  const { projectId, workspaceId } = useParams();
   const [deleteWorkspace] = useDeleteWorkspaceMutation();
-  const { workspaceList } = useFetchWorkspaceListQuery(projectId, {
+  const { workspaceList } = useFetchWorkspaceListQuery(Number(projectId), {
     selectFromResult: ({ data }) => ({
       workspaceList: data?.filter((workspace: any) => workspace.name.includes(name))?.filter(Boolean),
     }),
+    skip: !projectId,
   });
 
-  const handleMenuClick = useCallback(
-    ({ key }) => {
-      dispatch(setCurrentWorkspaceId(key));
-    },
-    [dispatch],
-  );
+  const handleMenuClick = useMemoCallback(({ key }) => {
+    dispatch(setCurrentWorkspaceId(key));
+    navigate(`/app-manager/project/${projectId}/workspace/${key}`);
+  });
 
-  const handleAddWorkspaceVisible = useCallback(() => {
+  const handleAddWorkspaceVisible = useMemoCallback(() => {
     modalRef.current.show();
     modalRef.current.setTitle('新增');
-  }, []);
+  });
 
   const renderMenuIcon = useMemoCallback((id) => {
-    return <Icon type={+workspaceId === +id ? 'wenjianjiacaisedakai' : 'wenjianjiacaise'} />;
+    return <Icon type={Number(workspaceId) === Number(id) ? 'wenjianjiacaisedakai' : 'wenjianjiacaise'} />;
   });
 
   const handleEditWorkspaceName = useMemoCallback((e: React.MouseEvent, item) => {

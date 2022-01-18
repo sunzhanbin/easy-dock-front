@@ -34,6 +34,7 @@ const NewSubAppModal = ({ modalInfo, visible, onOk, onCancel }: ModalProps) => {
       }),
     }),
     refetchOnMountOrArgChange: true,
+    skip: !projectId,
   });
   const handleNewSubApp = useCallback(
     ({ name }) => {

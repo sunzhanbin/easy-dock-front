@@ -1,4 +1,4 @@
-import { SubAppType } from '@/consts';
+import { SubAppType, TWorkspaceItem } from '@/consts';
 import baseFetch, { runTime } from '@utils/fetch';
 
 export const appManagerBuilder = baseFetch.injectEndpoints({
@@ -26,9 +26,9 @@ export const appManagerBuilder = baseFetch.injectEndpoints({
       query: (id: number) => ({ url: `/app/${id}`, method: 'delete' }),
       invalidatesTags: [{ type: 'Workspace', id: 'LIST' }],
     }),
-    // 工作区里列表；
+    // 工作区列表；
     fetchWorkspaceList: build.query({
-      query: (projectId: number) => `/app/${projectId}/list/all`,
+      query: (projectId: number | string) => `/app/${projectId}/list/all`,
       providesTags: (result) =>
         result
           ? [
@@ -40,8 +40,8 @@ export const appManagerBuilder = baseFetch.injectEndpoints({
             ]
           : [{ type: 'Workspace', id: 'LIST' }],
     }),
-    updateWorkspaceList: build.mutation({
-      query: (projectId: number) => `/app/${projectId}/list/all`,
+    updateWorkspaceList: build.mutation<TWorkspaceItem[], number>({
+      query: (projectId) => `/app/${projectId}/list/all`,
     }),
     // 工作区详情；
     workspaceDetail: build.query({

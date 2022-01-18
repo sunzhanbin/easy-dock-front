@@ -29,10 +29,10 @@ export enum NavModeType {
 }
 
 export enum ThemeType {
-  DARK = "dark",
-  LIGHT = "light",
-  ORANGE = "orange",
-  BLUE = "blue",
+  DARK = 'dark',
+  LIGHT = 'light',
+  ORANGE = 'orange',
+  BLUE = 'blue',
 }
 
 export const APP_TYPE = 0;
@@ -63,8 +63,8 @@ export type CanvasResponseType = {
 };
 
 export enum SortDirection {
-  DESC = "DESC", //倒序
-  ASC = "ASC", //升序
+  DESC = 'DESC', //倒序
+  ASC = 'ASC', //升序
 }
 
 export enum TaskStatus {
@@ -95,4 +95,34 @@ export type Pagination = {
 export type UserItem = {
   id: number;
   userName: string;
+};
+
+export type TExtension = {
+  icon: string | null;
+  id: number;
+  meta: { [k: string]: any };
+  name: string;
+  navMode: NavModeType;
+  remark: string;
+  status: 1 | -1;
+  theme: ThemeType;
+};
+
+export type TProject = {
+  createTime: number;
+  id: number;
+  name: string;
+  status: 1 | -1;
+};
+
+export type TWorkspaceItem = {
+  createTime: number;
+  extension: null | TExtension;
+  icon: string | null;
+  id: number;
+  name: string;
+  power: number;
+  project: TProject;
+  remark: string;
+  status: 1 | -1;
 };
