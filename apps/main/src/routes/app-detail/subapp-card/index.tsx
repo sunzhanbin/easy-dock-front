@@ -1,16 +1,16 @@
-import React, { memo, useMemo, useState, FC, useCallback, useRef } from 'react';
-import styled from 'styled-components';
-import FlowImage from '@assets/flow-big.png';
-import ScreenImage from '@assets/screen-big.png';
-import { axios, getShorterText } from '@/utils';
-import { Popconfirm, Icon } from '@components';
-import classNames from 'classnames';
-import { useHistory } from 'react-router-dom';
-import { FlowMicroApp } from '@/consts';
-import { message, Tooltip } from 'antd';
-import { stopPropagation } from '@consts';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import AppModel from '../app-model';
+import React, { memo, useMemo, useState, FC, useCallback, useRef } from "react";
+import styled from "styled-components";
+import FlowImage from "@assets/flow-big.png";
+import ScreenImage from "@assets/screen-big.png";
+import { axios, getShorterText } from "@/utils";
+import { Popconfirm, Icon } from "@components";
+import classNames from "classnames";
+import { useHistory } from "react-router-dom";
+import { FlowMicroApp } from "@/consts";
+import { message, Tooltip } from "antd";
+import { stopPropagation } from "@consts";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import AppModel from "../app-model";
 
 const CardContainer = styled.div`
   position: relative;
@@ -159,30 +159,30 @@ const Card: FC<{
 }> = ({ id, containerId, name, status, type, className, version, onChange }) => {
   const [isShowOperation, setIsShowOperation] = useState<boolean>(false);
   const [isShowModel, setIsShowModel] = useState<boolean>(false);
-  const [position, setPosition] = useState<'left' | 'right'>('left');
+  const [position, setPosition] = useState<"left" | "right">("left");
   const history = useHistory();
   const containerRef = useRef<HTMLDivElement>(null);
   const typeMap = useMemo(() => {
     return {
-      1: '大屏',
-      2: '流程',
-      3: '报表',
-      4: '空间',
-      5: '表单',
+      1: "大屏",
+      2: "流程",
+      3: "报表",
+      4: "空间",
+      5: "表单",
     };
   }, []);
   const statusObj: StatusMap = useMemo(() => {
     // 未发布(没有版本信息)的子应用为编排中状态
     if (!version) {
       return {
-        className: 'editing',
-        text: '编排中',
+        className: "editing",
+        text: "编排中",
         status: 0,
       };
     }
     return status === 1
-      ? { className: 'used', text: '已启用', status: 1 }
-      : { className: 'stoped', text: '已停用', status: -1 };
+      ? { className: "used", text: "已启用", status: 1 }
+      : { className: "stoped", text: "已停用", status: -1 };
   }, [status, version]);
   const handleJump = useCallback(() => {
     if (type === 2) {
@@ -206,13 +206,13 @@ const Card: FC<{
     onChange && onChange();
   });
   const handleStart = useCallback(() => {
-    axios.put('/subapp/status', { id, status: 1 }).then(() => {
-      hideOperation('启用成功!');
+    axios.put("/subapp/status", { id, status: 1 }).then(() => {
+      hideOperation("启用成功!");
     });
   }, [id, hideOperation]);
   const handleStop = useCallback(() => {
-    axios.put('/subapp/status', { id, status: -1 }).then(() => {
-      hideOperation('停用成功!');
+    axios.put("/subapp/status", { id, status: -1 }).then(() => {
+      hideOperation("停用成功!");
     });
   }, [id, hideOperation]);
   const handleEdit = useCallback((e: React.MouseEvent) => {
@@ -220,21 +220,21 @@ const Card: FC<{
     setIsShowOperation(false);
     const { x = 0 } = containerRef.current?.getBoundingClientRect() as DOMRect;
     if (document.body.clientWidth - x < 400) {
-      setPosition('right');
+      setPosition("right");
     }
     setIsShowModel(true);
   }, []);
   const handleDelete = useCallback(() => {
     setIsShowOperation(false);
     axios.delete(`/subapp/${id}`).then(() => {
-      message.success('删除成功!');
+      message.success("删除成功!");
       onChange && onChange();
     });
   }, [id, onChange]);
   const handleOK = useCallback(
     (name) => {
-      axios.put('/subapp', { id, name }).then(() => {
-        message.success('编辑成功!');
+      axios.put("/subapp", { id, name }).then(() => {
+        message.success("编辑成功!");
         setIsShowModel(false);
         onChange && onChange();
       });
@@ -251,7 +251,7 @@ const Card: FC<{
         setIsShowOperation(false);
       }}
     >
-      <div className="image" style={{ backgroundColor: type === 1 ? '#DFF5EF' : '#E7EBFD' }}>
+      <div className="image" style={{ backgroundColor: type === 1 ? "#DFF5EF" : "#E7EBFD" }}>
         <img src={type === 1 ? ScreenImage : FlowImage} alt="图片" />
       </div>
       <div className="content">
@@ -270,7 +270,7 @@ const Card: FC<{
           </div>
           {isShowOperation && (
             <div className="operation subApp_card_operation" onClick={stopPropagation}>
-              {statusObj.className === 'stoped' && (
+              {statusObj.className === "stoped" && (
                 <Popconfirm
                   title="提示"
                   content="请确认是否启用该子应用?"
@@ -284,7 +284,7 @@ const Card: FC<{
                   </div>
                 </Popconfirm>
               )}
-              {statusObj.className === 'used' && (
+              {statusObj.className === "used" && (
                 <Popconfirm
                   title="提示"
                   content="请确认是否停用该子应用?"
@@ -302,7 +302,7 @@ const Card: FC<{
                 <Icon type="bianji" />
                 <div>编辑</div>
               </div>
-              {statusObj.className !== 'used' && (
+              {statusObj.className !== "used" && (
                 <Popconfirm
                   title="提示"
                   content="删除后不可恢复,请确认是否删除该子应用?"
@@ -320,7 +320,7 @@ const Card: FC<{
           )}
         </div>
         <div className="footer">
-          <div className={classNames('status', statusObj.className)}>{statusObj.text}</div>
+          <div className={classNames("status", statusObj.className)}>{statusObj.text}</div>
           <div className="type">{typeMap[type]}</div>
         </div>
         {isShowModel && (

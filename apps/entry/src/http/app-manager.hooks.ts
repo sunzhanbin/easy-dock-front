@@ -6,25 +6,25 @@ export const appManagerBuilder = baseFetch.injectEndpoints({
     // 添加工作区；
     addWorkspace: build.mutation({
       query: (params?: { name: string; projectId: number }) => ({
-        url: '/app',
-        method: 'post',
+        url: "/app",
+        method: "post",
         body: params,
       }),
-      invalidatesTags: [{ type: 'Workspace', id: 'LIST' }],
+      invalidatesTags: [{ type: "Workspace", id: "LIST" }],
     }),
     // 编辑工作区
     editWorkspace: build.mutation({
       query: (params?: { name: string; id: number }) => ({
-        url: '/app',
-        method: 'put',
+        url: "/app",
+        method: "put",
         body: params,
       }),
-      invalidatesTags: [{ type: 'Workspace', id: 'LIST' }],
+      invalidatesTags: [{ type: "Workspace", id: "LIST" }],
     }),
     // 删除工作区
     deleteWorkspace: build.mutation({
-      query: (id: number) => ({ url: `/app/${id}`, method: 'delete' }),
-      invalidatesTags: [{ type: 'Workspace', id: 'LIST' }],
+      query: (id: number) => ({ url: `/app/${id}`, method: "delete" }),
+      invalidatesTags: [{ type: "Workspace", id: "LIST" }],
     }),
     // 工作区列表；
     fetchWorkspaceList: build.query({
@@ -33,12 +33,12 @@ export const appManagerBuilder = baseFetch.injectEndpoints({
         result
           ? [
               ...result.map(({ id }: { id: number }) => ({
-                type: 'Workspace' as const,
+                type: "Workspace" as const,
                 id,
               })),
-              { type: 'Workspace', id: 'LIST' },
+              { type: "Workspace", id: "LIST" },
             ]
-          : [{ type: 'Workspace', id: 'LIST' }],
+          : [{ type: "Workspace", id: "LIST" }],
     }),
     updateWorkspaceList: build.mutation<TWorkspaceItem[], number>({
       query: (projectId) => `/app/${projectId}/list/all`,
@@ -47,16 +47,16 @@ export const appManagerBuilder = baseFetch.injectEndpoints({
     workspaceDetail: build.query({
       query: (workspaceId: number) => `/app/${workspaceId}`,
       keepUnusedDataFor: 0,
-      providesTags: [{ type: 'Workspace', id: 'DETAIL' }],
+      providesTags: [{ type: "Workspace", id: "DETAIL" }],
     }),
     // 添加子应用；
     addSubApp: build.mutation({
       query: (params: { appId: number; name: string; type: number }) => ({
-        url: '/subapp',
-        method: 'post',
+        url: "/subapp",
+        method: "post",
         body: params,
       }),
-      invalidatesTags: [{ type: 'SubApps', id: 'LIST' }],
+      invalidatesTags: [{ type: "SubApps", id: "LIST" }],
     }),
     // 子应用列表；
     fetchSubAppList: build.query({
@@ -65,71 +65,71 @@ export const appManagerBuilder = baseFetch.injectEndpoints({
         result
           ? [
               ...result.map(({ id }: { id: number }) => ({
-                type: 'SubApps' as const,
+                type: "SubApps" as const,
                 id,
               })),
-              { type: 'SubApps', id: 'LIST' },
+              { type: "SubApps", id: "LIST" },
             ]
-          : [{ type: 'SubApps', id: 'LIST' }],
+          : [{ type: "SubApps", id: "LIST" }],
     }),
     // 已发布的子应用列表
     fetchDeployedSubAppList: build.query({
       query: (appId: number, type?: SubAppType) => ({
         url: `/subapp/${appId}/list/all/deployed`,
-        method: 'get',
+        method: "get",
         params: type ? { type } : {},
       }),
       providesTags: (result) =>
         result
           ? [
               ...result.map(({ id }: { id: number }) => ({
-                type: 'SubApps' as const,
+                type: "SubApps" as const,
                 id,
               })),
-              { type: 'SubApps', id: 'LIST' },
+              { type: "SubApps", id: "LIST" },
             ]
-          : [{ type: 'SubApps', id: 'LIST' }],
+          : [{ type: "SubApps", id: "LIST" }],
     }),
     // 修改应用状态 & 发布应用配置；
     modifyAppStatus: build.mutation({
       query: (params: { status: number; id: number }) => ({
-        url: `/app/status`,
-        method: 'put',
+        url: "/app/status",
+        method: "put",
         body: params,
       }),
-      invalidatesTags: [{ type: 'Workspace', id: 'DETAIL' }],
+      invalidatesTags: [{ type: "Workspace", id: "DETAIL" }],
     }),
     // 修改子应用状态
     modifySubAppStatus: build.mutation<boolean, { status: number; id: number }>({
       query: (params) => ({
-        url: '/subapp/status',
-        method: 'put',
+        url: "/subapp/status",
+        method: "put",
         body: params,
       }),
-      invalidatesTags: [{ type: 'SubApps', id: 'LIST' }],
+      invalidatesTags: [{ type: "SubApps", id: "LIST" }],
     }),
     // 修改子应用名称
     modifySubAppName: build.mutation({
       query: (params: { name: string; id: number }) => ({
-        url: '/subapp',
-        method: 'put',
+        url: "/subapp",
+        method: "put",
         body: params,
       }),
-      invalidatesTags: [{ type: 'SubApps', id: 'LIST' }],
+      invalidatesTags: [{ type: "SubApps", id: "LIST" }],
     }),
     // 删除子应用
     deleteSupApp: build.mutation({
-      query: (id: number) => ({ url: `/subapp/${id}`, method: 'delete' }),
-      invalidatesTags: [{ type: 'SubApps', id: 'LIST' }],
+      query: (id: number) => ({ url: `/subapp/${id}`, method: "delete" }),
+      invalidatesTags: [{ type: "SubApps", id: "LIST" }],
     }),
     // 新增子应用
     createSupApp: build.mutation({
       query: (params: { appId: number; type: number; name: string }) => ({
-        url: `/subapp`,
-        method: 'post',
+        url: "/subapp",
+        method: "post",
         body: params,
       }),
-      invalidatesTags: [{ type: 'SubApps', id: 'LIST' }],
+      invalidatesTags: [{ type: "SubApps", id: "LIST" }],
     }),
     // 保存应用配置；
     saveAppSetup: build.mutation({
@@ -142,11 +142,11 @@ export const appManagerBuilder = baseFetch.injectEndpoints({
         remark?: string;
         theme?: string;
       }) => ({
-        url: '/app/extension',
-        method: 'put',
+        url: "/app/extension",
+        method: "put",
         body: params,
       }),
-      invalidatesTags: [{ type: 'Workspace', id: 'DETAIL' }],
+      invalidatesTags: [{ type: "Workspace", id: "DETAIL" }],
     }),
   }),
   // overrideExisting: false,

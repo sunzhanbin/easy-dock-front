@@ -1,9 +1,9 @@
-import { memo, useEffect, useRef, useState } from 'react';
-import { loadMicroApp } from 'qiankun';
-import Loading from '@components/loading';
-import classnames from 'classnames';
-import useMatchRoute from '@hooks/use-match-route';
-import styles from './index.module.scss';
+import { memo, useEffect, useRef, useState } from "react";
+import { loadMicroApp } from "qiankun";
+import Loading from "@components/loading";
+import classnames from "classnames";
+import useMatchRoute from "@hooks/use-match-route";
+import styles from "./index.module.scss";
 
 interface MicroAppProps {
   name: string;
@@ -23,7 +23,7 @@ function MicroApp(props: MicroAppProps) {
     if (containerRef.current) {
       const app = loadMicroApp({
         name,
-        entry: entry.replace(/\/$/, '') + `?ts=${Date.now()}`,
+        entry: entry.replace(/\/$/, "") + `?ts=${Date.now()}`,
         container: containerRef.current,
         props: {
           basename: basename || `/main${matchedRoute}`,
@@ -49,14 +49,14 @@ function MicroApp(props: MicroAppProps) {
     const config = { attributes: false, childList: true, subtree: false };
     const callback = (mutationsList: MutationRecord[]) => {
       mutationsList.forEach((item) => {
-        if (item.addedNodes.length > 0 && (item.addedNodes[0] as HTMLDivElement).className === 'bf-modal-root') {
+        if (item.addedNodes.length > 0 && (item.addedNodes[0] as HTMLDivElement).className === "bf-modal-root") {
           const modal = item.addedNodes[0];
-          modal.addEventListener('click', (e) => {
+          modal.addEventListener("click", (e) => {
             const classList = (e.target as HTMLElement).classList;
             if (
-              classList.contains('bfi-close') ||
-              classList.contains('button-cancel') ||
-              classList.contains('button-insert')
+              classList.contains("bfi-close") ||
+              classList.contains("button-cancel") ||
+              classList.contains("button-insert")
             ) {
               // 关闭弹窗
               targetNode.removeChild(modal);

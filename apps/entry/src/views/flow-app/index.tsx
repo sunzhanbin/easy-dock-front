@@ -12,14 +12,7 @@ const FlowApp = () => {
       projectId: data?.project?.id,
     }),
   });
-  return (
-    <FlowAppContent
-      id={+subAppId!}
-      appId={appId!}
-      projectId={projectId}
-      theme={theme}
-    />
-  );
+  return <FlowAppContent id={+subAppId!} appId={appId!} projectId={projectId} theme={theme} />;
 };
 
 export default memo(FlowApp);

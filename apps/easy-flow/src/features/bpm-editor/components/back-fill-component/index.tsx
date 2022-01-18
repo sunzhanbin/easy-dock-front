@@ -1,14 +1,14 @@
-import { memo, FC, useMemo } from 'react';
-import { Select } from 'antd';
-import { Icon } from '@common/components';
-import { useAppSelector } from '@/app/hooks';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import styles from './index.module.scss';
-import { formMetaSelector } from '../../flow-design/flow-slice';
+import { memo, FC, useMemo } from "react";
+import { Select } from "antd";
+import { Icon } from "@common/components";
+import { useAppSelector } from "@/app/hooks";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import styles from "./index.module.scss";
+import { formMetaSelector } from "../../flow-design/flow-slice";
 
 interface BackFillComponentProps {
   value?: string;
-  onChange?: (value: this['value']) => void;
+  onChange?: (value: this["value"]) => void;
 }
 
 const { Option } = Select;
@@ -18,7 +18,7 @@ const BackFillComponent: FC<BackFillComponentProps> = ({ value, onChange }) => {
   const components = useMemo(() => {
     return Object.values(formMeta?.components || {})
       .map((v) => v.config)
-      .filter((v) => v.type === 'InputNumber');
+      .filter((v) => v.type === "InputNumber");
   }, [formMeta]);
   const handleChange = useMemoCallback((val) => {
     if (val) {

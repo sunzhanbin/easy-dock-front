@@ -6,10 +6,10 @@ export type Api = {
 };
 
 export enum Location {
-  BODY = 'body',
-  HEAD = 'head',
-  QUERY = 'query',
-  PATH = 'path',
+  BODY = "body",
+  HEAD = "head",
+  QUERY = "query",
+  PATH = "path",
 }
 
 export enum ParamType {
@@ -29,17 +29,17 @@ export type ResponseSchem =
   | {
       name: string;
     }
-  | Omit<ParamSchem, 'location'>[];
+  | Omit<ParamSchem, "location">[];
 
 export enum ApiType {
   ORCH_SERVICE = 1, // 已有接口,服务编排来的
   CUSTOM = 2, // 自定义接口
 }
 export enum MethodType {
-  POST = 'POST',
-  GET = 'GET',
-  PUT = 'PUT',
-  DELETE = 'DELETE',
+  POST = "POST",
+  GET = "GET",
+  PUT = "PUT",
+  DELETE = "DELETE",
 }
 
 export type DataConfig = {

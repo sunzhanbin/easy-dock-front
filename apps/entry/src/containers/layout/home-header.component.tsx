@@ -18,7 +18,7 @@ const HomeHeader: React.FC = () => {
     skip: !projectId,
   });
   const location = useLocation();
-  const mainEntry = location.pathname === '/';
+  const mainEntry = location.pathname === "/";
   return (
     <div className={classnames('home_header', mainEntry ? 'main-header' : '')}>
       <Header>

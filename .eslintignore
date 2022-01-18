@@ -8,3 +8,6 @@
 **/webpack.config*.js
 **/rollup.config.js
 **/iconfont.js
+**/*.config.js
+**/config-overrides.js
+**/paths.js

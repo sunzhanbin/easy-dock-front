@@ -1,41 +1,41 @@
-import { FC, memo, useEffect, useMemo, useState } from 'react';
-import { Modal } from 'antd';
-import { Icon, Loading } from '@common/components';
-import { useAppSelector } from '@/app/hooks';
+import { FC, memo, useEffect, useMemo, useState } from "react";
+import { Modal } from "antd";
+import { Icon, Loading } from "@common/components";
+import { useAppSelector } from "@/app/hooks";
 import {
   componentPropsSelector,
   propertyRulesSelector,
   formRulesSelector,
   layoutSelector,
   subAppSelector,
-} from '@/features/bpm-editor/form-design/formzone-reducer';
-import FormEngine from '@components/form-engine';
-import { Datasource, FormMeta } from '@type/detail';
-import { AuthType, FieldAuthsMap } from '@type/flow';
-import { ComponentConfig, FormField, FormFieldMap, InputField, InputNumberField, RadioField } from '@/type';
-import { fetchDataSource } from '@/apis/detail';
-import { useSubAppDetail } from '@/app/app';
-import classnames from 'classnames';
-import titleImage from '@/assets/title.png';
-import leftImage from '@assets/background_left.png';
-import rightImage from '@assets/background_right.png';
-import styles from './index.module.scss';
+} from "@/features/bpm-editor/form-design/formzone-reducer";
+import FormEngine from "@components/form-engine";
+import { Datasource, FormMeta } from "@type/detail";
+import { AuthType, FieldAuthsMap } from "@type/flow";
+import { ComponentConfig, FormField, FormFieldMap, InputField, InputNumberField, RadioField } from "@/type";
+import { fetchDataSource } from "@/apis/detail";
+import { useSubAppDetail } from "@/app/app";
+import classnames from "classnames";
+import titleImage from "@/assets/title.png";
+import leftImage from "@assets/background_left.png";
+import rightImage from "@assets/background_right.png";
+import styles from "./index.module.scss";
 
 const propsKey = [
-  'defaultValue',
-  'showSearch',
-  'multiple',
-  'format',
-  'datelimit',
-  'numlimit',
-  'maxCount',
-  'height',
-  'components',
-  'fieldName',
-  'decimal',
-  'fileMap',
-  'defaultNumber',
-  'url',
+  "defaultValue",
+  "showSearch",
+  "multiple",
+  "format",
+  "datelimit",
+  "numlimit",
+  "maxCount",
+  "height",
+  "components",
+  "fieldName",
+  "decimal",
+  "fileMap",
+  "defaultNumber",
+  "url",
 ];
 type Key = keyof FormField;
 
@@ -65,7 +65,7 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
           component.props[key] = object[key as Key];
         } else {
           component.config[key] = object[key as Key];
-          if (type === 'Image' || type === 'Attachment') {
+          if (type === "Image" || type === "Attachment") {
             component.props[key] = object[key as Key];
           }
         }
@@ -82,13 +82,13 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
       propertyRules,
       themes: [{}],
       components: components,
-      selectedTheme: '',
+      selectedTheme: "",
     };
   }, [layout, byId, formRules, propertyRules]);
   const auths = useMemo(() => {
     const res: FieldAuthsMap = {};
     Object.keys(byId).forEach((id) => {
-      const { fieldName = '' } = byId[id];
+      const { fieldName = "" } = byId[id];
       res[fieldName || id] = AuthType.Edit;
     });
     return res;
@@ -117,7 +117,7 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
   useEffect(() => {
     const components = Object.values(byId).filter((component) => {
       const { type } = component;
-      return type === 'Radio' || type === 'Checkbox' || type === 'Select';
+      return type === "Radio" || type === "Checkbox" || type === "Select";
     });
     const formDataList: { name: string; value: any }[] = Object.keys(initialValue).map((key) => ({
       name: key,
@@ -147,19 +147,19 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
           <div className={styles.left} style={{ backgroundImage: `url(${leftImage})` }} />
           <div className={styles.right} style={{ backgroundImage: `url(${rightImage})` }} />
         </div>
-        <div className={styles['start-form-wrapper']}>
+        <div className={styles["start-form-wrapper"]}>
           <div className={classnames(styles.form)} style={{ height: `${document.body.clientHeight - 124}px` }}>
             <div className={styles.title}>
               <img src={titleImage} alt="title" className={styles.image} />
               <span>{appName}</span>
             </div>
-            <div className={styles['form-wrap']}>
+            <div className={styles["form-wrap"]}>
               <FormEngine
                 datasource={dataSource}
                 initialValue={initialValue}
-                data={(formDesign as unknown) as FormMeta}
+                data={formDesign as unknown as FormMeta}
                 fieldsAuths={auths}
-                className={styles['form-engine']}
+                className={styles["form-engine"]}
                 projectId={projectId}
                 nodeType="preview"
               />

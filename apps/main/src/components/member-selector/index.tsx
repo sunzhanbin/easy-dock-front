@@ -1,15 +1,15 @@
-import React, { memo, useState, useEffect, useMemo, useRef } from 'react';
-import { Input, Checkbox } from 'antd';
-import { throttle } from 'lodash';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import { Loading } from '@common/components';
-import memberDefaultAvatar from '@assets/member-default-avatar.png';
-import { Image } from '@common/components';
-import { runtimeAxios } from '@utils';
-import styles from './index.module.scss';
+import React, { memo, useState, useEffect, useMemo, useRef } from "react";
+import { Input, Checkbox } from "antd";
+import { throttle } from "lodash";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { Loading } from "@common/components";
+import memberDefaultAvatar from "@assets/member-default-avatar.png";
+import { Image } from "@common/components";
+import { runtimeAxios } from "@utils";
+import styles from "./index.module.scss";
 
 const fetchUser = async (data: { name: string; page: number; projectId: number }) => {
-  const memberResponse = await runtimeAxios.post('/user/search', {
+  const memberResponse = await runtimeAxios.post("/user/search", {
     projectId: data.projectId,
     index: data.page,
     size: 20,
@@ -40,10 +40,10 @@ interface SelectorProps {
 
 function Selector(props: SelectorProps) {
   const { projectId, title, value, onMembersChange } = props;
-  const [members, setMembers] = useState<ValueType['members']>([]);
+  const [members, setMembers] = useState<ValueType["members"]>([]);
   const [loading, setLoading] = useState(false);
   const [memberTotal, setMemberTotal] = useState(0);
-  const [memberSearchText, setMemberSearchText] = useState('');
+  const [memberSearchText, setMemberSearchText] = useState("");
   const memberPageNumberRef = useRef(1);
   const timerRef = useRef<NodeJS.Timeout>();
   const searchMembers = useMemoCallback(async (payload: { name: string; page: number; projectId: number }) => {
@@ -71,7 +71,7 @@ function Selector(props: SelectorProps) {
   });
 
   const handleMemberSearchTextChange: React.ChangeEventHandler<HTMLInputElement> = useMemoCallback(async (event) => {
-    const name = (event.target.value || '').trim();
+    const name = (event.target.value || "").trim();
 
     setMemberSearchText(name);
     memberPageNumberRef.current = 1;
@@ -99,7 +99,7 @@ function Selector(props: SelectorProps) {
     return maps;
   }, [value]);
 
-  const handleChangeMembers = useMemoCallback((member: ValueType['members'][number], checked: boolean) => {
+  const handleChangeMembers = useMemoCallback((member: ValueType["members"][number], checked: boolean) => {
     // let newMembers = value ? [...value.members] : [];
     // if (checked) {
     //   newMembers.push(member);
@@ -112,7 +112,7 @@ function Selector(props: SelectorProps) {
   });
 
   useEffect(() => {
-    searchMembers({ name: '', page: 1, projectId });
+    searchMembers({ name: "", page: 1, projectId });
   }, [searchMembers]);
 
   const handleMemberListScroll = useMemoCallback(

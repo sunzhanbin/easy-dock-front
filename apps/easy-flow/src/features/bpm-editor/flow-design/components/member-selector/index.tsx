@@ -1,14 +1,14 @@
-import { memo, useMemo } from 'react';
-import { MemberSelector as Selector, MemberSelectorProps as SelectorProps } from '@common/components';
-import { UserNode, CorrelationMemberConfigKey } from '@type/flow';
-import { useSubAppDetail } from '@app/app';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import useShowMembers from '../../hooks/use-show-members';
-import { flowDataSelector, setCacheMembers } from '../../flow-slice';
+import { memo, useMemo } from "react";
+import { MemberSelector as Selector, MemberSelectorProps as SelectorProps } from "@common/components";
+import { UserNode, CorrelationMemberConfigKey } from "@type/flow";
+import { useSubAppDetail } from "@app/app";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import useShowMembers from "../../hooks/use-show-members";
+import { flowDataSelector, setCacheMembers } from "../../flow-slice";
 
 interface MemberSelectorProps {
-  value?: UserNode['correlationMemberConfig'];
-  onChange?(value: this['value']): void;
+  value?: UserNode["correlationMemberConfig"];
+  onChange?(value: this["value"]): void;
 }
 
 function MemberSelector(props: MemberSelectorProps) {
@@ -18,13 +18,13 @@ function MemberSelector(props: MemberSelectorProps) {
   const dispatch = useAppDispatch();
   const dynamicFields = useMemo(() => {
     return fieldsTemplate
-      .filter((field) => field.type === 'Member')
+      .filter((field) => field.type === "Member")
       .map((field) => ({ name: field.name, key: field.id }));
   }, [fieldsTemplate]);
 
-  const showValue: NonNullable<SelectorProps['value']> = useShowMembers(value!);
+  const showValue: NonNullable<SelectorProps["value"]> = useShowMembers(value!);
 
-  const handleChange = (value: NonNullable<SelectorProps['value']>) => {
+  const handleChange = (value: NonNullable<SelectorProps["value"]>) => {
     const caches: Parameters<typeof setCacheMembers>[number] = {};
     const { members = [], depts = [], roles = [], dynamic } = value;
     const memberIds: CorrelationMemberConfigKey[] = [];

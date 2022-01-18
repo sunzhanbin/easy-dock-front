@@ -1,25 +1,25 @@
-import React, { Suspense, useEffect, useMemo, useCallback } from 'react';
-import { Route, NavLink, useLocation, NavLinkProps } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import Header from '@components/header';
-import Loading from '@components/loading';
-import { getUserInfo } from '@/store/user';
-import { ROUTES, micros, shouldHideHeaderUrls } from '@consts';
-import styles from './index.module.scss';
+import React, { Suspense, useEffect, useMemo, useCallback } from "react";
+import { Route, NavLink, useLocation, NavLinkProps } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import Header from "@components/header";
+import Loading from "@components/loading";
+import { getUserInfo } from "@/store/user";
+import { ROUTES, micros, shouldHideHeaderUrls } from "@consts";
+import styles from "./index.module.scss";
 
-const AppListPage = React.lazy(() => import(/* webpackChunkName: "scenes-list" */ '@/routes/scenes/main'));
+const AppListPage = React.lazy(() => import(/* webpackChunkName: "scenes-list" */ "@/routes/scenes/main"));
 
-const AppPage = React.lazy(() => import(/* webpackChunkName: "app-detail" */ '@/routes/app-detail'));
-const IntegrationPage = React.lazy(() => import(/* webpackChunkName: "integration" */ '@/routes/integration'));
-const UserManager = React.lazy(() => import(/* webpackChunkName: "user-manager" */ '@/routes/user-manager'));
+const AppPage = React.lazy(() => import(/* webpackChunkName: "app-detail" */ "@/routes/app-detail"));
+const IntegrationPage = React.lazy(() => import(/* webpackChunkName: "integration" */ "@/routes/integration"));
+const UserManager = React.lazy(() => import(/* webpackChunkName: "user-manager" */ "@/routes/user-manager"));
 
-const MicroPage = React.lazy(() => import(/* webpackChunkName: "micro" */ '@/routes/micro-page'));
+const MicroPage = React.lazy(() => import(/* webpackChunkName: "micro" */ "@/routes/micro-page"));
 
 function BuilderLayout() {
   const dispatch = useDispatch();
   const { pathname } = useLocation();
   const showHeader = useMemo(() => {
-    return !shouldHideHeaderUrls.find((url) => new RegExp(url.replace(/\//g, '\\/')).test(pathname));
+    return !shouldHideHeaderUrls.find((url) => new RegExp(url.replace(/\//g, "\\/")).test(pathname));
   }, [pathname]);
 
   const fallback = useMemo(() => <Loading />, []);
@@ -29,7 +29,7 @@ function BuilderLayout() {
     return micros.map((micro) => micro.route);
   }, []);
 
-  const indexNavIsActive: NavLinkProps['isActive'] = useCallback((match, location) => {
+  const indexNavIsActive: NavLinkProps["isActive"] = useCallback((match, location) => {
     if (
       match ||
       location.pathname.startsWith(ROUTES.BUILDER_INDEX) ||

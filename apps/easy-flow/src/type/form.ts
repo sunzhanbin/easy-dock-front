@@ -1,14 +1,14 @@
-import { ConfigItem } from '.';
-import { DataConfig } from './api';
+import { ConfigItem } from ".";
+import { DataConfig } from "./api";
 
-export type FieldType = FormField['type'];
+export type FieldType = FormField["type"];
 
 export type BaseField = {
   id: string;
   fieldName: string;
   label: string;
   desc: string;
-  colSpace: '1' | '2' | '3' | '4';
+  colSpace: "1" | "2" | "3" | "4";
   version?: string;
   multiple: boolean;
   required?: boolean;
@@ -18,13 +18,13 @@ export type BaseField = {
 };
 
 export type InputField = {
-  type: 'Input';
+  type: "Input";
   unique: boolean;
   defaultValue: string;
 } & BaseField;
 
 export type InputNumberField = {
-  type: 'InputNumber';
+  type: "InputNumber";
   defaultValue: number;
   defaultNumber?: {
     customData?: number | undefined;
@@ -47,12 +47,12 @@ export type InputNumberField = {
 } & BaseField;
 
 export type TextAreaField = {
-  type: 'Textarea';
+  type: "Textarea";
   defaultValue: string;
 } & BaseField;
 
 export type DateField = {
-  type: 'Date';
+  type: "Date";
   datelimit?: {
     enable?: boolean;
     daterange: {
@@ -60,11 +60,11 @@ export type DateField = {
       max: string;
     };
   };
-  format: 'yyyy-MM-DD' | 'yyyy-MM-DD HH:mm:ss';
+  format: "yyyy-MM-DD" | "yyyy-MM-DD HH:mm:ss";
   defaultValue: number;
 } & BaseField;
 
-export type OptionMode = 'custom' | 'subapp' | 'interface';
+export type OptionMode = "custom" | "subapp" | "interface";
 export type OptionItem = {
   key: string;
   value: string;
@@ -86,43 +86,43 @@ export type NumberDefaultOption = {
 };
 
 export type RadioField = {
-  type: 'Radio';
+  type: "Radio";
   dataSource: SelectOptionItem;
 } & BaseField;
 
 export type CheckboxField = {
-  type: 'Checkbox';
+  type: "Checkbox";
   dataSource: SelectOptionItem;
 } & BaseField;
 
 export type SelectField = {
-  type: 'Select';
+  type: "Select";
   showSearch: boolean;
   dataSource: SelectOptionItem;
 } & BaseField;
 
 export type DescTextField = {
-  type: 'DescText';
+  type: "DescText";
   value: string;
 } & BaseField;
 
 export type ImageField = {
-  type: 'Image';
+  type: "Image";
   maxNum: number;
 } & BaseField;
 
 export type AttachmentField = {
-  type: 'Attachment';
+  type: "Attachment";
   maxNum: number;
 } & BaseField;
 
 export type MemberField = {
-  type: 'Member';
+  type: "Member";
   showSearch: boolean;
 } & BaseField;
 
 export type FlowField = {
-  type: 'FlowData';
+  type: "FlowData";
   flows: any;
 } & BaseField;
 
@@ -132,18 +132,18 @@ export type CompConfig = {
 };
 
 export type TabsField = {
-  type: 'Tabs';
+  type: "Tabs";
   fieldManage: CompConfig[];
   components?: CompConfig[];
 } & BaseField;
 
 export type SerialNumField = {
-  type: 'SerialNum';
+  type: "SerialNum";
   serialRule: any;
 } & BaseField;
 
 export type IframeField = {
-  type: 'Iframe';
+  type: "Iframe";
   url: string;
   maxHeight: number;
 } & BaseField;

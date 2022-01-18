@@ -1,18 +1,18 @@
-import { memo, FC, useState, useMemo, useCallback, useEffect, useRef } from 'react';
-import { Form, Input, Select, Button, DatePicker, Table, Popover } from 'antd';
-import { getStayTime, getPassedTime, runtimeAxios } from '@/utils';
-import { useHistory, useLocation } from 'react-router-dom';
-import moment from 'moment';
-import classNames from 'classnames';
-import { dynamicRoutes } from '@/consts/route';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import useAppId from '@/hooks/use-app-id';
-import { Icon } from '@common/components';
-import StateTag from '@/features/bpm-editor/components/state-tag';
-import { TASK_STATE_LIST } from '@/utils/const';
-import styles from './index.module.scss';
-import { currentNodeItem, Pagination, StartItem } from '../type';
-import TimeoutState from '../components/timeout-state';
+import { memo, FC, useState, useMemo, useCallback, useEffect, useRef } from "react";
+import { Form, Input, Select, Button, DatePicker, Table, Popover } from "antd";
+import { getStayTime, getPassedTime, runtimeAxios } from "@/utils";
+import { useHistory, useLocation } from "react-router-dom";
+import moment from "moment";
+import classNames from "classnames";
+import { dynamicRoutes } from "@/consts/route";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import useAppId from "@/hooks/use-app-id";
+import { Icon } from "@common/components";
+import StateTag from "@/features/bpm-editor/components/state-tag";
+import { TASK_STATE_LIST } from "@/utils/const";
+import styles from "./index.module.scss";
+import { currentNodeItem, Pagination, StartItem } from "../type";
+import TimeoutState from "../components/timeout-state";
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -26,13 +26,13 @@ const Start: FC = () => {
     // 以iframe方式接入,参数在location中
     if (location.search) {
       const params = new URLSearchParams(location.search.slice(1));
-      return params.get('theme') || 'light';
+      return params.get("theme") || "light";
     }
-    return 'light';
+    return "light";
   }, [location.search]);
   const tableRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [sortDirection, setSortDirection] = useState<'DESC' | 'ASC'>('DESC');
+  const [sortDirection, setSortDirection] = useState<"DESC" | "ASC">("DESC");
   const [pagination, setPagination] = useState<Pagination>({
     pageSize: 10,
     current: 1,
@@ -56,19 +56,19 @@ const Start: FC = () => {
   const columns = useMemo(() => {
     return [
       {
-        title: '序号',
-        dataIndex: 'id',
-        key: 'id',
-        width: '7.5%',
+        title: "序号",
+        dataIndex: "id",
+        key: "id",
+        width: "7.5%",
         render(_: string, record: StartItem, index: number) {
           return <div>{index + 1}</div>;
         },
       },
       {
-        title: '流程名称',
-        dataIndex: 'processName',
-        key: 'processName',
-        width: '15%',
+        title: "流程名称",
+        dataIndex: "processName",
+        key: "processName",
+        width: "15%",
         render(_: string, record: StartItem) {
           return <div className={styles.name}>{record.processName}</div>;
         },
@@ -81,23 +81,23 @@ const Start: FC = () => {
         },
       },
       {
-        title: '发起时间',
-        dataIndex: 'startTime',
-        key: 'startTime',
-        width: '15%',
-        sortDirections: ['ascend' as const, 'descend' as const, 'ascend' as const],
-        defaultSortOrder: 'descend' as const,
+        title: "发起时间",
+        dataIndex: "startTime",
+        key: "startTime",
+        width: "15%",
+        sortDirections: ["ascend" as const, "descend" as const, "ascend" as const],
+        defaultSortOrder: "descend" as const,
         sorter: true,
         render(_: string, record: StartItem) {
           const { startTime } = record;
-          return <div className={styles.startTime}>{startTime ? getPassedTime(startTime) : ''}</div>;
+          return <div className={styles.startTime}>{startTime ? getPassedTime(startTime) : ""}</div>;
         },
       },
       {
-        title: '当前节点',
-        dataIndex: 'currentNode',
-        key: 'currentNode',
-        width: '15%',
+        title: "当前节点",
+        dataIndex: "currentNode",
+        key: "currentNode",
+        width: "15%",
         render(_: string, record: StartItem) {
           const { currentNodes } = record;
           if (!Array.isArray(currentNodes) || currentNodes.length === 0) {
@@ -133,10 +133,10 @@ const Start: FC = () => {
         },
       },
       {
-        title: '节点停留',
-        dataIndex: 'stayTime',
-        key: 'stayTime',
-        width: '15%',
+        title: "节点停留",
+        dataIndex: "stayTime",
+        key: "stayTime",
+        width: "15%",
         render(_: string, record: StartItem) {
           const { currentNodes } = record;
           if (!Array.isArray(currentNodes) || currentNodes.length === 0) {
@@ -159,10 +159,10 @@ const Start: FC = () => {
         },
       },
       {
-        title: '状态',
-        dataIndex: 'status',
-        key: 'status',
-        width: '15%',
+        title: "状态",
+        dataIndex: "status",
+        key: "status",
+        width: "15%",
         render(_: string, record: StartItem) {
           const { state } = record;
           return <StateTag state={state} />;
@@ -177,7 +177,7 @@ const Start: FC = () => {
       setLoading(true);
       const formValues = form.getFieldsValue(true);
       const { current: pageIndex, pageSize } = pagination;
-      const { flowName = '', state = '', timeRange = [] } = formValues;
+      const { flowName = "", state = "", timeRange = [] } = formValues;
       let startTime = 0;
       let endTime = 0;
       if (timeRange && timeRange[0]) {
@@ -202,7 +202,7 @@ const Start: FC = () => {
       }
       params.filter = filter;
       runtimeAxios
-        .post('/task/myStart', params)
+        .post("/task/myStart", params)
         .then((res) => {
           const list = res.data?.data || [];
           const total = res.data?.recordTotal || 0;
@@ -231,7 +231,7 @@ const Start: FC = () => {
   }, [form, fetchData]);
   const handleTableChange = useCallback(
     (newPagination, filters, sorter) => {
-      sorter.order === 'ascend' ? setSortDirection('ASC') : setSortDirection('DESC');
+      sorter.order === "ascend" ? setSortDirection("ASC") : setSortDirection("DESC");
       setTimeout(() => {
         setPagination((pagination) => {
           fetchData(newPagination);
@@ -266,7 +266,7 @@ const Start: FC = () => {
               <Select
                 allowClear
                 placeholder="请选择"
-                style={{ width: '100%' }}
+                style={{ width: "100%" }}
                 suffixIcon={<Icon type="xiala" />}
                 onChange={() => {
                   fetchData();
@@ -282,9 +282,9 @@ const Start: FC = () => {
             </Form.Item>
             <Form.Item label="发起时间" name="timeRange" className="startTime">
               <RangePicker
-                showTime={{ format: 'HH:mm' }}
+                showTime={{ format: "HH:mm" }}
                 format="yyyy-MM-DD HH:mm"
-                style={{ width: '100%' }}
+                style={{ width: "100%" }}
                 suffixIcon={<Icon type="riqi" />}
                 onChange={() => {
                   fetchData();

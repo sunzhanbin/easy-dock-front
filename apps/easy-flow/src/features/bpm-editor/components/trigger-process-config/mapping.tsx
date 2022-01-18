@@ -1,13 +1,13 @@
-import { memo, useEffect, useState, useMemo } from 'react';
-import { Button, Form, Select, Tooltip } from 'antd';
-import classNames from 'classnames';
-import { builderAxios } from '@utils';
-import styles from './index.module.scss';
-import { Icon } from '@common/components';
-import { useAppSelector } from '@/app/hooks';
-import { formMetaSelector } from '../../flow-design/flow-slice';
-import { AutoSelector } from '../data-api-config/components/map';
-import { AuthType, FieldAuth } from '@/type/flow';
+import { memo, useEffect, useState, useMemo } from "react";
+import { Button, Form, Select, Tooltip } from "antd";
+import classNames from "classnames";
+import { builderAxios } from "@utils";
+import styles from "./index.module.scss";
+import { Icon } from "@common/components";
+import { useAppSelector } from "@/app/hooks";
+import { formMetaSelector } from "../../flow-design/flow-slice";
+import { AutoSelector } from "../data-api-config/components/map";
+import { AuthType, FieldAuth } from "@/type/flow";
 
 const { Option } = Select;
 
@@ -18,7 +18,7 @@ interface MappingProps {
   currentFields?: any;
   targetFields?: any;
   value?: { current?: string; target: string; required?: boolean }[];
-  onChange?: (val: this['value']) => void;
+  onChange?: (val: this["value"]) => void;
 }
 interface Component {
   name: string;
@@ -34,13 +34,13 @@ const Mapping = ({ name, parentName, subAppId, value, onChange }: MappingProps) 
   const currentComponents = useMemo(() => {
     return Object.values(formMeta?.components || {})
       .map((v) => v.config)
-      .filter((v) => !['Tabs', 'FlowData'].includes(v.type))
+      .filter((v) => !["Tabs", "FlowData"].includes(v.type))
       .map((v) => ({ id: `\${${v.fieldName}}`, name: v.label as string }));
   }, [formMeta]);
   useEffect(() => {
     if (subAppId) {
       builderAxios.get<{ data: FieldAuth[] }>(`/process/list/fields/${subAppId}`).then((res) => {
-        const components = res.data.filter((v) => !['Tabs', 'FlowData', 'SerialNum'].includes(v.type));
+        const components = res.data.filter((v) => !["Tabs", "FlowData", "SerialNum"].includes(v.type));
         const requiredList = components.filter((v) => v.auth === AuthType.Required);
         const requiredConfig = requiredList.map((v) => ({ target: v.field, required: true }));
         if (requiredConfig.length && value?.length === 0) {
@@ -90,9 +90,9 @@ const Mapping = ({ name, parentName, subAppId, value, onChange }: MappingProps) 
                           return (
                             <>
                               <Form.Item
-                                name={[field.name, 'target']}
+                                name={[field.name, "target"]}
                                 className={styles.target}
-                                rules={[{ required: true, message: '请选择' }]}
+                                rules={[{ required: true, message: "请选择" }]}
                               >
                                 <Select
                                   size="large"
@@ -111,9 +111,9 @@ const Mapping = ({ name, parentName, subAppId, value, onChange }: MappingProps) 
                               </Form.Item>
                               <div className={styles.symbol}> 对应 </div>
                               <Form.Item
-                                name={[field.name, 'current']}
+                                name={[field.name, "current"]}
                                 className={styles.current}
-                                rules={[{ required: true, message: '请输入' }]}
+                                rules={[{ required: true, message: "请输入" }]}
                               >
                                 <AutoSelector options={currentComponents} />
                               </Form.Item>
@@ -130,7 +130,7 @@ const Mapping = ({ name, parentName, subAppId, value, onChange }: MappingProps) 
                                   <span>
                                     <Icon
                                       type="shanchu"
-                                      className={classNames(styles.icon, mapping.required ? styles.disabled : '')}
+                                      className={classNames(styles.icon, mapping.required ? styles.disabled : "")}
                                     />
                                   </span>
                                 </Tooltip>
@@ -142,7 +142,7 @@ const Mapping = ({ name, parentName, subAppId, value, onChange }: MappingProps) 
                     </div>
                   );
                 })}
-                <Button icon={<Icon type="xinzeng" />} className={styles['add-field']} onClick={() => add()}>
+                <Button icon={<Icon type="xinzeng" />} className={styles["add-field"]} onClick={() => add()}>
                   对应字段
                 </Button>
               </>

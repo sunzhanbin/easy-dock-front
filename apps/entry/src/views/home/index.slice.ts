@@ -35,25 +35,19 @@ export const HomeManagerSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addMatcher(
-      homeManageBuilder.endpoints.getProjectList.matchFulfilled,
-      (state, action) => {
-        state.projectList = action.payload;
-        state.projectId = action.payload.length && action.payload[0].id;
-      }
-    );
-    builder.addMatcher(
-      homeManageRuntime.endpoints.getUserInfo.matchFulfilled,
-      (state, action) => {
-        const { power, user } = action.payload;
-        state.userInfo = {
-          avatar: user.avatar,
-          username: user.userName,
-          id: user.id,
-          power: power,
-        };
-      }
-    );
+    builder.addMatcher(homeManageBuilder.endpoints.getProjectList.matchFulfilled, (state, action) => {
+      state.projectList = action.payload;
+      state.projectId = action.payload.length && action.payload[0].id;
+    });
+    builder.addMatcher(homeManageRuntime.endpoints.getUserInfo.matchFulfilled, (state, action) => {
+      const { power, user } = action.payload;
+      state.userInfo = {
+        avatar: user.avatar,
+        username: user.userName,
+        id: user.id,
+        power: power,
+      };
+    });
   },
 });
 

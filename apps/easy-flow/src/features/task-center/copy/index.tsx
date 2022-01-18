@@ -1,21 +1,21 @@
-import { memo, FC, useState, useRef, useMemo, useEffect } from 'react';
-import { Form, Input, Button, DatePicker, Select, Table, Popover } from 'antd';
-import { useLocation } from 'react-router-dom';
-import classNames from 'classnames';
-import { Icon } from '@common/components';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import { debounce, throttle } from 'lodash';
-import { getPassedTime, runtimeAxios, getStayTime } from '@/utils';
-import { useAppSelector } from '@/app/hooks';
-import { useHistory } from 'react-router';
-import { dynamicRoutes } from '@/consts';
-import moment from 'moment';
-import useAppId from '@/hooks/use-app-id';
-import StateTag from '@/features/bpm-editor/components/state-tag';
-import { TASK_STATE_LIST } from '@/utils/const';
-import styles from './index.module.scss';
-import { appSelector } from '../taskcenter-slice';
-import { CopyItem, Pagination, UserItem } from '../type';
+import { memo, FC, useState, useRef, useMemo, useEffect } from "react";
+import { Form, Input, Button, DatePicker, Select, Table, Popover } from "antd";
+import { useLocation } from "react-router-dom";
+import classNames from "classnames";
+import { Icon } from "@common/components";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { debounce, throttle } from "lodash";
+import { getPassedTime, runtimeAxios, getStayTime } from "@/utils";
+import { useAppSelector } from "@/app/hooks";
+import { useHistory } from "react-router";
+import { dynamicRoutes } from "@/consts";
+import moment from "moment";
+import useAppId from "@/hooks/use-app-id";
+import StateTag from "@/features/bpm-editor/components/state-tag";
+import { TASK_STATE_LIST } from "@/utils/const";
+import styles from "./index.module.scss";
+import { appSelector } from "../taskcenter-slice";
+import { CopyItem, Pagination, UserItem } from "../type";
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -30,15 +30,15 @@ const Copy: FC = () => {
     // 以iframe方式接入,参数在location中
     if (location.search) {
       const params = new URLSearchParams(location.search.slice(1));
-      return params.get('theme') || 'light';
+      return params.get("theme") || "light";
     }
-    return 'light';
+    return "light";
   }, [location.search]);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [optionList, setOptionList] = useState<UserItem[]>([]);
   const [total, setTotal] = useState<number>(0);
-  const [keyword, setKeyword] = useState<string>('');
+  const [keyword, setKeyword] = useState<string>("");
   const pageNumberRef = useRef(1);
   const [pagination, setPagination] = useState<Pagination>({
     pageSize: 10,
@@ -47,7 +47,7 @@ const Copy: FC = () => {
     showSizeChanger: true,
   });
   const [data, setData] = useState<CopyItem[]>([]);
-  const [sortDirection, setSortDirection] = useState<'DESC' | 'ASC'>('DESC');
+  const [sortDirection, setSortDirection] = useState<"DESC" | "ASC">("DESC");
   const tableWrapperContainerRef = useRef<HTMLDivElement>(null);
 
   const projectId = useMemo(() => {
@@ -58,19 +58,19 @@ const Copy: FC = () => {
   const columns = useMemo(() => {
     return [
       {
-        title: '序号',
-        dataIndex: 'id',
-        key: 'id',
-        width: '7.5%',
+        title: "序号",
+        dataIndex: "id",
+        key: "id",
+        width: "7.5%",
         render(_: string, record: CopyItem, index: number) {
           return <div>{index + 1}</div>;
         },
       },
       {
-        title: '流程名称',
-        dataIndex: 'processName',
-        key: 'processName',
-        width: '15%',
+        title: "流程名称",
+        dataIndex: "processName",
+        key: "processName",
+        width: "15%",
         render(_: string, record: CopyItem) {
           return <div className={styles.name}>{record.processName}</div>;
         },
@@ -83,10 +83,10 @@ const Copy: FC = () => {
         },
       },
       {
-        title: '当前节点',
-        dataIndex: 'currentNodeName',
-        key: 'currentNodeName',
-        width: '15%',
+        title: "当前节点",
+        dataIndex: "currentNodeName",
+        key: "currentNodeName",
+        width: "15%",
         render(_: string, record: CopyItem) {
           const { currentNodes } = record;
 
@@ -122,32 +122,32 @@ const Copy: FC = () => {
         },
       },
       {
-        title: '状态',
-        dataIndex: 'status',
-        key: 'status',
-        width: '15%',
+        title: "状态",
+        dataIndex: "status",
+        key: "status",
+        width: "15%",
         render(_: string, record: CopyItem) {
           const { state } = record;
           return <StateTag state={state} />;
         },
       },
       {
-        title: '抄送人',
-        dataIndex: 'copyUser',
-        key: 'copyUser',
-        width: '15%',
+        title: "抄送人",
+        dataIndex: "copyUser",
+        key: "copyUser",
+        width: "15%",
       },
       {
-        title: '抄送时间',
-        dataIndex: 'copyTime',
-        key: 'copyTime',
-        width: '15%',
-        sortDirections: ['ascend' as const, 'descend' as const, 'ascend' as const],
-        defaultSortOrder: 'descend' as const,
+        title: "抄送时间",
+        dataIndex: "copyTime",
+        key: "copyTime",
+        width: "15%",
+        sortDirections: ["ascend" as const, "descend" as const, "ascend" as const],
+        defaultSortOrder: "descend" as const,
         sorter: true,
         render(_: string, record: CopyItem) {
           const { copyTime } = record;
-          return <div className={styles.copyTime}>{copyTime ? getPassedTime(copyTime) : ''}</div>;
+          return <div className={styles.copyTime}>{copyTime ? getPassedTime(copyTime) : ""}</div>;
         },
       },
     ];
@@ -182,7 +182,7 @@ const Copy: FC = () => {
     }, 500),
   );
   const handleTableChange = useMemoCallback((newPagination, filters, sorter) => {
-    sorter.order === 'ascend' ? setSortDirection('ASC') : setSortDirection('DESC');
+    sorter.order === "ascend" ? setSortDirection("ASC") : setSortDirection("DESC");
     setTimeout(() => {
       setPagination((pagination) => {
         fetchData(newPagination);
@@ -197,7 +197,7 @@ const Copy: FC = () => {
       setLoading(true);
       const { current, pageSize } = pagination;
       const formValues = form.getFieldsValue(true);
-      const { instanceName = '', starter = '', timeRange = [], state } = formValues;
+      const { instanceName = "", starter = "", timeRange = [], state } = formValues;
       let startTime = 0;
       let endTime = 0;
       if (timeRange && timeRange[0]) {
@@ -225,7 +225,7 @@ const Copy: FC = () => {
         state,
       };
       runtimeAxios
-        .post('/task/copy', params)
+        .post("/task/copy", params)
         .then((res) => {
           const list = res.data?.data || [];
           const total = res.data?.recordTotal || 0;
@@ -239,7 +239,7 @@ const Copy: FC = () => {
   );
   const fetchOptionList = useMemoCallback((pageNum: number, keyword: string) => {
     if (projectId) {
-      runtimeAxios.post('/user/search', { index: pageNum, size: 20, keyword, projectId }).then((res) => {
+      runtimeAxios.post("/user/search", { index: pageNum, size: 20, keyword, projectId }).then((res) => {
         const list = res.data?.data || [];
         const total = res.data?.recordTotal;
         const index = res.data?.pageIndex;
@@ -259,7 +259,7 @@ const Copy: FC = () => {
 
   useEffect(() => {
     if (projectId) {
-      fetchOptionList(1, '');
+      fetchOptionList(1, "");
     }
   }, [fetchOptionList, projectId]);
   useEffect(() => {
@@ -288,7 +288,7 @@ const Copy: FC = () => {
             </Form.Item>
             <Form.Item label="状态" name="state" className="state">
               <Select
-                style={{ width: '100%' }}
+                style={{ width: "100%" }}
                 placeholder="请选择"
                 suffixIcon={<Icon type="xiala" />}
                 onChange={handleSearch}
@@ -304,10 +304,10 @@ const Copy: FC = () => {
             </Form.Item>
             <Form.Item label="抄送时间" name="timeRange" className="timeRange" labelCol={{ style: { width: 66 } }}>
               <RangePicker
-                showTime={{ format: 'HH:mm' }}
+                showTime={{ format: "HH:mm" }}
                 format="yyyy-MM-DD HH:mm"
                 suffixIcon={<Icon type="riqi" />}
-                style={{ width: '100%' }}
+                style={{ width: "100%" }}
                 onChange={handleSearch}
               ></RangePicker>
             </Form.Item>
@@ -318,7 +318,7 @@ const Copy: FC = () => {
                 onPopupScroll={handleScroll}
                 onSearch={handleSearchUser}
                 onChange={handleSearch}
-                style={{ width: '100%' }}
+                style={{ width: "100%" }}
                 suffixIcon={<Icon type="xiala" />}
                 placeholder="请选择"
                 optionFilterProp="label"

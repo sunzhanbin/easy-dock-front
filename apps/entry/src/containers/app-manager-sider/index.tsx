@@ -16,7 +16,7 @@ const { Sider } = Layout;
 const AppManagerSider = () => {
   const modalRef = useRef<any>();
   const inputRef = useRef<any>();
-  const [name, setName] = useState<string>('');
+  const [name, setName] = useState<string>("");
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { projectId, workspaceId } = useParams();
@@ -46,7 +46,7 @@ const AppManagerSider = () => {
     e.stopPropagation();
     const { name, id } = item;
     modalRef.current.show();
-    modalRef.current.setTitle('编辑');
+    modalRef.current.setTitle("编辑");
     modalRef.current.setWorkspace({ name, id });
   });
 
@@ -61,7 +61,7 @@ const AppManagerSider = () => {
         e.stopPropagation();
       }
       await deleteWorkspace(id).unwrap();
-      message.success('删除成功!');
+      message.success("删除成功!");
     } catch (e) {
       console.log(e);
     }
@@ -117,7 +117,7 @@ const AppManagerSider = () => {
                   <Text text={workspace.name} />
                 </div>
                 <Dropdown
-                  trigger={['click']}
+                  trigger={["click"]}
                   placement="bottomRight"
                   overlayClassName="dropdown-sider-container"
                   overlay={() => renderDropdownMenu(workspace)}

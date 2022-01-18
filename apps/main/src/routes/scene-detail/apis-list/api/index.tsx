@@ -1,8 +1,8 @@
-import { useMemo } from 'react';
-import classnames from 'classnames';
-import State, { StateProps } from '@components/state';
-import Card from '../../card';
-import styles from './index.module.scss';
+import { useMemo } from "react";
+import classnames from "classnames";
+import State, { StateProps } from "@components/state";
+import Card from "../../card";
+import styles from "./index.module.scss";
 
 export type ApiShape = {
   name: string;
@@ -26,22 +26,22 @@ interface ApiProps {
 export default function Api(props: ApiProps) {
   const { checked, data, className, onChecked, onDelete } = props;
   const stateNode = useMemo(() => {
-    let info: { text: string; state: StateProps['state'] };
+    let info: { text: string; state: StateProps["state"] };
 
     if (data.state === 0) {
       info = {
-        state: 'editing',
-        text: '编辑中',
+        state: "editing",
+        text: "编辑中",
       };
     } else if (data.state === 2) {
       info = {
-        state: 'success',
-        text: '已发布',
+        state: "success",
+        text: "已发布",
       };
     } else {
       info = {
-        state: 'waiting',
-        text: '待发布',
+        state: "waiting",
+        text: "待发布",
       };
     }
 
@@ -51,7 +51,7 @@ export default function Api(props: ApiProps) {
   const handleChecked = useMemo(() => {
     if (onChecked) {
       return (checked: boolean) => {
-        if (typeof onChecked === 'function') {
+        if (typeof onChecked === "function") {
           onChecked(data, checked);
         }
       };
@@ -60,7 +60,7 @@ export default function Api(props: ApiProps) {
 
   const createTimeText = useMemo(() => {
     if (!data.createTime) {
-      return '-';
+      return "-";
     }
 
     const date = new Date(data.createTime);
@@ -71,7 +71,7 @@ export default function Api(props: ApiProps) {
   const handleDelete = useMemo(() => {
     if (onDelete) {
       return async () => {
-        if (typeof onDelete === 'function') {
+        if (typeof onDelete === "function") {
           return onDelete(data);
         }
       };
@@ -88,7 +88,7 @@ export default function Api(props: ApiProps) {
       onDelete={handleDelete}
     >
       <div className={styles.info}>
-        <div className={styles.type}>{data.editGeneration === 1 ? '编排' : '原生'}</div>
+        <div className={styles.type}>{data.editGeneration === 1 ? "编排" : "原生"}</div>
         <div className={styles.version}>{data.version}</div>
         <div className={styles.separator}>|</div>
         <div className={styles.time}>{createTimeText}</div>

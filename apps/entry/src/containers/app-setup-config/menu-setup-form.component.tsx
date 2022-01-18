@@ -1,12 +1,4 @@
-import React, {
-  memo,
-  ReactNode,
-  useMemo,
-  useRef,
-  useEffect,
-  useCallback,
-  useImperativeHandle,
-} from "react";
+import React, { memo, ReactNode, useMemo, useRef, useEffect, useCallback, useImperativeHandle } from "react";
 import { Form, Input, Select, Radio } from "antd";
 import { selectMenuForm, setMenuForm } from "@views/app-setup/menu-setup.slice";
 import { useAppDispatch, useAppSelector } from "@/store";
@@ -91,12 +83,7 @@ const MenuSetupFormComponent = React.forwardRef<{
     <div className="menu-setup-form-component" ref={containerRef}>
       <div className="header">菜单属性</div>
       <div className="form">
-        <Form
-          form={form}
-          layout="vertical"
-          autoComplete="off"
-          onValuesChange={handleValuesChange}
-        >
+        <Form form={form} layout="vertical" autoComplete="off" onValuesChange={handleValuesChange}>
           <Form.Item label="菜单名称" name="name" required rules={[nameRule]}>
             <Input size="large" placeholder="请输入" />
           </Form.Item>
@@ -110,11 +97,7 @@ const MenuSetupFormComponent = React.forwardRef<{
               getPopupContainer={() => containerRef.current!}
             >
               {iconList.map((icon) => (
-                <Option
-                  key={icon}
-                  value={icon}
-                  label={icon === "wukongjian" ? "无" : <Icon type={icon} />}
-                >
+                <Option key={icon} value={icon} label={icon === "wukongjian" ? "无" : <Icon type={icon} />}>
                   <Icon type={icon} />
                 </Option>
               ))}
@@ -128,12 +111,7 @@ const MenuSetupFormComponent = React.forwardRef<{
           </Form.Item>
           <Form.Item label="内容设置">
             <Form.Item name="asset" className="asset-item">
-              <Radio.Group
-                size="large"
-                optionType="button"
-                className="asset-option"
-                options={options}
-              />
+              <Radio.Group size="large" optionType="button" className="asset-option" options={options} />
             </Form.Item>
             <AssetConfigComponent form={form} />
           </Form.Item>

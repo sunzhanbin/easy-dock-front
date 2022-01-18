@@ -1,14 +1,14 @@
-import { useMemo } from 'react';
-import { Menu } from 'antd';
-import classNames from 'classnames';
-import { useAppDispatch } from '@/store';
-import { setCurrentMenu } from '@/views/app-setup/menu-setup.slice';
-import { findFirstChild, findParentMenu, keyPath, getPopupContainer } from '@utils/utils';
-import { Menu as IMenu, MenuComponentProps } from '@utils/types';
-import { Icon, Text } from '@common/components';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import UserComponent from '@components//header/user';
-import '@containers/app-setup-preview/multi-nav.style';
+import { useMemo } from "react";
+import { Menu } from "antd";
+import classNames from "classnames";
+import { useAppDispatch } from "@/store";
+import { setCurrentMenu } from "@/views/app-setup/menu-setup.slice";
+import { findFirstChild, findParentMenu, keyPath, getPopupContainer } from "@utils/utils";
+import { Menu as IMenu, MenuComponentProps } from "@utils/types";
+import { Icon, Text } from "@common/components";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import UserComponent from "@components//header/user";
+import "@containers/app-setup-preview/multi-nav.style";
 
 const { SubMenu } = Menu;
 
@@ -20,10 +20,10 @@ const MultiNavComponent = ({ children, extra, dataSource, selectedKey, theme }: 
     return selectMenu?.children || [];
   }, [dataSource, selectedKey]);
 
-  const activeMainKey = useMemo(() => keyPath(selectedKey, dataSource).shift() || selectedKey, [
-    selectedKey,
-    dataSource,
-  ]);
+  const activeMainKey = useMemo(
+    () => keyPath(selectedKey, dataSource).shift() || selectedKey,
+    [selectedKey, dataSource],
+  );
   // 是否有二级菜单
   const hasSubMenu = useMemo(() => {
     if (!Array.isArray(dataSource) || dataSource.length < 1) {
@@ -51,14 +51,14 @@ const MultiNavComponent = ({ children, extra, dataSource, selectedKey, theme }: 
   });
 
   const renderIcon = useMemoCallback((icon) => {
-    if (!icon || icon === 'wukongjian') {
+    if (!icon || icon === "wukongjian") {
       return null;
     }
     return <Icon type={icon} />;
   });
 
   return (
-    <div className={classNames('multi-nav-component', theme)}>
+    <div className={classNames("multi-nav-component", theme)}>
       <div className="header">
         <div className="extra">{extra}</div>
         <div className="menu">

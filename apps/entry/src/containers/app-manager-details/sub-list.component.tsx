@@ -30,12 +30,12 @@ const SubListComponent: React.FC = () => {
   const navigate = useNavigate();
   const extension = useMemo(() => workspace?.extension, [workspace]);
   const subAppCount = useMemo(() => subAppList?.length || 0, [subAppList]);
-  const theme = useMemo(() => extension?.theme || 'light', [extension]);
+  const theme = useMemo(() => extension?.theme || "light", [extension]);
   const [showAppModal, setShowAppModal] = useState<boolean>(false);
-  const [logoUrl, setLogoUrl] = useState<string>('');
+  const [logoUrl, setLogoUrl] = useState<string>("");
   const [initialSubAppList, setInitialSubAppList] = useState<SubAppInfo[]>([]);
-  const [activeKey, setActiveKey] = useState<string>('all');
-  const [keyword, setKeyword] = useState<string>('');
+  const [activeKey, setActiveKey] = useState<string>("all");
+  const [keyword, setKeyword] = useState<string>("");
   const [showModal, setShowModal] = useState<boolean>(false);
   const containerRef = useRef<HTMLDivElement>(null);
   // 动态获取阴影的高度,实现嵌入的阴影效果
@@ -63,7 +63,7 @@ const SubListComponent: React.FC = () => {
     createSubApp({ appId: Number(workspaceId), name, type })
       .unwrap()
       .then(() => {
-        message.success('子应用创建成功!');
+        message.success("子应用创建成功!");
       });
   });
 
@@ -79,7 +79,7 @@ const SubListComponent: React.FC = () => {
     const params = { id: Number(workspaceId), status: checked ? 1 : -1 };
     try {
       await modifyAppStatus(params).unwrap();
-      message.success(checked ? '启用成功!' : '停用成功!');
+      message.success(checked ? "启用成功!" : "停用成功!");
     } catch (error) {
       console.error(error);
     }
@@ -147,7 +147,7 @@ const SubListComponent: React.FC = () => {
       } else {
         setLogoUrl('');
       }
-      setKeyword('');
+      setKeyword("");
     })();
   }, [extension]);
 
@@ -186,13 +186,13 @@ const SubListComponent: React.FC = () => {
                 />
               </div>
             </div>
-            <div className="remark">{extension.remark || '这是一个应用'}</div>
+            <div className="remark">{extension.remark || "这是一个应用"}</div>
           </div>
         </div>
       )}
       {subAppCount > 0 ? (
         <Tabs
-          className={classnames(!extension ? 'sub-app-tab' : '')}
+          className={classnames(!extension ? "sub-app-tab" : "")}
           activeKey={activeKey}
           onChange={handleTabsChange}
           tabBarExtraContent={renderExtra}

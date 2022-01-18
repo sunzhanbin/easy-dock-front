@@ -12,7 +12,7 @@ const AddWorkspaceModal = React.forwardRef(function AddWorkspace(_, ref) {
   const { projectId } = useParams();
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [workspaceId, setWorkspaceId] = useState<number>(0);
-  const [title, setTitle] = useState<string>('');
+  const [title, setTitle] = useState<string>("");
   const [addWorkspace] = useAddWorkspaceMutation();
   const [editWorkspace] = useEditWorkspaceMutation();
   const [form] = Form.useForm();
@@ -46,7 +46,7 @@ const AddWorkspaceModal = React.forwardRef(function AddWorkspace(_, ref) {
           message.success('新增成功!');
         } else {
           await editWorkspace({ name, id: workspaceId }).unwrap();
-          message.success('修改成功!');
+          message.success("修改成功!");
           dispatch(setCurrentWorkspaceId(workspaceId));
         }
         handleVisible(false);

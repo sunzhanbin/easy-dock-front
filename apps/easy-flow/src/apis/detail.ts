@@ -1,8 +1,8 @@
-import { runtimeAxios } from '@utils/axios';
-import { AuthType, FieldAuthsMap } from '@type/flow';
-import type { TaskDetailType, FlowMeta, FormMeta, FormValue, FlowInstance, Datasource } from '@type/detail';
-import { CheckboxField, RadioField, SelectField, UrlOptionItem } from '@/type';
-import { urlRegex } from '@/features/bpm-editor/form-design/validate';
+import { runtimeAxios } from "@utils/axios";
+import { AuthType, FieldAuthsMap } from "@type/flow";
+import type { TaskDetailType, FlowMeta, FormMeta, FormValue, FlowInstance, Datasource } from "@type/detail";
+import { CheckboxField, RadioField, SelectField, UrlOptionItem } from "@/type";
+import { urlRegex } from "@/features/bpm-editor/form-design/validate";
 
 export async function loadFlowData(
   flowIns: FlowInstance,
@@ -15,7 +15,7 @@ export async function loadFlowData(
     }),
     // 用户填写的表单数据
     runtimeAxios
-      .post('/task/getFormData', {
+      .post("/task/getFormData", {
         processInstanceId: flowIns.processInstanceId,
         type: type,
         key: flowIns.currentNodeId,
@@ -23,7 +23,7 @@ export async function loadFlowData(
       .then(({ data }) => JSON.parse(data)),
     // 流程节点元数据
     runtimeAxios
-      .post<{ data: string }>(`/process_instance/getProcessNodeMeta`, {
+      .post<{ data: string }>("/process_instance/getProcessNodeMeta", {
         processInstanceId: flowIns.processInstanceId,
         type: type,
         key: flowIns.currentNodeId,
@@ -72,9 +72,9 @@ export async function fetchDataSource(
   const source: Datasource = {};
   components.forEach(async (object) => {
     if (object?.dataSource) {
-      const key = object.fieldName || object.id || '';
+      const key = object.fieldName || object.id || "";
       const { dataSource } = object;
-      if (dataSource.type === 'custom') {
+      if (dataSource.type === "custom") {
         allPromises.push(
           Promise.resolve(dataSource.data).then((data) => {
             if (data) {
@@ -82,8 +82,8 @@ export async function fetchDataSource(
             }
           }),
         );
-      } else if (dataSource.type === 'subapp') {
-        const { fieldName = '', subappId = '' } = dataSource;
+      } else if (dataSource.type === "subapp") {
+        const { fieldName = "", subappId = "" } = dataSource;
         if (fieldName && subappId) {
           allPromises.push(
             runtimeAxios.get(`/subapp/${subappId}/form/${fieldName}/data`).then((res) => {
@@ -92,7 +92,7 @@ export async function fetchDataSource(
             }),
           );
         }
-      } else if (dataSource.type === 'interface') {
+      } else if (dataSource.type === "interface") {
         const { apiConfig } = dataSource;
         if (apiConfig && formDataList) {
           const formValues: { [k: string]: any } = {};
@@ -106,7 +106,7 @@ export async function fetchDataSource(
             .map((item) => {
               const { map } = item;
               if (!map) {
-                return '';
+                return "";
               }
               return String(map?.match(/(?<=\$\{).*?(?=\})/));
             })
@@ -127,11 +127,11 @@ export async function fetchDataSource(
           const formData = formDataList?.filter((val) => val.value) || [];
           if (name) {
             allPromises.push(
-              runtimeAxios.post('/common/doHttpJson', { meta: apiConfig, formDataList: formData }).then((res) => {
+              runtimeAxios.post("/common/doHttpJson", { meta: apiConfig, formDataList: formData }).then((res) => {
                 const data = eval(`res.${name}`);
                 let list: { key: string; value: string }[] = [];
                 if (Array.isArray(data)) {
-                  if (data.every((val) => typeof val === 'string')) {
+                  if (data.every((val) => typeof val === "string")) {
                     // 字符串数组
                     list = data.map((val) => ({ key: val, value: val }));
                   } else if (data.every((val) => val.key && val.value)) {
@@ -168,20 +168,20 @@ export const deleteDraft = async (draftId: number | string) => {
 };
 
 export const getFlowData = (params: any) => {
-  return runtimeAxios.post('', params);
+  return runtimeAxios.post("", params);
 };
 
 export const loadSrc = async (option: UrlOptionItem, formDataList?: { name: string; value: any }[]) => {
-  if (option?.type === 'custom') {
+  if (option?.type === "custom") {
     if (option.customValue && urlRegex.test(option.customValue)) {
       return option.customValue;
     }
-    return '';
+    return "";
   }
-  if (option?.type === 'interface') {
+  if (option?.type === "interface") {
     const { apiConfig } = option;
     if (!apiConfig) {
-      return '';
+      return "";
     }
     const formValues: { [k: string]: any } = {};
     formDataList?.forEach((v) => {
@@ -194,7 +194,7 @@ export const loadSrc = async (option: UrlOptionItem, formDataList?: { name: stri
       .map((item) => {
         const { map } = item;
         if (!map) {
-          return '';
+          return "";
         }
         return String(map?.match(/(?<=\$\{).*?(?=\})/));
       })
@@ -204,19 +204,19 @@ export const loadSrc = async (option: UrlOptionItem, formDataList?: { name: stri
       requestFields.some((name) => formValues[name] === undefined || formValues[name] === null);
     // 只要入参中有一个没有值，就不调用接口
     if (isEmpty) {
-      return '';
+      return "";
     }
     const name = (apiConfig.response as { name: string })?.name;
     if (!name) {
-      return '';
+      return "";
     }
     const formData = formDataList?.filter((val) => val.value) || [];
     try {
-      const res = await runtimeAxios.post('/common/doHttpJson', { meta: apiConfig, formDataList: formData });
+      const res = await runtimeAxios.post("/common/doHttpJson", { meta: apiConfig, formDataList: formData });
       return eval(`res.${name}`);
     } catch (error) {
-      return '';
+      return "";
     }
   }
-  return '';
+  return "";
 };

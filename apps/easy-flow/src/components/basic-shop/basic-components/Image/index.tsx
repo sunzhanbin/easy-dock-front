@@ -1,14 +1,14 @@
-import { memo, useEffect, useState, useRef } from 'react';
-import { Upload, Modal, message } from 'antd';
-import { UploadChangeParam, UploadFile, UploadProps } from 'antd/lib/upload/interface';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import { Icon } from '@common/components';
-import { getBase64 } from '@/utils';
-import { downloadFile } from '@/apis/file';
-import styles from './index.module.scss';
+import { memo, useEffect, useState, useRef } from "react";
+import { Upload, Modal, message } from "antd";
+import { UploadChangeParam, UploadFile, UploadProps } from "antd/lib/upload/interface";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { Icon } from "@common/components";
+import { getBase64 } from "@/utils";
+import { downloadFile } from "@/apis/file";
+import styles from "./index.module.scss";
 
 export type ImageValue = {
-  type: 'Image';
+  type: "Image";
   fileIdList?: { id: string; name: string }[];
   fileList?: UploadFile[];
 };
@@ -20,25 +20,25 @@ const ImageComponent = (
     onChange?: (value: ImageValue | string) => void;
   },
 ) => {
-  const { maxCount = 10, colSpace = '4', value, disabled, onChange } = props;
+  const { maxCount = 10, colSpace = "4", value, disabled, onChange } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [addFileCount, setAddFileCount] = useState<number>(0);
   const [previewVisible, setPreviewVisible] = useState<boolean>(false);
-  const [previewTitle, setPreviewTitle] = useState<string>('');
-  const [previewImage, setPreviewImage] = useState<string>('');
+  const [previewTitle, setPreviewTitle] = useState<string>("");
+  const [previewImage, setPreviewImage] = useState<string>("");
   // 校验图片类型和大小
   const checkoutFile = useMemoCallback((file: File) => {
     const { type, size } = file;
-    const isJPG = type === 'image/jpeg';
-    const isPNG = type === 'image/png';
+    const isJPG = type === "image/jpeg";
+    const isPNG = type === "image/png";
     const limitSize = 1024 * 1024 * 5; //5M
     if (!isJPG && !isPNG) {
-      message.error('当前仅支持上传.png .jpg .jpeg格式图片');
+      message.error("当前仅支持上传.png .jpg .jpeg格式图片");
       return false;
     }
     if (size > limitSize) {
-      message.error('您所上传的图片超过5M，请调整后上传');
+      message.error("您所上传的图片超过5M，请调整后上传");
       return false;
     }
     return true;
@@ -47,17 +47,17 @@ const ImageComponent = (
   const handleChange = useMemoCallback(({ file: image }: UploadChangeParam) => {
     const list = [...fileList];
     // 移除图片
-    if (image.status === 'removed') {
+    if (image.status === "removed") {
       const index = list.findIndex((item) => item.uid === image.uid);
       list.splice(index, 1);
-      const newValue = Object.assign({}, value, { fileList: list, type: 'Image' });
+      const newValue = Object.assign({}, value, { fileList: list, type: "Image" });
       setFileList(list);
       onChange && onChange(newValue);
       setAddFileCount((n) => n - 1);
       return;
     }
     // 上传图片
-    const validatedFile = checkoutFile((image as unknown) as File);
+    const validatedFile = checkoutFile(image as unknown as File);
     if (validatedFile) {
       const reader = new FileReader();
       reader.readAsDataURL(image as any);
@@ -65,7 +65,7 @@ const ImageComponent = (
         const url = reader.result;
         const file = Object.assign({}, image, { originFileObj: image, percent: 99, thumbUrl: url });
         list.push(file);
-        const newValue = Object.assign({}, value, { fileList: list, type: 'Image' });
+        const newValue = Object.assign({}, value, { fileList: list, type: "Image" });
         setFileList(list);
         setAddFileCount((n) => n + 1);
         onChange && onChange(newValue);
@@ -90,7 +90,7 @@ const ImageComponent = (
   });
   const handleRemove = useMemoCallback((file) => {
     if (value) {
-      const componentValue = typeof value === 'string' ? (JSON.parse(value) as ImageValue) : { ...value };
+      const componentValue = typeof value === "string" ? (JSON.parse(value) as ImageValue) : { ...value };
       const { fileIdList = [] } = componentValue;
       const list = [...fileIdList];
       const index = list.findIndex((v) => v.id === file.uid);
@@ -104,7 +104,7 @@ const ImageComponent = (
   });
   const initFileList = useMemoCallback(() => {
     if (value) {
-      const componentValue = typeof value === 'string' ? (JSON.parse(value) as ImageValue) : { ...value };
+      const componentValue = typeof value === "string" ? (JSON.parse(value) as ImageValue) : { ...value };
       const { fileIdList, fileList } = componentValue;
       const list: UploadFile[] = [];
       if (fileIdList && fileIdList.length > 0) {
@@ -137,16 +137,16 @@ const ImageComponent = (
   });
   // 处理每行最多展示8张图片
   useEffect(() => {
-    const el = containerRef.current!.querySelector('.ant-upload-list-picture-card');
+    const el = containerRef.current!.querySelector(".ant-upload-list-picture-card");
     if (el) {
       const classNameList: string[] = [];
       el.classList.forEach((className) => {
-        if (!className.includes('col-space')) {
+        if (!className.includes("col-space")) {
           classNameList.push(className);
         }
       });
       classNameList.push(`col-space-${colSpace}`);
-      el.className = classNameList.join(' ');
+      el.className = classNameList.join(" ");
     }
   }, [colSpace]);
   useEffect(() => {
@@ -154,31 +154,31 @@ const ImageComponent = (
   }, [initFileList]);
   useEffect(() => {
     // 后端保存的是字符串,提交时需要转成json对象
-    if (typeof value === 'string') {
+    if (typeof value === "string") {
       const componentValue = JSON.parse(value) as ImageValue;
       onChange && onChange(componentValue);
     }
   }, [value, onChange]);
   useEffect(() => {
     if (value) {
-      const componentValue = typeof value === 'string' ? (JSON.parse(value) as ImageValue) : { ...value };
+      const componentValue = typeof value === "string" ? (JSON.parse(value) as ImageValue) : { ...value };
       const { fileIdList = [] } = componentValue;
       const fileCount = fileIdList.length + addFileCount;
-      const el = containerRef.current!.querySelector('.ant-upload-list-picture-card');
+      const el = containerRef.current!.querySelector(".ant-upload-list-picture-card");
       const classNameList: string[] = [];
       if (el) {
         el.classList.forEach((c) => {
-          if (!c.includes('overlay')) {
+          if (!c.includes("overlay")) {
             classNameList.push(c);
           }
         });
         if (fileCount >= maxCount) {
-          classNameList.push('overlay');
+          classNameList.push("overlay");
         } else {
-          const index = classNameList.findIndex((v) => v === 'overlay');
+          const index = classNameList.findIndex((v) => v === "overlay");
           index > -1 && classNameList.splice(index, 1);
         }
-        el.className = classNameList.join(' ');
+        el.className = classNameList.join(" ");
       }
     }
   }, [maxCount, value, addFileCount]);
@@ -194,7 +194,7 @@ const ImageComponent = (
           showDownloadIcon: true,
           showPreviewIcon: true,
           showRemoveIcon: true,
-          removeIcon: <Icon type="shanchu" style={{ color: '#fff' }} />,
+          removeIcon: <Icon type="shanchu" style={{ color: "#fff" }} />,
         }}
         beforeUpload={handleBeforeUpload}
         onChange={handleChange}
@@ -214,10 +214,10 @@ const ImageComponent = (
         visible={previewVisible}
         title={previewTitle}
         footer={null}
-        bodyStyle={{ maxHeight: '600px' }}
+        bodyStyle={{ maxHeight: "600px" }}
         onCancel={handleCancel}
       >
-        <img alt={previewTitle} style={{ width: '100%' }} src={previewImage} />
+        <img alt={previewTitle} style={{ width: "100%" }} src={previewImage} />
       </Modal>
     </div>
   );

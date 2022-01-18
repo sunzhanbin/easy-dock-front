@@ -10,8 +10,8 @@ import { useAppDispatch } from '@/store';
 import { setBaseForm } from '@/views/app-setup/basic-setup.slice';
 
 const APP_INFO = {
-  title: '新建应用',
-  name: '应用',
+  title: "新建应用",
+  name: "应用",
   fieldKey: APP_TYPE,
 };
 
@@ -25,7 +25,7 @@ const HomeNewAPP = () => {
     try {
       const { name, appId: id } = values;
       const ret: ResponseType = await createApp({ name, id }).unwrap();
-      message.success('创建成功!');
+      message.success("创建成功!");
       setShowModal(false);
       // 清空应用基础配置,防止二次赋值引起的bug
       dispatch(setBaseForm({}))

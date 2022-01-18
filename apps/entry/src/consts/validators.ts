@@ -16,9 +16,7 @@ export const nameRule: Rule = {
       return Promise.reject(new Error("请输入"));
     }
     if (!nameRegexp.test(name)) {
-      return Promise.reject(
-        new Error("请输入3-20位的汉字、字母、数字、下划线")
-      );
+      return Promise.reject(new Error("请输入3-20位的汉字、字母、数字、下划线"));
     }
     return Promise.resolve();
   },
@@ -36,9 +34,7 @@ export const remarkRule: Rule = {
   validator(_, value: string) {
     const remark = value?.trim();
     if (remark && !remarkRegexp.test(remark)) {
-      return Promise.reject(
-        new Error("请输入1-200位的汉字、字母、数字、下划线")
-      );
+      return Promise.reject(new Error("请输入1-200位的汉字、字母、数字、下划线"));
     }
     return Promise.resolve();
   },

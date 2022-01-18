@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Button } from 'antd';
-import { ButtonProps } from 'antd/lib/button';
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { Button } from "antd";
+import { ButtonProps } from "antd/lib/button";
 
 interface AsyncButtonProps extends ButtonProps {
   onClick?(): Promise<void> | void;
@@ -19,14 +19,14 @@ function AsyncButton(props: AsyncButtonProps) {
   }, []);
 
   const handleClick = useCallback(async () => {
-    if (typeof onClick !== 'function') return;
+    if (typeof onClick !== "function") return;
 
     const clickReturn = onClick();
 
     // loading状态由外部空坠或者点击按钮后卸载了此组件不往下处理
     if (isControlled || hasUnmountedRef.current) return;
 
-    if (clickReturn && typeof clickReturn.then === 'function') {
+    if (clickReturn && typeof clickReturn.then === "function") {
       setLoading(true);
 
       try {

@@ -1,8 +1,8 @@
-import { memo, useMemo } from 'react';
-import { Icon } from '@common/components';
-import BaseNode from '../base-node';
-import { AutoNodeTriggerProcess as AutoNodeType } from '@type/flow';
-import styles from './index.module.scss';
+import { memo, useMemo } from "react";
+import { Icon } from "@common/components";
+import BaseNode from "../base-node";
+import { AutoNodeTriggerProcess as AutoNodeType } from "@type/flow";
+import styles from "./index.module.scss";
 
 interface AutoNodeProps {
   node: AutoNodeType;
@@ -13,9 +13,9 @@ function AutoNodeTriggerProcess(props: AutoNodeProps) {
   const { triggerConfig } = node;
   const flowNames = useMemo(() => {
     if (!triggerConfig.subapps || !triggerConfig.subapps.length) {
-      return '';
+      return "";
     }
-    return triggerConfig.subapps.map((v) => v.name).join('、');
+    return triggerConfig.subapps.map((v) => v.name).join("、");
   }, [triggerConfig]);
 
   return (
@@ -26,7 +26,7 @@ function AutoNodeTriggerProcess(props: AutoNodeProps) {
           <span className={styles.name}>{flowNames}</span>
         </div>
       ) : (
-        '请设置此节点'
+        "请设置此节点"
       )}
     </BaseNode>
   );

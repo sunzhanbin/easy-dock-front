@@ -1,6 +1,6 @@
-import { memo, FC } from 'react';
-import codingImage from '@assets/images/coding.png';
-import './index.style.scss';
+import { memo, FC } from "react";
+import codingImage from "@assets/images/coding.png";
+import "./index.style.scss";
 
 const Coding: FC<{ title?: string }> = ({ title }) => {
   return (

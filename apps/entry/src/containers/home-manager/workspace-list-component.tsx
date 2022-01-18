@@ -1,16 +1,16 @@
-import { useState, useEffect, useCallback } from 'react';
-import { List, Avatar, Tooltip } from 'antd';
-import { Icon, Loading, Text } from '@common/components';
-import '@containers/home-manager/index.style.scss';
-import { useNavigate } from 'react-router-dom';
-import { imgIdToUrl } from '@/utils/utils';
-import { useGetCanvasIdMutation, useGetHoloSceneIdMutation, useGetRecentListMutation } from '@/http';
-import { useAppSelector } from '@/store';
-import { selectProjectId } from '@views/home/index.slice';
-import { ResponseType } from '@/consts';
-import { ImageMap, NameMap } from '@utils/const';
-import { JumpLinkToUrl } from '@utils/utils';
-import NoImage from '@assets/images/home/no-app.png';
+import { useState, useEffect, useCallback } from "react";
+import { List, Avatar, Tooltip } from "antd";
+import { Icon, Loading, Text } from "@common/components";
+import "@containers/home-manager/index.style.scss";
+import { useNavigate } from "react-router-dom";
+import { imgIdToUrl } from "@/utils/utils";
+import { useGetCanvasIdMutation, useGetHoloSceneIdMutation, useGetRecentListMutation } from "@/http";
+import { useAppSelector } from "@/store";
+import { selectProjectId } from "@views/home/index.slice";
+import { ResponseType } from "@/consts";
+import { ImageMap, NameMap } from "@utils/const";
+import { JumpLinkToUrl } from "@utils/utils";
+import NoImage from "@assets/images/home/no-app.png";
 
 type ListItemType = {
   id: number;
@@ -53,7 +53,7 @@ const HomeWorkspaceList = () => {
     })();
   }, [data, projectId]);
   const toAppManage = useCallback(() => {
-    navigate('/app-manager');
+    navigate("/app-manager");
   }, [navigate]);
   const handleLinkTo = useCallback(
     async (item: ListItemType) => {
@@ -73,7 +73,7 @@ const HomeWorkspaceList = () => {
   };
 
   const renderName = (item: ListItemType) => {
-    return `${item.isApp ? '应用' : NameMap[item.type]}｜${item.parentName}`;
+    return `${item.isApp ? "应用" : NameMap[item.type]}｜${item.parentName}`;
   };
 
   useEffect(() => {
@@ -103,7 +103,7 @@ const HomeWorkspaceList = () => {
             renderItem={(item: ListItemType) => (
               <List.Item key={item.id} onClick={() => handleLinkTo(item)}>
                 <List.Item.Meta
-                  avatar={<Avatar src={renderIcon(item)} alt={''} />}
+                  avatar={<Avatar src={renderIcon(item)} alt={""} />}
                   title={
                     <Tooltip title={item.name}>
                       <Text>{item.name}</Text>

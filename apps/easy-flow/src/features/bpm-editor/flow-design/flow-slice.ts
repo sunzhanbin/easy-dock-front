@@ -1,6 +1,6 @@
-import { createSlice, PayloadAction, createAsyncThunk, createSelector, current } from '@reduxjs/toolkit';
-import { message } from 'antd';
-import { builderAxios, runtimeAxios } from '@utils';
+import { createSlice, PayloadAction, createAsyncThunk, createSelector, current } from "@reduxjs/toolkit";
+import { message } from "antd";
+import { builderAxios, runtimeAxios } from "@utils";
 import {
   AllNode,
   AddableNode,
@@ -16,12 +16,12 @@ import {
   RevertType,
   AuthType,
   FieldAuthsMap,
-} from '@type/flow';
-import { FormMeta } from '@type';
-import { Api } from '@type/api';
-import { RootState } from '@app/store';
-import { fielduuid, createNode, flowUpdate, branchUpdate, valid, ValidResultType, formatFieldsAuths } from './util';
-import { queryApis } from '../components/data-api-config/util';
+} from "@type/flow";
+import { FormMeta } from "@type";
+import { Api } from "@type/api";
+import { RootState } from "@app/store";
+import { fielduuid, createNode, flowUpdate, branchUpdate, valid, ValidResultType, formatFieldsAuths } from "./util";
+import { queryApis } from "../components/data-api-config/util";
 
 export type FlowType = {
   form: FormMeta | null;
@@ -34,7 +34,7 @@ export type FlowType = {
     [id: string]: { name: string; avatar?: string; id: number | string };
   };
   fieldsTemplate: FieldTemplate[];
-  choosedNode: AllNode | null | BranchNode['branches'][number];
+  choosedNode: AllNode | null | BranchNode["branches"][number];
   apis: Api[];
 };
 
@@ -64,16 +64,16 @@ function flowRecursion(flowData: Flow, callBack: (node: AllNode) => void) {
 }
 
 const flow = createSlice({
-  name: 'flow',
+  name: "flow",
   initialState: flowInitial,
   reducers: {
     setSaving(state, { payload }: PayloadAction<boolean>) {
       state.saving = payload;
     },
-    setFieldsTemplate(state, { payload }: PayloadAction<FlowType['fieldsTemplate']>) {
+    setFieldsTemplate(state, { payload }: PayloadAction<FlowType["fieldsTemplate"]>) {
       state.fieldsTemplate = payload;
     },
-    setCacheMembers(state, { payload }: PayloadAction<FlowType['cacheMembers']>) {
+    setCacheMembers(state, { payload }: PayloadAction<FlowType["cacheMembers"]>) {
       state.cacheMembers = {
         ...state.cacheMembers,
         ...payload,
@@ -82,7 +82,7 @@ const flow = createSlice({
     setForm(state, { payload }: PayloadAction<FormMeta>) {
       state.form = payload;
     },
-    setInvalidMaps(state, { payload: validRes }: PayloadAction<FlowType['invalidNodesMap']>) {
+    setInvalidMaps(state, { payload: validRes }: PayloadAction<FlowType["invalidNodesMap"]>) {
       state.invalidNodesMap = validRes;
     },
     setDirty(state, { payload: dirty }: PayloadAction<boolean>) {
@@ -94,7 +94,7 @@ const flow = createSlice({
     setInitialFlow(state, { payload: data }: PayloadAction<Flow>) {
       state.data = data;
     },
-    setChoosedNode(state, { payload: data }: PayloadAction<FlowType['choosedNode']>) {
+    setChoosedNode(state, { payload: data }: PayloadAction<FlowType["choosedNode"]>) {
       state.choosedNode = data;
     },
     addNode(state, { payload }: PayloadAction<{ prevId: string; node: AddableNode }>) {
@@ -144,23 +144,23 @@ const flowActions = flow.actions;
 export const { setLoading, updateNode, delNode, setCacheMembers, setDirty, setSaving, setChoosedNode } = flow.actions;
 
 // 加载应用的流程，对于初始创建的应用是null
-export const load = createAsyncThunk('flow/load', async (appkey: string, { dispatch }) => {
+export const load = createAsyncThunk("flow/load", async (appkey: string, { dispatch }) => {
   try {
     // bpmid变化时重新拉取数据
     dispatch(setLoading(true));
     dispatch(flowActions.setInitialFlow(flowInitial.data));
 
     // 获取流程数据和所需字段
-    let [{ data: flowResponse }, { data: form }] = await Promise.all([
+    const [{ data: flowResponse }, { data: form }] = await Promise.all([
       builderAxios.get<{ data: { meta: Flow | null } }>(`/process/${appkey}`),
       builderAxios.get<{ data: { meta: FormMeta } }>(`/form/${appkey}`),
     ]);
 
     const fields = form.meta?.components || [];
-    const fieldsTemplate: FlowType['fieldsTemplate'] = [];
+    const fieldsTemplate: FlowType["fieldsTemplate"] = [];
     fields.forEach((item) => {
       // Tabs需要设置的是子控件的权限
-      if (item.config.type === 'Tabs') {
+      if (item.config.type === "Tabs") {
         const component = fields.find((field) => field.props.id === item.config.id);
         if (component?.props?.components && component.props.components.length > 0) {
           const list = component.props.components.map((com: any) => {
@@ -186,13 +186,13 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
     let flowData = flowResponse.meta || [];
 
     if (!flowData.length) {
-      let fieldsAuths = formatFieldsAuths(fieldsTemplate);
+      const fieldsAuths = formatFieldsAuths(fieldsTemplate);
 
       // 如果没有流程就初始化一个
       const startNode: StartNode = {
         id: fielduuid(),
         type: NodeType.StartNode,
-        name: '开始节点',
+        name: "开始节点",
         trigger: {
           type: TriggerType.MANUAL,
         },
@@ -202,11 +202,11 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
       const finishNode: FinishNode = {
         id: fielduuid(),
         type: NodeType.FinishNode,
-        name: '结束节点',
-        notificationContent: '',
+        name: "结束节点",
+        notificationContent: "",
       };
 
-      const fillNode: FillNode = createNode(NodeType.FillNode, '填写节点');
+      const fillNode: FillNode = createNode(NodeType.FillNode, "填写节点");
 
       fillNode.fieldsAuths = fieldsAuths;
 
@@ -218,7 +218,7 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
       const roleIds: Set<number | string> = new Set();
 
       let hasAutoNode = false;
-      let fieldsMap = fieldsTemplate.reduce((curr, prev) => {
+      const fieldsMap = fieldsTemplate.reduce((curr, prev) => {
         curr[prev.id] = true;
         return curr;
       }, {} as { [key: string]: true });
@@ -301,13 +301,13 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
       }
 
       // 这样设计为了避免用户更新完头像或者名称后不在节点中更新的问题
-      const userResponse = await runtimeAxios.post('/user/query/owner', {
+      const userResponse = await runtimeAxios.post("/user/query/owner", {
         deptIds: Array.from(deptIds),
         userIds: Array.from(userIds),
         roleIds: Array.from(roleIds),
       });
 
-      const cacheMembers: FlowType['cacheMembers'] = {};
+      const cacheMembers: FlowType["cacheMembers"] = {};
 
       (userResponse.data.users || []).forEach((user: { id: number; userName: string; avatar?: string }) => {
         cacheMembers[user.id] = {
@@ -346,7 +346,7 @@ export const load = createAsyncThunk('flow/load', async (appkey: string, { dispa
 });
 
 export const save = createAsyncThunk<void, { subappId: string; showTip?: boolean }, { state: RootState }>(
-  'flow/save',
+  "flow/save",
   async ({ subappId, showTip }, { getState, dispatch }) => {
     dispatch(setSaving(true));
 
@@ -354,32 +354,32 @@ export const save = createAsyncThunk<void, { subappId: string; showTip?: boolean
     const flowData = flow.data;
 
     try {
-      const validResult: FlowType['invalidNodesMap'] = valid(flowData, {});
+      const validResult: FlowType["invalidNodesMap"] = valid(flowData, {});
 
       await new Promise<void>((resolve, reject) => {
         if (Object.keys(validResult).length) {
           dispatch(flowActions.setInvalidMaps(validResult));
 
-          message.error('数据填写不完整');
+          message.error("数据填写不完整");
 
-          return reject('数据填写不完整');
+          return reject("数据填写不完整");
         } else {
           resolve();
         }
       });
 
       if (!flow.dirty && showTip) {
-        message.success('保存成功');
+        message.success("保存成功");
 
         return;
       }
 
       dispatch(setLoading(true));
 
-      await builderAxios.post('/process/add', { meta: flowData, subappId });
+      await builderAxios.post("/process/add", { meta: flowData, subappId });
 
       if (showTip) {
-        message.success('保存成功');
+        message.success("保存成功");
       }
 
       dispatch(flowActions.setDirty(false));
@@ -394,13 +394,13 @@ export const save = createAsyncThunk<void, { subappId: string; showTip?: boolean
   },
 );
 
-export const loadApis = createAsyncThunk('flow/load-api', async (_, { dispatch }) => {
+export const loadApis = createAsyncThunk("flow/load-api", async (_, { dispatch }) => {
   const apis = await queryApis();
 
   dispatch(flowActions.setApis(apis));
 });
 
-export const addSubBranch = createAsyncThunk<void, BranchNode>('flow/add-subbranch', (branchNode, { dispatch }) => {
+export const addSubBranch = createAsyncThunk<void, BranchNode>("flow/add-subbranch", (branchNode, { dispatch }) => {
   dispatch(
     flowActions.updateNode({
       ...branchNode,
@@ -410,7 +410,7 @@ export const addSubBranch = createAsyncThunk<void, BranchNode>('flow/add-subbran
 });
 
 export const delSubBranch = createAsyncThunk<void, { branchNode: BranchNode; targetId: string }>(
-  'flow/del-subbranch',
+  "flow/del-subbranch",
   ({ branchNode, targetId }, { dispatch }) => {
     dispatch(
       flowActions.updateNode({
@@ -421,8 +421,8 @@ export const delSubBranch = createAsyncThunk<void, { branchNode: BranchNode; tar
   },
 );
 
-export const addNode = createAsyncThunk<void, { prevId: string; type: AddableNode['type'] }, { state: RootState }>(
-  'flow/create-node',
+export const addNode = createAsyncThunk<void, { prevId: string; type: AddableNode["type"] }, { state: RootState }>(
+  "flow/create-node",
   ({ prevId, type }, { getState, dispatch }) => {
     let tmpNode;
     const { flow } = getState();
@@ -430,23 +430,23 @@ export const addNode = createAsyncThunk<void, { prevId: string; type: AddableNod
     if (type === NodeType.BranchNode) {
       tmpNode = createNode(type);
     } else if (type === NodeType.AutoNodePushData) {
-      tmpNode = createNode(type, '自动节点_数据连接');
+      tmpNode = createNode(type, "自动节点_数据连接");
 
       // 如果添加了自动节点判断下服务编排里的接口有没有被加载进来
       if (flow.apis.length === 0) {
         dispatch(loadApis());
       }
     } else if (type === NodeType.AutoNodeTriggerProcess) {
-      tmpNode = createNode(type, '自动节点_触发流程');
+      tmpNode = createNode(type, "自动节点_触发流程");
     } else {
       if (type === NodeType.AuditNode) {
-        tmpNode = createNode(type, '审批节点');
+        tmpNode = createNode(type, "审批节点");
       } else if (type === NodeType.FillNode) {
-        tmpNode = createNode(type, '填写节点');
+        tmpNode = createNode(type, "填写节点");
       } else if (type === NodeType.CCNode) {
-        tmpNode = createNode(type, '抄送节点');
+        tmpNode = createNode(type, "抄送节点");
       } else {
-        throw Error('传入类型不正确');
+        throw Error("传入类型不正确");
       }
 
       tmpNode.fieldsAuths = formatFieldsAuths(flow.fieldsTemplate);

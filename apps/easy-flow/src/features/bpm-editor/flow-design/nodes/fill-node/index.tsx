@@ -1,8 +1,8 @@
-import { memo } from 'react';
-import { Icon } from '@common/components';
-import { FillNode as FillNodeType } from '@type/flow';
-import BaseNode from '../base-node';
-import MemberList from '../../components/member-list';
+import { memo } from "react";
+import { Icon } from "@common/components";
+import { FillNode as FillNodeType } from "@type/flow";
+import BaseNode from "../base-node";
+import MemberList from "../../components/member-list";
 
 export interface FillNodeProps {
   node: FillNodeType;

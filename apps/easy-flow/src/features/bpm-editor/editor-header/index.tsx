@@ -1,19 +1,19 @@
-import { FC, memo, useCallback, useMemo, useState, useEffect, useRef } from 'react';
-import { Button, Tooltip, message } from 'antd';
-import PreviewModal from '@components/preview-model';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import useConfirmLeave from '@common/hooks/use-confirm-leave';
-import { useHistory, useRouteMatch, NavLink, useLocation, useParams } from 'react-router-dom';
-import { save as saveExtend, setDirty as setExtendDirty } from '@app/app';
-import { save as saveFlow, setDirty as setFlowDirty } from '../flow-design/flow-slice';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { AsyncButton, confirm, Icon } from '@common/components';
-import { axios } from '@utils';
-import Header from '../../../components/header';
-import { layoutSelector, subAppSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
-import { saveForm, setIsDirty as setFormDirty } from '@/features/bpm-editor/form-design/formdesign-slice';
-import dirtySelector from '../use-dirty-selector';
-import styles from './index.module.scss';
+import { FC, memo, useCallback, useMemo, useState, useEffect, useRef } from "react";
+import { Button, Tooltip, message } from "antd";
+import PreviewModal from "@components/preview-model";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import useConfirmLeave from "@common/hooks/use-confirm-leave";
+import { useHistory, useRouteMatch, NavLink, useLocation, useParams } from "react-router-dom";
+import { save as saveExtend, setDirty as setExtendDirty } from "@app/app";
+import { save as saveFlow, setDirty as setFlowDirty } from "../flow-design/flow-slice";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import { AsyncButton, confirm, Icon } from "@common/components";
+import { axios } from "@utils";
+import Header from "../../../components/header";
+import { layoutSelector, subAppSelector } from "@/features/bpm-editor/form-design/formzone-reducer";
+import { saveForm, setIsDirty as setFormDirty } from "@/features/bpm-editor/form-design/formdesign-slice";
+import dirtySelector from "../use-dirty-selector";
+import styles from "./index.module.scss";
 
 const EditorHeader: FC = () => {
   const dispatch = useAppDispatch();
@@ -28,14 +28,14 @@ const EditorHeader: FC = () => {
   const { pathname: pathName } = useLocation<{ pathname: string }>();
   const showConfirm = useMemoCallback((go) => {
     confirm({
-      okText: '保存更改',
-      cancelText: '放弃保存',
+      okText: "保存更改",
+      cancelText: "放弃保存",
       width: 352,
-      text: '当前有未保存的更改，您在离开当前页面是否要保存这些更改?',
+      text: "当前有未保存的更改，您在离开当前页面是否要保存这些更改?",
       async onEnsure() {
         const saveRes = await handleSave();
 
-        if (saveRes && saveRes.meta.requestStatus === 'rejected') return;
+        if (saveRes && saveRes.meta.requestStatus === "rejected") return;
 
         go();
       },
@@ -48,7 +48,7 @@ const EditorHeader: FC = () => {
     });
   });
 
-  useConfirmLeave(process.env.NODE_ENV === 'development' ? false : dirty, showConfirm);
+  useConfirmLeave(process.env.NODE_ENV === "development" ? false : dirty, showConfirm);
 
   const flowDesignPath = `${match.url}/flow-design`;
   const extendPath = `${match.url}/extend`;
@@ -91,17 +91,17 @@ const EditorHeader: FC = () => {
   const handlePublish = useCallback(async () => {
     const flowResponse = await dispatch(saveFlow({ subappId: bpmId }));
 
-    if (flowResponse.meta.requestStatus === 'rejected') {
+    if (flowResponse.meta.requestStatus === "rejected") {
       return;
     }
 
-    await axios.post('/subapp/deploy', {
+    await axios.post("/subapp/deploy", {
       enableNewVersion: true,
-      remark: '',
+      remark: "",
       subappId: bpmId,
     });
 
-    message.success('发布成功');
+    message.success("发布成功");
 
     setTimeout(() => {
       window.close();
@@ -110,16 +110,16 @@ const EditorHeader: FC = () => {
   }, [bpmId, dispatch, appId]);
 
   useEffect(() => {
-    if (!dirty || process.env.NODE_ENV === 'development') return;
+    if (!dirty || process.env.NODE_ENV === "development") return;
 
     const beforeLeave = (e: BeforeUnloadEvent) => {
       e.preventDefault();
-      e.returnValue = '编辑的内容尚未保存，请确认是否离开？';
+      e.returnValue = "编辑的内容尚未保存，请确认是否离开？";
     };
 
-    window.addEventListener('beforeunload', beforeLeave);
+    window.addEventListener("beforeunload", beforeLeave);
     return () => {
-      window.removeEventListener('beforeunload', beforeLeave);
+      window.removeEventListener("beforeunload", beforeLeave);
     };
   }, [dirty]);
 

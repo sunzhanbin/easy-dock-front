@@ -24,11 +24,11 @@ const Workspace = React.lazy(() => import('@views/workspace'));
 const NoMatch = React.lazy(() => import('@views/no-match'));
 const EmptyPage = React.lazy(() => import('@containers/asset-pages/empty-page'));
 auth.setConfig({ server: process.env.REACT_APP_SSO_LOGIN_URL });
-const query = decodeURIComponent(window.location.href.split('?')[1]);
-const theme = new URLSearchParams(query).get('theme');
+const query = decodeURIComponent(window.location.href.split("?")[1]);
+const theme = new URLSearchParams(query).get("theme");
 
 if (theme) {
-  cookie.set('theme', theme);
+  cookie.set("theme", theme);
   registerTheme({
     theme,
   });

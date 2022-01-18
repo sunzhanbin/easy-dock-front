@@ -1,19 +1,19 @@
-import { memo, FC, useMemo, useState, useCallback, useEffect, useRef } from 'react';
-import { Form, Input, Select, Button, DatePicker, Table } from 'antd';
-import { useHistory, useLocation } from 'react-router-dom';
-import classNames from 'classnames';
-import { getPassedTime } from '@utils/index';
-import { runtimeAxios } from '@/utils';
-import moment from 'moment';
-import { dynamicRoutes } from '@/consts/route';
-import useAppId from '@/hooks/use-app-id';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import { useAppSelector } from '@/app/hooks';
-import { Icon } from '@common/components';
-import { debounce, throttle } from 'lodash';
-import styles from './index.module.scss';
-import { appSelector } from '../taskcenter-slice';
-import { DoneItem, Pagination, UserItem } from '../type';
+import { memo, FC, useMemo, useState, useCallback, useEffect, useRef } from "react";
+import { Form, Input, Select, Button, DatePicker, Table } from "antd";
+import { useHistory, useLocation } from "react-router-dom";
+import classNames from "classnames";
+import { getPassedTime } from "@utils/index";
+import { runtimeAxios } from "@/utils";
+import moment from "moment";
+import { dynamicRoutes } from "@/consts/route";
+import useAppId from "@/hooks/use-app-id";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { useAppSelector } from "@/app/hooks";
+import { Icon } from "@common/components";
+import { debounce, throttle } from "lodash";
+import styles from "./index.module.scss";
+import { appSelector } from "../taskcenter-slice";
+import { DoneItem, Pagination, UserItem } from "../type";
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -28,9 +28,9 @@ const Done: FC = () => {
     // 以iframe方式接入,参数在location中
     if (location.search) {
       const params = new URLSearchParams(location.search.slice(1));
-      return params.get('theme') || 'light';
+      return params.get("theme") || "light";
     }
-    return 'light';
+    return "light";
   }, [location.search]);
   const [loading, setLoading] = useState<boolean>(false);
   const [pagination, setPagination] = useState<Pagination>({
@@ -42,25 +42,25 @@ const Done: FC = () => {
   const [data, setData] = useState<DoneItem[]>([]);
   const [optionList, setOptionList] = useState<UserItem[]>([]);
   const [total, setTotal] = useState<number>(0);
-  const [keyword, setKeyword] = useState<string>('');
+  const [keyword, setKeyword] = useState<string>("");
   const pageNumberRef = useRef(1);
-  const [sortDirection, setSortDirection] = useState<'DESC' | 'ASC'>('DESC');
+  const [sortDirection, setSortDirection] = useState<"DESC" | "ASC">("DESC");
   const columns = useMemo(() => {
     return [
       {
-        title: '序号',
-        dataIndex: 'id',
-        key: 'id',
-        width: '7.5%',
+        title: "序号",
+        dataIndex: "id",
+        key: "id",
+        width: "7.5%",
         render(_: string, record: DoneItem, index: number) {
           return <div>{index + 1}</div>;
         },
       },
       {
-        title: '流程名称',
-        dataIndex: 'processName',
-        key: 'processName',
-        width: '20%',
+        title: "流程名称",
+        dataIndex: "processName",
+        key: "processName",
+        width: "20%",
         render(_: string, record: DoneItem) {
           return <div className={styles.name}>{record.processName}</div>;
         },
@@ -73,32 +73,32 @@ const Done: FC = () => {
         },
       },
       {
-        title: '发起人',
-        dataIndex: 'startUser',
-        key: 'startUser',
-        width: '20%',
+        title: "发起人",
+        dataIndex: "startUser",
+        key: "startUser",
+        width: "20%",
       },
       {
-        title: '发起时间',
-        dataIndex: 'startTime',
-        key: 'startTime',
-        width: '20%',
+        title: "发起时间",
+        dataIndex: "startTime",
+        key: "startTime",
+        width: "20%",
         render(_: string, record: DoneItem) {
           const { startTime } = record;
           return <div className={styles.startTime}>{getPassedTime(startTime)}</div>;
         },
       },
       {
-        title: '办理时间',
-        dataIndex: 'endTime',
-        key: 'endTime',
-        sortDirections: ['ascend' as const, 'descend' as const, 'ascend' as const],
-        defaultSortOrder: 'descend' as const,
+        title: "办理时间",
+        dataIndex: "endTime",
+        key: "endTime",
+        sortDirections: ["ascend" as const, "descend" as const, "ascend" as const],
+        defaultSortOrder: "descend" as const,
         sorter: true,
-        width: '20%',
+        width: "20%",
         render(_: string, record: DoneItem) {
           const { endTime } = record;
-          return <div className={styles.endTime}>{endTime ? moment(endTime).format('yyyy-MM-DD HH:mm') : ''}</div>;
+          return <div className={styles.endTime}>{endTime ? moment(endTime).format("yyyy-MM-DD HH:mm") : ""}</div>;
         },
       },
     ];
@@ -115,7 +115,7 @@ const Done: FC = () => {
       setLoading(true);
       const { current: pageIndex, pageSize } = pagination;
       const formValues = form.getFieldsValue(true);
-      const { name = '', starter = '', timeRange = [] } = formValues;
+      const { name = "", starter = "", timeRange = [] } = formValues;
       let startTime = 0;
       let endTime = 0;
       if (timeRange && timeRange[0]) {
@@ -142,7 +142,7 @@ const Done: FC = () => {
         sortDirection,
       };
       runtimeAxios
-        .post('/task/done', params)
+        .post("/task/done", params)
         .then((res) => {
           const list = res.data?.data || [];
           const total = res.data?.recordTotal || 0;
@@ -157,7 +157,7 @@ const Done: FC = () => {
   const fetchOptionList = useCallback(
     (pageNum: number, keyword: string) => {
       if (projectId) {
-        runtimeAxios.post('/user/search', { index: pageNum, size: 20, keyword, projectId }).then((res) => {
+        runtimeAxios.post("/user/search", { index: pageNum, size: 20, keyword, projectId }).then((res) => {
           const list = res.data?.data || [];
           const total = res.data?.recordTotal;
           const index = res.data?.pageIndex;
@@ -207,7 +207,7 @@ const Done: FC = () => {
   );
   const handleTableChange = useCallback(
     (newPagination, filters, sorter) => {
-      sorter.order === 'ascend' ? setSortDirection('ASC') : setSortDirection('DESC');
+      sorter.order === "ascend" ? setSortDirection("ASC") : setSortDirection("DESC");
       setTimeout(() => {
         setPagination((pagination) => {
           fetchData(newPagination);
@@ -222,7 +222,7 @@ const Done: FC = () => {
     fetchData();
   }, [form, fetchData]);
   useEffect(() => {
-    fetchOptionList(1, '');
+    fetchOptionList(1, "");
   }, [fetchOptionList]);
   useEffect(() => {
     appId && fetchData();
@@ -247,7 +247,7 @@ const Done: FC = () => {
               <Select
                 showSearch
                 allowClear
-                style={{ width: '100%' }}
+                style={{ width: "100%" }}
                 suffixIcon={<Icon type="xiala" />}
                 placeholder="请选择"
                 optionFilterProp="label"
@@ -267,10 +267,10 @@ const Done: FC = () => {
             </Form.Item>
             <Form.Item label="发起时间" name="timeRange" className="timeRange">
               <RangePicker
-                showTime={{ format: 'HH:mm' }}
+                showTime={{ format: "HH:mm" }}
                 format="yyyy-MM-DD HH:mm"
                 suffixIcon={<Icon type="riqi" />}
-                style={{ width: '100%' }}
+                style={{ width: "100%" }}
                 onChange={() => {
                   fetchData();
                 }}

@@ -1,13 +1,13 @@
-import { memo, useCallback, useState, useEffect, Fragment } from 'react';
-import { Select, Form, Button } from 'antd';
-import { axios } from '@utils';
-import { ColumnsItem, LabelMap, OptionItem, SelectColumnsItem } from '@/type';
-import { Icon } from '@common/components';
-import { useAppSelector } from '@/app/hooks';
-import { subAppSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
-import styles from './index.module.scss';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import DraggableOption from './drag-component';
+import { memo, useCallback, useState, useEffect, Fragment } from "react";
+import { Select, Form, Button } from "antd";
+import { axios } from "@utils";
+import { ColumnsItem, LabelMap, OptionItem, SelectColumnsItem } from "@/type";
+import { Icon } from "@common/components";
+import { useAppSelector } from "@/app/hooks";
+import { subAppSelector } from "@/features/bpm-editor/form-design/formzone-reducer";
+import styles from "./index.module.scss";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import DraggableOption from "./drag-component";
 
 const { Option } = Select;
 
@@ -21,7 +21,7 @@ const SelectColumns = (props: editProps) => {
   const { id, value, onChange } = props;
   const { appId, id: subAppId } = useAppSelector(subAppSelector);
   const [formList, setFormList] = useState<(OptionItem & { versionId: number })[]>([]);
-  const [formKey, setFormKey] = useState<string>(value?.formKeyId || '');
+  const [formKey, setFormKey] = useState<string>(value?.formKeyId || "");
   const [fieldList, setFieldList] = useState<LabelMap[]>([]);
   const [columns, setColumns] = useState<ColumnsItem[]>(value?.columns || []);
   const [addDisable, setAddDisable] = useState(false);
@@ -29,7 +29,7 @@ const SelectColumns = (props: editProps) => {
   // 新增列
   const addItem = useCallback(() => {
     const list: ColumnsItem[] = [...columns];
-    list.push({ title: '', dataIndex: '', key: new Date().getTime() + '' });
+    list.push({ title: "", dataIndex: "", key: new Date().getTime() + "" });
     setColumns(list);
     onChange &&
       onChange({
@@ -54,7 +54,7 @@ const SelectColumns = (props: editProps) => {
   // 拖拽列
   const handleDrag = useMemoCallback((sourceIndex: number, targetIndex: number) => {
     const list = [...columns];
-    let tmp = list[sourceIndex];
+    const tmp = list[sourceIndex];
     list[sourceIndex] = list[targetIndex];
     list[targetIndex] = tmp;
     setColumns(list);
@@ -64,13 +64,13 @@ const SelectColumns = (props: editProps) => {
   // 修改表头对应的字段和字段名称
   const handleChangeColumn = useMemoCallback((type: string, value: { key: string; label: string }, index: number) => {
     const list = [...columns];
-    if (type === 'select') {
+    if (type === "select") {
       list[index] = {
         title: value?.label,
         dataIndex: value?.key,
         key: value.key,
       };
-    } else if (type === 'blur') {
+    } else if (type === "blur") {
       // list[index] = {
       //   title: value,
       //   dataIndex: list[index].dataIndex,
@@ -83,9 +83,9 @@ const SelectColumns = (props: editProps) => {
 
   const fetchFieldNames = useCallback((formList, selectedKey: string) => {
     setFieldList([
-      { key: 'key1', value: 'key1', label: '字段1' },
-      { key: 'key2', value: 'key2', label: '字段2' },
-      { key: 'key3', value: 'key3', label: '字段3' },
+      { key: "key1", value: "key1", label: "字段1" },
+      { key: "key2", value: "key2", label: "字段2" },
+      { key: "key3", value: "key3", label: "字段3" },
     ]);
   }, []);
 

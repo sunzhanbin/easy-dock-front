@@ -1,17 +1,17 @@
-import { memo, useCallback, useMemo } from 'react';
-import { Modal, Form } from 'antd';
-import Condition from '@/features/bpm-editor/components/condition';
-import styles from './index.module.scss';
-import { useAppSelector } from '@/app/hooks';
-import { componentPropsSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
-import { PropertyRuleItem, FormField } from '@/type';
+import { memo, useCallback, useMemo } from "react";
+import { Modal, Form } from "antd";
+import Condition from "@/features/bpm-editor/components/condition";
+import styles from "./index.module.scss";
+import { useAppSelector } from "@/app/hooks";
+import { componentPropsSelector } from "@/features/bpm-editor/form-design/formzone-reducer";
+import { PropertyRuleItem, FormField } from "@/type";
 
 type modalProps = {
   editIndex?: number;
   rule: PropertyRuleItem | null;
-  type: 'add' | 'edit';
+  type: "add" | "edit";
   onClose: () => void;
-  onOk: (rules: any, type: 'add' | 'edit', editIndex?: number) => void;
+  onOk: (rules: any, type: "add" | "edit", editIndex?: number) => void;
 };
 
 const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => {
@@ -20,7 +20,7 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
   // 表单中所有控件列表
   const componentList = useMemo(() => {
     const list = Object.values(byId).map((item: FormField) => item) || [];
-    return list.filter((com) => com.type === 'Date');
+    return list.filter((com) => com.type === "Date");
   }, [byId]);
   const initFormValues = useMemo(() => {
     // 添加规则

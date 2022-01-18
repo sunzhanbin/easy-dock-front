@@ -1,14 +1,14 @@
-import { ReactNode, useMemo } from 'react';
-import { Link, useRouteMatch } from 'react-router-dom';
-import classnames from 'classnames';
-import logo from '@assets/logo.png';
-import { Icon } from '@common/components';
-import UserComponent from './user';
-import styles from './index.module.scss';
-import { useAppSelector } from '@/hooks/use-redux';
-import { userSelector } from '@/store/user';
-import { RoleEnum } from '@/schema/app';
-import { ROUTES } from '@consts';
+import { ReactNode, useMemo } from "react";
+import { Link, useRouteMatch } from "react-router-dom";
+import classnames from "classnames";
+import logo from "@assets/logo.png";
+import { Icon } from "@common/components";
+import UserComponent from "./user";
+import styles from "./index.module.scss";
+import { useAppSelector } from "@/hooks/use-redux";
+import { userSelector } from "@/store/user";
+import { RoleEnum } from "@/schema/app";
+import { ROUTES } from "@consts";
 
 interface AppHeaderProps {
   children?: ReactNode;
@@ -30,7 +30,6 @@ export default function AppHeader({ children }: AppHeaderProps) {
     return false;
   }, [user]);
 
-
   // 是否有权限跳转到应用端,只有正常项目租户才有权限
   const canGoApp = useMemo(() => {
     if (user && user.info && user.info.power) {
@@ -42,7 +41,7 @@ export default function AppHeader({ children }: AppHeaderProps) {
 
   return (
     <div className={styles.container}>
-      <div className={classnames('easy-dock-content', styles.header)}>
+      <div className={classnames("easy-dock-content", styles.header)}>
         <Link to="/" className={styles.logo}>
           <img src={logo} alt="logo" />
         </Link>
@@ -50,7 +49,7 @@ export default function AppHeader({ children }: AppHeaderProps) {
         {children}
 
         <div className={styles.right}>
-          {match.url === '/' ? (
+          {match.url === "/" ? (
             canGoBuilder ? (
               <a href={`/main${ROUTES.BUILDER}`} target="_blank" rel="noreferrer" className={styles.appClient}>
                 <Icon type="yingyonduandinglan" className={styles.icon} />

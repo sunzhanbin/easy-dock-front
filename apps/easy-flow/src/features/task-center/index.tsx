@@ -1,34 +1,34 @@
-import { memo, useCallback, FC, useState, useEffect, useMemo } from 'react';
-import { NavLink, Route, Switch, useLocation, useRouteMatch } from 'react-router-dom';
-import { Input, Button } from 'antd';
-import classNames from 'classnames';
-import { Icon } from '@common/components';
-import { useAppSelector } from '@/app/hooks';
-import useAppId from '@/hooks/use-app-id';
-import { useAppDispatch } from '@app/hooks';
-import { runtimeAxios } from '@/utils';
-import styles from './index.module.scss';
-import Todo from './todo';
-import Start from './start';
-import Done from './done';
-import Card from './card';
-import Draft from './draft';
-import Copy from './copy';
-import { todoNumSelector } from './taskcenter-reducer';
-import { loadApp } from './taskcenter-slice';
-import { SubAppItem } from './type';
+import { memo, useCallback, FC, useState, useEffect, useMemo } from "react";
+import { NavLink, Route, Switch, useLocation, useRouteMatch } from "react-router-dom";
+import { Input, Button } from "antd";
+import classNames from "classnames";
+import { Icon } from "@common/components";
+import { useAppSelector } from "@/app/hooks";
+import useAppId from "@/hooks/use-app-id";
+import { useAppDispatch } from "@app/hooks";
+import { runtimeAxios } from "@/utils";
+import styles from "./index.module.scss";
+import Todo from "./todo";
+import Start from "./start";
+import Done from "./done";
+import Card from "./card";
+import Draft from "./draft";
+import Copy from "./copy";
+import { todoNumSelector } from "./taskcenter-reducer";
+import { loadApp } from "./taskcenter-slice";
+import { SubAppItem } from "./type";
 
 const TaskCenter: FC = () => {
   const dispatch = useAppDispatch();
   const match = useRouteMatch();
-  const matchedPath = match.path.replace(/\/$/, '');
-  const matchedUrl = match.url.replace(/\/$/, '');
+  const matchedPath = match.path.replace(/\/$/, "");
+  const matchedUrl = match.url.replace(/\/$/, "");
   const todoNum = useAppSelector(todoNumSelector);
   const appId = useAppId();
   const location = useLocation();
   const [isShowDrawer, setIsShowDrawer] = useState<boolean>(false);
   const [subAppList, setSubAppList] = useState<SubAppItem[]>([]);
-  const [keyword, setKeyWord] = useState<string>('');
+  const [keyword, setKeyWord] = useState<string>("");
   const handleStart = useCallback(() => {
     setIsShowDrawer(true);
   }, []);
@@ -40,17 +40,17 @@ const TaskCenter: FC = () => {
     // 以iframe方式接入,参数在location中
     if (location.search) {
       const params = new URLSearchParams(location.search.slice(1));
-      return params.get('theme') || 'light';
+      return params.get("theme") || "light";
     }
-    return 'light';
+    return "light";
   }, [location.search]);
 
   const mode = useMemo(() => {
     if (location.search) {
       const params = new URLSearchParams(location.search.slice(1));
-      return params.get('mode') || 'running';
+      return params.get("mode") || "running";
     }
-    return 'running';
+    return "running";
   }, [location.search]);
 
   useEffect(() => {
@@ -115,7 +115,7 @@ const TaskCenter: FC = () => {
           </div>
         </div>
         <div className={styles.right}>
-          {mode === 'running' && (
+          {mode === "running" && (
             <Button type="primary" size="large" className={styles.startFlow} onClick={handleStart}>
               发起流程
             </Button>

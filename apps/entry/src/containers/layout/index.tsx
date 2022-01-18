@@ -9,10 +9,10 @@ import classnames from "classnames";
 const { Content } = LayoutWrap;
 
 const Layout: React.FC = () => {
-    const location = useLocation();
-    const mainEntry = location.pathname === '/';
+  const location = useLocation();
+  const mainEntry = location.pathname === "/";
   return (
-    <LayoutWrap className={classnames(mainEntry ? "main-layout": "")}>
+    <LayoutWrap className={classnames(mainEntry ? "main-layout" : "")}>
       <Routes>
         <Route path="app-manager/:id" element={<AppManagerHeader />} />
         <Route path="workspace/*" element={null} />

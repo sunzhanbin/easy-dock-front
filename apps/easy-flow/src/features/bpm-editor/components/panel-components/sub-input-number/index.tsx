@@ -1,12 +1,12 @@
-import { memo, useMemo } from 'react';
-import { InputNumber } from 'antd';
-import { useAppSelector } from '@/app/hooks';
-import { subComponentConfigSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
+import { memo, useMemo } from "react";
+import { InputNumber } from "antd";
+import { useAppSelector } from "@/app/hooks";
+import { subComponentConfigSelector } from "@/features/bpm-editor/form-design/formzone-reducer";
 
 interface SubInputNumberProps {
   id: string;
   value?: number;
-  onChange?: (val: this['value']) => void;
+  onChange?: (val: this["value"]) => void;
 }
 
 const SubInputNumber = ({ id, value, onChange }: SubInputNumberProps) => {
@@ -25,9 +25,9 @@ const SubInputNumber = ({ id, value, onChange }: SubInputNumberProps) => {
   }, [subAppConfig, id]);
   const propList = useMemo(() => {
     const props: { [k: string]: any } = {
-      size: 'large',
-      className: 'input_number',
-      placeholder: '请输入',
+      size: "large",
+      className: "input_number",
+      placeholder: "请输入",
       value,
       onChange,
     };
@@ -51,17 +51,17 @@ const SubInputNumber = ({ id, value, onChange }: SubInputNumberProps) => {
       }
       // 不允许小数位数,整数截断
       if (!decimal?.enable) {
-        return number.split('.')[0];
+        return number.split(".")[0];
       }
-      if (number.indexOf('.') > 0) {
+      if (number.indexOf(".") > 0) {
         const { precision } = decimal;
 
         // 小数位数
-        const precisionLength = number.split('.')[1].length;
+        const precisionLength = number.split(".")[1].length;
 
         // 小数位数超出时,截断
         if (precisionLength > precision) {
-          return number.substring(0, number.indexOf('.') + decimal.precision + 1);
+          return number.substring(0, number.indexOf(".") + decimal.precision + 1);
         }
       }
       return number;

@@ -8,7 +8,7 @@ const InstanceManagerMicroPage = () => {
   const { workspaceId } = useParams();
   const { theme } = useWorkspaceRuntimeDetailQuery(+(workspaceId as string), {
     selectFromResult: ({ data }) => ({
-      theme: data?.extension?.theme || 'light',
+      theme: data?.extension?.theme || "light",
     }),
   });
   const url = useMemo(() => {

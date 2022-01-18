@@ -1,15 +1,21 @@
-import React, { memo, FC, useMemo, useCallback, useRef, useEffect } from 'react';
-import { Icon, Loading } from '@common/components';
-import { Tooltip } from 'antd';
-import { AllComponentType, FormField, MoveConfig, RadioField, TConfigItem } from '@/type';
-import { exchange, comAdded, comDeleted , moveUpAction, moveDownAction } from '@/features/bpm-editor/form-design/formdesign-slice';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import useLoadComponents from '@/hooks/use-load-components';
-import { formDesignSelector, selectedFieldSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
+import React, { memo, FC, useMemo, useCallback, useRef, useEffect } from "react";
+import { Icon, Loading } from "@common/components";
+import { Tooltip } from "antd";
+import { AllComponentType, FormField, MoveConfig, RadioField, TConfigItem } from "@/type";
+import {
+  exchange,
+  comAdded,
+  comDeleted,
+  moveUpAction,
+  moveDownAction,
+} from "@/features/bpm-editor/form-design/formdesign-slice";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import useLoadComponents from "@/hooks/use-load-components";
+import { formDesignSelector, selectedFieldSelector } from "@/features/bpm-editor/form-design/formzone-reducer";
 
-import useDataSource from '@/hooks/use-data-source';
-import styles from './index.module.scss';
-import LabelContent from '../label-content';
+import useDataSource from "@/hooks/use-data-source";
+import styles from "./index.module.scss";
+import LabelContent from "../label-content";
 
 type Component = React.FC | React.ComponentClass;
 const SourceBox: FC<{
@@ -37,10 +43,10 @@ const SourceBox: FC<{
 
   const [options, loading] = useDataSource({ prevDataSource: sourceRef.current, dataSource });
   // 获取组件源码
-  const compSources = useLoadComponents(type as AllComponentType['type']) as Component;
+  const compSources = useLoadComponents(type as AllComponentType["type"]) as Component;
   const propList = useMemo(() => {
     const type = config?.type;
-    if (type === 'Radio' || type === 'Checkbox' || type === 'InputNumber') {
+    if (type === "Radio" || type === "Checkbox" || type === "InputNumber") {
       return Object.assign({}, config, { id, options });
     }
     return Object.assign({}, config, { id });
@@ -63,10 +69,10 @@ const SourceBox: FC<{
     dispatch(moveDownAction({ id, rowIndex }));
   }, [id, rowIndex, dispatch]);
   const handleMoveLeft = useCallback(() => {
-    dispatch(exchange({ id, direction: 'left' }));
+    dispatch(exchange({ id, direction: "left" }));
   }, [id, dispatch]);
   const handleMoveRight = useCallback(() => {
-    dispatch(exchange({ id, direction: 'right' }));
+    dispatch(exchange({ id, direction: "right" }));
   }, [id, dispatch]);
   const content = useMemo(() => {
     if (compSources) {
@@ -75,7 +81,7 @@ const SourceBox: FC<{
         <div className={styles.container}>
           {loading && <Loading />}
           <div className={styles.component_container}>
-            {type !== 'DescText' && <LabelContent label={propList.label} desc={propList.desc} />}
+            {type !== "DescText" && <LabelContent label={propList.label} desc={propList.desc} />}
             <Component {...(propList as TConfigItem)} />
           </div>
           <div className={styles.operation}>
@@ -91,22 +97,22 @@ const SourceBox: FC<{
             </Tooltip>
           </div>
           {moveConfig.up && (
-            <div className={styles.moveUp} style={{ display: id === selectedField ? 'block' : 'none' }}>
+            <div className={styles.moveUp} style={{ display: id === selectedField ? "block" : "none" }}>
               <Icon className={styles.iconfont} type="jiantouxiangshang" onClick={handleMoveUp} />
             </div>
           )}
           {moveConfig.down && (
-            <div className={styles.moveDown} style={{ display: id === selectedField ? 'block' : 'none' }}>
+            <div className={styles.moveDown} style={{ display: id === selectedField ? "block" : "none" }}>
               <Icon className={styles.iconfont} type="jiantouxiangxia" onClick={handleMoveDown} />
             </div>
           )}
           {moveConfig.left && (
-            <div className={styles.moveLeft} style={{ display: id === selectedField ? 'block' : 'none' }}>
+            <div className={styles.moveLeft} style={{ display: id === selectedField ? "block" : "none" }}>
               <Icon className={styles.iconfont} type="hengxiangqiehuan" onClick={handleMoveLeft} />
             </div>
           )}
           {moveConfig.right && (
-            <div className={styles.moveRight} style={{ display: id === selectedField ? 'block' : 'none' }}>
+            <div className={styles.moveRight} style={{ display: id === selectedField ? "block" : "none" }}>
               <Icon className={styles.iconfont} type="hengxiangqiehuan" onClick={handleMoveRight} />
             </div>
           )}

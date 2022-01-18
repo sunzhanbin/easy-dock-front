@@ -22,15 +22,18 @@ const MenuSetupFormAssetConfigComponent = ({ form }: AssetConfigProps) => {
   const { subAppList } = useFetchDeployedSubAppListQuery(appId, {
     selectFromResult: ({ data }) => {
       return {
-        subAppList: data?.concat([{
-          name: "任务中心",
-          type: HomeSubAppType.TASK_CENTER,
-          id: workspaceId,
-        }, {
-          name: "流程数据管理",
-          type: HomeSubAppType.INSTANCE_MANAGER,
-          id: (workspaceId && workspaceId! + 1),
-        }]),
+        subAppList: data?.concat([
+          {
+            name: "任务中心",
+            type: HomeSubAppType.TASK_CENTER,
+            id: workspaceId,
+          },
+          {
+            name: "流程数据管理",
+            type: HomeSubAppType.INSTANCE_MANAGER,
+            id: workspaceId && workspaceId! + 1,
+          },
+        ]),
       };
     },
   });
@@ -56,12 +59,7 @@ const MenuSetupFormAssetConfigComponent = ({ form }: AssetConfigProps) => {
         </Form.Item>
       ) : (
         <Form.Item name={["assetConfig", "subAppId"]}>
-          <Select
-            placeholder="选择子应用"
-            size="large"
-            onChange={onSelect}
-            suffixIcon={<Icon type="xiala" />}
-          >
+          <Select placeholder="选择子应用" size="large" onChange={onSelect} suffixIcon={<Icon type="xiala" />}>
             {(subAppList || []).map((v: SubAppInfo) => (
               <Option key={v.id} value={v.id} className="sub-app-option">
                 <>

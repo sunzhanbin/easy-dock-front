@@ -1,19 +1,19 @@
-import { memo, useMemo } from 'react';
-import { Form, Input, Button } from 'antd';
-import { Rule } from 'antd/lib/form';
-import debounce from 'lodash/debounce';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import { useAppDispatch } from '@/app/hooks';
-import { FillNode } from '@type/flow';
-import MemberSelector from '../../components/member-selector';
-import { updateNode } from '../../flow-slice';
-import ButtonEditor from '../../components/button-editor';
-import FieldAuths from '../../components/field-auths';
-import DueConfig from '@/features/bpm-editor/components/due-config';
-import { trimInputValue } from '../../util';
-import { rules } from '../../validators';
-import useValidateForm from '../../hooks/use-validate-form';
-import styles from './index.module.scss';
+import { memo, useMemo } from "react";
+import { Form, Input, Button } from "antd";
+import { Rule } from "antd/lib/form";
+import debounce from "lodash/debounce";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { useAppDispatch } from "@/app/hooks";
+import { FillNode } from "@type/flow";
+import MemberSelector from "../../components/member-selector";
+import { updateNode } from "../../flow-slice";
+import ButtonEditor from "../../components/button-editor";
+import FieldAuths from "../../components/field-auths";
+import DueConfig from "@/features/bpm-editor/components/due-config";
+import { trimInputValue } from "../../util";
+import { rules } from "../../validators";
+import useValidateForm from "../../hooks/use-validate-form";
+import styles from "./index.module.scss";
 
 interface FillNodeEditorProps {
   node: FillNode;
@@ -21,15 +21,15 @@ interface FillNodeEditorProps {
 
 type FormValuesType = {
   name: string;
-  correlationMemberConfig: FillNode['correlationMemberConfig'];
-  btnText: FillNode['btnText'];
-  fieldsAuths: FillNode['fieldsAuths'];
+  correlationMemberConfig: FillNode["correlationMemberConfig"];
+  btnText: FillNode["btnText"];
+  fieldsAuths: FillNode["fieldsAuths"];
 };
 
 const defaultDueConfig = {
   enable: false,
   timeout: {
-    unit: 'day',
+    unit: "day",
   },
   notice: {
     starter: false,
@@ -39,7 +39,7 @@ const defaultDueConfig = {
   },
   cycle: {
     enable: false,
-    unit: 'day',
+    unit: "day",
   },
   action: null,
 };
@@ -89,13 +89,13 @@ function FillNodeEditor(props: FillNodeEditorProps) {
       <Form.Item label="选择办理人" name="correlationMemberConfig" rules={memberRules} required>
         <MemberSelector />
       </Form.Item>
-      <Form.Item className={styles['btn-configs']} label="操作权限">
-        <Form.Item name={['btnText', 'save']}>
+      <Form.Item className={styles["btn-configs"]} label="操作权限">
+        <Form.Item name={["btnText", "save"]}>
           <ButtonEditor checkable={false} btnKey="save">
             <Button size="large">保存</Button>
           </ButtonEditor>
         </Form.Item>
-        <Form.Item name={['btnText', 'submit']}>
+        <Form.Item name={["btnText", "submit"]}>
           <ButtonEditor checkable={false} btnKey="submit">
             <Button size="large">提交</Button>
           </ButtonEditor>

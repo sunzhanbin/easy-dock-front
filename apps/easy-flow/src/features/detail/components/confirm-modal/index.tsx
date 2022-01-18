@@ -1,5 +1,5 @@
-import { memo, useCallback, useState, useMemo, useEffect } from 'react';
-import { Form, Modal, Input } from 'antd';
+import { memo, useCallback, useState, useMemo, useEffect } from "react";
+import { Form, Modal, Input } from "antd";
 
 export enum ActionType {
   Approve = 1, // 同意
@@ -25,9 +25,9 @@ function ComfirmModal(props: ConfirmModalProps) {
       setLoading(true);
 
       try {
-        const remark = form.getFieldValue('remark');
+        const remark = form.getFieldValue("remark");
 
-        await onConfirm(remark ? remark.trim() : '');
+        await onConfirm(remark ? remark.trim() : "");
       } finally {
         setLoading(false);
       }
@@ -36,22 +36,22 @@ function ComfirmModal(props: ConfirmModalProps) {
 
   const okText = useMemo(() => {
     if (type === ActionType.Approve) {
-      return '同意';
+      return "同意";
     }
 
     if (type === ActionType.Revert) {
-      return '驳回';
+      return "驳回";
     }
 
     if (type === ActionType.Terminate) {
-      return '终止';
+      return "终止";
     }
 
     if (type === ActionType.Revoke) {
-      return '撤回';
+      return "撤回";
     }
 
-    return '' as never;
+    return "" as never;
   }, [type]);
 
   useEffect(() => {
@@ -67,8 +67,8 @@ function ComfirmModal(props: ConfirmModalProps) {
       onOk={handleConfirm}
       title="确认"
       okText={okText}
-      okButtonProps={{ type: 'primary', danger: type !== ActionType.Approve, size: 'large', loading }}
-      cancelButtonProps={{ size: 'large' }}
+      okButtonProps={{ type: "primary", danger: type !== ActionType.Approve, size: "large", loading }}
+      cancelButtonProps={{ size: "large" }}
       destroyOnClose
       getContainer={false}
       keyboard={false}

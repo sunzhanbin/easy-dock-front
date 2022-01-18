@@ -1,7 +1,7 @@
-import { memo, useMemo } from 'react';
-import { Radio } from 'antd';
-import { OptionItem } from '@/type';
-import { RadioGroupProps } from 'antd/lib/radio';
+import { memo, useMemo } from "react";
+import { Radio } from "antd";
+import { OptionItem } from "@/type";
+import { RadioGroupProps } from "antd/lib/radio";
 
 const RadioComponent = (props: RadioGroupProps & { options: OptionItem[] }) => {
   const { options, onChange } = props;

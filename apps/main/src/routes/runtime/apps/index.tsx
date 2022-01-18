@@ -1,24 +1,24 @@
-import { memo, useEffect, useState, useMemo, useRef } from 'react';
-import { useSelector } from 'react-redux';
-import { Tooltip } from 'antd';
-import classnames from 'classnames';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import { Loading } from '@common/components';
-import { runtimeAxios } from '@utils';
-import { AppSchema } from '@schema/app';
-import { MAIN_CONTENT_CLASSNAME, dynamicRoutes } from '@consts';
-import { userSelector } from '@/store/user';
-import AppCard from '@components/app-card';
-import styles from './index.module.scss';
+import { memo, useEffect, useState, useMemo, useRef } from "react";
+import { useSelector } from "react-redux";
+import { Tooltip } from "antd";
+import classnames from "classnames";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { Loading } from "@common/components";
+import { runtimeAxios } from "@utils";
+import { AppSchema } from "@schema/app";
+import { MAIN_CONTENT_CLASSNAME, dynamicRoutes } from "@consts";
+import { userSelector } from "@/store/user";
+import AppCard from "@components/app-card";
+import styles from "./index.module.scss";
 
 function formatTime(time: Date): string {
   const hours = time.getHours();
 
   if (hours > 12 && hours < 24) {
-    return '下午';
+    return "下午";
   }
 
-  return '上午';
+  return "上午";
 }
 
 function App() {
@@ -30,7 +30,7 @@ function App() {
   useEffect(() => {
     (async function () {
       try {
-        const { data } = await runtimeAxios.get<{ data: AppSchema[] }>(`/app/list/all`);
+        const { data } = await runtimeAxios.get<{ data: AppSchema[] }>("/app/list/all");
 
         setApps(data);
       } finally {
@@ -70,7 +70,7 @@ function App() {
                   <div className={styles.remark}>{app.remark}</div>
                 </Tooltip>
               ) : (
-                <div className={styles.remark}>{app.remark || '这是一个应用'}</div>
+                <div className={styles.remark}>{app.remark || "这是一个应用"}</div>
               )}
             </AppCard>
           ))}

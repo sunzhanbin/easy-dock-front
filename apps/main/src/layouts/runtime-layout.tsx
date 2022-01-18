@@ -1,14 +1,14 @@
-import React, { memo, Suspense, useMemo, useEffect } from 'react';
-import { Route, useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { Loading } from '@common/components';
-import Header from '@components/header';
-import { useAppSelector } from '@/hooks/use-redux';
-import { getUserInfo, userSelector } from '@/store/user';
-import { ROUTES } from '@consts';
-import { RoleEnum } from '@/schema/app';
+import React, { memo, Suspense, useMemo, useEffect } from "react";
+import { Route, useHistory } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Loading } from "@common/components";
+import Header from "@components/header";
+import { useAppSelector } from "@/hooks/use-redux";
+import { getUserInfo, userSelector } from "@/store/user";
+import { ROUTES } from "@consts";
+import { RoleEnum } from "@/schema/app";
 
-const AppsRuntimePage = React.lazy(() => import(/* webpackChunkName: "apps" */ '@/routes/runtime/apps'));
+const AppsRuntimePage = React.lazy(() => import(/* webpackChunkName: "apps" */ "@/routes/runtime/apps"));
 
 function RuntimeLayout() {
   const dispatch = useDispatch();

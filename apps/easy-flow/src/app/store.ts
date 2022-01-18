@@ -1,8 +1,8 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import taskCenterReducer from '@/features/task-center/taskcenter-slice';
-import subapp from './app';
-import formDesignReducer from '../features/bpm-editor/form-design/formdesign-slice';
-import flowSlice from '../features/bpm-editor/flow-design/flow-slice';
+import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
+import taskCenterReducer from "@/features/task-center/taskcenter-slice";
+import subapp from "./app";
+import formDesignReducer from "../features/bpm-editor/form-design/formdesign-slice";
+import flowSlice from "../features/bpm-editor/flow-design/flow-slice";
 
 export const store = configureStore({
   reducer: {

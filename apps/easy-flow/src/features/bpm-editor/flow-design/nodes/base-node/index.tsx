@@ -1,12 +1,12 @@
-import { memo, ReactNode, useCallback, useState, useMemo } from 'react';
-import classnames from 'classnames';
-import { Icon, PopoverConfirm } from '@common/components';
-import { delNode, flowDataSelector, setChoosedNode } from '../../flow-slice';
-import { NodeType, AllNode, BranchNode } from '@type/flow';
-import AddNodeButton from '../../components/add-node-button';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import styles from './index.module.scss';
+import { memo, ReactNode, useCallback, useState, useMemo } from "react";
+import classnames from "classnames";
+import { Icon, PopoverConfirm } from "@common/components";
+import { delNode, flowDataSelector, setChoosedNode } from "../../flow-slice";
+import { NodeType, AllNode, BranchNode } from "@type/flow";
+import AddNodeButton from "../../components/add-node-button";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import styles from "./index.module.scss";
 
 interface BaseProps {
   icon: ReactNode;
@@ -27,23 +27,23 @@ export const CardHeader = memo(function CardHeader(props: CardHeaderProps) {
 
   const typeClass = useMemo(() => {
     if (type === NodeType.AuditNode) {
-      return styles['audit-node'];
+      return styles["audit-node"];
     } else if (type === NodeType.FillNode) {
-      return styles['fill-node'];
+      return styles["fill-node"];
     } else if (type === NodeType.CCNode) {
-      return styles['cc-node'];
+      return styles["cc-node"];
     } else if (type === NodeType.AutoNodePushData) {
-      return styles['auto-node'];
+      return styles["auto-node"];
     } else if (type === NodeType.AutoNodeTriggerProcess) {
-      return styles['auto-node'];
+      return styles["auto-node"];
     }
 
-    return '';
+    return "";
   }, [type]);
 
   return (
     <div className={classnames(styles.header, typeClass, className)}>
-      <div className={styles['icon-box']}>{icon}</div>
+      <div className={styles["icon-box"]}>{icon}</div>
       <div className={styles.title}>{children}</div>
     </div>
   );
