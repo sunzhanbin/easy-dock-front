@@ -1,21 +1,21 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { appManagerBuilder } from "@/http";
-import { RootState } from "@/store";
-import { WorkspaceInitialState } from "@utils/types";
-import { NavModeType } from "@/consts";
-import { HomeManagerSlice } from "@views/home/index.slice";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { appManagerBuilder, appManagerRunTime } from '@/http';
+import { RootState } from '@/store';
+import { WorkspaceInitialState } from '@utils/types';
+import { NavModeType } from '@/consts';
+import { HomeManagerSlice } from '@views/home/index.slice';
 
 const initialState: WorkspaceInitialState = {
-  name: "",
+  name: '',
   navMode: NavModeType.MULTI,
-  currentId: "", // 菜单id
-  appId: "",
-  projectId: "",
+  currentId: '', // 菜单id
+  appId: '',
+  projectId: '',
   menu: [],
 };
 
 export const workspaceSlice = createSlice({
-  name: "workspace",
+  name: 'workspace',
   initialState,
   reducers: {
     setName: (state, action: PayloadAction<string>) => {
@@ -26,29 +26,37 @@ export const workspaceSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(
-      HomeManagerSlice.actions.setProjectId.type,
-      (state, action: PayloadAction<string>) => {
-        state.projectId = action.payload;
+    builder.addCase(HomeManagerSlice.actions.setProjectId.type, (state, action: PayloadAction<string>) => {
+      state.projectId = action.payload;
+    });
+    builder.addMatcher(appManagerRunTime.endpoints.workspaceRuntimeDetail.matchFulfilled, (state, action) => {
+      const {
+        id,
+        project: { id: projectId },
+        extension,
+      } = action.payload;
+      state.appId = id;
+      state.projectId = projectId;
+      if (extension?.meta) {
+        const { menuList } = extension.meta;
+        state.menu = menuList;
+        state.currentId = menuList.length && menuList[0].id;
       }
-    );
-    builder.addMatcher(
-      appManagerBuilder.endpoints.workspaceDetail.matchFulfilled,
-      (state, action) => {
-        const {
-          id,
-          project: { id: projectId },
-          extension,
-        } = action.payload;
-        state.appId = id;
-        state.projectId = projectId;
-        if (extension?.meta) {
-          const { menuList } = extension.meta;
-          state.menu = menuList;
-          state.currentId = menuList.length && menuList[0].id;
-        }
+    });
+    builder.addMatcher(appManagerBuilder.endpoints.workspaceDetail.matchFulfilled, (state, action) => {
+      const {
+        id,
+        project: { id: projectId },
+        extension,
+      } = action.payload;
+      state.appId = id;
+      state.projectId = projectId;
+      if (extension?.meta) {
+        const { menuList } = extension.meta;
+        state.menu = menuList;
+        state.currentId = menuList.length && menuList[0].id;
       }
-    );
+    });
   },
 });
 
