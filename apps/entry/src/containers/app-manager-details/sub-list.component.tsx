@@ -1,23 +1,23 @@
-import React, { useCallback, useMemo, useState, useRef, useEffect } from 'react';
-import { Tabs, Input, Button, Switch, message } from 'antd';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { useCallback, useMemo, useState, useRef, useEffect } from "react";
+import { Tabs, Input, Button, Switch, message } from "antd";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   useFetchSubAppListQuery,
   useWorkspaceDetailQuery,
   useCreateSupAppMutation,
   useModifyAppStatusMutation,
-} from '@/http';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import { SubAppInfo, SubAppType } from '@/consts';
-import { Icon } from '@common/components';
-import classnames from 'classnames';
-import AppPreviewModal from '@containers/app-preview-modal';
-import { imgIdToUrl } from '@/utils/utils';
-import AppModal from './app-modal.component';
-import AppCard from './app-card.component';
-import AppEmpty from './app-empty.component';
-import lightDefaultLogo from '@assets/images/light-default-logo.png';
-import '@containers/app-manager-details/sub-list.style';
+} from "@/http";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { SubAppInfo, SubAppType } from "@/consts";
+import { Icon } from "@common/components";
+import classnames from "classnames";
+import AppPreviewModal from "@containers/app-preview-modal";
+import { imgIdToUrl } from "@/utils/utils";
+import AppModal from "./app-modal.component";
+import AppCard from "./app-card.component";
+import AppEmpty from "./app-empty.component";
+import lightDefaultLogo from "@assets/images/light-default-logo.png";
+import "@containers/app-manager-details/sub-list.style";
 
 const { TabPane } = Tabs;
 
@@ -145,7 +145,7 @@ const SubListComponent: React.FC = () => {
         const url = await imgIdToUrl(extension.icon);
         setLogoUrl(url);
       } else {
-        setLogoUrl('');
+        setLogoUrl("");
       }
       setKeyword("");
     })();

@@ -1,5 +1,5 @@
-import { SubAppType, TWorkspaceItem } from '@/consts';
-import baseFetch, { runTime } from '@utils/fetch';
+import { SubAppType, TWorkspaceItem } from "@/consts";
+import baseFetch, { runTime } from "@utils/fetch";
 
 export const appManagerBuilder = baseFetch.injectEndpoints({
   endpoints: (build) => ({
@@ -185,4 +185,4 @@ export const appManagerRunTime = runTime.injectEndpoints({
   }),
 });
 
-export const { useGetCanvasIdMutation, useGetHoloSceneIdMutation,useWorkspaceRuntimeDetailQuery } = appManagerRunTime;
+export const { useGetCanvasIdMutation, useGetHoloSceneIdMutation, useWorkspaceRuntimeDetailQuery } = appManagerRunTime;

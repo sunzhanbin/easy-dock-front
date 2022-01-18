@@ -1,10 +1,10 @@
-import React, { useMemo } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { Button } from 'antd';
-import { useWorkspaceDetailQuery, useFetchSubAppListQuery } from '@http/app-manager.hooks';
-import { Icon } from '@common/components';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import '@containers/app-manager-details/app-info.style';
+import React, { useMemo } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { Button } from "antd";
+import { useWorkspaceDetailQuery, useFetchSubAppListQuery } from "@http/app-manager.hooks";
+import { Icon } from "@common/components";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import "@containers/app-manager-details/app-info.style";
 
 const AppInfoComponent: React.FC = () => {
   const navigate = useNavigate();

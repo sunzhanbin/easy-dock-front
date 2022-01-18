@@ -1,10 +1,10 @@
-import { useMemo } from 'react';
-import { useParams } from 'react-router';
-import { useAppSelector } from '@/store';
-import { useWorkspaceRuntimeDetailQuery } from '@http/app-manager.hooks';
-import { selectCurrentId } from '@views/workspace/index.slice';
-import { findItem } from '@utils/utils';
-import '@containers/asset-pages/iframe-page.style';
+import { useMemo } from "react";
+import { useParams } from "react-router";
+import { useAppSelector } from "@/store";
+import { useWorkspaceRuntimeDetailQuery } from "@http/app-manager.hooks";
+import { selectCurrentId } from "@views/workspace/index.slice";
+import { findItem } from "@utils/utils";
+import "@containers/asset-pages/iframe-page.style";
 
 const IframeMicroPage = () => {
   const { workspaceId } = useParams();

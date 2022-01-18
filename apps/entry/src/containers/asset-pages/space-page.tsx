@@ -1,11 +1,11 @@
-import { useEffect, useMemo, useState } from 'react';
-import { useParams } from 'react-router';
-import { useAppSelector } from '@/store';
-import { useGetHoloSceneIdMutation, useWorkspaceRuntimeDetailQuery } from '@http/app-manager.hooks';
-import { selectCurrentId } from '@views/workspace/index.slice';
-import { findItem } from '@utils/utils';
-import { SPACE_ENTRY } from '@/consts';
-import './space-page.style.scss';
+import { useEffect, useMemo, useState } from "react";
+import { useParams } from "react-router";
+import { useAppSelector } from "@/store";
+import { useGetHoloSceneIdMutation, useWorkspaceRuntimeDetailQuery } from "@http/app-manager.hooks";
+import { selectCurrentId } from "@views/workspace/index.slice";
+import { findItem } from "@utils/utils";
+import { SPACE_ENTRY } from "@/consts";
+import "./space-page.style.scss";
 
 const SpaceMicroPage = () => {
   const { workspaceId } = useParams();
@@ -23,7 +23,7 @@ const SpaceMicroPage = () => {
       subAppType: menuInfo?.form?.assetConfig?.subAppType,
     };
   }, [selectedKey, menu]);
-  const [src, setSrc] = useState<string>('');
+  const [src, setSrc] = useState<string>("");
 
   useEffect(() => {
     if (appInfo?.subAppId) {

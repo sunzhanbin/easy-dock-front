@@ -1,21 +1,21 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { appManagerBuilder, appManagerRunTime } from '@/http';
-import { RootState } from '@/store';
-import { WorkspaceInitialState } from '@utils/types';
-import { NavModeType } from '@/consts';
-import { HomeManagerSlice } from '@views/home/index.slice';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { appManagerBuilder, appManagerRunTime } from "@/http";
+import { RootState } from "@/store";
+import { WorkspaceInitialState } from "@utils/types";
+import { NavModeType } from "@/consts";
+import { HomeManagerSlice } from "@views/home/index.slice";
 
 const initialState: WorkspaceInitialState = {
-  name: '',
+  name: "",
   navMode: NavModeType.MULTI,
-  currentId: '', // 菜单id
-  appId: '',
-  projectId: '',
+  currentId: "", // 菜单id
+  appId: "",
+  projectId: "",
   menu: [],
 };
 
 export const workspaceSlice = createSlice({
-  name: 'workspace',
+  name: "workspace",
   initialState,
   reducers: {
     setName: (state, action: PayloadAction<string>) => {

@@ -1,18 +1,18 @@
-import React from 'react';
-import classnames from 'classnames';
-import { NavLink, useLocation } from 'react-router-dom';
-import Header from '@components/header';
-import { useAppSelector } from '@/store';
-import { selectProjectId } from '@/views/home/index.slice';
-import '@containers/layout/home-header.style';
-import { useFetchWorkspaceListQuery } from '@/http/app-manager.hooks';
+import React from "react";
+import classnames from "classnames";
+import { NavLink, useLocation } from "react-router-dom";
+import Header from "@components/header";
+import { useAppSelector } from "@/store";
+import { selectProjectId } from "@/views/home/index.slice";
+import "@containers/layout/home-header.style";
+import { useFetchWorkspaceListQuery } from "@/http/app-manager.hooks";
 
 const HomeHeader: React.FC = () => {
   const projectId = useAppSelector(selectProjectId);
   const { workspaceId } = useFetchWorkspaceListQuery(projectId, {
     selectFromResult: (data) => {
       return {
-        workspaceId: data?.data?.[0].id || '',
+        workspaceId: data?.data?.[0].id || "",
       };
     },
     skip: !projectId,
@@ -20,7 +20,7 @@ const HomeHeader: React.FC = () => {
   const location = useLocation();
   const mainEntry = location.pathname === "/";
   return (
-    <div className={classnames('home_header', mainEntry ? 'main-header' : '')}>
+    <div className={classnames("home_header", mainEntry ? "main-header" : "")}>
       <Header>
         <nav className="nav_menu">
           <NavLink className={({ isActive }) => classnames({ nav: true, active: isActive })} to="/home">

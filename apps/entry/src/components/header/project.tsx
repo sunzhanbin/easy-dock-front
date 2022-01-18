@@ -6,13 +6,13 @@ import {
   useDeleteProjectMutation,
   useEditProjectMutation,
   useUpdateWorkspaceListMutation,
-} from '@/http';
-import { useAppDispatch, useAppSelector } from '@/store';
-import { selectProjectId, setProjectId, selectUserInfo } from '@views/home/index.slice';
-import { message } from 'antd';
-import { RoleEnum } from '@utils/types';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+} from "@/http";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { selectProjectId, setProjectId, selectUserInfo } from "@views/home/index.slice";
+import { message } from "antd";
+import { RoleEnum } from "@utils/types";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const SELECT_CARD_TYPE = {
   key: "project",
@@ -34,7 +34,7 @@ const ProjectComponent = () => {
   const [deleteProject] = useDeleteProjectMutation();
   const projectId = useAppSelector(selectProjectId);
   const selectedProjectId = useMemo(() => {
-    if (location.pathname.startsWith('/app-manager')) {
+    if (location.pathname.startsWith("/app-manager")) {
       return Number(param);
     }
     return projectId;
@@ -45,7 +45,7 @@ const ProjectComponent = () => {
     updateWorkspaceList(projectId)
       .unwrap()
       .then((workspaceList) => {
-        if (location.pathname.startsWith('/app-manager')) {
+        if (location.pathname.startsWith("/app-manager")) {
           if (workspaceList?.length > 0) {
             const workspaceId = workspaceList[0].id;
             navigate(`/app-manager/project/${projectId}/workspace/${workspaceId}`);

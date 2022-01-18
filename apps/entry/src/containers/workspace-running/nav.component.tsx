@@ -1,17 +1,17 @@
-import { useState, useEffect, useMemo } from 'react';
-import { useParams } from 'react-router';
-import { useAppSelector } from '@/store';
-import AppInfo from '@components/app-info';
-import SingleNavComponent from '@containers/workspace-running/single-nav.component';
-import MultiNavComponent from '@containers/workspace-running/multi-nav.component';
-import { useWorkspaceRuntimeDetailQuery } from '@http/app-manager.hooks';
-import { selectCurrentId } from '@views/workspace/index.slice';
-import '@containers/workspace-running/nav.style';
-import { RouteMap, AuthEnum } from '@utils/const';
-import { filterItem } from '@utils/utils';
-import { NavModeType, SubAppType } from '@/consts';
-import { useNavigate } from 'react-router-dom';
-import { axios } from '@/utils/fetch';
+import { useState, useEffect, useMemo } from "react";
+import { useParams } from "react-router";
+import { useAppSelector } from "@/store";
+import AppInfo from "@components/app-info";
+import SingleNavComponent from "@containers/workspace-running/single-nav.component";
+import MultiNavComponent from "@containers/workspace-running/multi-nav.component";
+import { useWorkspaceRuntimeDetailQuery } from "@http/app-manager.hooks";
+import { selectCurrentId } from "@views/workspace/index.slice";
+import "@containers/workspace-running/nav.style";
+import { RouteMap, AuthEnum } from "@utils/const";
+import { filterItem } from "@utils/utils";
+import { NavModeType, SubAppType } from "@/consts";
+import { useNavigate } from "react-router-dom";
+import { axios } from "@/utils/fetch";
 
 const NavComponent = () => {
   const { workspaceId } = useParams();

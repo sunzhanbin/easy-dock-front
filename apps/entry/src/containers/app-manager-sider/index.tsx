@@ -1,15 +1,15 @@
-import React, { useRef, useState } from 'react';
-import { Layout, Menu, Button, Input, Dropdown, message } from 'antd';
-import { useDeleteWorkspaceMutation, useFetchWorkspaceListQuery } from '@/http';
-import { useAppDispatch } from '@/store';
-import AddWorkspaceModal from '@components/add-workspace-modal';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import Popconfirm from '@components/popconfirm';
-import { Icon, Text } from '@common/components';
-import { setCurrentWorkspaceId } from '@views/app-manager/index.slice';
-import '@containers/app-manager-sider/index.style';
-import { handleStopPropagation } from '@utils/utils';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { useRef, useState } from "react";
+import { Layout, Menu, Button, Input, Dropdown, message } from "antd";
+import { useDeleteWorkspaceMutation, useFetchWorkspaceListQuery } from "@/http";
+import { useAppDispatch } from "@/store";
+import AddWorkspaceModal from "@components/add-workspace-modal";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import Popconfirm from "@components/popconfirm";
+import { Icon, Text } from "@common/components";
+import { setCurrentWorkspaceId } from "@views/app-manager/index.slice";
+import "@containers/app-manager-sider/index.style";
+import { handleStopPropagation } from "@utils/utils";
+import { useNavigate, useParams } from "react-router-dom";
 
 const { Sider } = Layout;
 
@@ -35,11 +35,11 @@ const AppManagerSider = () => {
 
   const handleAddWorkspaceVisible = useMemoCallback(() => {
     modalRef.current.show();
-    modalRef.current.setTitle('新增');
+    modalRef.current.setTitle("新增");
   });
 
   const renderMenuIcon = useMemoCallback((id) => {
-    return <Icon type={Number(workspaceId) === Number(id) ? 'wenjianjiacaisedakai' : 'wenjianjiacaise'} />;
+    return <Icon type={Number(workspaceId) === Number(id) ? "wenjianjiacaisedakai" : "wenjianjiacaise"} />;
   });
 
   const handleEditWorkspaceName = useMemoCallback((e: React.MouseEvent, item) => {

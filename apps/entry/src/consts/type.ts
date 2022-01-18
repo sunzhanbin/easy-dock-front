@@ -29,10 +29,10 @@ export enum NavModeType {
 }
 
 export enum ThemeType {
-  DARK = 'dark',
-  LIGHT = 'light',
-  ORANGE = 'orange',
-  BLUE = 'blue',
+  DARK = "dark",
+  LIGHT = "light",
+  ORANGE = "orange",
+  BLUE = "blue",
 }
 
 export const APP_TYPE = 0;
@@ -63,8 +63,8 @@ export type CanvasResponseType = {
 };
 
 export enum SortDirection {
-  DESC = 'DESC', //倒序
-  ASC = 'ASC', //升序
+  DESC = "DESC", //倒序
+  ASC = "ASC", //升序
 }
 
 export enum TaskStatus {

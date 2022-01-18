@@ -1,16 +1,16 @@
-import { memo, useState, useCallback, useEffect } from 'react';
-import { Button, Tooltip, message } from 'antd';
-import { EventType, FormChangeRule, FormField, FormRuleItem, TabsField } from '@/type';
-import { formatRuleValue } from '@/utils';
-import { Icon } from '@common/components';
-import FormAttrModal from '../form-attr-modal';
-import styles from './index.module.scss';
-import { useAppSelector, useAppDispatch } from '@/app/hooks';
-import { componentPropsSelector, formRulesSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
-import { setFormRules } from '@/features/bpm-editor/form-design/formdesign-slice';
-import FieldAttrEditor from '@/features/bpm-editor/components/panel-components/field-attr-editor';
-import { queryApis } from '../../data-api-config/util';
-import useMemoCallback from '@common/hooks/use-memo-callback';
+import { memo, useState, useCallback, useEffect } from "react";
+import { Button, Tooltip, message } from "antd";
+import { EventType, FormChangeRule, FormField, FormRuleItem, TabsField } from "@/type";
+import { formatRuleValue } from "@/utils";
+import { Icon } from "@common/components";
+import FormAttrModal from "../form-attr-modal";
+import styles from "./index.module.scss";
+import { useAppSelector, useAppDispatch } from "@/app/hooks";
+import { componentPropsSelector, formRulesSelector } from "@/features/bpm-editor/form-design/formzone-reducer";
+import { setFormRules } from "@/features/bpm-editor/form-design/formdesign-slice";
+import FieldAttrEditor from "@/features/bpm-editor/components/panel-components/field-attr-editor";
+import { queryApis } from "../../data-api-config/util";
+import useMemoCallback from "@common/hooks/use-memo-callback";
 
 const FormAttrEditor = () => {
   const byId = useAppSelector(componentPropsSelector);
@@ -107,7 +107,7 @@ const FormAttrEditor = () => {
     if (config?.url) {
       return config.url;
     }
-    return '';
+    return "";
   });
   useEffect(() => {
     dispatch(setFormRules({ formRules: rules }));
@@ -331,7 +331,7 @@ const FormAttrEditor = () => {
                 );
               }
               return null;
-            } else if (item.type === 'init') {
+            } else if (item.type === "init") {
               const interfaceName = getInterfaceName(item.formInitRule);
               return (
                 <div className={styles.ruleItem} key={index}>

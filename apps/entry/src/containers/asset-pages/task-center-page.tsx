@@ -1,8 +1,8 @@
-import { useMemo } from 'react';
-import { useParams } from 'react-router';
-import { MAIN_ENTRY } from '@/consts';
-import { useWorkspaceRuntimeDetailQuery } from '@/http/app-manager.hooks';
-import '@containers/asset-pages/task-center-page.style';
+import { useMemo } from "react";
+import { useParams } from "react-router";
+import { MAIN_ENTRY } from "@/consts";
+import { useWorkspaceRuntimeDetailQuery } from "@/http/app-manager.hooks";
+import "@containers/asset-pages/task-center-page.style";
 
 const TaskCenterMicroPage = () => {
   const { workspaceId } = useParams();

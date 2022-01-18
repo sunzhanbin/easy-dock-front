@@ -1,8 +1,8 @@
-import { useParams } from 'react-router-dom';
-import { Layout } from 'antd';
-import AppManagerSider from '@containers/app-manager-sider';
-import AppManagerDetails from '@containers/app-manager-details';
-import '@views/app-manager/index.style.scss';
+import { useParams } from "react-router-dom";
+import { Layout } from "antd";
+import AppManagerSider from "@containers/app-manager-sider";
+import AppManagerDetails from "@containers/app-manager-details";
+import "@views/app-manager/index.style.scss";
 
 const { Content } = Layout;
 
@@ -22,4 +22,3 @@ const AppManager = () => {
 };
 
 export default AppManager;
- 

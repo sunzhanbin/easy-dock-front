@@ -1,19 +1,19 @@
-import { useMemo } from 'react';
-import { useParams } from 'react-router';
-import classNames from 'classnames';
-import { MAIN_ENTRY } from '@/consts';
-import { useWorkspaceRuntimeDetailQuery } from '@/http';
-import { useAppSelector } from '@/store';
-import { selectCurrentId } from '@views/workspace/index.slice';
-import { findItem } from '@utils/utils';
-import '@containers/asset-pages/flow-page.style';
+import { useMemo } from "react";
+import { useParams } from "react-router";
+import classNames from "classnames";
+import { MAIN_ENTRY } from "@/consts";
+import { useWorkspaceRuntimeDetailQuery } from "@/http";
+import { useAppSelector } from "@/store";
+import { selectCurrentId } from "@views/workspace/index.slice";
+import { findItem } from "@utils/utils";
+import "@containers/asset-pages/flow-page.style";
 
-const FlowMicroPage = ({ mode }: { mode: 'preview' | 'running' }) => {
+const FlowMicroPage = ({ mode }: { mode: "preview" | "running" }) => {
   const { workspaceId } = useParams();
   const selectedKey = useAppSelector(selectCurrentId);
   const { theme, menu } = useWorkspaceRuntimeDetailQuery(+(workspaceId as string), {
     selectFromResult: ({ data }) => ({
-      theme: data?.extension?.theme || 'light',
+      theme: data?.extension?.theme || "light",
       menu: data?.extension?.meta?.menuList || [],
     }),
   });
@@ -33,7 +33,7 @@ const FlowMicroPage = ({ mode }: { mode: 'preview' | 'running' }) => {
   }, [selectedKey, menu]);
 
   return (
-    <div className={classNames('flow-page', theme)}>
+    <div className={classNames("flow-page", theme)}>
       <iframe
         className="iframe"
         src={`${MAIN_ENTRY}/main/app/${workspaceId || appId}/process/instance/${

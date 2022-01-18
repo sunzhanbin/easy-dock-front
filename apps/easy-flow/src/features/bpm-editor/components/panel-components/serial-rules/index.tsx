@@ -57,12 +57,12 @@ const SerialRules = (props: RulesProps) => {
   useEffect(() => {
     if (!fieldSerial) return;
     const { serialId, serialMata } = fieldSerial;
-    setRuleName(serialMata?.ruleName || '');
+    setRuleName(serialMata?.ruleName || "");
     setRules(serialMata?.rules || initialRules);
     const filterMata = filterRules(serialMata?.changeRules, fields);
-    setSerialId(serialId || '');
+    setSerialId(serialId || "");
     setEditStatus(serialMata?.editStatus);
-    if (!serialId){
+    if (!serialId) {
       setType(SERIAL_TYPE.CUSTOM_TYPE);
     }
   }, [fieldSerial, fields]);
@@ -194,7 +194,7 @@ const SerialRules = (props: RulesProps) => {
     setResetRuleName(name);
     setChangeRules(filterMata);
     setChangeRuleName(name);
-    if (type === 'inject') {
+    if (type === "inject") {
       setEditStatus(false);
       setErrors(false);
       return;

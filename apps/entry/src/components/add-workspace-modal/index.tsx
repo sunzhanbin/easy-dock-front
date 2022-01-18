@@ -1,11 +1,11 @@
-import React, { useCallback, useState, useImperativeHandle } from 'react';
-import { Modal, Form, Input, message } from 'antd';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import { setCurrentWorkspaceId } from '@views/app-manager/index.slice';
-import { nameRule } from '@/consts';
-import { useAddWorkspaceMutation, useEditWorkspaceMutation } from '@/http';
-import { useAppDispatch } from '@/store';
-import { useParams } from 'react-router-dom';
+import React, { useCallback, useState, useImperativeHandle } from "react";
+import { Modal, Form, Input, message } from "antd";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { setCurrentWorkspaceId } from "@views/app-manager/index.slice";
+import { nameRule } from "@/consts";
+import { useAddWorkspaceMutation, useEditWorkspaceMutation } from "@/http";
+import { useAppDispatch } from "@/store";
+import { useParams } from "react-router-dom";
 
 const AddWorkspaceModal = React.forwardRef(function AddWorkspace(_, ref) {
   const dispatch = useAppDispatch();
@@ -41,9 +41,9 @@ const AddWorkspaceModal = React.forwardRef(function AddWorkspace(_, ref) {
     form
       .validateFields()
       .then(async ({ name }) => {
-        if (title === '新增') {
+        if (title === "新增") {
           await addWorkspace({ name, projectId: Number(projectId) }).unwrap();
-          message.success('新增成功!');
+          message.success("新增成功!");
         } else {
           await editWorkspace({ name, id: workspaceId }).unwrap();
           message.success("修改成功!");
