@@ -1,12 +1,12 @@
 import { useMemo } from 'react';
 import { useParams } from 'react-router';
 import { MAIN_ENTRY } from '@/consts';
-import { useWorkspaceDetailQuery } from '@/http/app-manager.hooks';
+import { useWorkspaceRuntimeDetailQuery } from '@/http/app-manager.hooks';
 import '@containers/asset-pages/instance-manager-page.style';
 
 const InstanceManagerMicroPage = () => {
   const { workspaceId } = useParams();
-  const { theme } = useWorkspaceDetailQuery(+(workspaceId as string), {
+  const { theme } = useWorkspaceRuntimeDetailQuery(+(workspaceId as string), {
     selectFromResult: ({ data }) => ({
       theme: data?.extension?.theme || 'light',
     }),

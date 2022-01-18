@@ -1,12 +1,12 @@
 import { useMemo } from 'react';
 import { useParams } from 'react-router';
-import { FLOW_ENTRY, MAIN_ENTRY } from '@/consts';
-import { useWorkspaceDetailQuery } from '@/http/app-manager.hooks';
+import { MAIN_ENTRY } from '@/consts';
+import { useWorkspaceRuntimeDetailQuery } from '@/http/app-manager.hooks';
 import '@containers/asset-pages/task-center-page.style';
 
 const TaskCenterMicroPage = () => {
   const { workspaceId } = useParams();
-  const { theme } = useWorkspaceDetailQuery(+(workspaceId as string), {
+  const { theme } = useWorkspaceRuntimeDetailQuery(+(workspaceId as string), {
     selectFromResult: ({ data }) => ({
       theme: data?.extension?.theme || 'light',
     }),
