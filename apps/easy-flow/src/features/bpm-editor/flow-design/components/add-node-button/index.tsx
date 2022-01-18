@@ -1,13 +1,13 @@
-import { memo, useState, useMemo } from 'react';
-import classnames from 'classnames';
-import { Button, Popover } from 'antd';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import { Icon } from '@common/components';
-import { addNode } from '../../flow-slice';
-import { getPopupContainer } from '../../util';
-import { NodeType, AddableNode } from '@type/flow';
-import styles from './index.module.scss';
-import { useAppDispatch } from '@/app/hooks';
+import { memo, useState, useMemo } from "react";
+import classnames from "classnames";
+import { Button, Popover } from "antd";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { Icon } from "@common/components";
+import { addNode } from "../../flow-slice";
+import { getPopupContainer } from "../../util";
+import { NodeType, AddableNode } from "@type/flow";
+import styles from "./index.module.scss";
+import { useAppDispatch } from "@/app/hooks";
 
 interface AddNodeButtonProps {
   prevId: string;
@@ -20,7 +20,7 @@ function AddNodeButton(props: AddNodeButtonProps) {
   const [showAddPopover, setShowAddPopover] = useState(false);
   const [showAutoNode, setShowAutoNode] = useState<boolean>(false);
 
-  const handleAddNode = useMemoCallback((type: AddableNode['type']) => {
+  const handleAddNode = useMemoCallback((type: AddableNode["type"]) => {
     // 将业务逻辑放在redux里处理
     dispatch(addNode({ prevId, type }));
     setShowAddPopover(false);
@@ -29,9 +29,9 @@ function AddNodeButton(props: AddNodeButtonProps) {
 
   const autoNodePopoverContent = useMemo(() => {
     return (
-      <div className={styles['node-list']}>
+      <div className={styles["node-list"]}>
         <div
-          className={styles['push-data']}
+          className={styles["push-data"]}
           onClick={() => {
             handleAddNode(NodeType.AutoNodePushData);
           }}
@@ -40,7 +40,7 @@ function AddNodeButton(props: AddNodeButtonProps) {
           <span>数据连接</span>
         </div>
         <div
-          className={styles['trigger-flow']}
+          className={styles["trigger-flow"]}
           onClick={() => {
             handleAddNode(NodeType.AutoNodeTriggerProcess);
           }}
@@ -54,7 +54,7 @@ function AddNodeButton(props: AddNodeButtonProps) {
 
   const addPopoverContent = useMemo(() => {
     return (
-      <div className={styles['add-list']}>
+      <div className={styles["add-list"]}>
         <div onClick={() => handleAddNode(NodeType.AuditNode)}>
           <Icon type="lineshenpijiedian" />
           <span>添加审批节点</span>
@@ -75,7 +75,7 @@ function AddNodeButton(props: AddNodeButtonProps) {
         </div>
 
         <Popover
-          className={styles['auto-node']}
+          className={styles["auto-node"]}
           getPopupContainer={getPopupContainer}
           placement="rightTop"
           arrowContent={null}
@@ -105,7 +105,7 @@ function AddNodeButton(props: AddNodeButtonProps) {
     >
       <div className={classnames(styles.container, className)}>
         <Button
-          className={classnames(styles['add-button'], { [styles.active]: showAddPopover })}
+          className={classnames(styles["add-button"], { [styles.active]: showAddPopover })}
           type="default"
           icon={<Icon type="xinzeng" />}
         />

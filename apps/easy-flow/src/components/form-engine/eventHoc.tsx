@@ -1,6 +1,6 @@
-import { useCallback } from 'react';
-import PubSub from 'pubsub-js';
-import { useContainerContext } from './context';
+import { useCallback } from "react";
+import PubSub from "pubsub-js";
+import { useContainerContext } from "./context";
 
 const EventHoc = ({ children }: { children: React.ReactNode }) => {
   const { fieldName } = useContainerContext();
@@ -10,7 +10,7 @@ const EventHoc = ({ children }: { children: React.ReactNode }) => {
       const { type, target } = event;
       PubSub.publish(`${fieldName}-${type}`, target.value);
 
-      console.log('eventHoc::', `${fieldName}-${type}`, event.type, event.target.value);
+      console.log("eventHoc::", `${fieldName}-${type}`, event.type, event.target.value);
     },
     [fieldName],
   );

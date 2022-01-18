@@ -1,31 +1,31 @@
-import { memo, FC, useMemo } from 'react';
-import classNames from 'classnames';
-import styles from './index.module.scss';
+import { memo, FC, useMemo } from "react";
+import classNames from "classnames";
+import styles from "./index.module.scss";
 
 const stateMap: { [k: number]: { className: string; text: string } } = {
   1: {
-    className: 'doing',
-    text: '进行中',
+    className: "doing",
+    text: "进行中",
   },
   2: {
-    className: 'stop',
-    text: '已终止',
+    className: "stop",
+    text: "已终止",
   },
   3: {
-    className: 'recall',
-    text: '已撤回',
+    className: "recall",
+    text: "已撤回",
   },
   4: {
-    className: 'done',
-    text: '已办结',
+    className: "done",
+    text: "已办结",
   },
   5: {
-    className: 'reject',
-    text: '已驳回',
+    className: "reject",
+    text: "已驳回",
   },
   6: {
-    className: 'doing',
-    text: '等待中',
+    className: "doing",
+    text: "等待中",
   },
 };
 

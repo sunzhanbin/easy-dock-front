@@ -1,34 +1,34 @@
-import React from 'react';
-import { ConfigProvider } from 'antd';
+import React from "react";
+import { ConfigProvider } from "antd";
 import AuthProvider from "./auth-provider";
-import zh_CN from 'antd/es/locale/zh_CN';
-import 'swiper/swiper-bundle.css';
-import 'moment/locale/zh-cn';
-import { Routes, Route } from 'react-router-dom';
-import Layout from '@containers/layout';
-import SuspenseWrap from '@components/suspense-wrap';
-import Home from '@views/home';
-import Main from '@views/main';
-import '@/App.scss';
-import cookie from 'js-cookie';
-import { registerTheme } from '@enc/theme-scheme/dist/utils.esm';
-import Empty from '@common/components/empty';
-import { auth } from './consts';
-const AppManager = React.lazy(() => import('@views/app-manager'));
-const AppSetup = React.lazy(() => import('@views/app-setup'));
-const AppPreview = React.lazy(() => import('@views/app-preview'));
-const FlowApp = React.lazy(() => import('@views/flow-app'));
-const AssetCentre = React.lazy(() => import('@views/asset-centre'));
-const TemplateMall = React.lazy(() => import('@views/template-mall'));
-const Workspace = React.lazy(() => import('@views/workspace'));
-const NoMatch = React.lazy(() => import('@views/no-match'));
-const EmptyPage = React.lazy(() => import('@containers/asset-pages/empty-page'));
+import zh_CN from "antd/es/locale/zh_CN";
+import "swiper/swiper-bundle.css";
+import "moment/locale/zh-cn";
+import { Routes, Route } from "react-router-dom";
+import Layout from "@containers/layout";
+import SuspenseWrap from "@components/suspense-wrap";
+import Home from "@views/home";
+import Main from "@views/main";
+import "@/App.scss";
+import cookie from "js-cookie";
+import { registerTheme } from "@enc/theme-scheme/dist/utils.esm";
+import Empty from "@common/components/empty";
+import { auth } from "./consts";
+const AppManager = React.lazy(() => import("@views/app-manager"));
+const AppSetup = React.lazy(() => import("@views/app-setup"));
+const AppPreview = React.lazy(() => import("@views/app-preview"));
+const FlowApp = React.lazy(() => import("@views/flow-app"));
+const AssetCentre = React.lazy(() => import("@views/asset-centre"));
+const TemplateMall = React.lazy(() => import("@views/template-mall"));
+const Workspace = React.lazy(() => import("@views/workspace"));
+const NoMatch = React.lazy(() => import("@views/no-match"));
+const EmptyPage = React.lazy(() => import("@containers/asset-pages/empty-page"));
 auth.setConfig({ server: process.env.REACT_APP_SSO_LOGIN_URL });
-const query = decodeURIComponent(window.location.href.split('?')[1]);
-const theme = new URLSearchParams(query).get('theme');
+const query = decodeURIComponent(window.location.href.split("?")[1]);
+const theme = new URLSearchParams(query).get("theme");
 
 if (theme) {
-  cookie.set('theme', theme);
+  cookie.set("theme", theme);
   registerTheme({
     theme,
   });
@@ -39,7 +39,14 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/*" element={<Layout />}>
           <Route index element={<Main />} />
-          <Route path="home" element={<AuthProvider><Home/></AuthProvider>} />
+          <Route
+            path="home"
+            element={
+              <AuthProvider>
+                <Home />
+              </AuthProvider>
+            }
+          />
           <Route path="asset-centre" element={<SuspenseWrap render={<AssetCentre />} />} />
           <Route path="app-manager">
             <Route index element={<SuspenseWrap render={<AppManager />} />} />

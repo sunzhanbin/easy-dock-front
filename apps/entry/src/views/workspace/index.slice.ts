@@ -26,29 +26,23 @@ export const workspaceSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(
-      HomeManagerSlice.actions.setProjectId.type,
-      (state, action: PayloadAction<string>) => {
-        state.projectId = action.payload;
+    builder.addCase(HomeManagerSlice.actions.setProjectId.type, (state, action: PayloadAction<string>) => {
+      state.projectId = action.payload;
+    });
+    builder.addMatcher(appManagerBuilder.endpoints.workspaceDetail.matchFulfilled, (state, action) => {
+      const {
+        id,
+        project: { id: projectId },
+        extension,
+      } = action.payload;
+      state.appId = id;
+      state.projectId = projectId;
+      if (extension?.meta) {
+        const { menuList } = extension.meta;
+        state.menu = menuList;
+        state.currentId = menuList.length && menuList[0].id;
       }
-    );
-    builder.addMatcher(
-      appManagerBuilder.endpoints.workspaceDetail.matchFulfilled,
-      (state, action) => {
-        const {
-          id,
-          project: { id: projectId },
-          extension,
-        } = action.payload;
-        state.appId = id;
-        state.projectId = projectId;
-        if (extension?.meta) {
-          const { menuList } = extension.meta;
-          state.menu = menuList;
-          state.currentId = menuList.length && menuList[0].id;
-        }
-      }
-    );
+    });
   },
 });
 

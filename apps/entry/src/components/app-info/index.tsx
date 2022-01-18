@@ -8,17 +8,9 @@ import { NavModeType, ThemeType } from "@/consts";
 import { Text } from "@common/components";
 import "@components/app-info/index.style";
 
-const AppInfo = ({
-  navMode,
-  theme,
-}: {
-  navMode: NavModeType;
-  theme: ThemeType;
-}) => {
+const AppInfo = ({ navMode, theme }: { navMode: NavModeType; theme: ThemeType }) => {
   const appBasicConfig = useAppSelector(selectBasicForm);
-  const appName = useMemo(() => appBasicConfig?.name || "未命名站点", [
-    appBasicConfig?.name,
-  ]);
+  const appName = useMemo(() => appBasicConfig?.name || "未命名站点", [appBasicConfig?.name]);
   const classNameMap = useMemo<{ [k in NavModeType]: string }>(() => {
     return {
       [NavModeType.LEFT]: "single",
@@ -26,9 +18,7 @@ const AppInfo = ({
       [NavModeType.TOP]: "top",
     };
   }, []);
-  const navModeClassName = useMemo<string>(() => classNameMap[navMode], [
-    navMode,
-  ]);
+  const navModeClassName = useMemo<string>(() => classNameMap[navMode], [navMode]);
 
   const [logoUrl, setLogoUrl] = useState<string>("");
 

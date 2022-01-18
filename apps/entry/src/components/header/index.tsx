@@ -17,31 +17,31 @@ export default function Header({ children }: HeaderProps) {
   const showProject = location.pathname !== "/";
   const showPopover = location.pathname !== "/home";
   return (
-    <div className={classnames("header_container", location.pathname === "/" ? 'main-header' : '')}>
+    <div className={classnames("header_container", location.pathname === "/" ? "main-header" : "")}>
       <div className="header_content">
         <Link to="/" className="logo">
           <img src={logo} alt="logo" />
         </Link>
-        { showProject ? <ProjectComponent/>: <div className="no-project" />}
+        {showProject ? <ProjectComponent /> : <div className="no-project" />}
         {showProject && children}
         <div className="right">
-          { showProject ?
-              <>
-                {showPopover ? <NewSubAppPopover /> : <a className="hidden" />}
-                <Icon className="icon" type="shezhi" />
-                <Icon className="icon" type="shuoming" />
-              </>
-              :
-              <div className="right-no-content">
-                  <Link to="/home" className="workspace-link">
-                      工作台
-                  </Link>
-              </div>
-          }
-                <div className="user_info">
-                  <UserComponent showProject={showProject}/>
-                </div>
-              </div>
+          {showProject ? (
+            <>
+              {showPopover ? <NewSubAppPopover /> : <a className="hidden" />}
+              <Icon className="icon" type="shezhi" />
+              <Icon className="icon" type="shuoming" />
+            </>
+          ) : (
+            <div className="right-no-content">
+              <Link to="/home" className="workspace-link">
+                工作台
+              </Link>
+            </div>
+          )}
+          <div className="user_info">
+            <UserComponent showProject={showProject} />
+          </div>
+        </div>
       </div>
     </div>
   );

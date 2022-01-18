@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState, memo } from 'react';
-import { useDrag, useDrop } from 'react-dnd';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import styles from '@/features/bpm-editor/components/panel-components/select-columns/index.module.scss';
-import { Input, Select, Tooltip } from 'antd';
-import { Icon } from '@common/components';
-import { LabelMap } from '@type';
+import { useEffect, useRef, useState, memo } from "react";
+import { useDrag, useDrop } from "react-dnd";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import styles from "@/features/bpm-editor/components/panel-components/select-columns/index.module.scss";
+import { Input, Select, Tooltip } from "antd";
+import { Icon } from "@common/components";
+import { LabelMap } from "@type";
 const { Option } = Select;
 
 interface DraggableOptionProps {
@@ -13,9 +13,9 @@ interface DraggableOptionProps {
   columns: any;
   fieldList: LabelMap[];
 
-  onDelete(index: this['index']): void;
+  onDelete(index: this["index"]): void;
 
-  onChange(type: string, value: any, index: this['index']): void;
+  onChange(type: string, value: any, index: this["index"]): void;
 
   onDrag(sourceIndex: number, targetIndex: number): void;
 
@@ -32,7 +32,7 @@ function DraggableOption(props: DraggableOptionProps) {
 
   const [, drag] = useDrag(
     () => ({
-      type: 'option',
+      type: "option",
       item() {
         return { index };
       },
@@ -42,7 +42,7 @@ function DraggableOption(props: DraggableOptionProps) {
   );
   const [, drop] = useDrop(
     () => ({
-      accept: 'option',
+      accept: "option",
       drop: (currentDragItem: { index: number }) => {
         if (currentDragItem.index !== index) {
           onDrag(currentDragItem.index, index);
@@ -53,11 +53,11 @@ function DraggableOption(props: DraggableOptionProps) {
   );
 
   const handleChange = useMemoCallback((value) => {
-    onChange('select', value, index);
+    onChange("select", value, index);
   });
 
   const handleInputBlur = useMemoCallback((event: React.FocusEvent<HTMLInputElement>) => {
-    onChange('blur', event.target.value, index);
+    onChange("blur", event.target.value, index);
   });
 
   const handleDelete = useMemoCallback(() => {
@@ -107,7 +107,7 @@ function DraggableOption(props: DraggableOptionProps) {
           <Option value="jack">Jack (100)</Option>
           <Option value="lucy">Lucy (101)</Option>
         </Select>
-        <Input className={styles.columns_name} size={'middle'} defaultValue={data.title} onChange={handleInputBlur} />
+        <Input className={styles.columns_name} size={"middle"} defaultValue={data.title} onChange={handleInputBlur} />
       </div>
     </div>
   );

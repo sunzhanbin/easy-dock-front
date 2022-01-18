@@ -1,24 +1,29 @@
 {
+  "typescript.tsdk": "./node_modules/typescript/lib",
+  "eslint.packageManager": "yarn",
+  "eslint.codeActionsOnSave.mode": "problems",
+  "eslint.validate": [
+    "javascript",
+    "typescript",
+    "javascriptreact",
+    "typescriptreact"
+  ],
+  "eslint.options": {
+    //指定vscode的eslint所处理的文件的后缀
+    "extensions": [
+      ".js",
+      ".vue",
+      ".ts",
+      ".tsx"
+    ]
+  },
+  //  "eslint.format.enable": true,
   "editor.codeActionsOnSave": {
     "source.fixAll": true,
     "source.fixAll.eslint": true,
   },
-  "eslint.validate": [
-    "vue",
-    "javascript",
-    "typescript",
-    "javascriptreact"
-  ],
-  "eslint.options": {
-    //指定vscode的eslint所处理的文件的后缀
-       "extensions": [
-           ".js",
-           ".vue",
-           ".ts",
-           ".tsx"
-       ]
-   },
-   "eslint.format.enable": true,
    "editor.formatOnSave": false,
-   "editor.defaultFormatter": null,
+  "editor.defaultFormatter": null,
+  "eslint.alwaysShowStatus": true,
+  "eslint.run": "onSave",
 }

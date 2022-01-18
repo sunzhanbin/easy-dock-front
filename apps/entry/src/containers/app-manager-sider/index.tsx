@@ -1,22 +1,22 @@
-import React, { useCallback, useRef, useState } from 'react';
-import { Layout, Menu, Button, Input, Dropdown, message } from 'antd';
-import { useDeleteWorkspaceMutation, useFetchWorkspaceListQuery } from '@/http';
-import { useAppDispatch, useAppSelector } from '@/store';
-import AddWorkspaceModal from '@components/add-workspace-modal';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import Popconfirm from '@components/popconfirm';
-import { Icon, Text } from '@common/components';
-import { selectCurrentWorkspaceId, setCurrentWorkspaceId } from '@views/app-manager/index.slice';
-import '@containers/app-manager-sider/index.style';
-import { selectProjectId } from '@/views/home/index.slice';
-import { handleStopPropagation } from '@utils/utils';
+import React, { useCallback, useRef, useState } from "react";
+import { Layout, Menu, Button, Input, Dropdown, message } from "antd";
+import { useDeleteWorkspaceMutation, useFetchWorkspaceListQuery } from "@/http";
+import { useAppDispatch, useAppSelector } from "@/store";
+import AddWorkspaceModal from "@components/add-workspace-modal";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import Popconfirm from "@components/popconfirm";
+import { Icon, Text } from "@common/components";
+import { selectCurrentWorkspaceId, setCurrentWorkspaceId } from "@views/app-manager/index.slice";
+import "@containers/app-manager-sider/index.style";
+import { selectProjectId } from "@/views/home/index.slice";
+import { handleStopPropagation } from "@utils/utils";
 
 const { Sider } = Layout;
 
 const AppManagerSider = () => {
   const modalRef = useRef<any>();
   const inputRef = useRef<any>();
-  const [name, setName] = useState<string>('');
+  const [name, setName] = useState<string>("");
   const dispatch = useAppDispatch();
   const projectId = useAppSelector(selectProjectId);
   const workspaceId = useAppSelector(selectCurrentWorkspaceId);
@@ -36,18 +36,18 @@ const AppManagerSider = () => {
 
   const handleAddWorkspaceVisible = useCallback(() => {
     modalRef.current.show();
-    modalRef.current.setTitle('新增');
+    modalRef.current.setTitle("新增");
   }, []);
 
   const renderMenuIcon = useMemoCallback((id) => {
-    return <Icon type={+workspaceId === +id ? 'wenjianjiacaisedakai' : 'wenjianjiacaise'} />;
+    return <Icon type={+workspaceId === +id ? "wenjianjiacaisedakai" : "wenjianjiacaise"} />;
   });
 
   const handleEditWorkspaceName = useMemoCallback((e: React.MouseEvent, item) => {
     e.stopPropagation();
     const { name, id } = item;
     modalRef.current.show();
-    modalRef.current.setTitle('编辑');
+    modalRef.current.setTitle("编辑");
     modalRef.current.setWorkspace({ name, id });
   });
 
@@ -62,7 +62,7 @@ const AppManagerSider = () => {
         e.stopPropagation();
       }
       await deleteWorkspace(id).unwrap();
-      message.success('删除成功!');
+      message.success("删除成功!");
     } catch (e) {
       console.log(e);
     }
@@ -118,7 +118,7 @@ const AppManagerSider = () => {
                   <Text text={workspace.name} />
                 </div>
                 <Dropdown
-                  trigger={['click']}
+                  trigger={["click"]}
                   placement="bottomRight"
                   overlayClassName="dropdown-sider-container"
                   overlay={() => renderDropdownMenu(workspace)}

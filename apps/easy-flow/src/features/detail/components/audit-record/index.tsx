@@ -1,79 +1,79 @@
-import { memo, useMemo } from 'react';
-import classnames from 'classnames';
-import moment from 'moment';
-import { Icon, Avatar } from '@common/components';
-import Tag, { StatusTagProps } from '@components/status-tag';
-import { AuditRecordType, AuditRecordSchema } from '@type/detail';
-import styles from './index.module.scss';
+import { memo, useMemo } from "react";
+import classnames from "classnames";
+import moment from "moment";
+import { Icon, Avatar } from "@common/components";
+import Tag, { StatusTagProps } from "@components/status-tag";
+import { AuditRecordType, AuditRecordSchema } from "@type/detail";
+import styles from "./index.module.scss";
 
-function mapActionInfo(type: AuditRecordType): { text: string; status: StatusTagProps['status'] } {
+function mapActionInfo(type: AuditRecordType): { text: string; status: StatusTagProps["status"] } {
   if (type === AuditRecordType.APPROVE) {
     return {
-      text: '同意',
-      status: 'success',
+      text: "同意",
+      status: "success",
     };
   }
 
   if (type === AuditRecordType.FORM_FILL) {
     return {
-      text: '提交',
-      status: 'primary',
+      text: "提交",
+      status: "primary",
     };
   }
 
   if (type === AuditRecordType.REJECT) {
     return {
-      text: '驳回',
-      status: 'warning',
+      text: "驳回",
+      status: "warning",
     };
   }
 
   if (type === AuditRecordType.INSTANCE_STOP) {
     return {
-      text: '终止',
-      status: 'error',
+      text: "终止",
+      status: "error",
     };
   }
 
   if (type === AuditRecordType.TURN) {
     return {
-      text: '转办',
-      status: 'primary',
+      text: "转办",
+      status: "primary",
     };
   }
 
   if (type === AuditRecordType.START) {
     return {
-      text: '开始',
-      status: 'primary',
+      text: "开始",
+      status: "primary",
     };
   }
 
   if (type === AuditRecordType.BACK) {
     return {
-      text: '撤回',
-      status: 'revoke',
+      text: "撤回",
+      status: "revoke",
     };
   }
 
   if (type === AuditRecordType.RUNNING) {
     return {
-      text: '进行中',
-      status: 'primary',
+      text: "进行中",
+      status: "primary",
     };
   }
 
   if (type === AuditRecordType.AUTO_PROCESS_TRIGGER) {
     return {
-      text: '自动节点-流程触发',
-      status: 'primary',
+      text: "自动节点-流程触发",
+      status: "primary",
     };
   }
 
   if (type === AuditRecordType.AUTO_INTERFACE_PUSH) {
     return {
-      text: '自动节点-数据连接',
-      status: 'primary',
+      text: "自动节点-数据连接",
+      status: "primary",
     };
   }
 
@@ -92,7 +92,7 @@ function NodeActionRecord(props: NodeActionRecordProps) {
 
     if (isProcessing) {
       return {
-        type: 'shenhejilujinxingzhong',
+        type: "shenhejilujinxingzhong",
         className: styles.processing,
       };
     }
@@ -103,13 +103,13 @@ function NodeActionRecord(props: NodeActionRecordProps) {
 
     if (isRejected) {
       return {
-        type: 'guanbi',
+        type: "guanbi",
         className: styles.error,
       };
     }
 
     return {
-      type: 'gou',
+      type: "gou",
       className: styles.success,
     };
   }, [data]);
@@ -120,7 +120,7 @@ function NodeActionRecord(props: NodeActionRecordProps) {
         <Icon type={icon.type} />
       </div>
       <div className={styles.content}>
-        <div className={styles['node-name']}>{data.taskName}</div>
+        <div className={styles["node-name"]}>{data.taskName}</div>
 
         {data.auditRecordList.map((record) => {
           return (
@@ -131,14 +131,14 @@ function NodeActionRecord(props: NodeActionRecordProps) {
                 return (
                   <div className={styles.user} key={member.id}>
                     <Avatar size={24} className={styles.avatar} src={member.avatar} name={member.name} />
-                    <div className={styles['user-name']}>{member.name}</div>
+                    <div className={styles["user-name"]}>{member.name}</div>
                     <Tag status={action.status}>{action.text}</Tag>
                   </div>
                 );
               })}
 
               {record.auditTime && (
-                <div className={styles.time}>{moment(record.auditTime).format('YYYY.MM.DD HH:mm:ss')}</div>
+                <div className={styles.time}>{moment(record.auditTime).format("YYYY.MM.DD HH:mm:ss")}</div>
               )}
 
               {record.comments?.commit && (
@@ -157,7 +157,7 @@ function NodeActionRecord(props: NodeActionRecordProps) {
 
 export default memo(NodeActionRecord);
 
-function formatRecordList(data: AuditRecordSchema['auditRecordList'][number]) {
+function formatRecordList(data: AuditRecordSchema["auditRecordList"][number]) {
   const users = data.userList || [];
   const depts = data.deptList || [];
   const roles = data.roleList || [];

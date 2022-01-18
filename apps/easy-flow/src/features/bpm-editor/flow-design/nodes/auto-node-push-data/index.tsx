@@ -1,10 +1,10 @@
-import { memo, useMemo } from 'react';
-import { useSelector } from 'react-redux';
-import { Icon } from '@common/components';
-import BaseNode from '../base-node';
-import { AutoNodePushData as AutoNodeType } from '@type/flow';
-import { apisSelector } from '../../flow-slice';
-import styles from './index.module.scss';
+import { memo, useMemo } from "react";
+import { useSelector } from "react-redux";
+import { Icon } from "@common/components";
+import BaseNode from "../base-node";
+import { AutoNodePushData as AutoNodeType } from "@type/flow";
+import { apisSelector } from "../../flow-slice";
+import styles from "./index.module.scss";
 
 interface AutoNodeProps {
   node: AutoNodeType;
@@ -24,7 +24,7 @@ function AutoNodePushData(props: AutoNodeProps) {
 
     if (target) return target.name;
 
-    return '';
+    return "";
   }, [api, apis]);
 
   return (
@@ -35,7 +35,7 @@ function AutoNodePushData(props: AutoNodeProps) {
           <span className={styles.name}>{apiName}</span>
         </div>
       ) : (
-        '请设置此节点'
+        "请设置此节点"
       )}
     </BaseNode>
   );

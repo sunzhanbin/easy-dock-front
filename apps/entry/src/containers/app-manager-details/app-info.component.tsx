@@ -2,10 +2,7 @@ import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "antd";
 import { useAppSelector } from "@/store";
-import {
-  useWorkspaceDetailQuery,
-  useFetchSubAppListQuery,
-} from "@http/app-manager.hooks";
+import { useWorkspaceDetailQuery, useFetchSubAppListQuery } from "@http/app-manager.hooks";
 import { selectCurrentWorkspaceId } from "@views/app-manager/index.slice";
 import { Icon } from "@common/components";
 

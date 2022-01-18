@@ -1,18 +1,18 @@
-import { memo, FC, ReactNode, useMemo, useState } from 'react';
-import { message, Button } from 'antd';
-import { SubAppType } from '@/consts';
-import { Icon } from '@common/components';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import { useAppSelector } from '@/store';
-import SpaceImage from '@assets/images/space.png';
-import { selectCurrentWorkspaceId } from '@/views/app-manager/index.slice';
-import { useCreateSupAppMutation } from '@/http/app-manager.hooks';
-import FormImage from '@assets/images/form.png';
-import FlowImage from '@assets/images/flow.png';
-import ChartImage from '@assets/images/chart.png';
-import CanvasImage from '@assets/images/canvas.png';
-import AppModal from './app-modal.component';
-import './app-empty.style.scss';
+import { memo, FC, ReactNode, useMemo, useState } from "react";
+import { message, Button } from "antd";
+import { SubAppType } from "@/consts";
+import { Icon } from "@common/components";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { useAppSelector } from "@/store";
+import SpaceImage from "@assets/images/space.png";
+import { selectCurrentWorkspaceId } from "@/views/app-manager/index.slice";
+import { useCreateSupAppMutation } from "@/http/app-manager.hooks";
+import FormImage from "@assets/images/form.png";
+import FlowImage from "@assets/images/flow.png";
+import ChartImage from "@assets/images/chart.png";
+import CanvasImage from "@assets/images/canvas.png";
+import AppModal from "./app-modal.component";
+import "./app-empty.style.scss";
 
 type TypeItem = {
   type: SubAppType;
@@ -21,7 +21,7 @@ type TypeItem = {
   position: "left" | "right";
   children: ReactNode;
   showModal: boolean;
-}
+};
 
 type ShowModalMap = {
   [k in SubAppType]: boolean;
@@ -94,7 +94,7 @@ const AppEmpty: FC = () => {
     createSubApp({ appId: workspaceId, name, type })
       .unwrap()
       .then(() => {
-        message.success('子应用创建成功!');
+        message.success("子应用创建成功!");
       });
   });
   return (

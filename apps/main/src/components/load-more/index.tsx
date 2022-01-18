@@ -1,8 +1,8 @@
-import React, { useEffect, useMemo, useRef } from 'react';
-import throttle from 'lodash/throttle';
-import Loading from '@components/loading';
-import classnames from 'classnames';
-import styles from './index.module.scss';
+import React, { useEffect, useMemo, useRef } from "react";
+import throttle from "lodash/throttle";
+import Loading from "@components/loading";
+import classnames from "classnames";
+import styles from "./index.module.scss";
 
 interface LoadMoreProps {
   loading?: boolean;
@@ -35,7 +35,7 @@ export default function LoadMore(props: LoadMoreProps) {
       handleScroll.cancel();
 
       if (scrollContainerRef.current) {
-        scrollContainerRef.current.removeEventListener('scroll', handleScroll);
+        scrollContainerRef.current.removeEventListener("scroll", handleScroll);
       }
     }
 
@@ -43,7 +43,7 @@ export default function LoadMore(props: LoadMoreProps) {
       return clear();
     }
 
-    scrollContainerRef.current.addEventListener('scroll', handleScroll, false);
+    scrollContainerRef.current.addEventListener("scroll", handleScroll, false);
 
     return clear;
   }, [done, loadmore, debounce, threshold]);
@@ -61,7 +61,7 @@ export default function LoadMore(props: LoadMoreProps) {
   }, [children]);
 
   return (
-    <div className={classnames(styles.container, { [styles['not-empty']]: hasChildren })}>
+    <div className={classnames(styles.container, { [styles["not-empty"]]: hasChildren })}>
       <div ref={scrollContainerRef} className={classnames(styles.list, className)}>
         {children}
       </div>

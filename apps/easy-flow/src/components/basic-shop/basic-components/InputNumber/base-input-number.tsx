@@ -1,14 +1,14 @@
-import { memo, useMemo, useRef, useEffect } from 'react';
-import { InputNumber } from 'antd';
-import { Icon } from '@common/components';
-import { InputNumberProps } from 'antd/lib/input-number';
-import { InputNumberField } from '@type';
-import styles from './index.module.scss';
+import { memo, useMemo, useRef, useEffect } from "react";
+import { InputNumber } from "antd";
+import { Icon } from "@common/components";
+import { InputNumberProps } from "antd/lib/input-number";
+import { InputNumberField } from "@type";
+import styles from "./index.module.scss";
 
 const InputNumberComponent = (
   props: InputNumberProps & {
-    decimal?: InputNumberField['decimal'];
-    numlimit?: InputNumberField['numlimit'];
+    decimal?: InputNumberField["decimal"];
+    numlimit?: InputNumberField["numlimit"];
   } & {
     defaultNumber?: any;
   },
@@ -18,8 +18,8 @@ const InputNumberComponent = (
   const propList = useMemo(() => {
     // eslint-disable-next-line @typescript-eslint/ban-types
     const prop: { [k: string]: string | number | boolean | undefined | Function } = {
-      size: 'large',
-      placeholder: '请输入',
+      size: "large",
+      placeholder: "请输入",
       max: Number.MAX_SAFE_INTEGER,
       min: Number.MIN_SAFE_INTEGER,
       onChange: onChange,
@@ -28,14 +28,14 @@ const InputNumberComponent = (
       prop.min = numlimit.numrange.min;
       prop.max = numlimit.numrange.max;
     }
-    const el = document.getElementById('edit-form');
+    const el = document.getElementById("edit-form");
     if (defaultNumber?.customData !== null && defaultNumber?.customData !== undefined) {
       prop.defaultValue = +defaultNumber?.customData;
       if (el?.contains(containerRef?.current)) {
         prop.value = +defaultNumber?.customData;
       }
     }
-    if (typeof defaultNumber === 'number') {
+    if (typeof defaultNumber === "number") {
       prop.defaultValue = defaultNumber;
       if (el?.contains(containerRef?.current)) {
         prop.value = defaultNumber;

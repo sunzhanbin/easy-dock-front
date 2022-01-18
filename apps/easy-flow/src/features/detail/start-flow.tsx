@@ -1,24 +1,24 @@
-import { memo, useEffect, useState, useMemo, useRef } from 'react';
-import { useParams, useHistory } from 'react-router';
-import classnames from 'classnames';
-import { FormInstance, message } from 'antd';
-import { throttle, debounce } from 'lodash';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import { AsyncButton, Loading, PopoverConfirm } from '@common/components';
-import { runtimeAxios, validateTabs, uploadFile } from '@utils';
-import { dynamicRoutes } from '@consts';
-import { loadDatasource, deleteDraft } from '@apis/detail';
-import { StartNode } from '@type/flow';
-import { FormMeta, FormValue, Datasource } from '@type/detail';
-import Form from '@components/form-engine';
-import Header from '@components/header';
-import useSubapp from '@/hooks/use-subapp';
-import titleImage from '@/assets/title.png';
-import leftImage from '@assets/background_left.png';
-import rightImage from '@assets/background_right.png';
+import { memo, useEffect, useState, useMemo, useRef } from "react";
+import { useParams, useHistory } from "react-router";
+import classnames from "classnames";
+import { FormInstance, message } from "antd";
+import { throttle, debounce } from "lodash";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { AsyncButton, Loading, PopoverConfirm } from "@common/components";
+import { runtimeAxios, validateTabs, uploadFile } from "@utils";
+import { dynamicRoutes } from "@consts";
+import { loadDatasource, deleteDraft } from "@apis/detail";
+import { StartNode } from "@type/flow";
+import { FormMeta, FormValue, Datasource } from "@type/detail";
+import Form from "@components/form-engine";
+import Header from "@components/header";
+import useSubapp from "@/hooks/use-subapp";
+import titleImage from "@/assets/title.png";
+import leftImage from "@assets/background_left.png";
+import rightImage from "@assets/background_right.png";
 
-import { useLocation } from 'react-router-dom';
-import styles from './index.module.scss';
+import { useLocation } from "react-router-dom";
+import styles from "./index.module.scss";
 
 type DataType = {
   processMeta: StartNode;
@@ -45,17 +45,17 @@ function StartFlow() {
   const mode = useMemo(() => {
     if (location.search) {
       const params = new URLSearchParams(location.search.slice(1));
-      return params.get('mode') || 'running';
+      return params.get("mode") || "running";
     }
-    return 'running';
+    return "running";
   }, [location.search]);
 
   const type = useMemo(() => {
     if (location.search) {
       const params = new URLSearchParams(location.search.slice(1));
-      return params.get('type') || 'task-center';
+      return params.get("type") || "task-center";
     }
-    return 'task-center';
+    return "task-center";
   }, [location.search]);
 
   useEffect(() => {
@@ -93,7 +93,7 @@ function StartFlow() {
   useEffect(() => {
     if (!data || !subApp) return;
 
-    loadDatasource(data.formMeta, data.processMeta.fieldsAuths, subApp.version.id, '').then((values) => {
+    loadDatasource(data.formMeta, data.processMeta.fieldsAuths, subApp.version.id, "").then((values) => {
       serDatasource(values);
     });
   }, [data, subApp]);
@@ -107,7 +107,7 @@ function StartFlow() {
         datasource={datasource}
         ref={formRef}
         data={formMeta}
-        className={styles['form-engine']}
+        className={styles["form-engine"]}
         initialValue={formData}
         projectId={projectId}
         fieldsAuths={processMeta.fieldsAuths}
@@ -123,15 +123,15 @@ function StartFlow() {
       const values = await formRef.current.validateFields();
       const formValues = await uploadFile(values);
       // 上传文件成功之后再提交表单
-      await runtimeAxios.post(`/process_instance/start`, {
+      await runtimeAxios.post("/process_instance/start", {
         formData: formValues,
         versionId: subApp.version.id,
       });
 
-      message.success('提交成功');
+      message.success("提交成功");
 
       setTimeout(() => {
-        if (type === 'app') {
+        if (type === "app") {
           history.goBack();
         } else {
           // 回任务中心我的发起
@@ -147,12 +147,12 @@ function StartFlow() {
       const values = await formRef.current.getFieldsValue(true);
       const formValues = await uploadFile(values);
 
-      await runtimeAxios.post(`/task/draft/add`, {
+      await runtimeAxios.post("/task/draft/add", {
         formData: formValues,
         subappId: subApp.id,
       });
 
-      message.success('保存成功');
+      message.success("保存成功");
     }, 500),
   );
 
@@ -160,11 +160,11 @@ function StartFlow() {
     debounce(async () => {
       await deleteDraft(subAppId);
 
-      message.success('删除成功');
+      message.success("删除成功");
 
       if (subApp) {
         setTimeout(() => {
-          if (type === 'app') {
+          if (type === "app") {
             history.goBack();
           } else {
             // 回任务中心草稿列表
@@ -180,7 +180,7 @@ function StartFlow() {
       {loading && <Loading />}
 
       <Header className={styles.header} backText="发起流程">
-        {mode === 'running' && (
+        {mode === "running" && (
           <div className={styles.btns}>
             {showDelete && (
               <PopoverConfirm title="确认删除" content="确认删除该草稿吗?" onConfirm={handleDeleteDraft}>
@@ -204,7 +204,7 @@ function StartFlow() {
         <div className={styles.right} style={{ backgroundImage: `url(${rightImage})` }}></div>
       </div>
       {subApp && (
-        <div className={styles['start-form-wrapper']}>
+        <div className={styles["start-form-wrapper"]}>
           <div className={classnames(styles.form)} style={{ height: `${document.body.clientHeight - 124}px` }}>
             <div className={styles.title}>
               <img src={titleImage} alt="title" className={styles.image} />

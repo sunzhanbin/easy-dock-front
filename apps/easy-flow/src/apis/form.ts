@@ -1,4 +1,4 @@
-import { builderAxios, runtimeAxios } from '@/utils';
+import { builderAxios, runtimeAxios } from "@/utils";
 
 /**编号规则 ---start **/
 export const getSerialList = (appId: number) => {
@@ -10,7 +10,7 @@ export const deleteSerialId = (id: string) => {
 };
 
 export const saveSerialRules = (params: any) => {
-  return builderAxios.post('id_rule/save', params);
+  return builderAxios.post("id_rule/save", params);
 };
 
 export const getSerialInfo = (id: string) => {
@@ -21,5 +21,5 @@ export const getSerialInfo = (id: string) => {
 
 /* 附件 */
 export const getFilesType = () => {
-  return runtimeAxios.get('common/types/doc');
+  return runtimeAxios.get("common/types/doc");
 };

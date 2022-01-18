@@ -1,18 +1,18 @@
-import React, { useCallback, useState, useImperativeHandle } from 'react';
-import { selectProjectId } from '@views/home/index.slice';
-import { Modal, Form, Input, message } from 'antd';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import { selectCurrentWorkspaceId, setCurrentWorkspaceId } from '@views/app-manager/index.slice';
-import { nameRule } from '@/consts';
-import { useAddWorkspaceMutation, useEditWorkspaceMutation } from '@/http';
-import { useAppDispatch, useAppSelector } from '@/store';
+import React, { useCallback, useState, useImperativeHandle } from "react";
+import { selectProjectId } from "@views/home/index.slice";
+import { Modal, Form, Input, message } from "antd";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { selectCurrentWorkspaceId, setCurrentWorkspaceId } from "@views/app-manager/index.slice";
+import { nameRule } from "@/consts";
+import { useAddWorkspaceMutation, useEditWorkspaceMutation } from "@/http";
+import { useAppDispatch, useAppSelector } from "@/store";
 
 const AddWorkspaceModal = React.forwardRef(function AddWorkspace(_, ref) {
   const dispatch = useAppDispatch();
   const projectId = useAppSelector(selectProjectId);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [workspaceId, setWorkspaceId] = useState<number>(0);
-  const [title, setTitle] = useState<string>('');
+  const [title, setTitle] = useState<string>("");
   const [addWorkspace] = useAddWorkspaceMutation();
   const [editWorkspace] = useEditWorkspaceMutation();
   const [form] = Form.useForm();
@@ -27,7 +27,7 @@ const AddWorkspaceModal = React.forwardRef(function AddWorkspace(_, ref) {
     setTitle: (title: string) => {
       setTitle(title);
     },
-    setWorkspace: ({name, id} : {name: string, id: number}) => {
+    setWorkspace: ({ name, id }: { name: string; id: number }) => {
       form.setFieldsValue({ name });
       setWorkspaceId(id);
     },
@@ -41,12 +41,12 @@ const AddWorkspaceModal = React.forwardRef(function AddWorkspace(_, ref) {
     form
       .validateFields()
       .then(async ({ name }) => {
-        if (title === '新增') {
+        if (title === "新增") {
           await addWorkspace({ name, projectId }).unwrap();
-          message.success('新增成功!');
+          message.success("新增成功!");
         } else {
           await editWorkspace({ name, id: workspaceId }).unwrap();
-          message.success('修改成功!');
+          message.success("修改成功!");
           dispatch(setCurrentWorkspaceId(workspaceId));
         }
         handleVisible(false);

@@ -1,20 +1,11 @@
-import React, {
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-} from "react";
+import React, { useCallback, useEffect, useImperativeHandle, useMemo } from "react";
 import { Form, Input, Select } from "antd";
 import { Rule } from "antd/lib/form";
 import { UploadFile } from "antd/lib/upload/interface";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { Icon } from "@common/components";
 import { nameRule, remarkRule } from "@/consts";
-import {
-  basicErrorSelector,
-  selectBasicForm,
-  setBaseForm,
-} from "@views/app-setup/basic-setup.slice";
+import { basicErrorSelector, selectBasicForm, setBaseForm } from "@views/app-setup/basic-setup.slice";
 import NavMode from "./nav-mode.component";
 import Theme from "./theme.component";
 import UploadImage from "./upload-image.component";
@@ -25,10 +16,7 @@ interface BasicSetupFormProps {
 }
 const { Option } = Select;
 
-const BasicSetupFormComponent = React.forwardRef(function BasicSetupForm(
-  { workspaceList }: BasicSetupFormProps,
-  ref
-) {
+const BasicSetupFormComponent = React.forwardRef(function BasicSetupForm({ workspaceList }: BasicSetupFormProps, ref) {
   const [form] = Form.useForm();
   const dispatch = useAppDispatch();
   const basicError = useAppSelector(basicErrorSelector);
@@ -69,12 +57,7 @@ const BasicSetupFormComponent = React.forwardRef(function BasicSetupForm(
 
   return (
     <div className="basic-setup-form-component">
-      <Form
-        layout="vertical"
-        autoComplete="off"
-        form={form}
-        onValuesChange={handleValuesChange}
-      >
+      <Form layout="vertical" autoComplete="off" form={form} onValuesChange={handleValuesChange}>
         <Form.Item label="应用名称" name="name" required rules={[nameRule]}>
           <Input size="large" placeholder="请输入" />
         </Form.Item>
@@ -83,20 +66,12 @@ const BasicSetupFormComponent = React.forwardRef(function BasicSetupForm(
           name="workspace"
           rules={[{ required: true, message: "请选择应用所属工作区!" }]}
         >
-          <Select
-            size="large"
-            placeholder="请选择"
-            disabled
-            allowClear
-            suffixIcon={<Icon type="xiala" />}
-          >
-            {(workspaceList ?? []).map(
-              ({ id, name }: { id: number; name: string }) => (
-                <Option key={id} value={id}>
-                  {name}
-                </Option>
-              )
-            )}
+          <Select size="large" placeholder="请选择" disabled allowClear suffixIcon={<Icon type="xiala" />}>
+            {(workspaceList ?? []).map(({ id, name }: { id: number; name: string }) => (
+              <Option key={id} value={id}>
+                {name}
+              </Option>
+            ))}
           </Select>
         </Form.Item>
         <Form.Item label="应用描述" name="remark" rules={[remarkRule]}>

@@ -1,14 +1,14 @@
-import { FC, memo, useMemo, useCallback } from 'react';
-import { Form } from 'antd';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { layoutSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
-import { moveIndex } from '@/features/bpm-editor/form-design/formdesign-slice';
-import emptyImage from '@assets/drag.png';
-import styles from './index.module.scss';
-import { Card, CardProps } from '@/components/card';
-import { useDrop } from 'react-dnd';
+import { FC, memo, useMemo, useCallback } from "react";
+import { Form } from "antd";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import { layoutSelector } from "@/features/bpm-editor/form-design/formzone-reducer";
+import { moveIndex } from "@/features/bpm-editor/form-design/formdesign-slice";
+import emptyImage from "@assets/drag.png";
+import styles from "./index.module.scss";
+import { Card, CardProps } from "@/components/card";
+import { useDrop } from "react-dnd";
 
-const FormZone: FC<{}> = () => {
+const FormZone: FC<any> = () => {
   const dispatch = useAppDispatch();
   const layout = useAppSelector(layoutSelector);
   const moveCard = useCallback(
@@ -19,7 +19,7 @@ const FormZone: FC<{}> = () => {
   );
   const [, drop] = useDrop(
     () => ({
-      accept: 'toolItem',
+      accept: "toolItem",
       collect: (monitor) => ({
         isOver: monitor.isOver(),
         canDrop: monitor.canDrop(),

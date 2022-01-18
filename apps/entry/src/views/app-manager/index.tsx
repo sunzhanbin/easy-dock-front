@@ -17,9 +17,7 @@ const AppManager = () => {
       <Layout>
         {projectId && <AppManagerSider />}
         <Layout className="site-layout">
-          <Content className="site-layout-background">
-            {workspaceId && <AppManagerDetails />}
-          </Content>
+          <Content className="site-layout-background">{workspaceId && <AppManagerDetails />}</Content>
         </Layout>
       </Layout>
     </div>

@@ -1,15 +1,15 @@
-import { useCallback, useMemo, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { Form, Input } from 'antd';
-import { UserOutlined, KeyOutlined } from '@ant-design/icons';
-import cookie from 'js-cookie';
-import loginIcon from '@assets/login-icon.png';
-import logoIcon from '@assets/logo-icon.png';
-import { runtimeAxios } from '@utils';
-import { ROUTES } from '@consts';
-import { Loading } from '@components';
-import styles from './index.module.scss';
-import useMemoCallback from '@common/hooks/use-memo-callback';
+import { useCallback, useMemo, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { Form, Input } from "antd";
+import { UserOutlined, KeyOutlined } from "@ant-design/icons";
+import cookie from "js-cookie";
+import loginIcon from "@assets/login-icon.png";
+import logoIcon from "@assets/logo-icon.png";
+import { runtimeAxios } from "@utils";
+import { ROUTES } from "@consts";
+import { Loading } from "@components";
+import styles from "./index.module.scss";
+import useMemoCallback from "@common/hooks/use-memo-callback";
 
 export default function Login() {
   const [form] = Form.useForm();
@@ -22,15 +22,15 @@ export default function Login() {
 
     try {
       const values = await form.validateFields();
-      const loginResponse = await runtimeAxios.post<{ data: { token: string } }>('/auth/login', values);
+      const loginResponse = await runtimeAxios.post<{ data: { token: string } }>("/auth/login", values);
       const token = loginResponse.data.token;
-      let redirectUrl = '';
+      let redirectUrl = "";
 
       // 记录token
-      cookie.set('token', token, { expires: 1 });
+      cookie.set("token", token, { expires: 1 });
 
-      const keyValues = decodeURIComponent(search.slice(1)).split('=');
-      const redirectUrlIndex = keyValues.findIndex((item) => item === 'redirect');
+      const keyValues = decodeURIComponent(search.slice(1)).split("=");
+      const redirectUrlIndex = keyValues.findIndex((item) => item === "redirect");
 
       if (redirectUrlIndex !== -1) {
         redirectUrl = keyValues[redirectUrlIndex + 1];
@@ -56,7 +56,7 @@ export default function Login() {
       {
         required: true,
         validator(_: any, value: string) {
-          return validateRule(value, '请输入用户名');
+          return validateRule(value, "请输入用户名");
         },
       },
     ];
@@ -66,14 +66,14 @@ export default function Login() {
     return [
       {
         required: true,
-        message: '请输入密码',
+        message: "请输入密码",
       },
     ];
   }, []);
 
   const handleKeydown = useCallback(
     (event: React.KeyboardEvent) => {
-      if (event.code === 'Enter') {
+      if (event.code === "Enter") {
         login();
       }
     },
@@ -103,7 +103,7 @@ export default function Login() {
             />
           </Form.Item>
         </Form>
-        <div className={styles['login-icon']}>
+        <div className={styles["login-icon"]}>
           <img src={loginIcon} alt="login" onClick={login} />
           {loading && <Loading />}
         </div>

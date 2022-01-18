@@ -1,8 +1,8 @@
-import { FC, memo } from 'react';
-import FormZone from './form-zone';
-import styles from './index.module.scss';
+import { FC, memo } from "react";
+import FormZone from "./form-zone";
+import styles from "./index.module.scss";
 
-const DesignZone: FC<{}> = () => {
+const DesignZone: FC<any> = () => {
   return (
     <div className={styles.container}>
       <FormZone></FormZone>

@@ -28,15 +28,7 @@ interface TypeItem {
   type: SubAppType;
 }
 
-const AppModal: FC<AppModalProps> = ({
-  type,
-  mode,
-  name,
-  position = "left",
-  className,
-  onOk,
-  onClose,
-}) => {
+const AppModal: FC<AppModalProps> = ({ type, mode, name, position = "left", className, onOk, onClose }) => {
   const [form] = Form.useForm();
   const containerStyle = useMemo(() => {
     if (position === "left") {
@@ -80,29 +72,15 @@ const AppModal: FC<AppModalProps> = ({
       </div>
       <div className="content">
         <Form form={form} layout="vertical" autoComplete="off">
-          <Form.Item
-            name="name"
-            label="子应用名称"
-            initialValue={name}
-            required
-            rules={[nameRule]}
-          >
-            <Input
-              autoFocus
-              size="large"
-              placeholder="请输入"
-              onClick={handleStopPropagation}
-            />
+          <Form.Item name="name" label="子应用名称" initialValue={name} required rules={[nameRule]}>
+            <Input autoFocus size="large" placeholder="请输入" onClick={handleStopPropagation} />
           </Form.Item>
           {mode === "create" && !type && (
             <Form.Item className="form-item" label="子应用类型" required>
               <div className="type-list">
                 {typeList.map(({ name, image, type }) => (
                   <div
-                    className={classNames(
-                      "type-card",
-                      selectType === type ? "active" : ""
-                    )}
+                    className={classNames("type-card", selectType === type ? "active" : "")}
                     key={name}
                     onClick={() => setSelectType(type)}
                   >
@@ -119,12 +97,7 @@ const AppModal: FC<AppModalProps> = ({
       </div>
       <div className="model_footer">
         <div className="operation">
-          <Button
-            type="text"
-            size="large"
-            className="cancel"
-            onClick={(e) => handleClose(e)}
-          >
+          <Button type="text" size="large" className="cancel" onClick={(e) => handleClose(e)}>
             取消
           </Button>
           <Button type="primary" size="large" onClick={(e) => handleOk(e)}>

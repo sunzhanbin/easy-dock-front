@@ -1,10 +1,10 @@
-import { memo, useState, useCallback, useMemo } from 'react';
-import BraftEditor, { ControlType, EditorState } from 'braft-editor';
-import { message } from 'antd';
-import { batchUpload } from '@/apis/file';
-import { Icon } from '@common/components';
-import 'braft-editor/dist/index.css';
-import styles from './index.module.scss';
+import { memo, useState, useCallback, useMemo } from "react";
+import BraftEditor, { ControlType, EditorState } from "braft-editor";
+import { message } from "antd";
+import { batchUpload } from "@/apis/file";
+import { Icon } from "@common/components";
+import "braft-editor/dist/index.css";
+import styles from "./index.module.scss";
 
 interface RichTextProps {
   value?: string;
@@ -54,39 +54,39 @@ const RichText = (props: RichTextProps) => {
               loop: false,
               autoPlay: false,
               controls: false,
-              poster: '',
+              poster: "",
             },
           });
         }
-        return Promise.reject('上传失败');
+        return Promise.reject("上传失败");
       })
       .catch(() => {
-        error({ msg: '上传失败' });
+        error({ msg: "上传失败" });
       });
   }, []);
   const handleValidate: (file: File) => boolean = useCallback((file) => {
     const limitSize = 1024 * 1024 * 5; //文件大小，限制为5M
     if (file.size > limitSize) {
-      message.error('您所上传的图片超过5MB，请调整后上传');
+      message.error("您所上传的图片超过5MB，请调整后上传");
       return false;
     }
     return true;
   }, []);
   const controls: ControlType[] = useMemo(() => {
     return [
-      'bold',
-      'italic',
-      'underline',
-      'strike-through',
-      'headings',
-      'font-size',
-      'text-color',
-      'text-align',
-      'hr',
-      'link',
+      "bold",
+      "italic",
+      "underline",
+      "strike-through",
+      "headings",
+      "font-size",
+      "text-color",
+      "text-align",
+      "hr",
+      "link",
       {
-        key: 'media',
-        title: '图片',
+        key: "media",
+        title: "图片",
         text: <Icon type="tupiancaidan" />,
       },
     ];

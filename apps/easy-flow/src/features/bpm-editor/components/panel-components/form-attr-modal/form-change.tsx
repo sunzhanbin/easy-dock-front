@@ -1,14 +1,14 @@
-import { memo, useCallback, useMemo } from 'react';
-import { Form, Select } from 'antd';
-import { Icon } from '@common/components';
-import Condition from '@/features/bpm-editor/components/condition';
-import DataApiConfig from '@/features/bpm-editor/components/data-api-config';
-import ResponseWithMap from '@/features/bpm-editor/components/data-api-config/response-with-map';
-import styles from './index.module.scss';
-import { useAppSelector } from '@/app/hooks';
-import { componentPropsSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
-import { fieldRule, FormField, SelectField } from '@/type';
-import { loadFieldDatasource } from '@utils/form';
+import { memo, useCallback, useMemo } from "react";
+import { Form, Select } from "antd";
+import { Icon } from "@common/components";
+import Condition from "@/features/bpm-editor/components/condition";
+import DataApiConfig from "@/features/bpm-editor/components/data-api-config";
+import ResponseWithMap from "@/features/bpm-editor/components/data-api-config/response-with-map";
+import styles from "./index.module.scss";
+import { useAppSelector } from "@/app/hooks";
+import { componentPropsSelector } from "@/features/bpm-editor/form-design/formzone-reducer";
+import { fieldRule, FormField, SelectField } from "@/type";
+import { loadFieldDatasource } from "@utils/form";
 
 const { Option } = Select;
 
@@ -39,7 +39,7 @@ const FormChange = () => {
   );
   const fields = useMemo<{ id: string; name: string }[]>(() => {
     return componentList
-      .filter((com) => !['DescText', 'Tabs'].includes(com.type))
+      .filter((com) => !["DescText", "Tabs"].includes(com.type))
       .map((com) => ({ id: com.fieldName, name: com.label }));
   }, [componentList]);
   return (
@@ -53,10 +53,10 @@ const FormChange = () => {
 
       <Form.Item noStyle shouldUpdate>
         {({ getFieldValue }) => {
-          const subtype = getFieldValue('subtype');
+          const subtype = getFieldValue("subtype");
           if (subtype === 1) {
-            const ruleValue: fieldRule[] = getFieldValue('ruleValue') || [];
-            const hideComponents = getFieldValue('hideComponents') || [];
+            const ruleValue: fieldRule[] = getFieldValue("ruleValue") || [];
+            const hideComponents = getFieldValue("hideComponents") || [];
             // 规则中选中的组件fieldName列表
             const ruleComponentFieldIdList = ruleValue.flat(1).map((item) => item.fieldName);
             // 显示控件的列表要排除规则中已有的组件列表和已选择的隐藏控件
@@ -69,7 +69,7 @@ const FormChange = () => {
               // 选择了tabs内的控件,则控制的控件也是tabs内的控件
               if (parentId) {
                 components.forEach((item) => {
-                  if (item.type === 'Tabs') {
+                  if (item.type === "Tabs") {
                     item.components?.forEach((v) => {
                       options.push(Object.assign({}, v.config, v.props, { label: `${item.label}·${v.config.label}` }));
                     });
@@ -78,7 +78,7 @@ const FormChange = () => {
               } else {
                 // 选择的是tabs外的控件，则控制的也是tabs外的控件
                 components
-                  .filter((item) => item.type !== 'Tabs')
+                  .filter((item) => item.type !== "Tabs")
                   .forEach((v) => {
                     options.push(v);
                   });
@@ -124,8 +124,8 @@ const FormChange = () => {
                   }
                 >
                   {({ getFieldValue }) => {
-                    const showComponents = getFieldValue('showComponents') || [];
-                    const ruleValue: fieldRule[] = getFieldValue('ruleValue') || [];
+                    const showComponents = getFieldValue("showComponents") || [];
+                    const ruleValue: fieldRule[] = getFieldValue("ruleValue") || [];
                     // 规则中选中的组件fieldName列表
                     const ruleComponentFieldIdList = ruleValue && ruleValue.flat(1).map((item) => item.fieldName);
                     // 显示控件的列表要排除规则中已有的组件列表和已选择的隐藏控件
@@ -138,7 +138,7 @@ const FormChange = () => {
                       // 选择了tabs内的控件,则控制的控件也是tabs内的控件
                       if (parentId) {
                         components.forEach((item) => {
-                          if (item.type === 'Tabs') {
+                          if (item.type === "Tabs") {
                             item.components?.forEach((v) => {
                               options.push(
                                 Object.assign({}, v.config, v.props, {
@@ -151,7 +151,7 @@ const FormChange = () => {
                       } else {
                         // 选择的是tabs外的控件，则控制的也是tabs外的控件
                         components
-                          .filter((item) => item.type !== 'Tabs')
+                          .filter((item) => item.type !== "Tabs")
                           .forEach((v) => {
                             options.push(v);
                           });

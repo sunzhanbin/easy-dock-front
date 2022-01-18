@@ -42,33 +42,30 @@ export const basicSetupSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addMatcher(
-      appManagerBuilder.endpoints.workspaceDetail.matchFulfilled,
-      (state, action) => {
-        const extension = action.payload?.extension;
-        if (!extension) {
-          state.basicForm = {
-            navMode: NavModeType.MULTI,
-            theme: ThemeType.LIGHT,
-          };
-        } else {
-          const { name, id, remark, navMode, theme, icon } = extension;
-          const defaultNavMode = navMode || NavModeType.MULTI;
-          const defaultTheme = theme || ThemeType.LIGHT;
-          state.theme = defaultTheme;
-          state.navMode = defaultNavMode;
-          state.logo = icon;
-          state.basicForm = {
-            icon,
-            name,
-            remark,
-            theme: defaultTheme,
-            navMode: defaultNavMode,
-            workspace: id,
-          };
-        }
+    builder.addMatcher(appManagerBuilder.endpoints.workspaceDetail.matchFulfilled, (state, action) => {
+      const extension = action.payload?.extension;
+      if (!extension) {
+        state.basicForm = {
+          navMode: NavModeType.MULTI,
+          theme: ThemeType.LIGHT,
+        };
+      } else {
+        const { name, id, remark, navMode, theme, icon } = extension;
+        const defaultNavMode = navMode || NavModeType.MULTI;
+        const defaultTheme = theme || ThemeType.LIGHT;
+        state.theme = defaultTheme;
+        state.navMode = defaultNavMode;
+        state.logo = icon;
+        state.basicForm = {
+          icon,
+          name,
+          remark,
+          theme: defaultTheme,
+          navMode: defaultNavMode,
+          workspace: id,
+        };
       }
-    );
+    });
   },
 });
 
@@ -82,13 +79,7 @@ export const selectBasicForm = (state: RootState) => state.basicSetup.basicForm;
 
 export const basicErrorSelector = (state: RootState) => state.basicSetup.errors;
 
-export const {
-  setTheme,
-  setMode,
-  setLogo,
-  setErrors,
-  setBaseForm,
-} = basicSetupSlice.actions;
+export const { setTheme, setMode, setLogo, setErrors, setBaseForm } = basicSetupSlice.actions;
 
 // 校验基础表单,保存时需要校验
 export const validateBasicForm = createAsyncThunk<

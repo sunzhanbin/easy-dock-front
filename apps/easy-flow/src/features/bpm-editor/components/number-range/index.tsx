@@ -1,7 +1,7 @@
-import { memo, useState, useCallback, useEffect } from 'react';
-import { InputNumber } from 'antd';
-import classnames from 'classnames';
-import styles from './index.module.scss';
+import { memo, useState, useCallback, useEffect } from "react";
+import { InputNumber } from "antd";
+import classnames from "classnames";
+import styles from "./index.module.scss";
 
 interface EditProps {
   className?: string;
@@ -41,7 +41,7 @@ const NumberRange = ({ className, value, onChange }: EditProps) => {
     }
   }, [value, setMinNumber, setMaxNumber]);
   return (
-    <div className={classnames(styles.numberRange, className ? className : '')}>
+    <div className={classnames(styles.numberRange, className ? className : "")}>
       <InputNumber
         className={styles.min}
         placeholder="最小值"

@@ -1,4 +1,4 @@
-import type { RootState as StoreState } from '@app/store';
+import type { RootState as StoreState } from "@app/store";
 
 declare global {
   type RootState = StoreState;
@@ -15,4 +15,4 @@ declare global {
   }
 }
 
-declare module '@enc/theme-scheme/dist/utils.esm';
+declare module "@enc/theme-scheme/dist/utils.esm";

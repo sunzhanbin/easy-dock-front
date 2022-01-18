@@ -9,13 +9,13 @@ import { useDispatch } from "react-redux";
 
 type HeaderUserProps = {
   showProject?: boolean;
-}
-function HeaderUser({showProject}: HeaderUserProps) {
+};
+function HeaderUser({ showProject }: HeaderUserProps) {
   const dispatch = useDispatch();
   const skip = auth.getAuth() ? false : true;
   const { user } = useGetUserInfoQuery(undefined, {
     selectFromResult: ({ data }) => {
-      if (!data) return {user: null};
+      if (!data) return { user: null };
       const { power, user } = data;
       return {
         user: {
@@ -26,7 +26,7 @@ function HeaderUser({showProject}: HeaderUserProps) {
         },
       };
     },
-    skip
+    skip,
   });
 
   const handleLogin = async () => {
@@ -59,18 +59,13 @@ function HeaderUser({showProject}: HeaderUserProps) {
   return (
     <>
       {user ? (
-        <Dropdown
-          overlay={dropdownOverlay}
-          getPopupContainer={(c) => c}
-          placement="bottomLeft"
-        >
+        <Dropdown overlay={dropdownOverlay} getPopupContainer={(c) => c} placement="bottomLeft">
           <div className="user">
-            {
-              showProject &&
+            {showProject && (
               <div className="avatar">
-                <Avatar round size={32} src={user.avatar} name={user.username}/>
+                <Avatar round size={32} src={user.avatar} name={user.username} />
               </div>
-            }
+            )}
             <Text className="name">{user.username}</Text>
           </div>
         </Dropdown>

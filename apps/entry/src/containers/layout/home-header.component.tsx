@@ -3,13 +3,13 @@ import classnames from "classnames";
 import { NavLink, useLocation } from "react-router-dom";
 import Header from "@components/header";
 import { Icon } from "@common/components";
-import '@containers/layout/home-header.style';
+import "@containers/layout/home-header.style";
 
 const HomeHeader: React.FC = () => {
   const location = useLocation();
-  const mainEntry = location.pathname === '/';
+  const mainEntry = location.pathname === "/";
   return (
-    <div className={classnames('home_header', mainEntry ? 'main-header': '')}>
+    <div className={classnames("home_header", mainEntry ? "main-header" : "")}>
       <Header>
         <nav className="nav_menu">
           <NavLink className={({ isActive }) => classnames({ nav: true, active: isActive })} to="/home">

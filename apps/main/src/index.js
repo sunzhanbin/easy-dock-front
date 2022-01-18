@@ -1,5 +1,5 @@
 // // import 方式加载 sso.js
-import Auth from '@enc/sso';
+import Auth from "@enc/sso";
 
 const auth = new Auth();
 
@@ -24,6 +24,6 @@ auth.setConfig({ server: window.SSO_LOGIN_URL });
   // const token = await Auth.getToken(true, window.EASY_DOCK_BASE_SERVICE_ENDPOINT);
 
   if (token) {
-    require('./app.tsx');
+    require("./app.tsx");
   }
 })();

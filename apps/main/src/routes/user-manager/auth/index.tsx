@@ -1,13 +1,13 @@
-import { memo, useState, useEffect } from 'react';
-import { Popover } from 'antd';
-import projectImage from '@assets/project.png';
-import { Icon, MemberList, Text, Loading } from '@common/components';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import { fetchProjectPowers, revokeAuth, assignAuth, AssignAuthParams, fetchAllUser } from '@/api/auth';
-import MemberSelector from '@common/components/member-selector/selectors/member-selector';
-import SelectorContext from '@common/components/member-selector/context';
-import { AuthEnum, ResourceTypeEnum, OwnerTypeEnum, ProjectPower, UserOwner } from '@/schema/app';
-import styles from './index.module.scss';
+import { memo, useState, useEffect } from "react";
+import { Popover } from "antd";
+import projectImage from "@assets/project.png";
+import { Icon, MemberList, Text, Loading } from "@common/components";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { fetchProjectPowers, revokeAuth, assignAuth, AssignAuthParams, fetchAllUser } from "@/api/auth";
+import MemberSelector from "@common/components/member-selector/selectors/member-selector";
+import SelectorContext from "@common/components/member-selector/context";
+import { AuthEnum, ResourceTypeEnum, OwnerTypeEnum, ProjectPower, UserOwner } from "@/schema/app";
+import styles from "./index.module.scss";
 
 const Auth = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -64,10 +64,10 @@ const Auth = () => {
       const member = members[members.length - 1];
       if (member && member.id) {
         const params: AssignAuthParams = {
-          ownerKey: member.id + '',
+          ownerKey: member.id + "",
           ownerType: OwnerTypeEnum.USER,
           power: AuthEnum.ADMIN,
-          resourceKey: project.id + '',
+          resourceKey: project.id + "",
           resourceType: ResourceTypeEnum.PROJECT,
         };
         assignAuth(params).then(() => {
@@ -77,7 +77,7 @@ const Auth = () => {
     } else {
       const powerList = [...powers];
       members.forEach((member: User) => {
-        const index = powerList.findIndex((power) => ((power.owner as unknown) as UserOwner).id === member.id);
+        const index = powerList.findIndex((power) => (power.owner as unknown as UserOwner).id === member.id);
         powerList.splice(index, 1);
       });
       const power = powerList[0];
@@ -97,8 +97,8 @@ const Auth = () => {
       .map((user) => Object.assign({}, user, { name: user.userName, username: user.userName }));
     return (
       <div className={styles.selector}>
-        <div className={styles['add-manager']}>添加项目管理员</div>
-        <SelectorContext.Provider value={{ wrapperClass: styles['member-selector'] }}>
+        <div className={styles["add-manager"]}>添加项目管理员</div>
+        <SelectorContext.Provider value={{ wrapperClass: styles["member-selector"] }}>
           <MemberSelector
             value={members}
             fetchUser={fetchUser}

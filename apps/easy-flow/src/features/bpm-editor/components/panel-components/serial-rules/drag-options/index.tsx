@@ -1,14 +1,14 @@
-import React, { useEffect, useRef, useState, memo } from 'react';
-import { DropTargetMonitor, useDrag, useDrop, XYCoord } from 'react-dnd';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import styles from '../index.module.scss';
-import { Tooltip, Input, Select } from 'antd';
-import { Icon } from '@common/components';
-import { RuleOption, SerialNumType, CountResetRules } from '@type';
-import IncNumModal from '../components/modal-increase-num';
-import classNames from 'classnames';
-import { DateOptions } from '@utils/const';
-import { getPopupContainer } from '@utils';
+import React, { useEffect, useRef, useState, memo } from "react";
+import { DropTargetMonitor, useDrag, useDrop, XYCoord } from "react-dnd";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import styles from "../index.module.scss";
+import { Tooltip, Input, Select } from "antd";
+import { Icon } from "@common/components";
+import { RuleOption, SerialNumType, CountResetRules } from "@type";
+import IncNumModal from "../components/modal-increase-num";
+import classNames from "classnames";
+import { DateOptions } from "@utils/const";
+import { getPopupContainer } from "@utils";
 
 const { Option } = Select;
 
@@ -19,7 +19,7 @@ interface DraggableOptionProps {
   fields: { id: string; name: string }[];
   disabled?: boolean;
 
-  onDelete(index: this['index']): void;
+  onDelete(index: this["index"]): void;
 
   onChange: (arg0: RuleOption) => void;
 
@@ -28,13 +28,13 @@ interface DraggableOptionProps {
 
 function DraggableOption(props: DraggableOptionProps) {
   const { onDelete, data, onChange, onDrag, index, fields, disabled } = props;
-  const type = data?.type || 'incNumber'; // 自定义编号规则
+  const type = data?.type || "incNumber"; // 自定义编号规则
   const dragWrapperRef = useRef<HTMLDivElement>(null);
   const [canMove, setCanMove] = useState<boolean>(false);
   const [showIncModal, setShowIncModal] = useState<boolean>(false);
   const [{ opacity }, drag] = useDrag(
     () => ({
-      type: 'option',
+      type: "option",
       item() {
         return { index };
       },
@@ -47,7 +47,7 @@ function DraggableOption(props: DraggableOptionProps) {
   );
   const [, drop] = useDrop(
     () => ({
-      accept: 'option',
+      accept: "option",
       hover: (currentDragItem: { index: number }, monitor: DropTargetMonitor) => {
         if (!dragWrapperRef.current) {
           return;
@@ -87,15 +87,15 @@ function DraggableOption(props: DraggableOptionProps) {
   );
 
   const handleInputBlur = useMemoCallback((event: React.FocusEvent<HTMLInputElement>) => {
-    onChange({ type: 'fixedChars', chars: event.target.value, index });
+    onChange({ type: "fixedChars", chars: event.target.value, index });
   });
 
   const handleSelectChange = useMemoCallback((value) => {
-    onChange({ type: 'createTime', format: value, index });
+    onChange({ type: "createTime", format: value, index });
   });
 
   const handleChangeField = useMemoCallback((value) => {
-    onChange({ type: 'fieldName', fieldValue: value, index });
+    onChange({ type: "fieldName", fieldValue: value, index });
   });
   const handleDelete = useMemoCallback(() => {
     onDelete(index);
@@ -114,23 +114,24 @@ function DraggableOption(props: DraggableOptionProps) {
   }, [drag, drop]);
 
   const handleSubmit = useMemoCallback((values) => {
-    type === 'incNumber' && setShowIncModal(false);
+    type === "incNumber" && setShowIncModal(false);
     onChange && onChange(values);
   });
   const renderLabel = useMemoCallback(() => {
     switch (data?.type) {
-      case 'incNumber':
+      case "incNumber": {
         const resetDuration = data?.resetDuration as keyof typeof CountResetRules;
         const labelStr = `${data?.digitsNum}位数字，${CountResetRules[resetDuration]}`;
         return (
           <div
-            className={classNames(styles.label, disabled ? styles.labelDisable : '')}
+            className={classNames(styles.label, disabled ? styles.labelDisable : "")}
             onClick={() => !disabled && setShowIncModal(true)}
           >
             <span className={styles.labelStr}>{labelStr}</span>
           </div>
         );
-      case 'createTime':
+      }
+      case "createTime": {
         const date = DateOptions.find((item) => item.key === data?.format)?.value;
         return (
           <Select
@@ -150,10 +151,11 @@ function DraggableOption(props: DraggableOptionProps) {
             ))}
           </Select>
         );
-      case 'fixedChars':
+      }
+      case "fixedChars":
         return (
           <Input
-            className={classNames(!data?.chars ? styles.inputBorder : '')}
+            className={classNames(!data?.chars ? styles.inputBorder : "")}
             size="large"
             onChange={handleInputBlur}
             defaultValue={data?.chars}
@@ -162,7 +164,7 @@ function DraggableOption(props: DraggableOptionProps) {
             placeholder="请输入"
           />
         );
-      case 'fieldName':
+      case "fieldName":
         return (
           <div className={styles.label}>
             <Select
@@ -192,7 +194,7 @@ function DraggableOption(props: DraggableOptionProps) {
         {renderLabel()}
       </div>
       <div className={styles.operation}>
-        {type !== 'incNumber' && !disabled ? (
+        {type !== "incNumber" && !disabled ? (
           <div className={styles.delete} onClick={handleDelete}>
             <Tooltip title="删除">
               <span>
@@ -211,7 +213,7 @@ function DraggableOption(props: DraggableOptionProps) {
         )}
         {!disabled ? (
           <div
-            className={classNames(styles.move, type === 'incNumber' ? styles.incNumber : '')}
+            className={classNames(styles.move, type === "incNumber" ? styles.incNumber : "")}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
           >

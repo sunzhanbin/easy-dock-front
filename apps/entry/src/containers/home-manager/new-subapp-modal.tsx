@@ -1,11 +1,11 @@
-import React, { memo, useCallback } from 'react';
-import { Modal, Form, Input, message } from 'antd';
-import SelectCard from '@components/select-card';
-import { useAppSelector } from '@/store';
-import { selectProjectId } from '@views/home/index.slice';
-import '@components/select-card/index.style.scss';
-import { useFetchWorkspaceListQuery, useAddWorkspaceMutation } from '@/http';
-import { APP_TYPE, nameRule } from '@/consts';
+import React, { memo, useCallback } from "react";
+import { Modal, Form, Input, message } from "antd";
+import SelectCard from "@components/select-card";
+import { useAppSelector } from "@/store";
+import { selectProjectId } from "@views/home/index.slice";
+import "@components/select-card/index.style.scss";
+import { useFetchWorkspaceListQuery, useAddWorkspaceMutation } from "@/http";
+import { APP_TYPE, nameRule } from "@/consts";
 
 type ModalProps = {
   modalInfo: { title: string; name: string; fieldKey: number };
@@ -15,8 +15,8 @@ type ModalProps = {
 };
 
 const SELECT_CARD_TYPE = {
-  key: 'workspace',
-  label: '工作区',
+  key: "workspace",
+  label: "工作区",
 };
 
 const NewSubAppModal = ({ modalInfo, visible, onOk, onCancel }: ModalProps) => {
@@ -39,7 +39,7 @@ const NewSubAppModal = ({ modalInfo, visible, onOk, onCancel }: ModalProps) => {
     ({ name }) => {
       const ret = addWorkspace({ name, projectId }).unwrap();
       ret.then(() => {
-        message.success('创建成功');
+        message.success("创建成功");
       });
       return ret;
     },

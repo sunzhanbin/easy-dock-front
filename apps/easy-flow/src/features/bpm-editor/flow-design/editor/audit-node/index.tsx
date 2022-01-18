@@ -1,22 +1,22 @@
-import { memo, useMemo } from 'react';
-import { useDispatch } from 'react-redux';
-import { Form, Input, Button, Checkbox, InputNumber } from 'antd';
-import { Rule } from 'antd/lib/form';
-import debounce from 'lodash/debounce';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import { AuditNode, RevertType } from '@type/flow';
-import MemberSelector from '../../components/member-selector';
-import FieldAuths from '../../components/field-auths';
-import ButtonEditor from '../../components/button-editor';
-import CounterSignButtonGroup from './countersign-btn-group';
-import { updateNode } from '../../flow-slice';
-import { trimInputValue } from '../../util';
-import useValidateForm from '../../hooks/use-validate-form';
-import usePrevNodes from '../../hooks/use-prev-nodes';
-import RevertCascader from './revert-cascader';
-import { rules } from '../../validators';
-import styles from './index.module.scss';
-import DueConfig from '@/features/bpm-editor/components/due-config';
+import { memo, useMemo } from "react";
+import { useDispatch } from "react-redux";
+import { Form, Input, Button, Checkbox, InputNumber } from "antd";
+import { Rule } from "antd/lib/form";
+import debounce from "lodash/debounce";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { AuditNode, RevertType } from "@type/flow";
+import MemberSelector from "../../components/member-selector";
+import FieldAuths from "../../components/field-auths";
+import ButtonEditor from "../../components/button-editor";
+import CounterSignButtonGroup from "./countersign-btn-group";
+import { updateNode } from "../../flow-slice";
+import { trimInputValue } from "../../util";
+import useValidateForm from "../../hooks/use-validate-form";
+import usePrevNodes from "../../hooks/use-prev-nodes";
+import RevertCascader from "./revert-cascader";
+import { rules } from "../../validators";
+import styles from "./index.module.scss";
+import DueConfig from "@/features/bpm-editor/components/due-config";
 
 interface AuditNodeEditorProps {
   node: AuditNode;
@@ -24,20 +24,20 @@ interface AuditNodeEditorProps {
 
 type FormValuesType = {
   name: string;
-  correlationMemberConfig: AuditNode['correlationMemberConfig'];
+  correlationMemberConfig: AuditNode["correlationMemberConfig"];
   btnConfigs: {
-    btnText: AuditNode['btnText'];
-    revert: AuditNode['revert'];
+    btnText: AuditNode["btnText"];
+    revert: AuditNode["revert"];
   };
-  fieldsAuths: AuditNode['fieldsAuths'];
-  countersign: AuditNode['countersign'];
-  dueConfig: AuditNode['dueConfig'];
+  fieldsAuths: AuditNode["fieldsAuths"];
+  countersign: AuditNode["countersign"];
+  dueConfig: AuditNode["dueConfig"];
 };
 
 const defaultDueConfig = {
   enable: false,
   timeout: {
-    unit: 'day',
+    unit: "day",
   },
   notice: {
     starter: false,
@@ -47,7 +47,7 @@ const defaultDueConfig = {
   },
   cycle: {
     enable: false,
-    unit: 'day',
+    unit: "day",
   },
   action: null,
 };
@@ -122,13 +122,13 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
       <Form.Item label="选择办理人" name="correlationMemberConfig" rules={memberRules} required>
         <MemberSelector />
       </Form.Item>
-      <Form.Item className={styles['btn-configs']} label="操作权限" required>
-        <Form.Item name={['btnConfigs', 'btnText', 'save']}>
+      <Form.Item className={styles["btn-configs"]} label="操作权限" required>
+        <Form.Item name={["btnConfigs", "btnText", "save"]}>
           <ButtonEditor className={styles.editor} checkable={false} btnKey="save">
             <Button size="large">保存</Button>
           </ButtonEditor>
         </Form.Item>
-        <Form.Item name={['btnConfigs', 'btnText', 'approve']}>
+        <Form.Item name={["btnConfigs", "btnText", "approve"]}>
           <ButtonEditor className={styles.editor} checkable={false} btnKey="approve">
             <Button size="large" className={styles.approve}>
               同意
@@ -136,7 +136,7 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
           </ButtonEditor>
         </Form.Item>
 
-        <Form.Item name={['btnConfigs', 'btnText', 'revert']}>
+        <Form.Item name={["btnConfigs", "btnText", "revert"]}>
           <ButtonEditor className={styles.editor} checkable={false} btnKey="revert">
             <Button size="large" type="primary" danger>
               驳回
@@ -145,12 +145,12 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
         </Form.Item>
 
         <Form.Item
-          name={['btnConfigs', 'revert']}
+          name={["btnConfigs", "revert"]}
           rules={[
             {
-              validator(_, revert: AuditNode['revert']) {
+              validator(_, revert: AuditNode["revert"]) {
                 if (revert.type === RevertType.Specify && !revert.nodeId) {
-                  return Promise.reject('选择驳回到指定节点时指定节点不能为空');
+                  return Promise.reject("选择驳回到指定节点时指定节点不能为空");
                 }
 
                 return Promise.resolve();
@@ -167,7 +167,7 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
           </ButtonEditor>
         </Form.Item> */}
 
-        <Form.Item name={['btnConfigs', 'btnText', 'terminate']}>
+        <Form.Item name={["btnConfigs", "btnText", "terminate"]}>
           <ButtonEditor className={styles.editor} btnKey="terminate">
             <Button size="large">终止</Button>
           </ButtonEditor>
@@ -176,36 +176,36 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
 
       <Form.Item>
         <Form.Item
-          name={['countersign', 'enable']}
-          className={styles['countersign-checkbox__wrapper']}
+          name={["countersign", "enable"]}
+          className={styles["countersign-checkbox__wrapper"]}
           valuePropName="checked"
         >
           <Checkbox>会签设置</Checkbox>
         </Form.Item>
         <Form.Item noStyle shouldUpdate>
           {(form) => {
-            const { enable, type } = form.getFieldValue(['countersign']) || {};
+            const { enable, type } = form.getFieldValue(["countersign"]) || {};
 
             if (!enable) return null;
 
             return (
               <>
                 <Form.Item
-                  className={styles['countersign-type__wrapper']}
-                  name={['countersign', 'type']}
+                  className={styles["countersign-type__wrapper"]}
+                  name={["countersign", "type"]}
                   initialValue={type === undefined ? 1 : undefined}
                 >
                   <CounterSignButtonGroup />
                 </Form.Item>
 
                 {type === 1 ? (
-                  <div className={styles['countersign-detail']}>
+                  <div className={styles["countersign-detail"]}>
                     <Form.Item
-                      name={['countersign', 'percent']}
+                      name={["countersign", "percent"]}
                       rules={[
                         {
                           validator(_, value) {
-                            return validateRule(value, '百分比不能为空');
+                            return validateRule(value, "百分比不能为空");
                           },
                         },
                       ]}
@@ -215,13 +215,13 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
                     <span>% 同意时进入下一节点，否则驳回</span>
                   </div>
                 ) : (
-                  <div className={styles['countersign-detail']}>
+                  <div className={styles["countersign-detail"]}>
                     <Form.Item
-                      name={['countersign', 'count']}
+                      name={["countersign", "count"]}
                       rules={[
                         {
                           validator(_, value) {
-                            return validateRule(value, '人数不能为空');
+                            return validateRule(value, "人数不能为空");
                           },
                         },
                       ]}

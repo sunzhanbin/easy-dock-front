@@ -1,19 +1,19 @@
-import { useState, useMemo, useEffect } from 'react';
-import { Menu } from 'antd';
-import { Icon } from '@common/components';
-import classNames from 'classnames';
-import { useAppDispatch } from '@/store';
-import { Outlet, useParams } from 'react-router';
-import { useNavigate } from 'react-router-dom';
-import { setCurrentId } from '@/views/workspace/index.slice';
-import { keyPath, findFirstChild, findItem, getPopupContainer } from '@utils/utils';
-import { RouteMap, TASK_CENTER_TYPE } from '@utils/const';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import { WorkspaceBaseMenuProps, Menu as IMenu } from '@utils/types';
-import UserComponent from '@components//header/user';
-import '@containers/workspace-running/multi-nav.style';
-import { CanvasResponseType, CANVAS_ENTRY, MAIN_ENTRY, SPACE_ENTRY, SubAppType } from '@/consts';
-import { useGetCanvasIdMutation, useGetHoloSceneIdMutation } from '@/http/app-manager.hooks';
+import { useState, useMemo, useEffect } from "react";
+import { Menu } from "antd";
+import { Icon } from "@common/components";
+import classNames from "classnames";
+import { useAppDispatch } from "@/store";
+import { Outlet, useParams } from "react-router";
+import { useNavigate } from "react-router-dom";
+import { setCurrentId } from "@/views/workspace/index.slice";
+import { keyPath, findFirstChild, findItem, getPopupContainer } from "@utils/utils";
+import { RouteMap, TASK_CENTER_TYPE } from "@utils/const";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { WorkspaceBaseMenuProps, Menu as IMenu } from "@utils/types";
+import UserComponent from "@components//header/user";
+import "@containers/workspace-running/multi-nav.style";
+import { CanvasResponseType, CANVAS_ENTRY, MAIN_ENTRY, SPACE_ENTRY, SubAppType } from "@/consts";
+import { useGetCanvasIdMutation, useGetHoloSceneIdMutation } from "@/http/app-manager.hooks";
 
 const { SubMenu } = Menu;
 
@@ -36,7 +36,7 @@ const MultiNavComponent = ({ extra, dataSource, theme, selectedKey }: WorkspaceB
     const menu = dataSource.length ? dataSource[0] : null;
     setActiveMainKey(menu?.id || "");
     const subMenu = findFirstChild(menu as IMenu);
-    if (subMenu && subMenu.form?.mode === 'current') {
+    if (subMenu && subMenu.form?.mode === "current") {
       dispatch(setCurrentId(subMenu.id));
     }
   }, [dataSource]);
@@ -48,17 +48,17 @@ const MultiNavComponent = ({ extra, dataSource, theme, selectedKey }: WorkspaceB
         mode,
       },
     } = menu;
-    let url = '';
-    if (mode === 'current') {
+    let url = "";
+    if (mode === "current") {
       // 当前窗口打开
       if (subAppType === SubAppType.FLOW && subAppId) {
-        url = `./${RouteMap[(subAppType as unknown) as keyof typeof RouteMap]}/instance/${subAppId}`;
+        url = `./${RouteMap[subAppType as unknown as keyof typeof RouteMap]}/instance/${subAppId}`;
       } else if (subAppId) {
-        url = `./${RouteMap[(subAppType as unknown) as keyof typeof RouteMap]}`;
+        url = `./${RouteMap[subAppType as unknown as keyof typeof RouteMap]}`;
       } else if (customUrl) {
-        url = './iframe';
+        url = "./iframe";
       } else {
-        url = './empty';
+        url = "./empty";
       }
       navigate(url);
     } else {
@@ -101,21 +101,21 @@ const MultiNavComponent = ({ extra, dataSource, theme, selectedKey }: WorkspaceB
     if (menu?.id !== key) {
       navigateFn(subMenu);
     }
-    if(menu){
-      if (subMenu && subMenu.form?.mode === 'current') {
+    if (menu) {
+      if (subMenu && subMenu.form?.mode === "current") {
         dispatch(setCurrentId(subMenu.id));
       }
     } else {
       dispatch(setCurrentId(key));
     }
-    console.log(22222233111)
+    console.log(22222233111);
   });
 
   const handleTitleClick = useMemoCallback(({ key }) => {
     const menu = findItem(key, dataSource);
     console.log(2222);
     navigateFn(menu);
-    if (menu && menu.form?.mode === 'current') {
+    if (menu && menu.form?.mode === "current") {
       dispatch(setCurrentId(key));
     }
   });
@@ -125,20 +125,20 @@ const MultiNavComponent = ({ extra, dataSource, theme, selectedKey }: WorkspaceB
     if (selectedKey !== key) {
       navigateFn(menu);
     }
-    if (menu && menu.form?.mode === 'current') {
+    if (menu && menu.form?.mode === "current") {
       dispatch(setCurrentId(key));
     }
   });
 
   const renderIcon = useMemoCallback((icon) => {
-    if (!icon || icon === 'wukongjian') {
+    if (!icon || icon === "wukongjian") {
       return null;
     }
     return <Icon type={icon} />;
   });
 
   return (
-    <div className={classNames('multi-nav-component', theme)}>
+    <div className={classNames("multi-nav-component", theme)}>
       <div className="header">
         <div className="extra">{extra}</div>
         <div className="menu">

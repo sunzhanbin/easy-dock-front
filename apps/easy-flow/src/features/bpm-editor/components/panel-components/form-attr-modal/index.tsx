@@ -1,21 +1,21 @@
-import { memo, useCallback, useMemo } from 'react';
-import { Modal, Form, Select, message } from 'antd';
-import { Icon } from '@common/components';
-import DataApiConfig from '@/features/bpm-editor/components/data-api-config';
-import ResponseWithMap from '@/features/bpm-editor/components/data-api-config/response-with-map';
-import FormChange from './form-change';
-import styles from './index.module.scss';
-import { useAppSelector } from '@/app/hooks';
-import { componentPropsSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
-import { fieldRule, FormField, FormRuleItem } from '@/type';
-import useMemoCallback from '@common/hooks/use-memo-callback';
+import { memo, useCallback, useMemo } from "react";
+import { Modal, Form, Select, message } from "antd";
+import { Icon } from "@common/components";
+import DataApiConfig from "@/features/bpm-editor/components/data-api-config";
+import ResponseWithMap from "@/features/bpm-editor/components/data-api-config/response-with-map";
+import FormChange from "./form-change";
+import styles from "./index.module.scss";
+import { useAppSelector } from "@/app/hooks";
+import { componentPropsSelector } from "@/features/bpm-editor/form-design/formzone-reducer";
+import { fieldRule, FormField, FormRuleItem } from "@/type";
+import useMemoCallback from "@common/hooks/use-memo-callback";
 
 type modalProps = {
   editIndex?: number;
   rule: FormRuleItem | null;
-  type: 'add' | 'edit';
+  type: "add" | "edit";
   onClose: () => void;
-  onOk: (rules: any, type: 'add' | 'edit', editIndex?: number) => void;
+  onOk: (rules: any, type: "add" | "edit", editIndex?: number) => void;
 };
 
 const { Option } = Select;
@@ -29,7 +29,7 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
   }, [byId]);
   const fields = useMemo<{ id: string; name: string }[]>(() => {
     return componentList
-      .filter((com) => !['DescText', 'Tabs'].includes(com.type))
+      .filter((com) => !["DescText", "Tabs"].includes(com.type))
       .map((com) => ({ id: com.fieldName, name: com.label }));
   }, [componentList]);
   const initFormValues = useMemo(() => {
@@ -37,7 +37,7 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
     if (!rule) {
       return { mode: 1, subtype: 1 };
     }
-    if (rule.type === 'change') {
+    if (rule.type === "change") {
       // 编辑值改变时规则
       return {
         mode: 1,
@@ -47,7 +47,7 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
         hideComponents: rule.formChangeRule?.hideComponents,
         interfaceConfig: rule.formChangeRule?.interfaceConfig,
       };
-    } else if (rule.type === 'init') {
+    } else if (rule.type === "init") {
       // 编辑进入表单时规则
       return {
         mode: 2,
@@ -71,7 +71,7 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
         });
         // 显示控件和隐藏控件中包含了条件中关联的控件
         if (intersection.length > 0) {
-          message.error('条件关联的控件中包含了显示隐藏的控件');
+          message.error("条件关联的控件中包含了显示隐藏的控件");
           return;
         }
         onOk && onOk(rules, type, editIndex);
@@ -116,7 +116,7 @@ const FormAttrModal = ({ editIndex, type, rule, onClose, onOk }: modalProps) => 
         </Form.Item>
         <Form.Item noStyle shouldUpdate={(prevValues, curValues) => prevValues.mode !== curValues.mode}>
           {({ getFieldValue }) => {
-            const mode = getFieldValue('mode');
+            const mode = getFieldValue("mode");
             if (mode === 1) {
               return <FormChange />;
             }

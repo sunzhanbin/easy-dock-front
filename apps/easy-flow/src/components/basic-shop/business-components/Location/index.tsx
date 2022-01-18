@@ -1,4 +1,4 @@
-import { memo, FC } from 'react';
+import { memo, FC } from "react";
 
 const Location: FC = () => {
   return <div>Location</div>;

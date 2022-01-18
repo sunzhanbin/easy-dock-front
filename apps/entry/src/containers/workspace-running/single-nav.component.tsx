@@ -1,19 +1,19 @@
-import { useCallback, useMemo } from 'react';
-import { Menu } from 'antd';
-import classNames from 'classnames';
-import { Outlet, useParams } from 'react-router';
-import { useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '@/store';
-import { RouteMap, TASK_CENTER_TYPE } from '@utils/const';
-import { WorkspaceBaseMenuProps, Menu as IMenu } from '@utils/types';
-import UserComponent from '@components//header/user';
-import { setCurrentId } from '@/views/workspace/index.slice';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import { findFirstChild, findItem, keyPath } from '@utils/utils';
-import '@containers/workspace-running/single-nav.style';
-import { CanvasResponseType, CANVAS_ENTRY, MAIN_ENTRY, SPACE_ENTRY, SubAppType } from '@/consts';
-import { useGetCanvasIdMutation, useGetHoloSceneIdMutation } from '@/http/app-manager.hooks';
-import { Icon } from '@common/components';
+import { useCallback, useMemo } from "react";
+import { Menu } from "antd";
+import classNames from "classnames";
+import { Outlet, useParams } from "react-router";
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "@/store";
+import { RouteMap, TASK_CENTER_TYPE } from "@utils/const";
+import { WorkspaceBaseMenuProps, Menu as IMenu } from "@utils/types";
+import UserComponent from "@components//header/user";
+import { setCurrentId } from "@/views/workspace/index.slice";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { findFirstChild, findItem, keyPath } from "@utils/utils";
+import "@containers/workspace-running/single-nav.style";
+import { CanvasResponseType, CANVAS_ENTRY, MAIN_ENTRY, SPACE_ENTRY, SubAppType } from "@/consts";
+import { useGetCanvasIdMutation, useGetHoloSceneIdMutation } from "@/http/app-manager.hooks";
+import { Icon } from "@common/components";
 
 const { SubMenu } = Menu;
 
@@ -26,7 +26,7 @@ const SingleNavComponent = ({ extra, dataSource, theme, selectedKey }: Workspace
   const [getHoloSceneId] = useGetHoloSceneIdMutation();
 
   const renderIcon = useMemoCallback((icon) => {
-    if (!icon || icon === 'wukongjian') {
+    if (!icon || icon === "wukongjian") {
       return null;
     }
     return <Icon type={icon} />;
@@ -39,19 +39,19 @@ const SingleNavComponent = ({ extra, dataSource, theme, selectedKey }: Workspace
         mode,
       },
     } = menu;
-    let url = '';
+    let url = "";
     // 当前窗口打开
-    if (mode === 'current') {
+    if (mode === "current") {
       // 流程类子应用
       if (subAppType === SubAppType.FLOW && subAppId) {
-        url = `./${RouteMap[(subAppType as unknown) as keyof typeof RouteMap]}/instance/${subAppId}`;
+        url = `./${RouteMap[subAppType as unknown as keyof typeof RouteMap]}/instance/${subAppId}`;
       } else if (subAppId) {
-        url = `./${RouteMap[(subAppType as unknown) as keyof typeof RouteMap]}`;
+        url = `./${RouteMap[subAppType as unknown as keyof typeof RouteMap]}`;
       } else if (customUrl) {
-        url = './iframe';
+        url = "./iframe";
       } else {
         // 如果没有子应用id和自定义url,则显示空状态
-        url = './empty';
+        url = "./empty";
       }
       navigate(url);
     } else {
@@ -88,10 +88,10 @@ const SingleNavComponent = ({ extra, dataSource, theme, selectedKey }: Workspace
     }
   }, []);
 
-  const activeMainKey = useMemo(() => keyPath(selectedKey, dataSource).shift() || selectedKey, [
-    selectedKey,
-    dataSource,
-  ]);
+  const activeMainKey = useMemo(
+    () => keyPath(selectedKey, dataSource).shift() || selectedKey,
+    [selectedKey, dataSource],
+  );
 
   const handleTitleClick = useMemoCallback(({ key }) => {
     const menu = dataSource.find((v) => v.id === key);
@@ -100,7 +100,7 @@ const SingleNavComponent = ({ extra, dataSource, theme, selectedKey }: Workspace
       if (subMenu.id !== selectedKey) {
         navigateFn(subMenu);
       }
-      if (subMenu && subMenu.form?.mode === 'current') {
+      if (subMenu && subMenu.form?.mode === "current") {
         dispatch(setCurrentId(subMenu.id));
       }
     }
@@ -109,15 +109,15 @@ const SingleNavComponent = ({ extra, dataSource, theme, selectedKey }: Workspace
     const menu = findItem(key, dataSource);
     if (selectedKey !== key) {
       navigateFn(menu);
-    };
+    }
 
-    if (menu && menu.form?.mode === 'current') {
+    if (menu && menu.form?.mode === "current") {
       dispatch(setCurrentId(key));
     }
   });
 
   return (
-    <div className={classNames('single-nav-component', theme)}>
+    <div className={classNames("single-nav-component", theme)}>
       <div className="left">
         <div className="extra">{extra}</div>
         <div className="menu">

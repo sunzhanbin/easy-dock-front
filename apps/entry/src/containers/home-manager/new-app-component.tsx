@@ -1,15 +1,15 @@
-import { useState } from 'react';
-import { Icon } from '@common/components';
-import '@containers/home-manager/index.style.scss';
-import NewSubAppModal from '@containers/home-manager/new-subapp-modal';
-import { useNavigate } from 'react-router-dom';
-import { useSaveAppSetupMutation } from '@/http';
-import { message } from 'antd';
-import { APP_TYPE, ResponseType } from '@/consts';
+import { useState } from "react";
+import { Icon } from "@common/components";
+import "@containers/home-manager/index.style.scss";
+import NewSubAppModal from "@containers/home-manager/new-subapp-modal";
+import { useNavigate } from "react-router-dom";
+import { useSaveAppSetupMutation } from "@/http";
+import { message } from "antd";
+import { APP_TYPE, ResponseType } from "@/consts";
 
 const APP_INFO = {
-  title: '新建应用',
-  name: '应用',
+  title: "新建应用",
+  name: "应用",
   fieldKey: APP_TYPE,
 };
 
@@ -22,7 +22,7 @@ const HomeNewAPP = () => {
     try {
       const { name, appId: id } = values;
       const ret: ResponseType = await createApp({ name, id }).unwrap();
-      message.success('创建成功!');
+      message.success("创建成功!");
       setShowModal(false);
       navigate(`/app-manager/${ret.id}`);
     } catch (e) {

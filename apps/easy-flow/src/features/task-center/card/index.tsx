@@ -1,9 +1,9 @@
-import { memo, useCallback, FC } from 'react';
-import styles from './index.module.scss';
-import FlowImage from '@assets/flow-small.png';
-import classNames from 'classnames';
-import { useHistory } from 'react-router-dom';
-import { dynamicRoutes } from '@/consts/route';
+import { memo, useCallback, FC } from "react";
+import styles from "./index.module.scss";
+import FlowImage from "@assets/flow-small.png";
+import classNames from "classnames";
+import { useHistory } from "react-router-dom";
+import { dynamicRoutes } from "@/consts/route";
 
 const Card: FC<{ id: number; name: string; className?: string }> = ({ id, name, className }) => {
   const history = useHistory();

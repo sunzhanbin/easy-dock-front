@@ -1,9 +1,9 @@
-import { Rule } from 'antd/lib/form';
-import { DataConfig } from './api';
-import { FormField, FieldType } from './form';
-export * from './form';
+import { Rule } from "antd/lib/form";
+import { DataConfig } from "./api";
+import { FormField, FieldType } from "./form";
+export * from "./form";
 
-export type { Member, Dept, Role } from '@common/type';
+export type { Member, Dept, Role } from "@common/type";
 
 export type SchemaConfigItem = {
   key: string;
@@ -15,7 +15,7 @@ export type SchemaConfigItem = {
   requiredMessage?: string;
   rules?: Rule[];
   children?: SchemaConfigItem;
-  direction?: 'vertical' | 'horizontal';
+  direction?: "vertical" | "horizontal";
   range?: rangeItem[];
   isProps: boolean;
   checked?: boolean;
@@ -45,13 +45,13 @@ export type Schema = {
 };
 
 export type AppBindField = {
-  type: 'app';
+  type: "app";
   appId: string;
   fieldId: string;
 };
 
 export type CustomField = {
-  type: 'custom';
+  type: "custom";
   data: FieldOption[];
 };
 
@@ -68,7 +68,7 @@ export type FormLogicItem = {
   fields: string[];
 };
 
-export type FormLogicType = 'visible' | 'disable' | 'refresh' | 'reset';
+export type FormLogicType = "visible" | "disable" | "refresh" | "reset";
 
 export type FormLogicBaseField = {
   [k in FormLogicType]: FormLogicItem[];
@@ -76,7 +76,7 @@ export type FormLogicBaseField = {
 
 export type DataFilterCondition = {
   operator: string;
-  children: { type: 'field | constant | calc'; value: string | number | DataFilterCondition }[];
+  children: { type: "field | constant | calc"; value: string | number | DataFilterCondition }[];
 };
 
 export type DataBaseField = {
@@ -84,7 +84,7 @@ export type DataBaseField = {
   dataFilter?: DataFilterCondition[] | null;
 };
 
-export type OptionMode = 'custom' | 'subapp' | 'interface';
+export type OptionMode = "custom" | "subapp" | "interface";
 export type OptionItem = {
   key: string;
   value: string;
@@ -109,7 +109,7 @@ export type SelectOptionItem = {
 };
 
 export type UrlOptionItem = {
-  type: 'custom' | 'interface';
+  type: "custom" | "interface";
   customValue?: string;
   apiConfig?: DataConfig;
 };
@@ -120,7 +120,7 @@ export type SelectColumnsItem = {
   formKeyId?: string;
 };
 
-export type ruleType = 'custom' | 'inject';
+export type ruleType = "custom" | "inject";
 
 export type serialRulesItem = {
   serialId: string | undefined;
@@ -216,7 +216,7 @@ export type TConfigMap = {
   [k: string]: TConfigItem;
 };
 
-type MoveDirection = 'up' | 'down' | 'left' | 'right';
+type MoveDirection = "up" | "down" | "left" | "right";
 
 export type MoveConfig = {
   [k in MoveDirection]: boolean;
@@ -278,16 +278,16 @@ export type Datasource = {
 };
 
 export enum SerialNumType {
-  incNumber = '自动计数',
-  createTime = '提交日期',
-  fixedChars = '固定字符',
-  fieldName = '表单字段',
+  incNumber = "自动计数",
+  createTime = "提交日期",
+  fixedChars = "固定字符",
+  fieldName = "表单字段",
 }
 
 export enum CountResetRules {
-  none = '不自动重置',
-  day = '每日重置',
-  week = '每周重置',
-  month = '每月重置',
-  year = '每年重置',
+  none = "不自动重置",
+  day = "每日重置",
+  week = "每周重置",
+  month = "每月重置",
+  year = "每年重置",
 }

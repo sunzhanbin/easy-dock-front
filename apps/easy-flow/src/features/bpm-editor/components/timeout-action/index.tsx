@@ -1,24 +1,24 @@
-import { memo, useEffect, useState } from 'react';
-import { Switch } from 'antd';
-import styles from './index.module.scss';
-import useMemoCallback from '@common/hooks/use-memo-callback';
+import { memo, useEffect, useState } from "react";
+import { Switch } from "antd";
+import styles from "./index.module.scss";
+import useMemoCallback from "@common/hooks/use-memo-callback";
 
 interface TimeoutActionProps {
   hasRequired?: boolean;
-  value?: 'submit' | 'back' | null;
-  onChange?: (val: this['value']) => void;
+  value?: "submit" | "back" | null;
+  onChange?: (val: this["value"]) => void;
 }
 
 const TimeoutAction = ({ hasRequired = false, value, onChange }: TimeoutActionProps) => {
-  const [autoSubmit, setAutoSubmit] = useState<boolean>(value === 'submit');
-  const [autoBack, setAutoBack] = useState<boolean>(value === 'back');
+  const [autoSubmit, setAutoSubmit] = useState<boolean>(value === "submit");
+  const [autoBack, setAutoBack] = useState<boolean>(value === "back");
   const handleChangeSubmit = useMemoCallback((checked) => {
     setAutoSubmit(checked);
     if (autoBack) {
       setAutoBack(false);
     }
     if (checked) {
-      onChange && onChange('submit');
+      onChange && onChange("submit");
     } else {
       if (!autoBack) {
         onChange && onChange(null);
@@ -31,7 +31,7 @@ const TimeoutAction = ({ hasRequired = false, value, onChange }: TimeoutActionPr
       setAutoSubmit(false);
     }
     if (checked) {
-      onChange && onChange('back');
+      onChange && onChange("back");
     } else {
       if (!autoSubmit) {
         onChange && onChange(null);

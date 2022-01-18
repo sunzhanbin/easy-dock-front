@@ -1,9 +1,9 @@
-import { memo, useEffect, useMemo } from 'react';
-import { useRouteMatch } from 'react-router-dom';
-import classnames from 'classnames';
-import MicroApp from '@components/micro-app';
-import { micros } from '@consts';
-import styles from './index.module.scss';
+import { memo, useEffect, useMemo } from "react";
+import { useRouteMatch } from "react-router-dom";
+import classnames from "classnames";
+import MicroApp from "@components/micro-app";
+import { micros } from "@consts";
+import styles from "./index.module.scss";
 
 function MicroPage({ hasHeader }: { hasHeader?: boolean }) {
   const { path } = useRouteMatch();
@@ -23,7 +23,7 @@ function MicroPage({ hasHeader }: { hasHeader?: boolean }) {
 
   return (
     <MicroApp
-      className={classnames(styles.micro, { [styles['has-components']]: hasHeader })}
+      className={classnames(styles.micro, { [styles["has-components"]]: hasHeader })}
       name={currentInfo.name}
       entry={currentInfo.entry}
     />

@@ -1,5 +1,5 @@
-import { memo, FC } from 'react';
-import styles from './index.module.scss';
+import { memo, FC } from "react";
+import styles from "./index.module.scss";
 
 const LabelContent: FC<{ label: string; desc?: string }> = ({ label, desc }) => {
   return (

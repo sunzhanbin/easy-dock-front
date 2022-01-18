@@ -1,20 +1,20 @@
-import { memo, useEffect, useState, useMemo, useRef, ReactNode } from 'react';
-import classNames from 'classnames';
-import { Select, Form, Input, Radio, RadioChangeEvent } from 'antd';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import { Api, ParamType, DataConfig, ApiType } from '@type/api';
-import { Icon, Loading } from '@common/components';
-import { ParamReturn, queryApiDetail, queryApis } from './util';
-import DataContext from './context';
-import Required from './required';
-import Custom from './custom';
-import styles from './index.module.scss';
-import { urlRegex } from '../../form-design/validate';
+import { memo, useEffect, useState, useMemo, useRef, ReactNode } from "react";
+import classNames from "classnames";
+import { Select, Form, Input, Radio, RadioChangeEvent } from "antd";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { Api, ParamType, DataConfig, ApiType } from "@type/api";
+import { Icon, Loading } from "@common/components";
+import { ParamReturn, queryApiDetail, queryApis } from "./util";
+import DataContext from "./context";
+import Required from "./required";
+import Custom from "./custom";
+import styles from "./index.module.scss";
+import { urlRegex } from "../../form-design/validate";
 
 export interface DataApiConfigProps {
   value?: DataConfig;
-  onChange?(val: this['value']): void;
-  layout?: 'vertical' | 'horizontal';
+  onChange?(val: this["value"]): void;
+  layout?: "vertical" | "horizontal";
   fields: { name: string; id: string }[];
   name: string | string[];
   children?: ReactNode;
@@ -35,7 +35,7 @@ function DataApiConfig(props: DataApiConfigProps) {
   const {
     value = defaultValue,
     onChange,
-    layout = 'vertical',
+    layout = "vertical",
     fields,
     name,
     children,
@@ -127,8 +127,8 @@ function DataApiConfig(props: DataApiConfigProps) {
 
   const typeOptions = useMemo(() => {
     return [
-      { label: '选择已有接口', value: 1 },
-      { label: '自定义接口', value: 2 },
+      { label: "选择已有接口", value: 1 },
+      { label: "自定义接口", value: 2 },
     ];
   }, []);
 
@@ -158,10 +158,10 @@ function DataApiConfig(props: DataApiConfigProps) {
     return {
       validator(_: any, val: string) {
         if (!val) {
-          return Promise.reject(new Error('请输入接口地址'));
+          return Promise.reject(new Error("请输入接口地址"));
         }
         if (!urlRegex.test(val)) {
-          return Promise.reject(new Error('请输入正确的接口地址'));
+          return Promise.reject(new Error("请输入正确的接口地址"));
         }
         return Promise.resolve();
       },
@@ -174,30 +174,30 @@ function DataApiConfig(props: DataApiConfigProps) {
     >
       <div className={classNames(styles.container, className)} ref={containerRef}>
         {loading && <Loading className={styles.loading} />}
-        <Form.Item name={[...thisFormItemName, 'type']} initialValue={value?.type}>
+        <Form.Item name={[...thisFormItemName, "type"]} initialValue={value?.type}>
           <Radio.Group
             optionType="button"
             size="large"
             options={typeOptions}
             className={styles.type}
-            style={{ maxWidth: maxWidth ? maxWidth : '100%' }}
+            style={{ maxWidth: maxWidth ? maxWidth : "100%" }}
             onChange={handleChangeType}
           ></Radio.Group>
         </Form.Item>
         <Form.Item noStyle shouldUpdate={true}>
           {(form) => {
-            const type = form.getFieldValue([...thisFormItemName, 'type']);
+            const type = form.getFieldValue([...thisFormItemName, "type"]);
             if (type === 1) {
               return (
                 <>
                   <Form.Item
-                    name={[...thisFormItemName, 'id']}
-                    className={styles['api-form-item']}
+                    name={[...thisFormItemName, "id"]}
+                    className={styles["api-form-item"]}
                     rules={[
                       {
                         validator(_, val) {
                           if (!val) {
-                            return Promise.reject(new Error('请选择数据接口'));
+                            return Promise.reject(new Error("请选择数据接口"));
                           }
 
                           return Promise.resolve();
@@ -225,7 +225,7 @@ function DataApiConfig(props: DataApiConfigProps) {
                   <div className={styles.subtitle}>{label}</div>
 
                   {/* 必填参数 */}
-                  <Required key={value?.id} name={[...thisFormItemName, 'request', 'required']} />
+                  <Required key={value?.id} name={[...thisFormItemName, "request", "required"]} />
                 </>
               );
             }
@@ -233,7 +233,7 @@ function DataApiConfig(props: DataApiConfigProps) {
               return (
                 <>
                   <Form.Item
-                    name={[...thisFormItemName, 'url']}
+                    name={[...thisFormItemName, "url"]}
                     label="接口地址"
                     rules={[urlRule]}
                     labelCol={{ span: 24 }}
@@ -243,13 +243,13 @@ function DataApiConfig(props: DataApiConfigProps) {
                     <Input size="large" placeholder="请输入接口地址" />
                   </Form.Item>
                   <Form.Item
-                    name={[...thisFormItemName, 'method']}
+                    name={[...thisFormItemName, "method"]}
                     label="请求方式"
                     rules={[
                       {
                         validator(_, val) {
                           if (!val) {
-                            return Promise.reject(new Error('请选择请求方式'));
+                            return Promise.reject(new Error("请选择请求方式"));
                           }
                           return Promise.resolve();
                         },
@@ -274,7 +274,7 @@ function DataApiConfig(props: DataApiConfigProps) {
           }}
         </Form.Item>
         {/* 自定义参数包括可选参数 */}
-        <Custom name={[...thisFormItemName, 'request', 'customize']} />
+        <Custom name={[...thisFormItemName, "request", "customize"]} />
 
         {/* 响应参数 */}
         {children}

@@ -1,22 +1,22 @@
-import React, { memo, useEffect, useMemo, useState } from 'react';
-import { Col, Form, FormInstance, Row } from 'antd';
-import classNames from 'classnames';
-import { Rule } from 'antd/lib/form';
-import useLoadComponents from '@/hooks/use-load-components';
-import { AllComponentType, Datasource, EventType, FormRuleItem } from '@type';
-import { AuthType, FieldAuthsMap } from '@type/flow';
-import { FormMeta, FormValue } from '@type/detail';
-import { analysisFormChangeRule, runtimeAxios } from '@/utils';
-import { Loading } from '@common/components';
-import { DataConfig, ParamSchem } from '@/type/api';
-import PubSub from 'pubsub-js';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import { debounce, omit } from 'lodash';
-import { getFilesType } from '@apis/form';
-import { convertFormRules, validateRules } from './utils';
-import Container from './container';
-import styles from './index.module.scss';
-import LabelContent from '../label-content';
+import React, { memo, useEffect, useMemo, useState } from "react";
+import { Col, Form, FormInstance, Row } from "antd";
+import classNames from "classnames";
+import { Rule } from "antd/lib/form";
+import useLoadComponents from "@/hooks/use-load-components";
+import { AllComponentType, Datasource, EventType, FormRuleItem } from "@type";
+import { AuthType, FieldAuthsMap } from "@type/flow";
+import { FormMeta, FormValue } from "@type/detail";
+import { analysisFormChangeRule, runtimeAxios } from "@/utils";
+import { Loading } from "@common/components";
+import { DataConfig, ParamSchem } from "@/type/api";
+import PubSub from "pubsub-js";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { debounce, omit } from "lodash";
+import { getFilesType } from "@apis/form";
+import { convertFormRules, validateRules } from "./utils";
+import Container from "./container";
+import styles from "./index.module.scss";
+import LabelContent from "../label-content";
 
 type FieldsVisible = { [fieldId: string]: boolean };
 
@@ -32,7 +32,7 @@ interface FormProps {
 }
 
 type CompMaps = {
-  [componentId: string]: FormMeta['components'][number];
+  [componentId: string]: FormMeta["components"][number];
 };
 
 type ExtendProps = {
@@ -69,7 +69,7 @@ const FormDetail = React.forwardRef(function FormDetail(
   props: FormProps,
   ref: React.ForwardedRef<FormInstance<FormValue>>,
 ) {
-  const { data, fieldsAuths, datasource, initialValue, readonly, className, projectId, nodeType = 'start' } = props;
+  const { data, fieldsAuths, datasource, initialValue, readonly, className, projectId, nodeType = "start" } = props;
   const [form] = Form.useForm<FormValue>();
   const [loading, setLoading] = useState<boolean>(false);
   const [fieldsVisible, setFieldsVisible] = useState<FieldsVisible>({});
@@ -86,7 +86,7 @@ const FormDetail = React.forwardRef(function FormDetail(
     if (!data.formRules) {
       return [];
     }
-    return data.formRules.filter((rule) => rule.type === 'init').map((rule) => rule.formInitRule as DataConfig);
+    return data.formRules.filter((rule) => rule.type === "init").map((rule) => rule.formInitRule as DataConfig);
   }, [data.formRules]);
 
   // 提取所有组件类型
@@ -111,11 +111,11 @@ const FormDetail = React.forwardRef(function FormDetail(
         .map((item) => {
           const { map } = item;
           if (!map) {
-            return '';
+            return "";
           }
           return String(map?.match(/(?<=\$\{).*?(?=\})/));
         })
-        .filter((name) => name !== 'null' && name !== '');
+        .filter((name) => name !== "null" && name !== "");
       // 只要接口关联表单值得参数中有一个没有值就不请求接口
       const isEmpty = requestMapList.some((name) => {
         return formValues[name] === undefined;
@@ -125,13 +125,13 @@ const FormDetail = React.forwardRef(function FormDetail(
       }
       const resMap = ((rule?.response as ParamSchem[]) || []).map((res) => {
         if (!res) {
-          return { fieldName: '', name: '' };
+          return { fieldName: "", name: "" };
         }
-        const { name, map: fieldName = '' } = res;
+        const { name, map: fieldName = "" } = res;
         return { fieldName, name };
       });
       respListMap.push(resMap);
-      promiseList.push(runtimeAxios.post('/common/doHttpJson', { meta: rule, formDataList }));
+      promiseList.push(runtimeAxios.post("/common/doHttpJson", { meta: rule, formDataList }));
     });
     setLoading(true);
     Promise.all(promiseList)
@@ -210,9 +210,9 @@ const FormDetail = React.forwardRef(function FormDetail(
     // 此处不要进行setState操作   避免重复更新
     Object.entries(changeValue).forEach(([key, value]: any) => {
       // tabs components
-      if (value && Array.isArray(value) && value.length && all?.[key]?.[0]?.['__title__']) {
+      if (value && Array.isArray(value) && value.length && all?.[key]?.[0]?.["__title__"]) {
         const field = value[value.length - 1];
-        if (field && typeof field === 'object') {
+        if (field && typeof field === "object") {
           const changeKey = Object.keys(field)[0];
           const changeValue = Object.values(field)[0];
           if (!changeKey) return;
@@ -229,13 +229,13 @@ const FormDetail = React.forwardRef(function FormDetail(
 
   useEffect(() => {
     const visbles: FieldsVisible = {};
-    const comMaps: { [key: string]: FormMeta['components'][number] } = {};
-    const formValues: FormProps['initialValue'] = {};
+    const comMaps: { [key: string]: FormMeta["components"][number] } = {};
+    const formValues: FormProps["initialValue"] = {};
     (async () => {
-      if (componentTypes.includes('Attachment')) {
+      if (componentTypes.includes("Attachment")) {
         const fileMap = await getFilesTypeList();
         data.components.forEach((comp) => {
-          if (comp.config.type === 'Attachment') {
+          if (comp.config.type === "Attachment") {
             comp.props.fileMap = fileMap;
           }
         });
@@ -272,7 +272,7 @@ const FormDetail = React.forwardRef(function FormDetail(
 
       // 不是开始节点的话，需要一进来就走一遍表单逻辑规则
       setTimeout(() => {
-        if (nodeType !== 'start') {
+        if (nodeType !== "start") {
           Object.entries(formValues)
             .filter(([key, value]: [string, any]) => value !== undefined)
             .forEach(([key, value]) => {
@@ -300,17 +300,17 @@ const FormDetail = React.forwardRef(function FormDetail(
           <Row key={index} className={styles.row}>
             {formRow.map((fieldId) => {
               const { config = {}, props = {} } = compMaps[fieldId];
-              const { colSpace = 4, label = '', desc = '', type = '', id } = config;
-              const fieldName = config.fieldName || props.fieldName || '';
+              const { colSpace = 4, label = "", desc = "", type = "", id } = config;
+              const fieldName = config.fieldName || props.fieldName || "";
               const isRequired = fieldsAuths && fieldsAuths[fieldName] === AuthType.Required;
               const compProps = { ...props };
-              const Component = compSources[config?.type as AllComponentType['type']];
+              const Component = compSources[config?.type as AllComponentType["type"]];
               if (!fieldsVisible[config.fieldName || fieldId] || !Component) return null;
-              if (type === 'DescText' && compProps.value) {
-                compProps['text_value'] = compProps.value;
+              if (type === "DescText" && compProps.value) {
+                compProps["text_value"] = compProps.value;
               }
-              delete compProps['defaultValue'];
-              delete compProps['apiConfig'];
+              delete compProps["defaultValue"];
+              delete compProps["apiConfig"];
               const rules: Rule[] = validateRules(isRequired, label, type, props);
               return (
                 <Col span={colSpace * 6} key={fieldId} className={styles.col}>
@@ -325,7 +325,7 @@ const FormDetail = React.forwardRef(function FormDetail(
                     <Form.Item
                       key={fieldId}
                       name={fieldName || fieldId}
-                      label={type !== 'DescText' ? <LabelContent label={label} desc={desc} /> : null}
+                      label={type !== "DescText" ? <LabelContent label={label} desc={desc} /> : null}
                       required={isRequired}
                       rules={rules}
                     >
@@ -361,15 +361,15 @@ const FormDetail = React.forwardRef(function FormDetail(
 
 export default memo(FormDetail);
 
-function compRender(type: AllComponentType['type'], Component: any, props: any, extendProps: ExtendProps) {
+function compRender(type: AllComponentType["type"], Component: any, props: any, extendProps: ExtendProps) {
   const { datasource, projectId, fieldName, formInstance, fieldsAuths, readonly } = extendProps;
-  if ((type === 'Select' || type === 'Radio' || type === 'Checkbox') && datasource) {
+  if ((type === "Select" || type === "Radio" || type === "Checkbox") && datasource) {
     return <Component {...props} options={datasource} />;
   }
-  if (type === 'Member') {
+  if (type === "Member") {
     return <Component {...props} projectid={projectId} />;
   }
-  if (type === 'Tabs') {
+  if (type === "Tabs") {
     return (
       <Component
         {...props}
