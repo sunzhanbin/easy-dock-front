@@ -91,7 +91,6 @@ const SerialRules = (props: RulesProps) => {
         setResetRules(filterMata);
         setResetRuleName(data.name);
         setType(SERIAL_TYPE.INJECT_TYPE);
-
       } catch (e) {
         console.log(e);
       }

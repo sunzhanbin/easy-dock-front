@@ -49,10 +49,10 @@
         }
         .ant-modal-body {
           padding: 0;
-          max-height: calc(100vh - 56px);
+          max-height: 100vh;
           overflow-y: auto;
           & > .app-setup-preview {
-            height: calc(100vh - 56px);
+            height: 100vh;
             width: 100%;
           }
         }
