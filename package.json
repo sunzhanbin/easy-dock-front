@@ -15,8 +15,8 @@
     "bootstrap-dev": "yarn add husky --dev -W && husky install && lerna bootstrap -- --dev",
     "publish": "lerna publish",
     "clean": "lerna clean",
-    "lint": "eslint --ext .js,.jsx,.ts,.tsx apps/**",
-    "fix": "eslint -c .eslintrc.json apps --fix"
+    "lint": "eslint -c .eslintrc.json apps --ext .ts,.tsx,.js,.jsx",
+    "fix": "eslint -c .eslintrc.json apps --ext .ts,.tsx,.js,.jsx --fix"
   },
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "^5.9.1",

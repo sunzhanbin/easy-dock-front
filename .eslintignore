@@ -11,3 +11,5 @@
 **/*.config.js
 **/config-overrides.js
 **/paths.js
+**/conf.*.js
+**/conf.js
