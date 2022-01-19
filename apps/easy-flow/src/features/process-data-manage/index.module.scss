@@ -124,7 +124,7 @@
   }
 
   &.dark {
-    background: $dark-content-background-color;
+    background: $content-background-color;
     height: 100%;
     .ant-btn-primary {
       background: $dark-btn-background-color;
@@ -135,7 +135,7 @@
       color: #7582E3;
     }
     .status-stop {
-      background: rgba(255, 101, 118, 0.12);      
+      background: rgba(255, 101, 118, 0.12);
       color: #FF7C8A;
     }
     .status-reject {
@@ -154,7 +154,7 @@
     :global {
       .ant-select-dropdown,
       .ant-select-clear {
-        background-color: rgba($dark-content-background-color, 1);
+        background-color: rgba($content-background-color, 1);
       }
       .ant-select-item-option,
       .ant-select-selection-item,
@@ -172,7 +172,7 @@
       .ant-checkbox-wrapper {
         color: rgba($dark-text-color, 0.8);
       }
-      
+
     }
     & > .operation {
       & > .export,.refresh {
@@ -204,12 +204,12 @@
           }
         }
         .ant-table {
-          background-color: $dark-content-background-color;
+          background-color: $content-background-color;
           color: rgba($dark-text-color, 0.55);
           .ant-table-thead {
             & > tr {
               & > th {
-                background-color: $dark-content-background-color;
+                background-color: $content-background-color;
                 color: rgba($dark-text-color, 0.55);
                 border-bottom-color: rgba($dark-text-color, 0.1);
               }
@@ -219,7 +219,7 @@
             }
           }
           td.ant-table-column-sort {
-            background-color: $dark-content-background-color;
+            background-color: $content-background-color;
           }
           .ant-table-tbody {
             .ant-table-row {
@@ -255,7 +255,7 @@
           color: rgba($dark-text-color, 0.55);
         }
         .ant-table-tbody > tr.ant-table-placeholder:hover > td {
-          background-color: rgba($dark-content-background-color, 1);
+          background-color: rgba($content-background-color, 1);
         }
       }
     }

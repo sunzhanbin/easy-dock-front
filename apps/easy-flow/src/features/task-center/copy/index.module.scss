@@ -89,7 +89,7 @@
     :global {
       .ant-select-dropdown,
       .ant-select-clear {
-        background-color: rgba($dark-content-background-color, 1) !important;
+        background-color: rgba($content-background-color, 1) !important;
       }
       .ant-select-item-option,
       .ant-select-selection-item,
@@ -135,7 +135,7 @@
         .ant-table-wrapper {
           color: rgba($dark-text-color, 0.55);
           .ant-table-cell {
-            background-color: $dark-content-background-color;
+            background-color: $content-background-color;
             color: rgba($dark-text-color, 0.55);
             border-color: rgba($dark-text-color, 0.1);
           }

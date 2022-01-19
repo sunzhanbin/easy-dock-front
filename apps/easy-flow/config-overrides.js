@@ -14,7 +14,7 @@ process.env.PORT = 8083;
 
 module.exports = {
   webpack: override(
-    babelInclude([path.resolve(__dirname, '../../packages/common'), path.resolve(__dirname, 'src')]),
+    babelInclude([path.resolve(__dirname, '../../packages/common'), path.resolve(__dirname, '../../packages/theme'), path.resolve(__dirname, 'src')]),
     removeModuleScopePlugin(),
     addWebpackAlias({
       '@utils': path.resolve(__dirname, './src/utils'),
@@ -29,6 +29,7 @@ module.exports = {
       '@app': path.resolve(__dirname, './src/app'),
       '@config': path.resolve(__dirname, './src/config'),
       '@common': path.resolve(__dirname, '../../packages/common'),
+      '@theme': path.resolve(__dirname, '../../packages/theme'),
     }),
     function overrideWebpackOutput(config) {
       config.output = {

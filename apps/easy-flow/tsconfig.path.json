@@ -19,6 +19,7 @@
       "@app": ["src/app"],
       "@app/*": ["src/app/*"],
       "@common/*": ["../../packages/common/*"],
+      "@theme/*": ["../../packages/theme/*"],
       "@apis": ["src/apis"],
       "@apis/*": ["src/apis/*"]
     }

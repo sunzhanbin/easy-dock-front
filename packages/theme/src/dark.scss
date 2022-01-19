@@ -1,0 +1,143 @@
+:root[theme='dark'] {
+  --ant-primary-color: #5D6CDE;
+  --custom-menu-title-text: #FFFFFFCC;
+  --custom-menu-line: #FFFFFF1F;
+  --custom-menu-nav: #FFFFFF99;
+  --custom-menu-nav-active: #FFFFFFCC;
+  --custom-dropdown-empty-text: #FFFFFF8C;
+  --custom-select-option-bg: #4C5CDB14;
+  --custom-dropdown-header-border: #FFFFFF19;
+  --custom-dropdown-bg: #363639;
+  --custom-selected-time-bg: #4C5CDB1F;
+  --custom-selected-time-text: #5D6CDE;
+  --custom-range-hover-bg: #FFFFFF0F;
+
+  --custom-primary-color: unset;
+  --custom-primary-color-hover: unset;
+  --custom-primary-color-active: unset;
+  --custom-primary-color-outline: unset;
+
+  /* 大背景 */
+  --custom-body-background: #202023;
+  --custom-body-shadow: unset;
+
+  /* 组件背景 */
+  --custom-component-background: linear-gradient(
+                  45deg,
+                  #f6f9ff 0%,
+                  #ebefed 100%
+  );
+  --custom-component-shadow: unset;
+
+  /* 导航栏背景 */
+  /* --custom-nav-bar-background:; */
+  /* --custom-nav-bar-shadow:; */
+
+  /* 侧边菜单 */
+  --custom-side-menu-bg: #2d2d2f;
+  --custom-side-menu-popup-bg: unset;
+  --custom-side-menu-item-color: unset;
+  --custom-side-menu-inline-submenu-bg: unset;
+  --custom-side-menu-highlight-color: unset;
+  --custom-side-menu-highlight-danger-color: unset;
+  --custom-side-menu-item-active-bg: linear-gradient(
+                  90deg,
+                  #e2fef8 0%,
+                  #f8f8f8 87%
+  );
+  --custom-side-menu-item-active-danger-bg: unset;
+  --custom-side-menu-item-group-title-color: unset;
+
+  --custom-side-menu-shadow: unset;
+  --custom-sise-menu-item-shadow: unset;
+
+  /* 导航菜单 */
+  --custom-nav-menu-bg: linear-gradient(270deg, #9face6 0%, #74ebd5 100%);
+  --custom-nav-menu-popup-bg: unset;
+  --custom-nav-menu-item-color: unset;
+  --custom-nav-menu-inline-submenu-bg: unset;
+  --custom-nav-menu-highlight-color: unset;
+  --custom-nav-menu-highlight-danger-color: unset;
+  --custom-nav-menu-item-active-bg: linear-gradient(
+                  90deg,
+                  #e3ffe7 0%,
+                  #d9e7ff 100%
+  );
+  --custom-nav-menu-item-active-danger-bg: unset;
+  --custom-nav-menu-item-group-title-color: unset;
+
+  --custom-nav-menu-shadow: unset;
+  --custom-nav-menu-item-shadow: unset;
+
+  /* 间隔空间背景 */
+  --custom-divider-space-background: unset;
+  --custom-divider-space-shadow: unset;
+
+  /* 空状态背景图片 */
+  --custom-empty-image: unset;
+  --custom-emtpy-shadow: unset;
+
+  /* 结果反馈页背景 */
+  --custom-result-feedback-background: unset;
+  --custom-result-feedback-shadow: unset;
+
+  /* 结果反馈页图片 */
+  --custom-result-feedback-icon: unset;
+  --custom-result-feedback-icon-shadow: unset;
+
+  /* 按钮 */
+  --custom-btn-shadow: unset;
+  --custom-btn-primary-shadow: unset;
+  --custom-btn-text-shadow: unset;
+
+  --custom-btn-primary-color: #FFFFFFCC;
+  --custom-btn-primary-bg: unset;
+
+  --custom-btn-default-color: unset;
+  --custom-btn-default-bg: unset;
+
+  --custom-btn-danger-color: unset;
+  --custom-btn-danger-bg: unset;
+
+  --custom-btn-disable-color: #FFFFFF7F;
+  --custom-btn-disable-bg: #4C5CDB80;
+
+  --custom-btn-default-ghost-color: unset;
+  --custom-btn-default-ghost-bg: unset;
+
+  /* 面包屑 */
+  --custom-breadcrumb-base-color: unset;
+  --custom-breadcrumb-last-item-color: unset;
+  --custom-breadcrumb-link-color: unset;
+  --custom-breadcrumb-link-color-hover: unset;
+  --custom-breadcrumb-separator-color: unset;
+
+  /* 抽屉面板 */
+  --custom-drawer-bg: unset;
+  --custom-drawer-shadow: unset;
+
+  /* 卡片 */
+  --custom-card-background: linear-gradient(90deg, #e3ffe7 0%, #d9e7ff 100%);
+  --custom-card-hover-background: linear-gradient(
+                  270deg,
+                  #ffdee9 0%,
+                  #b5fffc 100%
+  );
+  /* 表格 */
+  --custom-table-bg: #e1ebee;
+  --custom-table-header-bg: #b0c4de;
+  --custom-table-header-color: unset;
+  --custom-table-header-sort-bg: unset;
+  --custom-table-body-sort-bg: unset;
+  --custom-table-body-bg: unset;
+  --custom-table-row-hover-bg: unset;
+  --custom-table-selected-row-color: unset;
+  --custom-table-selected-row-bg: unset;
+  --custom-table-body-selected-sort-bg: unset;
+  --custom-table-selected-row-hover-bg: unset;
+  --custom-table-expanded-row-bg: unset;
+  --custom-table-border-color: unset;
+  --custom-table-footer-bg: unset;
+  --custom-table-footer-color: unset;
+  --custom-table-header-cell-split-color: unset;
+}
