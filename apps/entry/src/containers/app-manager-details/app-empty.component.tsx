@@ -1,11 +1,10 @@
 import { memo, FC, ReactNode, useMemo, useState } from "react";
+import { useParams } from "react-router-dom";
 import { message, Button } from "antd";
 import { SubAppType } from "@/consts";
 import { Icon } from "@common/components";
 import useMemoCallback from "@common/hooks/use-memo-callback";
-import { useAppSelector } from "@/store";
 import SpaceImage from "@assets/images/space.png";
-import { selectCurrentWorkspaceId } from "@/views/app-manager/index.slice";
 import { useCreateSupAppMutation } from "@/http/app-manager.hooks";
 import FormImage from "@assets/images/form.png";
 import FlowImage from "@assets/images/flow.png";
@@ -36,7 +35,7 @@ const initialShowModal: ShowModalMap = {
 };
 
 const AppEmpty: FC = () => {
-  const workspaceId = useAppSelector(selectCurrentWorkspaceId);
+  const { workspaceId } = useParams();
   const [createSubApp] = useCreateSupAppMutation();
   const [showModal, setShowModal] = useState<ShowModalMap>(initialShowModal);
   const typeList = useMemo<TypeItem[]>(() => {
@@ -91,7 +90,7 @@ const AppEmpty: FC = () => {
     setShowModal(initialShowModal);
   });
   const handleOk = useMemoCallback((name: string, type: SubAppType) => {
-    createSubApp({ appId: workspaceId, name, type })
+    createSubApp({ appId: Number(workspaceId), name, type })
       .unwrap()
       .then(() => {
         message.success("子应用创建成功!");

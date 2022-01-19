@@ -30,7 +30,7 @@ const HomeHeader: React.FC = () => {
             资产中心
           </NavLink>
           <NavLink
-            className={({ isActive }) => classnames({ nav: true, active: isActive })}
+            className={() => classnames({ nav: true, active: location.pathname.startsWith("/app-manager") })}
             to={`/app-manager/project/${projectId}/workspace/${workspaceId}`}
           >
             应用管理
