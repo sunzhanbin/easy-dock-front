@@ -1,15 +1,15 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { Layout, Menu, Button, Input, Dropdown, message } from 'antd';
-import { useDeleteWorkspaceMutation, useFetchWorkspaceListQuery } from '@/http';
-import { useAppDispatch, useAppSelector } from '@/store';
 import AddWorkspaceModal from '@components/add-workspace-modal';
 import useMemoCallback from '@common/hooks/use-memo-callback';
 import Popconfirm from '@components/popconfirm';
 import { Icon, Text } from '@common/components';
 import { selectCurrentWorkspaceId, setCurrentWorkspaceId } from '@views/app-manager/index.slice';
 import '@containers/app-manager-sider/index.style';
-import { selectProjectId } from '@/views/home/index.slice';
 import { handleStopPropagation } from '@utils/utils';
+import { selectProjectId } from '@/views/home/index.slice';
+import { useAppDispatch, useAppSelector } from '@/store';
+import { useDeleteWorkspaceMutation, useFetchWorkspaceListQuery } from '@/http';
 
 const { Sider } = Layout;
 
@@ -56,17 +56,19 @@ const AppManagerSider = () => {
     setName(name);
   });
 
-  const handleDeleteWorkspace = async (e: React.MouseEvent | undefined, id: number) => {
+  const handleDeleteWorkspace = async (id: number) => {
     try {
-      if (e) {
-        e.stopPropagation();
-      }
       await deleteWorkspace(id).unwrap();
       message.success('删除成功!');
     } catch (e) {
       console.log(e);
     }
   };
+
+  const handleCancel = useMemoCallback(() => {
+    console.log('cancel');
+  });
+
   const renderDropdownMenu = (workspace: { name: string; id: number }) => {
     return (
       <div className="workspace-operation">
@@ -78,8 +80,8 @@ const AppManagerSider = () => {
           title="提示"
           content="删除后不可恢复,请确认是否删除该工作区?"
           placement="bottom"
-          onConfirm={(e) => handleDeleteWorkspace(e, workspace.id)}
-          onCancel={(e) => e?.stopPropagation()}
+          onConfirm={() => handleDeleteWorkspace(workspace.id)}
+          onCancel={() => handleCancel()}
         >
           <div className="delete" onClick={handleStopPropagation}>
             <Icon type="shanchu" />

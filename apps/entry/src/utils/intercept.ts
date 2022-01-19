@@ -52,9 +52,7 @@ const createBaseQuery = (mode: 'builder' | 'runtime') => {
     baseUrl: baseUrl,
     prepareHeaders: (headers) => {
       const auth = window.Auth?.getAuth();
-      if (auth) {
-        headers.set('auth', auth);
-      }
+      headers.set('auth', auth);
       return headers;
     },
   });
@@ -68,7 +66,7 @@ const createQueryWithIntercept = (
   let resultMessage = data?.resultMessage;
   if (error) {
     const { status, data } = error as FetchBaseQueryError;
-    resultMessage = handleHttpError(status, (data as { resultMessage: string })?.resultMessage);
+    resultMessage = handleHttpError(status as number, (data as { resultMessage: string })?.resultMessage);
     if (!silence) {
       message.error(resultMessage);
     }
@@ -97,7 +95,7 @@ export const builderQueryWithIntercept: BaseQueryFn<string | FetchArgs, unknown,
     api,
     extraOptions,
   );
-  const silence = ((args as unknown) as { silence: boolean })?.silence ?? false;
+  const silence = (args as unknown as { silence: boolean })?.silence ?? false;
   return createQueryWithIntercept(result, silence);
 };
 
@@ -111,6 +109,6 @@ export const runtimeQueryWithIntercept: BaseQueryFn<string | FetchArgs, unknown,
     api,
     extraOptions,
   );
-  const silence = ((args as unknown) as { silence: boolean })?.silence ?? false;
+  const silence = (args as unknown as { silence: boolean })?.silence ?? false;
   return createQueryWithIntercept(result, silence);
 };
