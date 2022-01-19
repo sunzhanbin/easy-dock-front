@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { Layout, Menu, Button, Input, Dropdown, message } from "antd";
 import { useDeleteWorkspaceMutation, useFetchWorkspaceListQuery } from "@/http";
 import { useAppDispatch } from "@/store";
