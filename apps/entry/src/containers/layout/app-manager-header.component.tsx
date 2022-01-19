@@ -1,4 +1,4 @@
-import { memo, FC, useState, useMemo, useEffect } from "react";
+import { memo, FC, useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button, message } from "antd";
 import classNames from "classnames";
@@ -18,30 +18,29 @@ interface EditHeaderProps {
   className?: string;
 }
 
-interface NavItem {
-  key: string;
-  title: string;
-}
+// interface NavItem {
+//   key: string;
+//   title: string;
+// }
 
 const AppManagerHeader: FC<EditHeaderProps> = ({ className }) => {
   const navigate = useNavigate();
-  const { workspaceId } = useParams();
+  const { projectId, workspaceId } = useParams();
   const dispatch = useAppDispatch();
-  const { data: workspace } = useWorkspaceDetailQuery(+(workspaceId as string));
+  const { data: workspace } = useWorkspaceDetailQuery(Number(workspaceId), { skip: !workspaceId });
   const [saveAppSetup] = useSaveAppSetupMutation();
   const [modifyAppStatus] = useModifyAppStatusMutation();
   const basicConfig = useAppSelector(selectBasicForm);
   const menuList = useAppSelector(selectMenu);
-  const [activeNav, setActiveNav] = useState<string>("edit");
+  // const [activeNav, setActiveNav] = useState<string>("edit");
   const [showModal, setShowModal] = useState<boolean>(false);
-  const navList = useMemo<NavItem[]>(() => {
-    return [{ key: "edit", title: "应用设计" }];
-  }, []);
+  // const navList = useMemo<NavItem[]>(() => {
+  //   return [{ key: "edit", title: "应用设计" }];
+  // }, []);
   const handleBack = useMemoCallback(() => {
-    navigate("/app-manager");
+    navigate(`/app-manager/project/${projectId}/workspace/${workspaceId}`);
   });
   const handlePreview = useMemoCallback(() => {
-    // navigate(`/app-manager/preview/${workspaceId}`);
     setShowModal(true);
   });
   const handleModalClose = useMemoCallback(() => {

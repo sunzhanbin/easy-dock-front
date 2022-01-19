@@ -38,18 +38,6 @@ const SubListComponent: React.FC = () => {
   const [keyword, setKeyword] = useState<string>("");
   const [showModal, setShowModal] = useState<boolean>(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  // 动态获取阴影的高度,实现嵌入的阴影效果
-  const style = useMemo<React.CSSProperties>(() => {
-    const el = containerRef.current;
-    if (!el) {
-      return {};
-    }
-    const height = el.getBoundingClientRect().height;
-    return {
-      // boxShadow: `0px ${80 - height}px 24px 0px rgba(24, 31, 67, 0.08)`,
-    };
-  }, [containerRef.current]);
-
   const handleTabsChange = useCallback((activeKey: string) => {
     setShowAppModal(false);
     setActiveKey(activeKey);
@@ -86,7 +74,7 @@ const SubListComponent: React.FC = () => {
   });
 
   const handleEdit = useMemoCallback(() => {
-    navigate(`/app-manager/${workspaceId}`);
+    navigate(`./setup`);
   });
 
   const handleJumpToClient = useMemoCallback(() => {
@@ -152,7 +140,7 @@ const SubListComponent: React.FC = () => {
   }, [extension]);
 
   return (
-    <div className="sub-list-component-container" ref={containerRef} style={style}>
+    <div className="sub-list-component-container" ref={containerRef}>
       {extension && (
         <div className="app-info">
           <div className="logo">

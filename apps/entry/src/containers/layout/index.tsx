@@ -14,11 +14,10 @@ const Layout: React.FC = () => {
   return (
     <LayoutWrap className={classnames(mainEntry ? "main-layout" : "")}>
       <Routes>
-        <Route path="app-manager/:id" element={<AppManagerHeader />} />
         <Route path="workspace/*" element={null} />
-        <Route path="app-manager/preview/*" element={null} />
         <Route path="app/:appId/flow-app/:subAppId" element={null} />
         <Route path="app/:appId/empty" element={null} />
+        <Route path="app-manager/project/:projectId/workspace/:workspaceId/setup" element={<AppManagerHeader />} />
         <Route path="*" element={<HomeHeader />} />
       </Routes>
       <Content>

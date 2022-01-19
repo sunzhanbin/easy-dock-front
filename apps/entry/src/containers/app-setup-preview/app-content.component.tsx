@@ -11,7 +11,6 @@ import useMemoCallback from "@common/hooks/use-memo-callback";
 import lightEmptyImage from "@assets/images/light-empty.png";
 import darkEmptyImage from "@assets/images/dark-empty.png";
 import { selectMenu } from "@/views/app-setup/menu-setup.slice";
-import { selectCurrentWorkspaceId } from "@/views/app-manager/index.slice";
 import "./app-content.style.scss";
 
 interface AppContentProps {
@@ -28,8 +27,6 @@ type ThemeMap = {
 
 const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
   const menuList = useAppSelector(selectMenu);
-  // 应用管理页面的路由中没有携带workspaceId,故从redux中取
-  const currentWorkspaceId = useAppSelector(selectCurrentWorkspaceId);
   const { workspaceId } = useParams();
   const [getHoloSceneId] = useGetHoloSceneIdMutation();
   const [getCanvasId] = useGetCanvasIdMutation();
@@ -42,7 +39,6 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
     }
     return findItem(selectedKey, menuList);
   }, [selectedKey, menuList]);
-  const appId = useMemo(() => workspaceId || currentWorkspaceId, [workspaceId, currentWorkspaceId]);
   const isEmpty = useMemo<boolean>(() => {
     if (!menu?.form) {
       return true;
@@ -127,18 +123,18 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
     }
     // 流程子应用内容渲染
     if (subAppType === SubAppType.FLOW && subAppId) {
-      const url = `${MAIN_ENTRY}/main/app/${appId}/process/instance/${subAppId}?theme=${theme}&mode=preview`;
+      const url = `${MAIN_ENTRY}/main/app/${workspaceId}/process/instance/${subAppId}?theme=${theme}&mode=preview`;
       return renderIframe(url, "flow-container");
     }
     // 任务中心内容渲染
     if (subAppType === TASK_CENTER_TYPE && subAppId) {
-      const url = `${MAIN_ENTRY}/main/instance/${appId}/task-center?theme=${theme}&mode=preview`;
+      const url = `${MAIN_ENTRY}/main/instance/${workspaceId}/task-center?theme=${theme}&mode=preview`;
       return renderIframe(url, "space-container");
     }
 
     // 流程数据管理
     if (subAppType === INSTANCE_MANAGER_TYPE) {
-      const url = `${MAIN_ENTRY}/main/instance/${appId}/data-manage?theme=${theme}&mode=preview`;
+      const url = `${MAIN_ENTRY}/main/instance/${workspaceId}/data-manage?theme=${theme}&mode=preview`;
       return renderIframe(url, "flow-manager-container");
     }
     return empty;
