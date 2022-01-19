@@ -15,6 +15,7 @@ const UserManager = React.lazy(() => import(/* webpackChunkName: "user-manager" 
 
 const MicroPage = React.lazy(() => import(/* webpackChunkName: "micro" */ "@/routes/micro-page"));
 
+console.log("test");
 function BuilderLayout() {
   const dispatch = useDispatch();
   const { pathname } = useLocation();
