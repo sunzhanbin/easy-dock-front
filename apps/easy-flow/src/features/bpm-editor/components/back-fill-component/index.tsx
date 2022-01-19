@@ -30,6 +30,7 @@ const BackFillComponent: FC<BackFillComponentProps> = ({ value, onChange }) => {
       <div className={styles.text}>超时时间回填至</div>
       <div className={styles.component}>
         <Select
+          allowClear
           size="large"
           placeholder="请选择"
           suffixIcon={<Icon type="xiala" />}
