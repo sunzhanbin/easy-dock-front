@@ -4,5 +4,9 @@
   "eslint.packageManager": "yarn",
   "eslint.options": {
     "configFile": "./.eslintrc.json"
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true,
+    "source.fixAll.eslint": true
   }
 }
