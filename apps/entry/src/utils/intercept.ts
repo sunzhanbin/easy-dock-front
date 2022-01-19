@@ -55,9 +55,7 @@ const createBaseQuery = (mode: "builder" | "runtime") => {
     baseUrl: baseUrl,
     prepareHeaders: (headers) => {
       const auth = window.Auth?.getAuth();
-      if (auth) {
-        headers.set("auth", auth);
-      }
+      headers.set("auth", auth);
       return headers;
     },
   });
