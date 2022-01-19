@@ -1,4 +1,4 @@
-#!/bin/sh
+#! /usr/bin/env node
 . "$(dirname "$0")/_/husky.sh"
 
-npm run precommit
+yarn run lint-staged
