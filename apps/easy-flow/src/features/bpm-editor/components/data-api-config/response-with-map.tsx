@@ -1,5 +1,5 @@
 import { memo, useContext, useMemo } from "react";
-import { Form, Input, Button, Select } from "antd";
+import { Form, Input, Button } from "antd";
 import classnames from "classnames";
 import { Icon } from "@common/components";
 import { ParamType } from "@type/api";
@@ -14,7 +14,7 @@ interface ResponseWithMapProps {
 
 function ResponseWithMap(props: ResponseWithMapProps) {
   const { label } = props;
-  const { name: parentName, detail, getPopupContainer } = useContext(DataContext)!;
+  const { name: parentName, detail } = useContext(DataContext)!;
   const name = useMemo(() => {
     return [...parentName, "response"];
   }, [parentName]);

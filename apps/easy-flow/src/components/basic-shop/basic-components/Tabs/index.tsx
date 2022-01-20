@@ -108,6 +108,7 @@ const Tabs = ({ components = [], fieldName, auth, projectId, disabled, formInsta
         </Form.Item>
       </Form>
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleConfirm = useMemoCallback((add: (defaultValue?: any) => void, length: number) => {

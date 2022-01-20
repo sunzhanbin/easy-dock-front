@@ -24,6 +24,7 @@ const AppSetupConfig = () => {
     if (workspace?.id) {
       setWorkspaceList([{ id: workspace.id, name: workspace.name }]);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workspace?.id]);
 
   return (

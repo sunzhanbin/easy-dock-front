@@ -59,7 +59,6 @@ const SerialRules = (props: RulesProps) => {
     const { serialId, serialMata } = fieldSerial;
     setRuleName(serialMata?.ruleName || "");
     setRules(serialMata?.rules || initialRules);
-    const filterMata = filterRules(serialMata?.changeRules, fields);
     setSerialId(serialId || "");
     setEditStatus(serialMata?.editStatus);
     if (!serialId) {
@@ -95,6 +94,7 @@ const SerialRules = (props: RulesProps) => {
         console.log(e);
       }
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // 自定义规则/引用规则

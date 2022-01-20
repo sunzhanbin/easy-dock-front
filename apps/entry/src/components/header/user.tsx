@@ -5,7 +5,6 @@ import { auth } from "@/consts";
 import { useGetUserInfoQuery } from "@/http";
 import { Avatar, Icon, Text } from "@common/components";
 import { logout } from "@views/home/index.slice";
-import classnames from "classnames";
 import "@components/header/index.style.scss";
 import { RoleEnum } from "@utils/types";
 import { useDispatch } from "react-redux";

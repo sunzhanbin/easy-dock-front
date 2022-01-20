@@ -69,6 +69,7 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
         className: "blue",
       },
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [theme]);
   const empty = useMemo<ReactNode>(() => {
     const config = themeMap[theme] || themeMap[ThemeType.LIGHT];
@@ -79,6 +80,7 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
         <div className="tip">在右侧面板添加一个吧~</div>
       </div>
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEmpty, themeMap, theme]);
   // 是否是自定义url
   const isCustomUrl = useMemo<boolean>(() => {
@@ -152,6 +154,7 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
         holoSceneData?.token && setHoloSceneToken(holoSceneData.token);
       }
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [subAppType, subAppId]);
 
   return <div className="app-content-container">{renderContent()}</div>;

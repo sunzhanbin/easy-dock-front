@@ -43,14 +43,16 @@ const usePubSub = (props: any) => {
           handleRules(msg, data);
         }
       });
+      return item;
     });
 
     return () => {
       watchs?.map((item: any) => {
         PubSub.unsubscribe(item);
+        return item;
       });
     };
-  }, []);
+  }, [rules, handleRules, handleValue, handleVisible]);
 
   return {
     rules,

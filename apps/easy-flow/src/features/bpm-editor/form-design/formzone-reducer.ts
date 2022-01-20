@@ -1,4 +1,4 @@
-import { createSelector, PayloadAction, current } from "@reduxjs/toolkit";
+import { createSelector, PayloadAction } from "@reduxjs/toolkit";
 import { uniqueId } from "lodash";
 import {
   ErrorItem,

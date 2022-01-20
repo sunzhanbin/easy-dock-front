@@ -11,7 +11,7 @@ const DescText = (props: { value: string; text_value?: string }) => {
       return <div className={styles.desc}>请补充描述性文字</div>;
     }
     return <div className={styles.content} dangerouslySetInnerHTML={{ __html: descValue }}></div>;
-  }, [value, text_value]);
+  }, [descValue]);
   return <div className={styles.container}>{renderContent()}</div>;
 };
 

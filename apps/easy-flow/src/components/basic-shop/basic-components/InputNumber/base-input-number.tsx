@@ -1,4 +1,4 @@
-import { memo, useMemo, useRef, useEffect } from "react";
+import { memo, useMemo, useRef } from "react";
 import { InputNumber } from "antd";
 import { Icon } from "@common/components";
 import { InputNumberProps } from "antd/lib/input-number";

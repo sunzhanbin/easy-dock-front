@@ -59,6 +59,7 @@ const AddWorkspaceModal = React.forwardRef(function AddWorkspace(_, ref) {
   const handleCancel = useCallback(() => {
     form.resetFields();
     handleVisible(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [handleVisible]);
 
   return (

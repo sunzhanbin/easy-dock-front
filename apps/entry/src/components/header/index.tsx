@@ -27,7 +27,7 @@ export default function Header({ children }: HeaderProps) {
         <div className="right">
           {showProject ? (
             <>
-              {showPopover ? <NewSubAppPopover /> : <a className="hidden" />}
+              {showPopover ? <NewSubAppPopover /> : <a className="hidden"></a>}
               <Icon className="icon" type="shezhi" />
               <Icon className="icon" type="shuoming" />
             </>

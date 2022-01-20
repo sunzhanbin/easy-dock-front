@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import { Menu } from "antd";
 import classNames from "classnames";
 import { Outlet, useParams } from "react-router";
@@ -9,7 +9,7 @@ import { WorkspaceBaseMenuProps, Menu as IMenu } from "@utils/types";
 import UserComponent from "@components//header/user";
 import { setCurrentId } from "@/views/workspace/index.slice";
 import useMemoCallback from "@common/hooks/use-memo-callback";
-import { findFirstChild, findItem, keyPath } from "@utils/utils";
+import { findFirstChild, findItem } from "@utils/utils";
 import "@containers/workspace-running/single-nav.style";
 import { CanvasResponseType, CANVAS_ENTRY, MAIN_ENTRY, SPACE_ENTRY, SubAppType } from "@/consts";
 import { useGetCanvasIdMutation, useGetHoloSceneIdMutation } from "@/http/app-manager.hooks";
@@ -86,12 +86,8 @@ const SingleNavComponent = ({ extra, dataSource, theme, selectedKey }: Workspace
       }
       window.open(url);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const activeMainKey = useMemo(
-    () => keyPath(selectedKey, dataSource).shift() || selectedKey,
-    [selectedKey, dataSource],
-  );
 
   const handleTitleClick = useMemoCallback(({ key }) => {
     const menu = dataSource.find((v) => v.id === key);

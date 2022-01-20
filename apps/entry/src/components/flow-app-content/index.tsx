@@ -462,6 +462,7 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ id, appId, projectId, theme =
         setFields(currentFields);
       }
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   useEffect(() => {
@@ -474,15 +475,18 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ id, appId, projectId, theme =
           console.error(error);
         });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   useEffect(() => {
     fetchDataSource();
     fetchOptionList(1, "");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, projectId]);
 
   useEffect(() => {
     fetchDataSource();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [statusList, userId, pagination.pageSize, pagination.current, sortDirection]);
 
   return (

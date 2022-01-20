@@ -36,6 +36,7 @@ const BasicSetupFormComponent = React.forwardRef(function BasicSetupForm({ works
   const handleValuesChange = useCallback(() => {
     const formValues = form.getFieldsValue();
     dispatch(setBaseForm(formValues));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useImperativeHandle(ref, () => ({
@@ -47,12 +48,14 @@ const BasicSetupFormComponent = React.forwardRef(function BasicSetupForm({ works
       const values = { ...basicConfig, workspace: workspaceList?.[0]?.id };
       form.setFieldsValue(values);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [basicConfig, workspaceList]);
 
   useEffect(() => {
     if (basicError?.length > 0) {
       form.validateFields();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [basicError]);
 
   return (

@@ -13,7 +13,7 @@ const InstanceManagerMicroPage = () => {
   });
   const url = useMemo(() => {
     return `${MAIN_ENTRY}/main/instance/${workspaceId}/data-manage?theme=${theme}&mode=running`;
-  }, [theme]);
+  }, [theme, workspaceId]);
 
   return (
     <div className="instance-manager-page">

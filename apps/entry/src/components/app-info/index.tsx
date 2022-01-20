@@ -47,7 +47,7 @@ const AppInfo = ({
       [NavModeType.TOP]: "top",
     };
   }, []);
-  const navModeClassName = useMemo<string>(() => classNameMap[navMode], [navMode]);
+  const navModeClassName = useMemo<string>(() => classNameMap[navMode], [navMode, classNameMap]);
 
   const [logoUrl, setLogoUrl] = useState<string>("");
 
@@ -66,6 +66,7 @@ const AppInfo = ({
         </div>
       </div>
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navMode, appName, logoUrl, theme]);
 
   useEffect(() => {
