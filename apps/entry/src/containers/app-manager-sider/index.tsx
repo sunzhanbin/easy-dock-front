@@ -44,7 +44,6 @@ const AppManagerSider = () => {
   });
 
   const handleEditWorkspaceName = useMemoCallback((e: React.MouseEvent, item) => {
-    e.stopPropagation();
     const { name, id } = item;
     modalRef.current.show();
     modalRef.current.setTitle('编辑');
@@ -65,10 +64,6 @@ const AppManagerSider = () => {
     }
   };
 
-  const handleCancel = useMemoCallback(() => {
-    console.log('cancel');
-  });
-
   const renderDropdownMenu = (workspace: { name: string; id: number }) => {
     return (
       <div className="workspace-operation">
@@ -81,7 +76,6 @@ const AppManagerSider = () => {
           content="删除后不可恢复,请确认是否删除该工作区?"
           placement="bottom"
           onConfirm={() => handleDeleteWorkspace(workspace.id)}
-          onCancel={() => handleCancel()}
         >
           <div className="delete" onClick={handleStopPropagation}>
             <Icon type="shanchu" />
@@ -119,16 +113,18 @@ const AppManagerSider = () => {
                 <div className="text">
                   <Text text={workspace.name} />
                 </div>
-                <Dropdown
-                  trigger={['click']}
-                  placement="bottomRight"
-                  overlayClassName="dropdown-sider-container"
-                  overlay={() => renderDropdownMenu(workspace)}
-                >
-                  <span onClick={handleStopPropagation}>
-                    <Icon className="icon-dropdown" type="gengduo" />
-                  </span>
-                </Dropdown>
+                <div onClick={(e) => e.stopPropagation()}>
+                  <Dropdown
+                    trigger={['click']}
+                    placement="bottomRight"
+                    overlayClassName="dropdown-sider-container"
+                    overlay={() => renderDropdownMenu(workspace)}
+                  >
+                    <span onClick={handleStopPropagation}>
+                      <Icon className="icon-dropdown" type="gengduo" />
+                    </span>
+                  </Dropdown>
+                </div>
               </Menu.Item>
             ))}
           </Menu>
