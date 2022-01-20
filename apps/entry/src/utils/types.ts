@@ -118,3 +118,19 @@ export interface WorkspaceBaseMenuProps {
   theme: ThemeType;
   selectedKey: string;
 }
+
+export declare type QueryReturnValue<T = unknown, E = unknown, M = unknown> =
+  | {
+      error: E;
+      data?: undefined;
+      meta?: M;
+      resultCode?: undefined;
+      resultMessage?: undefined;
+    }
+  | {
+      error?: undefined;
+      data: T;
+      meta?: M;
+      resultCode?: undefined;
+      resultMessage?: undefined;
+    };

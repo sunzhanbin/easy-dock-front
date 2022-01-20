@@ -40,17 +40,15 @@
     "@commitlint/config-conventional": "12.1.1",
     "@types/mockjs": "1.0.3",
     "husky": "^7.0.4",
-    "lint-staged": "^12.2.0",
+    "lint-staged": "^12.2.1",
     "mockjs": "1.1.0"
   },
   "lint-staged": {
     "packages/*/src/**/*.{ts,tsx,js,jsx}": [
-      "prettier --write",
-      "eslint -c=.eslintrc.json --fix"
+      "eslint -c .eslintrc.json --fix"
     ],
     "apps/*/src/**/*.{ts,tsx,js,jsx}": [
-      "prettier --write",
-      "eslint -c=.eslintrc.json --fix"
+      "eslint -c .eslintrc.json --fix"
     ]
   },
   "workspaces": [
