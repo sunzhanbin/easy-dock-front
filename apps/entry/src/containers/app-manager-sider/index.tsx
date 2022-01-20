@@ -54,14 +54,19 @@ const AppManagerSider = () => {
     setName(name);
   });
 
-  const handleDeleteWorkspace = async (id: number) => {
+  const handleDeleteWorkspace = useMemoCallback(async (id: number) => {
     try {
       await deleteWorkspace(id).unwrap();
       message.success("删除成功!");
+      // 如果删除的正好是当前工作区,则跳转到该项目下第一个工作区
+      if (Number(workspaceId) === id) {
+        const currentId = workspaceList?.[0].id;
+        navigate(`/app-manager/project/${projectId}/workspace/${currentId}`, { replace: true });
+      }
     } catch (e) {
       console.log(e);
     }
-  };
+  });
   const renderDropdownMenu = (workspace: { name: string; id: number }) => {
     return (
       <div className="workspace-operation">
