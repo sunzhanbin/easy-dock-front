@@ -69,7 +69,7 @@ const createQueryWithIntercept = (
   let resultMessage = data?.resultMessage;
   if (error) {
     const { status, data } = error as FetchBaseQueryError;
-    resultMessage = handleHttpError(status, (data as { resultMessage: string })?.resultMessage);
+    resultMessage = handleHttpError(status as number, (data as { resultMessage: string })?.resultMessage);
     if (!silence) {
       message.error(resultMessage);
     }
