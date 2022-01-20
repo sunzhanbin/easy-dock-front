@@ -46,10 +46,8 @@ const ProjectComponent = () => {
       .unwrap()
       .then((workspaceList) => {
         if (location.pathname.startsWith("/app-manager")) {
-          if (workspaceList?.length > 0) {
-            const workspaceId = workspaceList[0].id;
-            navigate(`/app-manager/project/${projectId}/workspace/${workspaceId}`);
-          }
+          const workspaceId = workspaceList?.[0]?.id;
+          navigate(`/app-manager/project/${projectId}/workspace/${workspaceId}`);
         }
       });
   });

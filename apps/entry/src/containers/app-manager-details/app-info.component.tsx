@@ -9,13 +9,17 @@ import "@containers/app-manager-details/app-info.style";
 const AppInfoComponent: React.FC = () => {
   const navigate = useNavigate();
   const { workspaceId } = useParams();
-  const { data: workspace } = useWorkspaceDetailQuery(Number(workspaceId), { skip: !workspaceId });
-  const { data: subAppList } = useFetchSubAppListQuery(Number(workspaceId), { skip: !workspaceId });
+  const { data: workspace } = useWorkspaceDetailQuery(Number(workspaceId), {
+    skip: !workspaceId || workspaceId === "undefined",
+  });
+  const { data: subAppList } = useFetchSubAppListQuery(Number(workspaceId), {
+    skip: !workspaceId || workspaceId === "undefined",
+  });
   const hasPublished = useMemo(() => workspace?.extension, [workspace]);
   const subAppCount = useMemo(() => subAppList?.length || 0, [subAppList]);
 
   const handleCreate = useMemoCallback(() => {
-    navigate(`/app-manager/${workspaceId}`);
+    navigate(`./setup`);
   });
 
   return (

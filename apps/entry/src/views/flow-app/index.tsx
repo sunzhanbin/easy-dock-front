@@ -6,11 +6,12 @@ import "./index.style.scss";
 
 const FlowApp = () => {
   const { appId, subAppId } = useParams();
-  const { theme, projectId } = useWorkspaceDetailQuery(+(appId as string), {
+  const { theme, projectId } = useWorkspaceDetailQuery(Number(appId), {
     selectFromResult: ({ data }) => ({
       theme: data?.extension?.theme,
       projectId: data?.project?.id,
     }),
+    skip: !appId,
   });
   return <FlowAppContent id={+subAppId!} appId={appId!} projectId={projectId} theme={theme} />;
 };

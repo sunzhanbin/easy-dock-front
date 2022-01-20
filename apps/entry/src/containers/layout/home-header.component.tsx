@@ -12,7 +12,7 @@ const HomeHeader: React.FC = () => {
   const { workspaceId } = useFetchWorkspaceListQuery(projectId, {
     selectFromResult: (data) => {
       return {
-        workspaceId: data?.data?.[0].id || "",
+        workspaceId: data?.data?.[0]?.id || "",
       };
     },
     skip: !projectId,

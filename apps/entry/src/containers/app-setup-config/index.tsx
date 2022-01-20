@@ -16,7 +16,9 @@ type WorkspaceItem = {
 
 const AppSetupConfig = () => {
   const { workspaceId } = useParams();
-  const { data: workspace } = useWorkspaceDetailQuery(+(workspaceId as string));
+  const { data: workspace } = useWorkspaceDetailQuery(Number(workspaceId), {
+    skip: !workspaceId,
+  });
   const [workspaceList, setWorkspaceList] = useState<WorkspaceItem[]>([]);
   const formRef = useRef<BasicSetupFormComponentHandle>(null);
 
@@ -24,7 +26,7 @@ const AppSetupConfig = () => {
     if (workspace?.id) {
       setWorkspaceList([{ id: workspace.id, name: workspace.name }]);
     }
-  }, [workspace?.id]);
+  }, [workspace?.id, workspace?.name]);
 
   return (
     <div className="app-setup-config">

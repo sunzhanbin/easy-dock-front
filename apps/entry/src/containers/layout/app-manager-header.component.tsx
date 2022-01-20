@@ -27,7 +27,9 @@ const AppManagerHeader: FC<EditHeaderProps> = ({ className }) => {
   const navigate = useNavigate();
   const { projectId, workspaceId } = useParams();
   const dispatch = useAppDispatch();
-  const { data: workspace } = useWorkspaceDetailQuery(Number(workspaceId), { skip: !workspaceId });
+  const { data: workspace } = useWorkspaceDetailQuery(Number(workspaceId), {
+    skip: !workspaceId,
+  });
   const [saveAppSetup] = useSaveAppSetupMutation();
   const [modifyAppStatus] = useModifyAppStatusMutation();
   const basicConfig = useAppSelector(selectBasicForm);

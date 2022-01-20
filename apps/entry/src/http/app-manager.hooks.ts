@@ -58,7 +58,7 @@ export const appManagerBuilder = baseFetch.injectEndpoints({
       }),
       invalidatesTags: [{ type: "SubApps", id: "LIST" }],
     }),
-    // 子应用列表；
+    // 子应用列表
     fetchSubAppList: build.query({
       query: (workspaceId: number) => `/subapp/${workspaceId}/list/all`,
       providesTags: (result) =>

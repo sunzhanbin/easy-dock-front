@@ -23,8 +23,12 @@ const { TabPane } = Tabs;
 
 const SubListComponent: React.FC = () => {
   const { workspaceId } = useParams();
-  const { data: workspace } = useWorkspaceDetailQuery(Number(workspaceId), { skip: !workspaceId });
-  const { data: subAppList } = useFetchSubAppListQuery(Number(workspaceId), { skip: !workspaceId });
+  const { data: workspace } = useWorkspaceDetailQuery(Number(workspaceId), {
+    skip: !workspaceId || workspaceId === "undefined",
+  });
+  const { data: subAppList } = useFetchSubAppListQuery(Number(workspaceId), {
+    skip: !workspaceId || workspaceId === "undefined",
+  });
   const [createSubApp] = useCreateSupAppMutation();
   const [modifyAppStatus] = useModifyAppStatusMutation();
   const navigate = useNavigate();

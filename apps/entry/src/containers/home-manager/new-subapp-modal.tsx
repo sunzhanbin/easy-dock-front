@@ -1,4 +1,4 @@
-import React, { memo, useCallback } from "react";
+import { memo, useCallback } from "react";
 import { Modal, Form, Input, message } from "antd";
 import SelectCard from "@components/select-card";
 import { useAppSelector } from "@/store";
@@ -25,7 +25,7 @@ const NewSubAppModal = ({ modalInfo, visible, onOk, onCancel }: ModalProps) => {
   const [addWorkspace] = useAddWorkspaceMutation();
   const { workspaceList } = useFetchWorkspaceListQuery(projectId, {
     selectFromResult: ({ data }) => ({
-      workspaceList: data?.filter(Boolean).filter((item: any) => {
+      workspaceList: (data || [])?.filter(Boolean).filter((item: any) => {
         // 一个工作区只能关联一个应用
         if (modalInfo.fieldKey === APP_TYPE) {
           return !item.extension && item;

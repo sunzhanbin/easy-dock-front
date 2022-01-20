@@ -23,7 +23,7 @@ const AppManagerSider = () => {
   const [deleteWorkspace] = useDeleteWorkspaceMutation();
   const { workspaceList } = useFetchWorkspaceListQuery(Number(projectId), {
     selectFromResult: ({ data }) => ({
-      workspaceList: data?.filter((workspace: any) => workspace.name.includes(name))?.filter(Boolean),
+      workspaceList: (data || [])?.filter((workspace: any) => workspace.name.includes(name))?.filter(Boolean),
     }),
     skip: !projectId,
   });
@@ -60,7 +60,7 @@ const AppManagerSider = () => {
       message.success("删除成功!");
       // 如果删除的正好是当前工作区,则跳转到该项目下第一个工作区
       if (Number(workspaceId) === id) {
-        const currentId = workspaceList?.[0].id;
+        const currentId = id === workspaceList?.[0]?.id ? workspaceList?.[1]?.id : workspaceList?.[0]?.id;
         navigate(`/app-manager/project/${projectId}/workspace/${currentId}`, { replace: true });
       }
     } catch (e) {
