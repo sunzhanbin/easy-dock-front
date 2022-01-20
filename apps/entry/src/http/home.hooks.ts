@@ -1,4 +1,5 @@
 import baseFetch, { runTime } from "@utils/fetch";
+import { AssignAuthParams, ProjectPower, RevokeAuthParams } from "@utils/types";
 
 export const homeManageBuilder = baseFetch.injectEndpoints({
   endpoints: (build) => ({
@@ -45,11 +46,18 @@ export const homeManageBuilder = baseFetch.injectEndpoints({
         params,
       }),
     }),
+    fetchProjectPowers: build.query<ProjectPower[], void>({
+      query: () => ({
+        url: "/project/list/all/powers",
+        method: "get",
+      }),
+    }),
   }),
 });
 
 export const {
   useGetProjectListQuery,
+  useLazyFetchProjectPowersQuery,
   useNewProjectMutation,
   useGetRecentListMutation,
   useDeleteProjectMutation,
@@ -65,7 +73,29 @@ export const homeManageRuntime = runTime.injectEndpoints({
         silence: true,
       }),
     }),
+    fetchAllUser: build.mutation({
+      query: (params: { index: number; size: number; keyword: string }) => ({
+        url: "/user/search/all",
+        method: "post",
+        body: params,
+      }),
+    }),
+    assignAuth: build.mutation({
+      query: (params: AssignAuthParams) => ({
+        url: "/privilege/assign",
+        method: "post",
+        body: params,
+      }),
+    }),
+    revokeAuth: build.mutation({
+      query: (params: RevokeAuthParams) => ({
+        url: "/privilege/revoke",
+        method: "delete",
+        body: params,
+      }),
+    }),
   }),
 });
 
-export const { useGetUserInfoQuery } = homeManageRuntime;
+export const { useGetUserInfoQuery, useFetchAllUserMutation, useAssignAuthMutation, useRevokeAuthMutation } =
+  homeManageRuntime;

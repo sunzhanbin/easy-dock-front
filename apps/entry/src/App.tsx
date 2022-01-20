@@ -14,12 +14,16 @@ import cookie from "js-cookie";
 import { registerTheme } from "@enc/theme-scheme/dist/utils.esm";
 import Empty from "@common/components/empty";
 import { auth } from "./consts";
+import { useAppSelector } from "@/store";
+import { selectIsAdmin } from "@views/home/index.slice";
+
 const AppManager = React.lazy(() => import("@views/app-manager"));
 const AppSetup = React.lazy(() => import("@views/app-setup"));
 const FlowApp = React.lazy(() => import("@views/flow-app"));
 const AssetCentre = React.lazy(() => import("@views/asset-centre"));
 const TemplateMall = React.lazy(() => import("@views/template-mall"));
 const Workspace = React.lazy(() => import("@views/workspace"));
+const Auth = React.lazy(() => import("@views/auth"));
 const NoMatch = React.lazy(() => import("@views/no-match"));
 const EmptyPage = React.lazy(() => import("@containers/asset-pages/empty-page"));
 auth.setConfig({ server: process.env.REACT_APP_SSO_LOGIN_URL });
@@ -33,6 +37,8 @@ if (theme) {
   });
 }
 const App: React.FC = () => {
+  const isAdmin = useAppSelector(selectIsAdmin);
+
   return (
     <ConfigProvider locale={zh_CN} virtual={false} renderEmpty={Empty}>
       <Routes>
@@ -46,6 +52,7 @@ const App: React.FC = () => {
               </AuthProvider>
             }
           />
+          {isAdmin && <Route path="user-auth" element={<SuspenseWrap render={<Auth />} />} />}
           <Route path="asset-centre" element={<SuspenseWrap render={<AssetCentre />} />} />
           <Route path="app-manager/project/:projectId/workspace/:workspaceId">
             <Route index element={<SuspenseWrap render={<AppManager />} />} />
