@@ -26,6 +26,7 @@ const Workspace = React.lazy(() => import("@views/workspace"));
 const Auth = React.lazy(() => import("@views/auth"));
 const NoMatch = React.lazy(() => import("@views/no-match"));
 const EmptyPage = React.lazy(() => import("@containers/asset-pages/empty-page"));
+const RuntimeRoot = React.lazy(() => import("@containers/workspace-running/runtime-root"));
 auth.setConfig({ server: process.env.REACT_APP_SSO_LOGIN_URL });
 const query = decodeURIComponent(window.location.href.split("?")[1]);
 const theme = new URLSearchParams(query).get("theme");
@@ -52,8 +53,11 @@ const App: React.FC = () => {
               </AuthProvider>
             }
           />
+          {/* 超级管理员才可以进行权限设置 */}
           {isAdmin && <Route path="user-auth" element={<SuspenseWrap render={<Auth />} />} />}
           <Route path="asset-centre" element={<SuspenseWrap render={<AssetCentre />} />} />
+          {/* 超级管理员不能去运行端  只有普通租户可以 */}
+          {!isAdmin && <Route path="runtime" element={<SuspenseWrap render={<RuntimeRoot />} />} />}{" "}
           <Route path="app-manager/project/:projectId/workspace/:workspaceId">
             <Route index element={<SuspenseWrap render={<AppManager />} />} />
             <Route path="setup" element={<SuspenseWrap render={<AppSetup />} />} />

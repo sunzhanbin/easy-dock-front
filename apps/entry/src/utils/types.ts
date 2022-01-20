@@ -9,6 +9,16 @@ export type User = {
   name?: string;
 };
 
+export type AppSchema = {
+  id: number;
+  name: string;
+  icon: keyof typeof SCENE_IAMGES;
+  remark: string;
+  status: 1 | -1;
+  createTime: number;
+  power: number;
+};
+
 export enum RoleEnum {
   TENEMENT = 1, //普通租户
   APP_MANAGER = 2, //应用管理员
@@ -40,6 +50,7 @@ export enum OwnerTypeEnum {
   ROLE = 2, //角色
   DEPARTMENT = 3, //部门
 }
+
 export type AssignAuthParams = {
   ownerKey: string;
   ownerType: number;
@@ -51,7 +62,6 @@ export type UserOwner = {
   id: number | string; //登录名
   avatar?: string; // 头像
   username?: string; // 中文名
-  userName?: string;
   name: string;
 };
 export type DepartOwner = {
