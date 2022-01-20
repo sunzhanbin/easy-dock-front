@@ -73,6 +73,12 @@ export const homeManageRuntime = runTime.injectEndpoints({
         silence: true,
       }),
     }),
+    getWorkspaceList: build.query<any[], void>({
+      query: () => ({
+        url: "/app/list/all",
+        method: "get",
+      }),
+    }),
     fetchAllUser: build.mutation({
       query: (params: { index: number; size: number; keyword: string }) => ({
         url: "/user/search/all",
@@ -97,5 +103,10 @@ export const homeManageRuntime = runTime.injectEndpoints({
   }),
 });
 
-export const { useGetUserInfoQuery, useFetchAllUserMutation, useAssignAuthMutation, useRevokeAuthMutation } =
-  homeManageRuntime;
+export const {
+  useGetUserInfoQuery,
+  useGetWorkspaceListQuery,
+  useFetchAllUserMutation,
+  useAssignAuthMutation,
+  useRevokeAuthMutation,
+} = homeManageRuntime;

@@ -26,11 +26,19 @@
         "sourceType": "module"
     },
     "rules": {
+        "eqeqeq": "off",
         "react/prop-types": "off",
-        "react/react-in-jsx-scope": "off",
         "react/no-deprecated": "off",
-        "@typescript-eslint/no-non-null-assertion": "off",
+        "no-use-before-define": "off",
+        "jsx-a11y/anchor-is-valid": "off",
+        "react/react-in-jsx-scope": "off",
+        "jsx-a11y/iframe-has-title": "off",
+        "jsx-a11y/img-redundant-alt": "off",
+        "jsx-a11y/anchor-has-content": "off",
         "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "react-hooks/exhaustive-deps": "error",
+        "@typescript-eslint/no-use-before-define": ["error"],
         "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx", ".tsx", ".ts"] }],
         "@typescript-eslint/no-empty-function": ["error", { "allow": ["arrowFunctions"] }]
     }

@@ -26,16 +26,19 @@ const MenuItemComponent = ({ menu, onBeforeIdChange }: { menu: Menu; onBeforeIdC
     await onBeforeIdChange();
     const childId = uuid();
     dispatch(add({ currentId, childId }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleRemoveMenu = useCallback((currentId: string) => {
     dispatch(remove(currentId));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleMenuClick = useCallback(async (e: React.MouseEvent, currentId: string) => {
     e.stopPropagation();
     await onBeforeIdChange();
     dispatch(setCurrentMenu(currentId));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <div
@@ -123,6 +126,7 @@ const MenuSetupListComponent = ({ onBeforeIdChange }: { onBeforeIdChange: Before
     }
     const childId = uuid();
     dispatch(add({ currentId: null, childId }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [menu]);
 
   return (

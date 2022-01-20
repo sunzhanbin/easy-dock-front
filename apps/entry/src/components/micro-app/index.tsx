@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef, useState, useMemo } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { loadMicroApp } from "qiankun";
 
 interface MicroAppProps {
@@ -10,9 +10,9 @@ interface MicroAppProps {
 }
 
 function MicroApp(props: MicroAppProps) {
-  const { name, entry, className, basename, extra } = props;
+  const { name, entry, basename, extra } = props;
   const containerRef = useRef<HTMLDivElement>(null);
-  const [loading, setLoading] = useState(true);
+  const [, setLoading] = useState(true);
   useEffect(() => {
     if (containerRef.current) {
       const app = loadMicroApp({

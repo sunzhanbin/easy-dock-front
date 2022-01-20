@@ -44,7 +44,7 @@ const Theme: FC<ThemeProps> = ({ value, onChange }) => {
           onClick={() => handleChangeTheme(key)}
         >
           <div className="image-container">
-            <img src={image} alt="image" className="image" />
+            <img src={image} alt="picture" className="image" />
           </div>
           <div className="text">{label}</div>
         </div>

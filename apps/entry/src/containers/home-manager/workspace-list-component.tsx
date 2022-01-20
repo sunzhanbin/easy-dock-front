@@ -51,6 +51,7 @@ const HomeWorkspaceList = () => {
         console.log(e);
       }
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, projectId]);
   const toAppManage = useCallback(() => {
     navigate("/app-manager");
@@ -63,6 +64,7 @@ const HomeWorkspaceList = () => {
         navigate(`/app-manager/${id}`);
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [navigate],
   );
   const renderIcon = (item: ListItemType): string => {
@@ -78,6 +80,7 @@ const HomeWorkspaceList = () => {
 
   useEffect(() => {
     loadMoreData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectId]);
 
   return (

@@ -72,6 +72,7 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
       return appConfig.extra.theme;
     }
     return "light";
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.search, appConfig?.extra?.theme]);
 
   const mode = useMemo(() => {
@@ -83,6 +84,7 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
       return appConfig.extra.mode;
     }
     return "running";
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.search, appConfig?.extra?.mode]);
 
   const [loading, setLoading] = useState<boolean>(true);
@@ -491,6 +493,7 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
         setFields(currentFields);
       }
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   useEffect(() => {
@@ -508,16 +511,19 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
 
   useEffect(() => {
     fetchDataSource();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   useEffect(() => {
     if (projectId) {
       fetchOptionList(1, "");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectId]);
 
   useEffect(() => {
     fetchDataSource();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [statusList, userId, pagination.pageSize, pagination.current, sortDirection]);
 
   return (

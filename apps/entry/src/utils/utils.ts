@@ -187,3 +187,9 @@ export const filterAssetConfig = (menuList: any[]) => {
   }
   return menu;
 };
+
+export function getSceneImageUrl(type: any) {
+  // const publicPath = process.env.PUBLIC_URL;
+
+  return `.png`;
+}

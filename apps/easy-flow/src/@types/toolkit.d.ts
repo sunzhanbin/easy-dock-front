@@ -1,5 +1,5 @@
 import { AsyncThunkPayloadCreator, AsyncThunk, AsyncThunkOptions } from "@reduxjs/toolkit/dist/createAsyncThunk";
-import type { Dispatch, AnyAction } from "redux";
+import type { Dispatch } from "redux";
 
 declare module "@reduxjs/toolkit" {
   type AsyncThunkConfig = {

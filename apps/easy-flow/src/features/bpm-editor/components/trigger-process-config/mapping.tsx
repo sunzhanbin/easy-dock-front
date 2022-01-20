@@ -67,6 +67,7 @@ const Mapping = ({ name, parentName, subAppId, value, onChange }: MappingProps) 
         });
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
   return (
     <div className={styles.mapping}>

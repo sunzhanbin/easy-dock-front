@@ -1,12 +1,7 @@
-import { memo, useEffect } from "react";
+import { memo } from "react";
 import { Form, InputNumber } from "antd";
 import styles from "../comp-attr-editor/index.module.scss";
 import { formatNumber } from "@utils";
-
-interface LimitNumProps {
-  id: string;
-  componentId?: string;
-}
 
 const NumRangeComponent = (props: { id: string; form: any }) => {
   const { id, form } = props;

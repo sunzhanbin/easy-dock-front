@@ -91,11 +91,13 @@ const AppManagerHeader: FC<EditHeaderProps> = ({ className }) => {
     if (workspace?.name) {
       dispatch(setName(workspace.name));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workspace?.name]);
   useEffect(() => {
     if (workspaceId) {
       dispatch(setCurrentWorkspaceId(+workspaceId));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workspaceId]);
   return (
     <div className={classNames("app-manager-header", className && className)}>

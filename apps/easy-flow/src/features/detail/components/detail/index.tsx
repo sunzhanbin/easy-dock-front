@@ -67,6 +67,7 @@ const Detail = forwardRef(function Detail(props: DetailProps, ref: React.Forward
       if (!Object.keys(form.value).includes(field)) {
         valueMap[field] = moment().valueOf();
       }
+      return field;
     });
     console.log(valueMap, "valueMap");
     return valueMap;

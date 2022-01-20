@@ -23,6 +23,7 @@ const MenuSetupComponent = () => {
           .catch(() => reject);
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formRef.current]);
 
   return (

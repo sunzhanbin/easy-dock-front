@@ -146,6 +146,7 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId, name }
         });
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [context, name, setFieldVisible, watchFn]);
   return (
     <Form.List name={name}>

@@ -10,7 +10,7 @@ import { Router } from "react-router-dom";
 import { Provider } from "react-redux";
 import { createBrowserHistory } from "history";
 import AntdProvider from "@common/components/antd-provider";
-import cookie from "js-cookie";
+// import cookie from "js-cookie";
 import { store } from "./app/store";
 import App from "./App";
 import appConfig from "./init";
@@ -28,10 +28,10 @@ export async function mount(props?: AppProps) {
   const { container, basename = "/", appId, extra } = props || {};
   const history = createBrowserHistory({ basename });
 
-  const query = decodeURIComponent(window.location.href.split("?")[1]);
-  const themeFromQuery = new URLSearchParams(query).get("theme");
-  const themeFromCookie = cookie.get("theme");
-  const theme = themeFromQuery || themeFromCookie;
+  // const query = decodeURIComponent(window.location.href.split("?")[1]);
+  // const themeFromQuery = new URLSearchParams(query).get("theme");
+  // const themeFromCookie = cookie.get("theme");
+  // const theme = themeFromQuery || themeFromCookie;
 
   /*   if (theme) {
     cookie.set('theme', theme);

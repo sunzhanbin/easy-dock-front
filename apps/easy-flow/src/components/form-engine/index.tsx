@@ -11,7 +11,7 @@ import { Loading } from "@common/components";
 import { DataConfig, ParamSchem } from "@/type/api";
 import PubSub from "pubsub-js";
 import useMemoCallback from "@common/hooks/use-memo-callback";
-import { debounce, omit } from "lodash";
+import { debounce } from "lodash";
 import { getFilesType } from "@apis/form";
 import { convertFormRules, validateRules } from "./utils";
 import Container from "./container";

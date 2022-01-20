@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState, AppThunk } from "@/store";
 // import { fetchUser } from "@utils/apis";
 
 export interface AppManagerState {

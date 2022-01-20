@@ -2,7 +2,7 @@ import { memo, useEffect, useState, useMemo, useRef } from "react";
 import { useParams, useHistory } from "react-router";
 import classnames from "classnames";
 import { FormInstance, message } from "antd";
-import { throttle, debounce } from "lodash";
+import { debounce } from "lodash";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import { AsyncButton, Loading, PopoverConfirm } from "@common/components";
 import { runtimeAxios, validateTabs, uploadFile } from "@utils";

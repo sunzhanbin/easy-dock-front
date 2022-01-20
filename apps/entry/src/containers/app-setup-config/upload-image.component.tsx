@@ -79,6 +79,7 @@ const UploadImage: FC<UploadImageProps> = ({ value, onChange }) => {
     if (value) {
       downloadFile(value);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   return (

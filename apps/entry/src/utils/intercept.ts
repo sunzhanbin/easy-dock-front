@@ -1,4 +1,3 @@
-import { QueryReturnValue } from "@reduxjs/toolkit/dist/query/baseQueryTypes";
 import {
   BaseQueryFn,
   FetchArgs,
@@ -7,6 +6,7 @@ import {
   FetchBaseQueryMeta,
 } from "@reduxjs/toolkit/query/react";
 import { message } from "antd";
+import { QueryReturnValue } from "@utils/types";
 
 const handleHttpError = (
   httpStatus: number | "FETCH_ERROR" | "PARSING_ERROR" | "CUSTOM_ERROR",
@@ -75,6 +75,8 @@ const createQueryWithIntercept = (
     }
   }
   if (Object.is(data?.resultCode, 0)) {
+    Object.prototype.hasOwnProperty.call(data, "resultCode") && delete data.resultCode;
+    Object.prototype.hasOwnProperty.call(data, "resultMessage") && delete data.resultMessage;
     return data;
   }
   return {

@@ -107,6 +107,7 @@ const EditorHeader: FC = () => {
       window.close();
       // window.location.replace(`/main/builder/app/${appId}`);
     }, 1500);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bpmId, dispatch, appId]);
 
   useEffect(() => {

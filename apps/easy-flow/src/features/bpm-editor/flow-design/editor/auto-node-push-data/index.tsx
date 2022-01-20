@@ -11,7 +11,6 @@ import { trimInputValue } from "../../util";
 import { rules } from "../../validators";
 import useValidateForm from "../../hooks/use-validate-form";
 import DataApiConfig from "../../../components/data-api-config";
-import useFieldsTemplate from "../../hooks/use-fields-template";
 
 interface AutoNodeEditorProps {
   node: AutoNodePushData;

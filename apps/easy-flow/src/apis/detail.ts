@@ -128,6 +128,7 @@ export async function fetchDataSource(
           if (name) {
             allPromises.push(
               runtimeAxios.post("/common/doHttpJson", { meta: apiConfig, formDataList: formData }).then((res) => {
+                /* eslint-disable-next-line no-eval */
                 const data = eval(`res.${name}`);
                 let list: { key: string; value: string }[] = [];
                 if (Array.isArray(data)) {
@@ -212,7 +213,9 @@ export const loadSrc = async (option: UrlOptionItem, formDataList?: { name: stri
     }
     const formData = formDataList?.filter((val) => val.value) || [];
     try {
+      // eslint-disable-next-line
       const res = await runtimeAxios.post("/common/doHttpJson", { meta: apiConfig, formDataList: formData });
+      // eslint-disable-next-line
       return eval(`res.${name}`);
     } catch (error) {
       return "";

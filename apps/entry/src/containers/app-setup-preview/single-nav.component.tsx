@@ -1,6 +1,6 @@
 import { Menu } from "antd";
 import classNames from "classnames";
-import { findFirstChild, keyPath } from "@utils/utils";
+import { findFirstChild } from "@utils/utils";
 import { Menu as IMenu, MenuComponentProps } from "@utils/types";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import { Icon, Text } from "@common/components";

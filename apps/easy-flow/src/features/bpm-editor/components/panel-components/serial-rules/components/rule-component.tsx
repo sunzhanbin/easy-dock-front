@@ -9,7 +9,6 @@ import { getFieldValue } from "@utils";
 import { useAppSelector } from "@app/hooks";
 import { errorSelector } from "@/features/bpm-editor/form-design/formzone-reducer";
 
-const { SubMenu } = Menu;
 const labelCol = { span: 24 };
 
 interface RuleComponentProps {

@@ -67,6 +67,7 @@ const SubInputNumber = ({ id, value, onChange }: SubInputNumberProps) => {
       return number;
     };
     return props;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value, decimal, numberRange]);
 
   return <InputNumber {...propList} />;

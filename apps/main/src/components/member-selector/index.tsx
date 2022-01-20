@@ -113,6 +113,7 @@ function Selector(props: SelectorProps) {
 
   useEffect(() => {
     searchMembers({ name: "", page: 1, projectId });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchMembers]);
 
   const handleMemberListScroll = useMemoCallback(

@@ -69,6 +69,7 @@ const MenuSetupFormComponent = React.forwardRef<{
     }
     const formValues = form.getFieldsValue();
     dispatch(setMenuForm(formValues));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useImperativeHandle(ref, () => ({
@@ -77,6 +78,7 @@ const MenuSetupFormComponent = React.forwardRef<{
 
   useEffect(() => {
     form.setFieldsValue(menuForm);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [menuForm]);
 
   return (

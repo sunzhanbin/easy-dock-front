@@ -51,7 +51,6 @@ export const HomeManagerSlice = createSlice({
         id: user.id,
         power: power,
       };
-      console.log((power & RoleEnum.ADMIN) === RoleEnum.ADMIN, "(power & RoleEnum.ADMIN) === RoleEnum.ADMIN");
       state.isAdmin = (power & RoleEnum.ADMIN) === RoleEnum.ADMIN;
     });
     builder.addMatcher(homeManageBuilder.endpoints.fetchProjectPowers.matchFulfilled, (state, action) => {

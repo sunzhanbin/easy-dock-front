@@ -32,6 +32,7 @@ const BubbleSvgComponent = () => {
         ))}
       </>
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bubbleList]);
 
   useEffect(() => {
@@ -53,6 +54,7 @@ const BubbleSvgComponent = () => {
         ReactDom.unmountComponentAtNode(svgRef);
       });
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ref, initRenderLinear]);
   return <svg className="bubble-svg" ref={ref}></svg>;
 };

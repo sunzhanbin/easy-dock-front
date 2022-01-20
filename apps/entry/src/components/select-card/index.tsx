@@ -84,6 +84,7 @@ const SelectCard = ({ type, list, onSelect, selectedId, onAdd, onDelete, isAdmin
     } catch (e) {
       console.log(e);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form]);
 
   // option编辑字段名确认

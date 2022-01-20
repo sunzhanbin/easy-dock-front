@@ -56,6 +56,7 @@ const NavComponent = () => {
         navigate(`./${RouteMap[assetConfig.subAppType as unknown as keyof typeof RouteMap]}`);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authMenu, workspaceId]);
 
   return (

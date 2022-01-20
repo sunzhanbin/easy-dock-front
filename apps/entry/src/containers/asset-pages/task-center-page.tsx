@@ -13,7 +13,7 @@ const TaskCenterMicroPage = () => {
   });
   const url = useMemo(() => {
     return `${MAIN_ENTRY}/main/instance/${workspaceId}/task-center?theme=${theme}&mode=running`;
-  }, [theme]);
+  }, [theme, workspaceId]);
 
   return (
     <div className="task-center-page">

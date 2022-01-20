@@ -22,7 +22,6 @@ export function init(svgRef: SVGSVGElement, lineD3: any) {
 }
 
 function blob(n: number, cx: number, cy: number, r: number, rnd1: number, rnd2: number, index: number) {
-  const da = (2 * Math.PI) / n;
   const points: any = blobPoints(n, cx, cy, r, rnd1, rnd2);
   const points2: any = blobPoints(n, cx, cy, r, rnd1, rnd2);
   const d: any = line(points);
@@ -30,7 +29,6 @@ function blob(n: number, cx: number, cy: number, r: number, rnd1: number, rnd2: 
   const fill = `url(#bubble${index + 1})`;
   const g = document.createElementNS(SVG_URL, "g");
   const path = document.createElementNS(SVG_URL, "path");
-  const defsElement = document.createElementNS(SVG_URL, "defs");
   const b: any = { points, path, d2, fill };
   path.setAttributeNS(null, "d", d);
   g.appendChild(path);

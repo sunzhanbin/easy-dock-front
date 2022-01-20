@@ -37,6 +37,7 @@ const SpaceMicroPage = () => {
         setSrc(src);
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [appInfo?.subAppId]);
 
   return (

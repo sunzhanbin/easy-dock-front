@@ -12,7 +12,7 @@ const UserManager = () => {
     <div className="layout">
       <div className="sidebar">
         <div className="menus">
-          <NavLink to={matched?.pathname!} className={({ isActive }) => classNames({ nav: true, active: isActive })}>
+          <NavLink to={matched!.pathname} className={({ isActive }) => classNames({ nav: true, active: isActive })}>
             <Icon type="quanxianshezhi" className="icon" />
             <div className="text">权限设置</div>
           </NavLink>

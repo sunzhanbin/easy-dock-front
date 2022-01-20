@@ -39,6 +39,7 @@ const MultiNavComponent = ({ extra, dataSource, theme, selectedKey }: WorkspaceB
     if (subMenu && subMenu.form?.mode === "current") {
       dispatch(setCurrentId(subMenu.id));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataSource]);
 
   const navigateFn = useMemoCallback(async (menu: IMenu) => {

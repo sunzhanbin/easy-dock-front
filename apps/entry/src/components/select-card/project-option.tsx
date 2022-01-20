@@ -33,6 +33,7 @@ const ProjectOption = ({
   const handleEdit = useCallback((e, item) => {
     form.setFieldsValue({ fieldName: item.name });
     onEdit(e, item);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   // option确认编辑
   const handleConfirm = useCallback(
@@ -45,6 +46,7 @@ const ProjectOption = ({
         console.log(e);
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [form],
   );
   // option选中

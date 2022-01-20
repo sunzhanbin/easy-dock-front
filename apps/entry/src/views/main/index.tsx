@@ -1,5 +1,4 @@
 import { memo, useState } from "react";
-import classnames from "classnames";
 import "swiper/swiper.scss";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { Mousewheel } from "swiper";
