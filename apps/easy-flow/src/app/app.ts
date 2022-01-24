@@ -1,9 +1,9 @@
-import { createSlice, createAsyncThunk, PayloadAction, createSelector } from '@reduxjs/toolkit';
-import { message } from 'antd';
-import { useAppSelector } from '@app/hooks';
-import { SubApp } from '@type/subapp';
-import { builderAxios, runtimeAxios } from '@utils';
-import { Member, Role, Dept } from '@type';
+import { createSlice, createAsyncThunk, PayloadAction, createSelector } from "@reduxjs/toolkit";
+import { message } from "antd";
+import { useAppSelector } from "@app/hooks";
+import { SubApp } from "@type/subapp";
+import { builderAxios, runtimeAxios } from "@utils";
+import { Member, Role, Dept } from "@type";
 
 export type Visits = {
   depts: Dept[];
@@ -17,14 +17,14 @@ export interface SubAppState {
   extend?: {
     config: {
       openVisit?: boolean;
-      meta?: SubApp['meta'];
+      meta?: SubApp["meta"];
     };
     visits?: Visits;
   };
 }
 
 const subapp = createSlice({
-  name: 'subapp',
+  name: "subapp",
   initialState: { loading: false } as SubAppState,
   reducers: {
     setLoading(state, { payload }: PayloadAction<boolean>) {
@@ -36,7 +36,7 @@ const subapp = createSlice({
     setDirty(state, { payload }: PayloadAction<boolean>) {
       state.dirty = payload;
     },
-    setExtend(state, { payload }: PayloadAction<Partial<SubAppState['extend']>>) {
+    setExtend(state, { payload }: PayloadAction<Partial<SubAppState["extend"]>>) {
       state.extend = Object.assign({}, state.extend, payload);
     },
   },
@@ -44,8 +44,8 @@ const subapp = createSlice({
 
 export const { setLoading, setApp, setExtend, setDirty } = subapp.actions;
 
-export const loadApp = createAsyncThunk<Promise<SubAppState['data']>, string>(
-  'subapp/load',
+export const loadApp = createAsyncThunk<Promise<SubAppState["data"]>, string>(
+  "subapp/load",
   async (subappId, { dispatch, getState }) => {
     const { subapp } = getState();
 
@@ -65,8 +65,8 @@ export const loadApp = createAsyncThunk<Promise<SubAppState['data']>, string>(
   },
 );
 
-export const loadExtend = createAsyncThunk<Promise<SubAppState['extend']>, string | number>(
-  'subapp/load-extend',
+export const loadExtend = createAsyncThunk<Promise<SubAppState["extend"]>, string | number>(
+  "subapp/load-extend",
   async (subappId, { dispatch, getState }) => {
     const visits = await fetchVisits(subappId);
     const { subapp } = getState();
@@ -84,12 +84,12 @@ export const loadExtend = createAsyncThunk<Promise<SubAppState['extend']>, strin
   },
 );
 
-export const save = createAsyncThunk<void, void>('subapp/save', async (_, { dispatch, getState }) => {
+export const save = createAsyncThunk<void, void>("subapp/save", async (_, { dispatch, getState }) => {
   try {
     const subapp = getState().subapp;
 
     if (!subapp.dirty) {
-      message.success('保存成功');
+      message.success("保存成功");
 
       return;
     }
@@ -104,7 +104,7 @@ export const save = createAsyncThunk<void, void>('subapp/save', async (_, { disp
     dispatch(setDirty(false));
     dispatch(setApp(Object.assign({}, subapp.data, { openVisit: config.openVisit }, { meta: config.meta })));
 
-    message.success('保存成功');
+    message.success("保存成功");
   } catch (e) {
     console.error(e);
 
@@ -189,14 +189,14 @@ async function changeVisits(visits: Visits | undefined, subappId: string | numbe
     });
   });
 
-  await runtimeAxios.post(`/privilege/assign/subapp`, {
+  await runtimeAxios.post("/privilege/assign/subapp", {
     id: subappId,
     privileges,
   });
 }
 
-async function changeMeta(extendConfig: NonNullable<SubAppState['extend']>['config'], subappId: string | number) {
-  await builderAxios.put(`/subapp/meta`, {
+async function changeMeta(extendConfig: NonNullable<SubAppState["extend"]>["config"], subappId: string | number) {
+  await builderAxios.put("/subapp/meta", {
     id: subappId,
     ...extendConfig,
   });

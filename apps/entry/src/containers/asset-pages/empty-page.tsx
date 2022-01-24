@@ -8,10 +8,11 @@ import "./empty-page.style.scss";
 
 const EmptyPage: FC = () => {
   const { workspaceId } = useParams();
-  const { theme } = useWorkspaceDetailQuery(+(workspaceId as string), {
+  const { theme } = useWorkspaceDetailQuery(Number(workspaceId), {
     selectFromResult: ({ data }) => ({
       theme: data?.extension?.theme || "light",
     }),
+    skip: !workspaceId,
   });
   const themeImageMap = useMemo<{ [k in ThemeType]: string }>(() => {
     return {

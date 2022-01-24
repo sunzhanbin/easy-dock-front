@@ -1,10 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router";
 import { useAppSelector } from "@/store";
-import {
-  useGetCanvasIdMutation,
-  useWorkspaceDetailQuery,
-} from "@http/app-manager.hooks";
+import { useGetCanvasIdMutation, useWorkspaceRuntimeDetailQuery } from "@http/app-manager.hooks";
 import { selectCurrentId } from "@views/workspace/index.slice";
 import { findItem } from "@utils/utils";
 import { CANVAS_ENTRY } from "@/consts";
@@ -16,9 +13,9 @@ const CanvasMicroPage = () => {
   const selectedKey = useAppSelector(selectCurrentId);
   const [getCanvasId] = useGetCanvasIdMutation();
   const [src, setSrc] = useState<string>("");
-  const { menu } = useWorkspaceDetailQuery(+(workspaceId as string), {
+  const { menu } = useWorkspaceRuntimeDetailQuery(+(workspaceId as string), {
     selectFromResult: ({ data }) => ({
-      menu: data?.extension?.meta?.menuList,
+      menu: data?.extension?.meta?.menuList || [],
     }),
   });
   const appInfo = useMemo(() => {
@@ -38,6 +35,7 @@ const CanvasMicroPage = () => {
         setSrc(src);
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [appInfo?.subAppId]);
 
   return (

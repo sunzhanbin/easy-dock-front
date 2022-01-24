@@ -12,11 +12,7 @@ interface AppPreviewModalProps {
   onClose: () => void;
 }
 
-const AppPreviewModal: FC<AppPreviewModalProps> = ({
-  visible,
-  theme = "light",
-  onClose,
-}) => {
+const AppPreviewModal: FC<AppPreviewModalProps> = ({ visible, theme = "light", onClose }) => {
   return (
     <div className={classNames("app-preview-container", !visible && "hidden")}>
       <Modal

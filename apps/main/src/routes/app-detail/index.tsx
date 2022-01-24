@@ -1,19 +1,19 @@
-import { memo, FC, useEffect, useState, useCallback, useMemo } from 'react';
-import { useParams } from 'react-router';
-import { useHistory } from 'react-router-dom';
-import classNames from 'classnames';
-import styles from './index.module.scss';
-import { axios } from '@/utils';
-import { SceneShape, SubAppInfo } from '../scenes/types';
-import Empty from './empty/index';
-import { Text, Icon, Loading } from '@common/components';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import { Button, Input } from 'antd';
-import Card from './subapp-card';
-import AppModel from './app-model';
-import AuthModal from './auth-modal';
-import { AppInfo } from '@/schema/app';
-import { FlowMicroApp, MAIN_CONTENT_CLASSNAME, ChartMicroApp } from '@/consts';
+import { memo, FC, useEffect, useState, useCallback, useMemo } from "react";
+import { useParams } from "react-router";
+import { useHistory } from "react-router-dom";
+import classNames from "classnames";
+import styles from "./index.module.scss";
+import { axios } from "@/utils";
+import { SceneShape, SubAppInfo } from "../scenes/types";
+import Empty from "./empty/index";
+import { Text, Icon, Loading } from "@common/components";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { Button, Input } from "antd";
+import Card from "./subapp-card";
+import AppModel from "./app-model";
+import AuthModal from "./auth-modal";
+import { AppInfo } from "@/schema/app";
+import { FlowMicroApp, MAIN_CONTENT_CLASSNAME, ChartMicroApp } from "@/consts";
 
 const AppDetail: FC = () => {
   const history = useHistory();
@@ -23,7 +23,7 @@ const AppDetail: FC = () => {
   const [subAppList, setSubAppList] = useState<SubAppInfo[]>([]);
   const [showAppModal, setShowAppModal] = useState<boolean>(false);
   const [showAuthModal, setShowAuthModal] = useState<boolean>(false);
-  const [keyWord, setKeyWord] = useState<string>('');
+  const [keyWord, setKeyWord] = useState<string>("");
   const filterAppList = useMemo(() => {
     if (keyWord) {
       return subAppList.filter(({ name }) => name.indexOf(keyWord) > -1);
@@ -35,7 +35,7 @@ const AppDetail: FC = () => {
   }, []);
   const handleOK = useCallback(
     (name, type) => {
-      axios.post('/subapp', { appId, name, type }).then((res) => {
+      axios.post("/subapp", { appId, name, type }).then((res) => {
         setShowAppModal(false);
         if (type === 1) {
           history.push(`${ChartMicroApp.route}/chart-editor/${res.data.id}/chart-design`);
@@ -94,15 +94,15 @@ const AppDetail: FC = () => {
               className={styles.back}
               type="fanhui"
               onClick={() => {
-                history.replace('/builder');
+                history.replace("/builder");
               }}
             />
             <div className={classNames(styles.status, appInfo?.status === 1 ? styles.active : styles.negative)}>
-              {appInfo?.status === 1 ? '已启用' : '已停用'}
+              {appInfo?.status === 1 ? "已启用" : "已停用"}
             </div>
             <div className={styles.app_info}>
               <div className={styles.name}>
-                <Text text={appInfo?.name || ''} getContainer={false} />
+                <Text text={appInfo?.name || ""} getContainer={false} />
               </div>
               {subAppList.length > 0 && (
                 <>
@@ -131,7 +131,7 @@ const AppDetail: FC = () => {
           <div className={styles.content}>
             {subAppList.length > 0 ? (
               <div
-                className={classNames(styles.scenes, { [styles['no-scene']]: subAppList.length === 0 })}
+                className={classNames(styles.scenes, { [styles["no-scene"]]: subAppList.length === 0 })}
                 id="sub_app_card_list"
               >
                 <div className={classNames(styles.card, styles.scene)}>
@@ -176,7 +176,7 @@ const AppDetail: FC = () => {
           </div>
           {showAuthModal && (
             <AuthModal
-              appInfo={(appInfo as unknown) as AppInfo}
+              appInfo={appInfo as unknown as AppInfo}
               onClose={() => {
                 setShowAuthModal(false);
               }}

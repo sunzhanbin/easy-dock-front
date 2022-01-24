@@ -4,9 +4,7 @@ import MenuSetupFormComponent from "@containers/app-setup-config/menu-setup-form
 
 import "@containers/app-setup-config/menu-setup.style";
 
-type MenuSetupFormComponentHandle = React.ElementRef<
-  typeof MenuSetupFormComponent
->;
+type MenuSetupFormComponentHandle = React.ElementRef<typeof MenuSetupFormComponent>;
 
 const MenuSetupComponent = () => {
   const formRef = useRef<MenuSetupFormComponentHandle>(null);
@@ -25,6 +23,7 @@ const MenuSetupComponent = () => {
           .catch(() => reject);
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formRef.current]);
 
   return (

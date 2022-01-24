@@ -1,26 +1,10 @@
 import { memo, FC, useState, useEffect, useMemo, useRef } from "react";
-import {
-  Button,
-  Checkbox,
-  Tooltip,
-  Table,
-  TableProps,
-  Popover,
-  Select,
-  message,
-} from "antd";
+import { Button, Checkbox, Tooltip, Table, TableProps, Popover, Select, message } from "antd";
 import moment from "moment";
 import classNames from "classnames";
 import { omit, throttle, debounce } from "lodash";
 import { axios } from "@utils/fetch";
-import {
-  MAIN_ENTRY,
-  Pagination,
-  ProcessDataManagerParams,
-  SortDirection,
-  TASK_STATE_LIST,
-  UserItem,
-} from "@/consts";
+import { MAIN_ENTRY, Pagination, ProcessDataManagerParams, SortDirection, TASK_STATE_LIST, UserItem } from "@/consts";
 import { Icon, StateTag, Text } from "@common/components";
 import {
   useFetchUsersMutation,
@@ -66,13 +50,7 @@ type FieldItem = {
 
 const { Option } = Select;
 
-const FlowAppContent: FC<FlowAppContentProps> = ({
-  id,
-  appId,
-  projectId,
-  theme = "light",
-  canOperation = true,
-}) => {
+const FlowAppContent: FC<FlowAppContentProps> = ({ id, appId, projectId, theme = "light", canOperation = true }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [statusList, setStatusList] = useState<number[]>([1, 2, 3, 4, 5, 6]);
   const [dataSource, setDataSource] = useState<any[]>();
@@ -81,9 +59,7 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
   const [keyword, setKeyword] = useState<string>("");
   const [userId, setUserId] = useState<string>("");
   const [subAppName, setSubAppName] = useState<string>("");
-  const [sortDirection, setSortDirection] = useState<SortDirection>(
-    SortDirection.DESC
-  );
+  const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.DESC);
   const [pagination, setPagination] = useState<Pagination>({
     pageSize: 10,
     current: 1,
@@ -145,18 +121,14 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
     } else {
       text = membersCacheRef.current[member]?.name || "";
     }
-    return (
-      <Text className="dynamic-cell" text={String(text)} getContainer={false} />
-    );
+    return <Text className="dynamic-cell" text={String(text)} getContainer={false} />;
   });
 
   const renderDate = useMemoCallback((date: number | [number, number]) => {
     if (!date) return null;
 
     if (Array.isArray(date)) {
-      return date
-        .map((ts) => moment(ts).format("yyyy-MM-DD HH:mm:ss"))
-        .join("至");
+      return date.map((ts) => moment(ts).format("yyyy-MM-DD HH:mm:ss")).join("至");
     }
     return moment(date).format("yyyy-MM-DD HH:mm:ss");
   });
@@ -171,16 +143,11 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
     } else {
       text = value;
     }
-    return (
-      <Text className="dynamic-cell" text={String(text)} getContainer={false} />
-    );
+    return <Text className="dynamic-cell" text={String(text)} getContainer={false} />;
   });
 
   const renderContent = useMemoCallback(
-    (
-      data: { [k: string]: any }[],
-      componentList: { field: string; type: string }[]
-    ) => {
+    (data: { [k: string]: any }[], componentList: { field: string; type: string }[]) => {
       const nameMap = data.shift() || {};
       const dataSource = data;
       const columns: TableColumn[] = [];
@@ -206,102 +173,90 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
       });
       return (
         <div className="pop-container">
-          <Table
-            dataSource={dataSource}
-            columns={columns}
-            rowKey="key"
-            pagination={false}
-          ></Table>
+          <Table dataSource={dataSource} columns={columns} rowKey="key" pagination={false}></Table>
         </div>
       );
-    }
+    },
   );
 
   // 获取表格动态的列,源自于流程表单的控件
-  const getDynamicColumns = useMemoCallback(
-    (currentFields: any[]): TableProps<TableDataBase>["columns"] => {
-      return currentFields.map((field) => {
-        const tableKey = `formData.${field.field}`;
-        const tableColumn: typeof baseColumns[number] = {
-          key: tableKey,
-          title: <Text className="dynamic-cell" text={field.name} />,
-          dataIndex: tableKey,
-          width: 150,
+  const getDynamicColumns = useMemoCallback((currentFields: any[]): TableProps<TableDataBase>["columns"] => {
+    return currentFields.map((field) => {
+      const tableKey = `formData.${field.field}`;
+      const tableColumn: typeof baseColumns[number] = {
+        key: tableKey,
+        title: <Text className="dynamic-cell" text={field.name} />,
+        dataIndex: tableKey,
+        width: 150,
+      };
+      if (field.type === "Tabs") {
+        // eslint-disable-next-line
+          tableColumn.render = (_: string, data: TableDataBase) => {
+          if (!data?.formData) {
+            return null;
+          }
+          const components = (field as any).components;
+          if (!components || components?.length === 0) {
+            return null;
+          }
+          const tabData: any[] = [];
+          const nameMap: { [k: string]: string } = {};
+          const keyList: string[] = [];
+          const componentList: { field: string; type: string }[] = [];
+          components.forEach((com: any) => {
+            nameMap[com.field] = com.name;
+            keyList.push(com.field);
+            componentList.push({ field: com.field, type: com.type });
+          });
+          tabData.push(nameMap);
+          let fieldData = data.formData?.[field.field];
+          if (!fieldData) {
+            return null;
+          }
+          fieldData = Array.isArray(fieldData) ? fieldData : JSON.parse(fieldData as string);
+          const compData = ((fieldData as any[]) || []).map((item) => omit(item, ["__title__"]));
+          tabData.push(...compData);
+          return (
+            <Popover
+              placement="topLeft"
+              trigger="click"
+              title={null}
+              content={renderContent(tabData, componentList)}
+              getPopupContainer={() => containerRef.current as HTMLDivElement}
+            >
+              <div className="tab-detail">查看详情</div>
+            </Popover>
+          );
         };
-        if (field.type === "Tabs") {
-          // eslint-disable-next-line
-          tableColumn.render = (_: string, data: TableDataBase) => {
-            if (!data?.formData) {
-              return null;
-            }
-            const components = (field as any).components;
-            if (!components || components?.length === 0) {
-              return null;
-            }
-            const tabData: any[] = [];
-            const nameMap: { [k: string]: string } = {};
-            const keyList: string[] = [];
-            const componentList: { field: string; type: string }[] = [];
-            components.forEach((com: any) => {
-              nameMap[com.field] = com.name;
-              keyList.push(com.field);
-              componentList.push({ field: com.field, type: com.type });
-            });
-            tabData.push(nameMap);
-            let fieldData = data.formData?.[field.field];
-            if (!fieldData) {
-              return null;
-            }
-            fieldData = Array.isArray(fieldData)
-              ? fieldData
-              : JSON.parse(fieldData as string);
-            const compData = ((fieldData as any[]) || []).map((item) =>
-              omit(item, ["__title__"])
-            );
-            tabData.push(...compData);
-            return (
-              <Popover
-                placement="topLeft"
-                trigger="click"
-                title={null}
-                content={renderContent(tabData, componentList)}
-                getPopupContainer={() => containerRef.current as HTMLDivElement}
-              >
-                <div className="tab-detail">查看详情</div>
-              </Popover>
-            );
-          };
-        } else if (field.type === "Member") {
-          tableColumn.render = (_: string, data: TableDataBase) => {
-            if (!data?.formData) {
-              return null;
-            }
-            const member = data.formData[field.field] || field.defaultValue;
-            return renderMember(member as number | number[]);
-          };
-        } else if (field.type === "Date") {
-          tableColumn.render = (_: string, data: TableDataBase) => {
-            if (!data?.formData) {
-              return null;
-            }
-            const date = data.formData[field.field] || field.defaultValue || "";
-            tableColumn.width = Array.isArray(date) ? 360 : 180;
-            return renderDate(date as number | [number, number]);
-          };
-        } else {
-          tableColumn.render = (_: string, data: TableDataBase) => {
-            if (!data?.formData) {
-              return null;
-            }
-            const value =
-              data.formData[field.field] || field.defaultValue || "";
-            return renderText(value as string | string[]);
-          };
-        }
-        return tableColumn;
-      });
-    }
-  );
+      } else if (field.type === "Member") {
+        tableColumn.render = (_: string, data: TableDataBase) => {
+          if (!data?.formData) {
+            return null;
+          }
+          const member = data.formData[field.field] || field.defaultValue;
+          return renderMember(member as number | number[]);
+        };
+      } else if (field.type === "Date") {
+        tableColumn.render = (_: string, data: TableDataBase) => {
+          if (!data?.formData) {
+            return null;
+          }
+          const date = data.formData[field.field] || field.defaultValue || "";
+          tableColumn.width = Array.isArray(date) ? 360 : 180;
+          return renderDate(date as number | [number, number]);
+        };
+      } else {
+        tableColumn.render = (_: string, data: TableDataBase) => {
+          if (!data?.formData) {
+            return null;
+          }
+          const value = data.formData[field.field] || field.defaultValue || "";
+          return renderText(value as string | string[]);
+        };
+      }
+      return tableColumn;
+    });
+  });
   // 缓存人员
   const cacheMembers = useMemoCallback(async (data) => {
     // 搜集人员字段的值方便后面拉取人员列表
@@ -362,44 +317,40 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
         userIds: Array.from(ids),
       };
       const userResponse = (await fetchUsers(params)) as any;
-      (userResponse.data.users || []).forEach(
-        (user: { id: number; userName: string; avatar?: string }) => {
-          membersCacheRef.current[user.id] = {
-            id: user.id,
-            name: user.userName,
-            avatar: user.avatar,
-          };
-        }
-      );
+      (userResponse.data.users || []).forEach((user: { id: number; userName: string; avatar?: string }) => {
+        membersCacheRef.current[user.id] = {
+          id: user.id,
+          name: user.userName,
+          avatar: user.avatar,
+        };
+      });
     }
   });
 
-  const fetchOptionList = useMemoCallback(
-    async (pageNum: number, keyword: string) => {
-      if (projectId) {
-        const params = {
-          size: 20,
-          index: pageNum,
-          keyword,
-          projectId,
-        };
-        const res = (await searchUser(params)) as any;
-        const list = res.data?.data || [];
-        const total = res.data?.recordTotal;
-        const index = res.data?.pageIndex;
-        setOptionList((val) => {
-          // 从第一页搜索时覆盖原数组
-          if (pageNum === 1) {
-            return list;
-          }
-          return val.concat(list);
-        });
-        // 更新当前页数
-        pageNumberRef.current = index;
-        setTotal(total);
-      }
+  const fetchOptionList = useMemoCallback(async (pageNum: number, keyword: string) => {
+    if (projectId) {
+      const params = {
+        size: 20,
+        index: pageNum,
+        keyword,
+        projectId,
+      };
+      const res = (await searchUser(params)) as any;
+      const list = res.data?.data || [];
+      const total = res.data?.recordTotal;
+      const index = res.data?.pageIndex;
+      setOptionList((val) => {
+        // 从第一页搜索时覆盖原数组
+        if (pageNum === 1) {
+          return list;
+        }
+        return val.concat(list);
+      });
+      // 更新当前页数
+      pageNumberRef.current = index;
+      setTotal(total);
     }
-  );
+  });
 
   const handleScroll = useMemoCallback(
     throttle((event: React.UIEvent<HTMLDivElement, UIEvent>) => {
@@ -408,22 +359,19 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
 
       const container = event.target as HTMLDivElement;
 
-      if (
-        container.scrollHeight - container.offsetHeight - container.scrollTop <
-        20
-      ) {
+      if (container.scrollHeight - container.offsetHeight - container.scrollTop < 20) {
         if (loading) return;
 
         fetchOptionList(pageNumberRef.current + 1, keyword);
       }
-    }, 300)
+    }, 300),
   );
   const handleSearchUser = useMemoCallback(
     debounce((val) => {
       setKeyword(val);
       pageNumberRef.current = 1;
       fetchOptionList(1, val);
-    }, 500)
+    }, 500),
   );
 
   const fetchDataSource = useMemoCallback(async () => {
@@ -441,11 +389,7 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
       }
       const res = (await fetchProcessDataManager(params)) as { data: any };
       const dataSource = res?.data;
-      if (
-        canOperation &&
-        Array.isArray(dataSource?.data) &&
-        dataSource?.data.length > 0
-      ) {
+      if (canOperation && Array.isArray(dataSource?.data) && dataSource?.data.length > 0) {
         cacheMembers(dataSource.data);
         setDataSource(dataSource.data);
       }
@@ -458,16 +402,12 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
     }
   });
 
-  const handleTableChange = useMemoCallback(
-    (newPagination, filters, sorter) => {
-      sorter.order === "ascend"
-        ? setSortDirection(SortDirection.ASC)
-        : setSortDirection(SortDirection.DESC);
-      setPagination((pagination) => {
-        return { ...pagination, ...newPagination };
-      });
-    }
-  );
+  const handleTableChange = useMemoCallback((newPagination, filters, sorter) => {
+    sorter.order === "ascend" ? setSortDirection(SortDirection.ASC) : setSortDirection(SortDirection.DESC);
+    setPagination((pagination) => {
+      return { ...pagination, ...newPagination };
+    });
+  });
 
   const handleStatusChange = useMemoCallback((list) => {
     setStatusList(list);
@@ -499,12 +439,10 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
         sortDirection,
       },
     };
-    axios
-      .post("/task/processDataManager/export", params, { responseType: "blob" })
-      .then((res) => {
-        const type = (res as any).type;
-        exportFile(res, `${subAppName || "file"}.xlsx`, type);
-      });
+    axios.post("/task/processDataManager/export", params, { responseType: "blob" }).then((res) => {
+      const type = (res as any).type;
+      exportFile(res, `${subAppName || "file"}.xlsx`, type);
+    });
   });
 
   useEffect(() => {
@@ -513,16 +451,8 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
       const res = (await fetchFlowComponents(id)) as { data: any[] };
       if (Array.isArray(res?.data) && res.data.length > 0) {
         // 不展示的控件类型
-        const excludeTypeList: string[] = [
-          "Attachment",
-          "DescText",
-          "Image",
-          "FlowData",
-          "Iframe",
-        ];
-        const currentFields = (res.data || []).filter(
-          (field) => !excludeTypeList.includes(field.type)
-        );
+        const excludeTypeList: string[] = ["Attachment", "DescText", "Image", "FlowData", "Iframe"];
+        const currentFields = (res.data || []).filter((field) => !excludeTypeList.includes(field.type));
         const dynamicColumns = getDynamicColumns(currentFields);
         if (dynamicColumns?.length) {
           setTableColumns(() => {
@@ -532,6 +462,7 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
         setFields(currentFields);
       }
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   useEffect(() => {
@@ -544,38 +475,24 @@ const FlowAppContent: FC<FlowAppContentProps> = ({
           console.error(error);
         });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   useEffect(() => {
     fetchDataSource();
     fetchOptionList(1, "");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, projectId]);
 
   useEffect(() => {
     fetchDataSource();
-  }, [
-    statusList,
-    userId,
-    pagination.pageSize,
-    pagination.current,
-    sortDirection,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [statusList, userId, pagination.pageSize, pagination.current, sortDirection]);
 
   return (
-    <div
-      className={classNames(
-        "flow-app-content",
-        theme,
-        !canOperation && "preview"
-      )}
-    >
+    <div className={classNames("flow-app-content", theme, !canOperation && "preview")}>
       <div className="start">
-        <Button
-          type="primary"
-          size="large"
-          className="button"
-          onClick={handleJumpToStartFlow}
-        >
+        <Button type="primary" size="large" className="button" onClick={handleJumpToStartFlow}>
           发起流程
         </Button>
       </div>

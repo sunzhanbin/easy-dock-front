@@ -1,11 +1,11 @@
-import { forwardRef, memo, useEffect, useState, useMemo } from 'react';
-import { FormInstance } from 'antd';
-import classnames from 'classnames';
-import { runtimeAxios } from '@utils';
-import { loadDatasource } from '@apis/detail';
-import FormEngine from '@components/form-engine';
-import FlowStatusBar from '../flow-statusbar';
-import AuditRecord from '../audit-record';
+import { forwardRef, memo, useEffect, useState, useMemo } from "react";
+import { FormInstance } from "antd";
+import classnames from "classnames";
+import { runtimeAxios } from "@utils";
+import { loadDatasource } from "@apis/detail";
+import FormEngine from "@components/form-engine";
+import FlowStatusBar from "../flow-statusbar";
+import AuditRecord from "../audit-record";
 import {
   FlowMeta,
   FlowInstance,
@@ -14,9 +14,9 @@ import {
   AuditRecordSchema,
   TaskDetailType,
   Datasource,
-} from '@type/detail';
-import styles from './index.module.scss';
-import moment from 'moment';
+} from "@type/detail";
+import styles from "./index.module.scss";
+import moment from "moment";
 
 interface DetailProps {
   className?: string;
@@ -50,7 +50,7 @@ const Detail = forwardRef(function Detail(props: DetailProps, ref: React.Forward
 
   useEffect(() => {
     if (!flow || !form) return;
-    console.log(form.value, 'form.meta');
+    console.log(form.value, "form.meta");
     loadDatasource(
       form.meta,
       flow.node.fieldsAuths,
@@ -61,15 +61,16 @@ const Detail = forwardRef(function Detail(props: DetailProps, ref: React.Forward
     });
   }, [flow, form]);
   const initialValue = useMemo(() => {
-    const dateFields = form.meta.components.filter(item => item.config.type === 'Date').map(item => item.props.id)
-    const valueMap = {...form.value}
-    Object.values(dateFields).map(field => {
-      if(!Object.keys(form.value).includes(field)){
-        valueMap[field] = moment().valueOf()
+    const dateFields = form.meta.components.filter((item) => item.config.type === "Date").map((item) => item.props.id);
+    const valueMap = { ...form.value };
+    Object.values(dateFields).map((field) => {
+      if (!Object.keys(form.value).includes(field)) {
+        valueMap[field] = moment().valueOf();
       }
-    })
-    console.log(valueMap, 'valueMap')
-    return valueMap
+      return field;
+    });
+    console.log(valueMap, "valueMap");
+    return valueMap;
   }, [form.value, form.meta]);
   return (
     <div className={classnames(styles.main, className)}>
@@ -92,11 +93,11 @@ const Detail = forwardRef(function Detail(props: DetailProps, ref: React.Forward
         </div>
       </div>
       <div className={styles.flow}>
-        <div className={styles['record-title']}>审核记录</div>
+        <div className={styles["record-title"]}>审核记录</div>
         <div className={styles.detail}>
           {auditRecords.map((record, index) => (
             <AuditRecord
-              className={auditRecords.length === index + 1 ? styles['last-record'] : ''}
+              className={auditRecords.length === index + 1 ? styles["last-record"] : ""}
               data={record}
               key={index}
             />

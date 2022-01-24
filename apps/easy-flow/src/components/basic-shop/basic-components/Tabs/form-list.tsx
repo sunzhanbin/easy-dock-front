@@ -1,19 +1,19 @@
-import { memo, useEffect, useMemo, useState } from 'react';
-import { Form, Row, Col } from 'antd';
-import { Rule, FormInstance } from 'antd/lib/form';
-import { AllComponentType, CompConfig, Datasource, EventType } from '@/type';
-import useLoadComponents from '@/hooks/use-load-components';
-import { fetchDataSource } from '@/apis/detail';
-import { AuthType, FieldAuthsMap } from '@/type/flow';
-import { useContainerContext } from '@/components/form-engine/context';
-import PubSub from 'pubsub-js';
-import { analysisFormChangeRule } from '@/utils';
-import { formRulesItem, formRulesReturn, validateRules } from '@/components/form-engine/utils';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import { getFilesTypeList } from '@/components/form-engine';
-import { omit } from 'lodash';
-import styles from './index.module.scss';
-import LabelContent from '../../../label-content';
+import { memo, useEffect, useMemo, useState } from "react";
+import { Form, Row, Col } from "antd";
+import { Rule, FormInstance } from "antd/lib/form";
+import { AllComponentType, CompConfig, Datasource, EventType } from "@/type";
+import useLoadComponents from "@/hooks/use-load-components";
+import { fetchDataSource } from "@/apis/detail";
+import { AuthType, FieldAuthsMap } from "@/type/flow";
+import { useContainerContext } from "@/components/form-engine/context";
+import PubSub from "pubsub-js";
+import { analysisFormChangeRule } from "@/utils";
+import { formRulesItem, formRulesReturn, validateRules } from "@/components/form-engine/utils";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { getFilesTypeList } from "@/components/form-engine";
+import { omit } from "lodash";
+import styles from "./index.module.scss";
+import LabelContent from "../../../label-content";
 
 interface FormListProps {
   fields: CompConfig[];
@@ -37,7 +37,7 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId, name }
     return fields.map((v) => v.config.type);
   }, [fields]);
   const optionComponents = useMemo(() => {
-    return fields.filter((v) => ['Select', 'Radio', 'Checkbox'].includes(v.config.type)).map((v) => v.config);
+    return fields.filter((v) => ["Select", "Radio", "Checkbox"].includes(v.config.type)).map((v) => v.config);
   }, [fields]);
   const compSources = useLoadComponents(componentTypes);
   const [dataSourceMap, setDataSourceMap] = useState<Datasource>({});
@@ -62,7 +62,7 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId, name }
   }, [optionComponents, context]);
 
   useEffect(() => {
-    if (componentTypes.includes('Attachment')) {
+    if (componentTypes.includes("Attachment")) {
       (async () => {
         const fileMap = await getFilesTypeList();
         setFileMap(fileMap);
@@ -108,7 +108,7 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId, name }
           key: v.config.fieldName,
           value:
             v.props?.defaultValue ||
-            (typeof v.props?.defaultNumber === 'number' && v.props?.defaultNumber) ||
+            (typeof v.props?.defaultNumber === "number" && v.props?.defaultNumber) ||
             undefined,
         }))
         .filter(({ value }) => value !== undefined && value !== null)
@@ -126,7 +126,7 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId, name }
     if (context && context?.rules) {
       const { rules, form, nodeType } = context;
       Object.keys(rules).forEach((key) => {
-        const ruleList = ((rules as unknown) as formRulesReturn)[key];
+        const ruleList = (rules as unknown as formRulesReturn)[key];
         const visibleRules = ruleList?.filter((item) => item?.subtype === EventType.Visible);
         const watchList = watchFn(ruleList);
         const visibleWatchList = watchFn(visibleRules);
@@ -138,14 +138,15 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId, name }
           });
         });
       });
-      if (nodeType !== 'start') {
+      if (nodeType !== "start") {
         const fieldValue = form.getFieldValue([parentId, id]);
-        const subComponents = omit(fieldValue, ['__title__', 'key', 'content']);
+        const subComponents = omit(fieldValue, ["__title__", "key", "content"]);
         Object.entries(subComponents).forEach(([key, value]: [string, any]) => {
           PubSub.publish(`${key}-change`, value);
         });
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [context, name, setFieldVisible, watchFn]);
   return (
     <Form.List name={name}>
@@ -154,7 +155,7 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId, name }
           <Row className={styles.row}>
             {fields.map((field) => {
               const { config, props } = field;
-              const { fieldName = '', label = '', colSpace = 4, desc = '', type } = config;
+              const { fieldName = "", label = "", colSpace = 4, desc = "", type } = config;
               const Component = compSources ? compSources[type] : null;
               const dataSource = dataSourceMap[fieldName] || [];
               let fieldAuth = auth[fieldName] ?? AuthType.Edit;
@@ -166,10 +167,10 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId, name }
               }
               const isRequired = fieldAuth === AuthType.Required;
               const comProps = Object.assign({}, props, { disabled: fieldAuth === AuthType.View || readonly });
-              if (type === 'DescText' && comProps.value) {
-                comProps['text_value'] = comProps.value;
+              if (type === "DescText" && comProps.value) {
+                comProps["text_value"] = comProps.value;
               }
-              if (type === 'Attachment' && fileMap) {
+              if (type === "Attachment" && fileMap) {
                 comProps.fileMap = fileMap;
               }
               if (name !== -1) {
@@ -181,7 +182,7 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId, name }
                 <Col span={Number(colSpace) * 6} className={styles.col} key={fieldName}>
                   <Form.Item
                     name={fieldName}
-                    label={type !== 'DescText' ? <LabelContent label={label} desc={desc} /> : null}
+                    label={type !== "DescText" ? <LabelContent label={label} desc={desc} /> : null}
                     required={isRequired}
                     rules={rules}
                   >
@@ -200,16 +201,16 @@ const FormList = ({ fields, id, parentId, auth = {}, readonly, projectId, name }
 export default memo(FormList, (prev, current) => prev.name === current.name && prev.fields === current.fields);
 
 function compRender(
-  type: AllComponentType['type'],
+  type: AllComponentType["type"],
   Component: any,
   props: any,
   dataSource?: Datasource[keyof Datasource],
   projectId?: number,
 ) {
-  if ((type === 'Select' || type === 'Radio' || type === 'Checkbox') && dataSource) {
+  if ((type === "Select" || type === "Radio" || type === "Checkbox") && dataSource) {
     return <Component {...props} options={dataSource} />;
   }
-  if (type === 'Member') {
+  if (type === "Member") {
     return <Component {...props} projectid={projectId} />;
   }
   return <Component {...props} />;

@@ -30,5 +30,5 @@ interface MicroApp {
   description?: string;
 }
 
-declare module '@enc/theme-scheme/dist/utils.esm';
-declare module '@enc/sso';
+declare module "@enc/theme-scheme/dist/utils.esm";
+declare module "@enc/sso";

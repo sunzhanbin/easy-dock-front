@@ -1,9 +1,9 @@
-import { useAppSelector } from '@/app/hooks';
-import { componentPropsSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
-import { memo, useCallback, useMemo } from 'react';
-import { Select } from 'antd';
-import { OptionItem, SelectField } from '@/type';
-import { Icon } from '@common/components';
+import { useAppSelector } from "@/app/hooks";
+import { componentPropsSelector } from "@/features/bpm-editor/form-design/formzone-reducer";
+import { memo, useCallback, useMemo } from "react";
+import { Select } from "antd";
+import { OptionItem, SelectField } from "@/type";
+import { Icon } from "@common/components";
 
 const { Option } = Select;
 
@@ -23,9 +23,9 @@ const SelectDefaultOption = (props: editProps) => {
     return (byId[id] as SelectField)?.multiple;
   }, [id, byId]);
   const propList = useMemo(() => {
-    const prop: { [k: string]: string | boolean } = { size: 'large', placeholder: '请选择' };
+    const prop: { [k: string]: string | boolean } = { size: "large", placeholder: "请选择" };
     if (isMultiple) {
-      prop.mode = 'multiple';
+      prop.mode = "multiple";
     }
     if (value) {
       prop.defaultValue = value;

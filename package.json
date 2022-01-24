@@ -6,8 +6,8 @@
     "start:flow": "lerna run start --scope=easy-flow-front --stream",
     "start:chart": "lerna run start --scope=easy-chart-front",
     "start:entry": "lerna run start --scope=easy-entry-front",
-  
     "build": "lerna bootstrap && lerna run build",
+    "build:flow": "lerna bootstrap && lerna run build --scope=easy-flow-front",
     "build:entry": "lerna bootstrap && lerna run build --scope=easy-entry-front",
     "build:dev": "lerna bootstrap && lerna run build:dev",
     "precommit": "lint-staged",
@@ -15,48 +15,40 @@
     "bootstrap-dev": "yarn add husky --dev -W && husky install && lerna bootstrap -- --dev",
     "publish": "lerna publish",
     "clean": "lerna clean",
-    "eslint": "eslint apps/*/src --ext .js,.jsx,.ts,.tsx"
+    "lint": "eslint -c .eslintrc.json apps --ext .ts,.tsx,.js,.jsx",
+    "fix": "eslint -c .eslintrc.json apps --ext .ts,.tsx,.js,.jsx --fix"
   },
   "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.9.1",
+    "@typescript-eslint/parser": "^5.9.1",
     "create-react-app": "^4.0.3",
+    "eslint": "^7",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-react-app": "^7.0.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.28.0",
+    "eslint-plugin-react-hooks": "^4.2.1-rc.0-next-c09596cc6-20220112",
     "filemanager-webpack-plugin": "^4.0.0",
     "lerna": "^4.0.0",
     "mockjs": "1.1.0",
-    "pre-commit": "^1.2.2",
+    "prettier": "2.5.1",
     "typescript": "^4.2.4",
     "yarn": "1.22.10"
-  },
-  "peerDependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.24.0",
-    "@typescript-eslint/parser": "4.22.1",
-    "eslint": "7.25.0",
-    "eslint-config-prettier": "8.3.0",
-    "eslint-config-react-app": "6.0.0",
-    "eslint-plugin-import": "^2.23.2",
-    "eslint-plugin-prettier": "^3.4.0",
-    "eslint-plugin-react": "7.23.2",
-    "eslint-plugin-react-hooks": "4.2.0",
-    "prettier": "2.2.1"
   },
   "devDependencies": {
     "@commitlint/cli": "12.1.1",
     "@commitlint/config-conventional": "12.1.1",
     "@types/mockjs": "1.0.3",
-    "@typescript-eslint/parser": "4.22.1",
-    "@typescript-eslint/typescript-estree": "4.33.0",
-    "babel-eslint": "10.1.0",
     "husky": "^7.0.4",
-    "lint-staged": "10.5.4",
+    "lint-staged": "^12.2.1",
     "mockjs": "1.1.0"
   },
   "lint-staged": {
     "packages/*/src/**/*.{ts,tsx,js,jsx}": [
-      "prettier --write",
-      "eslint -c=.eslintrc --fix"
+      "eslint -c .eslintrc.json --fix"
     ],
     "apps/*/src/**/*.{ts,tsx,js,jsx}": [
-      "prettier --write",
-      "eslint -c=.eslintrc --fix"
+      "eslint -c .eslintrc.json --fix"
     ]
   },
   "workspaces": [
@@ -64,7 +56,8 @@
     "apps/*"
   ],
   "engines": {
-    "node": ">= 12.0"
+    "node": ">= 12.0",
+    "yarn": "^1"
   },
   "browserslist": {
     "production": [

@@ -1,11 +1,11 @@
-import { memo, useMemo } from 'react';
-import { message, Select } from 'antd';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import { useAppSelector } from '@app/hooks';
-import { componentPropsSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
-import { FormField } from '@type';
-import styles from './index.module.scss';
-import { Icon } from '@common/components';
+import { memo, useMemo } from "react";
+import { message, Select } from "antd";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { useAppSelector } from "@app/hooks";
+import { componentPropsSelector } from "@/features/bpm-editor/form-design/formzone-reducer";
+import { FormField } from "@type";
+import styles from "./index.module.scss";
+import { Icon } from "@common/components";
 
 const { Option } = Select;
 
@@ -31,10 +31,10 @@ const CalculateSelect = (props: CalculateProps) => {
     const componentList = Object.values(byId).map((item: FormField) => item) || [];
     return componentList
       .filter((com) => {
-        if (calcType === 'add') {
-          return com.type === 'InputNumber' && com.id !== id;
-        } else if (calcType === 'minus') {
-          return (com.type === 'InputNumber' || com.type === 'Date') && com.id !== id;
+        if (calcType === "add") {
+          return com.type === "InputNumber" && com.id !== id;
+        } else if (calcType === "minus") {
+          return (com.type === "InputNumber" || com.type === "Date") && com.id !== id;
         } else {
           return false;
         }
@@ -43,7 +43,7 @@ const CalculateSelect = (props: CalculateProps) => {
         id: com.fieldName,
         name: com.label,
         type: com.type,
-        format: com.type === 'Date' ? com.format : '',
+        format: com.type === "Date" ? com.format : "",
       }));
   }, [byId, id, calcType]);
 
@@ -52,14 +52,14 @@ const CalculateSelect = (props: CalculateProps) => {
     const componentList = Object.values(byId).map((item: FormField) => item) || [];
     return (
       componentList
-        .filter((com) => com.type === 'Tabs' && com.id !== id)
+        .filter((com) => com.type === "Tabs" && com.id !== id)
         // eslint-disable-next-line
         .map((com) => {
-          if (com.type === 'Tabs' && com.components) {
+          if (com.type === "Tabs" && com.components) {
             return com.components.map((item) => {
               const { config } = item;
               return (
-                config.type === 'InputNumber' && {
+                config.type === "InputNumber" && {
                   id: config.parentId,
                   subId: config.id,
                   name: `${com.label}.${config.label}`,
@@ -80,7 +80,7 @@ const CalculateSelect = (props: CalculateProps) => {
       return false;
     } else if (prevField?.type === field.type) {
       let status = false;
-      if (field.type === 'Date') {
+      if (field.type === "Date") {
         if (prevField.format === field.format) {
           return false;
         }
@@ -104,8 +104,8 @@ const CalculateSelect = (props: CalculateProps) => {
 
   // 多选下拉
   const handleMultiChange = useMemoCallback((values) => {
-    if (values.length > 2 && values.find((item: string) => item.includes('Date'))) {
-      return message.warning('最多支持选择2个日期控件 !');
+    if (values.length > 2 && values.find((item: string) => item.includes("Date"))) {
+      return message.warning("最多支持选择2个日期控件 !");
     }
     onChange && onChange(values);
   });
@@ -116,7 +116,7 @@ const CalculateSelect = (props: CalculateProps) => {
   });
   return (
     <>
-      {calcType === 'add' || calcType === 'minus' ? (
+      {calcType === "add" || calcType === "minus" ? (
         <>
           <Select
             mode="multiple"
@@ -124,8 +124,8 @@ const CalculateSelect = (props: CalculateProps) => {
             size="large"
             onChange={handleMultiChange}
             value={calculateData}
-            style={{ width: '100%' }}
-            maxTagCount={'responsive' as const}
+            style={{ width: "100%" }}
+            maxTagCount={"responsive" as const}
           >
             {fieldMulti.map((item) => (
               <Option key={item.id} value={item.id} disabled={handleDisableFields(item)}>
@@ -133,7 +133,7 @@ const CalculateSelect = (props: CalculateProps) => {
               </Option>
             ))}
           </Select>
-          <span className={styles.text_tips}>{filterMultiFields?.join(`${calcType === 'add' ? ' + ' : ' - '}`)}</span>
+          <span className={styles.text_tips}>{filterMultiFields?.join(`${calcType === "add" ? " + " : " - "}`)}</span>
         </>
       ) : (
         <>

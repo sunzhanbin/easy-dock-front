@@ -1,19 +1,19 @@
-import { memo, FC, useState, useEffect, useMemo } from 'react';
-import { loadSrc } from '@/apis/detail';
-import { useContainerContext } from '@/components/form-engine/context';
-import { urlRegex } from '@/features/bpm-editor/form-design/validate';
-import { UrlOptionItem } from '@/type';
-import styles from './index.module.scss';
+import { memo, FC, useState, useEffect, useMemo } from "react";
+import { loadSrc } from "@/apis/detail";
+import { useContainerContext } from "@/components/form-engine/context";
+import { urlRegex } from "@/features/bpm-editor/form-design/validate";
+import { UrlOptionItem } from "@/type";
+import styles from "./index.module.scss";
 
 const Iframe: FC<{ url: UrlOptionItem; height?: number }> = ({ url, height }) => {
   const context = useContainerContext();
-  const [src, setSrc] = useState<string>('');
+  const [src, setSrc] = useState<string>("");
   const style = useMemo(() => {
-    let iframeHeight = '';
+    let iframeHeight = "";
     if (!src) {
-      iframeHeight = '40px';
+      iframeHeight = "40px";
     } else if (!height) {
-      iframeHeight = 'auto';
+      iframeHeight = "auto";
     } else {
       iframeHeight = `${height}px`;
     }

@@ -33,6 +33,7 @@ const ProjectOption = ({
   const handleEdit = useCallback((e, item) => {
     form.setFieldsValue({ fieldName: item.name });
     onEdit(e, item);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   // option确认编辑
   const handleConfirm = useCallback(
@@ -45,7 +46,8 @@ const ProjectOption = ({
         console.log(e);
       }
     },
-    [form]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [form],
   );
   // option选中
   const handleSelectField = (item: any, index: number) => {
@@ -62,20 +64,9 @@ const ProjectOption = ({
   return (
     <div className="dropdown-select-project">
       {fieldList.map((item, index) => (
-        <div
-          key={index}
-          className={classnames(
-            "field-option",
-            activeIndex === index ? "active" : ""
-          )}
-        >
+        <div key={index} className={classnames("field-option", activeIndex === index ? "active" : "")}>
           {item.editable ? (
-            <Form
-              form={form}
-              name="editProject"
-              style={{ width: "100%" }}
-              initialValues={{ fieldName: item.name }}
-            >
+            <Form form={form} name="editProject" style={{ width: "100%" }} initialValues={{ fieldName: item.name }}>
               <Form.Item name="fieldName" rules={[nameRule]} noStyle>
                 <Input
                   autoFocus
@@ -83,17 +74,9 @@ const ProjectOption = ({
                   className="input-name"
                   suffix={
                     <>
-                      <Icon
-                        className={classnames("tick_icon")}
-                        type="gou"
-                        onClick={() => handleConfirm(item)}
-                      />
+                      <Icon className={classnames("tick_icon")} type="gou" onClick={() => handleConfirm(item)} />
 
-                      <Icon
-                        className="close"
-                        type="fanhuichexiao"
-                        onClick={onRevert}
-                      />
+                      <Icon className="close" type="fanhuichexiao" onClick={onRevert} />
                     </>
                   }
                 />
@@ -101,17 +84,10 @@ const ProjectOption = ({
             </Form>
           ) : (
             <React.Fragment key={item.id}>
-              <span
-                className="option-name"
-                onClick={() => handleSelectField(item, index)}
-              >
+              <span className="option-name" onClick={() => handleSelectField(item, index)}>
                 <Text text={item.name} />
               </span>
-              <Icon
-                className="edit-icon"
-                type="bianji"
-                onClick={(e) => handleEdit(e, item)}
-              />
+              <Icon className="edit-icon" type="bianji" onClick={(e) => handleEdit(e, item)} />
               <PopoverConfirm
                 title="提示"
                 placement="bottom"
@@ -119,11 +95,7 @@ const ProjectOption = ({
                 getPopupContainer={() => document.getElementById("root")!}
                 onConfirm={() => onDelete(item)}
               >
-                <Icon
-                  className="delete-icon"
-                  type="shanchu"
-                  onClick={(e) => handlePopOver(e)}
-                />
+                <Icon className="delete-icon" type="shanchu" onClick={(e) => handlePopOver(e)} />
               </PopoverConfirm>
             </React.Fragment>
           )}

@@ -29,18 +29,17 @@ export const menuSetupSlice = createSlice({
   reducers: {
     setCurrentMenu: (state, action: PayloadAction<string>) => {
       const currentItem: any = findItem(action.payload, state.menu);
-      {
-        state.currentId = action.payload;
-        // 由于菜单切换的时候 没有选择子应用的菜单会带上一个菜单的值  此处需要重置
-        let form = JSON.parse(JSON.stringify(currentItem))?.form;
-        form = Object.assign({}, form, {
-          assetConfig: {
-            ...form.assetConfig,
-            subAppId: form.assetConfig.subAppId || undefined,
-          },
-        });
-        state.menuForm = form || {};
-      }
+
+      state.currentId = action.payload;
+      // 由于菜单切换的时候 没有选择子应用的菜单会带上一个菜单的值  此处需要重置
+      let form = JSON.parse(JSON.stringify(currentItem))?.form;
+      form = Object.assign({}, form, {
+        assetConfig: {
+          ...form.assetConfig,
+          subAppId: form.assetConfig.subAppId || undefined,
+        },
+      });
+      state.menuForm = form || {};
     },
     setMenu: (state, action: PayloadAction<any[]>) => {
       state.menu = action.payload;
@@ -54,19 +53,16 @@ export const menuSetupSlice = createSlice({
       state.menuForm = action.payload;
     },
     // 添加菜单；
-    add: (
-      state,
-      action: PayloadAction<{ currentId: string | null; childId: string }>
-    ) => {
+    add: (state, action: PayloadAction<{ currentId: string | null; childId: string }>) => {
       const { currentId, childId } = action.payload;
       const childMenuName = currentId ? "二级菜单" : "一级菜单";
-      {
-        state.currentId = childId;
-        state.menuForm = {
-          ...defaultForm,
-          name: childMenuName,
-        };
-      }
+
+      state.currentId = childId;
+      state.menuForm = {
+        ...defaultForm,
+        name: childMenuName,
+      };
+
       if (!currentId) {
         state.menu.push({
           id: childId,
@@ -97,9 +93,7 @@ export const menuSetupSlice = createSlice({
         state.menu = state.menu?.filter((item) => item.id !== currentId);
       } else {
         const parentItem: any = findItem(parentId, state.menu);
-        parentItem.children = parentItem.children?.filter(
-          (item: any) => item.id !== currentId
-        );
+        parentItem.children = parentItem.children?.filter((item: any) => item.id !== currentId);
       }
       // 删除后定位到第一个菜单的叶子结点
       const redirectItem = deepSearch(state.menu);
@@ -117,29 +111,26 @@ export const menuSetupSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addMatcher(
-      appManagerBuilder.endpoints.workspaceDetail.matchFulfilled,
-      (state, action) => {
-        const extension = action.payload?.extension;
-        if (!extension?.meta) {
+    builder.addMatcher(appManagerBuilder.endpoints.workspaceDetail.matchFulfilled, (state, action) => {
+      const extension = action.payload?.extension;
+      if (!extension?.meta) {
+        state.menu = [];
+        state.currentId = "";
+        state.menuForm = defaultForm;
+      } else {
+        const menuList = extension.meta.menuList;
+        if (Array.isArray(menuList) && menuList.length > 0) {
+          state.menu = menuList;
+          const currentItem = deepSearch(menuList);
+          state.currentId = currentItem.id;
+          state.menuForm = JSON.parse(JSON.stringify(currentItem.form));
+        } else {
           state.menu = [];
           state.currentId = "";
           state.menuForm = defaultForm;
-        } else {
-          const menuList = extension.meta.menuList;
-          if (Array.isArray(menuList) && menuList.length > 0) {
-            state.menu = menuList;
-            const currentItem = deepSearch(menuList);
-            state.currentId = currentItem.id;
-            state.menuForm = JSON.parse(JSON.stringify(currentItem.form));
-          } else {
-            state.menu = [];
-            state.currentId = "";
-            state.menuForm = defaultForm;
-          }
         }
       }
-    );
+    });
   },
 });
 
@@ -151,11 +142,4 @@ export const selectMenu = (state: RootState) => state.menuSetup.menu;
 
 export const selectMenuForm = (state: RootState) => state.menuSetup.menuForm;
 
-export const {
-  setCurrentMenu,
-  setMenu,
-  setMenuForm,
-  add,
-  remove,
-  insert,
-} = menuSetupSlice.actions;
+export const { setCurrentMenu, setMenu, setMenuForm, add, remove, insert } = menuSetupSlice.actions;

@@ -1,18 +1,19 @@
-import React, { useCallback, useState, useImperativeHandle } from 'react';
-import { selectProjectId } from '@views/home/index.slice';
-import { Modal, Form, Input, message } from 'antd';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import { selectCurrentWorkspaceId, setCurrentWorkspaceId } from '@views/app-manager/index.slice';
-import { nameRule } from '@/consts';
-import { useAddWorkspaceMutation, useEditWorkspaceMutation } from '@/http';
-import { useAppDispatch, useAppSelector } from '@/store';
+import React, { useCallback, useState, useImperativeHandle } from "react";
+import { Modal, Form, Input, message } from "antd";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { setCurrentWorkspaceId } from "@views/app-manager/index.slice";
+import { nameRule } from "@/consts";
+import { useAddWorkspaceMutation, useEditWorkspaceMutation } from "@/http";
+import { useAppDispatch } from "@/store";
+import { useNavigate, useParams } from "react-router-dom";
 
 const AddWorkspaceModal = React.forwardRef(function AddWorkspace(_, ref) {
   const dispatch = useAppDispatch();
-  const projectId = useAppSelector(selectProjectId);
+  const navigate = useNavigate();
+  const { projectId, workspaceId: appId } = useParams();
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [workspaceId, setWorkspaceId] = useState<number>(0);
-  const [title, setTitle] = useState<string>('');
+  const [title, setTitle] = useState<string>("");
   const [addWorkspace] = useAddWorkspaceMutation();
   const [editWorkspace] = useEditWorkspaceMutation();
   const [form] = Form.useForm();
@@ -27,7 +28,7 @@ const AddWorkspaceModal = React.forwardRef(function AddWorkspace(_, ref) {
     setTitle: (title: string) => {
       setTitle(title);
     },
-    setWorkspace: ({name, id} : {name: string, id: number}) => {
+    setWorkspace: ({ name, id }: { name: string; id: number }) => {
       form.setFieldsValue({ name });
       setWorkspaceId(id);
     },
@@ -41,12 +42,16 @@ const AddWorkspaceModal = React.forwardRef(function AddWorkspace(_, ref) {
     form
       .validateFields()
       .then(async ({ name }) => {
-        if (title === '新增') {
-          await addWorkspace({ name, projectId }).unwrap();
-          message.success('新增成功!');
+        if (title === "新增") {
+          const data = await addWorkspace({ name, projectId: Number(projectId) }).unwrap();
+          message.success("新增成功!");
+          // 如果添加的工作区是当前项目下的第一个工作区,则跳转至当前该工作区
+          if (appId === "undefined") {
+            navigate(`/app-manager/project/${projectId}/workspace/${data?.id}`, { replace: true });
+          }
         } else {
           await editWorkspace({ name, id: workspaceId }).unwrap();
-          message.success('修改成功!');
+          message.success("修改成功!");
           dispatch(setCurrentWorkspaceId(workspaceId));
         }
         handleVisible(false);
@@ -56,10 +61,10 @@ const AddWorkspaceModal = React.forwardRef(function AddWorkspace(_, ref) {
       });
   });
 
-  const handleCancel = useCallback(() => {
+  const handleCancel = useMemoCallback(() => {
     form.resetFields();
     handleVisible(false);
-  }, [handleVisible]);
+  });
 
   return (
     <Modal

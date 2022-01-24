@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import PubSub from 'pubsub-js';
-import { FormInstance } from 'antd';
-import { FormValue } from '@type/detail';
-import { analysisFormChangeRule } from '@/utils';
-import { EventType } from '@/type';
-import { ContainerProvider } from './context';
-import { formRulesItem } from './utils';
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import PubSub from "pubsub-js";
+import { FormInstance } from "antd";
+import { FormValue } from "@type/detail";
+import { analysisFormChangeRule } from "@/utils";
+import { EventType } from "@/type";
+import { ContainerProvider } from "./context";
+import { formRulesItem } from "./utils";
 
 interface ContainerProps {
   rules: formRulesItem[];

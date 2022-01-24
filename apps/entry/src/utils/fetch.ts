@@ -1,11 +1,11 @@
-import axiosInstance from '@common/utils/axios';
-import { createApi } from '@reduxjs/toolkit/query/react';
-import { builderQueryWithIntercept, runtimeQueryWithIntercept } from '@utils/intercept';
+import axiosInstance from "@common/utils/axios";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { builderQueryWithIntercept, runtimeQueryWithIntercept } from "@utils/intercept";
 
 export default createApi({
-  reducerPath: 'appsOrchestrationApi',
+  reducerPath: "appsOrchestrationApi",
   baseQuery: builderQueryWithIntercept,
-  tagTypes: ['Workspace', 'SubApps', 'Project'],
+  tagTypes: ["Workspace", "SubApps", "Project"],
   endpoints: () => ({}),
 });
 
@@ -14,8 +14,8 @@ export const axios = axiosInstance({
 });
 
 export const runTime = createApi({
-  reducerPath: 'appsOrchestrationRuntimeApi',
+  reducerPath: "appsOrchestrationRuntimeApi",
   baseQuery: runtimeQueryWithIntercept,
-  tagTypes: ['Workspace', 'SubApps', 'Project'],
+  tagTypes: ["Workspace", "SubApps", "Project"],
   endpoints: () => ({}),
 });

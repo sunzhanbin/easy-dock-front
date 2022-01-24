@@ -1,7 +1,7 @@
-import { memo, useMemo } from 'react';
-import { MemberList } from '@common/components/member-selector';
-import { CorrelationMemberConfig } from '@type/flow';
-import useShowMembers from '../../hooks/use-show-members';
+import { memo, useMemo } from "react";
+import { MemberList } from "@common/components/member-selector";
+import { CorrelationMemberConfig } from "@type/flow";
+import useShowMembers from "../../hooks/use-show-members";
 
 interface AllMemberListProps {
   config: CorrelationMemberConfig;

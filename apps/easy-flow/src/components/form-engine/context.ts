@@ -1,7 +1,7 @@
-import { createContext, useContext } from 'react';
-import { FormValue } from '@type/detail';
-import { FormInstance } from 'antd';
-import { formRulesItem } from './utils';
+import { createContext, useContext } from "react";
+import { FormValue } from "@type/detail";
+import { FormInstance } from "antd";
+import { formRulesItem } from "./utils";
 
 interface FormConfigContext {
   handleValueChange: () => void;
@@ -24,7 +24,7 @@ interface IContainerContext {
 
 export const ContainerContext = createContext<IContainerContext>({} as any);
 
-ContainerContext.displayName = 'ContainerContext';
+ContainerContext.displayName = "ContainerContext";
 
 export const ContainerProvider = ContainerContext.Provider;
 export const ContainerConsumer = ContainerContext.Consumer;

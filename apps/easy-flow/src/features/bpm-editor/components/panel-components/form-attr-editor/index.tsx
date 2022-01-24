@@ -1,16 +1,16 @@
-import { memo, useState, useCallback, useEffect } from 'react';
-import { Button, Tooltip, message } from 'antd';
-import { EventType, FormChangeRule, FormField, FormRuleItem, TabsField } from '@/type';
-import { formatRuleValue } from '@/utils';
-import { Icon } from '@common/components';
-import FormAttrModal from '../form-attr-modal';
-import styles from './index.module.scss';
-import { useAppSelector, useAppDispatch } from '@/app/hooks';
-import { componentPropsSelector, formRulesSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
-import { setFormRules } from '@/features/bpm-editor/form-design/formdesign-slice';
-import FieldAttrEditor from '@/features/bpm-editor/components/panel-components/field-attr-editor';
-import { queryApis } from '../../data-api-config/util';
-import useMemoCallback from '@common/hooks/use-memo-callback';
+import { memo, useState, useCallback, useEffect } from "react";
+import { Button, Tooltip, message } from "antd";
+import { EventType, FormChangeRule, FormField, FormRuleItem, TabsField } from "@/type";
+import { formatRuleValue } from "@/utils";
+import { Icon } from "@common/components";
+import FormAttrModal from "../form-attr-modal";
+import styles from "./index.module.scss";
+import { useAppSelector, useAppDispatch } from "@/app/hooks";
+import { componentPropsSelector, formRulesSelector } from "@/features/bpm-editor/form-design/formzone-reducer";
+import { setFormRules } from "@/features/bpm-editor/form-design/formdesign-slice";
+import FieldAttrEditor from "@/features/bpm-editor/components/panel-components/field-attr-editor";
+import { queryApis } from "../../data-api-config/util";
+import useMemoCallback from "@common/hooks/use-memo-callback";
 
 const FormAttrEditor = () => {
   const byId = useAppSelector(componentPropsSelector);
@@ -19,7 +19,7 @@ const FormAttrEditor = () => {
   const [rules, setRules] = useState<FormRuleItem[]>(formRules || []);
   const [currentRule, setCurrentRule] = useState<FormRuleItem | null>(null);
   const [editIndex, setEditIndex] = useState<number>(0);
-  const [type, setType] = useState<'add' | 'edit'>('add');
+  const [type, setType] = useState<"add" | "edit">("add");
   const [showModal, setShowModal] = useState<boolean>(false);
   const [apiMap, setApiMap] = useState<{ [k: number]: string }>({});
   const handleClose = useCallback(() => {
@@ -32,9 +32,11 @@ const FormAttrEditor = () => {
       if (rules.mode === 2 || subs.filter((item) => item.length !== 0).length !== 0) {
         setShowModal(false);
       } else {
-        message.warning('配置条件不能为空');
+        message.warning("配置条件不能为空");
       }
-    } catch {}
+    } catch (error) {
+      console.log({ error });
+    }
 
     let rule: FormRuleItem;
     if (rules.mode === 1) {
@@ -47,19 +49,19 @@ const FormAttrEditor = () => {
       }
       // 值改变时
       rule = {
-        type: 'change',
+        type: "change",
         subtype: rules.subtype,
         formChangeRule,
       };
     } else if (rules.mode === 2) {
       //进入表单时
       rule = {
-        type: 'init',
+        type: "init",
         subtype: rules.subtype,
         formInitRule: rules.dataConfig,
       };
     }
-    if (type === 'add') {
+    if (type === "add") {
       setRules((rules) => {
         const list = [...rules];
         list.push(rule);
@@ -77,7 +79,7 @@ const FormAttrEditor = () => {
     }
   }, []);
   const handleAddRule = useCallback(() => {
-    setType('add');
+    setType("add");
     setCurrentRule(null);
     setShowModal(true);
   }, []);
@@ -91,7 +93,7 @@ const FormAttrEditor = () => {
   const handleEditRule = useCallback(
     (index) => {
       const rule = rules[index];
-      setType('edit');
+      setType("edit");
       setEditIndex(index);
       setCurrentRule(rule);
       setShowModal(true);
@@ -105,7 +107,7 @@ const FormAttrEditor = () => {
     if (config?.url) {
       return config.url;
     }
-    return '';
+    return "";
   });
   useEffect(() => {
     dispatch(setFormRules({ formRules: rules }));
@@ -130,7 +132,7 @@ const FormAttrEditor = () => {
         <div className={styles.title}>表单逻辑规则</div>
         <div className={styles.content}>
           {rules.map((item: FormRuleItem, index: number) => {
-            if (item.type === 'change') {
+            if (item.type === "change") {
               const condition = item.formChangeRule!.fieldRule;
               // 值改变时显示隐藏控件
               if (item.subtype === EventType.Visible) {
@@ -189,9 +191,9 @@ const FormAttrEditor = () => {
                                 const formatRule = formatRuleValue(rule, component);
                                 return (
                                   <span key={ruleIndex}>
-                                    <span className={styles.fieldName}>{formatRule?.name || ''}</span>
-                                    <span>{formatRule?.symbol || ''}</span>
-                                    <span className={styles.fieldName}>{formatRule?.value || ''}</span>
+                                    <span className={styles.fieldName}>{formatRule?.name || ""}</span>
+                                    <span>{formatRule?.symbol || ""}</span>
+                                    <span className={styles.fieldName}>{formatRule?.value || ""}</span>
                                     {ruleIndex !== ruleBlock.length - 1 && <span>且</span>}
                                   </span>
                                 );
@@ -209,7 +211,7 @@ const FormAttrEditor = () => {
                             {showComponents.map((name, index) => (
                               <span key={index}>
                                 {name}
-                                {index !== showComponents.length - 1 ? '、' : ''}
+                                {index !== showComponents.length - 1 ? "、" : ""}
                               </span>
                             ))}
                           </span>
@@ -222,7 +224,7 @@ const FormAttrEditor = () => {
                             {hideComponents.map((name, index) => (
                               <span key={index}>
                                 {name}
-                                {index !== hideComponents.length - 1 ? '、' : ''}
+                                {index !== hideComponents.length - 1 ? "、" : ""}
                               </span>
                             ))}
                           </span>
@@ -284,9 +286,9 @@ const FormAttrEditor = () => {
                                 const formatRule = formatRuleValue(rule, component);
                                 return (
                                   <span key={ruleIndex}>
-                                    <span className={styles.fieldName}>{formatRule?.name || ''}</span>
-                                    <span>{formatRule?.symbol || ''}</span>
-                                    <span className={styles.fieldName}>{formatRule?.value || ''}</span>
+                                    <span className={styles.fieldName}>{formatRule?.name || ""}</span>
+                                    <span>{formatRule?.symbol || ""}</span>
+                                    <span className={styles.fieldName}>{formatRule?.value || ""}</span>
                                     {ruleIndex !== ruleBlock.length - 1 && <span>且</span>}
                                   </span>
                                 );
@@ -329,7 +331,7 @@ const FormAttrEditor = () => {
                 );
               }
               return null;
-            } else if (item.type === 'init') {
+            } else if (item.type === "init") {
               const interfaceName = getInterfaceName(item.formInitRule);
               return (
                 <div className={styles.ruleItem} key={index}>

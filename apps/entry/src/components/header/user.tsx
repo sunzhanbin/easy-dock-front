@@ -1,21 +1,26 @@
 import { memo, useMemo, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { Dropdown, Menu } from "antd";
 import { auth } from "@/consts";
 import { useGetUserInfoQuery } from "@/http";
 import { Avatar, Icon, Text } from "@common/components";
 import { logout } from "@views/home/index.slice";
 import "@components/header/index.style.scss";
+import { RoleEnum } from "@utils/types";
 import { useDispatch } from "react-redux";
 
 type HeaderUserProps = {
   showProject?: boolean;
-}
-function HeaderUser({showProject}: HeaderUserProps) {
+};
+
+function HeaderUser({ showProject }: HeaderUserProps) {
   const dispatch = useDispatch();
-  const skip = auth.getAuth() ? false : true;
+  const navigate = useNavigate();
+
+  const skip = !auth.getAuth(); // 判断无权限时不走获取用户信息接口
   const { user } = useGetUserInfoQuery(undefined, {
     selectFromResult: ({ data }) => {
-      if (!data) return {user: null};
+      if (!data) return { user: null };
       const { power, user } = data;
       return {
         user: {
@@ -26,7 +31,7 @@ function HeaderUser({showProject}: HeaderUserProps) {
         },
       };
     },
-    skip
+    skip,
   });
 
   const handleLogin = async () => {
@@ -37,15 +42,29 @@ function HeaderUser({showProject}: HeaderUserProps) {
     dispatch(logout());
   }, [dispatch]);
 
-  // 当前角色是否是超管 v1.2.0暂时不加
-  // const isAdmin = useMemo(() => {
-  //   const power = user?.power || 0;
-  //   return (power & RoleEnum.ADMIN) === RoleEnum.ADMIN;
-  // }, [user]);
+  // 当前角色是否是超管 v1.2.2新增
+  const isAdmin = useMemo(() => {
+    const power = user?.power || 0;
+    return (power & RoleEnum.ADMIN) === RoleEnum.ADMIN;
+  }, [user]);
+
+  const handleGoAuth = useCallback(() => {
+    navigate("/user-auth");
+  }, [navigate]);
 
   const dropdownOverlay = useMemo(() => {
     return (
       <Menu>
+        {isAdmin && (
+          <>
+            <Menu.Item key="auth" onClick={handleGoAuth} className="menuItem">
+              <span>
+                <Icon type="quanxianshezhi" className="icon-exit" />
+                权限设置
+              </span>
+            </Menu.Item>
+          </>
+        )}
         <Menu.Item key="logout" onClick={handleLogout} className="menuItem">
           <span>
             <Icon type="tuichudenglu" className="icon-exit" />
@@ -54,23 +73,18 @@ function HeaderUser({showProject}: HeaderUserProps) {
         </Menu.Item>
       </Menu>
     );
-  }, [handleLogout]);
+  }, [isAdmin, handleGoAuth, handleLogout]);
 
   return (
     <>
       {user ? (
-        <Dropdown
-          overlay={dropdownOverlay}
-          getPopupContainer={(c) => c}
-          placement="bottomLeft"
-        >
+        <Dropdown overlay={dropdownOverlay} getPopupContainer={(c) => c} placement="bottomLeft">
           <div className="user">
-            {
-              showProject &&
+            {showProject && (
               <div className="avatar">
-                <Avatar round size={32} src={user.avatar} name={user.username}/>
+                <Avatar round size={32} src={user.avatar} name={user.username} />
               </div>
-            }
+            )}
             <Text className="name">{user.username}</Text>
           </div>
         </Dropdown>

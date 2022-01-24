@@ -1,17 +1,17 @@
-import { memo, FC, useState, useEffect } from 'react';
-import { message, Upload } from 'antd';
-import { RcFile, UploadFile } from 'antd/lib/upload/interface';
-import { axios } from '@utils/fetch';
-import { Icon } from '@common/components';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import { imgIdToUrl } from '@/utils/utils';
-import { useAppDispatch } from '@/store';
-import { setLogo } from '@/views/app-setup/basic-setup.slice';
-import './upload-image.style.scss';
+import { memo, FC, useState, useEffect } from "react";
+import { message, Upload } from "antd";
+import { RcFile, UploadFile } from "antd/lib/upload/interface";
+import { axios } from "@utils/fetch";
+import { Icon } from "@common/components";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { imgIdToUrl } from "@/utils/utils";
+import { useAppDispatch } from "@/store";
+import { setLogo } from "@/views/app-setup/basic-setup.slice";
+import "./upload-image.style.scss";
 
 interface UploadImageProps {
   value?: UploadFile[];
-  onChange?: (value: this['value']) => void;
+  onChange?: (value: this["value"]) => void;
 }
 
 const UploadImage: FC<UploadImageProps> = ({ value, onChange }) => {
@@ -20,14 +20,14 @@ const UploadImage: FC<UploadImageProps> = ({ value, onChange }) => {
   // 校验图片类型和大小
   const checkoutFile = useMemoCallback((file: RcFile) => {
     const { type, size } = file;
-    const validTypes = ['image/png', 'image/jpeg', 'image/gif', 'image/bmp', 'image/svg', 'image/webp'];
+    const validTypes = ["image/png", "image/jpeg", "image/gif", "image/bmp", "image/svg", "image/webp"];
     const limitSize = 1024 * 1024 * 1; //1M
     if (!validTypes.includes(type)) {
-      message.error('当前仅支持上传.png .jpg .jpeg .gif .bmp .svg .webp格式的图片');
+      message.error("当前仅支持上传.png .jpg .jpeg .gif .bmp .svg .webp格式的图片");
       return false;
     }
     if (size > limitSize) {
-      message.error('您所上传的图片超过1M，请调整后上传');
+      message.error("您所上传的图片超过1M，请调整后上传");
       return false;
     }
     return true;
@@ -40,14 +40,14 @@ const UploadImage: FC<UploadImageProps> = ({ value, onChange }) => {
   });
   const handleRemove = useMemoCallback(() => {
     setFileList([]);
-    dispatch(setLogo(''));
+    dispatch(setLogo(""));
     onChange && onChange(undefined);
   });
   const handleCustomRequest = useMemoCallback(({ file, onError, onSuccess }) => {
     const formData = new FormData();
-    formData.append('files', file);
+    formData.append("files", file);
     axios
-      .post(`/file/batchUpload?controlType=1`, formData)
+      .post("/file/batchUpload?controlType=1", formData)
       .then(({ data: response }: any) => {
         onSuccess(response, file);
         if (Array.isArray(response) && response.length > 0) {
@@ -66,7 +66,7 @@ const UploadImage: FC<UploadImageProps> = ({ value, onChange }) => {
     const url = await imgIdToUrl(id);
     const fileList = [
       {
-        name: 'icon',
+        name: "icon",
         uid: id,
         url: url,
         thumbUrl: url,
@@ -78,11 +78,8 @@ const UploadImage: FC<UploadImageProps> = ({ value, onChange }) => {
   useEffect(() => {
     if (value) {
       downloadFile(value);
-    } else {
-      setTimeout(() => {
-        setFileList([]);
-      }, 100);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   return (
@@ -95,7 +92,7 @@ const UploadImage: FC<UploadImageProps> = ({ value, onChange }) => {
         showUploadList={{
           showPreviewIcon: false,
           showRemoveIcon: true,
-          removeIcon: <Icon type="shanchu" style={{ color: '#fff' }} />,
+          removeIcon: <Icon type="shanchu" style={{ color: "#fff" }} />,
         }}
         customRequest={handleCustomRequest}
         beforeUpload={handleBeforeUpload}

@@ -1,7 +1,7 @@
-import { memo } from 'react';
-import { Table } from 'antd';
-import { SelectColumnsItem } from '@type';
-import { ConfigMap } from '@components/form-engine';
+import { memo } from "react";
+import { Table } from "antd";
+import { SelectColumnsItem } from "@type";
+import { ConfigMap } from "@components/form-engine";
 
 type TableComponentType = {
   flows: SelectColumnsItem;

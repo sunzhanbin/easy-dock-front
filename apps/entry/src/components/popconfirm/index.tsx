@@ -9,14 +9,7 @@ interface ConfirmProps extends PopconfirmProps {
 }
 
 function Confirm(props: ConfirmProps) {
-  const {
-    content,
-    title,
-    children,
-    cancelButtonProps,
-    okButtonProps,
-    ...others
-  } = props;
+  const { content, title, children, cancelButtonProps, okButtonProps, ...others } = props;
   const mixinTitle = useMemo(() => {
     return (
       <div className="container">
@@ -27,19 +20,11 @@ function Confirm(props: ConfirmProps) {
   }, [title, content]);
 
   const cancelProps = useMemo(() => {
-    return Object.assign(
-      {},
-      { type: "text", size: "middle" },
-      cancelButtonProps
-    );
+    return Object.assign({}, { type: "text", size: "middle" }, cancelButtonProps);
   }, [cancelButtonProps]);
 
   const okProps = useMemo(() => {
-    return Object.assign(
-      {},
-      { type: "primary", size: "middle" },
-      okButtonProps
-    );
+    return Object.assign({}, { type: "primary", size: "middle" }, okButtonProps);
   }, [okButtonProps]);
 
   return (

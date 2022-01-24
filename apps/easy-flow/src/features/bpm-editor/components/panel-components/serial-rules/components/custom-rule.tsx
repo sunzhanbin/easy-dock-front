@@ -1,10 +1,10 @@
-import React, { memo, forwardRef, useImperativeHandle } from 'react';
-import RuleComponent from './rule-component';
-import styles from '../index.module.scss';
-import { Form, Button } from 'antd';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import { saveSerialRules } from '@apis/form';
-import { SERIAL_TYPE } from '@utils/const';
+import React, { memo, forwardRef, useImperativeHandle } from "react";
+import RuleComponent from "./rule-component";
+import styles from "../index.module.scss";
+import { Form, Button } from "antd";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { saveSerialRules } from "@apis/form";
+import { SERIAL_TYPE } from "@utils/const";
 
 const CustomRule = (props: any, ref: React.Ref<unknown> | undefined) => {
   const { rules, ruleName, id, onChange, fields, onSave, appId, isError, setErrors } = props;
@@ -12,7 +12,7 @@ const CustomRule = (props: any, ref: React.Ref<unknown> | undefined) => {
 
   useImperativeHandle(ref, () => ({
     reset: () => {
-      formSerial.setFieldsValue({ name: '' });
+      formSerial.setFieldsValue({ name: "" });
     },
   }));
 
@@ -21,7 +21,7 @@ const CustomRule = (props: any, ref: React.Ref<unknown> | undefined) => {
       const values = await formSerial.validateFields();
       if (values.errorFields || !appId) return;
       const hasChars = rules.some(
-        (item: { type: string; chars?: string }) => item.type === 'fixedChars' && !item.chars,
+        (item: { type: string; chars?: string }) => item.type === "fixedChars" && !item.chars,
       );
       if (hasChars) {
         return setErrors(hasChars);

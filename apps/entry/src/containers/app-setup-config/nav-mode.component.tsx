@@ -42,7 +42,7 @@ const NavMode: FC<NavModeProps> = ({ value, onChange }) => {
           onClick={() => handleChangeNav(key)}
         >
           <div className="image-container">
-            <img src={image} alt="image" className="image" />
+            <img src={image} alt="picture" className="image" />
           </div>
           <div className="text">{label}</div>
         </div>

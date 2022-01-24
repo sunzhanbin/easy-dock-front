@@ -1,10 +1,10 @@
-import { memo, useCallback, useMemo, useEffect } from 'react';
-import { Tooltip, Button } from 'antd';
-import classnames from 'classnames';
-import { Icon } from '@common/components';
-import { fieldRule, FormField } from '@/type';
-import FormList from './form-list';
-import styles from './index.module.scss';
+import { memo, useCallback, useMemo, useEffect } from "react";
+import { Tooltip, Button } from "antd";
+import classnames from "classnames";
+import { Icon } from "@common/components";
+import { fieldRule, FormField } from "@/type";
+import FormList from "./form-list";
+import styles from "./index.module.scss";
 
 interface EditProps {
   data: Array<FormField>;
@@ -21,7 +21,7 @@ interface EditProps {
 }
 
 // 不能作为条件的控件类型
-let excludeTypes = ['DescText', 'SerialNum', 'FlowData'];
+let excludeTypes = ["DescText", "SerialNum", "FlowData"];
 
 const Condition = ({
   className,
@@ -48,18 +48,18 @@ const Condition = ({
     }
     const componentList: any[] = [];
     if (!showTabs) {
-      excludeTypes.push('Tabs');
+      excludeTypes.push("Tabs");
       data.filter((v) => !excludeTypes.includes(v.type)).forEach((item) => componentList.push(item));
       return componentList;
     }
     const list = ruleList.flat(2).filter((v) => v.fieldName);
-    excludeTypes = excludeTypes.filter((v) => v !== 'Tabs');
+    excludeTypes = excludeTypes.filter((v) => v !== "Tabs");
     if (list.length < 1) {
       // 还没有选择控件
       data
         .filter((item) => !excludeTypes.includes(item.type))
         .forEach((item) => {
-          if (item.type === 'Tabs') {
+          if (item.type === "Tabs") {
             (item?.components || []).forEach((v) => {
               componentList.push(Object.assign({}, v.config, v.props, { label: `${item.label}·${v.config.label}` }));
             });
@@ -72,14 +72,14 @@ const Condition = ({
       // 选择了tabs内的控件
       if (parentId) {
         data.forEach((item) => {
-          if (item.type === 'Tabs') {
+          if (item.type === "Tabs") {
             (item?.components || []).forEach((v) => {
               componentList.push(Object.assign({}, v.config, v.props, { label: `${item.label}·${v.config.label}` }));
             });
           }
         });
       } else {
-        excludeTypes.push('Tabs');
+        excludeTypes.push("Tabs");
         // 选择了tabs外的控件
         data.filter((v) => !excludeTypes.includes(v.type)).forEach((item) => componentList.push(item));
       }
@@ -143,7 +143,7 @@ const Condition = ({
     }
   }, [value, onChange]);
   return (
-    <div className={classnames(styles.condition, className ? className : '')}>
+    <div className={classnames(styles.condition, className ? className : "")}>
       <div className={styles.ruleList}>
         {ruleList.map((ruleBlock: fieldRule[], index: number) => {
           if (ruleBlock.length === 0) {

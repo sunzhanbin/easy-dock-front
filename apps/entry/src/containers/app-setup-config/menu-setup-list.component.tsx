@@ -3,13 +3,7 @@ import { Button, Collapse } from "antd";
 import { v4 as uuid } from "uuid";
 import classnames from "classnames";
 import { useAppDispatch, useAppSelector } from "@/store";
-import {
-  selectMenu,
-  selectCurrentId,
-  setCurrentMenu,
-  add,
-  remove,
-} from "@views/app-setup/menu-setup.slice";
+import { selectMenu, selectCurrentId, setCurrentMenu, add, remove } from "@views/app-setup/menu-setup.slice";
 import { Menu } from "@utils/types";
 import { Icon, Text, PopoverConfirm } from "@common/components";
 import { findItem, handleStopPropagation } from "@utils/utils";
@@ -20,41 +14,32 @@ const { Panel } = Collapse;
 type BeforeIdChange = () => void;
 
 // 菜单单元组件；
-const MenuItemComponent = ({
-  menu,
-  onBeforeIdChange,
-}: {
-  menu: Menu;
-  onBeforeIdChange: BeforeIdChange;
-}) => {
+const MenuItemComponent = ({ menu, onBeforeIdChange }: { menu: Menu; onBeforeIdChange: BeforeIdChange }) => {
   const dispatch = useAppDispatch();
   const currentId = useAppSelector(selectCurrentId);
 
   const style = useMemo(() => {
     return { paddingLeft: `${menu.depth * 12 + 18}px` };
   }, [menu.depth]);
-  const handleAddMenu = useCallback(
-    async (e: React.MouseEvent, currentId: string) => {
-      e.stopPropagation();
-      await onBeforeIdChange();
-      const childId = uuid();
-      dispatch(add({ currentId, childId }));
-    },
-    []
-  );
+  const handleAddMenu = useCallback(async (e: React.MouseEvent, currentId: string) => {
+    e.stopPropagation();
+    await onBeforeIdChange();
+    const childId = uuid();
+    dispatch(add({ currentId, childId }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleRemoveMenu = useCallback((currentId: string) => {
     dispatch(remove(currentId));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleMenuClick = useCallback(
-    async (e: React.MouseEvent, currentId: string) => {
-      e.stopPropagation();
-      await onBeforeIdChange();
-      dispatch(setCurrentMenu(currentId));
-    },
-    []
-  );
+  const handleMenuClick = useCallback(async (e: React.MouseEvent, currentId: string) => {
+    e.stopPropagation();
+    await onBeforeIdChange();
+    dispatch(setCurrentMenu(currentId));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <div
       className={classnames({
@@ -92,13 +77,7 @@ const MenuItemComponent = ({
 };
 
 // 菜单嵌套逻辑组件；
-const MenuComponent = ({
-  menu,
-  onBeforeIdChange,
-}: {
-  menu: Menu;
-  onBeforeIdChange: BeforeIdChange;
-}) => {
+const MenuComponent = ({ menu, onBeforeIdChange }: { menu: Menu; onBeforeIdChange: BeforeIdChange }) => {
   const currentId = useAppSelector(selectCurrentId);
   const menuList = useAppSelector(selectMenu);
   const currentItem: any = findItem(currentId, menuList);
@@ -113,31 +92,18 @@ const MenuComponent = ({
           defaultActiveKey={currentItem.parentId}
           ghost
           expandIcon={({ isActive }) =>
-            isActive ? (
-              <Icon type="xiasanjiao" style={style} />
-            ) : (
-              <Icon type="yousanjiao" style={style} />
-            )
+            isActive ? <Icon type="xiasanjiao" style={style} /> : <Icon type="yousanjiao" style={style} />
           }
         >
           <Panel
             key={menu.id}
             className="menu-collapse-panel"
-            header={
-              <MenuItemComponent
-                menu={menu}
-                onBeforeIdChange={onBeforeIdChange}
-              />
-            }
+            header={<MenuItemComponent menu={menu} onBeforeIdChange={onBeforeIdChange} />}
           >
             <div className="men-wrap">
               <div className="children">
                 {menu.children.map((item, index: number) => (
-                  <MenuComponent
-                    key={index}
-                    menu={item}
-                    onBeforeIdChange={onBeforeIdChange}
-                  />
+                  <MenuComponent key={index} menu={item} onBeforeIdChange={onBeforeIdChange} />
                 ))}
               </div>
             </div>
@@ -151,11 +117,7 @@ const MenuComponent = ({
 };
 
 // 菜单容器组件；
-const MenuSetupListComponent = ({
-  onBeforeIdChange,
-}: {
-  onBeforeIdChange: BeforeIdChange;
-}) => {
+const MenuSetupListComponent = ({ onBeforeIdChange }: { onBeforeIdChange: BeforeIdChange }) => {
   const dispatch = useAppDispatch();
   const menu = useAppSelector(selectMenu);
   const handleAddMenu = useCallback(async () => {
@@ -164,6 +126,7 @@ const MenuSetupListComponent = ({
     }
     const childId = uuid();
     dispatch(add({ currentId: null, childId }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [menu]);
 
   return (
@@ -182,11 +145,7 @@ const MenuSetupListComponent = ({
       </div>
       <div className="menu">
         {menu?.map((child: any, index: number) => (
-          <MenuComponent
-            key={index}
-            menu={child}
-            onBeforeIdChange={onBeforeIdChange}
-          />
+          <MenuComponent key={index} menu={child} onBeforeIdChange={onBeforeIdChange} />
         ))}
       </div>
     </div>

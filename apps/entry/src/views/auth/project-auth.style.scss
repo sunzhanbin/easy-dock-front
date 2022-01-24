@@ -1,0 +1,104 @@
+@import '@common/styles/var.scss';
+.container {
+  display: flex;
+  width: 100%;
+  .loading {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%, -50%);
+  }
+  .selector {
+    & > .add-manager {
+      height: 32px;
+      line-height: 32px;
+      font-weight: 600;
+    }
+  }
+  .projectAuth {
+    flex: 1;
+    .header {
+      display: flex;
+      height: 169px;
+      .image {
+        flex: 0 0 169px;
+      }
+      .title {
+        flex: 1;
+        padding: 40px 40px 6px 16px;
+        .name {
+          height: 28px;
+          font-size: 18px;
+          font-weight: 600;
+          color: rgba(0, 0, 0, 0.85);
+          line-height: 28px;
+        }
+        .text {
+          font-size: 14px;
+          font-weight: 400;
+          color: rgba(24, 31, 67, 0.5);
+          line-height: 22px;
+          margin-top: 12px;
+        }
+      }
+    }
+    .content {
+      margin: 10px 40px;
+      .title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 52px;
+        font-size: 14px;
+        font-weight: 600;
+        color: rgba(24, 31, 67, 1);
+        border-bottom: 1px solid rgba(24, 31, 67, 0.08);
+      }
+      .projectList {
+        display: flex;
+        flex-direction: column;
+        .project {
+          display: flex;
+          padding: 14px 0;
+          border-bottom: 1px solid rgba(24, 31, 67, 0.08);
+          .name {
+            flex: 0 0 160px;
+            height: 22px;
+            font-size: 14px;
+            font-weight: 400;
+            color: #181f43;
+            line-height: 22px;
+            overflow: hidden;
+          }
+          .administrator {
+            flex: 1;
+            display: flex;
+            .list {
+              flex: 1;
+              display: flex;
+              justify-content: flex-end;
+            }
+            .add {
+              flex: 0 0 24px;
+              height: 24px;
+              text-align: center;
+              border-radius: 12px;
+              border: 1px solid rgba(24, 31, 67, 0.12);
+              cursor: pointer;
+              .icon {
+                font-size: 12px;
+                color: $primary-color;
+              }
+              &:hover {
+                .icon {
+                  color: $primary-color;
+                  opacity: 0.8;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

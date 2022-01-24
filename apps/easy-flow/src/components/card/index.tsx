@@ -1,18 +1,18 @@
-import { FC, useRef, useCallback, useMemo } from 'react';
-import { useDrag, useDrop, DropTargetMonitor } from 'react-dnd';
-import { XYCoord } from 'dnd-core';
-import { Row, Col } from 'antd';
-import classNames from 'classnames';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { selectField } from '@/features/bpm-editor/form-design/formdesign-slice';
+import { FC, useRef, useCallback, useMemo } from "react";
+import { useDrag, useDrop, DropTargetMonitor } from "react-dnd";
+import { XYCoord } from "dnd-core";
+import { Row, Col } from "antd";
+import classNames from "classnames";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import { selectField } from "@/features/bpm-editor/form-design/formdesign-slice";
 import {
   layoutSelector,
   componentPropsSelector,
   selectedFieldSelector,
   errorSelector,
-} from '@/features/bpm-editor/form-design/formzone-reducer';
-import { MoveConfig } from '@/type';
-import SourceBox from '@/components/source-box';
+} from "@/features/bpm-editor/form-design/formzone-reducer";
+import { MoveConfig } from "@/type";
+import SourceBox from "@/components/source-box";
 
 const spaceMap = {
   1: 6,
@@ -84,7 +84,7 @@ export const Card: FC<CardProps> = ({ rowIndex, row, moveCard }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [{ handlerId }, drop] = useDrop(
     {
-      accept: ['toolItem', 'card'],
+      accept: ["toolItem", "card"],
       collect(monitor) {
         return {
           handlerId: monitor.getHandlerId(),
@@ -146,7 +146,7 @@ export const Card: FC<CardProps> = ({ rowIndex, row, moveCard }) => {
 
   const [{ isDragging }, drag] = useDrag(
     {
-      type: 'card',
+      type: "card",
       item: () => {
         return { rowIndex, id: JSON.stringify(row) };
       },
@@ -167,9 +167,9 @@ export const Card: FC<CardProps> = ({ rowIndex, row, moveCard }) => {
             <Col
               key={id}
               className={classNames(
-                'form_item',
-                id === selectedField ? 'active' : '',
-                errorIdList.includes(id) ? 'error' : '',
+                "form_item",
+                id === selectedField ? "active" : "",
+                errorIdList.includes(id) ? "error" : "",
               )}
               onClick={() => {
                 handleSelect(id);
@@ -177,7 +177,7 @@ export const Card: FC<CardProps> = ({ rowIndex, row, moveCard }) => {
               span={getColSpace(id)}
             >
               <SourceBox
-                type={id ? byId?.[id]?.type : ''}
+                type={id ? byId?.[id]?.type : ""}
                 config={byId[id]}
                 moveConfig={getMoveConfig(rowIndex, colIndex)}
                 id={id}

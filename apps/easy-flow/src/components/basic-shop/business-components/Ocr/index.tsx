@@ -1,4 +1,4 @@
-import { memo, FC } from 'react';
+import { memo, FC } from "react";
 
 const Ocr: FC = () => {
   return <div>Ocr</div>;

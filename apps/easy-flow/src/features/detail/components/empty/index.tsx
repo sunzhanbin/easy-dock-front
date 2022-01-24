@@ -1,6 +1,6 @@
-import { memo } from 'react';
-import emptyImage from '@assets/empty.png';
-import styles from './index.module.scss';
+import { memo } from "react";
+import emptyImage from "@assets/empty.png";
+import styles from "./index.module.scss";
 
 interface EmptyProps {
   className?: string;

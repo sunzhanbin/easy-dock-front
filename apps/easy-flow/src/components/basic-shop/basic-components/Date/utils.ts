@@ -1,6 +1,6 @@
-import { flowVarsMap } from '@utils';
-import moment, { Moment } from 'moment';
-import * as math from 'mathjs';
+import { flowVarsMap } from "@utils";
+import moment, { Moment } from "moment";
+import * as math from "mathjs";
 
 type RuleParams = {
   rules: { [key: string]: any }[];
@@ -14,26 +14,26 @@ type RuleParams = {
 // 转换流程变量时间
 const getFlowVarsRule = (date: string, type: string, format?: string) => {
   switch (date) {
-    case 'currentMonth':
-      if (type === 'earlier' || type === 'latterEqual') {
-        return moment().startOf('month').startOf('day').valueOf();
+    case "currentMonth":
+      if (type === "earlier" || type === "latterEqual") {
+        return moment().startOf("month").startOf("day").valueOf();
       } else {
-        return moment().endOf('month').endOf('day').valueOf();
+        return moment().endOf("month").endOf("day").valueOf();
       }
-    case 'currentYear':
-      if (type === 'earlier' || type === 'latterEqual') {
-        return moment().startOf('year').startOf('day').valueOf();
+    case "currentYear":
+      if (type === "earlier" || type === "latterEqual") {
+        return moment().startOf("year").startOf("day").valueOf();
       } else {
-        return moment().endOf('year').endOf('day').valueOf();
+        return moment().endOf("year").endOf("day").valueOf();
       }
-    case 'currentTime':
-      if (format === 'yyyy-MM-DD HH:mm:ss') {
+    case "currentTime":
+      if (format === "yyyy-MM-DD HH:mm:ss") {
         return moment().valueOf();
       } else {
-        if (type === 'earlier' || type === 'latterEqual') {
-          return moment().startOf('day').valueOf();
+        if (type === "earlier" || type === "latterEqual") {
+          return moment().startOf("day").valueOf();
         } else {
-          return moment().endOf('day').valueOf();
+          return moment().endOf("day").valueOf();
         }
       }
   }
@@ -41,10 +41,10 @@ const getFlowVarsRule = (date: string, type: string, format?: string) => {
 
 // 转换关联控件的时间
 const formatFieldDate = (type: string, currentTime: number) => {
-  if (type === 'earlier' || type === 'latterEqual') {
-    return moment(currentTime).startOf('day').valueOf();
+  if (type === "earlier" || type === "latterEqual") {
+    return moment(currentTime).startOf("day").valueOf();
   } else {
-    return moment(currentTime).endOf('day').valueOf();
+    return moment(currentTime).endOf("day").valueOf();
   }
 };
 
@@ -78,7 +78,7 @@ const formatMaxMinDate = (
   const dateRules = (Array.isArray(rules) ? rules : []).filter((item) => {
     return (
       item?.condition?.symbol === type ||
-      (type === 'earlier' ? item?.condition?.symbol === 'earlierEqual' : item?.condition?.symbol === 'latterEqual')
+      (type === "earlier" ? item?.condition?.symbol === "earlierEqual" : item?.condition?.symbol === "latterEqual")
     );
   });
   const ruleWatchKeys = dateRules?.map((rule) => rule.watch).flat(2);
@@ -101,8 +101,8 @@ const formatMaxMinDate = (
     })
     ?.filter(Boolean);
   if (values && values.length) {
-    let dateValue = '';
-    if (type === 'earlier') {
+    let dateValue = "";
+    if (type === "earlier") {
       dateValue = math.min(values);
     } else {
       dateValue = math.max(values);
@@ -131,13 +131,13 @@ const formatMaxMinDate = (
  */
 const getDisabledDateRule = ({ rules, current, formValue, id, range, format }: RuleParams): boolean => {
   let rules1, rules2, rules3, rules4, rules5, rule6, rule7;
-  const earlierRules = formatMaxMinDate(rules, formValue, 'earlier', format);
-  const latterRules = formatMaxMinDate(rules, formValue, 'latter', format);
+  const earlierRules = formatMaxMinDate(rules, formValue, "earlier", format);
+  const latterRules = formatMaxMinDate(rules, formValue, "latter", format);
   const formatRules = [...earlierRules, ...latterRules].flat(2);
   // console.log(formatRules, '---------');
   (formatRules ?? []).forEach((item) => {
     const { watch, condition } = item;
-    if (condition.symbol === 'earlier' || condition.symbol === 'earlierEqual') {
+    if (condition.symbol === "earlier" || condition.symbol === "earlierEqual") {
       // 小于/小于等于
       if (Object.keys(flowVarsMap).includes(watch[0])) {
         const currentTime = getFlowVarsRule(watch[0], condition.symbol, format)!;
@@ -172,7 +172,7 @@ const getDisabledDateRule = ({ rules, current, formValue, id, range, format }: R
         }
       }
     }
-    if (condition.symbol === 'latter' || condition.symbol === 'latterEqual') {
+    if (condition.symbol === "latter" || condition.symbol === "latterEqual") {
       // 大于/大于等于
       if (Object.keys(flowVarsMap).includes(watch[0])) {
         const currentTime = getFlowVarsRule(watch[0], condition.symbol, format)!;

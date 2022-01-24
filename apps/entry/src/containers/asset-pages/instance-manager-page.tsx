@@ -1,19 +1,19 @@
-import { useMemo } from 'react';
-import { useParams } from 'react-router';
-import { MAIN_ENTRY } from '@/consts';
-import { useWorkspaceDetailQuery } from '@/http/app-manager.hooks';
-import '@containers/asset-pages/instance-manager-page.style';
+import { useMemo } from "react";
+import { useParams } from "react-router";
+import { MAIN_ENTRY } from "@/consts";
+import { useWorkspaceRuntimeDetailQuery } from "@/http/app-manager.hooks";
+import "@containers/asset-pages/instance-manager-page.style";
 
 const InstanceManagerMicroPage = () => {
   const { workspaceId } = useParams();
-  const { theme } = useWorkspaceDetailQuery(+(workspaceId as string), {
+  const { theme } = useWorkspaceRuntimeDetailQuery(+(workspaceId as string), {
     selectFromResult: ({ data }) => ({
-      theme: data?.extension?.theme || 'light',
+      theme: data?.extension?.theme || "light",
     }),
   });
   const url = useMemo(() => {
     return `${MAIN_ENTRY}/main/instance/${workspaceId}/data-manage?theme=${theme}&mode=running`;
-  }, [theme]);
+  }, [theme, workspaceId]);
 
   return (
     <div className="instance-manager-page">

@@ -24,11 +24,7 @@ const AppSetupPreview = () => {
           theme={theme}
           extra={<AppInfo navMode={NavModeType.LEFT} theme={theme} />}
         >
-          <AppContent
-            selectedKey={selectedKey}
-            key={selectedKey}
-            theme={theme}
-          />
+          <AppContent selectedKey={selectedKey} key={selectedKey} theme={theme} />
         </SingleNavComponent>
       );
     }
@@ -40,11 +36,7 @@ const AppSetupPreview = () => {
           theme={theme}
           extra={<AppInfo navMode={NavModeType.MULTI} theme={theme} />}
         >
-          <AppContent
-            selectedKey={selectedKey}
-            key={selectedKey}
-            theme={theme}
-          />
+          <AppContent selectedKey={selectedKey} key={selectedKey} theme={theme} />
         </MultiNavComponent>
       );
     }

@@ -23,15 +23,7 @@ type SelectCardProps = {
   selectedId?: string | number;
   isAdmin?: boolean;
 };
-const SelectCard = ({
-  type,
-  list,
-  onSelect,
-  selectedId,
-  onAdd,
-  onDelete,
-  isAdmin,
-}: SelectCardProps) => {
+const SelectCard = ({ type, list, onSelect, selectedId, onAdd, onDelete, isAdmin }: SelectCardProps) => {
   const [fieldName, setFieldName] = useState<string>(""); // 新增字段名称
   const [showButton, setShowButton] = useState<boolean>(true); // 判断是否显示新增按钮
   const [showDropdown, setShowDropdown] = useState<boolean>(false); // 判断是否显示下拉
@@ -65,16 +57,14 @@ const SelectCard = ({
   };
 
   // option支持点击编辑
-  const editField = useMemoCallback(
-    (e: React.MouseEvent, item: { id: number }) => {
-      e.stopPropagation();
-      const list = [...fieldList].map((field) => ({
-        ...field,
-        editable: field.id === item.id,
-      }));
-      setFieldList(list);
-    }
-  );
+  const editField = useMemoCallback((e: React.MouseEvent, item: { id: number }) => {
+    e.stopPropagation();
+    const list = [...fieldList].map((field) => ({
+      ...field,
+      editable: field.id === item.id,
+    }));
+    setFieldList(list);
+  });
   // option删除
   const deleteField = (item: { id: number }) => {
     onDelete && onDelete(item.id);
@@ -94,6 +84,7 @@ const SelectCard = ({
     } catch (e) {
       console.log(e);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form]);
 
   // option编辑字段名确认
@@ -146,12 +137,7 @@ const SelectCard = ({
           <Form.Item>
             {showButton ? (
               <Form.Item noStyle>
-                <Button
-                  className="btn_add_field"
-                  size="large"
-                  icon={<Icon type="xinzengjiacu" />}
-                  onClick={addField}
-                >
+                <Button className="btn_add_field" size="large" icon={<Icon type="xinzengjiacu" />} onClick={addField}>
                   创建{type.label}
                 </Button>
               </Form.Item>
@@ -165,18 +151,11 @@ const SelectCard = ({
                   suffix={
                     <>
                       <Icon
-                        className={classnames(
-                          "tick_icon",
-                          !fieldName ? "disabled" : ""
-                        )}
+                        className={classnames("tick_icon", !fieldName ? "disabled" : "")}
                         type="gou"
                         onClick={handleAddName}
                       />
-                      <Icon
-                        className="close"
-                        type="fanhuichexiao"
-                        onClick={handleRevert}
-                      />
+                      <Icon className="close" type="fanhuichexiao" onClick={handleRevert} />
                     </>
                   }
                 />
@@ -223,8 +202,7 @@ const SelectCard = ({
       >
         {fieldList?.map((item: any) => (
           <Option key={item.id} value={item.id} label={item.name}>
-            {(type.key !== "project" ||
-              (type.key === "project" && !isAdmin)) && (
+            {(type.key !== "project" || (type.key === "project" && !isAdmin)) && (
               <Text text={item.name} className="option-name" />
             )}
           </Option>

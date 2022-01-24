@@ -1,24 +1,27 @@
-import { QueryReturnValue } from '@reduxjs/toolkit/dist/query/baseQueryTypes';
 import {
   BaseQueryFn,
   FetchArgs,
   fetchBaseQuery,
   FetchBaseQueryError,
   FetchBaseQueryMeta,
-} from '@reduxjs/toolkit/query/react';
-import { message } from 'antd';
+} from "@reduxjs/toolkit/query/react";
+import { message } from "antd";
+import { QueryReturnValue } from "@utils/types";
 
-const handleHttpError = (httpStatus: number, msg?: string): string => {
+const handleHttpError = (
+  httpStatus: number | "FETCH_ERROR" | "PARSING_ERROR" | "CUSTOM_ERROR",
+  msg?: string,
+): string => {
   const url = `${window.SSO_LOGIN_URL || process.env.REACT_APP_SSO_LOGIN_URL}/logout?redirectUri=${encodeURIComponent(
     window.location.href,
   )}`;
-  let errorMsg = '';
+  let errorMsg = "";
   switch (httpStatus) {
     case 400:
-      errorMsg = msg || '错误的请求参数';
+      errorMsg = msg || "错误的请求参数";
       break;
     case 401:
-      errorMsg = '您没有登录,请先登录';
+      errorMsg = "您没有登录,请先登录";
       if (window.Auth && window.Auth.getAuth()) {
         setTimeout(() => {
           window.Auth.logout(url);
@@ -26,7 +29,7 @@ const handleHttpError = (httpStatus: number, msg?: string): string => {
       }
       break;
     case 403:
-      errorMsg = '登录过期，请重新登录';
+      errorMsg = "登录过期，请重新登录";
       if (window.Auth && window.Auth.getAuth()) {
         setTimeout(() => {
           window.Auth.logout(url);
@@ -34,27 +37,25 @@ const handleHttpError = (httpStatus: number, msg?: string): string => {
       }
       break;
     case 404:
-      errorMsg = '请求的资源不存在';
+      errorMsg = "请求的资源不存在";
       break;
     case 500:
-      errorMsg = '服务异常';
+      errorMsg = "服务异常";
       break;
     default:
-      errorMsg = '请求错误';
+      errorMsg = "请求错误";
       break;
   }
   return errorMsg;
 };
 
-const createBaseQuery = (mode: 'builder' | 'runtime') => {
+const createBaseQuery = (mode: "builder" | "runtime") => {
   const baseUrl = `${process.env.REACT_APP_EASY_DOCK_BASE_SERVICE_ENDPOINT}/enc-oss-easydock/api/${mode}/v1`;
   return fetchBaseQuery({
     baseUrl: baseUrl,
     prepareHeaders: (headers) => {
       const auth = window.Auth?.getAuth();
-      if (auth) {
-        headers.set('auth', auth);
-      }
+      headers.set("auth", auth);
       return headers;
     },
   });
@@ -68,12 +69,14 @@ const createQueryWithIntercept = (
   let resultMessage = data?.resultMessage;
   if (error) {
     const { status, data } = error as FetchBaseQueryError;
-    resultMessage = handleHttpError(status, (data as { resultMessage: string })?.resultMessage);
+    resultMessage = handleHttpError(status as number, (data as { resultMessage: string })?.resultMessage);
     if (!silence) {
       message.error(resultMessage);
     }
   }
   if (Object.is(data?.resultCode, 0)) {
+    Object.prototype.hasOwnProperty.call(data, "resultCode") && delete data.resultCode;
+    Object.prototype.hasOwnProperty.call(data, "resultMessage") && delete data.resultMessage;
     return data;
   }
   return {
@@ -84,8 +87,8 @@ const createQueryWithIntercept = (
   };
 };
 
-const builderQuery = createBaseQuery('builder');
-const runtimeQuery = createBaseQuery('runtime');
+const builderQuery = createBaseQuery("builder");
+const runtimeQuery = createBaseQuery("runtime");
 
 export const builderQueryWithIntercept: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (
   args,
@@ -97,7 +100,7 @@ export const builderQueryWithIntercept: BaseQueryFn<string | FetchArgs, unknown,
     api,
     extraOptions,
   );
-  const silence = ((args as unknown) as { silence: boolean })?.silence ?? false;
+  const silence = (args as unknown as { silence: boolean })?.silence ?? false;
   return createQueryWithIntercept(result, silence);
 };
 
@@ -111,6 +114,6 @@ export const runtimeQueryWithIntercept: BaseQueryFn<string | FetchArgs, unknown,
     api,
     extraOptions,
   );
-  const silence = ((args as unknown) as { silence: boolean })?.silence ?? false;
+  const silence = (args as unknown as { silence: boolean })?.silence ?? false;
   return createQueryWithIntercept(result, silence);
 };

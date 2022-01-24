@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
-import { runtimeAxios } from '@utils';
-import { OptionItem, SelectOptionItem } from '@/type';
+import { useState, useEffect, useCallback } from "react";
+import { runtimeAxios } from "@utils";
+import { OptionItem, SelectOptionItem } from "@/type";
 
 export type DataSourceParams = {
   prevDataSource?: SelectOptionItem;
@@ -17,11 +17,11 @@ export default function useDataSource({ dataSource, prevDataSource }: DataSource
     if (!dataSource || JSON.stringify(dataSource) === JSON.stringify(prevDataSource)) {
       return;
     }
-    if (dataSource?.type === 'custom') {
+    if (dataSource?.type === "custom") {
       const { data = [] } = dataSource;
       setData(data);
-    } else if (dataSource?.type === 'subapp') {
-      const { fieldName = '', subappId = '' } = dataSource;
+    } else if (dataSource?.type === "subapp") {
+      const { fieldName = "", subappId = "" } = dataSource;
       if (fieldName && subappId) {
         setLoading(true);
         runtimeAxios
@@ -34,7 +34,7 @@ export default function useDataSource({ dataSource, prevDataSource }: DataSource
             setLoading(false);
           });
       }
-    } else if (dataSource?.type === 'interface') {
+    } else if (dataSource?.type === "interface") {
       // const { apiconfig } = dataSource;
       // let list: OptionItem[] = [];
       // if (apiconfig && formDataList) {

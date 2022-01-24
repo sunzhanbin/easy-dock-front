@@ -1,7 +1,7 @@
-import { useEffect } from 'react';
-import PubSub from 'pubsub-js';
-import { useContainerContext } from './context';
-import { EventType } from '@/type';
+import { useEffect } from "react";
+import PubSub from "pubsub-js";
+import { useContainerContext } from "./context";
+import { EventType } from "@/type";
 
 /* 
 
@@ -43,14 +43,16 @@ const usePubSub = (props: any) => {
           handleRules(msg, data);
         }
       });
+      return item;
     });
 
     return () => {
       watchs?.map((item: any) => {
         PubSub.unsubscribe(item);
+        return item;
       });
     };
-  }, []);
+  }, [rules, handleRules, handleValue, handleVisible]);
 
   return {
     rules,

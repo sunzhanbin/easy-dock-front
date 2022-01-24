@@ -1,11 +1,11 @@
-import { memo, ReactNode, useState, useMemo } from 'react';
-import { Button } from 'antd';
-import classnames from 'classnames';
-import { FormField } from '@type';
-import { BranchNode as BranchNodeType } from '@type/flow';
-import { Icon, PopoverConfirm } from '@common/components';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
+import { memo, ReactNode, useState, useMemo } from "react";
+import { Button } from "antd";
+import classnames from "classnames";
+import { FormField } from "@type";
+import { BranchNode as BranchNodeType } from "@type/flow";
+import { Icon, PopoverConfirm } from "@common/components";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import {
   delNode,
   addSubBranch,
@@ -13,12 +13,12 @@ import {
   setChoosedNode,
   formMetaSelector,
   flowDataSelector,
-} from '../../flow-slice';
-import AddNodeButton from '../../components/add-node-button';
-import { formatRuleValue } from '@utils';
-import styles from './index.module.scss';
+} from "../../flow-slice";
+import AddNodeButton from "../../components/add-node-button";
+import { formatRuleValue } from "@utils";
+import styles from "./index.module.scss";
 
-type BranchType = BranchNodeType['branches'][number];
+type BranchType = BranchNodeType["branches"][number];
 
 interface BranchNodeProps {
   data: BranchNodeType;
@@ -93,9 +93,9 @@ export const Branch = memo(function Branch(props: BranchProps) {
       <span className={styles.line} />
 
       <div className={styles.main}>
-        <div className={classnames(styles.content, showDeletePopover ? styles['show-del'] : '')}>
+        <div className={classnames(styles.content, showDeletePopover ? styles["show-del"] : "")}>
           <div
-            className={classnames(styles.conditions, hasValidCondition ? styles['invalid'] : '')}
+            className={classnames(styles.conditions, hasValidCondition ? styles["invalid"] : "")}
             onClick={handleBranchClick}
           >
             {conditions.length === 0 ? (
@@ -136,7 +136,7 @@ export const Branch = memo(function Branch(props: BranchProps) {
             visible={showDeletePopover}
             onVisibleChange={setShowDeletePopover}
             trigger="click"
-            content={`确认删除该分支吗？`}
+            content={"确认删除该分支吗？"}
           >
             <div className={styles.action}>
               <Icon type="shanchu" className={styles.icon} />
@@ -162,9 +162,9 @@ function BranchNode(props: BranchNodeProps) {
   });
 
   return (
-    <div className={styles['branch-node']}>
+    <div className={styles["branch-node"]}>
       <Button
-        className={classnames(styles['add-branch-button'])}
+        className={classnames(styles["add-branch-button"])}
         type="primary"
         icon={<Icon type="guanbi" />}
         onClick={handleAddBranch}

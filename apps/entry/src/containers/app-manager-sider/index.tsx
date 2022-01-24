@@ -1,53 +1,51 @@
-import React, { useCallback, useRef, useState } from 'react';
-import { Layout, Menu, Button, Input, Dropdown, message } from 'antd';
-import { useDeleteWorkspaceMutation, useFetchWorkspaceListQuery } from '@/http';
-import { useAppDispatch, useAppSelector } from '@/store';
-import AddWorkspaceModal from '@components/add-workspace-modal';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import Popconfirm from '@components/popconfirm';
-import { Icon, Text } from '@common/components';
-import { selectCurrentWorkspaceId, setCurrentWorkspaceId } from '@views/app-manager/index.slice';
-import '@containers/app-manager-sider/index.style';
-import { selectProjectId } from '@/views/home/index.slice';
-import { handleStopPropagation } from '@utils/utils';
+import React, { useRef, useState } from "react";
+import { Layout, Menu, Button, Input, Dropdown, message } from "antd";
+import { useDeleteWorkspaceMutation, useFetchWorkspaceListQuery } from "@/http";
+import { useAppDispatch } from "@/store";
+import AddWorkspaceModal from "@components/add-workspace-modal";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import Popconfirm from "@components/popconfirm";
+import { Icon, Text } from "@common/components";
+import { setCurrentWorkspaceId } from "@views/app-manager/index.slice";
+import "@containers/app-manager-sider/index.style";
+import { handleStopPropagation } from "@utils/utils";
+import { useNavigate, useParams } from "react-router-dom";
 
 const { Sider } = Layout;
 
 const AppManagerSider = () => {
   const modalRef = useRef<any>();
   const inputRef = useRef<any>();
-  const [name, setName] = useState<string>('');
+  const [name, setName] = useState<string>("");
   const dispatch = useAppDispatch();
-  const projectId = useAppSelector(selectProjectId);
-  const workspaceId = useAppSelector(selectCurrentWorkspaceId);
+  const navigate = useNavigate();
+  const { projectId, workspaceId } = useParams();
   const [deleteWorkspace] = useDeleteWorkspaceMutation();
-  const { workspaceList } = useFetchWorkspaceListQuery(projectId, {
+  const { workspaceList } = useFetchWorkspaceListQuery(Number(projectId), {
     selectFromResult: ({ data }) => ({
-      workspaceList: data?.filter((workspace: any) => workspace.name.includes(name))?.filter(Boolean),
+      workspaceList: (data || [])?.filter((workspace: any) => workspace.name.includes(name))?.filter(Boolean),
     }),
+    skip: !projectId,
   });
 
-  const handleMenuClick = useCallback(
-    ({ key }) => {
-      dispatch(setCurrentWorkspaceId(key));
-    },
-    [dispatch],
-  );
+  const handleMenuClick = useMemoCallback(({ key }) => {
+    dispatch(setCurrentWorkspaceId(key));
+    navigate(`/app-manager/project/${projectId}/workspace/${key}`);
+  });
 
-  const handleAddWorkspaceVisible = useCallback(() => {
+  const handleAddWorkspaceVisible = useMemoCallback(() => {
     modalRef.current.show();
-    modalRef.current.setTitle('新增');
-  }, []);
+    modalRef.current.setTitle("新增");
+  });
 
   const renderMenuIcon = useMemoCallback((id) => {
-    return <Icon type={+workspaceId === +id ? 'wenjianjiacaisedakai' : 'wenjianjiacaise'} />;
+    return <Icon type={Number(workspaceId) === Number(id) ? "wenjianjiacaisedakai" : "wenjianjiacaise"} />;
   });
 
   const handleEditWorkspaceName = useMemoCallback((e: React.MouseEvent, item) => {
-    e.stopPropagation();
     const { name, id } = item;
     modalRef.current.show();
-    modalRef.current.setTitle('编辑');
+    modalRef.current.setTitle("编辑");
     modalRef.current.setWorkspace({ name, id });
   });
 
@@ -56,17 +54,19 @@ const AppManagerSider = () => {
     setName(name);
   });
 
-  const handleDeleteWorkspace = async (e: React.MouseEvent | undefined, id: number) => {
+  const handleDeleteWorkspace = useMemoCallback(async (id: number) => {
     try {
-      if (e) {
-        e.stopPropagation();
-      }
       await deleteWorkspace(id).unwrap();
-      message.success('删除成功!');
+      message.success("删除成功!");
+      // 如果删除的正好是当前工作区,则跳转到该项目下第一个工作区
+      if (Number(workspaceId) === id) {
+        const currentId = id === workspaceList?.[0]?.id ? workspaceList?.[1]?.id : workspaceList?.[0]?.id;
+        navigate(`/app-manager/project/${projectId}/workspace/${currentId}`, { replace: true });
+      }
     } catch (e) {
       console.log(e);
     }
-  };
+  });
   const renderDropdownMenu = (workspace: { name: string; id: number }) => {
     return (
       <div className="workspace-operation">
@@ -78,8 +78,7 @@ const AppManagerSider = () => {
           title="提示"
           content="删除后不可恢复,请确认是否删除该工作区?"
           placement="bottom"
-          onConfirm={(e) => handleDeleteWorkspace(e, workspace.id)}
-          onCancel={(e) => e?.stopPropagation()}
+          onConfirm={() => handleDeleteWorkspace(workspace.id)}
         >
           <div className="delete" onClick={handleStopPropagation}>
             <Icon type="shanchu" />
@@ -117,16 +116,18 @@ const AppManagerSider = () => {
                 <div className="text">
                   <Text text={workspace.name} />
                 </div>
-                <Dropdown
-                  trigger={['click']}
-                  placement="bottomRight"
-                  overlayClassName="dropdown-sider-container"
-                  overlay={() => renderDropdownMenu(workspace)}
-                >
-                  <span onClick={handleStopPropagation}>
-                    <Icon className="icon-dropdown" type="gengduo" />
-                  </span>
-                </Dropdown>
+                <div onClick={(e) => e.stopPropagation()}>
+                  <Dropdown
+                    trigger={["click"]}
+                    placement="bottomRight"
+                    overlayClassName="dropdown-sider-container"
+                    overlay={() => renderDropdownMenu(workspace)}
+                  >
+                    <span onClick={handleStopPropagation}>
+                      <Icon className="icon-dropdown" type="gengduo" />
+                    </span>
+                  </Dropdown>
+                </div>
               </Menu.Item>
             ))}
           </Menu>

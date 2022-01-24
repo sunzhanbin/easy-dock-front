@@ -8,9 +8,7 @@ import "@containers/app-setup-config/index.style";
 
 const { TabPane } = Tabs;
 
-type BasicSetupFormComponentHandle = React.ElementRef<
-  typeof BasicSetupFormComponent
->;
+type BasicSetupFormComponentHandle = React.ElementRef<typeof BasicSetupFormComponent>;
 type WorkspaceItem = {
   id: number;
   name: string;
@@ -18,7 +16,9 @@ type WorkspaceItem = {
 
 const AppSetupConfig = () => {
   const { workspaceId } = useParams();
-  const { data: workspace } = useWorkspaceDetailQuery(+(workspaceId as string));
+  const { data: workspace } = useWorkspaceDetailQuery(Number(workspaceId), {
+    skip: !workspaceId,
+  });
   const [workspaceList, setWorkspaceList] = useState<WorkspaceItem[]>([]);
   const formRef = useRef<BasicSetupFormComponentHandle>(null);
 
@@ -26,7 +26,7 @@ const AppSetupConfig = () => {
     if (workspace?.id) {
       setWorkspaceList([{ id: workspace.id, name: workspace.name }]);
     }
-  }, [workspace?.id]);
+  }, [workspace?.id, workspace?.name]);
 
   return (
     <div className="app-setup-config">
@@ -35,10 +35,7 @@ const AppSetupConfig = () => {
           <MenuSetupComponent />
         </TabPane>
         <TabPane tab="应用设置" key="app">
-          <BasicSetupFormComponent
-            ref={formRef}
-            workspaceList={workspaceList}
-          />
+          <BasicSetupFormComponent ref={formRef} workspaceList={workspaceList} />
         </TabPane>
       </Tabs>
     </div>

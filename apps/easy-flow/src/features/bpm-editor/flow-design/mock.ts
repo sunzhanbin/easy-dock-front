@@ -1,17 +1,17 @@
-import { mock, setup } from 'mockjs';
+import { mock, setup } from "mockjs";
 
 type Options = {
   body: any;
-  type: 'GET' | 'POST' | 'DELETE';
+  type: "GET" | "POST" | "DELETE";
   url: string;
 };
 
 setup({
-  timeout: '200',
+  timeout: "200",
 });
 
-mock(/\/fetch-flow\/\S+/, 'get', function (options: Options) {
-  const slices = options.url.split('/');
+mock(/\/fetch-flow\/\S+/, "get", function (options: Options) {
+  const slices = options.url.split("/");
   const appkey = slices[slices.length - 1];
   const localdata = localStorage.getItem(appkey);
 
@@ -21,7 +21,7 @@ mock(/\/fetch-flow\/\S+/, 'get', function (options: Options) {
   };
 });
 
-mock(/\/save-flow/, 'post', function (options: Options) {
+mock(/\/save-flow/, "post", function (options: Options) {
   const body = JSON.parse(options.body);
 
   localStorage.setItem(body.appkey, JSON.stringify(body.data));
@@ -35,16 +35,16 @@ mock(/\/save-flow/, 'post', function (options: Options) {
 mock(/\/form\/subapp\/\w+\/components/, function () {
   return mock({
     resultCode: 0,
-    'data|2-5': [
+    "data|2-5": [
       {
-        field: '@uuid',
-        name: '@ctitle',
+        field: "@uuid",
+        name: "@ctitle",
       },
     ],
   });
 });
 
-mock(/^\/user\/list/, 'post', function (options: Options) {
+mock(/^\/user\/list/, "post", function (options: Options) {
   const { data } = JSON.parse(options.body);
 
   return {
@@ -53,7 +53,7 @@ mock(/^\/user\/list/, 'post', function (options: Options) {
       return {
         avatar: `https://picsum.photos/100/100?t=${Math.random()}`,
         id: item,
-        name: mock('@cname'),
+        name: mock("@cname"),
       };
     }),
   };

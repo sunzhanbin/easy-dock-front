@@ -1,19 +1,21 @@
-import 'antd/dist/antd.css';
-import './styles/base.scss';
-// import '@theme/react/antd/antd.4.17-alpha.6.min.css';
-import '@theme/src/variable.scss';
+import "antd/dist/antd.css";
+import "./styles/base.scss";
 
-import ReactDOM from 'react-dom';
-import { Router } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import { createBrowserHistory } from 'history';
-import AntdProvider from '@common/components/antd-provider';
-import cookie from 'js-cookie';
-import { store } from './app/store';
-import App from './App';
-import appConfig from './init';
-import { registerTheme } from '@theme/src/utils';
-const APP_CONTAINER_ID = '#easy-flow-root';
+//import '@enc/theme-scheme/dist/react/antd/antd.4.17-alpha.6.min.css'
+// import './styles/base.scss';
+//import '@enc/theme-scheme/dist/variable.css';
+
+import ReactDOM from "react-dom";
+import { Router } from "react-router-dom";
+import { Provider } from "react-redux";
+import { createBrowserHistory } from "history";
+import AntdProvider from "@common/components/antd-provider";
+// import cookie from "js-cookie";
+import { store } from "./app/store";
+import App from "./App";
+import appConfig from "./init";
+//import { registerTheme } from '@enc/theme-scheme/dist/utils.esm';
+const APP_CONTAINER_ID = "#easy-flow-root";
 
 interface AppProps {
   container: HTMLElement;
@@ -23,20 +25,20 @@ interface AppProps {
 }
 
 export async function mount(props?: AppProps) {
-  const { container, basename = '/', appId, extra } = props || {};
+  const { container, basename = "/", appId, extra } = props || {};
   const history = createBrowserHistory({ basename });
 
-  const query = decodeURIComponent(window.location.href.split('?')[1]);
-  const themeFromQuery = new URLSearchParams(query).get('theme');
-  const themeFromCookie = cookie.get('theme');
-  const theme = themeFromQuery || themeFromCookie;
+  // const query = decodeURIComponent(window.location.href.split("?")[1]);
+  // const themeFromQuery = new URLSearchParams(query).get("theme");
+  // const themeFromCookie = cookie.get("theme");
+  // const theme = themeFromQuery || themeFromCookie;
 
-  if (theme) {
+  /*   if (theme) {
     cookie.set('theme', theme);
     registerTheme({
       theme,
     });
-  }
+  } */
 
   if (appId) {
     appConfig.appId = appId;

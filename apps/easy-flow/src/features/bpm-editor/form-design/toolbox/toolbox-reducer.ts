@@ -1,9 +1,9 @@
-import { createAsyncThunk, createSelector } from '@reduxjs/toolkit';
-import { values, reduce } from 'lodash';
-import { RootState } from '@app/store';
-import { fetchComponents } from './toolboxApi';
+import { createAsyncThunk, createSelector } from "@reduxjs/toolkit";
+import { values, reduce } from "lodash";
+import { RootState } from "@app/store";
+import { fetchComponents } from "./toolboxApi";
 
-export const loadComponents = createAsyncThunk('formDesign/fetchComponents', async () => {
+export const loadComponents = createAsyncThunk("formDesign/fetchComponents", async () => {
   const response = await fetchComponents();
 
   return response;

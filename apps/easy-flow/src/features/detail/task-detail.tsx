@@ -1,18 +1,18 @@
-import { memo, useEffect, useState, useRef } from 'react';
-import { useParams, useHistory } from 'react-router';
-import { message, FormInstance } from 'antd';
-import { Loading } from '@common/components';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import ConfirmModal, { ActionType } from './components/confirm-modal';
-import Header from '@components/header';
-import { runtimeAxios, uploadFile, validateTabs } from '@utils';
-import { loadFlowData } from '@/apis/detail';
-import { dynamicRoutes } from '@consts';
-import Detail from './components/detail';
-import Empty from './components/empty';
-import FlowNodeActions from './components/flow-node-actions';
-import { FormMeta, FormValue, FlowMeta, FlowInstance, TaskDetailType } from '@type/detail';
-import styles from './index.module.scss';
+import { memo, useEffect, useState, useRef } from "react";
+import { useParams, useHistory } from "react-router";
+import { message, FormInstance } from "antd";
+import { Loading } from "@common/components";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import ConfirmModal, { ActionType } from "./components/confirm-modal";
+import Header from "@components/header";
+import { runtimeAxios, uploadFile, validateTabs } from "@utils";
+import { loadFlowData } from "@/apis/detail";
+import { dynamicRoutes } from "@consts";
+import Detail from "./components/detail";
+import Empty from "./components/empty";
+import FlowNodeActions from "./components/flow-node-actions";
+import { FormMeta, FormValue, FlowMeta, FlowInstance, TaskDetailType } from "@type/detail";
+import styles from "./index.module.scss";
 
 export type DataType = {
   task: {
@@ -31,7 +31,7 @@ export type DataType = {
 
 const loadData = async function (taskId: string): Promise<DataType> {
   const { data } = await runtimeAxios.get<{
-    data: { processInstance: DataType['flow']['instance']; id: string; state: TaskDetailType };
+    data: { processInstance: DataType["flow"]["instance"]; id: string; state: TaskDetailType };
   }>(`/process_instance/getInstanceDetailByTaskId?taskId=${taskId}`);
   const flowInstance = data.processInstance;
   const [formMeta, formValue, node] = await loadFlowData(flowInstance);
@@ -79,12 +79,12 @@ function FlowDetail() {
     const values = await formRef.current.validateFields();
     const formValues = await uploadFile(values);
 
-    await runtimeAxios.post(`/process_instance/saveNodeForm`, {
+    await runtimeAxios.post("/process_instance/saveNodeForm", {
       formData: formValues,
       taskId,
     });
 
-    message.success('保存成功');
+    message.success("保存成功");
   });
 
   const handleSubmitNodeForm = useMemoCallback(async () => {
@@ -92,12 +92,12 @@ function FlowDetail() {
     const values = await formRef.current!.validateFields();
     const formValues = await uploadFile(values);
 
-    await runtimeAxios.post(`/process_instance/submit`, {
+    await runtimeAxios.post("/process_instance/submit", {
       formData: formValues,
       taskId,
     });
 
-    message.success('提交成功');
+    message.success("提交成功");
 
     setTimeout(() => {
       history.replace(dynamicRoutes.toTaskCenter(appId!));
@@ -111,28 +111,28 @@ function FlowDetail() {
 
     // 同意
     if (showConfirmType === ActionType.Approve) {
-      await runtimeAxios.post(`/process_instance/approve`, {
+      await runtimeAxios.post("/process_instance/approve", {
         formData: formValues,
         remark,
         taskId,
       });
       // 终止
     } else if (showConfirmType === ActionType.Terminate) {
-      await runtimeAxios.post(`/process_instance/stop`, {
+      await runtimeAxios.post("/process_instance/stop", {
         formData: formValues,
         taskId,
         remark,
       });
     } else if (showConfirmType === ActionType.Revert) {
       // 驳回
-      await runtimeAxios.post(`/process_instance/backTo`, {
+      await runtimeAxios.post("/process_instance/backTo", {
         formData: formValues,
         remark,
         taskId,
       });
     }
 
-    message.success('操作成功');
+    message.success("操作成功");
     setShowConfirmType(ActionType.Cancel);
 
     setTimeout(() => {

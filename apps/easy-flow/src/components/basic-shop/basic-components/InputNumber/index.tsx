@@ -1,9 +1,9 @@
-import { memo, useMemo } from 'react';
-import { InputNumberProps } from 'antd/lib/input-number';
-import EventHoc from '@/components/form-engine/eventHoc';
-import { useContainerContext } from '@/components/form-engine/context';
-import BaseInputNumber from './base-input-number';
-import { getCalculateNum } from './utils';
+import { memo, useMemo } from "react";
+import { InputNumberProps } from "antd/lib/input-number";
+import EventHoc from "@/components/form-engine/eventHoc";
+import { useContainerContext } from "@/components/form-engine/context";
+import BaseInputNumber from "./base-input-number";
+import { getCalculateNum } from "./utils";
 
 const InputNumberContainer = (props: InputNumberProps & { [key: string]: any }) => {
   const { form, rules, refresh } = useContainerContext();
@@ -22,6 +22,7 @@ const InputNumberContainer = (props: InputNumberProps & { [key: string]: any }) 
     }, 0);
 
     return prop;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form, props, refresh, rules]);
 
   return (

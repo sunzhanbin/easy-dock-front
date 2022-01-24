@@ -1,18 +1,17 @@
-import { memo, FC, ReactNode, useMemo, useState } from 'react';
-import { message, Button } from 'antd';
-import { SubAppType } from '@/consts';
-import { Icon } from '@common/components';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import { useAppSelector } from '@/store';
-import SpaceImage from '@assets/images/space.png';
-import { selectCurrentWorkspaceId } from '@/views/app-manager/index.slice';
-import { useCreateSupAppMutation } from '@/http/app-manager.hooks';
-import FormImage from '@assets/images/form.png';
-import FlowImage from '@assets/images/flow.png';
-import ChartImage from '@assets/images/chart.png';
-import CanvasImage from '@assets/images/canvas.png';
-import AppModal from './app-modal.component';
-import './app-empty.style.scss';
+import { memo, FC, ReactNode, useMemo, useState } from "react";
+import { useParams } from "react-router-dom";
+import { message, Button } from "antd";
+import { SubAppType } from "@/consts";
+import { Icon } from "@common/components";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import SpaceImage from "@assets/images/space.png";
+import { useCreateSupAppMutation } from "@/http/app-manager.hooks";
+import FormImage from "@assets/images/form.png";
+import FlowImage from "@assets/images/flow.png";
+import ChartImage from "@assets/images/chart.png";
+import CanvasImage from "@assets/images/canvas.png";
+import AppModal from "./app-modal.component";
+import "./app-empty.style.scss";
 
 type TypeItem = {
   type: SubAppType;
@@ -21,7 +20,7 @@ type TypeItem = {
   position: "left" | "right";
   children: ReactNode;
   showModal: boolean;
-}
+};
 
 type ShowModalMap = {
   [k in SubAppType]: boolean;
@@ -35,8 +34,8 @@ const initialShowModal: ShowModalMap = {
   [SubAppType.SPACE]: false,
 };
 
-const AppEmpty: FC = () => {
-  const workspaceId = useAppSelector(selectCurrentWorkspaceId);
+const AppEmpty: FC<{ empty?: boolean }> = ({ empty = false }) => {
+  const { workspaceId } = useParams();
   const [createSubApp] = useCreateSupAppMutation();
   const [showModal, setShowModal] = useState<ShowModalMap>(initialShowModal);
   const typeList = useMemo<TypeItem[]>(() => {
@@ -84,6 +83,10 @@ const AppEmpty: FC = () => {
     ];
   }, [showModal]);
   const handleShowModal = useMemoCallback((type: SubAppType) => {
+    if (empty) {
+      message.warn("请先创建工作区!");
+      return;
+    }
     const showModal: ShowModalMap = { ...initialShowModal, [type]: true };
     setShowModal(showModal);
   });
@@ -91,10 +94,10 @@ const AppEmpty: FC = () => {
     setShowModal(initialShowModal);
   });
   const handleOk = useMemoCallback((name: string, type: SubAppType) => {
-    createSubApp({ appId: workspaceId, name, type })
+    createSubApp({ appId: Number(workspaceId), name, type })
       .unwrap()
       .then(() => {
-        message.success('子应用创建成功!');
+        message.success("子应用创建成功!");
       });
   });
   return (

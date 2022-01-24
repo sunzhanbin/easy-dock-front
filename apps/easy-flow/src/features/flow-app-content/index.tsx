@@ -1,17 +1,17 @@
-import { memo, FC, useState, useEffect, useMemo, useRef } from 'react';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
-import { Button, Checkbox, Tooltip, Table, TableProps, Popover, Select, message } from 'antd';
-import moment from 'moment';
-import classNames from 'classnames';
-import { omit, throttle, debounce } from 'lodash';
-import { Pagination, ProcessDataManagerParams, SortDirection, TASK_STATE_LIST, UserItem } from '@/consts';
-import { Icon, StateTag, Text } from '@common/components';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import useSubapp from '@/hooks/use-subapp';
-import { runtimeAxios, builderAxios, exportFile, axios } from '@/utils';
-import { dynamicRoutes } from '@/consts/route';
-import appConfig from '@/init';
-import './index.style.scss';
+import { memo, FC, useState, useEffect, useMemo, useRef } from "react";
+import { useHistory, useLocation, useParams } from "react-router-dom";
+import { Button, Checkbox, Tooltip, Table, TableProps, Popover, Select, message } from "antd";
+import moment from "moment";
+import classNames from "classnames";
+import { omit, throttle, debounce } from "lodash";
+import { Pagination, ProcessDataManagerParams, SortDirection, TASK_STATE_LIST, UserItem } from "@/consts";
+import { Icon, StateTag, Text } from "@common/components";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import useSubapp from "@/hooks/use-subapp";
+import { runtimeAxios, builderAxios, exportFile, axios } from "@/utils";
+import { dynamicRoutes } from "@/consts/route";
+import appConfig from "@/init";
+import "./index.style.scss";
 
 interface FlowAppContentProps {
   id: number;
@@ -65,24 +65,26 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
     // 以iframe方式接入,参数在location中
     if (location.search) {
       const params = new URLSearchParams(location.search.slice(1));
-      return params.get('theme') || 'light';
+      return params.get("theme") || "light";
     }
     // 以微前端方式接入,参数在extra中
     if (appConfig?.extra?.theme) {
       return appConfig.extra.theme;
     }
-    return 'light';
+    return "light";
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.search, appConfig?.extra?.theme]);
 
   const mode = useMemo(() => {
     if (location.search) {
       const params = new URLSearchParams(location.search.slice(1));
-      return params.get('mode') || 'running';
+      return params.get("mode") || "running";
     }
     if (appConfig?.extra?.mode) {
       return appConfig.extra.mode;
     }
-    return 'running';
+    return "running";
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.search, appConfig?.extra?.mode]);
 
   const [loading, setLoading] = useState<boolean>(true);
@@ -90,9 +92,9 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
   const [dataSource, setDataSource] = useState<any[]>();
   const [optionList, setOptionList] = useState<UserItem[]>([]);
   const [total, setTotal] = useState<number>(0);
-  const [keyword, setKeyword] = useState<string>('');
-  const [userId, setUserId] = useState<string>('');
-  const [subAppName, setSubAppName] = useState<string>('');
+  const [keyword, setKeyword] = useState<string>("");
+  const [userId, setUserId] = useState<string>("");
+  const [subAppName, setSubAppName] = useState<string>("");
   const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.DESC);
   const [pagination, setPagination] = useState<Pagination>({
     pageSize: 10,
@@ -106,12 +108,12 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
     [id: string]: { name: string; avatar?: string; id: number | string };
   }>({});
 
-  const baseColumns: TableProps<TableDataBase>['columns'] = useMemo(() => {
+  const baseColumns: TableProps<TableDataBase>["columns"] = useMemo(() => {
     return [
       {
-        key: 'state',
-        dataIndex: 'state',
-        title: '流程状态',
+        key: "state",
+        dataIndex: "state",
+        title: "流程状态",
         width: 100,
         render(_, data: TableDataBase) {
           const { state } = data;
@@ -119,21 +121,21 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
         },
       },
       {
-        key: 'starter',
-        dataIndex: 'starter',
+        key: "starter",
+        dataIndex: "starter",
         width: 120,
-        title: '发起人',
+        title: "发起人",
       },
       {
-        key: 'startTime',
-        dataIndex: 'startTime',
-        title: '发起时间',
-        sortDirections: ['descend', 'ascend'],
+        key: "startTime",
+        dataIndex: "startTime",
+        title: "发起时间",
+        sortDirections: ["descend", "ascend"],
         sorter: true,
-        defaultSortOrder: 'descend',
+        defaultSortOrder: "descend",
         width: 180,
         render(_, data: TableDataBase) {
-          return moment(data.startTime).format('yyyy-MM-DD HH:mm');
+          return moment(data.startTime).format("yyyy-MM-DD HH:mm");
         },
       },
     ];
@@ -145,9 +147,9 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
     if (!member) return null;
     let text;
     if (Array.isArray(member)) {
-      text = member.map((id) => membersCacheRef.current[id].name).join(',');
+      text = member.map((id) => membersCacheRef.current[id].name).join(",");
     } else {
-      text = membersCacheRef.current[member]?.name || '';
+      text = membersCacheRef.current[member]?.name || "";
     }
     return <Text className="dynamic-cell" text={String(text)} getContainer={false} />;
   });
@@ -156,9 +158,9 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
     if (!date) return null;
 
     if (Array.isArray(date)) {
-      return date.map((ts) => moment(ts).format('yyyy-MM-DD HH:mm:ss')).join('至');
+      return date.map((ts) => moment(ts).format("yyyy-MM-DD HH:mm:ss")).join("至");
     }
-    return moment(date).format('yyyy-MM-DD HH:mm:ss');
+    return moment(date).format("yyyy-MM-DD HH:mm:ss");
   });
 
   const renderText = useMemoCallback((value: string | string[]) => {
@@ -167,7 +169,7 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
     }
     let text;
     if (Array.isArray(value)) {
-      text = value.join(',');
+      text = value.join(",");
     } else {
       text = value;
     }
@@ -186,10 +188,10 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
           title: nameMap[field],
           width: 120,
           render(_, data) {
-            if (type === 'Member') {
+            if (type === "Member") {
               const member = data[field];
               return renderMember(member);
-            } else if (type === 'Date') {
+            } else if (type === "Date") {
               const date = data[field];
               return renderDate(date);
             } else {
@@ -208,7 +210,7 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
   );
 
   // 获取表格动态的列,源自于流程表单的控件
-  const getDynamicColumns = useMemoCallback((currentFields: any[]): TableProps<TableDataBase>['columns'] => {
+  const getDynamicColumns = useMemoCallback((currentFields: any[]): TableProps<TableDataBase>["columns"] => {
     return currentFields.map((field) => {
       const tableKey = `formData.${field.field}`;
       const tableColumn: typeof baseColumns[number] = {
@@ -217,7 +219,7 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
         dataIndex: tableKey,
         width: 180,
       };
-      if (field.type === 'Tabs') {
+      if (field.type === "Tabs") {
         // eslint-disable-next-line
         tableColumn.render = (_: string, data: TableDataBase) => {
           if (!data?.formData) {
@@ -242,7 +244,7 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
             return null;
           }
           fieldData = Array.isArray(fieldData) ? fieldData : JSON.parse(fieldData as string);
-          const compData = ((fieldData as any[]) || []).map((item) => omit(item, ['__title__']));
+          const compData = ((fieldData as any[]) || []).map((item) => omit(item, ["__title__"]));
           tabData.push(...compData);
           return (
             <Popover
@@ -256,7 +258,7 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
             </Popover>
           );
         };
-      } else if (field.type === 'Member') {
+      } else if (field.type === "Member") {
         tableColumn.render = (_: string, data: TableDataBase) => {
           if (!data?.formData) {
             return null;
@@ -264,12 +266,12 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
           const member = data.formData[field.field] || field.defaultValue;
           return renderMember(member as number | number[]);
         };
-      } else if (field.type === 'Date') {
+      } else if (field.type === "Date") {
         tableColumn.render = (_: string, data: TableDataBase) => {
           if (!data?.formData) {
             return null;
           }
-          const date = data.formData[field.field] || field.defaultValue || '';
+          const date = data.formData[field.field] || field.defaultValue || "";
           tableColumn.width = Array.isArray(date) ? 360 : 180;
           return renderDate(date as number | [number, number]);
         };
@@ -278,7 +280,7 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
           if (!data?.formData) {
             return null;
           }
-          const value = data.formData[field.field] || field.defaultValue || '';
+          const value = data.formData[field.field] || field.defaultValue || "";
           return renderText(value as string | string[]);
         };
       }
@@ -301,7 +303,7 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
       Object.keys(item.formData).forEach((key) => {
         const field = fieldsMap[key];
         if (!field) return;
-        if (field.type === 'Member') {
+        if (field.type === "Member") {
           const mValue = item.formData[key];
           if (Array.isArray(mValue)) {
             mValue.forEach((id) => {
@@ -314,10 +316,10 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
               ids.add(mValue);
             }
           }
-        } else if (field.type === 'Tabs') {
+        } else if (field.type === "Tabs") {
           const tabData = item.formData[key];
           const memberKeys = (field as any).components
-            .filter((v: { type: string }) => v.type === 'Member')
+            .filter((v: { type: string }) => v.type === "Member")
             .map((v: { field: string }) => v.field);
           if (Array.isArray(tabData)) {
             tabData.forEach((item) => {
@@ -344,7 +346,7 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
       const params = {
         userIds: Array.from(ids),
       };
-      const userResponse = await runtimeAxios.post('/user/query/owner', params);
+      const userResponse = await runtimeAxios.post("/user/query/owner", params);
       (userResponse.data.users || []).forEach((user: { id: number; userName: string; avatar?: string }) => {
         membersCacheRef.current[user.id] = {
           id: user.id,
@@ -363,7 +365,7 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
         keyword,
         projectId,
       };
-      const res = (await runtimeAxios.post('/user/search', params)) as any;
+      const res = (await runtimeAxios.post("/user/search", params)) as any;
       const list = res.data?.data || [];
       const total = res.data?.recordTotal;
       const index = res.data?.pageIndex;
@@ -415,7 +417,7 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
       if (userId) {
         params.startUserId = userId;
       }
-      const res = (await runtimeAxios.post(`/task/processDataManager/list`, params)) as { data: any };
+      const res = (await runtimeAxios.post("/task/processDataManager/list", params)) as { data: any };
       const dataSource = res?.data;
       if (canOperation && Array.isArray(dataSource?.data) && dataSource?.data.length > 0) {
         cacheMembers(dataSource.data);
@@ -431,7 +433,7 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
   });
 
   const handleTableChange = useMemoCallback((newPagination, filters, sorter) => {
-    sorter.order === 'ascend' ? setSortDirection(SortDirection.ASC) : setSortDirection(SortDirection.DESC);
+    sorter.order === "ascend" ? setSortDirection(SortDirection.ASC) : setSortDirection(SortDirection.DESC);
     setPagination((pagination) => {
       return { ...pagination, ...newPagination };
     });
@@ -453,7 +455,7 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
   const handleExport = useMemoCallback(async () => {
     const { total } = pagination;
     if (total > 10000) {
-      message.info('当前数据多余10000条,只能导出10000条数据!');
+      message.info("当前数据多余10000条,只能导出10000条数据!");
       return;
     }
     const params = {
@@ -468,9 +470,9 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
         sortDirection,
       },
     };
-    axios.post('/task/processDataManager/export', params, { responseType: 'blob' }).then((res) => {
+    axios.post("/task/processDataManager/export", params, { responseType: "blob" }).then((res) => {
       const type = (res as any).type;
-      exportFile(res, `${subAppName || 'file'}.xlsx`, type);
+      exportFile(res, `${subAppName || "file"}.xlsx`, type);
     });
   });
 
@@ -480,7 +482,7 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
       const res = (await runtimeAxios.get(`/form/subapp/${id}/all/components`)) as { data: any[] };
       if (Array.isArray(res?.data) && res.data.length > 0) {
         // 不展示的控件类型
-        const excludeTypeList: string[] = ['Attachment', 'DescText', 'Image', 'FlowData', 'Iframe'];
+        const excludeTypeList: string[] = ["Attachment", "DescText", "Image", "FlowData", "Iframe"];
         const currentFields = (res.data || []).filter((field) => !excludeTypeList.includes(field.type));
         const dynamicColumns = getDynamicColumns(currentFields);
         if (dynamicColumns?.length) {
@@ -491,6 +493,7 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
         setFields(currentFields);
       }
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   useEffect(() => {
@@ -508,20 +511,23 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
 
   useEffect(() => {
     fetchDataSource();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   useEffect(() => {
     if (projectId) {
-      fetchOptionList(1, '');
+      fetchOptionList(1, "");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [projectId]);
 
   useEffect(() => {
     fetchDataSource();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [statusList, userId, pagination.pageSize, pagination.current, sortDirection]);
 
   return (
-    <div className={classNames('flow-app-content', theme, !canOperation && 'preview')} ref={containerRef}>
+    <div className={classNames("flow-app-content", theme, !canOperation && "preview")} ref={containerRef}>
       <div className="header">
         <div className="status-list">
           <Checkbox.Group value={statusList} onChange={handleStatusChange}>
@@ -575,7 +581,7 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
           pagination={pagination}
           columns={tableColumns}
           dataSource={dataSource}
-          scroll={{ scrollToFirstRowOnChange: true, x: '100%', y: '100%' }}
+          scroll={{ scrollToFirstRowOnChange: true, x: "100%", y: "100%" }}
           getPopupContainer={() => containerRef.current!}
           onChange={handleTableChange}
         />

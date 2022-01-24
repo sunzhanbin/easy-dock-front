@@ -1,15 +1,15 @@
-import React, { memo, useState, useEffect, useMemo } from 'react';
-import { message, Modal, Popconfirm, Tooltip } from 'antd';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import styles from '../index.module.scss';
-import { deleteSerialId, getSerialList } from '@apis/form';
-import { useSubAppDetail } from '@app/app';
-import { Icon } from '@common/components';
-import classNames from 'classnames';
-import { FormField, RuleOption } from '@type';
-import { RULE_TYPE } from '@utils/const';
-import { useAppSelector } from '@app/hooks';
-import { componentPropsSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
+import React, { memo, useState, useEffect, useMemo } from "react";
+import { message, Modal, Popconfirm, Tooltip } from "antd";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import styles from "../index.module.scss";
+import { deleteSerialId, getSerialList } from "@apis/form";
+import { useSubAppDetail } from "@app/app";
+import { Icon } from "@common/components";
+import classNames from "classnames";
+import { FormField, RuleOption } from "@type";
+import { RULE_TYPE } from "@utils/const";
+import { useAppSelector } from "@app/hooks";
+import { componentPropsSelector } from "@/features/bpm-editor/form-design/formzone-reducer";
 
 interface RuleProps {
   fields: { id: string; name: string }[];
@@ -30,18 +30,18 @@ const RuleModal = (props: RuleProps) => {
 
   const selectedRules = useMemo<{ id: string; name: string }[]>(() => {
     const componentList = Object.values(byId).map((item: FormField) => item) || [];
-    const compType = ['SerialNum'];
+    const compType = ["SerialNum"];
     return componentList
       .filter((com) => compType.includes(com.type))
       .map((com) => ({
-        id: com.type === 'SerialNum' && com.serialRule.serialId,
+        id: com.type === "SerialNum" && com.serialRule.serialId,
         name: com.label,
       }));
   }, [byId]);
 
   const handleSubmit = useMemoCallback(() => {
     if (activeIndex === -1) {
-      return message.warning('请选择规则');
+      return message.warning("请选择规则");
     }
     onSubmit && onSubmit(rule);
   });
@@ -61,7 +61,7 @@ const RuleModal = (props: RuleProps) => {
     try {
       const ruleId = rule.id;
       await deleteSerialId(ruleId);
-      message.success('删除成功');
+      message.success("删除成功");
       const list = [...ruleList];
       list.splice(index, 1);
       setRuleList(list);
@@ -76,7 +76,7 @@ const RuleModal = (props: RuleProps) => {
 
   const formatComponent: { [key: string]: (props: any) => React.ReactNode } = {
     incNumber: (item) => {
-      let digitsNum = '00000';
+      let digitsNum = "00000";
       digitsNum = digitsNum.substr(digitsNum.length - 5, item.digitsNum - 1) + 1;
       return <span>{digitsNum}</span>;
     },
@@ -84,7 +84,7 @@ const RuleModal = (props: RuleProps) => {
     fixedChars: (item) => <span>{item.chars}</span>,
     fieldName: (item) => {
       const fieldName = fields.find((field) => field.id === item.fieldValue)?.name;
-      return <span> {fieldName ? '${' + fieldName + '}' : ''}</span>;
+      return <span> {fieldName ? "${" + fieldName + "}" : ""}</span>;
     },
   };
 
@@ -104,13 +104,13 @@ const RuleModal = (props: RuleProps) => {
     <Modal
       width={500}
       visible={showRuleModal}
-      title={'选择规则'}
+      title={"选择规则"}
       onOk={handleSubmit}
       onCancel={onCancel}
       okText="确 认"
       cancelText="取 消"
-      cancelButtonProps={{ type: 'text', size: 'large' }}
-      okButtonProps={{ size: 'large' }}
+      cancelButtonProps={{ type: "text", size: "large" }}
+      okButtonProps={{ size: "large" }}
       destroyOnClose={true}
       maskClosable={false}
       getContainer={false}
@@ -119,7 +119,7 @@ const RuleModal = (props: RuleProps) => {
         {ruleList.map((rule: any, index) => (
           <div key={rule.id} className={styles.ruleItem}>
             <div
-              className={classNames(styles.name, activeIndex === index ? styles.active : '')}
+              className={classNames(styles.name, activeIndex === index ? styles.active : "")}
               onClick={() => handleSelectRule(rule, index)}
             >
               <Tooltip title={rule.name}>

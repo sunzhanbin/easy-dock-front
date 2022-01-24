@@ -1,10 +1,10 @@
-import React, { memo, useEffect } from 'react';
-import { Form, InputNumber } from 'antd';
-import styles from '../comp-attr-editor/index.module.scss';
+import React, { memo, useEffect } from "react";
+import { Form, InputNumber } from "antd";
+import styles from "../comp-attr-editor/index.module.scss";
 
 const DecimalComponent = (props: { id: string; formInstance: any }) => {
   const { id, formInstance } = props;
-  const isChecked = formInstance.getFieldValue('decimal');
+  const isChecked = formInstance.getFieldValue("decimal");
 
   useEffect(() => {
     if (!isChecked?.[id]) {
@@ -25,16 +25,16 @@ const DecimalComponent = (props: { id: string; formInstance: any }) => {
       <span className={styles.text}>限制</span>
       <Form.Item
         className={styles.formItem}
-        name={['decimal', id]}
+        name={["decimal", id]}
         rules={[
           {
             required: isChecked.enable,
-            message: '请输入小数位数',
+            message: "请输入小数位数",
           },
           {
             validator(_, value) {
               if (!/^[1-9]\d*$/.test(value)) {
-                return Promise.reject(new Error('请输入正整数'));
+                return Promise.reject(new Error("请输入正整数"));
               }
               return Promise.resolve();
             },

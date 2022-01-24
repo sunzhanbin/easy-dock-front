@@ -1,9 +1,9 @@
 /* 权限相关接口 */
-import { builderAxios, runtimeAxios } from '@utils';
+import { builderAxios, runtimeAxios } from "@utils";
 
 // 获取项目的访问权限
 export function fetchProjectPowers() {
-  return builderAxios.get('/project/list/all/powers');
+  return builderAxios.get("/project/list/all/powers");
 }
 export type AssignAuthParams = {
   ownerKey: string;
@@ -14,7 +14,7 @@ export type AssignAuthParams = {
 };
 // 分配单个资源权限
 export function assignAuth(params: AssignAuthParams) {
-  return runtimeAxios.post('/privilege/assign', params);
+  return runtimeAxios.post("/privilege/assign", params);
 }
 export type RevokeAuthParams = {
   id: number;
@@ -23,7 +23,7 @@ export type RevokeAuthParams = {
 };
 // 回收单个资源权限
 export function revokeAuth(params: RevokeAuthParams) {
-  return runtimeAxios.delete('/privilege/revoke', { data: params });
+  return runtimeAxios.delete("/privilege/revoke", { data: params });
 }
 export type Privilege = {
   ownerKey: string;
@@ -43,7 +43,7 @@ export type AppAuthParams = {
 };
 // 分配应用资源权限
 export function assignAppAuth(params: AppAuthParams) {
-  return runtimeAxios.post('/privilege/assign/app', params);
+  return runtimeAxios.post("/privilege/assign/app", params);
 }
 // 获取应用的访问权限
 export function fetchSubAppPowers(id: string) {
@@ -52,5 +52,5 @@ export function fetchSubAppPowers(id: string) {
 
 // 搜索全部用户
 export function fetchAllUser(params: { index: number; size: number; keyword: string }) {
-  return runtimeAxios.post('/user/search/all', params);
+  return runtimeAxios.post("/user/search/all", params);
 }

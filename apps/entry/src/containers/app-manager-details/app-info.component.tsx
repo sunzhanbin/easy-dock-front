@@ -1,29 +1,38 @@
-import React, { useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { FC, useMemo } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "antd";
-import { useAppSelector } from "@/store";
-import {
-  useWorkspaceDetailQuery,
-  useFetchSubAppListQuery,
-} from "@http/app-manager.hooks";
-import { selectCurrentWorkspaceId } from "@views/app-manager/index.slice";
+import { useWorkspaceDetailQuery, useFetchSubAppListQuery } from "@http/app-manager.hooks";
 import { Icon } from "@common/components";
-
-import "@containers/app-manager-details/app-info.style";
 import useMemoCallback from "@common/hooks/use-memo-callback";
+import "@containers/app-manager-details/app-info.style";
 
-const AppInfoComponent: React.FC = () => {
+const AppInfoComponent: FC<{ empty?: boolean }> = ({ empty = false }) => {
   const navigate = useNavigate();
-  const workspaceId = useAppSelector(selectCurrentWorkspaceId);
-  const { data: workspace } = useWorkspaceDetailQuery(workspaceId);
-  const { data: subAppList } = useFetchSubAppListQuery(workspaceId);
+  const { workspaceId } = useParams();
+  const { data: workspace } = useWorkspaceDetailQuery(Number(workspaceId), {
+    skip: !workspaceId || workspaceId === "undefined",
+  });
+  const { data: subAppList } = useFetchSubAppListQuery(Number(workspaceId), {
+    skip: !workspaceId || workspaceId === "undefined",
+  });
   const hasPublished = useMemo(() => workspace?.extension, [workspace]);
   const subAppCount = useMemo(() => subAppList?.length || 0, [subAppList]);
 
   const handleCreate = useMemoCallback(() => {
-    navigate(`/app-manager/${workspaceId}`);
+    navigate(`./setup`);
   });
 
+  if (empty) {
+    return (
+      <div className="app-info-component">
+        <div className="header">
+          <div className="base-info">
+            <span className="name">请先创建工作区</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="app-info-component">
       <div className="header">

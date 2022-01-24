@@ -96,3 +96,33 @@ export type UserItem = {
   id: number;
   userName: string;
 };
+
+export type TExtension = {
+  icon: string | null;
+  id: number;
+  meta: { [k: string]: any };
+  name: string;
+  navMode: NavModeType;
+  remark: string;
+  status: 1 | -1;
+  theme: ThemeType;
+};
+
+export type TProject = {
+  createTime: number;
+  id: number;
+  name: string;
+  status: 1 | -1;
+};
+
+export type TWorkspaceItem = {
+  createTime: number;
+  extension: null | TExtension;
+  icon: string | null;
+  id: number;
+  name: string;
+  power: number;
+  project: TProject;
+  remark: string;
+  status: 1 | -1;
+};

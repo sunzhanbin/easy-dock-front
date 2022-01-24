@@ -1,7 +1,7 @@
-import { memo, useMemo } from 'react';
-import { Checkbox } from 'antd';
-import { OptionItem } from '@/type';
-import { CheckboxGroupProps } from 'antd/lib/checkbox';
+import { memo, useMemo } from "react";
+import { Checkbox } from "antd";
+import { OptionItem } from "@/type";
+import { CheckboxGroupProps } from "antd/lib/checkbox";
 
 const CheckboxComponent = (props: CheckboxGroupProps & { options: OptionItem[] }) => {
   const { onChange, options } = props;

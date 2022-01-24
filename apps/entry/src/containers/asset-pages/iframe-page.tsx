@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useParams } from "react-router";
 import { useAppSelector } from "@/store";
-import { useWorkspaceDetailQuery } from "@http/app-manager.hooks";
+import { useWorkspaceRuntimeDetailQuery } from "@http/app-manager.hooks";
 import { selectCurrentId } from "@views/workspace/index.slice";
 import { findItem } from "@utils/utils";
 import "@containers/asset-pages/iframe-page.style";
@@ -9,9 +9,9 @@ import "@containers/asset-pages/iframe-page.style";
 const IframeMicroPage = () => {
   const { workspaceId } = useParams();
   const selectedKey = useAppSelector(selectCurrentId);
-  const { menu } = useWorkspaceDetailQuery(+(workspaceId as string), {
+  const { menu } = useWorkspaceRuntimeDetailQuery(+(workspaceId as string), {
     selectFromResult: ({ data }) => ({
-      menu: data?.extension?.meta?.menuList,
+      menu: data?.extension?.meta?.menuList || [],
     }),
   });
   const url = useMemo(() => {

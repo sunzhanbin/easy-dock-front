@@ -1,17 +1,17 @@
-import { memo, useEffect, useMemo } from 'react';
-import { Form } from 'antd';
-import debounce from 'lodash/debounce';
-import { FormField, SelectField } from '@type';
-import { SubBranch as SubBranchType } from '@type/flow';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import Condition from '@/features/bpm-editor/components/condition';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { loadFieldDatasource } from '@utils/form';
-import useValidateForm from '../../hooks/use-validate-form';
-import { updateNode, formMetaSelector } from '../../flow-slice';
+import { memo, useEffect, useMemo } from "react";
+import { Form } from "antd";
+import debounce from "lodash/debounce";
+import { FormField, SelectField } from "@type";
+import { SubBranch as SubBranchType } from "@type/flow";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import Condition from "@/features/bpm-editor/components/condition";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import { loadFieldDatasource } from "@utils/form";
+import useValidateForm from "../../hooks/use-validate-form";
+import { updateNode, formMetaSelector } from "../../flow-slice";
 
 type FormValuesType = {
-  conditions: SubBranchType['conditions'];
+  conditions: SubBranchType["conditions"];
 };
 
 interface SubBranchProps {

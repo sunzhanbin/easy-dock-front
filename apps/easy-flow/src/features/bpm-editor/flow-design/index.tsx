@@ -1,9 +1,9 @@
-import { memo, useEffect, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
-import { Drawer } from 'antd';
-import { Loading, Icon } from '@common/components';
-import { NodeType } from '@type/flow';
-import { CardHeader } from './nodes';
+import { memo, useEffect, useMemo } from "react";
+import { useParams } from "react-router-dom";
+import { Drawer } from "antd";
+import { Loading, Icon } from "@common/components";
+import { NodeType } from "@type/flow";
+import { CardHeader } from "./nodes";
 import {
   StartNodeEditor,
   AuditNodeEditor,
@@ -13,12 +13,12 @@ import {
   SubBranchEditor,
   AutoNodePushDataEditor,
   AutoNodeTriggerProcess,
-} from './editor';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { load, flowDataSelector, save, setChoosedNode } from './flow-slice';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import FlowTree from './flow-tree';
-import styles from './index.module.scss';
+} from "./editor";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import { load, flowDataSelector, save, setChoosedNode } from "./flow-slice";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import FlowTree from "./flow-tree";
+import styles from "./index.module.scss";
 
 function FlowDesign() {
   const dispatch = useAppDispatch();
@@ -42,17 +42,17 @@ function FlowDesign() {
 
   useEffect(() => {
     function handleSave(event: KeyboardEvent) {
-      if (event.key === 's' && (navigator.userAgent.match('Mac') ? event.metaKey : event.ctrlKey)) {
+      if (event.key === "s" && (navigator.userAgent.match("Mac") ? event.metaKey : event.ctrlKey)) {
         event.preventDefault();
 
         dispatch(save({ subappId: bpmId, showTip: true }));
       }
     }
 
-    document.body.addEventListener('keydown', handleSave, false);
+    document.body.addEventListener("keydown", handleSave, false);
 
     return () => {
-      document.body.removeEventListener('keydown', handleSave);
+      document.body.removeEventListener("keydown", handleSave);
     };
   }, [dispatch, bpmId]);
 
@@ -62,7 +62,7 @@ function FlowDesign() {
     }
 
     if (choosedNode.type === NodeType.SubBranch) {
-      return <div className={styles['branch-title']}>分支节点</div>;
+      return <div className={styles["branch-title"]}>分支节点</div>;
     }
 
     if (choosedNode.type === NodeType.AuditNode) {
@@ -119,7 +119,7 @@ function FlowDesign() {
   }, [choosedNode]);
 
   return (
-    <div className={styles['scroll-container']}>
+    <div className={styles["scroll-container"]}>
       <div className={styles.flow} onClick={handleCloseDrawer}>
         {loading && <Loading />}
 

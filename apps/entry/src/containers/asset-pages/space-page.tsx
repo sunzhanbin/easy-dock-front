@@ -1,10 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router";
 import { useAppSelector } from "@/store";
-import {
-  useGetHoloSceneIdMutation,
-  useWorkspaceDetailQuery,
-} from "@http/app-manager.hooks";
+import { useGetHoloSceneIdMutation, useWorkspaceRuntimeDetailQuery } from "@http/app-manager.hooks";
 import { selectCurrentId } from "@views/workspace/index.slice";
 import { findItem } from "@utils/utils";
 import { SPACE_ENTRY } from "@/consts";
@@ -13,9 +10,9 @@ import "./space-page.style.scss";
 const SpaceMicroPage = () => {
   const { workspaceId } = useParams();
   const selectedKey = useAppSelector(selectCurrentId);
-  const { menu } = useWorkspaceDetailQuery(+(workspaceId as string), {
+  const { menu } = useWorkspaceRuntimeDetailQuery(+(workspaceId as string), {
     selectFromResult: ({ data }) => ({
-      menu: data?.extension?.meta?.menuList,
+      menu: data?.extension?.meta?.menuList || [],
     }),
   });
   const [getHoloSceneId] = useGetHoloSceneIdMutation();
@@ -40,6 +37,7 @@ const SpaceMicroPage = () => {
         setSrc(src);
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [appInfo?.subAppId]);
 
   return (

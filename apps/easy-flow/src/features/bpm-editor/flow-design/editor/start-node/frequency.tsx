@@ -1,12 +1,12 @@
-import { memo } from 'react';
-import { InputNumber, Select } from 'antd';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import { TimingTrigger } from '@type/flow';
-import styles from './index.module.scss';
+import { memo } from "react";
+import { InputNumber, Select } from "antd";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { TimingTrigger } from "@type/flow";
+import styles from "./index.module.scss";
 
 interface FrequencyProps {
-  value?: TimingTrigger['frequency'];
-  onChange?(value?: this['value']): void;
+  value?: TimingTrigger["frequency"];
+  onChange?(value?: this["value"]): void;
 }
 
 function Frequency(props: FrequencyProps) {

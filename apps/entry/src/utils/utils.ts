@@ -34,21 +34,20 @@ export const findItem = (id: string, menus: Menu[]): Menu => {
 };
 
 export const filterItem = (id: string | number, key: string, menus: Menu[]) => {
-
-  var filterMenu = menus.filter(item => item[key as keyof Menu] !== id);
-  filterMenu.forEach((item) => { 
+  const filterMenu = menus.filter((item) => item[key as keyof Menu] !== id);
+  filterMenu.forEach((item) => {
     const recurse = (id: string | number, key: string, item: Menu) => {
-         var index = item.children.findIndex(child => child[key as keyof Menu] === id);
-         if(index >= 0) {
-           item.children.splice(index, 1).forEach((child) => recurse(id, key, child)); 
-         } else {
-           item.children.forEach((child) => recurse(id, key, child));
-         }
+      const index = item.children.findIndex((child) => child[key as keyof Menu] === id);
+      if (index >= 0) {
+        item.children.splice(index, 1).forEach((child) => recurse(id, key, child));
+      } else {
+        item.children.forEach((child) => recurse(id, key, child));
+      }
     };
     recurse(id, key, item);
   });
   return filterMenu;
-}
+};
 
 export const keyPath = (id: string, menus: Menu[]) => {
   let currentId = id;
@@ -188,3 +187,9 @@ export const filterAssetConfig = (menuList: any[]) => {
   }
   return menu;
 };
+
+export function getSceneImageUrl(type: any) {
+  // const publicPath = process.env.PUBLIC_URL;
+
+  return `.png`;
+}

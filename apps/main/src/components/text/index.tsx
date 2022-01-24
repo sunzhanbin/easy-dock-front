@@ -1,7 +1,7 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Tooltip } from 'antd';
-import classnames from 'classnames';
-import styles from './index.module.scss';
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Tooltip } from "antd";
+import classnames from "classnames";
+import styles from "./index.module.scss";
 
 interface TextProps {
   text: string;

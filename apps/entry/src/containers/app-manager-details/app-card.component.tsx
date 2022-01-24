@@ -1,20 +1,20 @@
-import React, { memo, FC, ReactNode, useMemo, useRef, useState } from 'react';
-import classNames from 'classnames';
-import { message } from 'antd';
-import { SubAppInfo } from '@/consts';
-import { Icon, Text, PopoverConfirm } from '@common/components';
-import { JumpLinkToUrl } from '@utils/utils';
-import useMemoCallback from '@common/hooks/use-memo-callback';
+import React, { memo, FC, ReactNode, useMemo, useRef, useState } from "react";
+import classNames from "classnames";
+import { message } from "antd";
+import { SubAppInfo } from "@/consts";
+import { Icon, Text, PopoverConfirm } from "@common/components";
+import { JumpLinkToUrl } from "@utils/utils";
+import useMemoCallback from "@common/hooks/use-memo-callback";
 import {
   useModifySubAppNameMutation,
   useModifySubAppStatusMutation,
   useDeleteSupAppMutation,
   useGetHoloSceneIdMutation,
   useGetCanvasIdMutation,
-} from '@/http/app-manager.hooks';
-import { ImageMap, NameMap } from '@utils/const';
-import AppModal from './app-modal.component';
-import './app-card.style.scss';
+} from "@/http/app-manager.hooks";
+import { ImageMap, NameMap } from "@utils/const";
+import AppModal from "./app-modal.component";
+import "./app-card.style.scss";
 
 interface AppCardProps {
   subApp: SubAppInfo;
@@ -31,21 +31,21 @@ const AppCard: FC<AppCardProps> = ({ subApp, className }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [position, setPosition] = useState<'left' | 'right'>('left');
+  const [position, setPosition] = useState<"left" | "right">("left");
   const statusInfo = useMemo<{ text: string; className: string }>(() => {
     // 未发布(没有版本信息)的子应用为编排中状态
     if (!version || !version.version) {
-      return { text: '编排中', className: 'editing' };
+      return { text: "编排中", className: "editing" };
     }
     if (status === 1) {
-      return { text: '已启用', className: 'enable' };
+      return { text: "已启用", className: "enable" };
     }
-    return { text: '已停用', className: 'disabled' };
+    return { text: "已停用", className: "disabled" };
   }, [status, version]);
 
   const statusNode = useMemo<ReactNode>(() => {
     const { text, className } = statusInfo;
-    return <div className={classNames('status', className)}>{text}</div>;
+    return <div className={classNames("status", className)}>{text}</div>;
   }, [statusInfo]);
 
   const getPopupContainer = useMemoCallback(() => {
@@ -61,7 +61,7 @@ const AppCard: FC<AppCardProps> = ({ subApp, className }) => {
     modifySubAppStatus({ id, status: 1 })
       .unwrap()
       .then(() => {
-        handleSuccessTip('启用成功!');
+        handleSuccessTip("启用成功!");
       })
       .finally(() => {
         handleClosePopup();
@@ -71,7 +71,7 @@ const AppCard: FC<AppCardProps> = ({ subApp, className }) => {
     modifySubAppStatus({ id, status: -1 })
       .unwrap()
       .then(() => {
-        handleSuccessTip('停用成功!');
+        handleSuccessTip("停用成功!");
       })
       .finally(() => {
         handleClosePopup();
@@ -81,7 +81,7 @@ const AppCard: FC<AppCardProps> = ({ subApp, className }) => {
     e.stopPropagation();
     const { x = 0 } = cardRef.current?.getBoundingClientRect() as DOMRect;
     if (document.body.clientWidth - x < 470) {
-      setPosition('right');
+      setPosition("right");
     }
     setShowPopup(false);
     setShowModal(true);
@@ -90,7 +90,7 @@ const AppCard: FC<AppCardProps> = ({ subApp, className }) => {
     deleteSubApp(id)
       .unwrap()
       .then(() => {
-        handleSuccessTip('删除成功!');
+        handleSuccessTip("删除成功!");
       })
       .finally(() => {
         handleClosePopup();
@@ -100,7 +100,7 @@ const AppCard: FC<AppCardProps> = ({ subApp, className }) => {
     modifySubAppName({ id, name })
       .unwrap()
       .then(() => {
-        handleSuccessTip('修改成功!');
+        handleSuccessTip("修改成功!");
       })
       .finally(() => {
         handleClosePopup();
@@ -109,7 +109,7 @@ const AppCard: FC<AppCardProps> = ({ subApp, className }) => {
   const content = useMemo<ReactNode>(() => {
     return (
       <div className="operation">
-        {statusInfo.text === '已停用' && (
+        {statusInfo.text === "已停用" && (
           <PopoverConfirm
             title="提示"
             placement="bottom"
@@ -123,7 +123,7 @@ const AppCard: FC<AppCardProps> = ({ subApp, className }) => {
             </div>
           </PopoverConfirm>
         )}
-        {statusInfo.text === '已启用' && (
+        {statusInfo.text === "已启用" && (
           <PopoverConfirm
             title="提示"
             placement="bottom"
@@ -141,7 +141,7 @@ const AppCard: FC<AppCardProps> = ({ subApp, className }) => {
           <Icon type="bianji" />
           <div>编辑</div>
         </div>
-        {statusInfo.text === '已停用' && (
+        {statusInfo.text === "已停用" && (
           <PopoverConfirm
             title="提示"
             placement="bottom"
@@ -170,7 +170,7 @@ const AppCard: FC<AppCardProps> = ({ subApp, className }) => {
   return (
     <div
       ref={cardRef}
-      className={classNames('app-card-container', className && className)}
+      className={classNames("app-card-container", className && className)}
       onMouseLeave={() => setShowPopup(false)}
       onClick={handleJumpTo}
     >

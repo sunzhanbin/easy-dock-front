@@ -1,5 +1,5 @@
-import { fieldRule as FieldRule, FieldType } from './index';
-import { DataConfig } from '@type/api';
+import { fieldRule as FieldRule, FieldType } from "./index";
+import { DataConfig } from "@type/api";
 
 export enum NodeType {
   // 开始节点
@@ -77,9 +77,9 @@ export interface FieldAuth {
 }
 
 export enum TimeUnit {
-  Day = 'day',
-  Hour = 'hour',
-  Minute = 'minute',
+  Day = "day",
+  Hour = "hour",
+  Minute = "minute",
 }
 
 export interface IDueConfig {
@@ -100,7 +100,7 @@ export interface IDueConfig {
     other: boolean;
     users?: number[];
   };
-  action?: 'submit' | 'back' | null;
+  action?: "submit" | "back" | null;
 }
 
 export interface AuditNode extends UserNode {

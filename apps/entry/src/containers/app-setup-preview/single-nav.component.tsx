@@ -1,20 +1,20 @@
-import { Menu } from 'antd';
-import classNames from 'classnames';
-import { findFirstChild, keyPath } from '@utils/utils';
-import { Menu as IMenu, MenuComponentProps } from '@utils/types';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import { Icon, Text } from '@common/components';
-import UserComponent from '@components//header/user';
-import { useAppDispatch } from '@/store';
-import { setCurrentMenu } from '@/views/app-setup/menu-setup.slice';
-import '@containers/app-setup-preview/single-nav.style';
+import { Menu } from "antd";
+import classNames from "classnames";
+import { findFirstChild } from "@utils/utils";
+import { Menu as IMenu, MenuComponentProps } from "@utils/types";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { Icon, Text } from "@common/components";
+import UserComponent from "@components//header/user";
+import { useAppDispatch } from "@/store";
+import { setCurrentMenu } from "@/views/app-setup/menu-setup.slice";
+import "@containers/app-setup-preview/single-nav.style";
 
 const { SubMenu } = Menu;
 
 const SingleNavComponent = ({ children, extra, dataSource, selectedKey, theme }: MenuComponentProps) => {
   const dispatch = useAppDispatch();
   const renderIcon = useMemoCallback((icon) => {
-    if (!icon || icon === 'wukongjian') {
+    if (!icon || icon === "wukongjian") {
       return null;
     }
     return <Icon type={icon} />;
@@ -42,7 +42,7 @@ const SingleNavComponent = ({ children, extra, dataSource, selectedKey, theme }:
   });
 
   return (
-    <div className={classNames('single-nav-component', theme)}>
+    <div className={classNames("single-nav-component", theme)}>
       <div className="left">
         <div className="extra">{extra}</div>
         <div className="menu">
