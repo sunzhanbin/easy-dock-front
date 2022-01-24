@@ -34,7 +34,7 @@ const initialShowModal: ShowModalMap = {
   [SubAppType.SPACE]: false,
 };
 
-const AppEmpty: FC = () => {
+const AppEmpty: FC<{ empty?: boolean }> = ({ empty = false }) => {
   const { workspaceId } = useParams();
   const [createSubApp] = useCreateSupAppMutation();
   const [showModal, setShowModal] = useState<ShowModalMap>(initialShowModal);
@@ -83,6 +83,10 @@ const AppEmpty: FC = () => {
     ];
   }, [showModal]);
   const handleShowModal = useMemoCallback((type: SubAppType) => {
+    if (empty) {
+      message.warn("请先创建工作区!");
+      return;
+    }
     const showModal: ShowModalMap = { ...initialShowModal, [type]: true };
     setShowModal(showModal);
   });

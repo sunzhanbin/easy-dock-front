@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState, useRef, useEffect } from "react";
+import { FC, useCallback, useMemo, useState, useRef, useEffect } from "react";
 import { Tabs, Input, Button, Switch, message } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -21,7 +21,7 @@ import "@containers/app-manager-details/sub-list.style";
 
 const { TabPane } = Tabs;
 
-const SubListComponent: React.FC = () => {
+const SubListComponent: FC<{ empty?: boolean }> = ({ empty = false }) => {
   const { workspaceId } = useParams();
   const { data: workspace } = useWorkspaceDetailQuery(Number(workspaceId), {
     skip: !workspaceId || workspaceId === "undefined",
@@ -142,6 +142,10 @@ const SubListComponent: React.FC = () => {
       setKeyword("");
     })();
   }, [extension]);
+
+  if (empty) {
+    return <AppEmpty empty={true} />;
+  }
 
   return (
     <div className="sub-list-component-container" ref={containerRef}>
