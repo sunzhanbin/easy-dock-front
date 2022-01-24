@@ -32,7 +32,11 @@ function RuntimeRoot() {
   });
 
   return (
-    <div ref={containerRef} id="easydock-apps-container" className={classnames("container", "easy-dock-content")}>
+    <div
+      ref={containerRef}
+      id="easydock-apps-container"
+      className={classnames("runtime-container", "easy-dock-content")}
+    >
       {isLoading && <Loading />}
       <div className="welcome">
         {<div className="title">{`Hi ${userInfo?.username}`}</div>}
