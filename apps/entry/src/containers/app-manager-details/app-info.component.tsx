@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { FC, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "antd";
 import { useWorkspaceDetailQuery, useFetchSubAppListQuery } from "@http/app-manager.hooks";
@@ -6,7 +6,7 @@ import { Icon } from "@common/components";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import "@containers/app-manager-details/app-info.style";
 
-const AppInfoComponent: React.FC = () => {
+const AppInfoComponent: FC<{ empty?: boolean }> = ({ empty = false }) => {
   const navigate = useNavigate();
   const { workspaceId } = useParams();
   const { data: workspace } = useWorkspaceDetailQuery(Number(workspaceId), {
@@ -22,6 +22,17 @@ const AppInfoComponent: React.FC = () => {
     navigate(`./setup`);
   });
 
+  if (empty) {
+    return (
+      <div className="app-info-component">
+        <div className="header">
+          <div className="base-info">
+            <span className="name">请先创建工作区</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="app-info-component">
       <div className="header">
