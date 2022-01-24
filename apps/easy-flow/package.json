@@ -69,10 +69,7 @@
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "react-app",
-    "rules": {
-      "@typescript-eslint/consistent-type-assertions": "off"
-    }
+    "extends": "react-app"
   },
   "browserslist": {
     "production": [
