@@ -10,7 +10,7 @@ import { RoleEnum } from "@utils/types";
 import { useDispatch } from "react-redux";
 
 type HeaderUserProps = {
-  showProject?: boolean;
+  showProject?: boolean; // 首页不展示用户头像
 };
 
 function HeaderUser({ showProject }: HeaderUserProps) {
