@@ -11,7 +11,7 @@
     "build:entry": "lerna bootstrap && lerna run build --scope=easy-entry-front",
     "build:dev": "lerna bootstrap && lerna run build:dev",
     "precommit": "lint-staged",
-    "bootstrap": "yarn add husky --dev -W && husky install && lerna bootstrap",
+    "bootstrap": "yarn add husky --dev -W && husky install && yarn --ignore-engines --production, --frozen-lockfile",
     "bootstrap-dev": "yarn add husky --dev -W && husky install && lerna bootstrap -- --dev",
     "publish": "lerna publish",
     "clean": "lerna clean",
