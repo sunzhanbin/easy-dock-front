@@ -16,6 +16,7 @@ import { imgIdToUrl } from "@/utils/utils";
 import AppModal from "./app-modal.component";
 import AppCard from "./app-card.component";
 import AppEmpty from "./app-empty.component";
+import AuthModal from "@containers/app-manager-details/auth-modal.component";
 import lightDefaultLogo from "@assets/images/light-default-logo.png";
 import "@containers/app-manager-details/sub-list.style";
 
@@ -23,6 +24,7 @@ const { TabPane } = Tabs;
 
 const SubListComponent: FC<{ empty?: boolean }> = ({ empty = false }) => {
   const { workspaceId } = useParams();
+  const navigate = useNavigate();
   const { data: workspace } = useWorkspaceDetailQuery(Number(workspaceId), {
     skip: !workspaceId || workspaceId === "undefined",
   });
@@ -31,12 +33,12 @@ const SubListComponent: FC<{ empty?: boolean }> = ({ empty = false }) => {
   });
   const [createSubApp] = useCreateSupAppMutation();
   const [modifyAppStatus] = useModifyAppStatusMutation();
-  const navigate = useNavigate();
   const extension = useMemo(() => workspace?.extension, [workspace]);
   const subAppCount = useMemo(() => subAppList?.length || 0, [subAppList]);
   const theme = useMemo(() => extension?.theme || "light", [extension]);
   const [showAppModal, setShowAppModal] = useState<boolean>(false);
   const [logoUrl, setLogoUrl] = useState<string>("");
+  const [showAuthModal, setShowAuthModal] = useState<boolean>(false);
   const [initialSubAppList, setInitialSubAppList] = useState<SubAppInfo[]>([]);
   const [activeKey, setActiveKey] = useState<string>("all");
   const [keyword, setKeyword] = useState<string>("");
@@ -79,6 +81,10 @@ const SubListComponent: FC<{ empty?: boolean }> = ({ empty = false }) => {
 
   const handleEdit = useMemoCallback(() => {
     navigate(`./setup`);
+  });
+
+  const handleShowAuthModal = useMemoCallback(() => {
+    setShowAuthModal(true);
   });
 
   const handleJumpToClient = useMemoCallback(() => {
@@ -168,6 +174,10 @@ const SubListComponent: FC<{ empty?: boolean }> = ({ empty = false }) => {
                 <div className="edit" onClick={handleEdit}>
                   <Icon type="bianji" className="icon" />
                   <div className="text">编辑</div>
+                </div>
+                <div className="edit" onClick={handleShowAuthModal}>
+                  <Icon type="quanxianshezhi" className="icon" />
+                  <div className="text">访问权限</div>
                 </div>
                 <div className="edit" onClick={handleJumpToClient}>
                   <Icon type="yingyonduandinglan" className="icon" />
@@ -353,6 +363,17 @@ const SubListComponent: FC<{ empty?: boolean }> = ({ empty = false }) => {
         <AppEmpty />
       )}
       <AppPreviewModal visible={showModal} theme={theme} onClose={handleModalClose} />
+      {showAuthModal && (
+        <AuthModal
+          appInfo={workspace}
+          onClose={() => {
+            setShowAuthModal(false);
+          }}
+          onOk={() => {
+            setShowAuthModal(false);
+          }}
+        />
+      )}
     </div>
   );
 };

@@ -16,7 +16,7 @@
     "bootstrap": {
       "npmClient": "yarn",
       "useWorkspaces": true,
-      "npmClientArgs": ["--production", "--frozen-lockfile"]
+      "npmClientArgs": ["--production", "--frozen-lockfile", "--ignore-engines"]
     }
   }
 }

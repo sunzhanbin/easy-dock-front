@@ -1,8 +1,11 @@
-import createAxios from '../../utils/axios';
-import { TreeData, Key, Role } from './type';
+import createAxios from "../../utils/axios";
+import { TreeData, Key, Role } from "./type";
+
+const EASY_DOCK_BASE_SERVICE_ENDPOINT =
+  window.EASY_DOCK_BASE_SERVICE_ENDPOINT || process.env.REACT_APP_EASY_DOCK_BASE_SERVICE_ENDPOINT;
 
 export const axios = createAxios({
-  baseURL: `${window.EASY_DOCK_BASE_SERVICE_ENDPOINT}/enc-oss-easydock/api/runtime/v1`,
+  baseURL: `${EASY_DOCK_BASE_SERVICE_ENDPOINT}/enc-oss-easydock/api/runtime/v1`,
 });
 
 type DeptsResponse = {
@@ -46,8 +49,8 @@ export function treeDataMap(data: TreeData, map: { [key: string]: TreeData[numbe
 }
 
 export function excludeTreeChildren(tree: TreeData, checkeds: Key[]): Key[] {
-  let value: Key[] = [];
-  let keyMap = checkeds.reduce((curr, next) => {
+  const value: Key[] = [];
+  const keyMap = checkeds.reduce((curr, next) => {
     curr = {
       ...curr,
       [next]: true,

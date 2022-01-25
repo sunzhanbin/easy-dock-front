@@ -43,7 +43,6 @@ export async function mount(props?: AppProps) {
   if (appId) {
     appConfig.appId = appId;
   }
-
   if (extra) {
     appConfig.extra = extra;
   }
