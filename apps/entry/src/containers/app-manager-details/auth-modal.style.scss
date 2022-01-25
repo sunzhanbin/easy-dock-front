@@ -1,0 +1,164 @@
+@import '@common/styles/var.scss';
+
+.auth-modal {
+  height: 600px;
+
+  .close {
+    font-size: 20px;
+
+    &:hover {
+      color: #4c5cdb;
+    }
+  }
+
+  .content {
+    .member-list {
+      margin-top: 0;
+    }
+
+    .tip {
+      width: 600px;
+      height: 36px;
+
+      display: flex;
+      align-items: center;
+      background: rgba(24, 39, 67, 0.04);
+
+      .icon {
+        width: 16px;
+        height: 16px;
+        line-height: 14px;
+        text-align: center;
+        border-radius: 8px;
+        margin-left: 33px;
+        margin-right: 8px;
+        background-color: #4c5cdb;
+
+        & > svg {
+          font-size: 10px;
+          color: #fff;
+        }
+      }
+
+      .text {
+        font-size: 14px;
+        font-weight: 400;
+        color: rgba(24, 31, 67, 0.75);
+      }
+    }
+
+    .auth-list {
+      padding-left: 32px;
+      overflow-y: auto;
+
+      .flow-auth,
+      .page-auth {
+        display: flex;
+        flex-direction: column;
+        padding-top: 16px;
+
+        .title {
+          height: 24px;
+          line-height: 24px;
+          font-size: 16px;
+          font-weight: 600;
+          color: #181f43;
+        }
+
+        .app-list {
+          display: flex;
+          flex-direction: column;
+
+          .app {
+            padding: 16px 12px;
+            border-bottom: 1px solid rgba(24, 31, 67, 0.08);
+
+            .title {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              height: 24px;
+
+              .name {
+                font-size: 14px;
+                font-weight: 400;
+                color: #181f43;
+              }
+
+              .change {
+                display: flex;
+                align-items: center;
+
+                .all {
+                  width: 90px;
+                  height: 22px;
+                  display: flex;
+                  align-items: center;
+                  font-size: 14px;
+                  font-weight: 400;
+                  color: #181f43;
+
+                  :global {
+                    .ant-checkbox {
+                      top: 0;
+                    }
+                  }
+                }
+
+                .add {
+                  flex: 0 0 24px;
+                  height: 24px;
+                  text-align: center;
+                  border-radius: 12px;
+                  border: 1px solid rgba(24, 31, 67, 0.12);
+                  cursor: pointer;
+
+                  .icon {
+                    font-size: 12px;
+                    color: #4c5cdb;
+                  }
+
+                  &:hover {
+                    .icon {
+                      color: rgba(#4c5cdb, 0.8);
+                    }
+                  }
+                }
+              }
+            }
+
+            &:hover {
+              background: rgba(76, 92, 219, 0.06);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .ant-modal-content {
+    padding: 32px 0 0 0;
+
+    .ant-modal-header {
+      font-size: 16px;
+      font-weight: 400;
+      color: #181f43;
+      line-height: 24px;
+      padding: 0 32px;
+      border-bottom: none;
+    }
+
+    .ant-modal-body {
+      height: 451px;
+      margin-top: 12px;
+      padding: 0 32px 24px 0;
+      max-height: 451px;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    .ant-modal-footer {
+      margin: 0;
+    }
+  }
+}

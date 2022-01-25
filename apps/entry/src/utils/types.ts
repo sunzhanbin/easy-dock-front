@@ -9,6 +9,7 @@ export type User = {
   name?: string;
 };
 
+// 子应用信息
 export type AppSchema = {
   id: number;
   name: string;
@@ -18,6 +19,38 @@ export type AppSchema = {
   createTime: number;
   power: number;
 };
+
+export type AppInfo = {
+  id: number;
+  name: string;
+  project: {
+    id: number;
+    name: string;
+  };
+};
+
+export type Privilege = {
+  ownerKey: string;
+  ownerType: number;
+  power: number;
+};
+export type SubAppAuthParams = {
+  id: string;
+  openVisit?: boolean;
+  privileges: Privilege[];
+};
+
+export type AppAuthParams = {
+  id: string;
+  openVisit?: boolean;
+  dataPrivileges: Privilege[];
+  subapps: SubAppAuthParams[];
+};
+
+export enum SubAppTypeEnum {
+  SCREEN = 1, //大屏类子应用
+  FLOW = 2, //流程类子应用
+}
 
 export enum RoleEnum {
   TENEMENT = 1, //普通租户
