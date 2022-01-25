@@ -94,7 +94,7 @@ export type AssignAuthParams = {
 export type UserOwner = {
   id: number | string; //登录名
   avatar?: string; // 头像
-  username?: string; // 中文名
+  userName?: string; // 中文名
   name: string;
 };
 export type DepartOwner = {

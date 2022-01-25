@@ -57,6 +57,7 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: (value: AppAu
     return project.id || "";
   }, [project]);
   const flowSubAppList = useMemo(() => {
+    console.log(subAppList, "subAppList");
     return subAppList.filter((subApp) => subApp.type === SubAppTypeEnum.FLOW) || [];
   }, [subAppList]);
   const screenSubAppList = useMemo(() => {
@@ -129,6 +130,7 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: (value: AppAu
   const handleChangeOpenVisitor = useMemoCallback((e: CheckboxChangeEvent, id: string) => {
     const { checked } = e.target;
     setSubAppVisitorList((list) => {
+      console.log(list, "======");
       return list.map((item) => {
         if (item.id === id) {
           const { visitor } = item;
@@ -237,6 +239,7 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: (value: AppAu
         const visitor = getVisitor(powers);
         return { id: String(id), visitor, openVisit };
       });
+      console.log(subAppVisitorList, "subAppVisitorList");
       setSubAppVisitorList(subAppVisitorList);
     }
   }, [subAppList]);
