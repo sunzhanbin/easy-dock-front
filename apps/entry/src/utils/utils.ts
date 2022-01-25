@@ -197,6 +197,5 @@ export const getVisitor = (powers: Power[]) => {
     ?.filter((power) => power.ownerType === OwnerTypeEnum.DEPARTMENT)
     .map((power) => power.owner);
   const roles = powerList?.filter((power) => power.ownerType === OwnerTypeEnum.ROLE).map((power) => power.owner);
-  console.log(members, "rrr");
   return { members, departs, roles };
 };

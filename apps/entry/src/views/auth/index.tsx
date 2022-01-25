@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import { memo } from "react";
 import { NavLink, useMatch } from "react-router-dom";
 import { Icon } from "@common/components";
 import classNames from "classnames";

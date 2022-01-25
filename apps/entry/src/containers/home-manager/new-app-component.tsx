@@ -44,12 +44,12 @@ const HomeNewAPP = () => {
   };
   return (
     <div className="top_sider">
-      <a className="new_app_wrapper" onClick={toApp}>
+      <span className="new_app_wrapper" onClick={toApp}>
         <span className="icon-new-app">
           <Icon type="xinzeng" className="icon-new" />
         </span>
         <span className="text_new_app">创建应用</span>
-      </a>
+      </span>
       {showModal && (
         <NewSubAppModal modalInfo={APP_INFO} visible={showModal} onOk={handleConfirm} onCancel={handleCancel} />
       )}

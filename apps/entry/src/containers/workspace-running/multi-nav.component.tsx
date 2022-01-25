@@ -109,12 +109,10 @@ const MultiNavComponent = ({ extra, dataSource, theme, selectedKey }: WorkspaceB
     } else {
       dispatch(setCurrentId(key));
     }
-    console.log(22222233111);
   });
 
   const handleTitleClick = useMemoCallback(({ key }) => {
     const menu = findItem(key, dataSource);
-    console.log(2222);
     navigateFn(menu);
     if (menu && menu.form?.mode === "current") {
       dispatch(setCurrentId(key));
@@ -122,7 +120,6 @@ const MultiNavComponent = ({ extra, dataSource, theme, selectedKey }: WorkspaceB
   });
   const handleSubMenuClick = useMemoCallback(({ key }) => {
     const menu = findItem(key, dataSource);
-    console.log(selectedKey, key);
     if (selectedKey !== key) {
       navigateFn(menu);
     }

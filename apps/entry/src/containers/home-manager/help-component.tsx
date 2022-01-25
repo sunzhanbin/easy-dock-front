@@ -25,7 +25,7 @@ const HeaderHelp = () => {
         renderItem={(item, index) => (
           <List.Item key={index}>
             <List.Item.Meta
-              title={<a className="name">{item.name}</a>}
+              title={<span className="name">{item.name}</span>}
               description={
                 <Tooltip title={item.desc} className="desc">
                   {item.desc}

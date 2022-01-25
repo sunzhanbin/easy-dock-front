@@ -86,9 +86,9 @@ const NewSubAppPopoverComponent = () => {
       trigger="hover"
       getPopupContainer={getPopupContainer}
     >
-      <a className="add-icon">
+      <span className="add-icon">
         <Icon className="icon" type="xinzeng" />
-      </a>
+      </span>
       {showModal && (
         <NewSubAppModal modalInfo={modalInfo} visible={showModal} onOk={handleConfirm} onCancel={handleCancel} />
       )}
