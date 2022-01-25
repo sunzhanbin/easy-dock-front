@@ -17,8 +17,19 @@
   --custom-primary-color-active: unset;
   --custom-primary-color-outline: unset;
 
+  /* 文字颜色 */
+  --custom-title-text-color: #FFFFFFFF;
+  --custom-body-text-color: #FFFFFFCC;
+  --custom-caption-text-color: #FFFFFF8C;
+  --custom-hint-text-color: #FFFFFF59;
+
+  /* 边框颜色 */
+  --custom-border-normal-color: #FFFFFF2B;
+  --custom-border-hover-color: #FFFFFF1F;
+  --custom-border-primary-color: #5D6CDE;
+
   /* 大背景 */
-  --custom-body-background: #202023;
+  --custom-body-background: #202023FF;
   --custom-body-shadow: unset;
 
   /* 组件背景 */

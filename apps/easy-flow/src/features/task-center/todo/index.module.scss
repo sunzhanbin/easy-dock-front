@@ -131,7 +131,7 @@
         color: $menu-title-text-color;
       }
       .ant-picker-year-btn, .ant-picker-month-btn, .ant-picker-header-view {
-        color: rgba($dark-text-color, 0.8) !important;
+        color: $body-text-color !important;
       }
       .ant-picker-cell-today .ant-picker-cell-inner {
         color: $primary-color !important;
@@ -187,21 +187,11 @@
         }
         .ant-picker-cell-inner {
           cursor: not-allowed;
-          color: rgba($dark-text-color, 0.35) !important;
+          color: $hint-text-color !important;
         }
       }
-    //
-    //  .ant-picker-decade-panel .ant-picker-cell-disabled .ant-picker-cell-inner, .ant-picker-year-panel .ant-picker-cell-disabled .ant-picker-cell-inner, .ant-picker-quarter-panel .ant-picker-cell-disabled .ant-picker-cell-inner, .ant-picker-month-panel .ant-picker-cell-disabled .ant-picker-cell-inner {
-    //    background: transparent;
-    //    cursor: not-allowed;
-    //    color: rgba($dark-text-color, 0.35) !important;
-    //  }
-    //  .ant-picker-prev-icon::before, .ant-picker-next-icon::before, .ant-picker-super-prev-icon::before, .ant-picker-super-next-icon::before {
-    //    border: rgba($dark-text-color, 0.65) !important;
-    //  }
     }
   }
-  &.dark {
     :global {
       .ant-select-item-option,
       .ant-select-selection-item,
@@ -214,15 +204,15 @@
         :global {
           #todo_form {
             .ant-form-item-label > label {
-              color: rgba($dark-text-color, 0.8);
+              color: $body-text-color;
             }
             .ant-input,
             .ant-picker,
             .ant-select.ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
-              background-color: rgba($dark-text-color, 0.04);
+              background-color: $normal-select-background-color;
             }
             .ant-picker-separator {
-              color: rgba($dark-text-color, 0.8);
+              color: $body-text-color;
             }
           }
         }
@@ -230,10 +220,10 @@
       .operationContainer {
         .operation {
           .reset {
-            border-color: rgba($dark-text-color, 0.12);
-            color: rgba($dark-text-color, 0.8);
+            border-color: $normal-border-color;
+            color: $body-text-color;
             &:hover {
-              border-color: rgba($dark-text-color, 0.3);
+              border-color: $hover-border-color;
             }
           }
         }
@@ -242,21 +232,21 @@
     .content {
       :global {
         .ant-table-wrapper {
-          color: rgba($dark-text-color, 0.55);
+          color: $caption-text-color;
           .ant-table-cell {
             background-color: $content-background-color;
-            color: rgba($dark-text-color, 0.55);
-            border-color: rgba($dark-text-color, 0.1);
+            color: $caption-text-color;
+            border-color: $normal-border-color;
           }
           .ant-pagination-item-link {
             border-color: transparent;
             background-color: transparent;
-            color: rgba($dark-text-color, 0.55);
+            color: $caption-text-color;
           }
           .ant-pagination-item {
             border-color: transparent;
             background-color: transparent;
-            color: rgba($dark-text-color, 0.55);
+            color: $caption-text-color;
             a {
               color: inherit;
             }
@@ -266,7 +256,7 @@
             }
           }
           .ant-pagination-options-size-changer {
-            color: rgba($dark-text-color, 0.55);
+            color: $caption-text-color;
             &.ant-select-focused {
               .ant-select-selector {
                 background-color: transparent;
@@ -287,10 +277,9 @@
             }
           }
           .ant-empty-description {
-            color: rgba($dark-text-color, 0.55);
+            color: $caption-text-color;
           }
         }
       }
     }
-  }
 }
