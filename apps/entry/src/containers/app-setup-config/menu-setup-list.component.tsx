@@ -44,7 +44,7 @@ const MenuItemComponent = ({ menu, onBeforeIdChange }: { menu: Menu; onBeforeIdC
     <div
       className={classnames({
         "menu-item": true,
-        active: currentId == menu.id,
+        active: currentId === menu.id,
       })}
       style={style}
     >

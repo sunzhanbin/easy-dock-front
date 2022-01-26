@@ -38,13 +38,11 @@ const MenuSetupFormAssetConfigComponent = ({ form }: AssetConfigProps) => {
     },
   });
   const onSelect = (v: any) => {
-    console.log(v, "v");
     const subAppItem = subAppList.find((item: { id: number }) => item.id === v);
     const subAppType = subAppItem?.type;
     if (subAppType) {
       const { assetConfig } = form.getFieldsValue();
       const config = Object.assign({}, assetConfig, { subAppType });
-      console.log(config, "0000");
       form.setFieldsValue({ assetConfig: config });
     }
     const formValues = form.getFieldsValue();

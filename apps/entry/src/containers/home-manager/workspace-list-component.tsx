@@ -1,16 +1,22 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { List, Avatar, Tooltip } from "antd";
 import { Icon, Loading, Text } from "@common/components";
 import "@containers/home-manager/index.style.scss";
 import { useNavigate } from "react-router-dom";
 import { imgIdToUrl } from "@/utils/utils";
-import { useGetCanvasIdMutation, useGetHoloSceneIdMutation, useGetRecentListMutation } from "@/http";
+import {
+  useFetchWorkspaceListQuery,
+  useGetCanvasIdMutation,
+  useGetHoloSceneIdMutation,
+  useGetRecentListMutation,
+} from "@/http";
 import { useAppSelector } from "@/store";
 import { selectProjectId } from "@views/home/index.slice";
 import { ResponseType } from "@/consts";
 import { ImageMap, NameMap } from "@utils/const";
 import { JumpLinkToUrl } from "@utils/utils";
 import NoImage from "@assets/images/home/no-app.png";
+import useMemoCallback from "@common/hooks/use-memo-callback";
 
 type ListItemType = {
   id: number;
@@ -24,13 +30,21 @@ type ListItemType = {
 const HomeWorkspaceList = () => {
   const navigate = useNavigate();
   const projectId = useAppSelector(selectProjectId);
+  const { workspaceId } = useFetchWorkspaceListQuery(projectId, {
+    selectFromResult: (data) => {
+      return {
+        workspaceId: data?.data?.[0]?.id,
+      };
+    },
+    skip: !projectId,
+  });
   const [getRecentList] = useGetRecentListMutation();
   const [getHoloSceneId] = useGetHoloSceneIdMutation();
   const [getCanvasId] = useGetCanvasIdMutation();
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<any>([]);
 
-  const loadMoreData = useCallback(() => {
+  const loadMoreData = useMemoCallback(() => {
     if (loading || !projectId) return;
     setLoading(true);
     (async () => {
@@ -51,22 +65,17 @@ const HomeWorkspaceList = () => {
         console.log(e);
       }
     })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, projectId]);
-  const toAppManage = useCallback(() => {
-    navigate("/app-manager");
-  }, [navigate]);
-  const handleLinkTo = useCallback(
-    async (item: ListItemType) => {
-      const { isApp, type, id } = item;
-      await JumpLinkToUrl(type, id, getCanvasId, getHoloSceneId);
-      if (isApp) {
-        navigate(`/app-manager/${id}`);
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [navigate],
-  );
+  });
+  const toAppManage = useMemoCallback(() => {
+    navigate(`/app-manager/project/${projectId}/workspace/${workspaceId}`);
+  });
+  const handleLinkTo = useMemoCallback(async (item: ListItemType) => {
+    const { isApp, type, id } = item;
+    await JumpLinkToUrl(type, id, getCanvasId, getHoloSceneId);
+    if (isApp) {
+      navigate(`/app-manager/project/${projectId}/workspace/${id}`);
+    }
+  });
   const renderIcon = (item: ListItemType): string => {
     if (item.isApp) {
       return item.icon ? item.icon : NoImage;

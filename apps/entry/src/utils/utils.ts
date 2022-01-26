@@ -192,7 +192,7 @@ export const getVisitor = (powers: Power[]) => {
   const powerList: Power[] = JSON.parse(JSON.stringify(powers));
   const members = powerList
     ?.filter((power) => power.ownerType === OwnerTypeEnum.USER)
-    ?.map((power) => Object.assign(power.owner, { name: (power.owner as UserOwner).username }));
+    ?.map((power) => Object.assign(power.owner, { name: (power.owner as UserOwner).userName }));
   const departs = powerList
     ?.filter((power) => power.ownerType === OwnerTypeEnum.DEPARTMENT)
     .map((power) => power.owner);

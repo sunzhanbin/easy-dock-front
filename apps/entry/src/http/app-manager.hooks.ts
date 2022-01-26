@@ -1,6 +1,5 @@
 import { SubAppType, TWorkspaceItem } from "@/consts";
 import baseFetch, { runTime } from "@utils/fetch";
-import { AppAuthParams } from "@utils/types";
 
 export const appManagerBuilder = baseFetch.injectEndpoints({
   endpoints: (build) => ({
@@ -185,10 +184,8 @@ export const appManagerRunTime = runTime.injectEndpoints({
     }),
     // 查询有工作区访问权限的用户
     fetchSubAppPowers: build.query({
-      query: (id: number) => ({
-        url: `/app/${id}/list/all/powers`,
-        method: "get",
-      }),
+      query: (id: number) => `/app/${id}/list/all/powers`,
+      providesTags: [{ type: "SubApps", id: "AUTH" }],
     }),
     // 分配应用资源权限
     assignAppAuth: build.mutation({
@@ -197,6 +194,7 @@ export const appManagerRunTime = runTime.injectEndpoints({
         method: "post",
         body: params,
       }),
+      invalidatesTags: [{ type: "SubApps", id: "AUTH" }],
     }),
   }),
 });

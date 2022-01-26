@@ -1,5 +1,13 @@
-import React from "react";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-const NoMatch = () => <React.Fragment>这里是没有匹配到任何东西</React.Fragment>;
+const NoMatch = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    // 没有权限/匹配不到统一定位到首页v1.2.0
+    navigate("/home");
+  }, [navigate]);
+  return null;
+};
 
 export default NoMatch;
