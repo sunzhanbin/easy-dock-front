@@ -28,6 +28,36 @@
   --custom-border-hover-color: #181F434D;
   --custom-border-primary-color: #4c5cdb;
 
+  /* input */
+  --custom-input-background-normal-color: #1827430A;
+  --custom-input-background-hover-color: #FFFFFFFF;
+  --custom-input-text-placeholder-color: #181F434D;
+  --custom-input-text-active-color: #181F43FF;
+  --custom-input-border-hover-color: #4C5CDBCC;
+  --custom-input-shadow-color: #4C5CDB1F;
+
+  /* select */
+  --custom-select-background-normal-color: #1827430A;
+  --custom-select-background-hover-color: #FFFFFFFF;
+  --custom-select-text-placeholder-color: #181F434D;
+  --custom-select-text-active-color: #181F43FF;
+  --custom-select-border-hover-color: #4C5CDBCC;
+  --custom-select-shadow-color: #4C5CDB1F;
+  /* select-dropdown */
+  --custom-select-dropdown-body-background-color: #FFFFFFFF;
+  --custom-select-dropdown-option-hover-color: #1827430A;
+  --custom-select-dropdown-option-active-color: #4C5CDB14;
+  --custom-select-dropdown-text-normal-color: #181F43FF;
+  --custom-select-dropdown-text-hover-color: #4C5CDBFF;
+
+  /* datepicker */
+  --custom-datepicker-background-normal-color: #1827430A;
+  --custom-datepicker-background-hover-color: #FFFFFFFF;
+  --custom-datepicker-text-placeholder-color: #181F434D;
+  --custom-datepicker-text-active-color: #181F43FF;
+  --custom-datepicker-border-hover-color: #4C5CDBCC;
+  --custom-datepicker-shadow-color: #4C5CDB1F;
+
   /* 大背景 */
   --custom-body-background: #FFFFFFFF;
   --custom-body-shadow: unset;

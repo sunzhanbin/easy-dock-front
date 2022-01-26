@@ -1,4 +1,4 @@
-@import './var.scss';
+@import "./var.scss";
 
 .ant-btn {
   display: inline-flex;
@@ -169,21 +169,26 @@
   background-color: rgba(24, 31, 67, 0.55);
 }
 
-// 定制输入框
+/* input style begin */
 .ant-input {
   border-radius: 3px;
   border-color: transparent;
-  background-color: rgba(24, 39, 67, 0.04);
+  background-color: $input-background-normal-color;
+  color: $input-text-active-color;
 
   &:hover {
-    border-color: rgba($primary-color-custom, 0.8);
+    border-color: $input-border-hover-color;
     background-color: transparent;
   }
 
   &:focus {
-    border-color: rgba($primary-color-custom, 0.8);
-    box-shadow: 0 0 0 3px rgba($primary-color-custom, 0.12);
+    border-color: $input-border-hover-color;
+    box-shadow: 0 0 0 3px $input-shadow-color;
     background-color: transparent;
+  }
+
+  &::-webkit-input-placeholder {
+    color: $input-text-placeholder-color;
   }
 
   &.ant-input-lg {
@@ -195,17 +200,17 @@
     color: inherit;
     background: linear-gradient(
       -45deg,
-      rgba(24, 39, 67, 0.04) 0,
-      rgba(24, 39, 67, 0.04) 5%,
+      $input-background-normal-color 0,
+      $input-background-normal-color 5%,
       transparent 5%,
       transparent 50%,
-      rgba(24, 39, 67, 0.04) 50%,
-      rgba(24, 39, 67, 0.04) 55%,
+      $input-background-normal-color 50%,
+      $input-background-normal-color 55%,
       transparent 55%,
       transparent
     );
     background-size: 10px 10px;
-    background-color: rgba(24, 39, 67, 0.04);
+    background-color: $input-background-normal-color;
     border-color: transparent;
     &:hover {
       border-color: transparent;
@@ -216,10 +221,10 @@
 .ant-input-affix-wrapper {
   border-radius: 3px;
   border-color: transparent;
-  background-color: rgba(24, 31, 67, 0.04);
+  background-color: $input-background-normal-color;
 
   &:not(&-disabled):hover {
-    border-color: rgba($primary-color-custom, 0.85);
+    border-color: $input-border-hover-color;
     background-color: transparent;
   }
 
@@ -229,8 +234,8 @@
 }
 
 .ant-input-affix-wrapper-focused {
-  border-color: rgba($primary-color-custom, 0.85);
-  box-shadow: 0 0 0 3px rgba($primary-color-custom, 0.12);
+  border-color: $input-border-hover-color;
+  box-shadow: 0 0 0 3px $input-shadow-color;
 }
 
 .ant-form-item-has-error {
@@ -287,6 +292,7 @@
     }
   }
 }
+/* input style end */
 
 .ant-checkbox {
   &.ant-checkbox-disabled {
@@ -347,39 +353,47 @@
   font-weight: 400;
 }
 
-// 定制时间框
+/* datepicker style begin */
 .ant-picker {
   border-radius: 3px;
   border-color: transparent;
-  background-color: rgba(24, 39, 67, 0.04);
+  background-color: $datepicker-background-normal-color;
   &:hover {
-    border-color: rgba($primary-color-custom, 0.85);
-    background-color: transparent;
+    border-color: $datepicker-border-hover-color;
+    background-color: $datepicker-background-hover-color;
   }
 
   &:focus {
-    border-color: rgba($primary-color-custom, 0.85);
-    box-shadow: 0 0 0 3px rgba($primary-color-custom, 0.12);
-    background-color: transparent;
+    border-color: $datepicker-border-hover-color;
+    box-shadow: 0 0 0 3px $datepicker-shadow-color;
+    background-color: $datepicker-background-hover-color;
   }
   &.ant-picker-disabled {
     color: inherit;
     background: linear-gradient(
       -45deg,
-      rgba(24, 39, 67, 0.04) 0,
-      rgba(24, 39, 67, 0.04) 5%,
+      $datepicker-background-normal-color 0,
+      $datepicker-background-normal-color 5%,
       transparent 5%,
       transparent 50%,
-      rgba(24, 39, 67, 0.04) 50%,
-      rgba(24, 39, 67, 0.04) 55%,
+      $datepicker-background-normal-color 50%,
+      $datepicker-background-normal-color 55%,
       transparent 55%,
       transparent
     );
     background-size: 10px 10px;
-    background-color: rgba(24, 39, 67, 0.04);
+    background-color: $datepicker-background-normal-color;
     border-color: transparent;
     &:hover {
       border-color: transparent;
+    }
+  }
+  & > .ant-picker-input {
+    & > input {
+      color: $datepicker-text-active-color;
+      &::-webkit-input-placeholder {
+        color: $datepicker-text-placeholder-color;
+      }
     }
   }
 }
@@ -388,6 +402,11 @@
     color: inherit;
   }
 }
+.ant-picker-dropdown{
+  
+}
+/* datepicker style end */
+
 // 定制数字输入框
 .ant-input-number {
   border-radius: 3px;
@@ -565,18 +584,24 @@
   }
 }
 
-// 定制下拉框
+/* select style begin */
 .ant-select {
   // 单选下拉框
   &.ant-select-single {
     &:not(.ant-select-customize-input) {
       .ant-select-selector {
-        background: rgba(24, 39, 67, 0.04);
+        background: $select-background-normal-color;
         border-radius: 3px;
         border-color: transparent;
         transition: none;
         &:hover {
-          background: #fff;
+          background: $select-background-hover-color;
+        }
+        .ant-select-selection-item {
+          color: $select-text-active-color;
+        }
+        .ant-select-selection-search-input::-webkit-input-placeholder {
+          color: $select-text-placeholder-color;
         }
       }
     }
@@ -584,18 +609,18 @@
     &.ant-select-disabled {
       &:not(.ant-select-customize-input) {
         .ant-select-selector {
-          background-color: rgba(24, 39, 67, 0.04);
+          background-color: $select-background-normal-color;
           color: inherit;
         }
       }
       background: linear-gradient(
         -45deg,
-        rgba(24, 39, 67, 0.04) 0,
-        rgba(24, 39, 67, 0.04) 5%,
+        $select-background-normal-color 0,
+        $select-background-normal-color 5%,
         transparent 5%,
         transparent 50%,
-        rgba(24, 39, 67, 0.04) 50%,
-        rgba(24, 39, 67, 0.04) 55%,
+        $select-background-normal-color 50%,
+        $select-background-normal-color 55%,
         transparent 55%,
         transparent
       );
@@ -610,29 +635,29 @@
   // 复选下拉框
   &.ant-select-multiple {
     .ant-select-selector {
-      background: rgba(24, 39, 67, 0.04);
+      background: $select-background-normal-color;
       border-radius: 3px;
       border-color: transparent;
       transition: none;
       &:hover {
-        background: #fff;
+        background: $select-background-hover-color;
       }
     }
     &.ant-select-disabled {
       &:not(.ant-select-customize-input) {
         .ant-select-selector {
-          background-color: rgba(24, 39, 67, 0.04);
+          background-color: $select-background-normal-color;
           color: inherit;
         }
       }
       background: linear-gradient(
         -45deg,
-        rgba(24, 39, 67, 0.04) 0,
-        rgba(24, 39, 67, 0.04) 5%,
+        $select-background-normal-color 0,
+        $select-background-normal-color 5%,
         transparent 5%,
         transparent 50%,
-        rgba(24, 39, 67, 0.04) 50%,
-        rgba(24, 39, 67, 0.04) 55%,
+        $select-background-normal-color 50%,
+        $select-background-normal-color 55%,
         transparent 55%,
         transparent
       );
@@ -643,12 +668,23 @@
 
 .ant-select-dropdown {
   padding: 8px;
+  background-color: $select-dropdown-body-background-color;
+  .ant-select-item {
+    color: $select-dropdown-text-normal-color;
+    &.ant-select-item-option-active {
+      background-color: $select-dropdown-option-hover-color;
+    }
+    &.ant-select-item-option-selected {
+      background-color: $select-dropdown-option-active-color;
+      color: $select-dropdown-text-active-color;
+    }
+  }
 }
 
 .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector {
-  box-shadow: 0 0 0 3px rgba($primary-color-custom, 0.12);
-  border-color: rgba($primary-color-custom, 0.8);
-  background-color: #fff;
+  box-shadow: 0 0 0 3px $select-shadow-color;
+  border-color: $select-border-hover-color;
+  background-color: $select-background-hover-color;
 }
 
 .ant-select-item {
@@ -661,21 +697,22 @@
 }
 
 .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
-  background-color: rgba($primary-text-color, 0.04);
+  background-color: $select-background-normal-color;
 }
 
 .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
   color: $primary-color-custom;
-  background-color: rgba($primary-color-custom, 0.08);
+  background-color: $select-background-normal-color;
   font-weight: normal;
 }
 
 .ant-select:not(.ant-select-disabled):hover .ant-select-selector,
 .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector {
-  box-shadow: 0 0 0 3px rgba($primary-color-custom, 0.12);
-  border-color: rgba($primary-color-custom, 0.8);
-  background-color: #fff;
+  box-shadow: 0 0 0 3px $select-shadow-color;
+  border-color: $select-border-hover-color;
+  background-color: $select-background-hover-color;
 }
+/* select style end */
 
 // 定制表格
 .ant-table {

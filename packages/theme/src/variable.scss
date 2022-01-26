@@ -29,6 +29,36 @@
   --custom-border-hover-color: unset;
   --custom-border-primary-color: unset;
 
+  /* input */
+  --custom-input-background-normal-color: unset;
+  --custom-input-background-hover-color: unset;
+  --custom-input-text-placeholder-color: unset;
+  --custom-input-text-active-color: unset;
+  --custom-input-border-hover-color: unset;
+  --custom-input-shadow-color: unset;
+
+  /* select */
+  --custom-select-background-normal-color: unset;
+  --custom-select-background-hover-color: unset;
+  --custom-select-text-placeholder-color: unset;
+  --custom-select-text-active-color: unset;
+  --custom-select-border-hover-color: unset;
+  --custom-select-shadow-color: unset;
+  /* select-dropdown */
+  --custom-select-dropdown-body-background-color: unset;
+  --custom-select-dropdown-option-hover-color: unset;
+  --custom-select-dropdown-option-active-color: unset;
+  --custom-select-dropdown-text-normal-color: unset;
+  --custom-select-dropdown-text-hover-color: unset;
+
+  /* datepicker */
+  --custom-datepicker-background-normal-color: unset;
+  --custom-datepicker-background-hover-color: unset;
+  --custom-datepicker-text-placeholder-color: unset;
+  --custom-datepicker-text-active-color: unset;
+  --custom-datepicker-border-hover-color: unset;
+  --custom-datepicker-shadow-color: unset;
+
 
   /* 大背景 */
   --custom-body-background: unset;
