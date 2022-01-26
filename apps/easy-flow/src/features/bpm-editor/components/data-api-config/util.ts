@@ -1,5 +1,5 @@
-import { Api, Location } from '@type/api';
-import { axios } from '@utils';
+import { Api, Location } from "@type/api";
+import { axios } from "@utils";
 
 type ParamData = { name: string; from?: string; hasRequired?: 1 | 0; properties?: ParamData[]; paramMode?: 2 };
 export type ParamReturn = { name: string; from?: Location; required: boolean };
@@ -17,17 +17,17 @@ export function formatPrams(data: ParamData[]) {
         loop(item.properties, params, parentRequired || item.hasRequired === 1);
       } else {
         const param: ParamReturn = {
-          name: prevs.join('.'),
+          name: prevs.join("."),
           required: Boolean(item.hasRequired === 1 || parentRequired),
         };
 
-        if (item.from === 'query') {
+        if (item.from === "query") {
           param.from = Location.QUERY;
-        } else if (item.from === 'header') {
+        } else if (item.from === "header") {
           param.from = Location.HEAD;
-        } else if (param.from === 'path') {
+        } else if (param.from === "path") {
           param.from = Location.PATH;
-        } else if (param.from === 'body') {
+        } else if (param.from === "body") {
           param.from = Location.BODY;
         }
         params.push(param);
@@ -46,12 +46,12 @@ export function formatPrams(data: ParamData[]) {
 
 const useMock = false;
 
-if (useMock && process.env.NODE_ENV === 'development') {
-  require('./mock');
+if (useMock && process.env.NODE_ENV === "development") {
+  require("./mock");
 }
 
-const orchPrefix = '/api/api-orchestration-service-main/interfaceManage/v1';
-const baseURL = useMock ? '/' : window.ALGOR_ORCH_BASE_SERVICE_ENDPOINT;
+const orchPrefix = "/api/api-orchestration-service-main/interfaceManage/v1";
+const baseURL = useMock ? "/" : window.ALGOR_ORCH_BASE_SERVICE_ENDPOINT;
 
 export async function queryApiDetail(
   api: number,

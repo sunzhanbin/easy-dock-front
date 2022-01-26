@@ -1,0 +1,74 @@
+.app-empty {
+  padding: 48px 24px;
+  display: grid;
+  grid-column-gap: 24px;
+  grid-template-columns: repeat(5, 1fr);
+  border-radius: 6px;
+  &:after, &:before{
+    content: '';
+    position: absolute;
+    top: 40px;
+    width: 20px;
+    height: 35px;
+    background-color: transparent;
+  }
+  &:after {
+    box-shadow: 5px 0 5px -5px rgba(24, 31, 67, 0.08);
+    right: 0;
+  }
+
+  &:before {
+    box-shadow: -5px 0 5px -5px rgba(24, 31, 67, 0.08);
+    left: 0;
+  }
+  & > .empty-item {
+    position: relative;
+    height: 286px;
+    background: #ffffff;
+    text-align: center;
+    border-radius: 3px;
+    padding: 38px 20px;
+    border: 1px solid rgba(24, 31, 67, 0.12);
+    & > .title {
+      font-size: 20px;
+      font-weight: 500;
+      color: rgba(0, 0, 0, 0.85);
+      margin-top: 10px;
+      line-height: 32px;
+    }
+    & > .desc {
+      font-size: 14px;
+      font-weight: 400;
+      color: rgba(24, 31, 67, 0.5);
+      line-height: 20px;
+      margin-top: 4px;
+    }
+    & > .children {
+      display: flex;
+      justify-content: center;
+      margin-top: 54px;
+      & > .image {
+        width: 68px;
+      }
+    }
+    & > .button {
+      display: none;
+      width: 48px;
+      height: 48px;
+      justify-content: center;
+      margin-top: 64px;
+    }
+    &:hover {
+      border: 1px solid rgba(24, 31, 67, 0.5);
+      & > .children {
+        display: none;
+      }
+      & > .button {
+        display: inline-block;
+      }
+    }
+    & > .empty-modal {
+      top: 290px;
+    }
+  }
+}

@@ -9,6 +9,7 @@ declare type User = {
 declare const REACT_APP_SSO_LOGIN_URL: string;
 
 interface Window {
+  __MICRO_APP_BASE_ROUTE__: string;
   COMMON_LOGIN_DOMAIN: string;
   ALGOR_ORCH_BASE_SERVICE_ENDPOINT: string;
   EASY_DOCK_BASE_SERVICE_ENDPOINT: string;
@@ -29,5 +30,5 @@ interface MicroApp {
   description?: string;
 }
 
-declare module '@enc/theme-scheme/dist/utils.esm';
-declare module '@enc/sso';
+declare module "@enc/theme-scheme/dist/utils.esm";
+declare module "@enc/sso";

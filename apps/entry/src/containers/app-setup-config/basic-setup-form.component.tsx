@@ -1,142 +1,97 @@
-import { useCallback } from "react";
-import { Form, Input, Button, Select, Radio, Upload } from "antd";
-import { useAppDispatch } from "@/store";
-import {
-  setTheme,
-  setMode,
-  setBaseForm,
-} from "@/views/app-setup/basic-setup.slice";
-import { axios } from "@utils/fetch";
-import { UploadOutlined } from "@ant-design/icons";
+import React, { useCallback, useEffect, useImperativeHandle, useMemo } from "react";
+import { Form, Input, Select } from "antd";
+import { Rule } from "antd/lib/form";
+import { UploadFile } from "antd/lib/upload/interface";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { Icon } from "@common/components";
+import { nameRule, remarkRule } from "@/consts";
+import { basicErrorSelector, selectBasicForm, setBaseForm } from "@views/app-setup/basic-setup.slice";
+import NavMode from "./nav-mode.component";
+import Theme from "./theme.component";
+import UploadImage from "./upload-image.component";
+import "@containers/app-setup-config/basic-setup-form.style";
 
-import "./basic-setup-form.style";
-
+interface BasicSetupFormProps {
+  workspaceList: { id: number; name: string }[];
+}
 const { Option } = Select;
 
-const tailLayout = {
-  wrapperCol: { offset: 8, span: 16 },
-};
-
-const normFile = (e: any) => {
-  console.log("Upload event:", e);
-  if (Array.isArray(e)) {
-    return e;
-  }
-  return e && e.fileList;
-};
-
-const BasicSetupFormComponent = () => {
+const BasicSetupFormComponent = React.forwardRef(function BasicSetupForm({ workspaceList }: BasicSetupFormProps, ref) {
   const [form] = Form.useForm();
   const dispatch = useAppDispatch();
+  const basicError = useAppSelector(basicErrorSelector);
+  const basicConfig = useAppSelector(selectBasicForm);
 
-  const handleFormFinish = useCallback((values: any) => {
-    dispatch(setBaseForm(values));
+  const iconRule = useMemo<Rule>(() => {
+    return {
+      validator(_, value: UploadFile[]) {
+        if (!value || value.length === 0) {
+          return Promise.reject(new Error("请上传应用LOGO!"));
+        }
+        return Promise.resolve();
+      },
+    };
   }, []);
 
-  const handleNavChange = useCallback((event: any) => {
-    const { value } = event.target;
-    dispatch(setMode(value));
-    console.log("navMode::", value);
+  const handleValuesChange = useCallback(() => {
+    const formValues = form.getFieldsValue();
+    dispatch(setBaseForm(formValues));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleThemeChange = useCallback((event: any) => {
-    const { value } = event.target;
-    dispatch(setTheme(value));
-    console.log("theme::", value);
-  }, []);
+  useImperativeHandle(ref, () => ({
+    validateFields: () => form.validateFields(),
+  }));
 
-  const handleCustomRequest = useCallback(
-    ({ file, filename, onError, onSuccess }) => {
-      const formData = new FormData();
-      formData.append(filename, file);
-      axios
-        .post(`/file/batchUpload?controlType=1`, formData)
-        .then(({ data: response }: any) => {
-          onSuccess(response, file);
-        })
-        .catch(onError);
-    },
-    []
-  );
+  useEffect(() => {
+    if (basicConfig) {
+      const values = { ...basicConfig, workspace: workspaceList?.[0]?.id };
+      form.setFieldsValue(values);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [basicConfig, workspaceList]);
 
-  const handleLogoUploadChange = useCallback((props: any) => {
-    console.log("handleLogoUploadChange", props);
-  }, []);
+  useEffect(() => {
+    if (basicError?.length > 0) {
+      form.validateFields();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [basicError]);
 
   return (
     <div className="basic-setup-form-component">
-      <Form layout="vertical" form={form} onFinish={handleFormFinish}>
-        <Form.Item
-          label="应用名称"
-          name="name"
-          rules={[{ required: true, message: "Please input your username!" }]}
-        >
-          <Input />
+      <Form layout="vertical" autoComplete="off" form={form} onValuesChange={handleValuesChange}>
+        <Form.Item label="应用名称" name="name" required rules={[nameRule]}>
+          <Input size="large" placeholder="请输入" />
         </Form.Item>
         <Form.Item
           label="应用所属工作区"
           name="workspace"
-          rules={[{ required: true, message: "Please input your password!" }]}
+          rules={[{ required: true, message: "请选择应用所属工作区!" }]}
         >
-          <Select placeholder="选择所属工作区" allowClear>
-            <Option value="workspace1">工作区一</Option>
-            <Option value="workspace2">工作区二</Option>
-            <Option value="workspace3">工作区三</Option>
+          <Select size="large" placeholder="请选择" disabled allowClear suffixIcon={<Icon type="xiala" />}>
+            {(workspaceList ?? []).map(({ id, name }: { id: number; name: string }) => (
+              <Option key={id} value={id}>
+                {name}
+              </Option>
+            ))}
           </Select>
         </Form.Item>
-        <Form.Item
-          label="应用描述"
-          name="remark"
-          rules={[{ required: true, message: "Please input your password!" }]}
-        >
-          <Input.TextArea />
+        <Form.Item label="应用描述" name="remark" rules={[remarkRule]}>
+          <Input.TextArea size="large" rows={4} placeholder="请输入" />
         </Form.Item>
-        <Form.Item
-          label="Web页面导航"
-          name="navMode"
-          rules={[{ required: true, message: "Please input your password!" }]}
-        >
-          <Radio.Group onChange={handleNavChange}>
-            <Radio value={0}>导航 1</Radio>
-            <Radio value={1}>导航 2</Radio>
-            <Radio value={2}>导航 3</Radio>
-          </Radio.Group>
+        <Form.Item label="Web页面导航" name="navMode">
+          <NavMode />
         </Form.Item>
-        <Form.Item
-          label="应用主题"
-          name="theme"
-          rules={[{ required: true, message: "Please input your password!" }]}
-        >
-          <Radio.Group onChange={handleThemeChange}>
-            <Radio value="theme1">主题 1</Radio>
-            <Radio value="theme2">主题 2</Radio>
-            <Radio value="theme3">主题 3</Radio>
-          </Radio.Group>
+        <Form.Item label="应用主题" name="theme">
+          <Theme />
         </Form.Item>
-        <Form.Item
-          label="应用LOGO"
-          name="icon"
-          valuePropName="fileList"
-          getValueFromEvent={normFile}
-          // rules={[{ required: true, message: "Please input your password!" }]}
-        >
-          <Upload
-            name="files"
-            listType="picture"
-            customRequest={handleCustomRequest}
-            onChange={handleLogoUploadChange}
-          >
-            <Button icon={<UploadOutlined />}>Click to upload</Button>
-          </Upload>
-        </Form.Item>
-        <Form.Item {...tailLayout}>
-          <Button type="primary" htmlType="submit">
-            Submit
-          </Button>
+        <Form.Item label="应用LOGO" name="icon" required rules={[iconRule]}>
+          <UploadImage />
         </Form.Item>
       </Form>
     </div>
   );
-};
+});
 
 export default BasicSetupFormComponent;

@@ -1,0 +1,17 @@
+{
+  "eslint.alwaysShowStatus": true,
+  "eslint.codeActionsOnSave.mode": "problems",
+  "eslint.packageManager": "yarn",
+  "eslint.options": {
+    "configFile": "./.eslintrc.json"
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true,
+    "source.fixAll.eslint": true
+  },
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "cSpell.words": [
+    "antd",
+    "consts"
+  ]
+}

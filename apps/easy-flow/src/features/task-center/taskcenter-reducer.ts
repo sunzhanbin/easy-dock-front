@@ -1,6 +1,6 @@
-import { RootState } from '@/app/store';
-import { createSelector, PayloadAction } from '@reduxjs/toolkit';
-import { TaskCenterState } from './type';
+import { RootState } from "@/app/store";
+import { createSelector, PayloadAction } from "@reduxjs/toolkit";
+import { TaskCenterState } from "./type";
 
 const reducers = {
   setTodoNum(state: TaskCenterState, action: PayloadAction<{ todoNum: number }>) {

@@ -1,18 +1,18 @@
-import { CompConfig } from '@/type';
-import { Icon } from '@common/components';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import { Tooltip } from 'antd';
-import React, { memo, useEffect, useRef, useState } from 'react';
-import { DropTargetMonitor, useDrag, useDrop, XYCoord } from 'react-dnd';
-import classNames from 'classnames';
-import styles from './index.module.scss';
+import { CompConfig } from "@/type";
+import { Icon } from "@common/components";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { Tooltip } from "antd";
+import React, { memo, useEffect, useRef, useState } from "react";
+import { DropTargetMonitor, useDrag, useDrop, XYCoord } from "react-dnd";
+import classNames from "classnames";
+import styles from "./index.module.scss";
 
 interface DragProps {
   className?: string;
   data: CompConfig;
   index: number;
-  onDelete(index: this['index']): void;
-  onEdit(value: this['data'], index: this['index']): void;
+  onDelete(index: this["index"]): void;
+  onEdit(value: this["data"], index: this["index"]): void;
   onDrop(sourceIndex: number, targetIndex: number): void;
 }
 
@@ -21,7 +21,7 @@ const DraggableOption = ({ className, data, index, onEdit, onDelete, onDrop }: D
   const [canMove, setCanMove] = useState<boolean>(false);
   const [{ opacity }, drag] = useDrag(
     () => ({
-      type: 'component',
+      type: "component",
       item() {
         return { index };
       },
@@ -34,7 +34,7 @@ const DraggableOption = ({ className, data, index, onEdit, onDelete, onDrop }: D
   );
   const [, drop] = useDrop(
     () => ({
-      accept: 'component',
+      accept: "component",
       hover: (currentDragItem: { index: number }, monitor: DropTargetMonitor) => {
         if (!dragWrapperRef.current) {
           return;
@@ -95,7 +95,7 @@ const DraggableOption = ({ className, data, index, onEdit, onDelete, onDrop }: D
     <div
       ref={dragWrapperRef}
       style={{ opacity }}
-      className={classNames(styles.draggable, className ? className : '')}
+      className={classNames(styles.draggable, className ? className : "")}
       onClick={handleClick}
     >
       <div className={styles.name}>

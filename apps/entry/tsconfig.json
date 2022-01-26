@@ -1,5 +1,5 @@
 {
-  "extends": "./paths.json",
+  "extends": "./tsconfig.base.json",
   "include": [
     "src/**/*",
     "../../packages/common/**/*"
@@ -12,5 +12,7 @@
     "node_modules/**",
     "template/**"
   ],
-  "compilerOptions": {}
+  "compilerOptions": {
+    "baseUrl": "."
+  }
 }

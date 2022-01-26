@@ -1,7 +1,7 @@
-import { AsyncThunkPayloadCreator, AsyncThunk, AsyncThunkOptions } from '@reduxjs/toolkit/dist/createAsyncThunk';
-import type { Dispatch, AnyAction } from 'redux';
+import { AsyncThunkPayloadCreator, AsyncThunk, AsyncThunkOptions } from "@reduxjs/toolkit/dist/createAsyncThunk";
+import type { Dispatch } from "redux";
 
-declare module '@reduxjs/toolkit' {
+declare module "@reduxjs/toolkit" {
   type AsyncThunkConfig = {
     state?: unknown;
     dispatch?: Dispatch;
@@ -16,7 +16,7 @@ declare module '@reduxjs/toolkit' {
   export declare function createAsyncThunk<
     Returned,
     ThunkArg = void,
-    ThunkApiConfig extends AsyncThunkConfig = { state: RootState }
+    ThunkApiConfig extends AsyncThunkConfig = { state: RootState },
   >(
     typePrefix: string,
     payloadCreator: AsyncThunkPayloadCreator<Returned, ThunkArg, ThunkApiConfig>,

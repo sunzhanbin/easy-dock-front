@@ -5,37 +5,42 @@ const {
   babelInclude,
   overrideDevServer,
   /*  addWebpackPlugin, */
-} = require('customize-cra');
-const FileManagerPlugin = require('filemanager-webpack-plugin');
-const path = require('path');
-const appPackageJson = require('./package.json');
-const paths = require('./paths');
+} = require("customize-cra");
+const FileManagerPlugin = require("filemanager-webpack-plugin");
+const path = require("path");
+const appPackageJson = require("./package.json");
+const paths = require("./paths");
 process.env.PORT = 8083;
 
 module.exports = {
   webpack: override(
-    babelInclude([path.resolve(__dirname, '../../packages/common'), path.resolve(__dirname, 'src')]),
+    babelInclude([
+      path.resolve(__dirname, "../../packages/common"),
+      path.resolve(__dirname, "../../packages/theme"),
+      path.resolve(__dirname, "src"),
+    ]),
     removeModuleScopePlugin(),
     addWebpackAlias({
-      '@utils': path.resolve(__dirname, './src/utils'),
-      '@': path.resolve(__dirname, './src'),
-      '@layouts': path.resolve(__dirname, './src/layouts'),
-      '@components': path.resolve(__dirname, './src/components'),
-      '@styles': path.resolve(__dirname, './src/styles'),
-      '@consts': path.resolve(__dirname, './src/consts'),
-      '@assets': path.resolve(__dirname, './src/assets'),
-      '@type': path.resolve(__dirname, './src/type'),
-      '@apis': path.resolve(__dirname, './src/apis'),
-      '@app': path.resolve(__dirname, './src/app'),
-      '@config': path.resolve(__dirname, './src/config'),
-      '@common': path.resolve(__dirname, '../../packages/common'),
+      "@utils": path.resolve(__dirname, "./src/utils"),
+      "@": path.resolve(__dirname, "./src"),
+      "@layouts": path.resolve(__dirname, "./src/layouts"),
+      "@components": path.resolve(__dirname, "./src/components"),
+      "@styles": path.resolve(__dirname, "./src/styles"),
+      "@consts": path.resolve(__dirname, "./src/consts"),
+      "@assets": path.resolve(__dirname, "./src/assets"),
+      "@type": path.resolve(__dirname, "./src/type"),
+      "@apis": path.resolve(__dirname, "./src/apis"),
+      "@app": path.resolve(__dirname, "./src/app"),
+      "@config": path.resolve(__dirname, "./src/config"),
+      "@common": path.resolve(__dirname, "../../packages/common"),
+      "@theme": path.resolve(__dirname, "../../packages/theme"),
     }),
     function overrideWebpackOutput(config) {
       config.output = {
         ...config.output,
-        publicPath: process.env.REACT_APP_IS_RELATIVE === 'true' ? '/easyflow/' : '/',
-        globalObject: 'window',
-        libraryTarget: 'umd',
+        publicPath: process.env.REACT_APP_IS_RELATIVE === "true" ? "/easyflow/" : "/",
+        globalObject: "window",
+        libraryTarget: "umd",
         library: `${appPackageJson.name}-[name]`,
       };
 
@@ -59,7 +64,7 @@ module.exports = {
       //     }),
       //   );
 
-      process.env.NODE_ENV !== 'development' &&
+      process.env.NODE_ENV !== "development" &&
         config.plugins.push(
           new FileManagerPlugin({
             events: {
@@ -68,13 +73,13 @@ module.exports = {
                 copy: [
                   {
                     source: `${paths.appPath}/conf${
-                      process.env.REACT_APP_TARGET_ENV === 'staging'
-                        ? '.staging.js'
-                        : process.env.REACT_APP_TARGET_ENV === 'staging'
-                        ? '.js'
-                        : process.env.REACT_APP_TARGET_ENV === 'cluster'
-                        ? '.cluster.js'
-                        : '.production.js'
+                      process.env.REACT_APP_TARGET_ENV === "staging"
+                        ? ".staging.js"
+                        : process.env.REACT_APP_TARGET_ENV === "staging"
+                        ? ".js"
+                        : process.env.REACT_APP_TARGET_ENV === "cluster"
+                        ? ".cluster.js"
+                        : ".production.js"
                     }`,
                     destination: `${paths.appBuild}/config.js`,
                   },
@@ -95,7 +100,7 @@ module.exports = {
                   {
                     source: `zip`,
                     destination: `../../${appPackageJson.name}-${appPackageJson.version}-SNAPSHOT.tar.gz`,
-                    format: 'tar',
+                    format: "tar",
                     options: {
                       gzip: true,
                       gzipOptions: {
@@ -107,7 +112,7 @@ module.exports = {
                     },
                   },
                 ],
-                delete: ['zip'],
+                delete: ["zip"],
               },
             },
             runTasksInSeries: true,
@@ -120,7 +125,7 @@ module.exports = {
     Object.assign({}, config, {
       headers: {
         ...config.headers,
-        'Access-Control-Allow-Origin': '*',
+        "Access-Control-Allow-Origin": "*",
       },
     }),
   ),

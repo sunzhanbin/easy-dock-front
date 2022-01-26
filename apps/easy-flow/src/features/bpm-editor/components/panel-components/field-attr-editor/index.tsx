@@ -1,13 +1,13 @@
-import { memo, useState, useCallback, useEffect } from 'react';
-import { Button, Tooltip, message } from 'antd';
-import { EventType, FormField, PropertyRuleItem } from '@/type';
-import { flowVarsMap, formatRuleValue } from '@/utils';
-import { Icon } from '@common/components';
-import FieldAttrModal from '../field-attr-modal';
-import styles from '../form-attr-editor/index.module.scss';
-import { useAppSelector, useAppDispatch } from '@/app/hooks';
-import { componentPropsSelector, propertyRulesSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
-import { setPropertyRules } from '@/features/bpm-editor/form-design/formdesign-slice';
+import { memo, useState, useCallback, useEffect } from "react";
+import { Button, Tooltip, message } from "antd";
+import { EventType, FormField, PropertyRuleItem } from "@/type";
+import { flowVarsMap, formatRuleValue } from "@/utils";
+import { Icon } from "@common/components";
+import FieldAttrModal from "../field-attr-modal";
+import styles from "../form-attr-editor/index.module.scss";
+import { useAppSelector, useAppDispatch } from "@/app/hooks";
+import { componentPropsSelector, propertyRulesSelector } from "@/features/bpm-editor/form-design/formzone-reducer";
+import { setPropertyRules } from "@/features/bpm-editor/form-design/formdesign-slice";
 
 const FieldAttrEditor = () => {
   const byId = useAppSelector(componentPropsSelector);
@@ -16,7 +16,7 @@ const FieldAttrEditor = () => {
   const [rules, setRules] = useState<PropertyRuleItem[]>(propertyRules || []);
   const [currentRule, setCurrentRule] = useState<PropertyRuleItem | null>(null);
   const [editIndex, setEditIndex] = useState<number>(0);
-  const [type, setType] = useState<'add' | 'edit'>('add');
+  const [type, setType] = useState<"add" | "edit">("add");
   const [showModal, setShowModal] = useState<boolean>(false);
   const handleClose = useCallback(() => {
     setShowModal(false);
@@ -27,18 +27,20 @@ const FieldAttrEditor = () => {
       if (subs.filter((item) => item.length !== 0).length !== 0) {
         setShowModal(false);
       } else {
-        message.warning('配置条件不能为空');
+        message.warning("配置条件不能为空");
       }
-    } catch {}
+    } catch (err) {
+      console.log({ err });
+    }
 
-    let rule = {
-      type: 'change',
+    const rule = {
+      type: "change",
       subtype: EventType.Union, // 运行端事件联动处理
       formChangeRule: {
         fieldRule: rules.propertyValue,
       },
     };
-    if (type === 'add') {
+    if (type === "add") {
       setRules((rules) => {
         const list = [...rules];
         list.push(rule);
@@ -56,7 +58,7 @@ const FieldAttrEditor = () => {
     }
   }, []);
   const handleAddRule = useCallback(() => {
-    setType('add');
+    setType("add");
     setCurrentRule(null);
     setShowModal(true);
   }, []);
@@ -70,7 +72,7 @@ const FieldAttrEditor = () => {
   const handleEditRule = useCallback(
     (index) => {
       const rule = rules[index];
-      setType('edit');
+      setType("edit");
       setEditIndex(index);
       setCurrentRule(rule);
       setShowModal(true);
@@ -107,7 +109,7 @@ const FieldAttrEditor = () => {
                               Object.values(byId).find((component) => component.fieldName === rule.fieldName) ||
                               ({} as FormField);
                             const componentNext =
-                              rule.valueType === 'other'
+                              rule.valueType === "other"
                                 ? Object.values(byId).find((component) => component.fieldName === rule.value) ||
                                   ({} as FormField)
                                 : Object.values(flowVarsMap).find((item) => item.value === rule.value) ||
@@ -115,9 +117,9 @@ const FieldAttrEditor = () => {
                             const formatRule = formatRuleValue(rule, componentPrev, componentNext);
                             return (
                               <span key={ruleIndex}>
-                                <span className={styles.fieldName}>{formatRule?.name || ''}</span>
-                                <span>{formatRule?.symbol || ''}</span>
-                                <span className={styles.fieldName}>{formatRule.value || ''}</span>
+                                <span className={styles.fieldName}>{formatRule?.name || ""}</span>
+                                <span>{formatRule?.symbol || ""}</span>
+                                <span className={styles.fieldName}>{formatRule.value || ""}</span>
                                 {ruleIndex !== ruleBlock.length - 1 && <span>且</span>}
                               </span>
                             );

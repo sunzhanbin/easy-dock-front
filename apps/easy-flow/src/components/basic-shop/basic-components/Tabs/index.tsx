@@ -1,15 +1,15 @@
-import { memo, useState, useRef, useEffect, useMemo } from 'react';
-import { Form, Input, FormInstance, Tooltip, Popconfirm } from 'antd';
-import classNames from 'classnames';
-import { Icon, Text } from '@common/components';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import styles from './index.module.scss';
-import { CompConfig } from '@/type';
-import FormList from './form-list';
-import { FieldAuthsMap } from '@/type/flow';
-import { omit } from 'lodash';
-import PubSub from 'pubsub-js';
-import { nameRegexp } from '@/utils';
+import { memo, useState, useRef, useEffect, useMemo } from "react";
+import { Form, Input, FormInstance, Tooltip, Popconfirm } from "antd";
+import classNames from "classnames";
+import { Icon, Text } from "@common/components";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { CompConfig } from "@/type";
+import { FieldAuthsMap } from "@/type/flow";
+import { omit } from "lodash";
+import PubSub from "pubsub-js";
+import { nameRegexp } from "@/utils";
+import FormList from "./form-list";
+import styles from "./index.module.scss";
 
 interface TabProps {
   fieldName: string;
@@ -20,7 +20,7 @@ interface TabProps {
   components?: CompConfig[];
   readonly?: boolean;
   value?: any;
-  onChange?: (value: this['value']) => void;
+  onChange?: (value: this["value"]) => void;
 }
 
 const Tabs = ({ components = [], fieldName, auth, projectId, disabled, formInstance, readonly }: TabProps) => {
@@ -31,7 +31,7 @@ const Tabs = ({ components = [], fieldName, auth, projectId, disabled, formInsta
   const [popVisible, setPopVisible] = useState<boolean>(false);
   // 编辑态默认有个tab,用于展示编辑的控件
   useEffect(() => {
-    const el = document.getElementById('edit-form');
+    const el = document.getElementById("edit-form");
     if (el?.contains(tabRef.current)) {
       setIsEdit(true);
       setActiveKey(-1);
@@ -49,7 +49,7 @@ const Tabs = ({ components = [], fieldName, auth, projectId, disabled, formInsta
     setActiveKey(length);
     const tabValue = (formInstance?.getFieldValue(fieldName) || []).filter((v: any) => v && v?.__title__);
     const defaultValue = formInstance?.getFieldValue(fieldName)?.[length];
-    if (defaultValue && typeof defaultValue === 'object' && Object.keys(defaultValue).length) {
+    if (defaultValue && typeof defaultValue === "object" && Object.keys(defaultValue).length) {
       tabValue.push({ __title__, ...defaultValue });
     } else {
       tabValue.push({ __title__ });
@@ -65,7 +65,7 @@ const Tabs = ({ components = [], fieldName, auth, projectId, disabled, formInsta
     const tabsValue = formInstance?.getFieldValue(fieldName);
     if (tabsValue && tabsValue?.[index]) {
       // 删除tab时要更新关联的数字公示计算
-      const subComponentNames = Object.keys(omit(tabsValue[index], ['__title__']));
+      const subComponentNames = Object.keys(omit(tabsValue[index], ["__title__"]));
       subComponentNames.forEach((key) => {
         PubSub.publish(`${fieldName}.${key}-change`, undefined);
       });
@@ -94,20 +94,21 @@ const Tabs = ({ components = [], fieldName, auth, projectId, disabled, formInsta
             {
               validator(_, value) {
                 if (!value || !value.trim()) {
-                  return Promise.reject(new Error('请输入标题'));
+                  return Promise.reject(new Error("请输入标题"));
                 }
                 if (!nameRegexp.test(value.trim())) {
-                  return Promise.reject(new Error('请输入1-30位的汉字、字母、数字、下划线'));
+                  return Promise.reject(new Error("请输入1-30位的汉字、字母、数字、下划线"));
                 }
                 return Promise.resolve();
               },
             },
           ]}
         >
-          <Input placeholder="请输入" autoFocus={true} style={{ width: '250px' }} />
+          <Input placeholder="请输入" autoFocus={true} style={{ width: "250px" }} />
         </Form.Item>
       </Form>
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleConfirm = useMemoCallback((add: (defaultValue?: any) => void, length: number) => {
@@ -139,7 +140,7 @@ const Tabs = ({ components = [], fieldName, auth, projectId, disabled, formInsta
   });
 
   return (
-    <div className={classNames(styles.tabs, disabled ? styles.disabled : '', isEdit ? styles.edit : '')} ref={tabRef}>
+    <div className={classNames(styles.tabs, disabled ? styles.disabled : "", isEdit ? styles.edit : "")} ref={tabRef}>
       <Form.Item noStyle shouldUpdate>
         {(form) => {
           const fieldValue = form.getFieldValue(fieldName);
@@ -147,7 +148,7 @@ const Tabs = ({ components = [], fieldName, auth, projectId, disabled, formInsta
             <Form.List name={fieldName}>
               {(fields, { add, remove }) => {
                 return (
-                  <div className={classNames(styles.container, 'tabs-container')}>
+                  <div className={classNames(styles.container, "tabs-container")}>
                     <div className={classNames(styles.title)}>
                       {isEdit ? (
                         <div className={classNames(styles.item, styles.active)}>
@@ -160,13 +161,13 @@ const Tabs = ({ components = [], fieldName, auth, projectId, disabled, formInsta
                               key={field.key}
                               className={classNames(
                                 styles.item,
-                                activeKey === field.name ? styles.active : '',
-                                'tab-nav',
+                                activeKey === field.name ? styles.active : "",
+                                "tab-nav",
                               )}
                               onClick={() => setActiveKey(field.name)}
                             >
                               <div className={styles.name}>
-                                <Text text={fieldValue?.[index]?.['__title__'] || ''} />
+                                <Text text={fieldValue?.[index]?.["__title__"] || ""} />
                               </div>
                               <div className={styles.operation}>
                                 <div
@@ -217,7 +218,7 @@ const Tabs = ({ components = [], fieldName, auth, projectId, disabled, formInsta
                       ) : (
                         fields.map((field) => {
                           return (
-                            <div key={field.name} style={{ display: field.name === activeKey ? 'block' : 'none' }}>
+                            <div key={field.name} style={{ display: field.name === activeKey ? "block" : "none" }}>
                               <FormList
                                 fields={components}
                                 id={String(field.name)}

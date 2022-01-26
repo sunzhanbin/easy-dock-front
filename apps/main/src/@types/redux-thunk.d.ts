@@ -1,4 +1,4 @@
-import { ThunkAction } from "redux-thunk"
+import { ThunkAction } from "redux-thunk";
 
 // Dispatch overload for redux-thunk
 // https://github.com/reduxjs/redux-thunk/pull/278
@@ -9,7 +9,7 @@ declare module "redux" {
    */
   export interface Dispatch<A extends Action<any> = AnyAction> {
     <TReturnType, TState, TExtraThunkArg>(
-      thunkAction: ThunkAction<TReturnType, TState, TExtraThunkArg, A>
-    ): TReturnType
+      thunkAction: ThunkAction<TReturnType, TState, TExtraThunkArg, A>,
+    ): TReturnType;
   }
 }

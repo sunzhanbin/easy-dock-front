@@ -1,16 +1,17 @@
-import { memo, useEffect, useState, useMemo, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import { Table, TableProps, message } from 'antd';
-import { TablePaginationConfig } from 'antd/lib/table';
-import { debounce } from 'lodash';
-import { Icon, PopoverConfirm } from '@common/components';
-import { timeDiff } from '@utils';
-import { dynamicRoutes } from '@consts';
-import { runtimeAxios } from '@utils/axios';
-import { deleteDraft } from '@apis/detail';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import useAppId from '@/hooks/use-app-id';
-import styles from './index.module.scss';
+import { memo, useEffect, useState, useMemo, useRef } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { Table, TableProps, message } from "antd";
+import classNames from "classnames";
+import { TablePaginationConfig } from "antd/lib/table";
+import { debounce } from "lodash";
+import { Icon, PopoverConfirm } from "@common/components";
+import { timeDiff } from "@utils";
+import { dynamicRoutes } from "@consts";
+import { runtimeAxios } from "@utils/axios";
+import { deleteDraft } from "@apis/detail";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import useAppId from "@/hooks/use-app-id";
+import styles from "./index.module.scss";
 
 interface DraftData {
   subappName: string;
@@ -25,6 +26,15 @@ interface DraftData {
 
 function Draft() {
   const appId = useAppId();
+  const location = useLocation();
+  const theme = useMemo<string>(() => {
+    // 以iframe方式接入,参数在location中
+    if (location.search) {
+      const params = new URLSearchParams(location.search.slice(1));
+      return params.get("theme") || "light";
+    }
+    return "light";
+  }, [location.search]);
   const [draftData, setDraftData] = useState<DraftData[]>([]);
   const [activeDataId, setActiveDataId] = useState<number>();
   const [loading, setLoading] = useState(false);
@@ -32,7 +42,7 @@ function Draft() {
     await deleteDraft(draftId);
 
     fetchDraftData();
-    message.success('操作成功');
+    message.success("操作成功");
   });
   const paginationRef = useRef<TablePaginationConfig>({
     pageSize: 10,
@@ -40,13 +50,13 @@ function Draft() {
     total: 0,
     showSizeChanger: true,
   });
-  const columns: TableProps<DraftData>['columns'] = useMemo(() => {
+  const columns: TableProps<DraftData>["columns"] = useMemo(() => {
     return [
       {
-        title: '流程名称',
-        dataIndex: 'subappName',
-        key: 'subappName',
-        width: '30%',
+        title: "流程名称",
+        dataIndex: "subappName",
+        key: "subappName",
+        width: "30%",
         render(_: string, data: DraftData) {
           return (
             <Link className={styles.link} to={dynamicRoutes.toStartFlow(data.subappId)}>
@@ -56,22 +66,22 @@ function Draft() {
         },
       },
       {
-        title: '操作人',
-        dataIndex: 'user',
-        key: 'user',
-        width: '30%',
+        title: "操作人",
+        dataIndex: "user",
+        key: "user",
+        width: "30%",
         render(_: string, data: DraftData) {
           return data.user.name;
         },
       },
       {
-        title: '操作时间',
-        dataIndex: 'createTime',
-        key: 'createTime',
-        width: '30%',
+        title: "操作时间",
+        dataIndex: "createTime",
+        key: "createTime",
+        width: "30%",
         render(_: string, data: DraftData) {
           if (Date.now() - data.createTime < 60 * 1000) {
-            return '刚刚';
+            return "刚刚";
           }
 
           return timeDiff(Math.max(Date.now() - data.createTime, 0));
@@ -81,15 +91,15 @@ function Draft() {
         // defaultSortOrder: 'ascend',
       },
       {
-        title: '',
-        key: 'action',
+        title: "",
+        key: "action",
         width: 100,
         render(_: string, data: DraftData) {
           if (data.subappId !== activeDataId) return null;
 
           return (
             <PopoverConfirm
-              title={`确认删除`}
+              title={"确认删除"}
               content={`确认删除${data.subappName}草稿吗？`}
               placement="left"
               onConfirm={() => handleDeleteDraftData(data.subappId)}
@@ -110,12 +120,12 @@ function Draft() {
     const data = paginationRef.current;
 
     runtimeAxios
-      .post(`/task/draft/list`, {
+      .post("/task/draft/list", {
         appId: appId,
         filter: {
           pageIndex: data.current || 1,
           pageSize: data.pageSize || 10,
-          starter: '',
+          starter: "",
         },
       })
       .then(({ data }) => {
@@ -154,7 +164,7 @@ function Draft() {
 
   return (
     <Table
-      className={styles.table}
+      className={classNames(styles.table, styles[theme])}
       columns={columns}
       dataSource={draftData}
       rowKey="subappId"

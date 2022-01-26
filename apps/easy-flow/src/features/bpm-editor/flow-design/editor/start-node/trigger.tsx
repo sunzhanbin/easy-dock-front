@@ -1,9 +1,9 @@
-import { memo } from 'react';
-import { Space, Button } from 'antd';
-import classnames from 'classnames';
-import { TriggerType } from '@type/flow';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import styles from './index.module.scss';
+import { memo } from "react";
+import { Space, Button } from "antd";
+import classnames from "classnames";
+import { TriggerType } from "@type/flow";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import styles from "./index.module.scss";
 
 function Trigger({ value, onChange }: { value?: TriggerType; onChange?(value: TriggerType): void }) {
   const handleValueChange = useMemoCallback((newValue: TriggerType) => {

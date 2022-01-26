@@ -1,6 +1,9 @@
 @import '@common/styles/var.scss';
+@import '@common/styles/theme-color.scss';
 .container {
+  height: 100%;
   padding: 24px 56px;
+  background-color: #fff;
 
   .header {
     line-height: 34px;
@@ -67,6 +70,27 @@
   }
   .content {
     margin-top: 24px;
+  }
+  &.dark {
+    background-color: $dark-content-background-color;
+    .header {
+      .left {
+        .title {
+          color: rgba($dark-text-color, 0.8);
+        }
+        .line {
+          border-color: rgba($dark-text-color, 0.12);
+        }
+        .navLink {
+          .nav {
+            color: rgba($dark-text-color, 0.6);
+            &.active {
+              color: rgba($dark-text-color, 0.8);
+            }
+          }
+        }
+      }
+    }
   }
 }
 .footer {

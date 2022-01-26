@@ -1,16 +1,16 @@
-import React, { memo, useMemo, Suspense } from 'react';
-import { Route, NavLink, useRouteMatch } from 'react-router-dom';
-import { Icon, Loading } from '@common/components';
-import { ROUTES } from '@consts';
-import styles from './index.module.scss';
+import React, { memo, useMemo, Suspense } from "react";
+import { Route, NavLink, useRouteMatch } from "react-router-dom";
+import { Icon, Loading } from "@common/components";
+import { ROUTES } from "@consts";
+import styles from "./index.module.scss";
 
-const Auth = React.lazy(() => import(/* webpackChunkName: "auth" */ '@/routes/user-manager/auth'));
+const Auth = React.lazy(() => import(/* webpackChunkName: "auth" */ "@/routes/user-manager/auth"));
 
 const UserManager = () => {
   const matched = useRouteMatch();
 
   const matchedUrl = useMemo(() => {
-    return matched.url.replace(/\/+$/, '');
+    return matched.url.replace(/\/+$/, "");
   }, [matched.url]);
   const fallback = useMemo(() => <Loading />, []);
   return (

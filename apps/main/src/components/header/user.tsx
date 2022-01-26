@@ -1,16 +1,16 @@
-import { memo, useMemo, useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
-import Auth from '@enc/sso';
-import { useSelector, useDispatch } from 'react-redux';
-import { Dropdown, Menu } from 'antd';
-import classNames from 'classnames';
-import { Avatar } from '@common/components';
-import { Icon } from '@common/components';
-import { userSelector, logout } from '@/store/user';
-import { ROUTES } from '@consts';
-import { RoleEnum } from '@/schema/app';
-import styles from './index.module.scss';
-import useMemoCallback from '@common/hooks/use-memo-callback';
+import { memo, useMemo, useCallback } from "react";
+import { useHistory } from "react-router-dom";
+import Auth from "@enc/sso";
+import { useSelector, useDispatch } from "react-redux";
+import { Dropdown, Menu } from "antd";
+import classNames from "classnames";
+import { Avatar } from "@common/components";
+import { Icon } from "@common/components";
+import { userSelector, logout } from "@/store/user";
+import { ROUTES } from "@consts";
+import { RoleEnum } from "@/schema/app";
+import styles from "./index.module.scss";
+import useMemoCallback from "@common/hooks/use-memo-callback";
 
 function HeaderUser() {
   const history = useHistory();

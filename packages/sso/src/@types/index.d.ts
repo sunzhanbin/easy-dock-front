@@ -18,6 +18,8 @@ export declare global {
 export declare module '@enc/sso' {
     /** 获取Token */
     function getToken(needAutoLogin: boolean, host: string): Promise<unknown>;
+    /** 设置配置项 */
+    function setConfig(config: ISSOConfig): void;
     /** 获取登录信息 */
     function getAuth(): string | null;
     /** 移除登录信息 */

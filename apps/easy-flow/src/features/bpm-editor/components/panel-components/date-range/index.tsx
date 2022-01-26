@@ -1,13 +1,13 @@
-import { memo, ReactNode, useMemo } from 'react';
-import { Form } from 'antd';
-import styles from '../comp-attr-editor/index.module.scss';
-import { useAppSelector } from '@app/hooks';
-import { componentPropsSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
-import { DateField } from '@type';
-import { Moment } from 'moment';
-import { Icon } from '@common/components';
-import DatePicker from '../../date-picker';
-import { FormInstance } from 'antd/es';
+import { memo, ReactNode, useMemo } from "react";
+import { Form } from "antd";
+import styles from "../comp-attr-editor/index.module.scss";
+import { useAppSelector } from "@app/hooks";
+import { componentPropsSelector } from "@/features/bpm-editor/form-design/formzone-reducer";
+import { DateField } from "@type";
+import { Moment } from "moment";
+import { Icon } from "@common/components";
+import DatePicker from "../../date-picker";
+import { FormInstance } from "antd/es";
 
 interface DateRangeProps {
   id: string;
@@ -21,20 +21,20 @@ const DateRangeComponent = ({ id, componentId, form }: DateRangeProps) => {
     return (byId[componentId] as DateField)?.format;
   }, [componentId, byId]);
   const propList = useMemo(() => {
-    const props: { [k: string]: string | boolean | Function | Moment | ReactNode } = {
-      size: 'large',
+    const props: { [k: string]: string | boolean | ((...args: any[]) => any) | Moment | ReactNode } = {
+      size: "large",
       suffixIcon: <Icon type="riqi" />,
       onChange: (v: Moment) => void 0,
     };
-    if (formatType === 'yyyy-MM-DD HH:mm:ss') {
+    if (formatType === "yyyy-MM-DD HH:mm:ss") {
       props.showTime = true;
-      props.format = 'yyyy-MM-DD HH:mm:ss';
-    } else if (formatType === 'yyyy-MM-DD') {
+      props.format = "yyyy-MM-DD HH:mm:ss";
+    } else if (formatType === "yyyy-MM-DD") {
       props.showTime = false;
-      props.format = 'yyyy-MM-DD';
+      props.format = "yyyy-MM-DD";
     } else {
       props.showTime = false;
-      props.format = 'yyyy-MM-DD';
+      props.format = "yyyy-MM-DD";
     }
     return props;
   }, [formatType]);
@@ -43,14 +43,14 @@ const DateRangeComponent = ({ id, componentId, form }: DateRangeProps) => {
     const {
       datelimit: { daterange },
     } = form.getFieldsValue();
-    if (index === 'prev' && daterange.max) {
+    if (index === "prev" && daterange.max) {
       return current && current > daterange.max;
-    } else if (index === 'next' && daterange.min) {
+    } else if (index === "next" && daterange.min) {
       return current && current < daterange.min;
     }
     return false;
   };
-  const isChecked = form.getFieldValue('datelimit');
+  const isChecked = form.getFieldValue("datelimit");
   if (!isChecked || !isChecked.enable) {
     return null;
   }
@@ -65,12 +65,12 @@ const DateRangeComponent = ({ id, componentId, form }: DateRangeProps) => {
       <div className={styles.limitRange}>
         <Form.Item
           className={styles.Item}
-          name={['datelimit', id, 'min']}
+          name={["datelimit", id, "min"]}
           rules={[
             {
               validator(_: any, value: number) {
-                if (!form.getFieldValue(['datelimit', id, 'max']) && !value) {
-                  return Promise.reject(new Error('请选择日期范围'));
+                if (!form.getFieldValue(["datelimit", id, "max"]) && !value) {
+                  return Promise.reject(new Error("请选择日期范围"));
                 }
                 return Promise.resolve();
               },
@@ -82,21 +82,21 @@ const DateRangeComponent = ({ id, componentId, form }: DateRangeProps) => {
             placeholder="最早日期"
             {...propList}
             type="startTime"
-            disabledDate={(v: Moment) => handleDisabledDate(v, 'prev', form)}
+            disabledDate={(v: Moment) => handleDisabledDate(v, "prev", form)}
             onChange={() => {
-              form.validateFields([['datelimit', id, 'max']]);
+              form.validateFields([["datelimit", id, "max"]]);
             }}
           />
         </Form.Item>
         <span className={styles.text}>~</span>
         <Form.Item
           className={styles.Item}
-          name={['datelimit', id, 'max']}
+          name={["datelimit", id, "max"]}
           rules={[
             {
               validator(_: any, value: number) {
-                if (!form.getFieldValue(['datelimit', id, 'min']) && !value) {
-                  return Promise.reject(new Error('请选择日期范围'));
+                if (!form.getFieldValue(["datelimit", id, "min"]) && !value) {
+                  return Promise.reject(new Error("请选择日期范围"));
                 }
                 return Promise.resolve();
               },
@@ -108,9 +108,9 @@ const DateRangeComponent = ({ id, componentId, form }: DateRangeProps) => {
             placeholder="最晚日期"
             {...propList}
             type="endTime"
-            disabledDate={(v: Moment) => handleDisabledDate(v, 'next', form)}
+            disabledDate={(v: Moment) => handleDisabledDate(v, "next", form)}
             onChange={() => {
-              form.validateFields([['datelimit', id, 'min']]);
+              form.validateFields([["datelimit", id, "min"]]);
             }}
           />
         </Form.Item>
@@ -125,7 +125,7 @@ const DateRangeComponent = ({ id, componentId, form }: DateRangeProps) => {
 const DateRange = (props: any) => {
   return (
     <Form.Item name="datelimit" noStyle>
-      <Form.Item name={['datelimit', props.id]} noStyle>
+      <Form.Item name={["datelimit", props.id]} noStyle>
         <DateRangeComponent {...props} />
       </Form.Item>
     </Form.Item>

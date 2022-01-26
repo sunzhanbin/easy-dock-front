@@ -1,26 +1,37 @@
-import { memo, useState, FC, useMemo, useCallback, useEffect, useRef } from 'react';
-import styles from './index.module.scss';
-import { Form, Input, Select, Button, DatePicker, Table } from 'antd';
-import moment from 'moment';
-import { dynamicRoutes } from '@/consts/route';
-import { getStayTime } from '@utils/index';
-import { runtimeAxios } from '@/utils';
-import { useHistory } from 'react-router-dom';
-import { Pagination, TodoItem, UserItem } from '../type';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import useAppId from '@/hooks/use-app-id';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import { setTodoNum, appSelector } from '../taskcenter-slice';
-import { Icon } from '@common/components';
-import TimeoutState from '../components/timeout-state';
-import { debounce, throttle } from 'lodash';
+import { memo, useState, FC, useMemo, useCallback, useEffect, useRef } from "react";
+import { Form, Input, Select, Button, DatePicker, Table } from "antd";
+import moment from "moment";
+import classNames from "classnames";
+import { dynamicRoutes } from "@/consts/route";
+import { getStayTime } from "@utils/index";
+import { runtimeAxios } from "@/utils";
+import { useHistory, useLocation } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import useAppId from "@/hooks/use-app-id";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { Icon } from "@common/components";
+import { debounce, throttle } from "lodash";
+import styles from "./index.module.scss";
+import TimeoutState from "../components/timeout-state";
+import { setTodoNum, appSelector } from "../taskcenter-slice";
+import { Pagination, TodoItem, UserItem } from "../type";
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
-const ToDo: FC<{}> = () => {
+const ToDo: FC = () => {
   const [form] = Form.useForm();
   const history = useHistory();
+  const location = useLocation();
+
+  const theme = useMemo<string>(() => {
+    // 以iframe方式接入,参数在location中
+    if (location.search) {
+      const params = new URLSearchParams(location.search.slice(1));
+      return params.get("theme") || "light";
+    }
+    return "light";
+  }, [location.search]);
   const appId = useAppId();
   const dispatch = useAppDispatch();
   const app = useAppSelector(appSelector);
@@ -28,7 +39,7 @@ const ToDo: FC<{}> = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [optionList, setOptionList] = useState<UserItem[]>([]);
   const [total, setTotal] = useState<number>(0);
-  const [keyword, setKeyword] = useState<string>('');
+  const [keyword, setKeyword] = useState<string>("");
   const pageNumberRef = useRef(1);
   const [pagination, setPagination] = useState<Pagination>({
     pageSize: 10,
@@ -38,7 +49,7 @@ const ToDo: FC<{}> = () => {
   });
 
   const [data, setData] = useState<TodoItem[]>([]);
-  const [sortDirection, setSortDirection] = useState<'DESC' | 'ASC'>('DESC');
+  const [sortDirection, setSortDirection] = useState<"DESC" | "ASC">("DESC");
   const projectId = useMemo(() => {
     if (app && app.project) {
       return app.project.id;
@@ -51,9 +62,9 @@ const ToDo: FC<{}> = () => {
       setLoading(true);
       const { current, pageSize } = pagination;
       const formValues = form.getFieldsValue(true);
-      const { name = '', starter = '', timeRange = [] } = formValues;
-      let startTime: number = 0;
-      let endTime: number = 0;
+      const { name = "", starter = "", timeRange = [] } = formValues;
+      let startTime = 0;
+      let endTime = 0;
       if (timeRange && timeRange[0]) {
         startTime = moment(timeRange[0]._d).valueOf();
       }
@@ -78,7 +89,7 @@ const ToDo: FC<{}> = () => {
         sortDirection,
       };
       runtimeAxios
-        .post('/task/todo', params)
+        .post("/task/todo", params)
         .then((res) => {
           const list = res.data?.data || [];
           const total = res.data?.recordTotal || 0;
@@ -94,7 +105,7 @@ const ToDo: FC<{}> = () => {
   const fetchOptionList = useCallback(
     (pageNum: number, keyword: string) => {
       if (projectId) {
-        runtimeAxios.post('/user/search', { index: pageNum, size: 20, keyword, projectId }).then((res) => {
+        runtimeAxios.post("/user/search", { index: pageNum, size: 20, keyword, projectId }).then((res) => {
           const list = res.data?.data || [];
           const total = res.data?.recordTotal;
           const index = res.data?.pageIndex;
@@ -138,19 +149,19 @@ const ToDo: FC<{}> = () => {
   const columns = useMemo(() => {
     return [
       {
-        title: '序号',
-        dataIndex: 'id',
-        key: 'id',
-        width: '7.5%',
+        title: "序号",
+        dataIndex: "id",
+        key: "id",
+        width: "7.5%",
         render(_: string, record: TodoItem, index: number) {
           return <div>{index + 1}</div>;
         },
       },
       {
-        title: '流程名称',
-        dataIndex: 'processDefinitionName',
-        key: 'processDefinitionName',
-        width: '15%',
+        title: "流程名称",
+        dataIndex: "processDefinitionName",
+        key: "processDefinitionName",
+        width: "15%",
         render(_: string, record: TodoItem) {
           return <div className={styles.name}>{record.processDefinitionName}</div>;
         },
@@ -163,16 +174,16 @@ const ToDo: FC<{}> = () => {
         },
       },
       {
-        title: '当前节点',
-        dataIndex: 'taskName',
-        key: 'taskName',
-        width: '15%',
+        title: "当前节点",
+        dataIndex: "taskName",
+        key: "taskName",
+        width: "15%",
       },
       {
-        title: '节点停留',
-        dataIndex: 'stay',
-        key: 'stay',
-        width: '15%',
+        title: "节点停留",
+        dataIndex: "stay",
+        key: "stay",
+        width: "15%",
         render(_: string, record: TodoItem) {
           const { taskCreateTime, dueState } = record;
           return (
@@ -184,22 +195,22 @@ const ToDo: FC<{}> = () => {
         },
       },
       {
-        title: '发起人',
-        dataIndex: 'starter',
-        key: 'starter',
-        width: '15%',
+        title: "发起人",
+        dataIndex: "starter",
+        key: "starter",
+        width: "15%",
       },
       {
-        title: '发起时间',
-        dataIndex: 'startTime',
-        key: 'startTime',
-        width: '15%',
-        sortDirections: ['ascend' as 'ascend', 'descend' as 'descend', 'ascend' as 'ascend'],
-        defaultSortOrder: 'descend' as 'descend',
+        title: "发起时间",
+        dataIndex: "startTime",
+        key: "startTime",
+        width: "15%",
+        sortDirections: ["ascend" as const, "descend" as const, "ascend" as const],
+        defaultSortOrder: "descend" as const,
         sorter: true,
         render(_: string, record: TodoItem) {
           const { startTime } = record;
-          return moment(startTime).format('yyyy-MM-DD HH:mm');
+          return moment(startTime).format("yyyy-MM-DD HH:mm");
         },
       },
     ];
@@ -221,7 +232,7 @@ const ToDo: FC<{}> = () => {
   }, [form, fetchData]);
   const handleTableChange = useCallback(
     (newPagination, filters, sorter) => {
-      sorter.order === 'ascend' ? setSortDirection('ASC') : setSortDirection('DESC');
+      sorter.order === "ascend" ? setSortDirection("ASC") : setSortDirection("DESC");
       setTimeout(() => {
         setPagination((pagination) => {
           fetchData(newPagination);
@@ -235,10 +246,10 @@ const ToDo: FC<{}> = () => {
     appId && fetchData();
   }, [fetchData, appId]);
   useEffect(() => {
-    fetchOptionList(1, '');
+    fetchOptionList(1, "");
   }, [fetchOptionList]);
   return (
-    <div className={styles.container}>
+    <div className={classNames(styles.container, styles[theme])}>
       <div className={styles.header}>
         <div className={styles.search}>
           <Form
@@ -256,12 +267,11 @@ const ToDo: FC<{}> = () => {
             <Form.Item label="发起人" name="starter" className="starter">
               <Select
                 showSearch
-                onChange={() => {
-                  fetchData();
-                }}
+                onChange={() => fetchData()}
+                getPopupContainer={(node) => node}
                 onPopupScroll={handleScroll}
                 onSearch={handleSearchUser}
-                style={{ width: '100%' }}
+                style={{ width: "100%" }}
                 suffixIcon={<Icon type="xiala" />}
                 placeholder="请选择"
                 optionFilterProp="label"
@@ -276,9 +286,10 @@ const ToDo: FC<{}> = () => {
             </Form.Item>
             <Form.Item label="发起时间" name="timeRange" className="timeRange">
               <RangePicker
-                showTime={{ format: 'HH:mm' }}
+                showTime={{ format: "HH:mm" }}
                 format="yyyy-MM-DD HH:mm"
-                style={{ width: '100%' }}
+                style={{ width: "100%" }}
+                getPopupContainer={(node) => node}
                 suffixIcon={<Icon type="riqi" />}
                 onChange={() => {
                   fetchData();

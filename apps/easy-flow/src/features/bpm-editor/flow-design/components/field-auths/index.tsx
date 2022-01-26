@@ -1,36 +1,36 @@
-import { memo, useMemo } from 'react';
-import { Checkbox } from 'antd';
-import classnames from 'classnames';
-import { Text } from '@common/components';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import { FieldAuthsMap, AuthType, FieldTemplate } from '@type/flow';
-import useFieldsTemplate from '../../hooks/use-fields-template';
-import styles from './index.module.scss';
+import { memo, useMemo } from "react";
+import { Checkbox } from "antd";
+import classnames from "classnames";
+import { Text } from "@common/components";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { FieldAuthsMap, AuthType, FieldTemplate } from "@type/flow";
+import useFieldsTemplate from "../../hooks/use-fields-template";
+import styles from "./index.module.scss";
 
-type FieldAuth = Pick<FieldTemplate, 'id'> & { auth: AuthType };
+type FieldAuth = Pick<FieldTemplate, "id"> & { auth: AuthType };
 
 interface FieldRowProps {
   label: string;
   value: FieldAuth;
   onChange(field: FieldAuth): void;
   extra?: {
-    [key in 'view' | 'edit' | 'required']: {
+    [key in "view" | "edit" | "required"]: {
       label: string;
       indeterminate: boolean;
     };
   };
   className?: string;
-  max?: FieldAuth['auth'];
+  max?: FieldAuth["auth"];
 }
 
 const FieldRow = memo(function FieldRow(props: FieldRowProps) {
   const { value, onChange, extra, label, className, max = AuthType.Required } = props;
-  const handleAuthChange = useMemoCallback((auth: FieldAuth['auth']) => {
+  const handleAuthChange = useMemoCallback((auth: FieldAuth["auth"]) => {
     onChange(Object.assign({}, value, { auth }));
   });
 
   return (
-    <div className={classnames(styles['flex-row'], max !== AuthType.Required ? styles.limit : '', className)}>
+    <div className={classnames(styles["flex-row"], max !== AuthType.Required ? styles.limit : "", className)}>
       <Text placement="topLeft" className={styles.cell}>
         {label}
       </Text>
@@ -72,27 +72,30 @@ const FieldRow = memo(function FieldRow(props: FieldRowProps) {
 });
 
 interface FieldAuthsProps {
-  max?: FieldAuth['auth'];
+  max?: FieldAuth["auth"];
   value?: FieldAuthsMap;
-  onChange?(value: this['value']): void;
+  onChange?(value: this["value"]): void;
 }
+
+// 只能查看,不能编辑的控件类型
+const viewComponentTypes = ["DescText", "SerialNum", "FlowData", "Iframe"];
 
 function FieldAuths(props: FieldAuthsProps) {
   const { value, onChange, max = AuthType.Required } = props;
   const templates = useFieldsTemplate();
   const memoValueInfo = useMemo(() => {
     const valueMaps: { [key: string]: FieldAuth } = {};
-    const statistic: FieldRowProps['extra'] = {
+    const statistic: FieldRowProps["extra"] = {
       view: {
-        label: '查看',
+        label: "查看",
         indeterminate: false,
       },
       edit: {
-        label: '编辑',
+        label: "编辑",
         indeterminate: false,
       },
       required: {
-        label: '必填',
+        label: "必填",
         indeterminate: false,
       },
     };
@@ -104,13 +107,13 @@ function FieldAuths(props: FieldAuthsProps) {
     // 必填字段数量
     let requiredAuthNum = 0;
     // 统计的权限
-    let totalAuth: FieldAuth['auth'] = 0;
+    let totalAuth: FieldAuth["auth"] = 0;
     // 统计只能有AuthType.View的字段总数
     let viewTypeNum = 0;
     templates.forEach((field) => {
       const { type, id, parentId } = field;
 
-      if (['DescText', 'SerialNum','FlowData'].includes(type)) {
+      if (viewComponentTypes.includes(type)) {
         viewTypeNum++;
       }
       let auth: AuthType = AuthType.View;
@@ -161,7 +164,7 @@ function FieldAuths(props: FieldAuthsProps) {
       valueMaps,
       total: {
         value: {
-          id: '',
+          id: "",
           auth: totalAuth,
         },
         extra: statistic,
@@ -190,12 +193,12 @@ function FieldAuths(props: FieldAuthsProps) {
       const { id, parentId, type } = field;
       if (parentId) {
         const parentAuth = Object.assign({}, newValue[parentId], {
-          [id]: ['DescText', 'SerialNum','FlowData'].includes(type) ? Math.min(auth, AuthType.View) : auth,
+          [id]: viewComponentTypes.includes(type) ? Math.min(auth, AuthType.View) : auth,
         });
         newValue[parentId] = Object.assign({}, newValue[parentId], parentAuth);
         return;
       }
-      if (['DescText', 'SerialNum','FlowData'].includes(type)) {
+      if (viewComponentTypes.includes(type)) {
         newValue[id] = Math.min(auth, AuthType.View);
       } else {
         newValue[id] = auth;
@@ -227,13 +230,13 @@ function FieldAuths(props: FieldAuthsProps) {
         }
         return (
           <FieldRow
-            label={field.name || '描述文字'}
+            label={field.name || "描述文字"}
             className={classnames({
               // 当字段是描述文字的时候并且字段列表可配编辑和必填时让描述文字的复选框显示only-view
               // 右侧会空出空间与其他字段对齐
-              [styles['only-view']]: ['DescText', 'SerialNum','FlowData'].includes(field.type) && max === AuthType.Required,
+              [styles["only-view"]]: viewComponentTypes.includes(field.type) && max === AuthType.Required,
             })}
-            max={['DescText', 'SerialNum','FlowData'].includes(field.type) ? 1 : max}
+            max={viewComponentTypes.includes(field.type) ? 1 : max}
             key={field.id}
             value={fieldAuth}
             onChange={handleFieldChange}

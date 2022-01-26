@@ -1,4 +1,4 @@
-import { SCENE_IAMGES } from '@consts';
+import { SCENE_IAMGES } from "@consts";
 
 export type AppSchema = {
   id: number;

@@ -1,0 +1,189 @@
+@import "@common/styles/var.scss";
+@import "@common/styles/theme-color.scss";
+
+.single-nav-component {
+  height: 100%;
+  display: flex;
+  & > .left {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    width: 240px;
+    border-right: 1px solid rgba(24, 31, 67, 0.08);
+    & > .extra {
+      height: 128px;
+    }
+    & > .menu {
+      height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      flex: 1;
+      & > .ant-menu {
+        width: 100% !important;
+        height: 100%;
+        border-right: none;
+        .ant-menu-submenu {
+          width: 100%;
+        }
+        .ant-menu-submenu-title,
+        .ant-menu-item {
+          height: 48px;
+          line-height: 48px;
+          margin: 0;
+          font-size: 14px;
+          font-weight: 400;
+          .ant-menu-item-icon {
+            font-size: 20px;
+          }
+          &:hover {
+            color: $primary-color  !important;
+            .ant-menu-item-icon {
+              color: $primary-color !important;
+            }
+          }
+          &:after {
+            display: none;
+          }
+        }
+        .ant-menu-item-selected {
+          color: $primary-color;
+          border-right: 5px solid $primary-color;
+          .ant-menu-item-icon {
+            color: $primary-color;
+          }
+        }
+        .ant-menu-submenu-active {
+          .ant-menu-submenu-arrow {
+            color: $primary-color;
+          }
+        }
+      }
+    }
+  }
+  & > .right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: calc(100% - 240px);
+    height: 100%;
+    & > .header {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      height: 56px;
+      padding-right: 18px;
+      border-bottom: 1px solid rgba(24, 31, 67, 0.08);
+      box-sizing: content-box;
+      // box-shadow: 0px 2px 8px 0px rgba(24, 31, 67, 0.08);
+      & > .user-container {
+        pointer-events: none;
+        & > .user {
+          display: flex;
+          align-items: center;
+          & > .avatar {
+            margin-right: 4px;
+          }
+        }
+      }
+    }
+    & > .content {
+      height: calc(100% - 56px);
+      width: 100%;
+      overflow: auto;
+      flex: 1;
+    }
+  }
+  // 浅色主题
+  &.light {
+    & > .left {
+      background: $light-side-background-color;
+      & > .menu {
+        & > .ant-menu {
+          background: $light-side-background-color;
+          .ant-menu-submenu-title,
+          .ant-menu-item {
+            color: $light-text-color;
+          }
+          .ant-menu-item-selected {
+            background-color: $light-content-background-color;
+            color: $primary-color;
+            .ant-menu-item-icon {
+              color: $primary-color;
+            }
+          }
+          .ant-menu-submenu-active {
+            .ant-menu-submenu-arrow {
+              color: $primary-color;
+            }
+          }
+        }
+      }
+    }
+    & > .right {
+      background: $light-content-background-color;
+    }
+  }
+  // 深色主题
+  &.dark {
+    & > .left {
+      background: $dark-side-background-color;
+      border-right-color: rgba($dark-text-color, 0.08);
+      .app-name {
+        color: rgba($dark-text-color, 0.8);
+      }
+      & > .menu {
+        & > .ant-menu {
+          background: $dark-side-background-color;
+          .ant-menu-submenu-title,
+          .ant-menu-item {
+            background: $dark-side-background-color;
+            color: rgba($dark-text-color, 0.8);
+            &:hover {
+              color: rgba($dark-text-color, 0.8);
+              .ant-menu-item-icon {
+                color: rgba($dark-text-color, 0.8);
+              }
+            }
+          }
+          .ant-menu-item-selected {
+            background-color: $dark-content-background-color;
+            color: $primary-color;
+            .ant-menu-item-icon {
+              color: $primary-color;
+            }
+          }
+          .ant-menu-submenu-active {
+            .ant-menu-submenu-arrow {
+              color: $dark-active-text-color;
+            }
+          }
+        }
+        .ant-menu-submenu-arrow {
+          color: rgba($dark-text-color, 0.8);
+        }
+      }
+    }
+    & > .right {
+      background: $dark-content-background-color;
+      & > .header {
+        background: $dark-side-background-color;
+        border-bottom-color: rgba($dark-text-color, 0.08);
+        & > .user-container {
+          color: rgba($dark-text-color, 0.8);
+        }
+      }
+      & > .content {
+        color: rgba($dark-text-color, 0.8);
+      }
+    }
+  }
+}
+
+.ant-modal-content {
+  .single-nav-component{
+    .header {
+      padding-right: 60px;
+    }
+  }
+}

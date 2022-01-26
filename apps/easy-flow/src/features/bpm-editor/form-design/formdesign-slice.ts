@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
   comAdded as addedReducer,
   moveDown as moveDownReducer,
@@ -18,9 +18,9 @@ import {
   setPropertyRules as setFieldRulesReducer,
   setSubComponentConfig as setSubComponentConfigReducer,
   editSubComponentProps as editSubComponentPropsReducer,
-} from './formzone-reducer';
-import { ConfigItem, ErrorItem, FieldType, FormDesign, FormField, FormMeta } from '@/type';
-import { loadComponents } from './toolbox/toolbox-reducer';
+} from "./formzone-reducer";
+import { ConfigItem, ErrorItem, FieldType, FormDesign, FormField, FormMeta } from "@/type";
+import { loadComponents } from "./toolbox/toolbox-reducer";
 import {
   validateFieldName,
   validateFields,
@@ -29,15 +29,16 @@ import {
   validateSerialCustom,
   validateSerialInject,
   validateSerial,
-} from './validate';
-import { RootState } from '@/app/store';
-import { axios } from '@/utils';
-import { message } from 'antd';
+  validUrlOption,
+} from "./validate";
+import { RootState } from "@/app/store";
+import { axios } from "@/utils";
+import { message } from "antd";
 
-let initialState: FormDesign = { subComponentConfig: null } as FormDesign;
+const initialState: FormDesign = { subComponentConfig: null } as FormDesign;
 
 const formDesign = createSlice({
-  name: 'formDesign',
+  name: "formDesign",
   initialState,
   reducers: {
     comAdded: addedReducer,
@@ -93,15 +94,23 @@ export const {
 export default formDesign.reducer;
 
 const validComponentConfig = (config: ConfigItem, props: ConfigItem): ErrorItem | null => {
-  const { id, label = '', fieldName = '', type } = config;
+  const { id, label = "", fieldName = "", type } = config;
   const errorItem: ErrorItem = { id, content: [], subError: [] };
-  const nameError = validateFieldName(fieldName);
+  if (!["DescText", "Iframe"].includes(type)) {
+    const nameError = validateFieldName(fieldName);
+    nameError && errorItem.content.push(nameError);
+  }
   const labelError = validateLabel(label);
+  labelError && errorItem.content.push(labelError);
   const serialError = validateSerial(config);
+  serialError && errorItem.content.push(serialError);
   const customError = validateSerialCustom(config);
+  customError && errorItem.content.push(customError);
   const injectError = validateSerialInject(config);
+  injectError && errorItem.content.push(injectError);
   const propsError = validateHasChecked(props, config);
-  if (type === 'Tabs') {
+  propsError && errorItem.content.push(propsError);
+  if (type === "Tabs") {
     const fieldsError = validateFields(props.components);
     fieldsError && errorItem.content.push(fieldsError);
     const len = props.components?.length;
@@ -110,18 +119,18 @@ const validComponentConfig = (config: ConfigItem, props: ConfigItem): ErrorItem 
         const comp = props.components[i];
         const subError = validComponentConfig(comp.config, comp.props);
         if (subError?.content && subError?.content.length > 0) {
-          errorItem.content.push('子控件错误!');
+          errorItem.content.push("子控件错误!");
           errorItem.subError?.push({ id: subError.id, content: subError.content });
         }
       }
     }
   }
-  nameError && errorItem.content.push(nameError);
-  labelError && errorItem.content.push(labelError);
-  propsError && errorItem.content.push(propsError);
-  serialError && errorItem.content.push(serialError);
-  customError && errorItem.content.push(customError);
-  injectError && errorItem.content.push(injectError);
+  if (type === "Iframe") {
+    const urlOption = props.url;
+    const urlError = validUrlOption(urlOption);
+    urlError && errorItem.content.push(urlError);
+  }
+
   return errorItem.content.length > 0 ? errorItem : null;
 };
 type SaveParams = {
@@ -131,7 +140,7 @@ type SaveParams = {
 };
 type Key = keyof FormField;
 export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>(
-  'form/save',
+  "form/save",
   async ({ subAppId, isShowTip, isShowErrorTip }, { getState, dispatch }) => {
     const { formDesign } = getState();
     const { layout = [], schema = {}, isDirty = false, byId = {}, formRules, propertyRules } = formDesign;
@@ -146,27 +155,27 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
     // 组装控件属性
     layout.forEach((row) => {
       row.forEach((id: string) => {
-        const type = <FieldType>formDesign.byId[id].type || '';
-        const version = schema[type]?.baseInfo.version || '';
+        const type = <FieldType>formDesign.byId[id].type || "";
+        const version = schema[type]?.baseInfo.version || "";
         const componentConfig =
-          type === 'DescText'
-            ? schema[type]?.config.concat([{ key: 'fieldName', type: 'Input', isProps: false, checked: false }]) //富文本也要保存fieldName
+          type === "DescText"
+            ? schema[type]?.config.concat([{ key: "fieldName", type: "Input", isProps: false, checked: false }]) //富文本也要保存fieldName
             : schema[type]?.config;
         const config: ConfigItem = {
           id,
           type,
           version,
           rules: [],
-          canSubmit: type !== 'DescText',
-          multiple: type === 'Checkbox' || (['Select', 'Member'].includes(type) && byId[id].multiple),
+          canSubmit: !["DescText", "FlowData", "Iframe"].includes(type),
+          multiple: type === "Checkbox" || (["Select", "Member"].includes(type) && byId[id].multiple),
         };
-        const props: ConfigItem = { type, id, multiple: type === 'Checkbox' };
+        const props: ConfigItem = { type, id, multiple: type === "Checkbox" };
         componentConfig?.forEach(({ isProps, key }) => {
           if (isProps) {
             props[key] = byId[id][key as Key];
           } else {
             config[key] = byId[id][key as Key];
-            if (key === 'colSpace' && (type === 'Image' || type === 'Attachment')) {
+            if (key === "colSpace" && (type === "Image" || type === "Attachment")) {
               props[key] = byId[id][key as Key];
             }
           }
@@ -183,29 +192,29 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
     });
 
     if (errors.length > 0) {
-      const id = errors[0].id || '';
+      const id = errors[0].id || "";
       id && dispatch(selectField({ id }));
       dispatch(setErrors({ errors }));
-      const hasTipsError = errors.find((item) => item.content.includes('errorTipsExchange'));
+      const hasTipsError = errors.find((item) => item.content.includes("errorTipsExchange"));
       const hasSubTipsError = errors.some((item) => {
-        return item?.subError && item.subError.some((v) => v.content.includes('errorTipsExchange'));
+        return item?.subError && item.subError.some((v) => v.content.includes("errorTipsExchange"));
       });
       if (isShowErrorTip && !hasTipsError && !hasSubTipsError) {
-        message.error('您有内容未填写或填写错误，请检查');
+        message.error("您有内容未填写或填写错误，请检查");
       }
       return Promise.reject(errors);
     }
     // 表单改变之后才有必要调后台接口
     if (isDirty) {
-      await axios.post('/form', { meta: formMeta, subappId: subAppId });
+      await axios.post("/form", { meta: formMeta, subappId: subAppId });
       dispatch(setIsDirty({ isDirty: false }));
     }
-    isShowTip && message.success('保存成功!');
+    isShowTip && message.success("保存成功!");
   },
 );
 
 export const moveUpAction = createAsyncThunk<void, { id: string; rowIndex: number }, { state: RootState }>(
-  'component/moveUp',
+  "component/moveUp",
   async ({ id, rowIndex }, { getState, dispatch }) => {
     dispatch(moveUp({ id }));
     const { formDesign } = getState();
@@ -215,21 +224,21 @@ export const moveUpAction = createAsyncThunk<void, { id: string; rowIndex: numbe
     const nextRow = rowList[rowIndex];
     // 当前行重新布局
     currentRow.forEach((id) => {
-      const config = Object.assign({}, componentMap[id], { colSpace: currentRow.length === 2 ? '2' : '1' });
+      const config = Object.assign({}, componentMap[id], { colSpace: currentRow.length === 2 ? "2" : "1" });
       dispatch(editProps({ id, config }));
     });
     // 如果有下一行，重新布局
     nextRow &&
       nextRow.forEach((id) => {
         const config = Object.assign({}, componentMap[id], {
-          colSpace: nextRow.length === 1 ? '4' : nextRow.length === 2 ? '2' : '1',
+          colSpace: nextRow.length === 1 ? "4" : nextRow.length === 2 ? "2" : "1",
         });
         dispatch(editProps({ id, config }));
       });
   },
 );
 export const moveDownAction = createAsyncThunk<void, { id: string; rowIndex: number }, { state: RootState }>(
-  'component/moveUp',
+  "component/moveUp",
   async ({ id, rowIndex }, { getState, dispatch }) => {
     dispatch(moveDown({ id }));
     const { formDesign } = getState();
@@ -239,10 +248,10 @@ export const moveDownAction = createAsyncThunk<void, { id: string; rowIndex: num
     const length = componentIdList.length;
     // 当前行重新布局
     componentIdList.forEach((id) => {
-      const config = Object.assign({}, componentMap[id], { colSpace: length === 1 ? '4' : length === 2 ? '2' : '1' });
+      const config = Object.assign({}, componentMap[id], { colSpace: length === 1 ? "4" : length === 2 ? "2" : "1" });
       dispatch(editProps({ id, config }));
     });
     // 下移之后一定是独占一行
-    dispatch(editProps({ id, config: Object.assign({}, componentMap[id], { colSpace: '4' }) }));
+    dispatch(editProps({ id, config: Object.assign({}, componentMap[id], { colSpace: "4" }) }));
   },
 );

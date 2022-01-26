@@ -1,17 +1,17 @@
-import { memo, useEffect, useState } from 'react';
-import { useParams, useHistory } from 'react-router';
-import { message } from 'antd';
-import { Loading, AsyncButton } from '@common/components';
-import Header from '@components/header';
-import { runtimeAxios } from '@utils';
-import { dynamicRoutes } from '@consts';
-import { loadFlowData } from '@apis/detail';
-import Detail from './components/detail';
-import Empty from './components/empty';
-import { FormValue, FormMeta, FlowMeta, TaskDetailType, FlowInstance } from '@type/detail';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import ConfirmModal, { ActionType } from './components/confirm-modal';
-import styles from './index.module.scss';
+import { memo, useEffect, useState } from "react";
+import { useParams, useHistory } from "react-router";
+import { message } from "antd";
+import { Loading, AsyncButton } from "@common/components";
+import Header from "@components/header";
+import { runtimeAxios } from "@utils";
+import { dynamicRoutes } from "@consts";
+import { loadFlowData } from "@apis/detail";
+import Detail from "./components/detail";
+import Empty from "./components/empty";
+import { FormValue, FormMeta, FlowMeta, TaskDetailType, FlowInstance } from "@type/detail";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import ConfirmModal, { ActionType } from "./components/confirm-modal";
+import styles from "./index.module.scss";
 
 type DataType = {
   form: {
@@ -70,13 +70,13 @@ function StartDetail() {
   }, [flowId]);
 
   const handleRevokeTask = useMemoCallback(async (remark: string) => {
-    await runtimeAxios.post(`/process_instance/revoke`, {
+    await runtimeAxios.post("/process_instance/revoke", {
       processInstanceId: flowId,
       remark,
     });
 
     setShowConfirm(false);
-    message.success('撤回成功');
+    message.success("撤回成功");
 
     setTimeout(() => {
       history.replace(`${dynamicRoutes.toTaskCenter(data!.flow.instance.subapp.app.id)}`);

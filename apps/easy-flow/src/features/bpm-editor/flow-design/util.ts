@@ -1,5 +1,5 @@
-import React from 'react';
-import { AbstractTooltipProps } from 'antd/lib/tooltip';
+import React from "react";
+import { AbstractTooltipProps } from "antd/lib/tooltip";
 import {
   NodeType,
   AllNode,
@@ -15,26 +15,26 @@ import {
   FieldAuthsMap,
   FieldTemplate,
   CorrelationMemberConfig,
-} from '@type/flow';
-import { FormMeta } from '@type';
-import { validators } from './validators';
+} from "@type/flow";
+import { FormMeta } from "@type";
+import { validators } from "./validators";
 
 function randomString() {
   return Math.random().toString(36).slice(2);
 }
 
-export function uuid(group: number = 3) {
+export function uuid(group = 3) {
   const strarr = Array.from(new Array(group)).map(() => randomString());
 
-  return strarr.join('-');
+  return strarr.join("-");
 }
 
-export function fielduuid(group: number = 3) {
+export function fielduuid(group = 3) {
   // 应后端要求字段id不能以数字开头
   return `flow-node-${uuid(group)}`;
 }
 
-export function branchuuid(group: number = 3) {
+export function branchuuid(group = 3) {
   // 应后端要求字段id不能以数字开头
   return `flow-branch-${uuid(group)}`;
 }
@@ -118,7 +118,7 @@ export function createNode(type: NodeType, name?: string) {
       dueConfig: {
         enable: false,
         timeout: {
-          unit: 'day',
+          unit: "day",
         },
         notice: {
           starter: false,
@@ -128,7 +128,7 @@ export function createNode(type: NodeType, name?: string) {
         },
         cycle: {
           enable: false,
-          unit: 'day',
+          unit: "day",
         },
         action: null,
       },
@@ -143,7 +143,7 @@ export function createNode(type: NodeType, name?: string) {
       dueConfig: {
         enable: false,
         timeout: {
-          unit: 'day',
+          unit: "day",
         },
         notice: {
           starter: false,
@@ -153,27 +153,27 @@ export function createNode(type: NodeType, name?: string) {
         },
         cycle: {
           enable: false,
-          unit: 'day',
+          unit: "day",
         },
       },
     };
   } else if (type === NodeType.CCNode) {
     return <CCNode>node;
   } else {
-    throw new Error('传入类型不正确');
+    throw new Error("传入类型不正确");
   }
 }
 
-export const getPopupContainer: AbstractTooltipProps['getPopupContainer'] = (container) => container;
+export const getPopupContainer: AbstractTooltipProps["getPopupContainer"] = (container) => container;
 
 export function trimInputValue(event: React.ChangeEvent<HTMLInputElement>) {
   const value = event.target.value;
 
-  return value ? value.trim() : '';
+  return value ? value.trim() : "";
 }
 
 export function flowUpdate(data: AllNode[], targetId: string, newNode: AllNode | null): AllNode[] {
-  let tIndex = data.findIndex((subNode) => subNode.id === targetId);
+  const tIndex = data.findIndex((subNode) => subNode.id === targetId);
 
   if (tIndex >= 0) {
     // 删除
@@ -259,9 +259,12 @@ export function valid(data: AllNode[], validRes: ValidResultType) {
 
         const isInvalid = branch.conditions.some((row) => {
           return row.some((col) => {
-            for (let key in col) {
-              if (!col[key as keyof typeof col] && !['parentId', 'valueType'].includes(key)) {
-                errors.push('条件配置不合法');
+            for (const key in col) {
+              if (
+                (col[key as keyof typeof col] === null || col[key as keyof typeof col] === undefined) &&
+                !["parentId", "valueType"].includes(key)
+              ) {
+                errors.push("条件配置不合法");
 
                 return true;
               }
@@ -273,7 +276,7 @@ export function valid(data: AllNode[], validRes: ValidResultType) {
 
         if (errors.length && isInvalid) {
           validRes[branch.id] = {
-            name: '子分支',
+            name: "子分支",
             id: branch.id,
             errors,
           };
@@ -287,7 +290,7 @@ export function valid(data: AllNode[], validRes: ValidResultType) {
     const errors = [];
 
     if (!node.name) {
-      errors.push('未输入节点名称');
+      errors.push("未输入节点名称");
     } else {
       const error = validators.name(node.name);
 
@@ -309,9 +312,9 @@ export function valid(data: AllNode[], validRes: ValidResultType) {
 
         if (node.countersign && node.countersign.enable) {
           if (node.countersign.type === 1 && !node.countersign.percent) {
-            errors.push('会签百分比不能为空');
+            errors.push("会签百分比不能为空");
           } else if (node.countersign.type === 2 && !node.countersign.count) {
-            errors.push('会签人数不能为空');
+            errors.push("会签人数不能为空");
           }
         }
       }
@@ -355,7 +358,7 @@ type PrevNodeType = Exclude<AllNode, BranchNode>;
 
 export const findPrevNodes = (flow: AllNode[], targetId: string): PrevNodeType[] => {
   function findPrevNodes(flow: AllNode[], targetId: string): [PrevNodeType[], boolean] {
-    let finded = false;
+    const finded = false;
     let prevs: PrevNodeType[] = [];
 
     const targetNodeIndex = flow.findIndex((node) => {
@@ -430,7 +433,7 @@ export function formatFieldsTemplate(form: FormMeta | null): FieldTemplate[] {
   });
 }
 
-export function dynamicIsEmpty(data?: CorrelationMemberConfig['dynamic']) {
+export function dynamicIsEmpty(data?: CorrelationMemberConfig["dynamic"]) {
   if (!data) return true;
 
   if (!data.starter && !data.fields.length && !data.roles.length) return true;

@@ -1,14 +1,15 @@
-import { ReactNode, memo, useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
-import classnames from 'classnames';
-import { Icon } from '@common/components';
-import styles from './index.module.scss';
+import { ReactNode, memo, useCallback } from "react";
+import { useHistory } from "react-router-dom";
+import classnames from "classnames";
+import { Icon } from "@common/components";
+import styles from "./index.module.scss";
 
 interface DetailHeaderProps {
   backText: string;
   backClassName?: string;
   children?: ReactNode;
   className?: string;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   goBack?: Function;
 }
 

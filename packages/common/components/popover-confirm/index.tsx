@@ -42,7 +42,8 @@ function EnnPopover(props: PopoverProps) {
     };
   }, []);
 
-  const handleCancel = useCallback(() => {
+  const handleCancel = useCallback((e) => {
+    e.stopPropagation();
     if (onVisibleChange) {
       onVisibleChange(false);
     } else {
@@ -54,11 +55,9 @@ function EnnPopover(props: PopoverProps) {
     if (onConfirm) {
       return async () => {
         const confirmReturn = onConfirm();
-
         if (hasUnmounted.current || !confirmReturn || typeof confirmReturn.then !== 'function') {
           return;
         }
-
         if (onVisibleChange) {
           onVisibleChange(false);
         } else {
@@ -72,7 +71,7 @@ function EnnPopover(props: PopoverProps) {
 
   const popoverContent = useMemo(() => {
     return (
-      <div className={styles.container}>
+      <div className={styles.container} onClick={(e: React.MouseEvent)=> e.stopPropagation()}>
         <div className={styles.header}>
           <ExclamationCircleFilled className={styles.icon} />
           <div className={styles.content}>

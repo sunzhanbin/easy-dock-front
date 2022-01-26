@@ -1,7 +1,7 @@
-import { useMemo } from 'react';
-import { useAppSelector } from '@/app/hooks';
-import { flowDataSelector, fieldsTemplateSelector } from '../flow-slice';
-import { CorrelationMemberConfig } from '@type/flow';
+import { useMemo } from "react";
+import { useAppSelector } from "@/app/hooks";
+import { flowDataSelector, fieldsTemplateSelector } from "../flow-slice";
+import { CorrelationMemberConfig } from "@type/flow";
 
 export default function useShowMembers(correlationMemberConfig: CorrelationMemberConfig) {
   const { cacheMembers } = useAppSelector(flowDataSelector);

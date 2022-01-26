@@ -1,0 +1,190 @@
+@import "@common/styles/var.scss";
+
+.sub-list-component-container {
+  position: relative;
+  height: calc(100% - 90px);
+  background: #fff;
+  border-radius: 6px;
+  margin: -46px 56px 0 56px;
+
+  & > .app-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 92px;
+    background-color: #fff;
+    padding: 20px 24px;
+    border-radius: 6px;
+    box-shadow:  0 0 10px rgba(24, 31, 67, 0.08);
+    margin-bottom: 12px;
+    & > .logo {
+      width: 56px;
+      height: 56px;
+      overflow: hidden;
+      & > img {
+        width: 100%;
+        object-fit: cover;
+      }
+    }
+    & > .content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      margin-left: 12px;
+      & > .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 24px;
+        & > .left {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          height: 16px;
+          font-size: 16px;
+          font-weight: bold;
+          color: rgba(0, 0, 0, 0.85);
+          & > .app {
+            padding-right: 8px;
+            border-right: 2px solid #262626;
+            line-height: 15px;
+          }
+          & > .name {
+            margin-left: 8px;
+          }
+        }
+        & > .right {
+          display: flex;
+          align-items: center;
+          font-size: 14px;
+          font-weight: 400;
+          color: #181f43;
+          & > .version {
+            font-size: 12px;
+            font-weight: 400;
+            color: rgba(24, 31, 67, 0.75);
+          }
+          & > .preview,
+          & > .edit,
+          & > .copy-link {
+            display: flex;
+            align-items: center;
+            margin-left: 16px;
+            cursor: pointer;
+            & > .icon {
+              font-size: 16px;
+              margin-right: 4px;
+            }
+            &:hover {
+              color: $primary-color;
+              & > .icon {
+                color: $primary-color;
+              }
+            }
+          }
+          & > .switch {
+            margin-left: 16px;
+          }
+        }
+      }
+      & > .remark {
+        line-height: 20px;
+        font-size: 12px;
+        font-weight: 400;
+        color: rgba(24, 31, 67, 0.5);
+        margin-top: 8px;
+      }
+    }
+  }
+
+  .sub-app-tab {
+    .ant-tabs-nav {
+      box-shadow: 5px 0 5px -5px rgba(24, 31, 67, 0.08), -5px 0 5px -5px rgba(24, 31, 67, 0.08);
+    }
+  }
+  // 覆盖ant-tabs的样式
+  .ant-tabs {
+    height: calc(100% - 128px);
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 24px;
+    overflow: visible;
+    .ant-tabs-nav {
+      padding: 20px 24px 0 16px;
+      .ant-tabs-nav-list {
+        .ant-tabs-tab {
+          height: 28px;
+          line-height: 28px;
+          font-size: 14px;
+          font-weight: 400;
+          color: rgba(24, 31, 67, 0.75);
+          &.ant-tabs-tab-active {
+            .ant-tabs-tab-btn {
+              font-size: 18px;
+              font-weight: 500;
+              color: rgba(0, 0, 0, 0.85);
+            }
+          }
+        }
+        .ant-tabs-ink-bar {
+          height: 5px;
+          background-color: $primary-color;
+        }
+      }
+      .ant-tabs-extra-content {
+        padding-right: 2px;
+      }
+      &::before {
+        border-color: transparent;
+      }
+    }
+    .ant-tabs-content-holder {
+      flex: 1;
+      height: calc(100% - 72px);
+      padding: 1px 24px;
+      overflow-y: auto;
+    }
+  }
+  .card-list {
+    display: grid;
+    grid-row-gap: 24px;
+    grid-column-gap: 24px;
+    .card {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100px;
+      background: var(--custom-card-background, #fff);
+      border-radius: 3px;
+      border: 1px solid rgba(24, 31, 67, 0.12);
+      line-height: 22px;
+      color: #181f43;
+      font-size: 14px;
+      font-weight: 400;
+
+      .btn {
+        border-radius: 50%;
+        margin-right: 12px;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 1640px) and (max-width: 1919px) {
+  .card-list {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media screen and (max-width: 1639px) {
+  .card-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media screen and (min-width: 1920px) {
+  .card-list {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}

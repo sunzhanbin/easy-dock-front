@@ -1,6 +1,6 @@
-import { FormRuleItem, Dept, Role } from './index';
-import type { FillNode, AuditNode, StartNode } from './flow';
-import { SubApp } from './subapp';
+import { FormRuleItem, Dept, Role } from "./index";
+import type { FillNode, AuditNode, StartNode } from "./flow";
+import { SubApp } from "./subapp";
 
 export interface FormMeta {
   seletedTheme: string;
@@ -17,11 +17,11 @@ export interface FormMeta {
     }[];
   };
   rules?: {
-    type: 'reg' | '<' | '>' | '=' | '||';
+    type: "reg" | "<" | ">" | "=" | "||";
     field: string;
-    validator?: RegExp | { type: 'ref'; value: string };
+    validator?: RegExp | { type: "ref"; value: string };
     message?: string;
-    children?: Omit<NonNullable<FormMeta['rules']>[number], 'children'>[];
+    children?: Omit<NonNullable<FormMeta["rules"]>[number], "children">[];
   }[];
   formRules?: FormRuleItem[];
   propertyRules?: FormRuleItem[];
@@ -75,14 +75,16 @@ export type FlowInstance = {
 };
 
 export enum AuditRecordType {
-  APPROVE = 'APPROVE',
-  REJECT = 'REJECT',
-  TURN = 'TURN',
-  INSTANCE_STOP = 'INSTANCE_STOP',
-  START = 'START',
-  BACK = 'BACK',
-  FORM_FILL = 'FORM_FILL',
-  RUNNING = 'RUNNING',
+  APPROVE = "APPROVE",
+  REJECT = "REJECT",
+  TURN = "TURN",
+  INSTANCE_STOP = "INSTANCE_STOP",
+  START = "START",
+  BACK = "BACK",
+  FORM_FILL = "FORM_FILL",
+  RUNNING = "RUNNING",
+  AUTO_PROCESS_TRIGGER = "AUTO_PROCESS_TRIGGER",
+  AUTO_INTERFACE_PUSH = "AUTO_INTERFACE_PUSH",
 }
 
 export type AuditRecordSchema = {

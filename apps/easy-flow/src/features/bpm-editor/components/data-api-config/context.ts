@@ -1,6 +1,6 @@
-import { createContext } from 'react';
-import { ParamReturn } from './util';
-import type { DataApiConfigProps } from './index';
+import { createContext } from "react";
+import { ParamReturn } from "./util";
+import type { DataApiConfigProps } from "./index";
 
 interface DataConfigContext {
   name: string[];
@@ -10,7 +10,7 @@ interface DataConfigContext {
     optionals: ParamReturn[];
     responses: ParamReturn[];
   };
-  layout?: DataApiConfigProps['layout'];
+  layout?: DataApiConfigProps["layout"];
   getPopupContainer(): HTMLDivElement;
 }
 

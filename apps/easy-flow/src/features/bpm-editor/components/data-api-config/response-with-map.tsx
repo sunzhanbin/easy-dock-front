@@ -1,12 +1,12 @@
-import { memo, useContext, useMemo } from 'react';
-import { Form, Input, Button, Select } from 'antd';
-import classnames from 'classnames';
-import { Icon } from '@common/components';
-import { ParamName, FieldMap } from './components';
-import DataContext from './context';
-import { ParamType } from '@type/api';
-import styles from './index.module.scss';
-import { AutoSelector } from './components/map';
+import { memo, useContext, useMemo } from "react";
+import { Form, Input, Button } from "antd";
+import classnames from "classnames";
+import { Icon } from "@common/components";
+import { ParamType } from "@type/api";
+import { ParamName, FieldMap } from "./components";
+import DataContext from "./context";
+import styles from "./index.module.scss";
+import { AutoSelector } from "./components/map";
 
 interface ResponseWithMapProps {
   label: string;
@@ -14,9 +14,9 @@ interface ResponseWithMapProps {
 
 function ResponseWithMap(props: ResponseWithMapProps) {
   const { label } = props;
-  const { name: parentName, detail, getPopupContainer } = useContext(DataContext)!;
+  const { name: parentName, detail } = useContext(DataContext)!;
   const name = useMemo(() => {
-    return [...parentName, 'response'];
+    return [...parentName, "response"];
   }, [parentName]);
 
   return (
@@ -26,7 +26,7 @@ function ResponseWithMap(props: ResponseWithMapProps) {
       <Form.List name={name}>
         {(fields, { add, remove }) => (
           <>
-            {fields.map((field, index) => {
+            {fields.map((field: any, index) => {
               return (
                 <div className={classnames(styles.row)} key={field.fieldKey}>
                   <div className={styles.detail}>
@@ -46,12 +46,12 @@ function ResponseWithMap(props: ResponseWithMapProps) {
                           paramNameChildren = <Input placeholder="请输入" size="large" />;
                         }
 
-                        return <ParamName name={[field.name, 'name']}>{paramNameChildren}</ParamName>;
+                        return <ParamName name={[field.name, "name"]}>{paramNameChildren}</ParamName>;
                       }}
                     </Form.Item>
 
                     <span className={styles.map}>对应</span>
-                    <FieldMap name={[field.name, 'map']} isAutoSelect={false} />
+                    <FieldMap name={[field.name, "map"]} isAutoSelect={false} />
                   </div>
                   <Button className={styles.del} icon={<Icon type="shanchu" />} onClick={() => remove(index)} />
                 </div>

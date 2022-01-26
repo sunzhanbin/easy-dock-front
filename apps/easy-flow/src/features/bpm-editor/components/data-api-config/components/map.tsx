@@ -1,8 +1,8 @@
-import { memo, useContext, useMemo } from 'react';
-import { Form, Input, Dropdown, Menu, Select } from 'antd';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import DataContext from '../context';
-import styles from './index.module.scss';
+import { memo, useContext, useMemo } from "react";
+import { Form, Input, Dropdown, Menu, Select } from "antd";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import styles from "./index.module.scss";
+import DataContext from "../context";
 
 interface FieldMapProps {
   name: (string | number)[];
@@ -32,7 +32,7 @@ function FieldMap(props: FieldMapProps) {
         {
           validator(_, val: string) {
             if (!val) {
-              return Promise.reject(new Error('映射字段不能为空'));
+              return Promise.reject(new Error("映射字段不能为空"));
             }
 
             return Promise.resolve();
@@ -62,7 +62,7 @@ export default memo(FieldMap);
 
 interface AutoSelectorProps {
   value?: string;
-  onChange?(value: this['value']): void;
+  onChange?(value: this["value"]): void;
   options: { id: string | number; name: string }[];
 }
 
@@ -87,14 +87,14 @@ export function AutoSelector(props: AutoSelectorProps) {
         <Menu className={styles.options} onClick={handleMenuClick}>
           {options.map((item) => {
             return (
-              <Menu.Item key={item.id} className={item.id === value ? styles['field-selected'] : ''}>
+              <Menu.Item key={item.id} className={item.id === value ? styles["field-selected"] : ""}>
                 {item.name}
               </Menu.Item>
             );
           })}
         </Menu>
       }
-      trigger={['click']}
+      trigger={["click"]}
     >
       <div className={styles.selector}>
         <Input size="large" value={showValue || value} onInput={handleInputChange} placeholder="请输入" />

@@ -1,10 +1,10 @@
-import React, { memo, useState } from 'react';
-import { Form, Modal, InputNumber, Select } from 'antd';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import styles from '../index.module.scss';
-import { RuleOption } from '@type';
-import { getPopupContainer } from '@utils';
-import { INCREASE_NUM_LIST, ResetDurationOptions } from '@utils/const';
+import React, { memo, useState } from "react";
+import { Form, Modal, InputNumber, Select } from "antd";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import styles from "../index.module.scss";
+import { RuleOption } from "@type";
+import { getPopupContainer } from "@utils";
+import { INCREASE_NUM_LIST, ResetDurationOptions } from "@utils/const";
 
 interface IncNumProps {
   showIncModal: boolean;
@@ -14,13 +14,13 @@ interface IncNumProps {
 }
 
 const { Option } = Select;
-const MODAL_TYPE = { type: 'incNumber' };
+const MODAL_TYPE = { type: "incNumber" };
 
 const IncNumModal = (props: IncNumProps) => {
   const { showIncModal, onCancel, onSubmit, data } = props;
   const [form] = Form.useForm();
   const [digitsNum, setDigitsNum] = useState<number>(data.digitsNum || 5); // 计数位数
-  const [resetDuration, setResetDuration] = useState<string>(data.resetDuration || 'none'); // 重置周期
+  const [resetDuration, setResetDuration] = useState<string>(data.resetDuration || "none"); // 重置周期
   const [startValue, setStartValue] = useState<number>(data.startValue || 1); // 初始值
 
   const handleSubmit = useMemoCallback(async () => {
@@ -34,18 +34,18 @@ const IncNumModal = (props: IncNumProps) => {
       width={400}
       className={styles.modalIncrease}
       visible={showIncModal}
-      title={'计数设置'}
+      title={"计数设置"}
       onOk={handleSubmit}
       onCancel={onCancel}
       okText="确 认"
       cancelText="取 消"
-      cancelButtonProps={{ type: 'text', size: 'large' }}
-      okButtonProps={{ size: 'large' }}
+      cancelButtonProps={{ type: "text", size: "large" }}
+      okButtonProps={{ size: "large" }}
       destroyOnClose={true}
       maskClosable={false}
       getContainer={false}
     >
-      <Form form={form} layout="vertical" autoComplete="off" initialValues={props.data}>
+      <Form component="div" form={form} layout="vertical" autoComplete="off" initialValues={props.data}>
         <Form.Item
           label="计数位数"
           name="digitsNum"
@@ -53,7 +53,7 @@ const IncNumModal = (props: IncNumProps) => {
             {
               validator(_, value) {
                 if (!/^[1-9]\d*$/.test(value)) {
-                  return Promise.reject(new Error('请输入正整数'));
+                  return Promise.reject(new Error("请输入正整数"));
                 }
                 return Promise.resolve();
               },
@@ -70,7 +70,7 @@ const IncNumModal = (props: IncNumProps) => {
           />
         </Form.Item>
         <Form.Item label="重置周期">
-          <Form.Item name="resetDuration" style={{ marginBottom: '5px' }}>
+          <Form.Item name="resetDuration" style={{ marginBottom: "5px" }}>
             <Select
               placeholder="请选择"
               size="large"
@@ -95,7 +95,7 @@ const IncNumModal = (props: IncNumProps) => {
             {
               validator(_, value) {
                 if (!/^[1-9]\d*$/.test(value)) {
-                  return Promise.reject(new Error('请输入正整数'));
+                  return Promise.reject(new Error("请输入正整数"));
                 }
                 return Promise.resolve();
               },

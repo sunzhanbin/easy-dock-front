@@ -1,11 +1,11 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import PubSub from 'pubsub-js';
-import { FormInstance } from 'antd';
-import { FormValue } from '@type/detail';
-import { analysisFormChangeRule } from '@/utils';
-import { ContainerProvider } from './context';
-import { formRulesItem } from './utils';
-import { EventType } from '@/type';
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import PubSub from "pubsub-js";
+import { FormInstance } from "antd";
+import { FormValue } from "@type/detail";
+import { analysisFormChangeRule } from "@/utils";
+import { EventType } from "@/type";
+import { ContainerProvider } from "./context";
+import { formRulesItem } from "./utils";
 
 interface ContainerProps {
   rules: formRulesItem[];
@@ -17,6 +17,7 @@ interface ContainerProps {
   nodeType: string;
 }
 
+// eslint-disable-next-line
 export const Container = React.memo(({ children, rules, fieldName, form, type, nodeType }: ContainerProps) => {
   const visibleRules = useMemo(() => rules?.filter((item) => item?.subtype === EventType.Visible), [rules]);
   const [visible, setVisible] = useState<boolean>(true);
@@ -81,7 +82,7 @@ export const Container = React.memo(({ children, rules, fieldName, form, type, n
     </ContainerProvider>
   );
 });
-
+// eslint-disable-next-line
 const wrapContainer = React.memo(({ children, rules, fieldName, form, type, nodeType }: ContainerProps) => {
   const isLeaf = Array.isArray(rules);
 

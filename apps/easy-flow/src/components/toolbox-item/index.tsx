@@ -1,12 +1,12 @@
-import { FC, memo, useCallback } from 'react';
-import classNames from 'classnames';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { configSelector, formDesignSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
-import { comAdded, comInserted } from '../../features/bpm-editor/form-design/formdesign-slice';
-import { FieldType, FormField } from '@/type';
-import { Icon } from '@common/components';
-import styles from './index.module.scss';
-import { useDrag } from 'react-dnd';
+import { FC, memo, useCallback } from "react";
+import classNames from "classnames";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import { configSelector, formDesignSelector } from "@/features/bpm-editor/form-design/formzone-reducer";
+import { FieldType, FormField } from "@/type";
+import { Icon } from "@common/components";
+import { useDrag } from "react-dnd";
+import styles from "./index.module.scss";
+import { comAdded, comInserted } from "../../features/bpm-editor/form-design/formdesign-slice";
 
 interface DropResult {
   rowIndex: number;
@@ -25,14 +25,14 @@ const ToolBoxItem: FC<{ icon: string; displayName: string; type: FieldType; disa
   const formDesign = useAppSelector(formDesignSelector);
   const [, drag] = useDrag(
     () => ({
-      type: 'toolItem',
+      type: "toolItem",
       item: { rowIndex: -1, id: type },
       canDrag: () => {
         return !disabled;
       },
       end: (item, monitor) => {
         const dropResult = monitor.getDropResult<DropResult>();
-        console.log(`dropResult`, dropResult);
+        console.log("dropResult", dropResult);
         const com = { ...configMap[type], type };
         dropResult && dispatch(comInserted(com as FormField, dropResult?.hoverIndex));
       },
@@ -53,7 +53,7 @@ const ToolBoxItem: FC<{ icon: string; displayName: string; type: FieldType; disa
   }, [type, configMap, formDesign, disabled, dispatch]);
   return (
     <div
-      className={classNames(styles.container, disabled ? styles.disabled : '')}
+      className={classNames(styles.container, disabled ? styles.disabled : "")}
       onClick={addComponent}
       ref={drag}
       // eslint-disable-next-line

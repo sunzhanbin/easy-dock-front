@@ -1,0 +1,96 @@
+@import "@common/styles/var.scss";
+
+.pop-container {
+  .ant-popover {
+    padding: 16px;
+  }
+
+  .sub-item-container {
+    .sub-name {
+      padding: 8px 0;
+      font-size: 14px;
+      color: rgba(24, 31, 67, 0.75);
+    }
+
+    .sub-list-container {
+      display: flex;
+      .container-list {
+        width: 84px;
+        height: 78px;
+        flex: 1;
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        &:hover {
+          transition: all 1s;
+          .icon_arrow {
+            height: 20px;
+            margin-top: 16px;
+            margin-bottom: 8px;
+            color: $primary-color;
+          }
+          .sub-icon {
+            display: none;
+          }
+          background: rgba(24, 39, 67, 0.04);
+        }
+        .icon_arrow {
+          font-size: 16px;
+          height: 0;
+          transition: all 0.5s;
+        }
+
+        .sub-icon {
+          width: 36px;
+          height: 36px;
+          display: inline-block;
+          margin-bottom: 8px;
+        }
+
+        .text {
+          font-size: 14px;
+          color: #181F43;
+        }
+        .icon_shebei {
+          background: url('~@assets/images/device.png') 0 0 no-repeat;
+          background-size: cover;
+        }
+        .icon_shuju {
+          background: url('~@assets/images/data-join.png') 0 0 no-repeat;
+          background-size: cover;
+        }
+        .icon_shujumoxing {
+          background: url('~@assets/images/data-model.png') 0 0 no-repeat;
+          background-size: cover;
+        }
+        .icon_newform {
+          background: url('~@assets/images/form.png') 0 0 no-repeat;
+          background-size: cover;
+        }
+        .icon_newflow {
+          background: url('~@assets/images/flow.png') 0 0 no-repeat;
+          background-size: cover;
+        }
+        .icon_newinterface {
+          background: url('~@assets/images/interface.png') 0 0 no-repeat;
+          background-size: cover;
+        }
+        .icon_newchart {
+          background: url('~@assets/images/chart.png') 0 0 no-repeat;
+          background-size: cover;
+        }
+        .icon_newcanvas {
+          background: url('~@assets/images/canvas.png') 0 0 no-repeat;
+          background-size: cover;
+        }
+        .icon_newspace {
+          background: url('~@assets/images/space.png') 0 0 no-repeat;
+          background-size: cover;
+        }
+      }
+    }
+  }
+}
+
+

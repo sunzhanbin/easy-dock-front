@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useState } from 'react';
-import { axios } from '@utils';
-import LoadMore from '@components/load-more';
-import styles from './index.module.scss';
-import ApiCard, { ApiShape } from './api';
-import { envs } from '@consts';
+import { useCallback, useEffect, useState } from "react";
+import { axios } from "@utils";
+import LoadMore from "@components/load-more";
+import styles from "./index.module.scss";
+import ApiCard, { ApiShape } from "./api";
+import { envs } from "@consts";
 
 interface ApiListProps {
   value: ApiShape[];
@@ -20,7 +20,7 @@ export default function ApiList(props: ApiListProps) {
   useEffect(() => {
     axios
       .post(
-        `/api/api-orchestration-service-main/interfaceManage/v1/listInfo`,
+        "/api/api-orchestration-service-main/interfaceManage/v1/listInfo",
         {
           pageNum: currentPage,
           pageSize: 30,

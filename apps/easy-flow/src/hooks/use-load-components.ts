@@ -1,26 +1,27 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { AllComponentType } from '@type';
-import componentSchema from '@/config/components';
+import React, { useState, useEffect, useMemo } from "react";
+import { AllComponentType } from "@type";
+import componentSchema from "@/config/components";
 
 const categoryList: { key: string; value: string }[] = [
-  { key: '基础控件', value: 'basic-components' },
-  { key: '高级控件', value: 'senior-components' },
+  { key: "基础控件", value: "basic-components" },
+  { key: "高级控件", value: "senior-components" },
+  { key: "业务控件", value: "business-components" },
 ];
 type ComponentCommonProps = {
   readOnly: boolean;
 };
 
 type Component = React.FC<ComponentCommonProps> | React.ComponentClass<ComponentCommonProps>;
-type ComponentMaps = { [key in AllComponentType['type']]?: Component };
+type ComponentMaps = { [key in AllComponentType["type"]]?: Component };
 
-export default function useLoadComponents(componentType: AllComponentType['type']): Component | undefined;
-export default function useLoadComponents(componentTypes: AllComponentType['type'][]): ComponentMaps | undefined;
+export default function useLoadComponents(componentType: AllComponentType["type"]): Component | undefined;
+export default function useLoadComponents(componentTypes: AllComponentType["type"][]): ComponentMaps | undefined;
 export default function useLoadComponents(
-  componentTypes: AllComponentType['type'] | AllComponentType['type'][],
+  componentTypes: AllComponentType["type"] | AllComponentType["type"][],
 ): Component | ComponentMaps | undefined {
   const [componentMaps, setComponentMaps] = useState<ComponentMaps>();
   const typesJson = useMemo(() => {
-    let allTypes: AllComponentType['type'][] = [];
+    let allTypes: AllComponentType["type"][] = [];
 
     if (Array.isArray(componentTypes)) {
       allTypes = componentTypes;
@@ -33,7 +34,7 @@ export default function useLoadComponents(
 
   useEffect(() => {
     const compMaps: ComponentMaps = {};
-    let types: AllComponentType['type'][] = JSON.parse(typesJson);
+    const types: AllComponentType["type"][] = JSON.parse(typesJson);
 
     const compPromises = types.map(
       (type) =>

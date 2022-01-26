@@ -1,4 +1,5 @@
 import { nameRegexp } from '@/utils';
+
 const fieldName = {
   key: 'fieldName',
   defaultValue: '',
@@ -292,6 +293,28 @@ const filetype = {
   required: false,
   isProps: true,
 };
+const height = {
+  key: 'height',
+  placeholder: '请输入',
+  label: '高度(px)',
+  defaultValue: 450,
+  type: 'InputNumber',
+  direction: 'vertical',
+  required: false,
+  isProps: true,
+};
+
+const urlOption = {
+  key: 'url',
+  label: 'URL',
+  defaultValue: {
+    type: 'custom',
+    value: '',
+  },
+  type: 'UrlOption',
+  required: true,
+  isProps: true,
+};
 
 const components = {
   Input: {
@@ -462,6 +485,76 @@ const components = {
       type: 'FlowData',
     },
     config: [fieldName, getLabel('关联流程'), flows, colSpace],
+  },
+  Title: {
+    baseInfo: {
+      name: '分组标题',
+      icon: 'fenzubiaoti',
+      category: '高级控件',
+      version: '1.0',
+      type: 'Title',
+    },
+    config: [fieldName, getLabel('分组标题'), desc, colSpace],
+  },
+  Iframe: {
+    baseInfo: {
+      name: 'iframe',
+      icon: 'iframe',
+      category: '高级控件',
+      version: '1.0',
+      type: 'Iframe',
+    },
+    config: [getLabel('iframe'), desc, height, urlOption],
+  },
+  Data: {
+    baseInfo: {
+      name: '数据关联',
+      icon: 'shujuguanlian',
+      category: '高级控件',
+      version: '1.0',
+      type: 'Data',
+    },
+    config: [fieldName, getLabel('数据关联'), desc, colSpace],
+  },
+  Text: {
+    baseInfo: {
+      name: '文字识别',
+      icon: 'wenzishibie',
+      category: '高级控件',
+      version: '1.0',
+      type: 'Text',
+    },
+    config: [fieldName, getLabel('文字识别'), desc, colSpace],
+  },
+  Location: {
+    baseInfo: {
+      name: '定位',
+      icon: 'dingweicaise',
+      category: '业务控件',
+      version: '1.0',
+      type: 'Location',
+    },
+    config: [fieldName, getLabel('定位'), desc, colSpace],
+  },
+  Ocr: {
+    baseInfo: {
+      name: 'ocr识别',
+      icon: 'ocrshibie',
+      category: '业务控件',
+      version: '1.0',
+      type: 'Ocr',
+    },
+    config: [fieldName, getLabel('ocr识别'), desc, colSpace],
+  },
+  Face: {
+    baseInfo: {
+      name: '人像识别',
+      icon: 'renxiangshibie',
+      category: '业务控件',
+      version: '1.0',
+      type: 'Face',
+    },
+    config: [fieldName, getLabel('人像识别'), desc, colSpace],
   },
 };
 
