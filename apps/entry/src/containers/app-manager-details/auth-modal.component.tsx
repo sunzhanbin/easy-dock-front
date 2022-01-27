@@ -63,6 +63,10 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: (value: AppAu
     return subAppList.filter((subApp) => subApp.type === SubAppTypeEnum.SCREEN) || [];
   }, [subAppList]);
 
+  const spaceSubAppList = useMemo(() => {
+    return subAppList.filter((subApp) => subApp.type === SubAppTypeEnum.SPACE) || [];
+  }, [subAppList]);
+
   const deletePower = useMemoCallback((visitor: Visitor, type, visitorId): Visitor => {
     const { members, departs, roles } = visitor;
     if (type === "member") {
@@ -272,9 +276,20 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: (value: AppAu
           </div>
           {screenSubAppList.length > 0 && (
             <div className="page-auth">
-              <div className="title">页面</div>
+              <div className="title">大屏</div>
               <div className="app-list">
                 {screenSubAppList.map((subApp) => {
+                  const { id, name } = subApp;
+                  return renderAppItem(String(id), name);
+                })}
+              </div>
+            </div>
+          )}
+          {spaceSubAppList.length > 0 && (
+            <div className="page-auth">
+              <div className="title">空间</div>
+              <div className="app-list">
+                {spaceSubAppList.map((subApp) => {
                   const { id, name } = subApp;
                   return renderAppItem(String(id), name);
                 })}
