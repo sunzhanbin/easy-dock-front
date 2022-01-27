@@ -1,48 +1,41 @@
-import { useMemo } from "react";
-import { useParams } from "react-router";
 import classNames from "classnames";
-import { MAIN_ENTRY } from "@/consts";
+import { useEffect, useRef } from "react";
+import { useParams } from "react-router";
+import { loadMicroApp } from "qiankun";
+import { MICRO_FLOW_ENTRY } from "@/consts";
 import { useWorkspaceRuntimeDetailQuery } from "@/http";
-import { useAppSelector } from "@/store";
-import { selectCurrentId } from "@views/workspace/index.slice";
-import { findItem } from "@utils/utils";
 import "@containers/asset-pages/flow-page.style";
 
 const FlowMicroPage = ({ mode }: { mode: "preview" | "running" }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const { workspaceId } = useParams();
-  const selectedKey = useAppSelector(selectCurrentId);
-  const { theme, menu } = useWorkspaceRuntimeDetailQuery(+(workspaceId as string), {
+  const { theme } = useWorkspaceRuntimeDetailQuery(+(workspaceId as string), {
     selectFromResult: ({ data }) => ({
       theme: data?.extension?.theme || "light",
-      menu: data?.extension?.meta?.menuList || [],
     }),
   });
-  const appId = useMemo(() => {
-    if (workspaceId) {
-      return +workspaceId;
+
+  useEffect(() => {
+    let microApp: any;
+    if (containerRef.current) {
+      microApp = loadMicroApp({
+        name: "flow-page",
+        entry: MICRO_FLOW_ENTRY!,
+        container: containerRef.current,
+        props: {
+          basename: `/workspace/${workspaceId}/` || "",
+          appId: workspaceId,
+          mode: "running",
+          theme,
+        },
+      });
     }
-    return 0;
-  }, [workspaceId]);
-
-  const appInfo = useMemo(() => {
-    const menuInfo = findItem(selectedKey, menu);
-    return {
-      subAppId: menuInfo?.form?.assetConfig?.subAppId || 0,
-      subAppType: menuInfo?.form?.assetConfig?.subAppType,
+    return () => {
+      microApp.unmount();
     };
-  }, [selectedKey, menu]);
+  });
 
-  return (
-    <div className={classNames("flow-page", theme)}>
-      <iframe
-        className="iframe"
-        src={`${MAIN_ENTRY}/main/app/${workspaceId || appId}/process/instance/${
-          appInfo?.subAppId
-        }?theme=${theme}&mode=running`}
-        frameBorder={0}
-      />
-    </div>
-  );
+  return <div className={classNames("flow-page", theme)} ref={containerRef}></div>;
 };
 
 export default FlowMicroPage;

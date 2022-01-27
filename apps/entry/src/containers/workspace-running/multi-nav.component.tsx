@@ -53,7 +53,7 @@ const MultiNavComponent = ({ extra, dataSource, theme, selectedKey }: WorkspaceB
     if (mode === "current") {
       // 当前窗口打开
       if (subAppType === SubAppType.FLOW && subAppId) {
-        url = `./${RouteMap[subAppType as unknown as keyof typeof RouteMap]}/instance/${subAppId}`;
+        url = `./${RouteMap[subAppType as unknown as keyof typeof RouteMap]}/${subAppId}`;
       } else if (subAppId) {
         url = `./${RouteMap[subAppType as unknown as keyof typeof RouteMap]}`;
       } else if (customUrl) {

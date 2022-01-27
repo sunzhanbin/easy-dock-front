@@ -44,7 +44,7 @@ const SingleNavComponent = ({ extra, dataSource, theme, selectedKey }: Workspace
     if (mode === "current") {
       // 流程类子应用
       if (subAppType === SubAppType.FLOW && subAppId) {
-        url = `./${RouteMap[subAppType as unknown as keyof typeof RouteMap]}/instance/${subAppId}`;
+        url = `./${RouteMap[subAppType as unknown as keyof typeof RouteMap]}/${subAppId}`;
       } else if (subAppId) {
         url = `./${RouteMap[subAppType as unknown as keyof typeof RouteMap]}`;
       } else if (customUrl) {

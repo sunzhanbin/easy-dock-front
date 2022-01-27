@@ -1,25 +1,41 @@
-import { useMemo } from "react";
+import { useEffect, useRef } from "react";
 import { useParams } from "react-router";
-import { MAIN_ENTRY } from "@/consts";
+import { loadMicroApp } from "qiankun";
+import { MICRO_FLOW_ENTRY } from "@/consts";
 import { useWorkspaceRuntimeDetailQuery } from "@/http/app-manager.hooks";
 import "@containers/asset-pages/instance-manager-page.style";
 
 const InstanceManagerMicroPage = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const { workspaceId } = useParams();
+
   const { theme } = useWorkspaceRuntimeDetailQuery(+(workspaceId as string), {
     selectFromResult: ({ data }) => ({
       theme: data?.extension?.theme || "light",
     }),
   });
-  const url = useMemo(() => {
-    return `${MAIN_ENTRY}/main/instance/${workspaceId}/data-manage?theme=${theme}&mode=running`;
-  }, [theme, workspaceId]);
 
-  return (
-    <div className="instance-manager-page">
-      <iframe className="iframe" src={url} frameBorder={0} />
-    </div>
-  );
+  useEffect(() => {
+    if (containerRef.current) {
+      const microApp = loadMicroApp({
+        name: "instance-namager-page",
+        entry: MICRO_FLOW_ENTRY!,
+        container: containerRef.current,
+        props: {
+          basename: `/workspace/${workspaceId}/` || "",
+          appId: workspaceId,
+          mode: "running",
+          theme,
+        },
+      });
+
+      return () => {
+        microApp.unmount();
+      };
+    }
+  });
+
+  return <div className="instance-manager-page" ref={containerRef}></div>;
 };
 
 export default InstanceManagerMicroPage;
