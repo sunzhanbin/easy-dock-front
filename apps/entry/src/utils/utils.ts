@@ -1,5 +1,5 @@
 import React from "react";
-import { Menu } from "@utils/types";
+import { Menu, OwnerTypeEnum, Power, UserOwner } from "@utils/types";
 import { axios } from "@utils/fetch";
 import { AbstractTooltipProps } from "antd/lib/tooltip";
 import {
@@ -188,8 +188,14 @@ export const filterAssetConfig = (menuList: any[]) => {
   return menu;
 };
 
-export function getSceneImageUrl(type: any) {
-  // const publicPath = process.env.PUBLIC_URL;
-
-  return `.png`;
-}
+export const getVisitor = (powers: Power[]) => {
+  const powerList: Power[] = JSON.parse(JSON.stringify(powers));
+  const members = powerList
+    ?.filter((power) => power.ownerType === OwnerTypeEnum.USER)
+    ?.map((power) => Object.assign(power.owner, { name: (power.owner as UserOwner).userName }));
+  const departs = powerList
+    ?.filter((power) => power.ownerType === OwnerTypeEnum.DEPARTMENT)
+    .map((power) => power.owner);
+  const roles = powerList?.filter((power) => power.ownerType === OwnerTypeEnum.ROLE).map((power) => power.owner);
+  return { members, departs, roles };
+};

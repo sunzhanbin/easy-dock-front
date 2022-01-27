@@ -182,7 +182,27 @@ export const appManagerRunTime = runTime.injectEndpoints({
       query: (workspaceId: number) => `/app/${workspaceId}`,
       keepUnusedDataFor: 0,
     }),
+    // 查询有工作区访问权限的用户
+    fetchSubAppPowers: build.query({
+      query: (id: number) => `/app/${id}/list/all/powers`,
+      providesTags: [{ type: "SubApps", id: "AUTH" }],
+    }),
+    // 分配应用资源权限
+    assignAppAuth: build.mutation({
+      query: (params) => ({
+        url: "/privilege/assign/app",
+        method: "post",
+        body: params,
+      }),
+      invalidatesTags: [{ type: "SubApps", id: "AUTH" }],
+    }),
   }),
 });
 
-export const { useGetCanvasIdMutation, useGetHoloSceneIdMutation, useWorkspaceRuntimeDetailQuery } = appManagerRunTime;
+export const {
+  useFetchSubAppPowersQuery,
+  useGetCanvasIdMutation,
+  useGetHoloSceneIdMutation,
+  useWorkspaceRuntimeDetailQuery,
+  useAssignAppAuthMutation,
+} = appManagerRunTime;

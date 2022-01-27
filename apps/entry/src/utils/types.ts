@@ -8,6 +8,7 @@ export type User = {
   name?: string;
 };
 
+// 子应用信息
 export type AppSchema = {
   id: number;
   name: string;
@@ -17,6 +18,40 @@ export type AppSchema = {
   createTime: number;
   power: number;
 };
+
+export type AppInfo = {
+  id: number;
+  name: string;
+  project: {
+    id: number;
+    name: string;
+  };
+};
+
+export type Privilege = {
+  ownerKey: string;
+  ownerType: number;
+  power: number;
+};
+export type SubAppAuthParams = {
+  id: string;
+  openVisit?: boolean;
+  privileges: Privilege[];
+};
+
+export type AppAuthParams = {
+  id: string;
+  openVisit?: boolean;
+  dataPrivileges: Privilege[];
+  subapps: SubAppAuthParams[];
+};
+
+// 1=大屏类，2=流程类，3=报表类，4=HoloScene，5=表单类
+export enum SubAppTypeEnum {
+  SCREEN = 1, // 大屏类子应用
+  FLOW = 2, // 流程类子应用
+  SPACE = 4, // 空间类子应用
+}
 
 export enum RoleEnum {
   TENEMENT = 1, //普通租户
@@ -60,7 +95,7 @@ export type AssignAuthParams = {
 export type UserOwner = {
   id: number | string; //登录名
   avatar?: string; // 头像
-  username?: string; // 中文名
+  userName?: string; // 中文名
   name: string;
 };
 export type DepartOwner = {
@@ -94,7 +129,7 @@ export type SubAppPower = {
   name: string;
   powers: Power[]; //被授权的对象
   status: -1 | 1; //-1:停用 1:启用
-  type: 1 | 2; //1:大屏类子应用 2:流程类子应用
+  type: 1 | 2 | 4; //1:大屏类子应用 2:流程类子应用 4:空间类子应用
   openVisit?: boolean; //所有人可访问
 };
 
