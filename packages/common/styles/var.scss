@@ -3,76 +3,78 @@ $primary-color: var(--ant-primary-color, #4c5cdb);
 $main-content-min-height: calc(100vh - 65px);
 
 // 背景颜色
-$side-background-color: var(--custom-side-background, #1827430A);
-$content-background-color: var(--custom-body-background, #FFFFFFFF);
+$side-background-color: var(--custom-side-background, #1827430a);
+$content-background-color: var(--custom-body-background, #ffffffff);
 
 // 文字颜色
-$title-text-color:var(--custom-title-text-color,#181F43FF);
-$body-text-color:var(--custom-body-text-color,#181F43BF);
-$caption-text-color:var(--custom-caption-text-color,#181F4380);
-$hint-text-color:var(--custom-hint-text-color,#181F434D);
+$title-text-color: var(--custom-title-text-color, #181f43ff);
+$body-text-color: var(--custom-body-text-color, #181f43bf);
+$caption-text-color: var(--custom-caption-text-color, #181f4380);
+$hint-text-color: var(--custom-hint-text-color, #181f434d);
 
 // 边框颜色
-$border-normal-color:var(--custom-border-normal-color,#181F431F);
-$border-hover-color:var(--custom-border-hover-color,#181F434D);
-$border-primary-color:var(--custom-border-primary-color,$primary-color);
+$border-normal-color: var(--custom-border-normal-color, #181f431f);
+$border-hover-color: var(--custom-border-hover-color, #181f434d);
+$border-primary-color: var(--custom-border-primary-color, $primary-color);
 
 // input
-$input-background-normal-color:var(--custom-input-background-normal-color,#1827430A);
-$input-background-hover-color:var(--custom-input-background-hover-color,#FFFFFFFF);
-$input-text-placeholder-color:var(--custom-input-text-placeholder-color,#181F434D);
-$input-text-active-color:var(--custom-input-text-active-color,#181F43FF);
-$input-border-hover-color:var(--custom-input-border-hover-color,#4C5CDBCC);
-$input-border-active-color:var(--custom-input-border-hover-color,#4C5CDBCC);
-$input-shadow-color:var(--custom-input-shadow-color,#4C5CDB1F);
+$input-background-normal-color: var(--custom-input-background-normal-color, #1827430a);
+$input-background-hover-color: var(--custom-input-background-hover-color, #ffffffff);
+$input-text-placeholder-color: var(--custom-input-text-placeholder-color, #181f434d);
+$input-text-active-color: var(--custom-input-text-active-color, #181f43ff);
+$input-border-hover-color: var(--custom-input-border-hover-color, #4c5cdbcc);
+$input-border-active-color: var(--custom-input-border-hover-color, #4c5cdbcc);
+$input-shadow-color: var(--custom-input-shadow-color, #4c5cdb1f);
 
 // select
-$select-background-normal-color:var(--custom-select-background-normal-color,#1827430A);
-$select-background-hover-color:var(--custom-select-background-hover-color,#FFFFFFFF);
-$select-text-placeholder-color:var(--custom-select-text-placeholder-color,#181F434D);
-$select-text-active-color:var(--custom-select-text-active-color,#181F43FF);
-$select-border-hover-color:var(--custom-select-border-hover-color,#4C5CDBCC);
-$select-border-active-color:var(--custom-select-border-hover-color,#4C5CDBCC);
-$select-shadow-color:var(--custom-select-shadow-color,#4C5CDB1F);
+$select-background-normal-color: var(--custom-select-background-normal-color, #1827430a);
+$select-background-hover-color: var(--custom-select-background-hover-color, #ffffffff);
+$select-text-placeholder-color: var(--custom-select-text-placeholder-color, #181f434d);
+$select-text-active-color: var(--custom-select-text-active-color, #181f43ff);
+$select-border-hover-color: var(--custom-select-border-hover-color, #4c5cdbcc);
+$select-border-active-color: var(--custom-select-border-hover-color, #4c5cdbcc);
+$select-shadow-color: var(--custom-select-shadow-color, #4c5cdb1f);
 // select-dropdown
-$select-dropdown-body-background-color: var(--custom-select-dropdown-body-background-color, #FFFFFFFF);
-$select-dropdown-option-hover-color: var(--custom-select-dropdown-option-hover-color, #1827430A);
-$select-dropdown-option-active-color: var(--custom-select-dropdown-option-active-color, #4C5CDB14);
-$select-dropdown-text-normal-color: var(--custom-select-dropdown-text-normal-color, #181F43FF);
-$select-dropdown-text-active-color: var(--custom-select-dropdown-text-hover-color, #4C5CDBFF);
+$select-dropdown-body-background-color: var(--custom-select-dropdown-body-background-color, #ffffffff);
+$select-dropdown-option-hover-color: var(--custom-select-dropdown-option-hover-color, #1827430a);
+$select-dropdown-option-active-color: var(--custom-select-dropdown-option-active-color, #4c5cdb14);
+$select-dropdown-text-normal-color: var(--custom-select-dropdown-text-normal-color, #181f43ff);
+$select-dropdown-text-active-color: var(--custom-select-dropdown-text-hover-color, #4c5cdbff);
 
 // datepicker
-$datepicker-background-normal-color:var(--custom-datepicker-background-normal-color,#1827430A);
-$datepicker-background-hover-color:var(--custom-datepicker-background-hover-color,#FFFFFFFF);
-$datepicker-text-placeholder-color:var(--custom-datepicker-text-placeholder-color,#181F434D);
-$datepicker-text-active-color:var(--custom-datepicker-text-active-color,#181F43FF);
-$datepicker-border-hover-color:var(--custom-datepicker-border-hover-color,#4C5CDBCC);
-$datepicker-border-active-color:var(--custom-datepicker-border-hover-color,#4C5CDBCC);
-$datepicker-shadow-color:var(--custom-datepicker-shadow-color,#4C5CDB1F);
+$datepicker-background-normal-color: var(--custom-datepicker-background-normal-color, #1827430a);
+$datepicker-background-hover-color: var(--custom-datepicker-background-hover-color, #ffffffff);
+$datepicker-text-placeholder-color: var(--custom-datepicker-text-placeholder-color, #181f434d);
+$datepicker-text-active-color: var(--custom-datepicker-text-active-color, #181f43ff);
+$datepicker-border-hover-color: var(--custom-datepicker-border-hover-color, #4c5cdbcc);
+$datepicker-border-active-color: var(--custom-datepicker-border-hover-color, #4c5cdbcc);
+$datepicker-shadow-color: var(--custom-datepicker-shadow-color, #4c5cdb1f);
 // datepicker-dropdown
-$datepicker-dropdown-body-background-color: var(--custom-datepicker-dropdown-body-background-color, #FFFFFFFF);
-$datepicker-dropdown-option-hover-color: var(--custom-datepicker-dropdown-option-hover-color, #1827430A);
-$datepicker-dropdown-option-active-color: var(--custom-datepicker-dropdown-option-active-color, #4C5CDB14);
-$datepicker-dropdown-text-normal-color: var(--custom-datepicker-dropdown-text-normal-color, #181F43FF);
-$datepicker-dropdown-text-active-color: var(--custom-datepicker-dropdown-text-hover-color, #4C5CDBFF);
+$datepicker-dropdown-body-background-color: var(--custom-datepicker-dropdown-body-background-color, #ffffffff);
+$datepicker-dropdown-option-hover-color: var(--custom-datepicker-dropdown-option-hover-color, #1827430a);
+$datepicker-dropdown-option-active-color: var(--custom-datepicker-dropdown-option-active-color, #4c5cdb14);
+$datepicker-dropdown-text-normal-color: var(--custom-datepicker-dropdown-text-normal-color, #181f43ff);
+$datepicker-dropdown-text-active-color: var(--custom-datepicker-dropdown-text-hover-color, #4c5cdbff);
+
+// table
+$table-body-background-hover-color: var(--custom-table-body-background-hover-color, #4c5cdb0f);
 
 // 任务中心header
-$menu-title-text-color: var(--custom-menu-title-text, #000000D9);
-$menu-line-color: var(--custom-menu-line, #181F431F);
-$nav-color: var(--custom-menu-nav, #181F43BF);
-$nav-active-color: var(--custom-menu-nav-active, #000000D8);
+$menu-title-text-color: var(--custom-menu-title-text, #000000d9);
+$menu-line-color: var(--custom-menu-line, #181f431f);
+$nav-color: var(--custom-menu-nav, #181f43bf);
+$nav-active-color: var(--custom-menu-nav-active, #000000d8);
 // select dropdown
 
-
 // datepicker dropdown
-$dropdown-border-shadow-color: #181F431A;
+$dropdown-border-shadow-color: #181f431a;
 $dropdown-header-border-color: var(--custom-dropdown-header-border, #f0f0f0);
 $btn-primary-text-color: var(--custom-btn-primary-color, #fff);
-$disabled-primary-bg: var(--custom-btn-disable-bg, #4C5CDB80);
-$disabled-primary-color: var(--custom-btn-disable-color, #FFFFFF7F);
-$time-selected-bg: var(--custom-selected-time-bg, #4C5CDB1F);
+$disabled-primary-bg: var(--custom-btn-disable-bg, #4c5cdb80);
+$disabled-primary-color: var(--custom-btn-disable-color, #ffffff7f);
+$time-selected-bg: var(--custom-selected-time-bg, #4c5cdb1f);
 $time-selected-text-color: var(--custom-selected-time-text, #4c5cdb);
-$time-range-hover-bg: var(--custom-range-hover-bg, #FFFFFF0F);
+$time-range-hover-bg: var(--custom-range-hover-bg, #ffffff0f);
 //$dropdown
 
 $primary-color-custom: #4c5cdb;

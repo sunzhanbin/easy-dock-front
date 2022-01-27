@@ -58,7 +58,15 @@
   --custom-datepicker-text-active-color: unset;
   --custom-datepicker-border-hover-color: unset;
   --custom-datepicker-shadow-color: unset;
+  /* datepicker-dropdown */
+  --custom-datepicker-dropdown-body-background-color: unset;
+  --custom-datepicker-dropdown-option-hover-color: unset;
+  --custom-datepicker-dropdown-option-active-color: unset;
+  --custom-datepicker-dropdown-text-normal-color: unset;
+  --custom-datepicker-dropdown-text-hover-color: unset;
 
+  /* table */
+  --custom-table-body-background-hover-color: unset;
 
   /* 大背景 */
   --custom-body-background: unset;
@@ -150,4 +158,3 @@
   --custom-card-shadow: unset;
   --custom-card-hover-shadow: unset;
 }
-

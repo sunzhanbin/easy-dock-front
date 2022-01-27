@@ -43,13 +43,8 @@
         .reset {
           flex: 0 0 60px;
           border-radius: 3px;
-          border: 1px solid rgba(24, 31, 67, 0.12);
           font-size: 14px;
           font-weight: 400;
-          color: rgba(24, 31, 67, 0.95);
-          &:hover {
-            border: 1px solid rgba(24, 31, 67, 0.3);
-          }
         }
         .unfold {
           height: 32px;
@@ -92,105 +87,6 @@
         cursor: pointer;
         &:hover {
           color: $primary-color;
-        }
-      }
-    }
-  }
-  &.dark {
-    :global {
-      .ant-select-dropdown,
-      .ant-select-clear {
-        background-color: rgba($content-background-color, 1) !important;
-      }
-      .ant-select-item-option,
-      .ant-select-selection-item,
-      .ant-select-clear {
-        color: rgba($dark-text-color, 0.55) !important;
-      }
-      .ant-select-item-option-active {
-        background-color: rgba(76, 92, 219, 0.08) !important;
-      }
-    }
-    .header {
-      .searchContainer {
-        :global {
-          #start_form {
-            .ant-form-item-label > label {
-              color: $dark-text-color;
-            }
-            .ant-input,
-            .ant-picker,
-            .ant-select.ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
-              background-color: rgba($dark-text-color, 0.04);
-            }
-            .ant-picker-separator {
-              color: rgba($dark-text-color, 0.88);
-            }
-          }
-        }
-      }
-      .operationContainer {
-        .operation {
-          .reset {
-            border-color: rgba($dark-text-color, 0.12);
-            color: rgba($dark-text-color, 0.66);
-            &:hover {
-              border-color: rgba($dark-text-color, 0.3);
-            }
-          }
-        }
-      }
-    }
-    .content {
-      :global {
-        .ant-table-wrapper {
-          color: rgba($dark-text-color, 0.55);
-          .ant-table-cell {
-            background-color: $content-background-color;
-            color: rgba($dark-text-color, 0.55);
-            border-color: rgba($dark-text-color, 0.1);
-          }
-          .ant-pagination-item-link {
-            border-color: transparent;
-            background-color: transparent;
-            color: rgba($dark-text-color, 0.55);
-          }
-          .ant-pagination-item {
-            border-color: transparent;
-            background-color: transparent;
-            color: rgba($dark-text-color, 0.55);
-            a {
-              color: inherit;
-            }
-            &.ant-pagination-item-active,
-            &:hover {
-              background: rgba(76, 92, 219, 0.12);
-            }
-          }
-          .ant-pagination-options-size-changer {
-            color: rgba($dark-text-color, 0.55);
-            &.ant-select-focused {
-              .ant-select-selector {
-                background-color: transparent;
-              }
-            }
-            .ant-select-selector {
-              background-color: transparent;
-              border-color: transparent;
-              box-shadow: none;
-            }
-          }
-          .ant-select.ant-select-single:not(.ant-select-customize-input) {
-            .ant-select-selector {
-              &:hover,
-              &:active {
-                background-color: transparent;
-              }
-            }
-          }
-          .ant-empty-description {
-            color: rgba($dark-text-color, 0.55);
-          }
         }
       }
     }

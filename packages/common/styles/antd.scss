@@ -1,5 +1,5 @@
 @import "./var.scss";
-
+/* button style begin */
 .ant-btn {
   display: inline-flex;
   align-items: center;
@@ -11,19 +11,35 @@
   svg {
     margin-right: 4px;
   }
-}
 
-.ant-btn:hover,
-.ant-btn:active,
-.ant-btn:focus {
-  color: $primary-color-custom;
-  border-color: $primary-color-custom;
+  &:hover,
+  &.active,
+  &:focus {
+    color: $primary-color-custom;
+    border-color: $primary-color-custom;
 
-  svg {
-    color: inherit;
+    svg {
+      color: inherit;
+    }
+  }
+
+  // ghost button
+  &.ant-btn-background-ghost {
+    background-color: transparent;
+    border-color: $border-normal-color;
+    color: $title-text-color;
+    &:hover,
+    &:focus {
+      border-color: $border-hover-color;
+      color: $title-text-color;
+    }
+    &:active {
+      box-shadow: 0 0 0 4px $input-background-normal-color;
+    }
   }
 }
 
+// primary button
 .ant-btn-primary {
   &,
   &:hover,
@@ -70,13 +86,13 @@
     color: inherit;
   }
 }
-
+// circle button
 .ant-btn-circle {
   svg {
     margin-right: 0;
   }
 }
-
+// icon button
 .ant-btn-icon-only {
   .anticon {
     font-size: 0;
@@ -87,6 +103,8 @@
     font-size: 16px;
   }
 }
+
+/* button style end */
 
 .ant-switch {
   height: 24px;
@@ -396,14 +414,116 @@
       }
     }
   }
+  .ant-picker-range-separator {
+    .ant-picker-separator {
+      color: $body-text-color;
+    }
+  }
 }
 .ant-picker-input {
   & > input[disabled] {
     color: inherit;
   }
 }
-.ant-picker-dropdown{
-  
+/* date-picker dropdown */
+.ant-picker-dropdown {
+  .ant-picker-range-arrow {
+    &::after {
+      border-color: $datepicker-dropdown-body-background-color $datepicker-dropdown-body-background-color transparent
+        transparent;
+    }
+  }
+  .ant-picker-panel-container {
+    background-color: $datepicker-dropdown-body-background-color;
+    .ant-picker-panels {
+      .ant-picker-panel {
+        border-color: $hint-text-color;
+        .ant-picker-year-panel,
+        .ant-picker-month-panel,
+        .ant-picker-date-panel {
+          .ant-picker-header {
+            border-bottom-color: $hint-text-color;
+            & > button {
+              color: $hint-text-color;
+            }
+            .ant-picker-header-view {
+              & > button {
+                color: $caption-text-color;
+              }
+            }
+          }
+          .ant-picker-body {
+            .ant-picker-content {
+              th {
+                color: $title-text-color;
+              }
+              .ant-picker-cell {
+                color: $hint-text-color;
+                &.ant-picker-cell-in-view {
+                  color: $body-text-color;
+                }
+              }
+              .ant-picker-cell:hover:not(.ant-picker-cell-in-view) .ant-picker-cell-inner,
+              .ant-picker-cell:hover:not(.ant-picker-cell-selected):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end):not(.ant-picker-cell-range-hover-start):not(.ant-picker-cell-range-hover-end)
+                .ant-picker-cell-inner {
+                background-color: $primary-color;
+                color: #fff;
+              }
+              .ant-picker-cell-today .ant-picker-cell-inner {
+                color: $primary-color;
+                &::before {
+                  width: 6px;
+                  height: 6px;
+                  border-radius: 50%;
+                  right: 0;
+                  top: 0;
+                  left: auto;
+                  background-color: $primary-color;
+                  border: 0 none;
+                }
+              }
+              .ant-picker-cell-selected .ant-picker-cell-inner {
+                background-color: $primary-color;
+                color: #fff;
+              }
+            }
+          }
+        }
+        .ant-picker-time-panel {
+          border-left-color: $hint-text-color;
+          .ant-picker-header {
+            border-bottom-color: $hint-text-color;
+            .ant-picker-header-view {
+              color: $caption-text-color;
+            }
+          }
+          .ant-picker-time-panel-column:not(:first-child) {
+            border-left-color: $hint-text-color;
+          }
+          .ant-picker-time-panel-cell-inner {
+            color: $body-text-color;
+            &:hover {
+              background-color: $primary-color;
+              color: #fff;
+            }
+          }
+          .ant-picker-time-panel-cell-selected .ant-picker-time-panel-cell-inner {
+            background-color: $primary-color;
+            color: #fff;
+          }
+        }
+      }
+    }
+    .ant-picker-ok {
+      .ant-btn-primary {
+        &[disabled] {
+          border-color: transparent;
+          background-color: $primary-color;
+          color: #fff;
+        }
+      }
+    }
+  }
 }
 /* datepicker style end */
 
@@ -664,6 +784,9 @@
       background-size: 10px 10px;
     }
   }
+  // .ant-select-clear {
+  //   background-color: $select-background-normal-color;
+  // }
 }
 
 .ant-select-dropdown {
@@ -714,37 +837,87 @@
 }
 /* select style end */
 
-// 定制表格
-.ant-table {
-  // 表头
-  .ant-table-thead {
-    & > tr {
-      & > th {
-        font-weight: 600;
-        border-top: 1px solid rgba(24, 31, 67, 0.12);
-        background-color: #fff;
-        &:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
-          display: none;
+/* table style begin */
+.ant-table-wrapper {
+  .ant-table {
+    // 表头
+    .ant-table-thead {
+      & > tr {
+        & > th {
+          font-weight: 600;
+          border-top: 1px solid rgba(24, 31, 67, 0.12);
+          background-color: $content-background-color;
+          &:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
+            display: none;
+          }
         }
       }
     }
-  }
-  // 表格本身
-  .ant-table-tbody {
-    & > tr.ant-table-row:hover {
-      & > td {
-        background-color: #f1f2fd;
+    // 表格本身
+    .ant-table-tbody {
+      & > tr.ant-table-row:hover {
+        & > td {
+          background-color: $table-body-background-hover-color;
+        }
+      }
+      & > tr {
+        &.ant-table-placeholde:hover {
+          .ant-table-cell {
+            background-color: $content-background-color;
+          }
+        }
       }
     }
-  }
 
-  td.ant-table-column-sort {
-    background-color: #fff;
-  }
+    .ant-table-cell {
+      background-color: $content-background-color;
+      color: $caption-text-color;
+      border-color: $border-normal-color;
+    }
 
-  .ant-table-column-sorter-up.active,
-  .ant-table-column-sorter-down.active {
-    color: $primary-color-custom;
+    td.ant-table-column-sort {
+      background-color: $content-background-color;
+    }
+
+    .ant-table-column-sorter-up.active,
+    .ant-table-column-sorter-down.active {
+      color: $primary-color-custom;
+    }
+    .ant-table-tbody > tr.ant-table-placeholder:hover > td {
+      background-color: $content-background-color;
+    }
+    .ant-empty-normal {
+      color: $body-text-color;
+    }
+  }
+  .ant-table-pagination {
+    .ant-pagination-prev,
+    .ant-pagination-item,
+    .ant-pagination-next {
+      color: $body-text-color;
+      background-color: transparent;
+      border-color: transparent;
+      .ant-pagination-item-link {
+        color: $body-text-color;
+        background-color: transparent;
+        border-color: transparent;
+      }
+      a {
+        color: $body-text-color;
+      }
+      &.ant-pagination-item-active {
+        background-color: $select-dropdown-option-active-color;
+        a {
+          color: $primary-color;
+        }
+      }
+      &:hover {
+        .ant-pagination-item-link,
+        a {
+          color: $primary-color;
+        }
+      }
+    }
   }
 }
 
@@ -779,6 +952,7 @@
   border-color: #d9d9d9;
   color: rgba(#000, 0.2);
 }
+/* table style end */
 
 // 定制局部区域空状态
 .ant-empty {
@@ -792,3 +966,15 @@
 .ant-message {
   top: 48px;
 }
+
+/* form style begin */
+.ant-form {
+  .ant-form-item {
+    .ant-form-item-label {
+      label {
+        color: $body-text-color;
+      }
+    }
+  }
+}
+/* form style end */
