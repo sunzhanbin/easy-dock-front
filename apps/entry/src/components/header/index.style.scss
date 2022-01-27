@@ -77,6 +77,7 @@
       .right-no-content {
         display: inline-block;
         margin-right: 30px;
+        vertical-align: middle;
 
         &:hover {
           .workspace-link {
@@ -94,6 +95,7 @@
         display: inline-block;
         vertical-align: middle;
         margin-left: 10px;
+        cursor: pointer;
 
         &:hover {
           .login {
