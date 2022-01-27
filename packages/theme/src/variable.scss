@@ -1,5 +1,6 @@
 @import "dark";
 @import "light";
+
 :root {
   --custom-primary-color: unset;
   --custom-primary-color-hover: unset;
@@ -64,9 +65,11 @@
   --custom-datepicker-dropdown-option-active-color: unset;
   --custom-datepicker-dropdown-text-normal-color: unset;
   --custom-datepicker-dropdown-text-hover-color: unset;
+  --custom-datepicker-dropdown-border-normal-color: unset;
 
   /* table */
   --custom-table-body-background-hover-color: unset;
+  --custom-table-head-text-color: unset;
 
   /* 大背景 */
   --custom-body-background: unset;
