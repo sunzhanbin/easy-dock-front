@@ -332,6 +332,7 @@
 .ant-checkbox-group {
   .ant-checkbox-wrapper {
     margin-bottom: 12px;
+    color: $body-text-color;
   }
 }
 
@@ -947,7 +948,7 @@
           background-color: $content-background-color;
           color: $table-head-text-color;
 
-          &:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
+          &:not(:last-child):not(.ant-table-se lection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before {
             display: none;
           }
         }
@@ -1089,6 +1090,10 @@
       label {
         color: $body-text-color;
       }
+    }
+
+    .ant-picker-focused {
+      box-shadow: 0 0 0 2px $datepicker-shadow-color;
     }
   }
 }

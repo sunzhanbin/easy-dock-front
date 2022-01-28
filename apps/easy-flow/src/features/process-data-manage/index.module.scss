@@ -1,5 +1,6 @@
 @import '@common/styles/var.scss';
 @import '@common/styles/theme-color.scss';
+
 .container {
   position: relative;
   padding: 24px 56px;
@@ -8,9 +9,10 @@
     margin-bottom: 24px;
     line-height: 34px;
     font-size: 24px;
-    color: rgba(0, 0, 0, 0.85);
+    color: $menu-title-text-color;
     font-weight: bold;
   }
+
   .operation {
     position: absolute;
     right: 56px;
@@ -19,31 +21,37 @@
     display: flex;
     justify-content: flex-end;
     align-items: center;
+
     .export {
       display: flex;
       align-items: center;
       height: 22px;
       padding-right: 12px;
-      border-right: 1px solid rgba(24, 31, 67, 0.12);
+      border-right: 1px solid $menu-line-color;
       cursor: pointer;
+
       .icon {
         font-size: 20px;
         margin-right: 4px;
       }
+
       .text {
         font-size: 14px;
         font-weight: 400;
         color: #181f43;
       }
+
       &:hover {
         .icon {
           color: $primary-color;
         }
+
         .text {
           color: $primary-text-color;
         }
       }
     }
+
     .refresh {
       display: flex;
       align-items: center;
@@ -53,6 +61,7 @@
       .icon {
         font-size: 20px;
       }
+
       &:hover {
         .icon {
           color: $primary-color;
@@ -89,26 +98,32 @@
     .dynamic-cell {
       max-width: 150px;
     }
+
     .tab-detail {
       max-width: 150px;
       cursor: pointer;
+
       &:hover {
         color: $primary-color;
       }
     }
   }
+
   .pop-container {
     min-width: 100px;
     max-width: 600px;
     max-height: 400px;
     overflow: auto;
+
     .header {
       display: flex;
       height: 32px;
+
       .cell {
         font-weight: 600;
       }
     }
+
     .content {
       .row {
         display: flex;
@@ -116,148 +131,11 @@
         height: 32px;
       }
     }
+
     .cell {
       flex: 1;
       padding: 4px;
       font-size: 12px;
-    }
-  }
-
-  &.dark {
-    background: $content-background-color;
-    height: 100%;
-    .ant-btn-primary {
-      background: $dark-btn-background-color;
-      color: rgba($dark-text-color, 0.8);
-    }
-    .status-doing {
-      background: rgba(76, 92, 219, 0.3);
-      color: #7582E3;
-    }
-    .status-stop {
-      background: rgba(255, 101, 118, 0.12);
-      color: #FF7C8A;
-    }
-    .status-reject {
-      background: rgba(255, 163, 25, 0.12);
-      color: #FFB13B;
-    }
-    .status-done {
-      background: rgba(31, 201, 162, 0.12);
-      color: #40D1B0;
-    }
-    .status-recall {
-      background: rgba(255, 255, 255, 0.1);
-      color: rgba(255, 255, 255, 0.55);
-    }
-
-    :global {
-      .ant-select-dropdown,
-      .ant-select-clear {
-        background-color: rgba($content-background-color, 1);
-      }
-      .ant-select-item-option,
-      .ant-select-selection-item,
-      .ant-select-clear {
-        color: rgba($dark-text-color, 0.8);
-      }
-      .ant-select-item-option-active {
-        background-color: rgba(76, 92, 219, 0.08);
-      }
-      .ant-select-selector {
-        background-color: transparent;
-        border-color: transparent;
-        box-shadow: none;
-      }
-      .ant-checkbox-wrapper {
-        color: rgba($dark-text-color, 0.8);
-      }
-
-    }
-    & > .operation {
-      & > .export,.refresh {
-        color: rgba($dark-text-color, 0.8);
-        .text {
-          color: rgba($dark-text-color, 0.8);
-        }
-      }
-    }
-    & > .header {
-      color: rgba($dark-text-color, 0.8);
-    }
-    .table {
-      :global {
-        .ant-pagination-options-size-changer {
-          color: rgba($dark-text-color, 0.55);
-          &.ant-select-focused {
-            .ant-select-selector {
-              background-color: transparent;
-            }
-          }
-        }
-        .ant-select.ant-select-single:not(.ant-select-customize-input) {
-          .ant-select-selector {
-            &:hover,
-            &:active {
-              background-color: transparent;
-            }
-          }
-        }
-        .ant-table {
-          background-color: $content-background-color;
-          color: rgba($dark-text-color, 0.55);
-          .ant-table-thead {
-            & > tr {
-              & > th {
-                background-color: $content-background-color;
-                color: rgba($dark-text-color, 0.55);
-                border-bottom-color: rgba($dark-text-color, 0.1);
-              }
-            }
-            .ant-table-cell-scrollbar {
-              display: none;
-            }
-          }
-          td.ant-table-column-sort {
-            background-color: $content-background-color;
-          }
-          .ant-table-tbody {
-            .ant-table-row {
-              &:hover {
-                & > td {
-                  background-color: rgba($dark-side-background-color, 1);
-                }
-              }
-            }
-            .ant-table-cell {
-              border-bottom-color: rgba($dark-text-color, 0.1);
-            }
-          }
-        }
-        .ant-pagination-item-link {
-          border-color: transparent;
-          background-color: transparent;
-          color: rgba($dark-text-color, 0.55);
-        }
-        .ant-pagination-item {
-          border-color: transparent;
-          background-color: transparent;
-          color: rgba($dark-text-color, 0.55);
-          a {
-            color: inherit;
-          }
-          &.ant-pagination-item-active,
-          &:hover {
-            background: rgba(76, 92, 219, 0.12);
-          }
-        }
-        .ant-empty-description {
-          color: rgba($dark-text-color, 0.55);
-        }
-        .ant-table-tbody > tr.ant-table-placeholder:hover > td {
-          background-color: rgba($content-background-color, 1);
-        }
-      }
     }
   }
 }
