@@ -109,25 +109,6 @@
           cursor: pointer;
         }
 
-        .user {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-shrink: 0;
-
-          .avatar {
-            margin-right: 8px;
-          }
-
-          .name {
-            max-width: 70px;
-            line-height: 22px;
-            color: rgba(0, 0, 0, 0.85);
-            font-size: 14px;
-            font-weight: 400;
-          }
-        }
-
         .menuItem.menuItem {
           font-size: 14px;
           font-weight: 400;
@@ -182,6 +163,29 @@
     }
   }
 }
+
+
+.user-container-component {
+  .user {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    .avatar {
+      margin-right: 8px;
+    }
+
+    .name {
+      max-width: 70px;
+      line-height: 22px;
+      color: rgba(0, 0, 0, 0.85);
+      font-size: 14px;
+      font-weight: 400;
+    }
+  }
+}
+
 
 @media screen and (min-width: 1366px) {
   .header_container {

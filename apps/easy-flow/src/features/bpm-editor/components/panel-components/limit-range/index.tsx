@@ -1,4 +1,3 @@
-import { memo } from "react";
 import { Form, InputNumber } from "antd";
 import styles from "../comp-attr-editor/index.module.scss";
 import { formatNumber } from "@utils";
@@ -7,7 +6,6 @@ const NumRangeComponent = (props: { id: string; form: any }) => {
   const { id, form } = props;
   const isChecked = form.getFieldValue("numlimit");
   const fieldValue = form.getFieldValue("decimal");
-
   if (!isChecked || !isChecked.enable) {
     return null;
   }
@@ -65,7 +63,7 @@ const NumRangeComponent = (props: { id: string; form: any }) => {
   );
 };
 
-const LimitNum = (props: any) => {
+const LimitRange = (props: any) => {
   return (
     <Form.Item noStyle name="numlimit">
       <Form.Item noStyle name={["numlimit", props.id]}>
@@ -75,4 +73,4 @@ const LimitNum = (props: any) => {
   );
 };
 
-export default memo(LimitNum, (prev, next) => prev.componentId === next.componentId);
+export default LimitRange;
