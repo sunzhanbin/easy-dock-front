@@ -31,6 +31,7 @@ function DraggableOption(props: DraggableOptionProps) {
   const type = data?.type || "incNumber"; // 自定义编号规则
   const dragWrapperRef = useRef<HTMLDivElement>(null);
   const [canMove, setCanMove] = useState<boolean>(false);
+  const [chars, setChars] = useState<string>("");
   const [showIncModal, setShowIncModal] = useState<boolean>(false);
   const [{ opacity }, drag] = useDrag(
     () => ({
@@ -88,6 +89,11 @@ function DraggableOption(props: DraggableOptionProps) {
 
   const handleInputBlur = useMemoCallback((event: React.FocusEvent<HTMLInputElement>) => {
     onChange({ type: "fixedChars", chars: event.target.value, index });
+  });
+
+  // 由于已有规则固定字符配置不做缓存  自定义规则需要缓存   即需要实时存储在redux中  此处需要判断是否输入的值和redux中的值是否一致
+  const handleCharsChange = useMemoCallback((event: React.FocusEvent<HTMLInputElement>) => {
+    setChars(event.target.value);
   });
 
   const handleSelectChange = useMemoCallback((value) => {
@@ -157,11 +163,12 @@ function DraggableOption(props: DraggableOptionProps) {
           <Input
             className={classNames(!data?.chars ? styles.inputBorder : "")}
             size="large"
-            onChange={handleInputBlur}
-            value={data?.chars}
+            onBlur={handleInputBlur}
+            onChange={handleCharsChange}
             disabled={disabled}
             maxLength={10}
             placeholder="请输入"
+            {...((chars || data?.chars) && { value: chars || data?.chars })}
           />
         );
       case "fieldName":
