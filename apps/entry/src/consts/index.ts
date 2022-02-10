@@ -10,6 +10,7 @@ export const MAIN_ENTRY = process.env.REACT_APP_MAIN_FRONTEND_ENTRY;
 export const IOT_ENTRY = process.env.REACT_APP_IOT_FRONTEND_ENTRY;
 export const DATA_FISH_ENTRY = process.env.REACT_APP_DATA_FISH_FRONTEND_ENTRY;
 export const INTERFACE_ENTRY = process.env.REACT_APP_INTERFACE_FRONTEND_ENTRY;
+export const MICRO_FLOW_ENTRY = process.env.REACT_APP_MICRO_FLOW_FRONTEND_ENTRY;
 
 export const auth = new Auth();
 

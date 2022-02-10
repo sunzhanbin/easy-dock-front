@@ -1,6 +1,7 @@
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { useAppSelector } from "@/store";
-import { NavModeType } from "@/consts";
+import { useNavigate } from "react-router-dom";
+import { NavModeType, HomeSubAppType } from "@/consts";
 import { selectTheme, selectNavMode } from "@views/app-setup/basic-setup.slice";
 import { selectMenu, selectCurrentId } from "@views/app-setup/menu-setup.slice";
 import SingleNavComponent from "@containers/app-setup-preview/single-nav.component";
@@ -10,10 +11,29 @@ import AppContent from "@containers/app-setup-preview/app-content.component";
 import "@containers/app-setup-preview/index.style";
 
 const AppSetupPreview = () => {
+  const navigate = useNavigate();
   const theme = useAppSelector(selectTheme);
   const navMode = useAppSelector(selectNavMode);
   const menu = useAppSelector(selectMenu);
   const selectedKey = useAppSelector(selectCurrentId);
+
+  useEffect(() => {
+    if (!menu || !menu.length) return;
+    const activeMenuForm = menu[0]?.form;
+    const { assetConfig } = activeMenuForm;
+    const { subAppType, subAppId } = assetConfig;
+
+    let url = "";
+    if (subAppType === (HomeSubAppType.FLOW as unknown) && subAppId) {
+      url = `./instance/${subAppId}`;
+    } else if (subAppType === (HomeSubAppType.TASK_CENTER as unknown)) {
+      url = `./task-center`;
+    } else if (subAppType === (HomeSubAppType.INSTANCE_MANAGER as unknown)) {
+      url = `./data-manage`;
+    }
+    navigate(url);
+    // eslint-disable-next-line
+  }, []);
 
   const renderNavComponent = useMemo(() => {
     if (navMode === NavModeType.LEFT) {

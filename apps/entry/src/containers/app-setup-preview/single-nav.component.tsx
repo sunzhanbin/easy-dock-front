@@ -1,17 +1,21 @@
 import { Menu } from "antd";
 import classNames from "classnames";
-import { findFirstChild } from "@utils/utils";
+import { useNavigate } from "react-router-dom";
+import { findFirstChild, findItem } from "@utils/utils";
 import { Menu as IMenu, MenuComponentProps } from "@utils/types";
+import { HomeSubAppType } from "@/consts";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import { Icon, Text } from "@common/components";
 import UserComponent from "@components//header/user";
 import { useAppDispatch } from "@/store";
 import { setCurrentMenu } from "@/views/app-setup/menu-setup.slice";
 import "@containers/app-setup-preview/single-nav.style";
+import { useCallback } from "react";
 
 const { SubMenu } = Menu;
 
 const SingleNavComponent = ({ children, extra, dataSource, selectedKey, theme }: MenuComponentProps) => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const renderIcon = useMemoCallback((icon) => {
     if (!icon || icon === "wukongjian") {
@@ -19,6 +23,29 @@ const SingleNavComponent = ({ children, extra, dataSource, selectedKey, theme }:
     }
     return <Icon type={icon} />;
   });
+
+  const navigateFn = useCallback(
+    (menu: IMenu) => {
+      const {
+        form: {
+          assetConfig: { subAppType, subAppId },
+        },
+      } = menu;
+      let url = "";
+      console.log({ subAppType });
+      // 流程类子应用
+      if (subAppType === (HomeSubAppType.FLOW as unknown) && subAppId) {
+        url = `./instance/${subAppId}`;
+      } else if (subAppType === (HomeSubAppType.TASK_CENTER as unknown)) {
+        url = `./task-center`;
+      } else if (subAppType === (HomeSubAppType.INSTANCE_MANAGER as unknown)) {
+        url = `./data-manage`;
+      }
+      navigate(url);
+    },
+    [navigate],
+  );
+
   const handleMenuClick = useMemoCallback(({ key }) => {
     const menu = dataSource.find((v) => v.id === key);
     if (menu) {
@@ -33,12 +60,21 @@ const SingleNavComponent = ({ children, extra, dataSource, selectedKey, theme }:
     if (menu) {
       const subMenu = findFirstChild(menu);
       dispatch(setCurrentMenu(subMenu.id));
+      if (subMenu.id !== selectedKey) {
+        navigateFn(subMenu);
+      }
     } else {
       dispatch(setCurrentMenu(key));
     }
   });
   const handleSubMenuClick = useMemoCallback(({ key }) => {
+    const menu = findItem(key, dataSource);
+
     dispatch(setCurrentMenu(key));
+
+    if (selectedKey !== key) {
+      navigateFn(menu);
+    }
   });
 
   return (

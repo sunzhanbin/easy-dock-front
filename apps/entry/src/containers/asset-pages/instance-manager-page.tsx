@@ -1,23 +1,26 @@
-import { useMemo } from "react";
 import { useParams } from "react-router";
-import { MAIN_ENTRY } from "@/consts";
+import { MICRO_FLOW_ENTRY } from "@/consts";
 import { useWorkspaceRuntimeDetailQuery } from "@/http/app-manager.hooks";
+import MicroApp from "@components/micro-app";
 import "@containers/asset-pages/instance-manager-page.style";
 
-const InstanceManagerMicroPage = () => {
+const InstanceManagerMicroPage: React.FC = () => {
   const { workspaceId } = useParams();
+
   const { theme } = useWorkspaceRuntimeDetailQuery(+(workspaceId as string), {
     selectFromResult: ({ data }) => ({
       theme: data?.extension?.theme || "light",
     }),
   });
-  const url = useMemo(() => {
-    return `${MAIN_ENTRY}/main/instance/${workspaceId}/data-manage?theme=${theme}&mode=running`;
-  }, [theme, workspaceId]);
 
   return (
     <div className="instance-manager-page">
-      <iframe className="iframe" src={url} frameBorder={0} />
+      <MicroApp
+        name="instance-namager-page"
+        entry={MICRO_FLOW_ENTRY!}
+        basename={`/workspace/${workspaceId}/` || ""}
+        extra={{ appId: workspaceId, mode: "running", theme }}
+      ></MicroApp>
     </div>
   );
 };

@@ -30,6 +30,7 @@
         "eqeqeq": "off",
         "react/prop-types": "off",
         "react/no-deprecated": "off",
+        "react/no-string-refs": "off",
         "no-use-before-define": "off",
         "jsx-a11y/anchor-is-valid": "off",
         "react/react-in-jsx-scope": "off",

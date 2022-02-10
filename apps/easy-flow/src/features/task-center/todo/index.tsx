@@ -37,6 +37,7 @@ const ToDo: FC = () => {
   const app = useAppSelector(appSelector);
 
   const [loading, setLoading] = useState<boolean>(false);
+  const [isUnmounted, setIsUnmounted] = useState(false);
   const [optionList, setOptionList] = useState<UserItem[]>([]);
   const [total, setTotal] = useState<number>(0);
   const [keyword, setKeyword] = useState<string>("");
@@ -98,7 +99,7 @@ const ToDo: FC = () => {
           dispatch(setTodoNum({ todoNum: total }));
         })
         .finally(() => {
-          setLoading(false);
+          !isUnmounted && setLoading(false);
         });
     },
   );
@@ -244,6 +245,9 @@ const ToDo: FC = () => {
   );
   useEffect(() => {
     appId && fetchData();
+    return () => {
+      setIsUnmounted(true);
+    };
   }, [fetchData, appId]);
   useEffect(() => {
     fetchOptionList(1, "");
