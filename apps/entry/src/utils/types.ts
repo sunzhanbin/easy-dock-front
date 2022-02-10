@@ -47,9 +47,11 @@ export type AppAuthParams = {
   subapps: SubAppAuthParams[];
 };
 
+// 1=大屏类，2=流程类，3=报表类，4=HoloScene，5=表单类
 export enum SubAppTypeEnum {
-  SCREEN = 1, //大屏类子应用
-  FLOW = 2, //流程类子应用
+  SCREEN = 1, // 大屏类子应用
+  FLOW = 2, // 流程类子应用
+  SPACE = 4, // 空间类子应用
 }
 
 export enum RoleEnum {
@@ -128,7 +130,7 @@ export type SubAppPower = {
   name: string;
   powers: Power[]; //被授权的对象
   status: -1 | 1; //-1:停用 1:启用
-  type: 1 | 2; //1:大屏类子应用 2:流程类子应用
+  type: 1 | 2 | 4; //1:大屏类子应用 2:流程类子应用 4:空间类子应用
   openVisit?: boolean; //所有人可访问
 };
 

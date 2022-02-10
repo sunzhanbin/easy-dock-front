@@ -173,30 +173,31 @@ export const formatRules = (rules: FormRuleItem[], id: string) => {
   return rules;
 };
 
-export const formatSerialRules = (byId: any, id: string) => {
-  const componentList = Object.values(byId).map((item: any) => item) || [];
-  componentList.forEach((comp) => {
-    if (comp.type === "SerialNum") {
-      const { serialMata = {} } = comp.serialRule;
-      serialMata.changeRules = serialMata.changeRules.filter((item: any) => {
-        if (item.type === "fieldName") {
-          return item.fieldValue !== id && item;
-        }
-        return item;
-      });
-      serialMata.rules = serialMata.rules.filter((item: any) => {
-        if (item.type === "fieldName") {
-          return item.fieldValue !== id && item;
-        }
-        return item;
-      });
-    }
-  });
-  return byId;
-};
+// export const formatSerialRules = (byId: any, id: string) => {
+//   const componentList = Object.values(byId).map((item: any) => item) || [];
+//   componentList.forEach((comp) => {
+//     if (comp.type === "SerialNum") {
+//       const { serialMata = {} } = comp.serialRule;
+//       serialMata.changeRules = serialMata.changeRules?.filter((item: any) => {
+//         if (item.type === "fieldName") {
+//           return item.fieldValue !== id && item;
+//         }
+//         return item;
+//       });
+//       serialMata.rules = serialMata.rules.filter((item: any) => {
+//         if (item.type === "fieldName") {
+//           return item.fieldValue !== id && item;
+//         }
+//         return item;
+//       });
+//     }
+//   });
+//   return byId;
+// };
 
-// eslint-disable-next-line
-export const urlRegex = /^(http|https):\/\/([\w\-]+\.)*[\w\-]+(:\d*)?(\/[\w\u4e00-\u9fa5\-\.\/?\@\%\!\&=\+\~\:\#\;\,]*)?/;
+export const urlRegex =
+  // eslint-disable-next-line
+  /^(http|https):\/\/([\w\-]+\.)*[\w\-]+(:\d*)?(\/[\w\u4e00-\u9fa5\-\.\/?\@\%\!\&=\+\~\:\#\;\,]*)?/;
 
 export const validUrlOption = (option: UrlOptionItem) => {
   if (option.type === "custom") {

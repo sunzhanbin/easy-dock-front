@@ -22,13 +22,13 @@ const WorkspaceRunning: React.FC = () => {
         <Route path=":workspaceId" element={<NavComponent />}>
           <Route>
             <Route path="canvas" element={<SuspenseWrap render={<CanvasMicroPage />} />} />
-            <Route path="flow/*" element={<SuspenseWrap render={<FlowMicroPage mode="running" />} />} />
+            <Route path="instance/*" element={<SuspenseWrap render={<FlowMicroPage mode="running" />} />} />
             <Route path="chart" element={<SuspenseWrap render={<ChartMicroPage />} />} />
             <Route path="space" element={<SuspenseWrap render={<SpaceMicroPage />} />} />
             <Route path="form" element={<SuspenseWrap render={<FormMicroPage />} />} />
             <Route path="iframe" element={<SuspenseWrap render={<IframeMicroPage />} />} />
             <Route path="task-center" element={<SuspenseWrap render={<TaskCenterMicroPage />} />} />
-            <Route path="instance-manager" element={<SuspenseWrap render={<InstanceManagerMicroPage />} />} />
+            <Route path="data-manage" element={<SuspenseWrap render={<InstanceManagerMicroPage />} />} />
             <Route path="empty" element={<SuspenseWrap render={<EmptyMicroPage />} />} />
           </Route>
         </Route>

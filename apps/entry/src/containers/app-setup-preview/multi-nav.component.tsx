@@ -1,9 +1,11 @@
-import { useMemo } from "react";
+import { useMemo, useCallback } from "react";
 import { Menu } from "antd";
 import classNames from "classnames";
+import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "@/store";
 import { setCurrentMenu } from "@/views/app-setup/menu-setup.slice";
-import { findFirstChild, findParentMenu, keyPath, getPopupContainer } from "@utils/utils";
+import { findFirstChild, findParentMenu, keyPath, getPopupContainer, findItem } from "@utils/utils";
+import { HomeSubAppType } from "@/consts";
 import { Menu as IMenu, MenuComponentProps } from "@utils/types";
 import { Icon, Text } from "@common/components";
 import useMemoCallback from "@common/hooks/use-memo-callback";
@@ -13,6 +15,7 @@ import "@containers/app-setup-preview/multi-nav.style";
 const { SubMenu } = Menu;
 
 const MultiNavComponent = ({ children, extra, dataSource, selectedKey, theme }: MenuComponentProps) => {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const submenu = useMemo(() => {
     const currentKey = keyPath(selectedKey, dataSource).shift() || selectedKey;
@@ -34,20 +37,53 @@ const MultiNavComponent = ({ children, extra, dataSource, selectedKey, theme }: 
     return menu && menu.children?.length > 0;
   }, [dataSource, selectedKey]);
 
+  const navigateFn = useCallback(
+    (menu: IMenu) => {
+      const {
+        form: {
+          assetConfig: { subAppType, subAppId },
+        },
+      } = menu;
+      let url = "";
+      console.log({ subAppType });
+      // 流程类子应用
+      if (subAppType === (HomeSubAppType.FLOW as unknown) && subAppId) {
+        url = `./instance/${subAppId}`;
+      } else if (subAppType === (HomeSubAppType.TASK_CENTER as unknown)) {
+        url = `./task-center`;
+      } else if (subAppType === (HomeSubAppType.INSTANCE_MANAGER as unknown)) {
+        url = `./data-manage`;
+      }
+      navigate(url);
+    },
+    [navigate],
+  );
+
   const handleMainMenuClick = useMemoCallback(({ key }) => {
     const menu = dataSource.find((v) => v.id === key);
     if (menu) {
       const subMenu = findFirstChild(menu);
       dispatch(setCurrentMenu(subMenu.id));
+      if (menu?.id !== key) {
+        navigateFn(subMenu);
+      }
     } else {
       dispatch(setCurrentMenu(key));
     }
   });
   const handleTitleClick = useMemoCallback(({ key }) => {
+    const menu = findItem(key, dataSource);
     dispatch(setCurrentMenu(key));
+    navigateFn(menu);
   });
   const handleSubMenuClick = useMemoCallback(({ key }) => {
+    const menu = findItem(key, dataSource);
+
     dispatch(setCurrentMenu(key));
+
+    if (selectedKey !== key) {
+      navigateFn(menu);
+    }
   });
 
   const renderIcon = useMemoCallback((icon) => {

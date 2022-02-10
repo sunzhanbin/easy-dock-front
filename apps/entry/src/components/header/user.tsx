@@ -76,7 +76,7 @@ function HeaderUser({ showProject }: HeaderUserProps) {
   }, [isAdmin, handleGoAuth, handleLogout]);
 
   return (
-    <>
+    <div className="user-container-component">
       {user ? (
         <Dropdown overlay={dropdownOverlay} getPopupContainer={(c) => c} placement="bottomLeft">
           <div className="user">
@@ -93,7 +93,7 @@ function HeaderUser({ showProject }: HeaderUserProps) {
           登录
         </div>
       )}
-    </>
+    </div>
   );
 }
 

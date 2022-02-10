@@ -51,7 +51,7 @@ const NavComponent: FC = () => {
       navigate("./iframe");
     } else {
       if (subAppType === SubAppType.FLOW && subAppId) {
-        navigate(`./${RouteMap[subAppType as unknown as keyof typeof RouteMap]}/instance/${subAppId}`);
+        navigate(`./${RouteMap[subAppType as unknown as keyof typeof RouteMap]}/${subAppId}`);
       } else {
         navigate(`./${RouteMap[assetConfig.subAppType as unknown as keyof typeof RouteMap]}`);
       }
