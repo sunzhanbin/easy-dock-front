@@ -14,12 +14,12 @@ import TaskImage from "@assets/images/home/no-app.png";
 
 export const RouteMap = {
   1: "canvas",
-  2: "flow",
+  2: "instance",
   3: "chart",
   4: "space",
   5: "form",
   10: "task-center",
-  11: "instance-manager",
+  11: "data-manage",
 };
 
 export const NavMenu = [

@@ -15,20 +15,20 @@ const TaskCenterMicroPage = React.lazy(() => import("@containers/asset-pages/tas
 const InstanceManagerMicroPage = React.lazy(() => import("@containers/asset-pages/instance-manager-page"));
 const EmptyMicroPage = React.lazy(() => import("@containers/asset-pages/empty-page"));
 
-const WorkspaceRunning = () => {
+const WorkspaceRunning: React.FC = () => {
   return (
     <div className="workspace-running">
       <Routes>
         <Route path=":workspaceId" element={<NavComponent />}>
           <Route>
             <Route path="canvas" element={<SuspenseWrap render={<CanvasMicroPage />} />} />
-            <Route path="flow/*" element={<SuspenseWrap render={<FlowMicroPage mode="running" />} />} />
+            <Route path="instance/*" element={<SuspenseWrap render={<FlowMicroPage mode="running" />} />} />
             <Route path="chart" element={<SuspenseWrap render={<ChartMicroPage />} />} />
             <Route path="space" element={<SuspenseWrap render={<SpaceMicroPage />} />} />
             <Route path="form" element={<SuspenseWrap render={<FormMicroPage />} />} />
             <Route path="iframe" element={<SuspenseWrap render={<IframeMicroPage />} />} />
             <Route path="task-center" element={<SuspenseWrap render={<TaskCenterMicroPage />} />} />
-            <Route path="instance-manager" element={<SuspenseWrap render={<InstanceManagerMicroPage />} />} />
+            <Route path="data-manage" element={<SuspenseWrap render={<InstanceManagerMicroPage />} />} />
             <Route path="empty" element={<SuspenseWrap render={<EmptyMicroPage />} />} />
           </Route>
         </Route>

@@ -1,7 +1,7 @@
-import { useMemo } from "react";
 import { useParams } from "react-router";
-import { MAIN_ENTRY } from "@/consts";
+import { MICRO_FLOW_ENTRY } from "@/consts";
 import { useWorkspaceRuntimeDetailQuery } from "@/http/app-manager.hooks";
+import MicroApp from "@components/micro-app";
 import "@containers/asset-pages/task-center-page.style";
 
 const TaskCenterMicroPage = () => {
@@ -11,13 +11,15 @@ const TaskCenterMicroPage = () => {
       theme: data?.extension?.theme || "light",
     }),
   });
-  const url = useMemo(() => {
-    return `${MAIN_ENTRY}/main/instance/${workspaceId}/task-center?theme=${theme}&mode=running`;
-  }, [theme, workspaceId]);
 
   return (
     <div className="task-center-page">
-      <iframe className="iframe" src={url} frameBorder={0} />
+      <MicroApp
+        name="task-center-page"
+        entry={MICRO_FLOW_ENTRY!}
+        basename={`/workspace/${workspaceId}/` || ""}
+        extra={{ appId: workspaceId, mode: "running", theme }}
+      ></MicroApp>
     </div>
   );
 };

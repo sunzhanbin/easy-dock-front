@@ -57,8 +57,8 @@
   "scripts": {
     "start": "react-app-rewired start",
     "build": "cross-env PUBLIC_URL=/easyflow/ REACT_APP_TARGET_ENV=staging react-app-rewired build",
-    "build:dev": "cross-env REACT_APP_TARGET_ENV=dev react-app-rewired build",
-    "build:cluster": "cross-env REACT_APP_TARGET_ENV=cluster react-app-rewired build",
+    "build:dev": "cross-env PUBLIC_URL=/easyflow/ REACT_APP_TARGET_ENV=dev react-app-rewired build",
+    "build:cluster": "cross-env PUBLIC_URL=/easyflow/ REACT_APP_TARGET_ENV=cluster react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },

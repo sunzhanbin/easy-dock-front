@@ -1,10 +1,9 @@
-import { memo, useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef } from "react";
 import { loadMicroApp } from "qiankun";
 
 interface MicroAppProps {
   name: string;
   entry: string;
-  className?: string;
   basename?: string;
   extra?: any;
 }
@@ -12,12 +11,12 @@ interface MicroAppProps {
 function MicroApp(props: MicroAppProps) {
   const { name, entry, basename, extra } = props;
   const containerRef = useRef<HTMLDivElement>(null);
-  const [, setLoading] = useState(true);
+  // const [, setLoading] = useState(true);
   useEffect(() => {
     if (containerRef.current) {
       const app = loadMicroApp({
         name,
-        entry: entry.replace(/\/$/, "") + `?ts=${Date.now()}`,
+        entry: entry,
         container: containerRef.current,
         props: {
           basename: basename || "",
@@ -25,12 +24,14 @@ function MicroApp(props: MicroAppProps) {
         },
       });
 
+      /*
       app.mountPromise.finally(() => {
         // 防止页面跳走后才加载成功时setstate的警告;
         if (containerRef.current) {
           setLoading(false);
         }
-      });
+      }); 
+      */
 
       return () => {
         app.unmount();
@@ -38,11 +39,7 @@ function MicroApp(props: MicroAppProps) {
     }
   }, [name, entry, basename, extra]);
 
-  return (
-    <div>
-      <div ref={containerRef}></div>
-    </div>
-  );
+  return <div ref={containerRef}></div>;
 }
 
 export default memo(MicroApp);

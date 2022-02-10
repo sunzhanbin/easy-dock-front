@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, FC } from "react";
 import { useParams } from "react-router";
 import { useAppSelector } from "@/store";
 import AppInfo from "@components/app-info";
@@ -13,7 +13,7 @@ import { NavModeType, SubAppType } from "@/consts";
 import { useNavigate } from "react-router-dom";
 import { axios } from "@/utils/fetch";
 
-const NavComponent = () => {
+const NavComponent: FC = () => {
   const { workspaceId } = useParams();
   const navigate = useNavigate();
   const selectedKey = useAppSelector(selectCurrentId);
@@ -51,7 +51,7 @@ const NavComponent = () => {
       navigate("./iframe");
     } else {
       if (subAppType === SubAppType.FLOW && subAppId) {
-        navigate(`./${RouteMap[subAppType as unknown as keyof typeof RouteMap]}/instance/${subAppId}`);
+        navigate(`./${RouteMap[subAppType as unknown as keyof typeof RouteMap]}/${subAppId}`);
       } else {
         navigate(`./${RouteMap[assetConfig.subAppType as unknown as keyof typeof RouteMap]}`);
       }

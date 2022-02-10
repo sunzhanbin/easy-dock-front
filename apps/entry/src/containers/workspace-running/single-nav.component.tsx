@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, FC } from "react";
 import { Menu } from "antd";
 import classNames from "classnames";
 import { Outlet, useParams } from "react-router";
@@ -17,7 +17,7 @@ import { Icon } from "@common/components";
 
 const { SubMenu } = Menu;
 
-const SingleNavComponent = ({ extra, dataSource, theme, selectedKey }: WorkspaceBaseMenuProps) => {
+const SingleNavComponent: FC<WorkspaceBaseMenuProps> = ({ extra, dataSource, theme, selectedKey }) => {
   const { workspaceId: appId } = useParams();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -44,7 +44,7 @@ const SingleNavComponent = ({ extra, dataSource, theme, selectedKey }: Workspace
     if (mode === "current") {
       // 流程类子应用
       if (subAppType === SubAppType.FLOW && subAppId) {
-        url = `./${RouteMap[subAppType as unknown as keyof typeof RouteMap]}/instance/${subAppId}`;
+        url = `./${RouteMap[subAppType as unknown as keyof typeof RouteMap]}/${subAppId}`;
       } else if (subAppId) {
         url = `./${RouteMap[subAppType as unknown as keyof typeof RouteMap]}`;
       } else if (customUrl) {
