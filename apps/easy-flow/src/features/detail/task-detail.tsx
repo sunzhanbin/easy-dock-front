@@ -57,6 +57,7 @@ function FlowDetail() {
   const history = useHistory();
   const [data, setData] = useState<DataType>();
   const [loading, setLoading] = useState(false);
+  const [isUnmounted, setIsUnmounted] = useState(false);
   const [showConfirmType, setShowConfirmType] = useState<ActionType>();
   const formRef = useRef<FormInstance<FormValue>>(null);
   const appId = data?.flow.instance.subapp.app.id;
@@ -69,9 +70,12 @@ function FlowDetail() {
         setData(data);
       })
       .finally(() => {
-        setLoading(false);
+        !isUnmounted && setLoading(false);
       });
-  }, [taskId]);
+    return () => {
+      setIsUnmounted(true);
+    };
+  }, [taskId, isUnmounted]);
 
   const handleSaveNodeForm = useMemoCallback(async () => {
     if (!formRef.current) return;

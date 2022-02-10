@@ -4,7 +4,7 @@ import { useWorkspaceRuntimeDetailQuery } from "@/http/app-manager.hooks";
 import MicroApp from "@components/micro-app";
 import "@containers/asset-pages/instance-manager-page.style";
 
-const InstanceManagerMicroPage = () => {
+const InstanceManagerMicroPage: React.FC = () => {
   const { workspaceId } = useParams();
 
   const { theme } = useWorkspaceRuntimeDetailQuery(+(workspaceId as string), {
