@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, FC } from "react";
 import { useParams } from "react-router";
 import { useAppSelector } from "@/store";
 import AppInfo from "@components/app-info";
@@ -13,7 +13,7 @@ import { NavModeType, SubAppType } from "@/consts";
 import { useNavigate } from "react-router-dom";
 import { axios } from "@/utils/fetch";
 
-const NavComponent = () => {
+const NavComponent: FC = () => {
   const { workspaceId } = useParams();
   const navigate = useNavigate();
   const selectedKey = useAppSelector(selectCurrentId);

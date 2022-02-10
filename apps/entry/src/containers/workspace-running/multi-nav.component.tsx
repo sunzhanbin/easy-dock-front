@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, FC } from "react";
 import { Menu } from "antd";
 import { Icon } from "@common/components";
 import classNames from "classnames";
@@ -17,7 +17,7 @@ import { useGetCanvasIdMutation, useGetHoloSceneIdMutation } from "@/http/app-ma
 
 const { SubMenu } = Menu;
 
-const MultiNavComponent = ({ extra, dataSource, theme, selectedKey }: WorkspaceBaseMenuProps) => {
+const MultiNavComponent: FC<WorkspaceBaseMenuProps> = ({ extra, dataSource, theme, selectedKey }) => {
   const { workspaceId: appId } = useParams();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -99,7 +99,7 @@ const MultiNavComponent = ({ extra, dataSource, theme, selectedKey }: WorkspaceB
     setActiveMainKey(key);
     const menu = dataSource.find((v) => v.id === key);
     const subMenu = findFirstChild(menu as IMenu);
-    if (menu?.id !== key) {
+    if (subMenu) {
       navigateFn(subMenu);
     }
     if (menu) {

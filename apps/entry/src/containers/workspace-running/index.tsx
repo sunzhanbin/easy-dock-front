@@ -15,7 +15,7 @@ const TaskCenterMicroPage = React.lazy(() => import("@containers/asset-pages/tas
 const InstanceManagerMicroPage = React.lazy(() => import("@containers/asset-pages/instance-manager-page"));
 const EmptyMicroPage = React.lazy(() => import("@containers/asset-pages/empty-page"));
 
-const WorkspaceRunning = () => {
+const WorkspaceRunning: React.FC = () => {
   return (
     <div className="workspace-running">
       <Routes>

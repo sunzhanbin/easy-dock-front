@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, FC } from "react";
 import { Menu } from "antd";
 import classNames from "classnames";
 import { Outlet, useParams } from "react-router";
@@ -17,7 +17,7 @@ import { Icon } from "@common/components";
 
 const { SubMenu } = Menu;
 
-const SingleNavComponent = ({ extra, dataSource, theme, selectedKey }: WorkspaceBaseMenuProps) => {
+const SingleNavComponent: FC<WorkspaceBaseMenuProps> = ({ extra, dataSource, theme, selectedKey }) => {
   const { workspaceId: appId } = useParams();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
