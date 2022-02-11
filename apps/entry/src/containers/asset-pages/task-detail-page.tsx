@@ -17,7 +17,7 @@ const TaskDetailMicroPage: FC = () => {
     <div className="task-center-page">
       <MicroApp
         name="task-center-page"
-        entry={process.env.NODE_ENV === "production" ? "/" : MICRO_FLOW_ENTRY!}
+        entry={MICRO_FLOW_ENTRY!}
         basename={`/workspace/${workspaceId}` || ""}
         extra={{ appId: workspaceId, mode: "running", theme }}
       ></MicroApp>

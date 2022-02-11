@@ -50,6 +50,8 @@ function StatusBar(props: StatusBarProps) {
     let styleName = "";
     const publicPath = appConfig.publicPath.replace(/\/$/, "");
 
+    console.info(publicPath, "publicPath");
+
     if (status === NodeStatusType.Processing) {
       image = `${publicPath}/images/flow-detail/processing.png`;
       styleName = styles.processing;
