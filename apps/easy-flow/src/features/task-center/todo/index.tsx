@@ -15,6 +15,7 @@ import styles from "./index.module.scss";
 import TimeoutState from "../components/timeout-state";
 import { setTodoNum, appSelector } from "../taskcenter-slice";
 import { Pagination, TodoItem, UserItem } from "../type";
+import appConfig from "@/init";
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -29,6 +30,10 @@ const ToDo: FC = () => {
     if (location.search) {
       const params = new URLSearchParams(location.search.slice(1));
       return params.get("theme") || "light";
+    }
+    // 以微前端方式接入,参数在extra中
+    if (appConfig?.extra?.theme) {
+      return appConfig.extra.theme;
     }
     return "light";
   }, [location.search]);
