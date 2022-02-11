@@ -1,4 +1,4 @@
-import { useMemo, useEffect } from "react";
+import { useMemo, useEffect, FC } from "react";
 import { useAppSelector } from "@/store";
 import { useNavigate } from "react-router-dom";
 import { NavModeType, HomeSubAppType } from "@/consts";
@@ -10,7 +10,7 @@ import AppInfo from "@components/app-info";
 import AppContent from "@containers/app-setup-preview/app-content.component";
 import "@containers/app-setup-preview/index.style";
 
-const AppSetupPreview = () => {
+const AppSetupPreview: FC = () => {
   const navigate = useNavigate();
   const theme = useAppSelector(selectTheme);
   const navMode = useAppSelector(selectNavMode);
