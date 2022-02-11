@@ -16,22 +16,22 @@ const staticRoutes = {
 export default staticRoutes;
 
 export const dynamicRoutes = {
-  toTaskDetail(taskId: string) {
+  toTaskDetail(taskId: string): string {
     return staticRoutes.TASK_DETAIL.replace(/:taskId/, taskId);
   },
-  toStartFlow(subAppId: number) {
+  toStartFlow(subAppId: number): string {
     return staticRoutes.START_FLOW.replace(/:subAppId/, String(subAppId));
   },
-  toStartDetail(flowId: string) {
+  toStartDetail(flowId: string): string {
     return staticRoutes.START_DETAIL.replace(/:flowId/, flowId);
   },
-  toTaskCenter(appId: number) {
+  toTaskCenter(appId: number): string {
     if (appConfig.appId) {
       return staticRoutes.TASK_CENTER_WITH_NO_APPID;
     }
     return staticRoutes.TASK_CENTER.replace(/:appId/, String(appId));
   },
-  toFlowInstanceList(subAppId: number) {
+  toFlowInstanceList(subAppId: number): string {
     return staticRoutes.FLOW_INSTANCE_LIST.replace(/:subAppId/, String(subAppId));
   },
 };
