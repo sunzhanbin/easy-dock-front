@@ -17,6 +17,7 @@ import Copy from "./copy";
 import { todoNumSelector } from "./taskcenter-reducer";
 import { loadApp } from "./taskcenter-slice";
 import { SubAppItem } from "./type";
+import appConfig from "@/init";
 
 const TaskCenter: FC = () => {
   const dispatch = useAppDispatch();
@@ -41,6 +42,10 @@ const TaskCenter: FC = () => {
     if (location.search) {
       const params = new URLSearchParams(location.search.slice(1));
       return params.get("theme") || "light";
+    }
+    // 以微前端方式接入,参数在extra中
+    if (appConfig?.extra?.theme) {
+      return appConfig.extra.theme;
     }
     return "light";
   }, [location.search]);

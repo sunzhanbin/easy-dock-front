@@ -15,6 +15,7 @@ import styles from "./index.module.scss";
 import TimeoutState from "../components/timeout-state";
 import { setTodoNum, appSelector } from "../taskcenter-slice";
 import { Pagination, TodoItem, UserItem } from "../type";
+import appConfig from "@/init";
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -30,6 +31,10 @@ const ToDo: FC = () => {
       const params = new URLSearchParams(location.search.slice(1));
       return params.get("theme") || "light";
     }
+    // 以微前端方式接入,参数在extra中
+    if (appConfig?.extra?.theme) {
+      return appConfig.extra.theme;
+    }
     return "light";
   }, [location.search]);
   const appId = useAppId();
@@ -37,6 +42,7 @@ const ToDo: FC = () => {
   const app = useAppSelector(appSelector);
 
   const [loading, setLoading] = useState<boolean>(false);
+  const [isUnmounted, setIsUnmounted] = useState(false);
   const [optionList, setOptionList] = useState<UserItem[]>([]);
   const [total, setTotal] = useState<number>(0);
   const [keyword, setKeyword] = useState<string>("");
@@ -98,7 +104,7 @@ const ToDo: FC = () => {
           dispatch(setTodoNum({ todoNum: total }));
         })
         .finally(() => {
-          setLoading(false);
+          !isUnmounted && setLoading(false);
         });
     },
   );
@@ -244,6 +250,9 @@ const ToDo: FC = () => {
   );
   useEffect(() => {
     appId && fetchData();
+    return () => {
+      setIsUnmounted(true);
+    };
   }, [fetchData, appId]);
   useEffect(() => {
     fetchOptionList(1, "");

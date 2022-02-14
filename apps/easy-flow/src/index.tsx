@@ -21,11 +21,12 @@ interface AppProps {
   container: HTMLElement;
   basename: string;
   appId: string;
-  extra?: any;
+  theme?: string;
+  mode?: string;
 }
 
 export async function mount(props?: AppProps) {
-  const { container, basename = "/", appId, extra } = props || {};
+  const { container, basename = "/", appId, theme, mode } = props || {};
   const history = createBrowserHistory({ basename });
 
   // const query = decodeURIComponent(window.location.href.split("?")[1]);
@@ -39,13 +40,12 @@ export async function mount(props?: AppProps) {
       theme,
     });
   } */
-
   if (appId) {
     appConfig.appId = appId;
   }
-  if (extra) {
-    appConfig.extra = extra;
-  }
+  console.info(theme, mode, 1111);
+  appConfig.extra = { theme: theme!, mode: mode! };
+  console.info(appConfig.extra, 222);
   ReactDOM.render(
     <AntdProvider>
       <Provider store={store}>

@@ -17,7 +17,7 @@ const Layout: React.FC = () => {
         <Route path="workspace/*" element={null} />
         <Route path="app/:appId/flow-app/:subAppId" element={null} />
         <Route path="app/:appId/empty" element={null} />
-        <Route path="app-manager/project/:projectId/workspace/:workspaceId/setup" element={<AppManagerHeader />} />
+        <Route path="app-manager/project/:projectId/workspace/:workspaceId/setup/*" element={<AppManagerHeader />} />
         <Route path="*" element={<HomeHeader />} />
       </Routes>
       <Content>

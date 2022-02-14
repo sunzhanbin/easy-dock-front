@@ -5,7 +5,7 @@ import { useWorkspaceRuntimeDetailQuery } from "@/http/app-manager.hooks";
 import MicroApp from "@components/micro-app";
 import "@containers/asset-pages/task-center-page.style";
 
-const TaskCenterMicroPage: FC = () => {
+const TaskDetailMicroPage: FC = () => {
   const { workspaceId } = useParams();
   const { theme } = useWorkspaceRuntimeDetailQuery(Number(workspaceId), {
     selectFromResult: ({ data }) => ({
@@ -18,11 +18,11 @@ const TaskCenterMicroPage: FC = () => {
       <MicroApp
         name="task-center-page"
         entry={MICRO_FLOW_ENTRY!}
-        basename={`/workspace/${workspaceId}/` || ""}
+        basename={`/workspace/${workspaceId}` || ""}
         extra={{ appId: workspaceId, mode: "running", theme }}
       ></MicroApp>
     </div>
   );
 };
 
-export default TaskCenterMicroPage;
+export default TaskDetailMicroPage;
