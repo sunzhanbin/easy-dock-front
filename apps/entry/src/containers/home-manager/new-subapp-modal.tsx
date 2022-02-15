@@ -1,11 +1,10 @@
 import { memo, useCallback } from "react";
 import { Modal, Form, Input, message } from "antd";
 import SelectCard from "@components/select-card";
-import { useAppSelector } from "@/store";
-import { selectProjectId } from "@views/home/index.slice";
 import "@components/select-card/index.style.scss";
 import { useFetchWorkspaceListQuery, useAddWorkspaceMutation } from "@/http";
 import { APP_TYPE, nameRule } from "@/consts";
+import { useParams } from "react-router-dom";
 
 type ModalProps = {
   modalInfo: { title: string; name: string; fieldKey: number };
@@ -21,9 +20,9 @@ const SELECT_CARD_TYPE = {
 
 const NewSubAppModal = ({ modalInfo, visible, onOk, onCancel }: ModalProps) => {
   const [form] = Form.useForm();
-  const projectId = useAppSelector(selectProjectId);
+  const { projectId } = useParams();
   const [addWorkspace] = useAddWorkspaceMutation();
-  const { workspaceList } = useFetchWorkspaceListQuery(projectId, {
+  const { workspaceList } = useFetchWorkspaceListQuery(projectId!, {
     selectFromResult: ({ data }) => ({
       workspaceList: (data || [])?.filter(Boolean).filter((item: any) => {
         // 一个工作区只能关联一个应用
