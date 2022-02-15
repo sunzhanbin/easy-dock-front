@@ -1,7 +1,6 @@
-import { useMemo, useEffect, FC } from "react";
+import { useMemo, FC } from "react";
 import { useAppSelector } from "@/store";
-import { useNavigate } from "react-router-dom";
-import { NavModeType, HomeSubAppType } from "@/consts";
+import { NavModeType } from "@/consts";
 import { selectTheme, selectNavMode } from "@views/app-setup/basic-setup.slice";
 import { selectMenu, selectCurrentId } from "@views/app-setup/menu-setup.slice";
 import SingleNavComponent from "@containers/app-setup-preview/single-nav.component";
@@ -11,13 +10,13 @@ import AppContent from "@containers/app-setup-preview/app-content.component";
 import "@containers/app-setup-preview/index.style";
 
 const AppSetupPreview: FC = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const theme = useAppSelector(selectTheme);
   const navMode = useAppSelector(selectNavMode);
   const menu = useAppSelector(selectMenu);
   const selectedKey = useAppSelector(selectCurrentId);
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (!menu || !menu.length) return;
     const activeMenuForm = menu[0]?.form;
     const { assetConfig } = activeMenuForm;
@@ -33,7 +32,7 @@ const AppSetupPreview: FC = () => {
     }
     navigate(url);
     // eslint-disable-next-line
-  }, []);
+  }, []); */
 
   const renderNavComponent = useMemo(() => {
     if (navMode === NavModeType.LEFT) {
