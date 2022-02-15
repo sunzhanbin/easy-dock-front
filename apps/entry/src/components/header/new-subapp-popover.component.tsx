@@ -26,10 +26,9 @@ const NewSubAppPopoverComponent = () => {
 
   const handleConfirm = async (values: any) => {
     try {
-      const { data }: ResponseType = await createSubApp(values).unwrap();
+      const ret: ResponseType = await createSubApp(values).unwrap();
       const { type = 0 } = values;
-      if (!data) return;
-      await JumpLinkToUrl(type, data?.id, getCanvasId, getHoloSceneId);
+      await JumpLinkToUrl(type, ret?.id, getCanvasId, getHoloSceneId);
       message.success("创建成功!");
       setShowModal(false);
     } catch (e) {
