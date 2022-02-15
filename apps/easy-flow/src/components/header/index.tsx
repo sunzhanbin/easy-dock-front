@@ -1,7 +1,7 @@
 import { ReactNode, memo, useCallback } from "react";
 import { useHistory } from "react-router-dom";
 import classnames from "classnames";
-import { Icon } from "@common/components";
+// import { Icon } from "@common/components";
 import styles from "./index.module.scss";
 
 interface DetailHeaderProps {
@@ -26,7 +26,7 @@ function DetailHeader(props: DetailHeaderProps) {
   return (
     <div className={classnames(styles.header, className)}>
       <div className={classnames(styles.back, backClassName)} onClick={handelClick}>
-        <Icon className={styles.icon} type="fanhui" />
+        {/*<Icon className={styles.icon} type="fanhui" />*/}
         {backText}
       </div>
       {children}

@@ -102,6 +102,7 @@ const NumberOption = (props: NumberOptionProps) => {
               if (defaultNumberProps?.precision && strLength > defaultNumberProps?.precision) {
                 return value.substring(0, value.indexOf(".") + defaultNumberProps.precision + 1);
               }
+              return value;
             }}
             value={customData}
             onChange={handleInputBlur}
