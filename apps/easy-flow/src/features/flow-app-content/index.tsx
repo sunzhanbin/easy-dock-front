@@ -569,9 +569,11 @@ const FlowAppContent: FC<FlowAppContentProps> = ({ canOperation = true }) => {
               <Icon type="chongpao" className="icon" />
             </div>
           </Tooltip>
-          <Button type="primary" size="large" className="button" onClick={handleJumpToStartFlow}>
-            发起流程
-          </Button>
+          {mode === "running" && (
+            <Button type="primary" size="large" className="button" onClick={handleJumpToStartFlow}>
+              发起流程
+            </Button>
+          )}
         </div>
       </div>
       <div className="table-container">
