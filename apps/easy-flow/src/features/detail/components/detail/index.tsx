@@ -68,9 +68,12 @@ const Detail = forwardRef(function Detail(props: DetailProps, ref: React.Forward
       if (form.value && !Object.keys(form.value).includes(field)) {
         valueMap[field] = moment().valueOf();
       }
+      if (typeof valueMap[field] === "string") {
+        valueMap[field] = Number(valueMap[field]);
+      }
       return field;
     });
-    console.log(valueMap, "valueMap");
+    console.log(valueMap, "valueMap", dateFields);
     return valueMap;
   }, [form.value, form.meta]);
   return (
