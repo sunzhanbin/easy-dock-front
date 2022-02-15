@@ -1,7 +1,7 @@
 import { ReactNode, memo, useCallback } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import classnames from "classnames";
-// import { Icon } from "@common/components";
+import { Icon } from "@common/components";
 import styles from "./index.module.scss";
 
 interface DetailHeaderProps {
@@ -15,6 +15,7 @@ interface DetailHeaderProps {
 
 function DetailHeader(props: DetailHeaderProps) {
   const history = useHistory();
+  const location = useLocation();
   const { backText, backClassName, children, className, goBack } = props;
   const handelClick = useCallback(() => {
     if (goBack) {
@@ -26,7 +27,7 @@ function DetailHeader(props: DetailHeaderProps) {
   return (
     <div className={classnames(styles.header, className)}>
       <div className={classnames(styles.back, backClassName)} onClick={handelClick}>
-        {/*<Icon className={styles.icon} type="fanhui" />*/}
+        {!location.pathname.includes("/bpm-editor/") && <Icon className={styles.icon} type="fanhui" />}
         {backText}
       </div>
       {children}
