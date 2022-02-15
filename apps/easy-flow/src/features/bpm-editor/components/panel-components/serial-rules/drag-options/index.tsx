@@ -31,7 +31,7 @@ function DraggableOption(props: DraggableOptionProps) {
   const type = data?.type || "incNumber"; // 自定义编号规则
   const dragWrapperRef = useRef<HTMLDivElement>(null);
   const [canMove, setCanMove] = useState<boolean>(false);
-  const [chars, setChars] = useState<string>("");
+  const [chars, setChars] = useState<string>(data?.chars || "");
   const [showIncModal, setShowIncModal] = useState<boolean>(false);
   const [{ opacity }, drag] = useDrag(
     () => ({
@@ -168,7 +168,7 @@ function DraggableOption(props: DraggableOptionProps) {
             disabled={disabled}
             maxLength={10}
             placeholder="请输入"
-            {...((chars || data?.chars) && { value: chars || data?.chars })}
+            {...(chars && { value: chars })}
           />
         );
       case "fieldName":
