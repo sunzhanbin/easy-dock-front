@@ -143,13 +143,9 @@ const SerialRules = (props: RulesProps) => {
       });
   };
 
-  const handleOnChange = (serialItem: { type: string; rules: any; ruleName: string }) => {
+  const handleOnChange = (serialItem: { type: string; rules: any; ruleName: string; eventType?: string }) => {
     const { type, rules: formRule, ruleName: formName } = serialItem;
     if (type === SERIAL_TYPE.CUSTOM_TYPE) {
-      const hasChars = formRule.some(
-        (item: { type: string; chars?: string }) => item.type === "fixedChars" && !item.chars,
-      );
-      setErrorsCustom(hasChars);
       onChange &&
         onChange({
           serialId,
@@ -164,10 +160,6 @@ const SerialRules = (props: RulesProps) => {
           },
         });
     } else {
-      const hasChars = formRule.some(
-        (item: { type: string; chars?: string }) => item.type === "fixedChars" && !item.chars,
-      );
-      setErrors(hasChars);
       setChangeRules(formRule);
       setChangeRuleName(formName);
       onChange &&
