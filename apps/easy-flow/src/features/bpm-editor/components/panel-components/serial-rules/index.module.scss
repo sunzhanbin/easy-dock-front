@@ -13,6 +13,7 @@
     border-radius: 3px;
     border: 1px solid rgba(24, 31, 67, 0.12);
     overflow: hidden;
+
     &.active {
       border-color: #4c5cdb;
     }
@@ -66,12 +67,14 @@
       flex: 0 0 40px;
       text-align: center;
     }
+
     .disable .iconfont {
       opacity: 0.3;
       cursor: not-allowed;
     }
   }
 }
+
 .draggable {
   display: flex;
   width: 100%;
@@ -85,6 +88,7 @@
     flex: 1;
     display: flex;
     align-items: center;
+
     .text {
       flex: 0 0 80px;
       text-align: center;
@@ -93,10 +97,12 @@
     .inputBorder {
       border: 1px solid var(--ant-error-color);
     }
+
     .errorMsg {
       font-size: 12px;
       color: var(--ant-error-color);
     }
+
     :global {
       .ant-select.ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
         background-color: transparent;
@@ -122,6 +128,7 @@
         overflow: hidden;
         width: 165px;
         white-space: nowrap;
+
         &:hover {
           border-radius: 3px;
           border: 1px solid rgba(76, 92, 219, 0.8);
@@ -134,6 +141,7 @@
         background: linear-gradient(-45deg, rgba(24, 39, 67, 0.04) 0, rgba(24, 39, 67, 0.04) 5%, transparent 5%, transparent 50%, rgba(24, 39, 67, 0.04) 50%, rgba(24, 39, 67, 0.04) 55%, transparent 55%, transparent);
         background-size: 10px 10px;
         cursor: not-allowed;
+
         .labelStr {
           &:hover {
             border: 1px solid transparent;
@@ -148,6 +156,7 @@
           text-align: left;
           padding-left: 10px;
         }
+
         .ant-select-selector {
           padding: 0;
         }
@@ -155,19 +164,23 @@
       }
 
     }
+
     input {
       background-color: transparent;
     }
   }
+
   .operation {
     flex: 0 0 60px;
     display: flex;
     align-items: center;
     border-left: 1px solid rgba(24, 31, 67, 0.1);
+
     .delete {
       flex: 0 0 34px;
       text-align: center;
     }
+
     .move {
       flex: 0 0 26px;
       text-align: left;
@@ -179,6 +192,7 @@
       opacity: 0.3;
       cursor: not-allowed;
     }
+
     .iconfont {
       font-size: 14px;
     }
@@ -250,23 +264,27 @@
 .formWrapper {
   margin-bottom: 0;
 }
+
 .add_custom, {
   width: 55%;
-  border: 1px dashed  rgba(24, 31, 67, 0.3);
+  border: 1px dashed rgba(24, 31, 67, 0.3);
   vertical-align: middle;
   margin-right: 12px;
 }
+
 .edit_btn, .add_change, .add_inject {
   width: 100%;
 }
 
 .edit_save_btn {
   display: inline-block;
+
   .change_btn {
     width: 45%;
   }
 }
-.save_custom, .edit_save_btn  {
+
+.save_custom, .edit_save_btn {
   width: calc(45% - 15px);
 }
 
@@ -274,7 +292,7 @@
   display: inline-block;
   padding-bottom: 10px;
   font-size: 12px;
-  color: var(--ant-error-color);
+  color: #ff4d4f;
 }
 
 .change_btn:nth-child(1) {
