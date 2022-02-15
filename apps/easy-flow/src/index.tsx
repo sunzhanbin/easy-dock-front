@@ -43,9 +43,7 @@ export async function mount(props?: AppProps) {
   if (appId) {
     appConfig.appId = appId;
   }
-  console.info(theme, mode, 1111);
   appConfig.extra = { theme: theme!, mode: mode! };
-  console.info(appConfig.extra, 222);
   ReactDOM.render(
     <AntdProvider>
       <Provider store={store}>
