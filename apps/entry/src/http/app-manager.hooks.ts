@@ -5,7 +5,7 @@ export const appManagerBuilder = baseFetch.injectEndpoints({
   endpoints: (build) => ({
     // 添加工作区；
     addWorkspace: build.mutation({
-      query: (params?: { name: string; projectId: number }) => ({
+      query: (params?: { name: string; projectId: any }) => ({
         url: "/app",
         method: "post",
         body: params,
