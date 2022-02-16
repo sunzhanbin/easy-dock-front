@@ -1,6 +1,8 @@
 import { memo, useCallback } from "react";
 import { Modal, Form, Input, message } from "antd";
 import SelectCard from "@components/select-card";
+import { useAppSelector } from "@/store";
+import { selectProjectId } from "@views/home/index.slice";
 import "@components/select-card/index.style.scss";
 import { useFetchWorkspaceListQuery, useAddWorkspaceMutation } from "@/http";
 import { APP_TYPE, nameRule } from "@/consts";
@@ -20,7 +22,9 @@ const SELECT_CARD_TYPE = {
 
 const NewSubAppModal = ({ modalInfo, visible, onOk, onCancel }: ModalProps) => {
   const [form] = Form.useForm();
-  const { projectId } = useParams();
+  const routeParams = useParams();
+  const selectId = useAppSelector(selectProjectId);
+  const projectId = routeParams.projectId || selectId;
   const [addWorkspace] = useAddWorkspaceMutation();
   const { workspaceList } = useFetchWorkspaceListQuery(projectId!, {
     selectFromResult: ({ data }) => ({
