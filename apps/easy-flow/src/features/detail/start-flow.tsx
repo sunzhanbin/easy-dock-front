@@ -19,6 +19,8 @@ import rightImage from "@assets/background_right.png";
 
 import { useLocation } from "react-router-dom";
 import styles from "./index.module.scss";
+import { useAppSelector } from "@/app/hooks";
+import { modeSelector } from "../task-center/taskcenter-slice";
 
 type DataType = {
   processMeta: StartNode;
@@ -42,13 +44,7 @@ function StartFlow() {
     }
   }, [subApp]);
 
-  const mode = useMemo(() => {
-    if (location.search) {
-      const params = new URLSearchParams(location.search.slice(1));
-      return params.get("mode") || "running";
-    }
-    return "running";
-  }, [location.search]);
+  const mode = useAppSelector(modeSelector);
 
   const type = useMemo(() => {
     if (location.search) {
