@@ -13,6 +13,8 @@ import Empty from "./components/empty";
 import FlowNodeActions from "./components/flow-node-actions";
 import { FormMeta, FormValue, FlowMeta, FlowInstance, TaskDetailType } from "@type/detail";
 import styles from "./index.module.scss";
+import { useAppSelector } from "@/app/hooks";
+import { modeSelector } from "../task-center/taskcenter-slice";
 
 export type DataType = {
   task: {
@@ -61,6 +63,7 @@ function FlowDetail() {
   const [showConfirmType, setShowConfirmType] = useState<ActionType>();
   const formRef = useRef<FormInstance<FormValue>>(null);
   const appId = data?.flow.instance.subapp.app.id;
+  const mode = useAppSelector(modeSelector);
 
   useEffect(() => {
     setLoading(true);
@@ -166,7 +169,7 @@ function FlowDetail() {
     <div className={styles.container}>
       {loading && <Loading />}
       <Header className={styles.header} backClassName={styles.back} backText="流程详情">
-        {data && (
+        {mode === "running" && data && (
           <FlowNodeActions
             flowMeta={data.flow.node}
             operable={data.task.state === TaskDetailType.MyTodo}

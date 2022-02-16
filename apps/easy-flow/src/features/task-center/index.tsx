@@ -15,7 +15,7 @@ import Card from "./card";
 import Draft from "./draft";
 import Copy from "./copy";
 import { todoNumSelector } from "./taskcenter-reducer";
-import { loadApp } from "./taskcenter-slice";
+import { loadApp, setMode, setTheme } from "./taskcenter-slice";
 import { SubAppItem } from "./type";
 import appConfig from "@/init";
 
@@ -69,6 +69,11 @@ const TaskCenter: FC = () => {
   useEffect(() => {
     appId && dispatch(loadApp(appId));
   }, [appId, dispatch]);
+
+  useEffect(() => {
+    dispatch(setTheme(theme));
+    dispatch(setMode(mode));
+  }, [theme, mode, dispatch]);
   return (
     <div className={classNames(styles.container, styles[theme])}>
       <div className={styles.header}>
@@ -120,11 +125,9 @@ const TaskCenter: FC = () => {
           </div>
         </div>
         <div className={styles.right}>
-          {mode === "running" && (
-            <Button type="primary" size="large" className={styles.startFlow} onClick={handleStart}>
-              发起流程
-            </Button>
-          )}
+          <Button type="primary" size="large" className={styles.startFlow} onClick={handleStart}>
+            发起流程
+          </Button>
         </div>
       </div>
       <div className={styles.content}>

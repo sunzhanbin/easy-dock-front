@@ -12,6 +12,8 @@ import { FormValue, FormMeta, FlowMeta, TaskDetailType, FlowInstance } from "@ty
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import ConfirmModal, { ActionType } from "./components/confirm-modal";
 import styles from "./index.module.scss";
+import { useAppSelector } from "@/app/hooks";
+import { modeSelector } from "../task-center/taskcenter-slice";
 
 type DataType = {
   form: {
@@ -47,6 +49,7 @@ function StartDetail() {
   const [showConfirm, setShowConfirm] = useState<boolean>();
   const [loading, setLoading] = useState(false);
   const history = useHistory();
+  const mode = useAppSelector(modeSelector);
 
   useEffect(() => {
     (async () => {
@@ -87,9 +90,11 @@ function StartDetail() {
     <div className={styles.container}>
       {loading && <Loading />}
       <Header className={styles.header} backText="流程详情" backClassName={styles.back}>
-        <AsyncButton size="large" disabled={!canRevoke} onClick={() => setShowConfirm(true)}>
-          撤回
-        </AsyncButton>
+        {mode === "running" && (
+          <AsyncButton size="large" disabled={!canRevoke} onClick={() => setShowConfirm(true)}>
+            撤回
+          </AsyncButton>
+        )}
       </Header>
 
       {(data && (
