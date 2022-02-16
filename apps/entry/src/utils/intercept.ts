@@ -29,7 +29,7 @@ const handleHttpError = (
       }
       break;
     case 403:
-      errorMsg = "登录过期，请重新登录";
+      errorMsg = "登录过期,请重新登录";
       if (window.Auth && window.Auth.getAuth()) {
         setTimeout(() => {
           window.Auth.logout(url);
@@ -50,7 +50,9 @@ const handleHttpError = (
 };
 
 const createBaseQuery = (mode: "builder" | "runtime") => {
-  const baseUrl = `${process.env.REACT_APP_EASY_DOCK_BASE_SERVICE_ENDPOINT}/enc-oss-easydock/api/${mode}/v1`;
+  const baseUrl = `${
+    window.EASY_DOCK_BASE_SERVICE_ENDPOINT || process.env.REACT_APP_EASY_DOCK_BASE_SERVICE_ENDPOINT
+  }/enc-oss-easydock/api/${mode}/v1`;
   return fetchBaseQuery({
     baseUrl: baseUrl,
     prepareHeaders: (headers) => {
