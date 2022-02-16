@@ -27,7 +27,7 @@ const Auth = React.lazy(() => import("@views/auth"));
 const NoMatch = React.lazy(() => import("@views/no-match"));
 const EmptyPage = React.lazy(() => import("@containers/asset-pages/empty-page"));
 const RuntimeRoot = React.lazy(() => import("@containers/workspace-running/runtime-root"));
-auth.setConfig({ server: process.env.REACT_APP_SSO_LOGIN_URL });
+auth.setConfig({ server: window.SSO_LOGIN_URL || process.env.REACT_APP_SSO_LOGIN_URL });
 const query = decodeURIComponent(window.location.href.split("?")[1]);
 const theme = new URLSearchParams(query).get("theme");
 

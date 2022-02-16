@@ -29,7 +29,9 @@
   },
   "scripts": {
     "start": "craco start",
-    "build": "craco build",
+    "build": "cross-env REACT_APP_TARGET_ENV=dev craco build",
+    "build:dev": "cross-env REACT_APP_TARGET_ENV=dev craco build",
+    "build:cluster": "cross-env REACT_APP_TARGET_ENV=cluster craco build",
     "test": "craco test",
     "eject": "react-scripts eject"
   },
