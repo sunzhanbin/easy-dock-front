@@ -2,13 +2,16 @@
 import { auth } from "./consts";
 
 // 引入Auth后，需要调用 Auth.setConfig 配置 server
-auth.setConfig({ server: process.env.REACT_APP_SSO_LOGIN_URL });
+auth.setConfig({ server: window.SSO_LOGIN_URL || process.env.REACT_APP_SSO_LOGIN_URL });
 
 (async () => {
   // import 方式加载 sso.js
   if (window.location.pathname === "/") {
     if (!auth.getAuth()) {
-      const token = await auth.getToken(false, process.env.REACT_APP_EASY_DOCK_BASE_SERVICE_ENDPOINT as string);
+      const token = await auth.getToken(
+        false,
+        window.EASY_DOCK_BASE_SERVICE_ENDPOINT || (process.env.REACT_APP_EASY_DOCK_BASE_SERVICE_ENDPOINT as string),
+      );
       if (token) {
         require("./main.tsx");
         return;
@@ -16,7 +19,10 @@ auth.setConfig({ server: process.env.REACT_APP_SSO_LOGIN_URL });
     }
     require("./main.tsx");
   } else {
-    const token = await auth.getToken(true, process.env.REACT_APP_EASY_DOCK_BASE_SERVICE_ENDPOINT as string);
+    const token = await auth.getToken(
+      true,
+      window.EASY_DOCK_BASE_SERVICE_ENDPOINT || (process.env.REACT_APP_EASY_DOCK_BASE_SERVICE_ENDPOINT as string),
+    );
     if (token) {
       require("./main.tsx");
     }
