@@ -11,7 +11,9 @@ import Home from "@views/home";
 import Main from "@views/main";
 import "@/App.scss";
 import cookie from "js-cookie";
-import { registerTheme } from "@enc/theme-scheme/dist/utils.esm";
+import "@theme/src/variable.scss";
+
+import { registerTheme } from "@theme/src/utils";
 import Empty from "@common/components/empty";
 import { auth } from "./consts";
 import { useAppSelector } from "@/store";

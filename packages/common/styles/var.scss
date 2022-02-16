@@ -11,6 +11,7 @@ $title-text-color: var(--custom-title-text-color, #181f43ff);
 $body-text-color: var(--custom-body-text-color, #181f43bf);
 $caption-text-color: var(--custom-caption-text-color, #181f4380);
 $hint-text-color: var(--custom-hint-text-color, #181f434d);
+$menu-title-text-color: var(--custom-menu-title-text-color, #181f43ff);
 
 // 边框颜色
 $border-normal-color: var(--custom-border-normal-color, #181f431f);
@@ -77,7 +78,9 @@ $disabled-primary-color: var(--custom-btn-disable-color, #ffffff7f);
 $time-selected-bg: var(--custom-selected-time-bg, #4c5cdb1f);
 $time-selected-text-color: var(--custom-selected-time-text, #4c5cdb);
 $time-range-hover-bg: var(--custom-range-hover-bg, #ffffff0f);
+
 //$dropdown
+$dropdown-body-background-color: var(--custom-dropdown-bg, #ffffffff);
 
 $primary-color-custom: #4c5cdb;
 $primary-text-color: #181f43;
