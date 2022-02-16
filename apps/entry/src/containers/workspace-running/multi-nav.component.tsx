@@ -100,7 +100,7 @@ const MultiNavComponent: FC<WorkspaceBaseMenuProps> = ({ extra, dataSource, them
     const menu = dataSource.find((v) => v.id === key);
     const subMenu = findFirstChild(menu as IMenu);
     if (subMenu) {
-      navigateFn(subMenu);
+      navigateFn(subMenu).then(() => {});
     }
     if (menu) {
       if (subMenu && subMenu.form?.mode === "current") {
@@ -113,7 +113,7 @@ const MultiNavComponent: FC<WorkspaceBaseMenuProps> = ({ extra, dataSource, them
 
   const handleTitleClick = useMemoCallback(({ key }) => {
     const menu = findItem(key, dataSource);
-    navigateFn(menu);
+    navigateFn(menu).then(() => {});
     if (menu && menu.form?.mode === "current") {
       dispatch(setCurrentId(key));
     }
@@ -121,7 +121,7 @@ const MultiNavComponent: FC<WorkspaceBaseMenuProps> = ({ extra, dataSource, them
   const handleSubMenuClick = useMemoCallback(({ key }) => {
     const menu = findItem(key, dataSource);
     if (selectedKey !== key) {
-      navigateFn(menu);
+      navigateFn(menu).then(() => {});
     }
     if (menu && menu.form?.mode === "current") {
       dispatch(setCurrentId(key));
@@ -173,7 +173,7 @@ const MultiNavComponent: FC<WorkspaceBaseMenuProps> = ({ extra, dataSource, them
                     } else {
                       return (
                         <Menu.Item key={menu.id} icon={renderIcon(menu?.form?.icon)} onClick={handleSubMenuClick}>
-                          {menu.name}1111
+                          {menu.name}
                         </Menu.Item>
                       );
                     }

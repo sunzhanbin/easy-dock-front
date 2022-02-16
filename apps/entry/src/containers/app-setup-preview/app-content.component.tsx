@@ -2,13 +2,12 @@ import { memo, FC, useMemo, useEffect, useState, ReactNode } from "react";
 import { useParams } from "react-router-dom";
 import classNames from "classnames";
 import { useAppSelector } from "@/store";
-import { SubAppType, ThemeType, CANVAS_ENTRY, SPACE_ENTRY, CanvasResponseType, MICRO_FLOW_ENTRY } from "@/consts";
+import { SubAppType, ThemeType, CANVAS_ENTRY, SPACE_ENTRY, CanvasResponseType, MAIN_ENTRY } from "@/consts";
 import { useGetCanvasIdMutation, useGetHoloSceneIdMutation } from "@/http/app-manager.hooks";
 import { findItem } from "@/utils/utils";
 import { Menu } from "@/utils/types";
 import { TASK_CENTER_TYPE, INSTANCE_MANAGER_TYPE } from "@utils/const";
 import useMemoCallback from "@common/hooks/use-memo-callback";
-import MicroApp from "@components/micro-app";
 import lightEmptyImage from "@assets/images/light-empty.png";
 import darkEmptyImage from "@assets/images/dark-empty.png";
 import { selectMenu } from "@/views/app-setup/menu-setup.slice";
@@ -28,7 +27,7 @@ type ThemeMap = {
 
 const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
   const menuList = useAppSelector(selectMenu);
-  const { workspaceId, projectId } = useParams();
+  const { workspaceId } = useParams();
   const [getHoloSceneId] = useGetHoloSceneIdMutation();
   const [getCanvasId] = useGetCanvasIdMutation();
   const [canvasId, setCanvasId] = useState<string>("");
@@ -125,9 +124,22 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
       return renderIframe(url, "space-container");
     }
     // 流程子应用内容渲染
+    if (subAppType === SubAppType.FLOW && subAppId) {
+      const url = `${MAIN_ENTRY}/main/app/${workspaceId}/process/instance/${subAppId}?theme=${theme}&mode=preview`;
+      return renderIframe(url, "flow-container");
+    }
     // 任务中心内容渲染
+    if (subAppType === TASK_CENTER_TYPE) {
+      const url = `${MAIN_ENTRY}/main/instance/${workspaceId}/task-center?theme=${theme}&mode=preview`;
+      return renderIframe(url, "space-container");
+    }
     // 流程数据管理
-    if (
+    if (subAppType === INSTANCE_MANAGER_TYPE) {
+      const url = `${MAIN_ENTRY}/main/instance/${workspaceId}/data-manage?theme=${theme}&mode=preview`;
+      return renderIframe(url, "space-container");
+    }
+    /* 时间原因,暂时先不用微前端加载,改为用iframe的方式加载  2022-02-15 */
+    /* if (
       (subAppType === SubAppType.FLOW || subAppType === TASK_CENTER_TYPE || subAppType === INSTANCE_MANAGER_TYPE) &&
       subAppId
     ) {
@@ -139,7 +151,7 @@ const AppContent: FC<AppContentProps> = ({ selectedKey, theme }) => {
           extra={{ appId: workspaceId, mode: "running", theme }}
         ></MicroApp>
       );
-    }
+    } */
 
     return empty;
   });

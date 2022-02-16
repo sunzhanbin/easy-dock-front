@@ -5,7 +5,7 @@ import { useWorkspaceRuntimeDetailQuery } from "@/http";
 import MicroApp from "@components/micro-app";
 import "@containers/asset-pages/flow-page.style";
 
-const FlowMicroPage = ({ mode }: { mode: "preview" | "running" }) => {
+const FlowMicroPage: React.FC = () => {
   const { workspaceId } = useParams();
   const { theme } = useWorkspaceRuntimeDetailQuery(+(workspaceId as string), {
     selectFromResult: ({ data }) => ({

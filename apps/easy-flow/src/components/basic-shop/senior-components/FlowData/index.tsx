@@ -10,12 +10,12 @@ type TableComponentType = {
 
 const TableComponent = (props: TableComponentType) => {
   const { flows, configMap } = props;
-  const TableName = flows.id;
+  const TableName = flows?.id || "";
   const dataSource: any = TableName && configMap?.[TableName]?.tableData;
 
   return (
     <div key={TableName}>
-      <Table columns={flows.columns} dataSource={dataSource} />
+      <Table columns={flows?.columns || []} dataSource={dataSource} />
     </div>
   );
 };

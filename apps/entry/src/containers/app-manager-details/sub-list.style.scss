@@ -11,7 +11,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 92px;
+    min-height: 92px;
     background-color: #fff;
     padding: 20px 24px;
     border-radius: 6px;
@@ -104,7 +104,7 @@
   }
   // 覆盖ant-tabs的样式
   .ant-tabs {
-    height: calc(100% - 128px);
+    height: calc(100% - 208px);
     display: flex;
     flex-direction: column;
     margin-bottom: 24px;

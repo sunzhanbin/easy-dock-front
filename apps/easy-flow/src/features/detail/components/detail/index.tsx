@@ -64,12 +64,16 @@ const Detail = forwardRef(function Detail(props: DetailProps, ref: React.Forward
     const dateFields = form.meta.components.filter((item) => item.config.type === "Date").map((item) => item.props.id);
     const valueMap = { ...form.value };
     Object.values(dateFields).map((field) => {
-      if (!Object.keys(form.value).includes(field)) {
+      // form.value有可能为null或undefined
+      if (form.value && !Object.keys(form.value).includes(field)) {
         valueMap[field] = moment().valueOf();
+      }
+      if (typeof valueMap[field] === "string") {
+        valueMap[field] = Number(valueMap[field]);
       }
       return field;
     });
-    console.log(valueMap, "valueMap");
+    console.log(valueMap, "valueMap", dateFields);
     return valueMap;
   }, [form.value, form.meta]);
   return (
