@@ -77,7 +77,7 @@ const Copy: FC = () => {
         onCell(data: CopyItem) {
           return {
             onClick() {
-              history.push(dynamicRoutes.toStartDetail(data.processInstanceId));
+              history.push(dynamicRoutes.toStartDetail(data.processInstanceId) + "?type=copy");
             },
           };
         },
