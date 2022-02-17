@@ -13,7 +13,7 @@ import { Icon } from "@common/components";
 import { debounce, throttle } from "lodash";
 import styles from "./index.module.scss";
 import TimeoutState from "../components/timeout-state";
-import { setTodoNum, appSelector } from "../taskcenter-slice";
+import { setTodoNum, setPreRoutePath, appSelector } from "../taskcenter-slice";
 import { Pagination, TodoItem, UserItem } from "../type";
 import appConfig from "@/init";
 
@@ -174,6 +174,7 @@ const ToDo: FC = () => {
         onCell(data: TodoItem) {
           return {
             onClick() {
+              dispatch(setPreRoutePath(location.pathname + location.search));
               history.push(dynamicRoutes.toTaskDetail(data.taskId));
             },
           };
@@ -220,7 +221,7 @@ const ToDo: FC = () => {
         },
       },
     ];
-  }, [history]);
+  }, [history, location.pathname, location.search, dispatch]);
   const handleKeyUp = useCallback(
     (e) => {
       if (e.keyCode === 13) {

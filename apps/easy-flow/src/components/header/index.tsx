@@ -3,6 +3,8 @@ import { useHistory, useLocation } from "react-router-dom";
 import classnames from "classnames";
 import { Icon } from "@common/components";
 import styles from "./index.module.scss";
+import { useAppSelector } from "@/app/hooks";
+import { preRoutePathSelector } from "@/features/task-center/taskcenter-slice";
 
 interface DetailHeaderProps {
   backText: string;
@@ -16,14 +18,19 @@ interface DetailHeaderProps {
 function DetailHeader(props: DetailHeaderProps) {
   const history = useHistory();
   const location = useLocation();
+  const preRoutePath = useAppSelector(preRoutePathSelector);
   const { backText, backClassName, children, className, goBack } = props;
   const handleClick = useCallback(() => {
     if (goBack) {
       goBack();
     } else {
-      history.goBack();
+      if (preRoutePath) {
+        history.push(preRoutePath);
+      } else {
+        history.goBack();
+      }
     }
-  }, [history, goBack]);
+  }, [history, goBack, preRoutePath]);
   return (
     <div className={classnames(styles.header, className)}>
       <div className={classnames(styles.back, backClassName)} onClick={handleClick}>

@@ -6,7 +6,7 @@ import { Icon } from "@common/components";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import { debounce, throttle } from "lodash";
 import { getPassedTime, runtimeAxios, getStayTime } from "@/utils";
-import { useAppSelector } from "@/app/hooks";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { useHistory } from "react-router";
 import { dynamicRoutes } from "@/consts";
 import moment from "moment";
@@ -14,7 +14,7 @@ import useAppId from "@/hooks/use-app-id";
 import StateTag from "@/features/bpm-editor/components/state-tag";
 import { TASK_STATE_LIST } from "@/utils/const";
 import styles from "./index.module.scss";
-import { appSelector } from "../taskcenter-slice";
+import { appSelector, setPreRoutePath } from "../taskcenter-slice";
 import { CopyItem, Pagination, UserItem } from "../type";
 
 const { RangePicker } = DatePicker;
@@ -26,6 +26,7 @@ const Copy: FC = () => {
   const appId = useAppId();
   const history = useHistory();
   const location = useLocation();
+  const dispatch = useAppDispatch();
   const theme = useMemo<string>(() => {
     // 以iframe方式接入,参数在location中
     if (location.search) {
@@ -77,6 +78,7 @@ const Copy: FC = () => {
         onCell(data: CopyItem) {
           return {
             onClick() {
+              dispatch(setPreRoutePath(location.pathname + location.search));
               history.push(dynamicRoutes.toStartDetail(data.processInstanceId) + "?type=copy");
             },
           };
@@ -151,7 +153,7 @@ const Copy: FC = () => {
         },
       },
     ];
-  }, [history]);
+  }, [dispatch, history, location.pathname, location.search]);
 
   const handleSearch = useMemoCallback(() => {
     fetchData();

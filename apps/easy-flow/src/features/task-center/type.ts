@@ -87,4 +87,5 @@ export type TaskCenterState = {
   theme: string;
   mode: string;
   app?: App;
+  preRoutePath?: string;
 };
