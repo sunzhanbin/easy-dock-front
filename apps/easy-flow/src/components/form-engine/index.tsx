@@ -17,6 +17,7 @@ import { convertFormRules, validateRules } from "./utils";
 import Container from "./container";
 import styles from "./index.module.scss";
 import LabelContent from "../label-content";
+import moment from "moment";
 
 type FieldsVisible = { [fieldId: string]: boolean };
 
@@ -255,6 +256,12 @@ const FormDetail = React.forwardRef(function FormDetail(
         comMaps[id] = com;
         // 流程编排中没有配置fieldAuths这个字段默认可见
         visbles[fieldName || id] = fieldsAuths && fieldsAuths[fieldName || id] !== AuthType.Denied;
+      });
+      const dateFields = data.components.filter((item) => item.config.type === "Date").map((item) => item.props.id);
+      dateFields.forEach((field) => {
+        if (formValues && formValues[field] === undefined) {
+          formValues[field] = moment().valueOf();
+        }
       });
       // 设置表单初始值
       form.setFieldsValue(formValues);

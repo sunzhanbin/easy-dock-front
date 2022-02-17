@@ -49,17 +49,18 @@ const NumberOption = (props: NumberOptionProps) => {
     if (!fieldNumber) return;
     const { defaultNumber } = fieldNumber;
     setType(defaultNumber?.type || "custom");
-    const number_default = defaultNumber?.customData || defaultNumber?.customData === 0 ? defaultNumber?.customData : 0;
+    const number_default =
+      defaultNumber?.customData || defaultNumber?.customData === 0 ? defaultNumber?.customData : undefined;
     setCustomData(number_default);
     setCalcType(defaultNumber?.calcType);
     setCalculateData(defaultNumber?.calculateData || []);
   }, [fieldNumber]);
 
-  useEffect(() => {
-    if (customData === 0) {
-      onChange && onChange({ id, type, customData: 0 });
-    }
-  }, [customData, id, onChange, type]);
+  // useEffect(() => {
+  //   if (customData === 0) {
+  //     onChange && onChange({ id, type, customData: 0 });
+  //   }
+  // }, [customData, id, onChange, type]);
 
   // 默认值的小数位数 默认值的数值范围
   const defaultNumberProps = useMemo(() => {
@@ -74,7 +75,7 @@ const NumberOption = (props: NumberOptionProps) => {
 
   // 改变默认值类型
   const handleChange = useMemoCallback((value: string) => {
-    onChange && onChange({ id, type: value, calculateData: undefined, calcType: undefined, customData: 0 });
+    onChange && onChange({ id, type: value, calculateData: undefined, calcType: undefined, customData: undefined });
   });
   const handleInputBlur = useMemoCallback((value) => {
     onChange && onChange({ id, type, customData: value });

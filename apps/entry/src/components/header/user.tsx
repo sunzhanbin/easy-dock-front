@@ -8,6 +8,7 @@ import { logout } from "@views/home/index.slice";
 import "@components/header/index.style.scss";
 import { RoleEnum } from "@utils/types";
 import { useDispatch } from "react-redux";
+import { clearCookies } from "@/utils/utils";
 
 type HeaderUserProps = {
   showProject?: boolean; // 首页不展示用户头像
@@ -35,6 +36,8 @@ function HeaderUser({ showProject }: HeaderUserProps) {
   });
 
   const handleLogin = async () => {
+    // 重定向前先清除cookie
+    clearCookies();
     await auth.getToken(true, window.EASY_DOCK_BASE_SERVICE_ENDPOINT);
   };
 
