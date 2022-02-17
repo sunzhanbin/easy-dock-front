@@ -13,6 +13,8 @@ import { TASK_STATE_LIST } from "@/utils/const";
 import styles from "./index.module.scss";
 import { currentNodeItem, Pagination, StartItem } from "../type";
 import TimeoutState from "../components/timeout-state";
+import { useAppDispatch } from "@/app/hooks";
+import { setPreRoutePath } from "../taskcenter-slice";
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -22,6 +24,7 @@ const Start: FC = () => {
   const history = useHistory();
   const appId = useAppId();
   const location = useLocation();
+  const dispatch = useAppDispatch();
   const theme = useMemo<string>(() => {
     // 以iframe方式接入,参数在location中
     if (location.search) {
@@ -75,6 +78,7 @@ const Start: FC = () => {
         onCell(record: StartItem) {
           return {
             onClick() {
+              dispatch(setPreRoutePath(location.pathname + location.search));
               history.push(dynamicRoutes.toStartDetail(record.processInstanceId));
             },
           };
@@ -169,7 +173,7 @@ const Start: FC = () => {
         },
       },
     ];
-  }, [history, renderContent]);
+  }, [history, location.pathname, location.search, renderContent, dispatch]);
   const fetchData = useMemoCallback(
     (pagination: Pagination = { pageSize: 10, current: 1, total: 0, showSizeChanger: true }) => {
       if (!appId) return;
