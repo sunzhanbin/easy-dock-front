@@ -30,7 +30,7 @@ const WorkspaceRunning: React.FC = () => {
             <Route path="iframe" element={<SuspenseWrap render={<IframeMicroPage />} />} />
             <Route path="task-center/*" element={<SuspenseWrap render={<TaskCenterMicroPage />} />} />
             {/* <Route path="task/detail/:taskId" element={<SuspenseWrap render={<TaskDetailMicroPage />} />} /> */}
-            <Route path="task/detail/:taskId" element={<SuspenseWrap render={<EmptyMicroPage />} />} />
+            <Route path="task/detail/:taskId" element={<SuspenseWrap render={<TaskCenterMicroPage />} />} />
             <Route path="start/detail/:taskId" element={<SuspenseWrap render={<TaskDetailMicroPage />} />} />
             <Route path="start/flow/:subAppId" element={<SuspenseWrap render={<TaskDetailMicroPage />} />} />
             <Route path="data-manage" element={<SuspenseWrap render={<InstanceManagerMicroPage />} />} />
