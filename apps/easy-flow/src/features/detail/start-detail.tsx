@@ -1,5 +1,5 @@
-import { memo, useEffect, useState } from "react";
-import { useParams, useHistory } from "react-router";
+import { memo, useEffect, useMemo, useState } from "react";
+import { useParams, useHistory, useLocation } from "react-router";
 import { message } from "antd";
 import { Loading, AsyncButton } from "@common/components";
 import Header from "@components/header";
@@ -50,6 +50,14 @@ function StartDetail() {
   const [loading, setLoading] = useState(false);
   const history = useHistory();
   const mode = useAppSelector(modeSelector);
+  const location = useLocation();
+  const type = useMemo(() => {
+    if (location.search) {
+      const params = new URLSearchParams(location.search.slice(1));
+      return params.get("type") || "start";
+    }
+    return "start";
+  }, [location.search]);
 
   useEffect(() => {
     (async () => {
@@ -90,7 +98,7 @@ function StartDetail() {
     <div className={styles.container}>
       {loading && <Loading />}
       <Header className={styles.header} backText="流程详情" backClassName={styles.back}>
-        {mode === "running" && (
+        {type !== "copy" && mode === "running" && (
           <AsyncButton size="large" disabled={!canRevoke} onClick={() => setShowConfirm(true)}>
             撤回
           </AsyncButton>
