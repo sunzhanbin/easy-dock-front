@@ -12,7 +12,7 @@ const FormMicroPage = React.lazy(() => import("@containers/asset-pages/form-page
 const IframeMicroPage = React.lazy(() => import("@containers/asset-pages/iframe-page"));
 const SpaceMicroPage = React.lazy(() => import("@containers/asset-pages/space-page"));
 const TaskCenterMicroPage = React.lazy(() => import("@containers/asset-pages/task-center-page"));
-const TaskDetailMicroPage = React.lazy(() => import("@containers/asset-pages/task-detail-page"));
+// const TaskDetailMicroPage = React.lazy(() => import("@containers/asset-pages/task-detail-page"));
 const InstanceManagerMicroPage = React.lazy(() => import("@containers/asset-pages/instance-manager-page"));
 const EmptyMicroPage = React.lazy(() => import("@containers/asset-pages/empty-page"));
 
@@ -31,8 +31,8 @@ const WorkspaceRunning: React.FC = () => {
             <Route path="task-center/*" element={<SuspenseWrap render={<TaskCenterMicroPage />} />} />
             {/* <Route path="task/detail/:taskId" element={<SuspenseWrap render={<TaskDetailMicroPage />} />} /> */}
             <Route path="task/detail/:taskId" element={<SuspenseWrap render={<TaskCenterMicroPage />} />} />
-            <Route path="start/detail/:taskId" element={<SuspenseWrap render={<TaskDetailMicroPage />} />} />
-            <Route path="start/flow/:subAppId" element={<SuspenseWrap render={<TaskDetailMicroPage />} />} />
+            <Route path="start/detail/:taskId" element={<SuspenseWrap render={<TaskCenterMicroPage />} />} />
+            <Route path="start/flow/:subAppId" element={<SuspenseWrap render={<TaskCenterMicroPage />} />} />
             <Route path="data-manage" element={<SuspenseWrap render={<InstanceManagerMicroPage />} />} />
             <Route path="empty" element={<SuspenseWrap render={<EmptyMicroPage />} />} />
             <Route path="*" element={<SuspenseWrap render={<EmptyMicroPage />} />} />
