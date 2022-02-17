@@ -17,7 +17,7 @@ function DetailHeader(props: DetailHeaderProps) {
   const history = useHistory();
   const location = useLocation();
   const { backText, backClassName, children, className, goBack } = props;
-  const handelClick = useCallback(() => {
+  const handleClick = useCallback(() => {
     if (goBack) {
       goBack();
     } else {
@@ -26,7 +26,7 @@ function DetailHeader(props: DetailHeaderProps) {
   }, [history, goBack]);
   return (
     <div className={classnames(styles.header, className)}>
-      <div className={classnames(styles.back, backClassName)} onClick={handelClick}>
+      <div className={classnames(styles.back, backClassName)} onClick={handleClick}>
         {!location.pathname.includes("/bpm-editor/") && <Icon className={styles.icon} type="fanhui" />}
         {backText}
       </div>
