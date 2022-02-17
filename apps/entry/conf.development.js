@@ -11,5 +11,5 @@
 
     conf.FLOW_FRONTEND_ENTRY = "http://10.19.248.238:28303";  //EasyFlow项目入口
     conf.MAIN_FRONTEND_ENTRY = "http://10.19.248.238:28303";  //EasyFlow项目入口
-    conf.MICRO_FLOW_FRONTEND_ENTRY = "http://10.19.248.238:28303/easyflow/";  //EasyFlow微应用入口
+    conf.MICRO_FLOW_FRONTEND_ENTRY = "/easyflow/";  //EasyFlow微应用入口
   })(window);
