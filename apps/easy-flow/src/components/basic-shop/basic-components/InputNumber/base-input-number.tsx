@@ -30,9 +30,9 @@ const InputNumberComponent = (
     }
     const el = document.getElementById("edit-form");
     if (defaultNumber?.customData !== null && defaultNumber?.customData !== undefined) {
-      prop.defaultValue = +defaultNumber?.customData;
+      prop.defaultValue = defaultNumber?.customData;
       if (el?.contains(containerRef?.current)) {
-        prop.value = +defaultNumber?.customData;
+        prop.value = defaultNumber?.customData;
       }
     }
     if (typeof defaultNumber === "number") {
