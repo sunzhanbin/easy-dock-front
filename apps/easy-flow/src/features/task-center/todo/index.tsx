@@ -174,9 +174,7 @@ const ToDo: FC = () => {
         onCell(data: TodoItem) {
           return {
             onClick() {
-              setTimeout(() => {
-                history.push(dynamicRoutes.toTaskDetail(data.taskId));
-              }, 200);
+              history.push(dynamicRoutes.toTaskDetail(data.taskId));
             },
           };
         },
