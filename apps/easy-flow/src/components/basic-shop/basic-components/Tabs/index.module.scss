@@ -93,4 +93,17 @@
   .ant-popconfirm {
     pointer-events: initial !important;
   }
+  .pop__title{
+    margin-bottom: 32px;
+    .ant-form-item-explain{
+      position: absolute;
+      top:32px;
+      left:0;
+    }
+  }
+  .title__popup{
+    .ant-popover-message{
+      padding-bottom: 0;
+    }
+  }
 }
