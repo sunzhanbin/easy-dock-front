@@ -7,6 +7,7 @@ import {
 } from "@reduxjs/toolkit/query/react";
 import { message } from "antd";
 import { QueryReturnValue } from "@utils/types";
+import { clearCookies } from "./utils";
 
 const handleHttpError = (
   httpStatus: number | "FETCH_ERROR" | "PARSING_ERROR" | "CUSTOM_ERROR",
@@ -24,6 +25,8 @@ const handleHttpError = (
       errorMsg = "您没有登录,请先登录";
       if (window.Auth && window.Auth.getAuth()) {
         setTimeout(() => {
+          // 重定向前先清除cookie
+          clearCookies();
           window.Auth.logout(url);
         }, 2500);
       }
@@ -32,6 +35,8 @@ const handleHttpError = (
       errorMsg = "登录过期,请重新登录";
       if (window.Auth && window.Auth.getAuth()) {
         setTimeout(() => {
+          // 重定向前先清除cookie
+          clearCookies();
           window.Auth.logout(url);
         }, 2500);
       }
