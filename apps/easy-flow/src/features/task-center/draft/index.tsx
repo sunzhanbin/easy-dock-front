@@ -73,7 +73,7 @@ function Draft() {
           return {
             onClick() {
               dispatch(setPreRoutePath(location.pathname + location.search));
-              history.push(dynamicRoutes.toStartDetail(String(record.subappId)));
+              history.push(dynamicRoutes.toStartFlow(record.subappId));
             },
           };
         },
