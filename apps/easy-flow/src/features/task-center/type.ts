@@ -84,5 +84,8 @@ export type App = {
 
 export type TaskCenterState = {
   todoNum: number;
+  theme: string;
+  mode: string;
   app?: App;
+  preRoutePath?: string;
 };

@@ -56,6 +56,12 @@ const NumberOption = (props: NumberOptionProps) => {
     setCalculateData(defaultNumber?.calculateData || []);
   }, [fieldNumber]);
 
+  // useEffect(() => {
+  //   if (customData === 0) {
+  //     onChange && onChange({ id, type, customData: 0 });
+  //   }
+  // }, [customData, id, onChange, type]);
+
   // 默认值的小数位数 默认值的数值范围
   const defaultNumberProps = useMemo(() => {
     if (!fieldNumber) return null;

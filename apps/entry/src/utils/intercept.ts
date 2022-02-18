@@ -7,6 +7,7 @@ import {
 } from "@reduxjs/toolkit/query/react";
 import { message } from "antd";
 import { QueryReturnValue } from "@utils/types";
+import { clearCookies } from "./utils";
 
 const handleHttpError = (
   httpStatus: number | "FETCH_ERROR" | "PARSING_ERROR" | "CUSTOM_ERROR",
@@ -24,14 +25,18 @@ const handleHttpError = (
       errorMsg = "您没有登录,请先登录";
       if (window.Auth && window.Auth.getAuth()) {
         setTimeout(() => {
+          // 重定向前先清除cookie
+          clearCookies();
           window.Auth.logout(url);
         }, 2500);
       }
       break;
     case 403:
-      errorMsg = "登录过期，请重新登录";
+      errorMsg = "登录过期,请重新登录";
       if (window.Auth && window.Auth.getAuth()) {
         setTimeout(() => {
+          // 重定向前先清除cookie
+          clearCookies();
           window.Auth.logout(url);
         }, 2500);
       }
@@ -50,7 +55,9 @@ const handleHttpError = (
 };
 
 const createBaseQuery = (mode: "builder" | "runtime") => {
-  const baseUrl = `${process.env.REACT_APP_EASY_DOCK_BASE_SERVICE_ENDPOINT}/enc-oss-easydock/api/${mode}/v1`;
+  const baseUrl = `${
+    window.EASY_DOCK_BASE_SERVICE_ENDPOINT || process.env.REACT_APP_EASY_DOCK_BASE_SERVICE_ENDPOINT
+  }/enc-oss-easydock/api/${mode}/v1`;
   return fetchBaseQuery({
     baseUrl: baseUrl,
     prepareHeaders: (headers) => {

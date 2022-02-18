@@ -8,11 +8,11 @@ import moment from "moment";
 import { dynamicRoutes } from "@/consts/route";
 import useAppId from "@/hooks/use-app-id";
 import useMemoCallback from "@common/hooks/use-memo-callback";
-import { useAppSelector } from "@/app/hooks";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { Icon } from "@common/components";
 import { debounce, throttle } from "lodash";
 import styles from "./index.module.scss";
-import { appSelector } from "../taskcenter-slice";
+import { appSelector, setPreRoutePath } from "../taskcenter-slice";
 import { DoneItem, Pagination, UserItem } from "../type";
 
 const { RangePicker } = DatePicker;
@@ -23,6 +23,7 @@ const Done: FC = () => {
   const history = useHistory();
   const appId = useAppId();
   const app = useAppSelector(appSelector);
+  const dispatch = useAppDispatch();
   const location = useLocation();
   const theme = useMemo<string>(() => {
     // 以iframe方式接入,参数在location中
@@ -67,6 +68,7 @@ const Done: FC = () => {
         onCell(record: DoneItem) {
           return {
             onClick() {
+              dispatch(setPreRoutePath(location.pathname + location.search));
               history.push(dynamicRoutes.toTaskDetail(record.taskId));
             },
           };
@@ -102,7 +104,7 @@ const Done: FC = () => {
         },
       },
     ];
-  }, [history]);
+  }, [dispatch, history, location.pathname, location.search]);
   const projectId = useMemo(() => {
     if (app && app.project) {
       return app.project.id;

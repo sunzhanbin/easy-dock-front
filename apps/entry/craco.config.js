@@ -1,7 +1,13 @@
 const babelInclude = require("@dealmore/craco-plugin-babel-include");
 const FileManagerPlugin = require("filemanager-webpack-plugin");
+const fs = require('fs');
 const path = require("path");
 const { name, version } = require("./package.json");
+
+const appDirectory = fs.realpathSync(process.cwd());
+const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath);
+const appPath = resolveApp('.');
+const appBuild = resolveApp('build');
 
 module.exports = {
   reactScriptsVersion: "react-scripts" /* (default value) */,
@@ -56,6 +62,10 @@ module.exports = {
               onEnd: {
                 mkdir: [`zip/${name}/dist`, `zip/${name}/template`],
                 copy: [
+                  {
+                    source: `${appPath}/conf${process.env.REACT_APP_TARGET_ENV === 'dev' ? '.development.js' : '.production.js'}`,
+                    destination: `${appBuild}/config.js`,
+                  },
                   {
                     source: `${path.resolve("build")}`,
                     destination: `zip/${name}/dist`,

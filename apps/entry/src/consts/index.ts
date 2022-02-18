@@ -3,14 +3,14 @@ import Auth from "@enc/sso";
 export * from "./validators";
 export * from "./type";
 
-export const CANVAS_ENTRY = process.env.REACT_APP_CANVAS_FRONTEND_ENTRY;
-export const SPACE_ENTRY = process.env.REACT_APP_SPACE_FRONTEND_ENTRY;
-export const FLOW_ENTRY = process.env.REACT_APP_FLOW_FRONTEND_ENTRY;
-export const MAIN_ENTRY = process.env.REACT_APP_MAIN_FRONTEND_ENTRY;
-export const IOT_ENTRY = process.env.REACT_APP_IOT_FRONTEND_ENTRY;
-export const DATA_FISH_ENTRY = process.env.REACT_APP_DATA_FISH_FRONTEND_ENTRY;
-export const INTERFACE_ENTRY = process.env.REACT_APP_INTERFACE_FRONTEND_ENTRY;
-export const MICRO_FLOW_ENTRY = process.env.REACT_APP_MICRO_FLOW_FRONTEND_ENTRY;
+export const CANVAS_ENTRY = window.CANVAS_FRONTEND_ENTRY;
+export const SPACE_ENTRY = window.SPACE_FRONTEND_ENTRY;
+export const FLOW_ENTRY = window.FLOW_FRONTEND_ENTRY;
+export const MAIN_ENTRY = window.MAIN_FRONTEND_ENTRY;
+export const IOT_ENTRY = window.IOT_FRONTEND_ENTRY;
+export const DATA_FISH_ENTRY = window.DATA_FISH_FRONTEND_ENTRY;
+export const INTERFACE_ENTRY = window.INTERFACE_FRONTEND_ENTRY;
+export const MICRO_FLOW_ENTRY = window.MICRO_FLOW_FRONTEND_ENTRY;
 
 export const auth = new Auth();
 

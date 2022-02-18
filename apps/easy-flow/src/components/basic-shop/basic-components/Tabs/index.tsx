@@ -90,6 +90,7 @@ const Tabs = ({ components = [], fieldName, auth, projectId, disabled, formInsta
           label="标题"
           name="__title__"
           required
+          className="pop__title"
           rules={[
             {
               validator(_, value) {
@@ -193,6 +194,7 @@ const Tabs = ({ components = [], fieldName, auth, projectId, disabled, formInsta
                         visible={popVisible}
                         disabled={true}
                         destroyTooltipOnHide={true}
+                        overlayClassName="title__popup"
                         onConfirm={() => handleConfirm(add, fields.length)}
                         onCancel={() => handleCancel()}
                       >

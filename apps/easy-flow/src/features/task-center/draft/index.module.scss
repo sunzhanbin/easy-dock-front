@@ -8,6 +8,12 @@
     color: $primary-color;
   }
 }
+.name {
+  cursor: pointer;
+  &:hover {
+    color: $primary-color;
+  }
+}
 
 .del {
   display: flex;

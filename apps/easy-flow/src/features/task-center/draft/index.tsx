@@ -1,5 +1,5 @@
 import { memo, useEffect, useState, useMemo, useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { Table, TableProps, message } from "antd";
 import classNames from "classnames";
 import { TablePaginationConfig } from "antd/lib/table";
@@ -12,6 +12,8 @@ import { deleteDraft } from "@apis/detail";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import useAppId from "@/hooks/use-app-id";
 import styles from "./index.module.scss";
+import { useAppDispatch } from "@/app/hooks";
+import { setPreRoutePath } from "../taskcenter-slice";
 
 interface DraftData {
   subappName: string;
@@ -27,6 +29,8 @@ interface DraftData {
 function Draft() {
   const appId = useAppId();
   const location = useLocation();
+  const history = useHistory();
+  const dispatch = useAppDispatch();
   const theme = useMemo<string>(() => {
     // 以iframe方式接入,参数在location中
     if (location.search) {
@@ -58,11 +62,20 @@ function Draft() {
         key: "subappName",
         width: "30%",
         render(_: string, data: DraftData) {
-          return (
-            <Link className={styles.link} to={dynamicRoutes.toStartFlow(data.subappId)}>
-              {data.subappName}
-            </Link>
-          );
+          // return (
+          //   <Link className={styles.link} to={dynamicRoutes.toStartFlow(data.subappId)}>
+          //     {data.subappName}
+          //   </Link>
+          // );
+          return <div className={styles.name}>{data.subappName}</div>;
+        },
+        onCell(record: DraftData) {
+          return {
+            onClick() {
+              dispatch(setPreRoutePath(location.pathname + location.search));
+              history.push(dynamicRoutes.toStartDetail(String(record.subappId)));
+            },
+          };
         },
       },
       {
@@ -112,7 +125,7 @@ function Draft() {
         },
       },
     ];
-  }, [handleDeleteDraftData, activeDataId]);
+  }, [dispatch, location.pathname, location.search, history, activeDataId, handleDeleteDraftData]);
 
   const fetchDraftData = useMemoCallback(() => {
     setLoading(true);

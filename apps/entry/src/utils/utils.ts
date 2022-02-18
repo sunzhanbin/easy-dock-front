@@ -1,4 +1,5 @@
 import React from "react";
+import cookie from "js-cookie";
 import { Menu, OwnerTypeEnum, Power, UserOwner } from "@utils/types";
 import { axios } from "@utils/fetch";
 import { AbstractTooltipProps } from "antd/lib/tooltip";
@@ -198,4 +199,13 @@ export const getVisitor = (powers: Power[]) => {
     .map((power) => power.owner);
   const roles = powerList?.filter((power) => power.ownerType === OwnerTypeEnum.ROLE).map((power) => power.owner);
   return { members, departs, roles };
+};
+
+export const clearCookies = () => {
+  const cookies = cookie.get();
+  if (cookies) {
+    Object.keys(cookies).forEach((key) => {
+      cookie.remove(key);
+    });
+  }
 };

@@ -4,7 +4,7 @@ import { setTodoNum as setTodoNumReducer } from "./taskcenter-reducer";
 import { RootState } from "@/app/store";
 import { runtimeAxios } from "@/utils";
 
-const initialState: TaskCenterState = { todoNum: 0 };
+const initialState: TaskCenterState = { todoNum: 0, theme: "light", mode: "running" };
 const taskCenter = createSlice({
   name: "tasks",
   initialState,
@@ -13,13 +13,28 @@ const taskCenter = createSlice({
     setApp(state, { payload }: PayloadAction<App>) {
       state.app = payload;
     },
+    setTheme(state, { payload }: PayloadAction<string>) {
+      state.theme = payload;
+    },
+    setMode(state, { payload }: PayloadAction<string>) {
+      state.mode = payload;
+    },
+    setPreRoutePath(state, { payload }: PayloadAction<string>) {
+      state.preRoutePath = payload;
+    },
   },
 });
 
-export const { setTodoNum, setApp } = taskCenter.actions;
+export const { setTodoNum, setApp, setTheme, setMode, setPreRoutePath } = taskCenter.actions;
 export const loadApp = createAsyncThunk("app/load", async (appId: string, { dispatch }) => {
   const { data: detailResponse } = await runtimeAxios.get(`/app/${appId}`);
   dispatch(setApp(detailResponse));
 });
 export const appSelector = createSelector([(state: RootState) => state.taskCenter], (data) => data.app);
+export const themeSelector = createSelector([(state: RootState) => state.taskCenter], (data) => data.theme);
+export const modeSelector = createSelector([(state: RootState) => state.taskCenter], (data) => data.mode);
+export const preRoutePathSelector = createSelector(
+  [(state: RootState) => state.taskCenter],
+  (data) => data.preRoutePath,
+);
 export default taskCenter.reducer;
