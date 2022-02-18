@@ -7,7 +7,8 @@
   border-radius: 3px;
   font-size: 14px;
   font-weight: 400;
-  background-color: transparent;
+  background-color: $button-default-background-color;
+  color: $title-text-color;
 
   svg {
     margin-right: 4px;
@@ -16,8 +17,9 @@
   &:hover,
   &.active,
   &:focus {
-    color: $primary-color;
-    border-color: $primary-color;
+    color: $button-default-text-hover-color;
+    border-color: $button-default-border-color;
+    background-color: $button-default-background-color;
 
     svg {
       color: inherit;

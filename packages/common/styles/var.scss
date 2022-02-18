@@ -83,9 +83,9 @@ $time-range-hover-bg: var(--custom-range-hover-bg, #ffffff0f);
 $dropdown-body-background-color: var(--custom-dropdown-bg, #ffffffff);
 
 // button
-$button-default-background-color: var(--custom-btn-default-bg, #ffffffff);
-$button-default-text-color: var(--custom-btn-default-color, #ffffffff);
-$button-default-border-color: var(--custom-btn-border-color, #ffffffff);
+$button-default-background-color: var(--custom-btn-default-bg, #fff);
+$button-default-text-hover-color: var(--custom-btn-default-text-hover-color, #4C5CDBFF);
+$button-default-border-color: var(--custom-btn-border-color, #4C5CDBCC);
 
 $button-primary-background-color: var(--custom-btn-primary-bg, #ffffffff);
 
