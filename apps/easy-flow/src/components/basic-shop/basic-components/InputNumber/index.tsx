@@ -10,8 +10,6 @@ const InputNumberContainer = (props: InputNumberProps & { [key: string]: any }) 
   const { onChange } = props;
   const propList = useMemo(() => {
     const prop = { ...props };
-    console.log(prop, "*****");
-
     setTimeout(() => {
       if (form && rules && refresh !== undefined) {
         const formValue = form.getFieldsValue();
