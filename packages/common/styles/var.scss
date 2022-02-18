@@ -3,6 +3,7 @@ $primary-color: var(--ant-primary-color, #4c5cdb);
 $main-content-min-height: calc(100vh - 65px);
 
 // 背景颜色
+$header-background-color: var(--custom-header-background, #ffffffff);
 $side-background-color: var(--custom-side-background, #1827430a);
 $content-background-color: var(--custom-body-background, #ffffffff);
 
@@ -67,7 +68,6 @@ $menu-title-text-color: var(--custom-menu-title-text, #000000d9);
 $menu-line-color: var(--custom-menu-line, #181f431f);
 $nav-color: var(--custom-menu-nav, #181f43bf);
 $nav-active-color: var(--custom-menu-nav-active, #000000d8);
-// select dropdown
 
 // datepicker dropdown
 $dropdown-border-shadow-color: #181f431a;
@@ -81,6 +81,9 @@ $time-range-hover-bg: var(--custom-range-hover-bg, #ffffff0f);
 
 //$dropdown
 $dropdown-body-background-color: var(--custom-dropdown-bg, #ffffffff);
+
+// button
+$button-primary-background-color: var(--custom-dropdown-bg, #ffffffff);
 
 $primary-color-custom: #4c5cdb;
 $primary-text-color: #181f43;

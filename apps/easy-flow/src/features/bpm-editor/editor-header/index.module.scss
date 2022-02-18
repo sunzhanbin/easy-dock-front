@@ -1,4 +1,5 @@
 @import '@common/styles/var.scss';
+
 .header_container {
   display: flex;
   align-items: center;
@@ -6,7 +7,7 @@
   height: 56px;
   width: 100%;
   border-bottom: 1px solid rgba(24, 31, 67, 0.12);
-  background: var(--custom-nav-menu-bg);
+  background: $header-background-color;
 
   .edit_header {
     width: 100%;
@@ -17,23 +18,27 @@
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
+
       .step {
         height: 56px;
         line-height: 56px;
         font-size: 16px;
         font-weight: 400;
-        color: rgba(24, 31, 67, 0.95);
+        color: $menu-title-text-color;
         white-space: nowrap;
+
         .number {
           font-size: 18px;
           font-weight: bold;
           margin-right: 4px;
         }
+
         &.active {
-          color: rgba(24, 31, 67, 0.95);
+          color: $menu-title-text-color;
           border-bottom: 5px solid $primary-color;
         }
       }
+
       .separator {
         width: 16px;
         height: 56px;
@@ -42,12 +47,14 @@
         font-size: 12px;
         color: #818a9e;
         margin: 0 12px;
+
         .iconfont {
           position: relative;
           top: 2px;
         }
       }
     }
+
     .operation {
       display: flex;
       align-items: center;
@@ -65,10 +72,12 @@
         margin-right: 24px;
         cursor: pointer;
       }
+
       .prev {
         width: 74px;
         margin-right: 12px;
       }
+
       .save {
         width: 60px;
         margin-right: 12px;
@@ -76,6 +85,7 @@
         font-size: 14px;
         font-weight: 400;
       }
+
       .next {
         width: 74px;
         margin-right: 24px;
@@ -84,12 +94,14 @@
         font-weight: 400;
         color: #ffffff;
       }
+
       .publish {
         width: 74px;
         border-radius: 3px;
         font-size: 14px;
         font-weight: 400;
         color: #ffffff;
+
         .iconfont {
           position: relative;
           right: 4px;

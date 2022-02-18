@@ -72,6 +72,7 @@
   --custom-table-head-text-color: #000000d8;
 
   /* 大背景 */
+  --custom-header-background: #FFFFFFFF;
   --custom-body-background: #FFFFFFFF;
   --custom-body-shadow: unset;
 
@@ -106,7 +107,7 @@
   --custom-sise-menu-item-shadow: unset;
 
   /* 导航菜单 */
-  --custom-nav-menu-bg: linear-gradient(270deg, #9face6 0%, #74ebd5 100%);
+  --custom-nav-menu-bg: #fff;
   --custom-nav-menu-popup-bg: unset;
   --custom-nav-menu-item-color: unset;
   --custom-nav-menu-inline-submenu-bg: unset;
@@ -145,7 +146,7 @@
   --custom-btn-text-shadow: unset;
 
   --custom-btn-primary-color: #fff;
-  --custom-btn-primary-bg: unset;
+  --custom-btn-primary-bg: #fff;
 
   --custom-btn-default-color: unset;
   --custom-btn-default-bg: unset;
