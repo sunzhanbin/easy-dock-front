@@ -15,6 +15,7 @@ const InputNumberComponent = (
 ) => {
   const { onChange, decimal, numlimit, defaultNumber } = props;
   const containerRef = useRef<HTMLDivElement>(null);
+  console.log(props, "---------");
   const propList = useMemo(() => {
     // eslint-disable-next-line @typescript-eslint/ban-types
     const prop: { [k: string]: string | number | boolean | undefined | Function } = {
@@ -35,8 +36,13 @@ const InputNumberComponent = (
         prop.value = defaultNumber?.customData;
       }
     }
+
     if (typeof defaultNumber === "number") {
-      prop.defaultValue = defaultNumber;
+      if (prop.value === null || prop.value === undefined) {
+        prop.defaultValue = undefined;
+      } else {
+        prop.defaultValue = defaultNumber;
+      }
       if (el?.contains(containerRef?.current)) {
         prop.value = defaultNumber;
       }
@@ -57,7 +63,6 @@ const InputNumberComponent = (
   //   }
   //   // eslint-disable-next-line
   // }, []);
-
   return (
     <div className={styles.container} ref={containerRef}>
       <div className={styles.number_container}>
