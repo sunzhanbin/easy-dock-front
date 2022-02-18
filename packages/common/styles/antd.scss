@@ -7,7 +7,8 @@
   border-radius: 3px;
   font-size: 14px;
   font-weight: 400;
-  //background-color: ;
+  background-color: transparent;
+
   svg {
     margin-right: 4px;
   }
@@ -15,8 +16,8 @@
   &:hover,
   &.active,
   &:focus {
-    color: $primary-color-custom;
-    border-color: $primary-color-custom;
+    color: $primary-color;
+    border-color: $primary-color;
 
     svg {
       color: inherit;
@@ -48,18 +49,18 @@
   &:focus,
   &:active {
     color: #fff;
-    background-color: $primary-color-custom;
-    border-color: $primary-color-custom;
+    background-color: $primary-color;
+    border-color: $primary-color;
   }
 
   &.ant-btn-background-ghost {
-    color: $primary-color-custom;
+    color: $primary-color;
     border-radius: 3px;
     border-color: rgba($primary-color-custom, 0.8);
 
     &:focus {
-      border-color: $primary-color-custom;
-      color: $primary-color-custom;
+      border-color: $primary-color;
+      color: $primary-color;
     }
 
     &:hover {
