@@ -170,9 +170,9 @@ function formatAllMembers(data: FlowInstance) {
     let roleNames: string[] = [];
 
     list.forEach((item) => {
-      const users = item.currentProcessor.users || [];
-      const depts = item.currentProcessor.depts || [];
-      const roles = item.currentProcessor.roles || [];
+      const users = item?.currentProcessor?.users || [];
+      const depts = item?.currentProcessor?.depts || [];
+      const roles = item?.currentProcessor?.roles || [];
 
       userNames = userNames.concat(users.map((user) => user.name));
       deptNames = deptNames.concat(depts.map((dept) => dept.name));
