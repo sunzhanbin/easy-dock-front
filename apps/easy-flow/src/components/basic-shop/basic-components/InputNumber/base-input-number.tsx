@@ -35,8 +35,13 @@ const InputNumberComponent = (
         prop.value = defaultNumber?.customData;
       }
     }
+
     if (typeof defaultNumber === "number") {
-      prop.defaultValue = defaultNumber;
+      if (prop.value === null || prop.value === undefined) {
+        prop.defaultValue = undefined;
+      } else {
+        prop.defaultValue = defaultNumber;
+      }
       if (el?.contains(containerRef?.current)) {
         prop.value = defaultNumber;
       }
@@ -51,13 +56,6 @@ const InputNumberComponent = (
     delete result.numrange;
     return result;
   }, [props, decimal, numlimit, defaultNumber, onChange]);
-  // useEffect(() => {
-  //   if (propList.defaultValue) {
-  //     onChange && onChange(propList.defaultValue as number);
-  //   }
-  //   // eslint-disable-next-line
-  // }, []);
-
   return (
     <div className={styles.container} ref={containerRef}>
       <div className={styles.number_container}>
