@@ -154,7 +154,7 @@ const MultiNavComponent: FC<WorkspaceBaseMenuProps> = ({ extra, dataSource, them
           </Menu>
         </div>
         <div className="user-container">
-          <UserComponent showProject={true} />
+          <UserComponent showProject={true} theme={theme} />
         </div>
       </div>
       <div className="content">
