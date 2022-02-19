@@ -1,5 +1,6 @@
 import { useMemo, useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import classNames from "classnames";
 import { useWorkspaceRuntimeDetailQuery } from "@/http";
 import { useAppSelector } from "@/store";
 import { selectBasicForm } from "@/views/app-setup/basic-setup.slice";
@@ -79,7 +80,7 @@ const AppInfo = ({
       }
     })();
   }, [logoId]);
-  return <div className="app-info">{content}</div>;
+  return <div className={classNames("app-info", theme)}>{content}</div>;
 };
 
 export default AppInfo;

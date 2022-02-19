@@ -1,5 +1,5 @@
 @import "@common/styles/var.scss";
-
+@import "@containers/app-setup-preview/multi-nav.style";
 .header_container {
   width: 100%;
   position: relative;
@@ -182,6 +182,11 @@
       color: rgba(0, 0, 0, 0.85);
       font-size: 14px;
       font-weight: 400;
+    }
+  }
+  &.dark{
+    .name{
+      color: rgba($dark-text-color, 0.85);
     }
   }
 }

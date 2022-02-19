@@ -1,3 +1,4 @@
+@import "@containers/app-setup-preview/multi-nav.style";
 .app-info {
   background: transparent;
   & > .multi {
@@ -40,6 +41,11 @@
       font-weight: 500;
       color: rgba(0, 0, 0, 0.85);
       line-height: 32px;
+    }
+  }
+  &.dark{
+    &>.app-name{
+      color: rgba($dark-text-color, 0.85);
     }
   }
 }
