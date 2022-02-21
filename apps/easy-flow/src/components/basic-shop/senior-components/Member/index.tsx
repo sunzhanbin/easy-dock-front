@@ -62,6 +62,9 @@ const Member = (
     const result = Object.assign({}, props, prop);
     delete result.fieldName;
     delete result.colSpace;
+    if (multiple && result.value === null) {
+      result.value = undefined;
+    }
     return result;
   }, [defaultValue, value, multiple, showSearch, props, handleSearch, onChange]);
 
