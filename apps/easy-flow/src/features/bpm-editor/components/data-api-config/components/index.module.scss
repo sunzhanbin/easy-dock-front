@@ -10,9 +10,10 @@
   :global {
     .ant-dropdown {
       max-width: 100%;
-      background-color: #fff;
+      background-color: $select-dropdown-body-background-color;
     }
   }
+
   .options {
     max-height: 220px;
     padding: 8px;

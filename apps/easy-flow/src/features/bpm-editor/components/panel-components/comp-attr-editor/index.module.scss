@@ -1,39 +1,46 @@
 @import '@common/styles/var.scss';
+
 .container {
   :global {
     .ant-form-item-label {
       padding-bottom: 4px;
+
       > label {
         height: 22px;
         line-height: 22px;
         font-size: 14px;
         font-weight: 600;
-        color: rgba(24, 31, 67, 0.95);
+        color: $form-item-label-text-color;
       }
     }
+
     .ant-radio-group {
       width: 100%;
       display: flex;
       justify-content: space-between;
+
       .ant-radio-button-wrapper {
         width: calc(25% - 8px);
         height: 40px;
         line-height: 40px;
         text-align: center;
         font-size: 14px;
-        background: rgba(24, 39, 67, 0.04);
+        background: $input-background-normal-color;
         border-radius: 3px;
         border: none;
         font-weight: 400;
         color: rgba(24, 31, 67, 0.95);
         box-shadow: none !important;
+
         &:hover {
           color: $primary-color;
         }
       }
+
       .ant-radio-button-wrapper:not(:first-child)::before {
         display: none;
       }
+
       .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
         color: $primary-color;
         background-image: url(~@/assets/selected.png);
@@ -43,6 +50,7 @@
         transition: none;
       }
     }
+
     .ant-form-item-label-left {
       height: 32px;
       line-height: 32px;

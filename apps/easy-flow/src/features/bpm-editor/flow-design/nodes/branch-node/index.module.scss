@@ -76,7 +76,7 @@ $line-color: #e3e4e8;
 
   .branchs {
     display: flex;
-    background-color: #f6f7f8;
+    background-color: $flow-manage-content-bg;
   }
 
   .branch {

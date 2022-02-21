@@ -1,35 +1,44 @@
 @import "@common/styles/var.scss";
 @import "@common/styles/theme-color.scss";
+
 .container {
   .header {
     display: flex;
     justify-content: space-between;
     flex: 1;
+
     :global {
       #copy_form {
         display: block;
         width: 100%;
+
         .copy_form_row {
           display: flex;
+
           .ant-form-item {
             flex: 1;
             margin-right: 40px;
             margin-bottom: 20px;
+
             &.timeRange {
               flex: 2;
               margin-right: 0;
             }
+
             &.empty {
               flex: 2;
               margin-right: 40px;
             }
+
             &.operation {
               margin-right: 0;
+
               .btn_list {
                 display: flex;
                 justify-content: flex-end;
                 width: 200px;
                 float: right;
+
                 .search {
                   flex: 0 0 60px;
                   border-radius: 3px;
@@ -38,11 +47,13 @@
                   font-weight: 400;
                   color: $primary-color;
                   margin-right: 12px;
+
                   &:hover {
                     border: 1px solid rgba(76, 92, 219, 0.5);
                     color: rgba(76, 92, 219, 0.8);
                   }
                 }
+
                 .reset {
                   flex: 0 0 60px;
                   border-radius: 3px;
@@ -57,29 +68,35 @@
       }
     }
   }
+
   .content {
     margin-top: 24px;
 
     .name {
       cursor: pointer;
+
       &:hover {
         color: $primary-color;
       }
     }
+
     .currentNode,
     .stayTime {
       display: flex;
       align-items: center;
+
       .icon {
         font-size: 16px;
         margin-left: 4px;
         cursor: pointer;
+
         &:hover {
           color: #4c5cdb;
         }
       }
     }
   }
+
   /* &.dark {
     :global {
       .ant-select-dropdown,
@@ -187,10 +204,11 @@
       display: flex;
       align-items: center;
       line-height: 22px;
+
       .name {
         font-size: 14px;
         font-weight: 400;
-        color: rgba(24, 31, 67, 0.75);
+        color: $flow-form-field-name-text-color;
         margin-right: 16px;
       }
     }

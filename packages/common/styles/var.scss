@@ -6,6 +6,8 @@ $main-content-min-height: calc(100vh - 65px);
 $header-background-color: var(--custom-header-background, #ffffffff);
 $side-background-color: var(--custom-side-background, #1827430a);
 $content-background-color: var(--custom-body-background, #ffffffff);
+$flow-manage-content-bg: var(--custom-flow-manage-content-bg, #F6F7F8FF);
+$flow-manage-drawer-bg: var(--custom-flow-manage-drawer-bg, #ffffffff);
 
 // 文字颜色
 $title-text-color: var(--custom-title-text-color, #181f43ff);
@@ -84,10 +86,37 @@ $dropdown-body-background-color: var(--custom-dropdown-bg, #ffffffff);
 
 // button
 $button-default-background-color: var(--custom-btn-default-bg, #fff);
+$button-default-disabled-background-color: var(--custom-btn-disabled-default-bg, #1827430A);
 $button-default-text-hover-color: var(--custom-btn-default-text-hover-color, #4C5CDBFF);
-$button-default-border-color: var(--custom-btn-border-color, #4C5CDBCC);
+$button-default-disabled-text-color: var(--custom-btn-default-disabled-text-color, #181F434D);
+$button-default-border-color: var(--custom-btn-default-border-color, #181F431F);
+$button-default-border-hover-color: var(--custom-default-btn-border-hover-color, #4C5CDBCC);
 
-$button-primary-background-color: var(--custom-btn-primary-bg, #ffffffff);
+
+$button-primary-background-color: var(--custom-btn-primary-bg, #4C5CDBFF);
+$button-primary-disabled-background-color: var(--custom-btn-primary-disabled-bg, #4C5CDB80);
+$button-primary-background-hover-color: var(--custom-btn-primary-hover-bg, #4C5CDBCC);
+$button-primary-text-color: var(--custom-btn-primary-text-color, #ffffffff);
+$button-primary-text-disabled-color: var(--custom-btn-primary-text-disabled-color, #ffffffff);
+$button-primary-ghost-text-color: var(--custom-btn-primary-ghost-text-color, #4c5cdbff);
+$button-primary-ghost-border-color: var(--custom-btn-primary-ghost-border-color, #4C5CDBCC);
+$button-primary-ghost-text-hover-color: var(--custom-btn-primary-ghost-text-hover-color, #4C5CDBCC);
+$button-primary-ghost-border-hover-color: var(--custom-btn-primary-ghost-border-hover-color, #4C5CDB80);
+$button-primary-ghost-disabled-border-color: var(--custom-btn-primary-ghost-disabled-border-color, #4C5CDB80);
+$button-primary-ghost-disabled-text-color: var(--custom-btn-primary-ghost-disabled-text-color, #4C5CDB80);
+
+// form
+$form-item-label-text-color: var(--custom-form-item-label-text-color, #181F43FF);
+$flow-form-field-name-text-color: var(--custom-flow-form-field-name-text-color, #181F43BF);
+$flow-form-title-color: var(--custom-flow-form-title-color, #000000D9);
+$flow-form-field-name-border-color: var(--custom-flow-form-field-name-border-color, #181F4314);
+
+
+// checkbox
+$checkbox-checked-bg: var(--custom-checkbox-checked-bg, #4C5CDBFF);
+$checkbox-indeterminate-bg: var(--custom-checkbox-indeterminate-bg, #ffffffff);
+$checkbox-indeterminate-border-color: var(--custom-checkbox-indeterminate-border-color, #181F431F);
+
 
 $primary-color-custom: #4c5cdb;
 $primary-text-color: #181f43;

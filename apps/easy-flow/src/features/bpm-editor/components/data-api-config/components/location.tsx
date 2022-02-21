@@ -3,6 +3,7 @@ import { Form, Select } from "antd";
 import { Location as LocationType } from "@type/api";
 import DataContext from "../context";
 import styles from "../index.module.scss";
+import { Icon } from "@common/components";
 
 interface LocationProps {
   disabled?: boolean;
@@ -35,6 +36,7 @@ function Location(props: LocationProps) {
         disabled={disabled}
         dropdownMatchSelectWidth={false}
         getPopupContainer={getPopupContainer}
+        suffixIcon={<Icon type="xiala" />}
         size={layout === "vertical" ? "small" : "large"}
       >
         <Select.Option value={LocationType.HEAD}>请求头</Select.Option>

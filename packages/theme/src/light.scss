@@ -74,6 +74,8 @@
   /* 大背景 */
   --custom-header-background: #FFFFFFFF;
   --custom-body-background: #FFFFFFFF;
+  --custom-flow-manage-content-bg: #F6F7F8FF;
+  --custom-flow-manage-drawer-bg: #ffffffff;
   --custom-body-shadow: unset;
 
   /* 组件背景 */
@@ -145,10 +147,24 @@
   --custom-btn-primary-shadow: unset;
   --custom-btn-text-shadow: unset;
 
+  --custom-btn-primary-bg: #4C5CDBFF;
+  --custom-btn-primary-hover-bg: #4C5CDBCC;
+  --custom-btn-primary-text-color: #FFFFFFFF;
+  --custom-btn-primary-ghost-text-color: #4c5cdbff;
+  --custom-btn-primary-ghost-border-color: #4C5CDBCC;
+  --custom-btn-primary-ghost-text-hover-color: #4C5CDBCC;
+  --custom-btn-primary-ghost-border-hover-color: #4C5CDB80;
+  --custom-btn-primary-disabled-bg: #4C5CDB80;
+  --custom-btn-primary-text-disabled-color: #ffffffff;
+  --custom-btn-primary-ghost-disabled-border-color: #4C5CDB80;
+  --custom-btn-primary-ghost-disabled-text-color: #4C5CDB80;
+
   --custom-btn-default-text-hover-color: #4C5CDBFF;
   --custom-btn-default-bg: #fff;
-  --custom-btn-border-color: #4C5CDBCC;
-  --custom-btn-default-color: unset;
+  --custom-btn-disabled-default-bg: #1827430A;
+  --custom-btn-default-disabled-text-color: #181F434D;
+  --custom-btn-default-border-color: #181F431F;
+  --custom-btn-default-border-hover-color: #4C5CDBCC;
 
   --custom-btn-danger-color: unset;
   --custom-btn-danger-bg: unset;
@@ -194,4 +210,15 @@
   --custom-table-footer-bg: unset;
   --custom-table-footer-color: unset;
   --custom-table-header-cell-split-color: unset;
+
+  // checkbox
+  --custom-checkbox-checked-bg: #4C5CDBFF;
+  --custom-checkbox-indeterminate-bg: #ffffffff;
+  --custom-checkbox-indeterminate-border-color: #181F431F;
+  // form
+  --custom-form-item-label-text-color: #181F43FF;
+  --custom-flow-form-field-name-text-color: #181F43BF;
+  --custom-flow-form-field-name-border-color: #181F4314;
+  --custom-flow-form-title-color: #000000D9;
+
 }

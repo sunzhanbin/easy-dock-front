@@ -1,4 +1,5 @@
 @import '@common/styles/var.scss';
+
 .muliText {
   position: relative;
   display: flex;
@@ -6,11 +7,13 @@
   background: rgba(24, 39, 67, 0.04);
   border-radius: 3px;
   overflow: hidden;
+
   .textContainer {
     .textList {
       display: flex;
       flex-wrap: wrap;
       padding: 4px;
+
       .textWrapper {
         display: flex;
         min-width: 32px;
@@ -22,7 +25,8 @@
         text-align: center;
         background: rgba(24, 39, 67, 0.04);
         border-radius: 3px;
-        border: 1px solid rgba(24, 31, 67, 0.12);
+        border: 1px solid $button-default-border-color;
+
         .text {
           border-radius: 4px;
           color: rgba(0, 0, 0, 0.85);
@@ -31,10 +35,12 @@
           text-overflow: ellipsis;
           overflow: hidden;
         }
+
         .delete {
           vertical-align: middle;
           font-size: 10px;
           cursor: pointer;
+
           &:hover {
             & > svg {
               color: $primary-color;
@@ -44,9 +50,11 @@
       }
     }
   }
+
   .input {
     background: transparent;
     box-shadow: none;
+
     .ok {
       width: 20px;
       height: 20px;
@@ -55,10 +63,12 @@
       background: rgba(6, 196, 152, 1);
       cursor: pointer;
       margin-right: 12px;
+
       & > svg {
         font-size: 12px;
         color: #fff;
       }
+
       &:hover {
         background: rgba(6, 196, 152, 0.8);
       }

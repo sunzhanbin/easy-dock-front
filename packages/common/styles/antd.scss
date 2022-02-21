@@ -9,20 +9,22 @@
   font-weight: 400;
   background-color: $button-default-background-color;
   color: $title-text-color;
+  border-color: $button-default-border-color;
 
   svg {
     margin-right: 4px;
+    color: $title-text-color;
   }
 
   &:hover,
   &.active,
   &:focus {
     color: $button-default-text-hover-color;
-    border-color: $button-default-border-color;
+    border-color: $button-default-border-hover-color;
     background-color: $button-default-background-color;
 
     svg {
-      color: inherit;
+      color: $button-default-text-hover-color;
     }
   }
 
@@ -42,32 +44,41 @@
       box-shadow: 0 0 0 4px $input-background-normal-color;
     }
   }
+
+  &[disabled] {
+    background-color: $button-default-disabled-background-color;
+    color: $button-default-disabled-text-color;
+  }
 }
 
 // primary button
 .ant-btn-primary {
-  &,
+
+  color: $button-primary-text-color;
+  background-color: $button-primary-background-color;
+  border-color: $button-primary-background-color;
+
   &:hover,
   &:focus,
   &:active {
-    color: #fff;
-    background-color: $primary-color;
-    border-color: $primary-color;
+    color: $title-text-color;
+    background-color: $button-primary-background-hover-color;
+    border-color: $button-primary-background-hover-color;
   }
 
   &.ant-btn-background-ghost {
-    color: $primary-color;
+    color: $button-primary-ghost-text-color;
     border-radius: 3px;
-    border-color: rgba($primary-color-custom, 0.8);
+    border-color: $button-primary-ghost-border-color;
 
     &:focus {
-      border-color: $primary-color;
-      color: $primary-color;
+      border-color: $button-primary-ghost-border-hover-color;
+      color: $button-primary-ghost-text-hover-color;
     }
 
     &:hover {
-      border-color: rgba($primary-color-custom, 0.5);
-      color: rgba($primary-color-custom, 0.8);
+      border-color: $button-primary-ghost-border-hover-color;
+      color: $button-primary-ghost-text-hover-color;
     }
 
     &.disabled {
@@ -77,7 +88,8 @@
   }
 
   &.disabled {
-    background-color: #a6ace2;
+    background-color: $button-primary-disabled-background-color;
+    color: $button-primary-text-disabled-color;
   }
 
   &[disabled] {
@@ -332,39 +344,53 @@
   }
 }
 
+.ant-checkbox-wrapper {
+  color: $flow-form-field-name-text-color;
+
+  .ant-checkbox-inner {
+    background-color: $checkbox-indeterminate-bg;
+    border-color: $checkbox-indeterminate-border-color;
+  }
+}
+
 .ant-checkbox-group {
   .ant-checkbox-wrapper {
     margin-bottom: 12px;
-    color: $body-text-color;
+    color: $flow-form-field-name-text-color;
   }
 }
 
 .ant-checkbox-checked .ant-checkbox-inner,
 .ant-tree-checkbox-checked .ant-tree-checkbox-inner {
-  background-color: $primary-color-custom;
-  border-color: $primary-color-custom;
+  background-color: $checkbox-checked-bg;
+  border-color: $checkbox-checked-bg;
 }
 
 // 树形控件半选状态
 .ant-tree-checkbox-indeterminate .ant-tree-checkbox-inner::after {
-  background-color: $primary-color-custom;
+  background-color: $checkbox-checked-bg;
+}
+
+.ant-checkbox-indeterminate .ant-checkbox-inner {
+  background-color: $checkbox-indeterminate-bg;
+  border-color: $checkbox-indeterminate-border-color;
 }
 
 .ant-tree-checkbox-wrapper:hover .ant-tree-checkbox-inner,
 .ant-tree-checkbox:hover .ant-tree-checkbox-inner,
 .ant-tree-checkbox-input:focus + .ant-tree-checkbox-inner {
-  border-color: $primary-color-custom;
+  border-color: $checkbox-checked-bg;
 }
 
 .ant-checkbox-indeterminate .ant-checkbox-inner::after {
-  background-color: $primary-color-custom;
+  background-color: $checkbox-checked-bg;
 }
 
 .ant-checkbox-wrapper:hover .ant-checkbox-inner,
 .ant-checkbox:hover .ant-checkbox-inner,
 .ant-checkbox-input:focus + .ant-checkbox-inner,
 .ant-checkbox-checked::after {
-  border-color: $primary-color-custom;
+  border-color: $checkbox-checked-bg;
 }
 
 .ant-checkbox-disabled.ant-checkbox-checked .ant-checkbox-inner {
@@ -665,6 +691,7 @@
 // 定制抽屉
 .ant-drawer-content {
   padding: 0;
+  background-color: $flow-manage-drawer-bg;
 
   .ant-drawer-header {
     padding-top: 32px;
@@ -711,6 +738,8 @@
         background-color: $primary-color-custom;
       }
     }
+
+
   }
 
   //禁用样式
@@ -722,6 +751,18 @@
 }
 
 .ant-radio-group {
+  color: $form-item-label-text-color;
+
+  .ant-radio-button-wrapper {
+    span {
+      color: $form-item-label-text-color;
+    }
+
+    &.ant-radio-button-wrapper-checked {
+      background-color: red;
+    }
+  }
+
   .ant-radio-wrapper {
     margin-bottom: 12px;
   }
@@ -794,8 +835,24 @@
   }
 }
 
+// dropdown
+.ant-dropdown-menu {
+  background-color: $select-dropdown-body-background-color;
+
+  .ant-dropdown-menu-item, .ant-dropdown-menu-submenu-title {
+    color: $select-dropdown-text-normal-color;
+
+  }
+
+  .ant-dropdown-menu-item:hover, .ant-dropdown-menu-submenu-title:hover {
+    background-color: $select-dropdown-option-hover-color;
+
+  }
+}
+
 /* select style begin */
 .ant-select {
+  color: $select-text-active-color;
   // 单选下拉框
   &.ant-select-single {
     &:not(.ant-select-customize-input) {
@@ -1089,9 +1146,11 @@
 /* form style begin */
 .ant-form {
   .ant-form-item {
+    color: $form-item-label-text-color;
+
     .ant-form-item-label {
       label {
-        color: $body-text-color;
+        color: $form-item-label-text-color;
       }
     }
 

@@ -6,7 +6,7 @@
   justify-content: space-between;
   height: 56px;
   width: 100%;
-  border-bottom: 1px solid rgba(24, 31, 67, 0.12);
+  border-bottom: 1px solid $button-default-border-color;
   background: $header-background-color;
 
   .edit_header {
@@ -79,7 +79,7 @@
       }
 
       .save {
-        width: 60px;
+        width: 74px;
         margin-right: 12px;
         border-radius: 3px;
         font-size: 14px;
