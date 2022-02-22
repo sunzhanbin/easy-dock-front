@@ -21,6 +21,7 @@ export const workspaceSlice = createSlice({
       state.name = action.payload;
     },
     setCurrentId: (state, action: PayloadAction<string>) => {
+      window.sessionStorage.setItem("activeMenuId", action.payload);
       state.currentId = action.payload;
     },
   },
