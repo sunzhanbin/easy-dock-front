@@ -2,10 +2,10 @@ import { useState, useMemo, useEffect, FC } from "react";
 import { Menu } from "antd";
 import { Icon } from "@common/components";
 import classNames from "classnames";
-import { useAppDispatch } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/store";
 import { Outlet, useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
-import { setCurrentId } from "@/views/workspace/index.slice";
+import { selectCurrentId, setCurrentId } from "@/views/workspace/index.slice";
 import { keyPath, findFirstChild, findItem, getPopupContainer } from "@utils/utils";
 import { RouteMap, TASK_CENTER_TYPE } from "@utils/const";
 import useMemoCallback from "@common/hooks/use-memo-callback";
@@ -14,6 +14,7 @@ import UserComponent from "@components//header/user";
 import "@containers/workspace-running/multi-nav.style";
 import { CanvasResponseType, CANVAS_ENTRY, MAIN_ENTRY, SPACE_ENTRY, SubAppType } from "@/consts";
 import { useGetCanvasIdMutation, useGetHoloSceneIdMutation } from "@/http/app-manager.hooks";
+import { useLocation } from "react-router-dom";
 
 const { SubMenu } = Menu;
 
@@ -21,6 +22,8 @@ const MultiNavComponent: FC<WorkspaceBaseMenuProps> = ({ extra, dataSource, them
   const { workspaceId: appId } = useParams();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const selectedMenuKey = useAppSelector(selectCurrentId);
 
   const [getCanvasId] = useGetCanvasIdMutation();
   const [getHoloSceneId] = useGetHoloSceneIdMutation();
@@ -34,13 +37,18 @@ const MultiNavComponent: FC<WorkspaceBaseMenuProps> = ({ extra, dataSource, them
 
   useEffect(() => {
     const menu = dataSource.length ? dataSource[0] : null;
-    setActiveMainKey(menu?.id || "");
     const subMenu = findFirstChild(menu as IMenu);
-    if (subMenu && subMenu.form?.mode === "current") {
-      dispatch(setCurrentId(subMenu.id));
+    const reg = /^\/workspace\/\d+$/;
+    if (reg.test(location.pathname)) {
+      setActiveMainKey(menu?.id || "");
+      if (subMenu && subMenu.form?.mode === "current") {
+        dispatch(setCurrentId(subMenu.id));
+      }
+    } else {
+      setActiveMainKey(selectedMenuKey);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dataSource]);
+  }, [dataSource, selectedMenuKey, location.pathname]);
 
   const navigateFn = useMemoCallback(async (menu: IMenu) => {
     const {
