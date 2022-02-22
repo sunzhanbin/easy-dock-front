@@ -173,7 +173,9 @@
   --custom-btn-disable-bg: #4C5CDB80;
 
   --custom-btn-default-ghost-color: unset;
-  --custom-btn-default-ghost-bg: unset;
+  --custom-btn-default-ghost-border-color: #181F431F;
+  --custom-btn-default-ghost-border-hover-color: #181F434D;
+  --custom-btn-default-ghost-shadow-active-color: #1827430A;
 
   /* 面包屑 */
   --custom-breadcrumb-base-color: unset;
@@ -215,10 +217,18 @@
   --custom-checkbox-checked-bg: #4C5CDBFF;
   --custom-checkbox-indeterminate-bg: #ffffffff;
   --custom-checkbox-indeterminate-border-color: #181F431F;
+
+  // popover
+  --popover-dropdown-bg: #ffffffff;
+  --custom-popover-dropdown-option-hover-color: #1827430a;
+  --custom-popover-dropdown-text-normal-color: #181f43ff;
+
   // form
   --custom-form-item-label-text-color: #181F43FF;
   --custom-flow-form-field-name-text-color: #181F43BF;
   --custom-flow-form-field-name-border-color: #181F4314;
   --custom-flow-form-title-color: #000000D9;
+  --custom-flow-form-symbol-color: #181F437F;
+  --custom-flow-line-border-color: #181F431F;
 
 }

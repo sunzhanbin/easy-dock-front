@@ -173,7 +173,9 @@
   --custom-btn-disable-bg: #4C5CDB80;
 
   --custom-btn-default-ghost-color: unset;
-  --custom-btn-default-ghost-bg: unset;
+  --custom-btn-default-ghost-border-color: #FFFFFF2B;
+  --custom-btn-default-ghost-border-hover-color: #FFFFFF59;
+  --custom-btn-default-ghost-shadow-active-color: #FFFFFF0F;
 
   /* 面包屑 */
   --custom-breadcrumb-base-color: unset;
@@ -221,5 +223,11 @@
   --custom-flow-form-field-name-text-color: #FFFFFF8C;
   --custom-flow-form-field-name-border-color: #FFFFFF1A;
   --custom-flow-form-title-color: #FFFFFFBF;
+  --custom-flow-form-symbol-color: #FFFFFF66;
+  --custom-flow-line-border-color: #FFFFFF2B;
 
+  // popover
+  --popover-dropdown-bg: #363639FF;
+  --custom-popover-dropdown-option-hover-color: #FFFFFF0F;
+  --custom-popover-dropdown-text-normal-color: #FFFFFFCC;
 }

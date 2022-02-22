@@ -87,8 +87,8 @@
   .content {
     padding: 12px;
     line-height: 20px;
-    color: rgba($color: #181f43, $alpha: 0.95);
-    background-color: #fff;
+    color: $form-item-label-text-color;
+    background-color: $flow-manage-drawer-bg;
     font-size: 12px;
     font-weight: 400;
   }

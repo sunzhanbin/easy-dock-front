@@ -26,7 +26,7 @@
   }
 
   .name {
-    color: rgba(#181f43, 0.95);
+    color: $form-item-label-text-color;
     line-height: 22px;
     font-size: 14px;
     font-weight: 400;

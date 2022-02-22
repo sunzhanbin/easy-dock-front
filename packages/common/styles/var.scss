@@ -45,6 +45,12 @@ $select-dropdown-option-active-color: var(--custom-select-dropdown-option-active
 $select-dropdown-text-normal-color: var(--custom-select-dropdown-text-normal-color, #181f43ff);
 $select-dropdown-text-active-color: var(--custom-select-dropdown-text-hover-color, #4c5cdbff);
 
+// popover
+$popover-dropdown-bg: var(--popover-dropdown-bg, #ffffffff);
+$popover-dropdown-option-hover-color: var(--custom-popover-dropdown-option-hover-color, #1827430a);
+$popover-dropdown-text-normal-color: var(--custom-popover-dropdown-text-normal-color, #181f43ff);
+
+
 // datepicker
 $datepicker-background-normal-color: var(--custom-datepicker-background-normal-color, #1827430a);
 $datepicker-background-hover-color: var(--custom-datepicker-background-hover-color, #ffffffff);
@@ -91,6 +97,9 @@ $button-default-text-hover-color: var(--custom-btn-default-text-hover-color, #4C
 $button-default-disabled-text-color: var(--custom-btn-default-disabled-text-color, #181F434D);
 $button-default-border-color: var(--custom-btn-default-border-color, #181F431F);
 $button-default-border-hover-color: var(--custom-default-btn-border-hover-color, #4C5CDBCC);
+$button-default-ghost-border-color: var(--custom-btn-default-ghost-border-color, #181F431F);
+$button-default-ghost-border-hover-color: var(--custom-btn-default-ghost-border-hover-color, #181F434D);
+$button-default-ghost-shadow-active-color: var(--custom-btn-default-ghost-shadow-active-color, #1827430A);
 
 
 $button-primary-background-color: var(--custom-btn-primary-bg, #4C5CDBFF);
@@ -105,11 +114,13 @@ $button-primary-ghost-border-hover-color: var(--custom-btn-primary-ghost-border-
 $button-primary-ghost-disabled-border-color: var(--custom-btn-primary-ghost-disabled-border-color, #4C5CDB80);
 $button-primary-ghost-disabled-text-color: var(--custom-btn-primary-ghost-disabled-text-color, #4C5CDB80);
 
-// form
+// flow-form
 $form-item-label-text-color: var(--custom-form-item-label-text-color, #181F43FF);
 $flow-form-field-name-text-color: var(--custom-flow-form-field-name-text-color, #181F43BF);
 $flow-form-title-color: var(--custom-flow-form-title-color, #000000D9);
 $flow-form-field-name-border-color: var(--custom-flow-form-field-name-border-color, #181F4314);
+$flow-form-symbol-color: var(--custom-flow-form-symbol-color, #181F437F);
+$flow-line-border-color: var(--custom-flow-line-border-color, #181F431F);
 
 
 // checkbox

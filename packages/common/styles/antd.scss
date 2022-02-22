@@ -13,7 +13,7 @@
 
   svg {
     margin-right: 4px;
-    color: $title-text-color;
+    margin-top: -2px;
   }
 
   &:hover,
@@ -208,7 +208,7 @@
 }
 
 /* input style begin */
-.ant-input {
+.ant-input, .ant-input-number {
   border-radius: 3px;
   border-color: transparent;
   background-color: $input-background-normal-color;
@@ -640,52 +640,38 @@
 
 // 定制数字输入框
 .ant-input-number {
-  border-radius: 3px;
-  border-color: transparent;
-  background-color: rgba(24, 39, 67, 0.04);
-
-  &:hover {
-    border-color: rgba($primary-color-custom, 0.85);
-    background-color: transparent;
+  input::-webkit-input-placeholder {
+    color: $input-text-placeholder-color;
   }
 
-  &.ant-input-number-disabled {
-    color: inherit;
-    background-color: inherit;
+  .ant-input-number-handler-wrap {
+    background: transparent;
+  }
+
+  .ant-input-number-handler {
+    border-color: $button-default-ghost-border-color;
+    color: $form-item-label-text-color;
 
     &:hover {
-      border-color: transparent;
+      border-color: $button-default-ghost-border-hover-color;
+    }
+
+    &:active {
+      background-color: transparent;
+      border-color: $button-default-ghost-border-hover-color;
+      box-shadow: 0px 0px 0px 4px $button-default-ghost-shadow-active-color;
     }
   }
 
-  &:focus {
-    border-color: rgba($primary-color-custom, 0.85);
-    box-shadow: 0 0 0 3px rgba($primary-color-custom, 0.2);
-    background-color: transparent;
+  .ant-input-number-handler:hover .ant-input-number-handler-up-inner, .ant-input-number-handler:hover .ant-input-number-handler-down-inner {
+    color: $form-item-label-text-color;
   }
 
-  &.ant-input-number-focused {
-    box-shadow: 0 0 0 2px rgba($primary-color-custom, 0.2);
+  .ant-input-number-handler-up-inner, .ant-input-number-handler-down-inner {
+    color: $button-primary-text-color;
   }
 
-  .ant-input-number-input {
-    &[disabled] {
-      color: inherit;
-      background: linear-gradient(
-                      -45deg,
-                      rgba(24, 39, 67, 0.04) 0,
-                      rgba(24, 39, 67, 0.04) 5%,
-                      transparent 5%,
-                      transparent 50%,
-                      rgba(24, 39, 67, 0.04) 50%,
-                      rgba(24, 39, 67, 0.04) 55%,
-                      transparent 55%,
-                      transparent
-      );
-      background-size: 10px 10px;
-      background-color: rgba(24, 39, 67, 0.04);
-    }
-  }
+
 }
 
 // 定制抽屉
@@ -853,6 +839,13 @@
 /* select style begin */
 .ant-select {
   color: $select-text-active-color;
+
+  .ant-select-selector {
+    .ant-select-selection-placeholder {
+      color: $select-text-placeholder-color;
+    }
+  }
+
   // 单选下拉框
   &.ant-select-single {
     &:not(.ant-select-customize-input) {
@@ -870,9 +863,6 @@
           color: $select-text-active-color;
         }
 
-        .ant-select-selection-search-input::-webkit-input-placeholder {
-          color: $select-text-placeholder-color;
-        }
       }
     }
 
@@ -1161,3 +1151,17 @@
 }
 
 /* form style end */
+
+// popover
+.ant-popover {
+  color: $popover-dropdown-text-normal-color;
+
+  .ant-popover-inner {
+    background-color: $popover-dropdown-bg;
+  }
+
+  .ant-popover-inner-content {
+    color: $popover-dropdown-text-normal-color;
+  }
+}
+

@@ -21,7 +21,7 @@ $line-color: #e3e4e8;
   &::before,
   &::after {
     content: '';
-    background-color: $line-color;
+    background-color: $flow-line-border-color;
     position: absolute;
     width: $width;
     height: 1px;
@@ -53,7 +53,7 @@ $line-color: #e3e4e8;
       left: 50%;
       width: 1px;
       transform: translateX(-50%);
-      background-color: $line-color;
+      background-color: $flow-line-border-color;
       z-index: -1;
     }
   }
@@ -106,9 +106,9 @@ $line-color: #e3e4e8;
       .content {
         position: relative;
         width: 248px;
-        background-color: #fff;
+        background-color: $flow-manage-drawer-bg;
         border-radius: 3px;
-        color: #181f43;
+        color: $form-item-label-text-color;
         z-index: 1;
         cursor: pointer;
 
@@ -147,7 +147,7 @@ $line-color: #e3e4e8;
           }
 
           .or {
-            background-color: rgba(#182743, 0.04);
+            background-color: $input-background-normal-color;
 
             &::after {
               content: '或';
@@ -170,12 +170,12 @@ $line-color: #e3e4e8;
             .and {
               padding: 8px;
               line-height: 22px;
-              color: #181f43;
+              color: $form-item-label-text-color;
 
               .symbol {
                 margin-left: 4px;
                 margin-right: 4px;
-                color: rgba(#181f43, 0.5);
+                color: $flow-form-symbol-color;
                 white-space: nowrap;
               }
             }
@@ -223,13 +223,13 @@ $line-color: #e3e4e8;
       left: 50%;
       transform: translate3d(-50%, 0, 0);
       width: 1px;
-      background-color: $line-color;
+      background-color: $flow-line-border-color;
     }
 
     .stretch {
       flex: 1 1 0;
       width: 1px;
-      background-color: $line-color;
+      background-color: $flow-line-border-color;
     }
   }
 
