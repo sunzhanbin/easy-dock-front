@@ -45,7 +45,8 @@ const MultiNavComponent: FC<WorkspaceBaseMenuProps> = ({ extra, dataSource, them
         dispatch(setCurrentId(subMenu.id));
       }
     } else {
-      setActiveMainKey(selectedMenuKey);
+      const item = findItem(selectedMenuKey, dataSource);
+      item?.parentId ? setActiveMainKey(item.parentId) : setActiveMainKey(selectedMenuKey);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataSource, selectedMenuKey, location.pathname]);
