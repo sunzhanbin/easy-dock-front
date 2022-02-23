@@ -15,6 +15,7 @@ $body-text-color: var(--custom-body-text-color, #181f43bf);
 $caption-text-color: var(--custom-caption-text-color, #181f4380);
 $hint-text-color: var(--custom-hint-text-color, #181f434d);
 $menu-title-text-color: var(--custom-menu-title-text-color, #181f43ff);
+$label-hint-text-color: var(--custom-label-hint-text-color, #181F43D9);
 
 // 边框颜色
 $border-normal-color: var(--custom-border-normal-color, #181f431f);
@@ -29,6 +30,9 @@ $input-text-active-color: var(--custom-input-text-active-color, #181f43ff);
 $input-border-hover-color: var(--custom-input-border-hover-color, #4c5cdbcc);
 $input-border-active-color: var(--custom-input-border-hover-color, #4c5cdbcc);
 $input-shadow-color: var(--custom-input-shadow-color, #4c5cdb1f);
+
+// modal
+$modal-mask-bg: var(--custom-modal-mask-bg, #181F438C);
 
 // select
 $select-background-normal-color: var(--custom-select-background-normal-color, #1827430a);

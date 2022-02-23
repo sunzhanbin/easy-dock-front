@@ -86,7 +86,7 @@
   flex-direction: column;
   width: 232px;
   height: 323px;
-  color: rgba(#181f43, 0.95);
+  color: $nav-color;
   font-size: 14px;
   font-weight: 400;
 
@@ -176,12 +176,12 @@
         height: 37px;
         padding-top: 0;
         line-height: 20px;
-        color: rgba(#181f43, 0.75);
+        color: $nav-color;
         font-size: 14px;
         font-weight: 400;
 
         &:hover {
-          color: rgba($primary-color, 0.75);
+          color: $nav-color;
         }
 
         .ant-tabs-tab-btn {
@@ -192,7 +192,7 @@
     }
 
     .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
-      color: rgba(#181f43, 0.95);
+      color: $menu-title-text-color;
       font-size: 18px;
       font-weight: 500;
     }
