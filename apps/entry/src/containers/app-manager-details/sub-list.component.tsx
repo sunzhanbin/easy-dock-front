@@ -86,8 +86,19 @@ const SubListComponent: FC<{ empty?: boolean }> = ({ empty = false }) => {
   const handleShowAuthModal = useMemoCallback(() => {
     setShowAuthModal(true);
   });
+  const canJumpToClient = useMemo<boolean>(() => {
+    /* 只有启用,并且配置了菜单的应用才能跳转到应用端  2022-02-23 */
+    if (extension?.status === 1 && extension?.meta && extension.meta?.menuList?.length > 0) {
+      return true;
+    }
+    return false;
+  }, [extension]);
 
   const handleJumpToClient = useMemoCallback(() => {
+    if (!canJumpToClient) {
+      // message.warn("请先启用应用并且设置应用菜单!");
+      return;
+    }
     window.open(`/workspace/${workspaceId}`);
   });
 
@@ -179,7 +190,7 @@ const SubListComponent: FC<{ empty?: boolean }> = ({ empty = false }) => {
                   <Icon type="quanxianshezhi" className="icon" />
                   <div className="text">访问权限</div>
                 </div>
-                <div className="edit" onClick={handleJumpToClient}>
+                <div className={classnames("edit", !canJumpToClient ? "disabled" : "")} onClick={handleJumpToClient}>
                   <Icon type="yingyonduandinglan" className="icon" />
                   <div className="text">跳转应用端</div>
                 </div>
