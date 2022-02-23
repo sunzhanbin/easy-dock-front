@@ -736,8 +736,8 @@
 
 // 定制radio
 
-.ant-form input[type='file']:focus, .ant-form input[type='radio']:focus, .ant-form input[type='checkbox']:focus {
-  outline: none;
+.ant-radio-input:focus + .ant-radio-inner {
+  box-shadow: none;
 }
 
 .ant-radio {
