@@ -144,6 +144,12 @@ const EditorHeader: FC = () => {
     const data = await axios.get(`/process/subapp/${bpmId}/export`);
     exportJsonFile(data, `${appName}_flow`);
   };
+  const handleImportForm = async () => {
+    console.info("import form");
+  };
+  const handleImportFlow = async () => {
+    console.info("import flow");
+  };
 
   return (
     <div className={styles.header_container} ref={containerRef}>
@@ -211,7 +217,26 @@ const EditorHeader: FC = () => {
           <Button type="primary" ghost className={styles.save} size="large" onClick={handleSave}>
             保存
           </Button>
-
+          {pathName === formDesignPath && (
+            <>
+              <Button type="primary" className={styles.prev} size="large" onClick={handleExportForm}>
+                导出表单
+              </Button>
+              <Button type="primary" className={styles.prev} size="large" onClick={handleImportForm}>
+                导入表单
+              </Button>
+            </>
+          )}
+          {pathName === flowDesignPath && (
+            <>
+              <Button type="primary" className={styles.prev} size="large" onClick={handleExportFlow}>
+                导出流程
+              </Button>
+              <Button type="primary" className={styles.prev} size="large" onClick={handleImportFlow}>
+                导入流程
+              </Button>
+            </>
+          )}
           {pathName === formDesignPath && (
             <Button
               type="primary"
@@ -223,16 +248,7 @@ const EditorHeader: FC = () => {
               下一步
             </Button>
           )}
-          {pathName === formDesignPath && (
-            <Button type="primary" className={styles.next} size="large" onClick={handleExportForm}>
-              导出表单
-            </Button>
-          )}
-          {pathName === flowDesignPath && (
-            <Button type="primary" className={styles.next} size="large" onClick={handleExportFlow}>
-              导出流程
-            </Button>
-          )}
+
           {pathName === `${match.url}/flow-design` && (
             <AsyncButton
               className={styles.publish}
