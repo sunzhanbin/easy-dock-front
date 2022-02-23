@@ -20,6 +20,7 @@ interface MappingProps {
   value?: { current?: string; target: string; required?: boolean }[];
   onChange?: (val: this["value"]) => void;
 }
+
 interface Component {
   name: string;
   field: string;
@@ -99,6 +100,7 @@ const Mapping = ({ name, parentName, subAppId, value, onChange }: MappingProps) 
                                   size="large"
                                   placeholder="所选流程"
                                   getPopupContainer={(c) => c}
+                                  suffixIcon={<Icon type="xiala" />}
                                   disabled={mapping.required}
                                 >
                                   {targetComponents.map((v) => {
@@ -110,7 +112,7 @@ const Mapping = ({ name, parentName, subAppId, value, onChange }: MappingProps) 
                                   })}
                                 </Select>
                               </Form.Item>
-                              <div className={styles.symbol}> 对应 </div>
+                              <div className={styles.symbol}> 对应</div>
                               <Form.Item
                                 name={[field.name, "current"]}
                                 className={styles.current}
