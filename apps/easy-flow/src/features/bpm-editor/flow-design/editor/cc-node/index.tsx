@@ -1,16 +1,16 @@
-import { memo, useMemo } from 'react';
-import { Form, Input } from 'antd';
-import { Rule } from 'antd/lib/form';
-import debounce from 'lodash/debounce';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import MemberSelector from '../../components/member-selector';
-import { updateNode } from '../../flow-slice';
-import { CCNode, AuthType } from '@type/flow';
-import FieldAuths from '../../components/field-auths';
-import { useAppDispatch } from '@/app/hooks';
-import { trimInputValue } from '../../util';
-import useValidateForm from '../../hooks/use-validate-form';
-import { rules } from '../../validators';
+import { memo, useMemo } from "react";
+import { Form, Input } from "antd";
+import { Rule } from "antd/lib/form";
+import debounce from "lodash/debounce";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import MemberSelector from "../../components/member-selector";
+import { updateNode } from "../../flow-slice";
+import { CCNode, AuthType } from "@type/flow";
+import FieldAuths from "../../components/field-auths";
+import { useAppDispatch } from "@/app/hooks";
+import { trimInputValue } from "../../util";
+import useValidateForm from "../../hooks/use-validate-form";
+import { rules } from "../../validators";
 
 interface CCNodeEditorProps {
   node: CCNode;
@@ -18,8 +18,8 @@ interface CCNodeEditorProps {
 
 type FormValuesType = {
   name: string;
-  correlationMemberConfig: CCNode['correlationMemberConfig'];
-  fieldsAuths: CCNode['fieldsAuths'];
+  correlationMemberConfig: CCNode["correlationMemberConfig"];
+  fieldsAuths: CCNode["fieldsAuths"];
 };
 
 function CCNodeEditor(props: CCNodeEditorProps) {

@@ -1,11 +1,11 @@
-import { ReactNode, memo, useMemo, useRef } from 'react';
-import classnames from 'classnames';
-import moment from 'moment';
-import appConfig from '@/init';
-import { timeDiff } from '@utils';
-import { Icon, Text } from '@common/components';
-import { NodeStatusType, FlowInstance } from '@type/detail';
-import styles from './index.module.scss';
+import { ReactNode, memo, useMemo, useRef } from "react";
+import classnames from "classnames";
+import moment from "moment";
+import appConfig from "@/init";
+import { timeDiff } from "@utils";
+import { Icon, Text } from "@common/components";
+import { NodeStatusType, FlowInstance } from "@type/detail";
+import styles from "./index.module.scss";
 
 interface CellProps {
   title: string | ReactNode;
@@ -19,17 +19,17 @@ const Cell = memo(function Cell(props: CellProps) {
 
   return (
     <div className={styles.cell}>
-      {icon && <Icon className={styles['cell-icon']} type={icon} />}
-      <div className={styles['cell-content']}>
+      {icon && <Icon className={styles["cell-icon"]} type={icon} />}
+      <div className={styles["cell-content"]}>
         {getContainer ? (
-          <Text className={styles['cell-title']} getContainer={getContainer} placement="bottomLeft">
+          <Text className={styles["cell-title"]} getContainer={getContainer} placement="bottomLeft">
             {title}
           </Text>
         ) : (
-          <div className={styles['cell-title']}>{title}</div>
+          <div className={styles["cell-title"]}>{title}</div>
         )}
 
-        <div className={styles['cell-desc']}>{desc}</div>
+        <div className={styles["cell-desc"]}>{desc}</div>
       </div>
     </div>
   );
@@ -46,9 +46,9 @@ function StatusBar(props: StatusBarProps) {
   const status = flowIns.state;
   const containerRef = useRef<HTMLDivElement>(null);
   const { image, styleName } = useMemo(() => {
-    let image = '';
-    let styleName = '';
-    const publicPath = appConfig.publicPath.replace(/\/$/, '');
+    let image = "";
+    let styleName = "";
+    const publicPath = appConfig.publicPath.replace(/\/$/, "");
 
     if (status === NodeStatusType.Processing) {
       image = `${publicPath}/images/flow-detail/processing.png`;
@@ -99,13 +99,13 @@ function StatusBar(props: StatusBarProps) {
 
     const trackCell = (
       <Cell
-        title={<div className={styles['time-used']}>{`流程用时 ${timeDiff(Date.now() - flowIns.applyTime)}`}</div>}
+        title={<div className={styles["time-used"]}>{`流程用时 ${timeDiff(Date.now() - flowIns.applyTime)}`}</div>}
         desc={trackNode}
       />
     );
 
     if (flowIns.state === NodeStatusType.Waiting) {
-      const currentNodesName = (flowIns.currentNodeList || []).map((item) => item.currentNodeName).join(',');
+      const currentNodesName = (flowIns.currentNodeList || []).map((item) => item.currentNodeName).join(",");
 
       return (
         <div className={styles.status}>
@@ -117,7 +117,7 @@ function StatusBar(props: StatusBarProps) {
 
     // 显示当前处理人
     if (showCurrentProcessor && flowIns.state !== NodeStatusType.Terminated) {
-      const currentNodesName = (flowIns.currentNodeList || []).map((item) => item.currentNodeName).join(',');
+      const currentNodesName = (flowIns.currentNodeList || []).map((item) => item.currentNodeName).join(",");
 
       return (
         <div className={styles.status}>
@@ -125,7 +125,7 @@ function StatusBar(props: StatusBarProps) {
           <Cell
             getContainer={getContainer}
             icon="dangqianchuliren"
-            title={formatAllMembers(flowIns).join(',')}
+            title={formatAllMembers(flowIns).join(",")}
             desc="当前处理人"
           />
 
@@ -139,7 +139,7 @@ function StatusBar(props: StatusBarProps) {
         <Cell icon="dangqianchuliren" title={flowIns.applyUser.name} desc="申请人" />
         <Cell
           icon="xuanzeshijian"
-          title={moment(flowIns.applyTime).format('yyyy-MM-DD HH:mm:ss')}
+          title={moment(flowIns.applyTime).format("yyyy-MM-DD HH:mm:ss")}
           desc="申请时间"
           getContainer={getContainer}
         />
@@ -170,9 +170,9 @@ function formatAllMembers(data: FlowInstance) {
     let roleNames: string[] = [];
 
     list.forEach((item) => {
-      const users = item.currentProcessor.users || [];
-      const depts = item.currentProcessor.depts || [];
-      const roles = item.currentProcessor.roles || [];
+      const users = item?.currentProcessor?.users || [];
+      const depts = item?.currentProcessor?.depts || [];
+      const roles = item?.currentProcessor?.roles || [];
 
       userNames = userNames.concat(users.map((user) => user.name));
       deptNames = deptNames.concat(depts.map((dept) => dept.name));

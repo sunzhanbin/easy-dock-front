@@ -1,14 +1,14 @@
-import React, { useEffect, useState, Suspense, useMemo } from 'react';
-import { Route, useParams, NavLink, useRouteMatch, useLocation } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import UserComponent from '@components/header/user';
-import MicroApp from '@components/micro-app';
-import { Loading, Icon } from '@common/components';
-import { getUserInfo } from '@/store/user';
-import { runtimeAxios, getSceneImageUrl } from '@utils';
-import { ROUTES, envs } from '@consts';
-import { AppSchema, AuthEnum } from '@schema/app';
-import styles from './index.module.scss';
+import React, { useEffect, useState, Suspense, useMemo } from "react";
+import { Route, useParams, NavLink, useRouteMatch, useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import UserComponent from "@components/header/user";
+import MicroApp from "@components/micro-app";
+import { Loading, Icon } from "@common/components";
+import { getUserInfo } from "@/store/user";
+import { runtimeAxios, getSceneImageUrl } from "@utils";
+import { ROUTES, envs } from "@consts";
+import { AppSchema, AuthEnum } from "@schema/app";
+import styles from "./index.module.scss";
 
 function SidebarLayout() {
   const dispatch = useDispatch();
@@ -19,8 +19,8 @@ function SidebarLayout() {
   const [loading, setLoading] = useState(false);
   const [showDataManage, setShowDataManage] = useState<boolean>(false);
   const showHeader = useMemo(() => {
-    const path = pathname.replace(ROUTES.APP_PROCESS.replace(':appId', appId), '');
-    return path.startsWith('/task-center') || path === '/data-manage';
+    const path = pathname.replace(ROUTES.APP_PROCESS.replace(":appId", appId), "");
+    return path.startsWith("/task-center") || path === "/data-manage";
   }, [pathname, appId]);
 
   useEffect(() => {
@@ -47,10 +47,10 @@ function SidebarLayout() {
   const microExtra = useMemo(() => ({ appId }), [appId]);
   const fallback = useMemo(() => <Loading />, []);
   const matchedUrl = useMemo(() => {
-    return matched.url.replace(/\/+$/, '');
+    return matched.url.replace(/\/+$/, "");
   }, [matched.url]);
   const microBasename = useMemo(() => {
-    return ROUTES.APP_PROCESS.replace(':appId', appId);
+    return `/main${ROUTES.APP_PROCESS.replace(":appId", appId)}`;
   }, [appId]);
 
   return (
@@ -112,6 +112,27 @@ function SidebarLayout() {
         </div>
       </div>
     </>
+  );
+}
+
+// export default React.memo(SidebarLayout);
+
+export function Instancelayout() {
+  const { appId } = useParams<{ appId: string }>();
+  const microExtra = useMemo(() => ({ appId }), [appId]);
+  const microBasename = useMemo(() => {
+    return `/main${ROUTES.INSTANCE_APP.replace(":appId", appId)}`;
+  }, [appId]);
+  return (
+    <div className={styles.instanceManager}>
+      <MicroApp
+        className={styles.micro}
+        entry={envs.EASY_FLOW_FRONTEND_ENTRY}
+        name="easy-flow"
+        basename={microBasename}
+        extra={microExtra}
+      />
+    </div>
   );
 }
 

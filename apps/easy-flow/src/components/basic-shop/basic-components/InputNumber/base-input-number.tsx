@@ -1,14 +1,14 @@
-import { memo, useMemo, useRef, useEffect } from 'react';
-import { InputNumber } from 'antd';
-import { Icon } from '@common/components';
-import { InputNumberProps } from 'antd/lib/input-number';
-import styles from './index.module.scss';
-import { InputNumberField } from '@type';
+import { memo, useMemo, useRef } from "react";
+import { InputNumber } from "antd";
+import { Icon } from "@common/components";
+import { InputNumberProps } from "antd/lib/input-number";
+import { InputNumberField } from "@type";
+import styles from "./index.module.scss";
 
 const InputNumberComponent = (
   props: InputNumberProps & {
-    decimal?: InputNumberField['decimal'];
-    numlimit?: InputNumberField['numlimit'];
+    decimal?: InputNumberField["decimal"];
+    numlimit?: InputNumberField["numlimit"];
   } & {
     defaultNumber?: any;
   },
@@ -16,9 +16,10 @@ const InputNumberComponent = (
   const { onChange, decimal, numlimit, defaultNumber } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const propList = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/ban-types
     const prop: { [k: string]: string | number | boolean | undefined | Function } = {
-      size: 'large',
-      placeholder: '请输入',
+      size: "large",
+      placeholder: "请输入",
       max: Number.MAX_SAFE_INTEGER,
       min: Number.MIN_SAFE_INTEGER,
       onChange: onChange,
@@ -27,15 +28,20 @@ const InputNumberComponent = (
       prop.min = numlimit.numrange.min;
       prop.max = numlimit.numrange.max;
     }
-    const el = document.getElementById('edit-form');
-    if (defaultNumber?.customData) {
-      prop.defaultValue = +defaultNumber?.customData;
+    const el = document.getElementById("edit-form");
+    if (defaultNumber?.customData !== null && defaultNumber?.customData !== undefined) {
+      prop.defaultValue = defaultNumber?.customData;
       if (el?.contains(containerRef?.current)) {
-        prop.value = +defaultNumber?.customData;
+        prop.value = defaultNumber?.customData;
       }
     }
-    if (typeof defaultNumber === 'number') {
-      prop.defaultValue = defaultNumber;
+
+    if (typeof defaultNumber === "number") {
+      if (prop.value === null || prop.value === undefined) {
+        prop.defaultValue = undefined;
+      } else {
+        prop.defaultValue = defaultNumber;
+      }
       if (el?.contains(containerRef?.current)) {
         prop.value = defaultNumber;
       }
@@ -50,13 +56,6 @@ const InputNumberComponent = (
     delete result.numrange;
     return result;
   }, [props, decimal, numlimit, defaultNumber, onChange]);
-  // useEffect(() => {
-  //   if (propList.defaultValue) {
-  //     onChange && onChange(propList.defaultValue as number);
-  //   }
-  //   // eslint-disable-next-line
-  // }, []);
-
   return (
     <div className={styles.container} ref={containerRef}>
       <div className={styles.number_container}>

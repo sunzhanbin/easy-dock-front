@@ -1,107 +1,126 @@
-import { useCallback, useEffect } from "react";
-import { Form, Input, Select, Checkbox, Button, Radio } from "antd";
+import React, { memo, ReactNode, useMemo, useRef, useEffect, useCallback, useImperativeHandle } from "react";
+import { Form, Input, Select, Radio } from "antd";
 import { selectMenuForm, setMenuForm } from "@views/app-setup/menu-setup.slice";
 import { useAppDispatch, useAppSelector } from "@/store";
-
-import "./menu-setup-form.style";
+import { Icon } from "@common/components";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { nameRule } from "@/consts";
+import "@containers/app-setup-config/menu-setup-form.style";
+import AssetConfigComponent from "@containers/app-setup-config/menu-setup-form-asset-config.component";
 
 const { Option } = Select;
 
-const tailLayout = {
-  wrapperCol: { offset: 8, span: 16 },
-};
-
-const MenuSetupFormComponent = () => {
+const MenuSetupFormComponent = React.forwardRef<{
+  validateFields: () => Promise<any>;
+}>(function MenuSetupForm(_, ref) {
   const dispatch = useAppDispatch();
+
   const menuForm = useAppSelector(selectMenuForm);
   const [form] = Form.useForm();
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const handleFormFinish = useCallback((values: { [key: string]: any }) => {
-    dispatch(setMenuForm(values));
+  const iconList = useMemo<string[]>(() => {
+    return [
+      "wukongjian",
+      "yingyongsheji1",
+      "yingyongsheji8",
+      "yingyongsheji7",
+      "yingyongsheji4",
+      "yingyongsheji3",
+      "yingyongsheji6",
+      "yingyongsheji9",
+      "yingyongsheji2",
+      "yingyongsheji5",
+      "shouyecaidanxian",
+      "lineyonghujiedianyuan",
+      "chakanshujuliang",
+      "jiekou",
+      "bianpai",
+      "wenjian",
+      "jiazhiwajue",
+      "riqi",
+      "yihangduolie",
+      "xiangqing",
+      "shujuzhili",
+      "liuchengchufa",
+      "chaosongjiedian",
+      "shujuhuiju",
+      "dangqianjiedian",
+    ];
   }, []);
+
+  const dropdownRender = useMemoCallback((originNode: ReactNode) => {
+    return <div className="dropdown-container">{originNode}</div>;
+  });
+
+  const options = useMemo(() => {
+    return [
+      { label: "已有资产", value: "exist" },
+      { label: "自定义URL", value: "custom" },
+    ];
+  }, []);
+
+  const handleValuesChange = useCallback((changedValue) => {
+    // 改变了子应用类型,子应用id要重置
+    if (changedValue?.assetConfig?.subAppType) {
+      const oldConfig = form.getFieldValue("assetConfig");
+      const assetConfig = Object.assign({}, oldConfig, { subAppId: undefined });
+      form.setFieldsValue({ assetConfig });
+    }
+    const formValues = form.getFieldsValue();
+    dispatch(setMenuForm(formValues));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useImperativeHandle(ref, () => ({
+    validateFields: () => form.validateFields(),
+  }));
 
   useEffect(() => {
     form.setFieldsValue(menuForm);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [menuForm]);
 
   return (
-    <div className="menu-setup-form-component">
-      <div className="header">内容设置</div>
+    <div className="menu-setup-form-component" ref={containerRef}>
+      <div className="header">菜单属性</div>
       <div className="form">
-        <Form form={form} layout="vertical" onFinish={handleFormFinish}>
-          <Form.Item
-            label="菜单名称"
-            name="name"
-            rules={[{ required: true, message: "Please input your username!" }]}
-          >
-            <Input />
+        <Form form={form} layout="vertical" autoComplete="off" onValuesChange={handleValuesChange}>
+          <Form.Item label="菜单名称" name="name" required rules={[nameRule]}>
+            <Input size="large" placeholder="请输入" />
           </Form.Item>
-          <Form.Item name="showMenu" valuePropName="checked">
-            <Checkbox>显示菜单 icon</Checkbox>
-          </Form.Item>
-          <Form.Item
-            name="icon"
-            rules={[{ required: true, message: "Please input your password!" }]}
-          >
-            <Select placeholder="选择菜单 icon" allowClear>
-              <Option value="icon1">菜单icon1</Option>
-              <Option value="icon2">菜单icon2</Option>
-              <Option value="icon3">菜单icon3</Option>
+          <Form.Item label="菜单icon" name="icon">
+            <Select
+              size="large"
+              placeholder="请选择"
+              optionLabelProp="label"
+              dropdownRender={dropdownRender}
+              suffixIcon={<Icon type="xiala" />}
+              getPopupContainer={() => containerRef.current!}
+            >
+              {iconList.map((icon) => (
+                <Option key={icon} value={icon} label={icon === "wukongjian" ? "无" : <Icon type={icon} />}>
+                  <Icon type={icon} />
+                </Option>
+              ))}
             </Select>
           </Form.Item>
           <Form.Item label="查看方式" name="mode">
-            <Radio.Group>
-              <Radio value={0}>当前页面打开</Radio>
-              <Radio value={1}>新窗口打开</Radio>
+            <Radio.Group size="large">
+              <Radio value="current">当前页面打开</Radio>
+              <Radio value="blank">新窗口打开</Radio>
             </Radio.Group>
           </Form.Item>
-          <Form.Item name="isHome" valuePropName="checked">
-            <Checkbox>设置为主页</Checkbox>
-          </Form.Item>
           <Form.Item label="内容设置">
-            <Form.Item name="asset">
-              <Radio.Group size="small">
-                <Radio.Button value="exist">使用已有资产</Radio.Button>
-                <Radio.Button value="custom">自定义 URL</Radio.Button>
-              </Radio.Group>
+            <Form.Item name="asset" className="asset-item">
+              <Radio.Group size="large" optionType="button" className="asset-option" options={options} />
             </Form.Item>
-            <Form.Item
-              noStyle
-              shouldUpdate={(prev, current) => prev.asset !== current.asset}
-            >
-              {({ getFieldValue }) =>
-                getFieldValue("asset") === "custom" ? (
-                  <Form.Item name={["assetConfig", "url"]}>
-                    <Input placeholder="请输入URL" />
-                  </Form.Item>
-                ) : (
-                  <>
-                    <Form.Item name={["assetConfig", "app"]}>
-                      <Select placeholder="选择应用" allowClear>
-                        <Option value="flow">流程</Option>
-                        <Option value="screen">大屏</Option>
-                      </Select>
-                    </Form.Item>
-                    <Form.Item name={["assetConfig", "subapp"]}>
-                      <Select placeholder="选择子应用" allowClear>
-                        <Option value="absence">请假</Option>
-                        <Option value="police">警务</Option>
-                      </Select>
-                    </Form.Item>
-                  </>
-                )
-              }
-            </Form.Item>
-          </Form.Item>
-          <Form.Item {...tailLayout}>
-            <Button type="primary" htmlType="submit">
-              Submit
-            </Button>
+            <AssetConfigComponent form={form} />
           </Form.Item>
         </Form>
       </div>
     </div>
   );
-};
+});
 
-export default MenuSetupFormComponent;
+export default memo(MenuSetupFormComponent);

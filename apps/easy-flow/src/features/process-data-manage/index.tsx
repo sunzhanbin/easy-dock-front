@@ -1,25 +1,27 @@
-import { memo, useState, useEffect, useRef, useMemo } from 'react';
-import moment from 'moment';
-import { debounce } from 'lodash';
-import { Select, Form, Checkbox, Table, Tooltip, message, Popover } from 'antd';
-import type { TablePaginationConfig, TableProps } from 'antd/lib/table';
-import { SorterResult } from 'antd/lib/table/interface';
-import { SubappShort, AppStatus, SubAppType } from '@type/subapp';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import { Text } from '@common/components';
-import useAppId from '@/hooks/use-app-id';
-import { FieldType } from '@type/form';
-import { exportFile, runtimeAxios } from '@utils';
-import { Icon } from '@common/components';
-import StateTag from '@/features/bpm-editor/components/state-tag';
-import { TASK_STATE_LIST } from '@/utils/const';
-import { omit } from 'lodash';
-import styles from './index.module.scss';
+import { memo, useState, useEffect, useRef, useMemo } from "react";
+import moment from "moment";
+import { debounce } from "lodash";
+import { Select, Form, Checkbox, Table, Tooltip, message, Popover } from "antd";
+import type { TablePaginationConfig, TableProps } from "antd/lib/table";
+import { SorterResult } from "antd/lib/table/interface";
+import { SubappShort, AppStatus, SubAppType } from "@type/subapp";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { Text } from "@common/components";
+import useAppId from "@/hooks/use-app-id";
+import { FieldType } from "@type/form";
+import { exportFile, runtimeAxios } from "@utils";
+import { Icon } from "@common/components";
+import StateTag from "@/features/bpm-editor/components/state-tag";
+import { TASK_STATE_LIST } from "@/utils/const";
+import { omit } from "lodash";
+import { useLocation } from "react-router-dom";
+import classNames from "classnames";
+import styles from "./index.module.scss";
 
 const useMock = false;
 
 if (useMock) {
-  require('./mock');
+  require("./mock");
 }
 
 type FormValue = {
@@ -29,7 +31,7 @@ type FormValue = {
     pageSize: number;
     current: number;
     total: number;
-    sortDirection: 'ASC' | 'DESC';
+    sortDirection: "ASC" | "DESC";
   };
 };
 
@@ -51,7 +53,7 @@ export type TableDataBase = {
   };
 };
 
-const baseServiceUrl = useMock ? '/' : undefined;
+const baseServiceUrl = useMock ? "/" : undefined;
 
 const DataManage = () => {
   const appId = useAppId();
@@ -65,24 +67,24 @@ const DataManage = () => {
     [id: string]: { name: string; avatar?: string; id: number | string };
   }>({});
   const [dataSource, setDataSource] = useState<any[]>();
-  const formInititalValue: Omit<FormValue, 'subappId'> = useMemo(() => {
+  const formInititalValue: Omit<FormValue, "subappId"> = useMemo(() => {
     return {
       stateList: [1, 2, 3, 4, 5, 6],
       table: {
         current: 1,
         pageSize: 10,
         total: 0,
-        sortDirection: 'DESC',
+        sortDirection: "DESC",
       },
     };
   }, []);
 
-  const baseColumns: TableProps<TableDataBase>['columns'] = useMemo(() => {
+  const baseColumns: TableProps<TableDataBase>["columns"] = useMemo(() => {
     return [
       {
-        key: 'state',
-        dataIndex: 'state',
-        title: '流程状态',
+        key: "state",
+        dataIndex: "state",
+        title: "流程状态",
         width: 100,
         render(_, data: TableDataBase) {
           const { state } = data;
@@ -90,25 +92,44 @@ const DataManage = () => {
         },
       },
       {
-        key: 'starter',
-        dataIndex: 'starter',
+        key: "starter",
+        dataIndex: "starter",
         width: 100,
-        title: '发起人',
+        title: "发起人",
       },
       {
-        key: 'startTime',
-        dataIndex: 'startTime',
-        title: '发起时间',
-        sortDirections: ['descend', 'ascend'],
+        key: "startTime",
+        dataIndex: "startTime",
+        title: "发起时间",
+        sortDirections: ["descend", "ascend"],
         sorter: true,
-        defaultSortOrder: 'descend',
+        defaultSortOrder: "descend",
         width: 180,
         render(_, data: TableDataBase) {
-          return moment(data.startTime).format('yyyy-MM-DD HH:mm');
+          return moment(data.startTime).format("yyyy-MM-DD HH:mm");
         },
       },
     ];
   }, []);
+
+  const location = useLocation();
+
+  const theme = useMemo<string>(() => {
+    // 以iframe方式接入,参数在location中
+    if (location.search) {
+      const params = new URLSearchParams(location.search.slice(1));
+      return params.get("theme") || "light";
+    }
+    return "light";
+  }, [location.search]);
+
+  const mode = useMemo(() => {
+    if (location.search) {
+      const params = new URLSearchParams(location.search.slice(1));
+      return params.get("mode") || "running";
+    }
+    return "running";
+  }, [location.search]);
 
   const [tableColumns, setTableColumns] = useState(baseColumns);
 
@@ -116,11 +137,11 @@ const DataManage = () => {
     if (!member) return null;
     let text;
     if (Array.isArray(member)) {
-      text = member.map((id) => membersCacheRef.current[id].name).join(',');
+      text = member.map((id) => membersCacheRef.current[id].name).join(",");
     } else {
-      text = membersCacheRef.current[member]?.name || '';
+      text = membersCacheRef.current[member]?.name || "";
     }
-    return <Text className={styles['dynamic-cell']} text={String(text)} getContainer={false} />;
+    return <Text className={styles["dynamic-cell"]} text={String(text)} getContainer={false} />;
   });
 
   const renderDate = useMemoCallback((date: number | [number, number], tableColumn?: any) => {
@@ -132,9 +153,9 @@ const DataManage = () => {
       if (tableColumn) {
         tableColumn.width = 360;
       }
-      return date.map((ts) => moment(ts).format('yyyy-MM-DD HH:mm:ss')).join('至');
+      return date.map((ts) => moment(ts).format("yyyy-MM-DD HH:mm:ss")).join("至");
     }
-    return moment(date).format('yyyy-MM-DD HH:mm:ss');
+    return moment(date).format("yyyy-MM-DD HH:mm:ss");
   });
 
   const renderText = useMemoCallback((value: string | string[]) => {
@@ -143,11 +164,11 @@ const DataManage = () => {
     }
     let text;
     if (Array.isArray(value)) {
-      text = value.join(',');
+      text = value.join(",");
     } else {
       text = value;
     }
-    return <Text className={styles['dynamic-cell']} text={String(text)} getContainer={false} />;
+    return <Text className={styles["dynamic-cell"]} text={String(text)} getContainer={false} />;
   });
 
   const renderContent = useMemoCallback(
@@ -162,10 +183,10 @@ const DataManage = () => {
           title: nameMap[field],
           width: 120,
           render(_, data) {
-            if (type === 'Member') {
+            if (type === "Member") {
               const member = data[field];
               return renderMember(member);
-            } else if (type === 'Date') {
+            } else if (type === "Date") {
               const date = data[field];
               return renderDate(date);
             } else {
@@ -176,7 +197,7 @@ const DataManage = () => {
         });
       });
       return (
-        <div className={styles['pop-container']}>
+        <div className={styles["pop-container"]}>
           <Table dataSource={dataSource} columns={columns} rowKey="key" pagination={false}></Table>
         </div>
       );
@@ -201,7 +222,7 @@ const DataManage = () => {
 
       const [listResponse, fieldResponse] = await Promise.all([
         runtimeAxios.post(
-          `/task/processDataManager/list`,
+          "/task/processDataManager/list",
           {
             pageIndex: table.current,
             pageSize: table.pageSize,
@@ -218,18 +239,18 @@ const DataManage = () => {
       if (fieldResponse) {
         shouldReFetchFormFields.current = false;
         // 不展示的控件类型
-        const excludeTypeList: string[] = ['Attachment', 'DescText', 'Image', 'FlowData'];
+        const excludeTypeList: string[] = ["Attachment", "DescText", "Image", "FlowData", "Iframe"];
         currentFields = (fieldResponse.data || []).filter((field) => !excludeTypeList.includes(field.type));
 
-        const dynamicColumns: TableProps<TableDataBase>['columns'] = currentFields.map((field) => {
-          let tableKey = `formData.${field.field}`;
-          let tableColumn: typeof baseColumns[number] = {
+        const dynamicColumns: TableProps<TableDataBase>["columns"] = currentFields.map((field) => {
+          const tableKey = `formData.${field.field}`;
+          const tableColumn: typeof baseColumns[number] = {
             key: tableKey,
-            title: <Text className={styles['dynamic-cell']} text={field.name} />,
+            title: <Text className={styles["dynamic-cell"]} text={field.name} />,
             dataIndex: tableKey,
             width: 150,
           };
-          if (field.type === 'Tabs') {
+          if (field.type === "Tabs") {
             tableColumn.render = (_: string, data: TableDataBase) => {
               const components = (field as any).components;
               if (!components || components?.length === 0) {
@@ -250,7 +271,7 @@ const DataManage = () => {
                 return null;
               }
               fieldData = Array.isArray(fieldData) ? fieldData : JSON.parse(fieldData as string);
-              const compData = ((fieldData as any[]) || []).map((item) => omit(item, ['__title__']));
+              const compData = ((fieldData as any[]) || []).map((item) => omit(item, ["__title__"]));
               tabData.push(...compData);
               return (
                 <Popover
@@ -260,23 +281,23 @@ const DataManage = () => {
                   content={renderContent(tabData, componentList)}
                   getPopupContainer={() => containerRef.current as HTMLDivElement}
                 >
-                  <div className={styles['tab-detail']}>查看详情</div>
+                  <div className={styles["tab-detail"]}>查看详情</div>
                 </Popover>
               );
             };
-          } else if (field.type === 'Member') {
+          } else if (field.type === "Member") {
             tableColumn.render = (_: string, data: TableDataBase) => {
               const member = data.formData[field.field] || field.defaultValue;
               return renderMember(member as number | number[]);
             };
-          } else if (field.type === 'Date') {
+          } else if (field.type === "Date") {
             tableColumn.render = (_: string, data: TableDataBase) => {
-              const date = data.formData[field.field] || field.defaultValue || '';
+              const date = data.formData[field.field] || field.defaultValue || "";
               return renderDate(date as number | [number, number], tableColumn);
             };
           } else {
             tableColumn.render = (_: string, data: TableDataBase) => {
-              const value = data.formData[field.field] || field.defaultValue || '';
+              const value = data.formData[field.field] || field.defaultValue || "";
               return renderText(value as string | string[]);
             };
           }
@@ -308,7 +329,7 @@ const DataManage = () => {
 
           if (!field) return;
 
-          if (field.type === 'Member') {
+          if (field.type === "Member") {
             const mValue = item.formData[key];
 
             if (Array.isArray(mValue)) {
@@ -322,10 +343,10 @@ const DataManage = () => {
                 ids.add(mValue);
               }
             }
-          } else if (field.type === 'Tabs') {
+          } else if (field.type === "Tabs") {
             const tabData = item.formData[key];
             const memberKeys = (field as any).components
-              .filter((v: { type: string }) => v.type === 'Member')
+              .filter((v: { type: string }) => v.type === "Member")
               .map((v: { field: string }) => v.field);
             if (Array.isArray(tabData)) {
               tabData.forEach((item) => {
@@ -351,7 +372,7 @@ const DataManage = () => {
 
       if (ids.size) {
         const userResponse = await runtimeAxios.post(
-          '/user/query/owner',
+          "/user/query/owner",
           { userIds: Array.from(Array.from(ids)) },
           { baseURL: baseServiceUrl },
         );
@@ -417,9 +438,9 @@ const DataManage = () => {
         pageSize: pagination.pageSize,
         current: pagination.current,
         total: pagination.total,
-        sortDirection: sorter.order === 'ascend' ? 'ASC' : 'DESC',
+        sortDirection: sorter.order === "ascend" ? "ASC" : "DESC",
       };
-    }) as TableProps<TableDataBase>['onChange'];
+    }) as TableProps<TableDataBase>["onChange"];
   }, []);
 
   const handleRefresh = useMemoCallback(debounce(fetchDatasource, 200));
@@ -427,7 +448,7 @@ const DataManage = () => {
     const { subappId, stateList, table } = form.getFieldsValue();
     const { sortDirection, total } = table;
     if (total > 10000) {
-      message.info('当前数据多余10000条,只能导出10000条数据!');
+      message.info("当前数据多余10000条,只能导出10000条数据!");
     }
     const params = {
       componentList: fields.map((field) => ({ fieldName: field.field, label: field.name, type: field.type })),
@@ -438,9 +459,9 @@ const DataManage = () => {
       },
     };
     const selectSubApp = subapps.find((subapp) => subapp.id === subappId);
-    runtimeAxios.post('/task/processDataManager/export', params, { responseType: 'blob' }).then((res) => {
+    runtimeAxios.post("/task/processDataManager/export", params, { responseType: "blob" }).then((res) => {
       const type = (res as any).type;
-      exportFile(res, `${selectSubApp?.name || 'file'}.xlsx`, type);
+      exportFile(res, `${selectSubApp?.name || "file"}.xlsx`, type);
     });
   });
 
@@ -451,19 +472,21 @@ const DataManage = () => {
   });
 
   return (
-    <div className={styles.container} ref={containerRef}>
+    <div className={classNames(styles.container, styles[theme])} ref={containerRef}>
       <div className={styles.header}>流程数据管理</div>
-      <div className={styles.operation}>
-        <div className={styles.export} onClick={handleExport}>
-          <Icon type="daochu" className={styles.icon} />
-          <span className={styles.text}>导出</span>
-        </div>
-        <Tooltip title="刷新">
-          <div className={styles.refresh} onClick={handleRefresh}>
-            <Icon type="chongpao" className={styles.icon} />
+      {mode !== "preview" && (
+        <div className={styles.operation}>
+          <div className={styles.export} onClick={handleExport}>
+            <Icon type="daochu" className={styles.icon} />
+            <span className={styles.text}>导出</span>
           </div>
-        </Tooltip>
-      </div>
+          <Tooltip title="刷新">
+            <div className={styles.refresh} onClick={handleRefresh}>
+              <Icon type="chongpao" className={styles.icon} />
+            </div>
+          </Tooltip>
+        </div>
+      )}
       <Form
         className={styles.form}
         form={form}
@@ -471,7 +494,7 @@ const DataManage = () => {
         onValuesChange={handleFormValueChange}
         initialValues={formInititalValue}
       >
-        <Form.Item name="subappId" className={styles['subapp-selector']}>
+        <Form.Item name="subappId" className={styles["subapp-selector"]}>
           <Select
             size="large"
             bordered={false}
@@ -502,7 +525,7 @@ const DataManage = () => {
 
         <Form.Item shouldUpdate={(prevValues, nextValue) => prevValues.table !== nextValue.table} noStyle>
           {(form) => {
-            const table = form.getFieldValue('table');
+            const table = form.getFieldValue("table");
             const pagination = {
               pageSize: Math.max(table.pageSize, dataSource?.length || 0),
               current: table.pageIndex,

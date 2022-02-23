@@ -1,39 +1,62 @@
-import { memo, useCallback, FC, useState, useEffect, useMemo } from 'react';
-import { NavLink, Route, Switch, useLocation, useRouteMatch } from 'react-router-dom';
-import { Input, Button } from 'antd';
-import { Icon } from '@common/components';
-import styles from './index.module.scss';
-import Todo from './todo';
-import Start from './start';
-import Done from './done';
-import Card from './card';
-import Draft from './draft';
-import Copy from './copy';
-import { useAppSelector } from '@/app/hooks';
-import { todoNumSelector } from './taskcenter-reducer';
-import { loadApp } from './taskcenter-slice';
-import useAppId from '@/hooks/use-app-id';
-import { useAppDispatch } from '@app/hooks';
-import { SubAppItem } from './type';
-import { runtimeAxios } from '@/utils';
+import { memo, useCallback, FC, useState, useEffect, useMemo } from "react";
+import { NavLink, Route, Switch, useLocation, useRouteMatch } from "react-router-dom";
+import { Input, Button } from "antd";
+import classNames from "classnames";
+import { Icon } from "@common/components";
+import { useAppSelector } from "@/app/hooks";
+import useAppId from "@/hooks/use-app-id";
+import { useAppDispatch } from "@app/hooks";
+import { runtimeAxios } from "@/utils";
+import styles from "./index.module.scss";
+import Todo from "./todo";
+import Start from "./start";
+import Done from "./done";
+import Card from "./card";
+import Draft from "./draft";
+import Copy from "./copy";
+import { todoNumSelector } from "./taskcenter-reducer";
+import { loadApp, setMode, setTheme } from "./taskcenter-slice";
+import { SubAppItem } from "./type";
+import appConfig from "@/init";
 
-const TaskCenter: FC<{}> = () => {
+const TaskCenter: FC = () => {
   const dispatch = useAppDispatch();
   const match = useRouteMatch();
-  const matchedPath = match.path.replace(/\/$/, '');
-  const matchedUrl = match.url.replace(/\/$/, '');
+  const matchedPath = match.path.replace(/\/$/, "");
+  const matchedUrl = match.url.replace(/\/$/, "");
   const todoNum = useAppSelector(todoNumSelector);
   const appId = useAppId();
   const location = useLocation();
   const [isShowDrawer, setIsShowDrawer] = useState<boolean>(false);
   const [subAppList, setSubAppList] = useState<SubAppItem[]>([]);
-  const [keyword, setKeyWord] = useState<string>('');
+  const [keyword, setKeyWord] = useState<string>("");
   const handleStart = useCallback(() => {
     setIsShowDrawer(true);
   }, []);
   const filterSubAppList = useMemo(() => {
     return subAppList.filter(({ name }) => name.indexOf(keyword) > -1);
   }, [subAppList, keyword]);
+
+  const theme = useMemo<string>(() => {
+    // 以iframe方式接入,参数在location中
+    if (location.search) {
+      const params = new URLSearchParams(location.search.slice(1));
+      return params.get("theme") || "light";
+    }
+    // 以微前端方式接入,参数在extra中
+    if (appConfig?.extra?.theme) {
+      return appConfig.extra.theme;
+    }
+    return "light";
+  }, [location.search]);
+
+  const mode = useMemo(() => {
+    if (location.search) {
+      const params = new URLSearchParams(location.search.slice(1));
+      return params.get("mode") || "running";
+    }
+    return "running";
+  }, [location.search]);
 
   useEffect(() => {
     if (isShowDrawer && appId) {
@@ -46,27 +69,57 @@ const TaskCenter: FC<{}> = () => {
   useEffect(() => {
     appId && dispatch(loadApp(appId));
   }, [appId, dispatch]);
+
+  useEffect(() => {
+    dispatch(setTheme(theme));
+    dispatch(setMode(mode));
+  }, [theme, mode, dispatch]);
   return (
-    <div className={styles.container}>
+    <div className={classNames(styles.container, styles[theme])}>
       <div className={styles.header}>
         <div className={styles.left}>
           <div className={styles.title}>任务中心</div>
           <div className={styles.line}></div>
           <div className={styles.navLink}>
-            <NavLink to={`${matchedUrl}`} replace exact className={styles.nav} activeClassName={styles.active}>
+            <NavLink
+              to={`${matchedUrl}?theme=${theme}&mode=${mode}`}
+              replace
+              exact
+              className={styles.nav}
+              activeClassName={styles.active}
+            >
               我的待办
               {location.pathname === `${matchedUrl}` && todoNum > 0 && <div className={styles.todoNum}>{todoNum}</div>}
             </NavLink>
-            <NavLink to={`${matchedUrl}/start`} replace className={styles.nav} activeClassName={styles.active}>
+            <NavLink
+              to={`${matchedUrl}/start?theme=${theme}&mode=${mode}`}
+              replace
+              className={styles.nav}
+              activeClassName={styles.active}
+            >
               我的发起
             </NavLink>
-            <NavLink to={`${matchedUrl}/done`} replace className={styles.nav} activeClassName={styles.active}>
+            <NavLink
+              to={`${matchedUrl}/done?theme=${theme}&mode=${mode}`}
+              replace
+              className={styles.nav}
+              activeClassName={styles.active}
+            >
               我的已办
             </NavLink>
-            <NavLink to={`${matchedUrl}/copy`} className={styles.nav} activeClassName={styles.active}>
+            <NavLink
+              to={`${matchedUrl}/copy?theme=${theme}&mode=${mode}`}
+              className={styles.nav}
+              activeClassName={styles.active}
+            >
               抄送我的
             </NavLink>
-            <NavLink to={`${matchedUrl}/draft`} replace className={styles.nav} activeClassName={styles.active}>
+            <NavLink
+              to={`${matchedUrl}/draft?theme=${theme}&mode=${mode}`}
+              replace
+              className={styles.nav}
+              activeClassName={styles.active}
+            >
               草稿
             </NavLink>
           </div>
@@ -106,7 +159,7 @@ const TaskCenter: FC<{}> = () => {
                     placeholder="搜索子应用名称"
                     bordered={false}
                     className={styles.search}
-                    onChange={(e) => {
+                    onChange={(e: { target: { value: any } }) => {
                       setKeyWord(e.target.value);
                     }}
                     prefix={<Icon type="sousuo" className={styles.icon} />}

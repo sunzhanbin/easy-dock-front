@@ -1,5 +1,5 @@
 @import '@common/styles/var.scss';
-
+@import '@common/styles/theme-color.scss';
 .container {
   position: relative;
   padding: 24px 56px;
@@ -120,6 +120,144 @@
       flex: 1;
       padding: 4px;
       font-size: 12px;
+    }
+  }
+
+  &.dark {
+    background: $dark-content-background-color;
+    height: 100%;
+    .ant-btn-primary {
+      background: $dark-btn-background-color;
+      color: rgba($dark-text-color, 0.8);
+    }
+    .status-doing {
+      background: rgba(76, 92, 219, 0.3);
+      color: #7582E3;
+    }
+    .status-stop {
+      background: rgba(255, 101, 118, 0.12);      
+      color: #FF7C8A;
+    }
+    .status-reject {
+      background: rgba(255, 163, 25, 0.12);
+      color: #FFB13B;
+    }
+    .status-done {
+      background: rgba(31, 201, 162, 0.12);
+      color: #40D1B0;
+    }
+    .status-recall {
+      background: rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.55);
+    }
+
+    :global {
+      .ant-select-dropdown,
+      .ant-select-clear {
+        background-color: rgba($dark-content-background-color, 1);
+      }
+      .ant-select-item-option,
+      .ant-select-selection-item,
+      .ant-select-clear {
+        color: rgba($dark-text-color, 0.8);
+      }
+      .ant-select-item-option-active {
+        background-color: rgba(76, 92, 219, 0.08);
+      }
+      .ant-select-selector {
+        background-color: transparent;
+        border-color: transparent;
+        box-shadow: none;
+      }
+      .ant-checkbox-wrapper {
+        color: rgba($dark-text-color, 0.8);
+      }
+      
+    }
+    & > .operation {
+      & > .export,.refresh {
+        color: rgba($dark-text-color, 0.8);
+        .text {
+          color: rgba($dark-text-color, 0.8);
+        }
+      }
+    }
+    & > .header {
+      color: rgba($dark-text-color, 0.8);
+    }
+    .table {
+      :global {
+        .ant-pagination-options-size-changer {
+          color: rgba($dark-text-color, 0.55);
+          &.ant-select-focused {
+            .ant-select-selector {
+              background-color: transparent;
+            }
+          }
+        }
+        .ant-select.ant-select-single:not(.ant-select-customize-input) {
+          .ant-select-selector {
+            &:hover,
+            &:active {
+              background-color: transparent;
+            }
+          }
+        }
+        .ant-table {
+          background-color: $dark-content-background-color;
+          color: rgba($dark-text-color, 0.55);
+          .ant-table-thead {
+            & > tr {
+              & > th {
+                background-color: $dark-content-background-color;
+                color: rgba($dark-text-color, 0.55);
+                border-bottom-color: rgba($dark-text-color, 0.1);
+              }
+            }
+            .ant-table-cell-scrollbar {
+              display: none;
+            }
+          }
+          td.ant-table-column-sort {
+            background-color: $dark-content-background-color;
+          }
+          .ant-table-tbody {
+            .ant-table-row {
+              &:hover {
+                & > td {
+                  background-color: rgba($dark-side-background-color, 1);
+                }
+              }
+            }
+            .ant-table-cell {
+              border-bottom-color: rgba($dark-text-color, 0.1);
+            }
+          }
+        }
+        .ant-pagination-item-link {
+          border-color: transparent;
+          background-color: transparent;
+          color: rgba($dark-text-color, 0.55);
+        }
+        .ant-pagination-item {
+          border-color: transparent;
+          background-color: transparent;
+          color: rgba($dark-text-color, 0.55);
+          a {
+            color: inherit;
+          }
+          &.ant-pagination-item-active,
+          &:hover {
+            background: rgba(76, 92, 219, 0.12);
+          }
+        }
+        .ant-empty-description {
+          color: rgba($dark-text-color, 0.55);
+        }
+        .ant-table-tbody > tr.ant-table-placeholder:hover > td {
+          background-color: rgba($dark-content-background-color, 1);
+        }
+      }
     }
   }
 }

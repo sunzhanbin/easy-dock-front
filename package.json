@@ -5,54 +5,70 @@
     "start": "lerna run start",
     "start:flow": "lerna run start --scope=easy-flow-front --stream",
     "start:chart": "lerna run start --scope=easy-chart-front",
+    "start:entry": "lerna run start --scope=easy-entry-front",
     "build": "lerna bootstrap && lerna run build",
+    "build:flow": "lerna bootstrap && lerna run build --scope=easy-flow-front",
+    "build:entry": "lerna bootstrap && lerna run build --scope=easy-entry-front",
     "build:dev": "lerna bootstrap && lerna run build:dev",
     "precommit": "lint-staged",
-    "bootstrap": "lerna bootstrap",
+    "bootstrap": "yarn add husky --dev -W && husky install && lerna bootstrap",
+    "bootstrap-dev": "yarn add husky --dev -W && husky install && lerna bootstrap -- --dev",
     "publish": "lerna publish",
     "clean": "lerna clean",
-    "eslint": "eslint apps/*/src --ext .js,.jsx,.ts,.tsx"
+    "lint": "eslint -c .eslintrc.json apps --ext .ts,.tsx,.js,.jsx",
+    "fix": "eslint -c .eslintrc.json apps --ext .ts,.tsx,.js,.jsx --fix"
+  },
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.9.1",
+    "@typescript-eslint/parser": "^5.9.1",
+    "create-react-app": "^4.0.3",
+    "eslint": "^7",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-react-app": "^7.0.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.28.0",
+    "eslint-plugin-react-hooks": "^4.2.1-rc.0-next-c09596cc6-20220112",
+    "filemanager-webpack-plugin": "^4.0.0",
+    "lerna": "^4.0.0",
+    "mockjs": "1.1.0",
+    "prettier": "2.5.1",
+    "typescript": "^4.2.4",
+    "yarn": "1.22.10"
   },
   "devDependencies": {
     "@commitlint/cli": "12.1.1",
     "@commitlint/config-conventional": "12.1.1",
     "@types/mockjs": "1.0.3",
-    "@typescript-eslint/eslint-plugin": "^4.24.0",
-    "@typescript-eslint/parser": "4.22.1",
-    "babel-eslint": "10.1.0",
-    "create-react-app": "^4.0.3",
-    "eslint": "7.25.0",
-    "eslint-config-prettier": "8.3.0",
-    "eslint-config-react-app": "6.0.0",
-    "eslint-plugin-import": "^2.23.2",
-    "eslint-plugin-react": "7.23.2",
-    "eslint-plugin-react-hooks": "4.2.0",
-    "filemanager-webpack-plugin": "^4.0.0",
-    "husky": "4.3.8",
-    "lerna": "^4.0.0",
-    "lint-staged": "10.5.4",
-    "mockjs": "1.1.0",
-    "prettier": "2.2.1",
-    "yarn": "1.22.10"
+    "husky": "^7.0.4",
+    "lint-staged": "^11",
+    "mockjs": "1.1.0"
   },
   "lint-staged": {
-    "packages/**/*.{ts,tsx,js,jsx}": [
-      "prettier --write",
-      "eslint"
+    "packages/*/src/**/*.{ts,tsx,js,jsx}": [
+      "eslint -c .eslintrc.json --fix"
     ],
-    "main/**/*.{ts,tsx,js,jsx}": [
-      "prettier --write",
-      "eslint"
+    "apps/*/src/**/*.{ts,tsx,js,jsx}": [
+      "eslint -c .eslintrc.json --fix"
     ]
-  },
-  "husky": {
-    "hooks": {}
   },
   "workspaces": [
     "packages/core",
     "apps/*"
   ],
   "engines": {
-    "node": ">= 10.0"
+    "node": ">= 12.0",
+    "yarn": "^1"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

@@ -1,8 +1,8 @@
-import { memo, useState, useCallback } from 'react';
-import { Input } from 'antd';
-import classnames from 'classnames';
-import { Icon, Text } from '@common/components';
-import styles from './index.module.scss';
+import { memo, useState, useCallback } from "react";
+import { Input } from "antd";
+import classnames from "classnames";
+import { Icon, Text } from "@common/components";
+import styles from "./index.module.scss";
 
 interface EditProps {
   className?: string;
@@ -11,14 +11,14 @@ interface EditProps {
 }
 
 const MultiText = ({ className, value, onChange }: EditProps) => {
-  const [text, setText] = useState<string>('');
+  const [text, setText] = useState<string>("");
   const handleAddText = useCallback(() => {
     if (text.trim()) {
       const list = value ? [...value] : [];
       list.push(text);
       onChange && onChange(list);
     }
-    setText('');
+    setText("");
   }, [text, value, onChange]);
 
   const handleDelete = useCallback(
@@ -30,7 +30,7 @@ const MultiText = ({ className, value, onChange }: EditProps) => {
     [value, onChange],
   );
   return (
-    <div className={classnames(styles.muliText, className ? className : '')}>
+    <div className={classnames(styles.muliText, className ? className : "")}>
       {value && value.length > 0 && (
         <div className={styles.textContainer}>
           <div className={styles.textList}>

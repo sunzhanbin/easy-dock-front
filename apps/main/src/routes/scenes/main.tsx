@@ -1,23 +1,23 @@
-import { memo, useCallback, useEffect, useRef, useState, useMemo } from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { userSelector } from '@/store/user';
-import { Button, message } from 'antd';
-import { FormInstance } from 'antd/lib/form';
-import throttle from 'lodash/throttle';
-import classnames from 'classnames';
-import { Popover, Icon, Loading } from '@common/components';
-import Project from './project';
-import Form from './project/form';
-import emptyImage from '@assets/empty.png';
-import { axios } from '@utils';
-import { RoleEnum } from '@/schema/app';
-import { MAIN_CONTENT_CLASSNAME, dynamicRoutes, ROUTES } from '@consts';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import Scene, { SceneProps } from './scene';
-import EditScene, { EditSceneProps } from './edit-scene';
-import { ProjectShape, SceneShape } from './types';
-import styles from './index.module.scss';
+import { memo, useCallback, useEffect, useRef, useState, useMemo } from "react";
+import { Link, useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { userSelector } from "@/store/user";
+import { Button, message } from "antd";
+import { FormInstance } from "antd/lib/form";
+import throttle from "lodash/throttle";
+import classnames from "classnames";
+import { Popover, Icon, Loading } from "@common/components";
+import Project from "./project";
+import Form from "./project/form";
+import emptyImage from "@assets/empty.png";
+import { axios } from "@utils";
+import { RoleEnum } from "@/schema/app";
+import { MAIN_CONTENT_CLASSNAME, dynamicRoutes, ROUTES } from "@consts";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import Scene, { SceneProps } from "./scene";
+import EditScene, { EditSceneProps } from "./edit-scene";
+import { ProjectShape, SceneShape } from "./types";
+import styles from "./index.module.scss";
 
 export default memo(function Main() {
   const history = useHistory();
@@ -41,7 +41,7 @@ export default memo(function Main() {
     setFetching(true);
 
     try {
-      const { data } = await axios.get<{ data: ProjectShape[] }>('/project/list/all');
+      const { data } = await axios.get<{ data: ProjectShape[] }>("/project/list/all");
       const list: ProjectShape[] = data.map((item) => {
         return {
           id: item.id,
@@ -52,7 +52,7 @@ export default memo(function Main() {
 
       setProjects(list);
       setActiveProjectId((prevActiveProjectIid) => {
-        const activeProjectId = sessionStorage.getItem('activeProjectId');
+        const activeProjectId = sessionStorage.getItem("activeProjectId");
         if (activeProjectId) {
           return +activeProjectId;
         }
@@ -78,10 +78,10 @@ export default memo(function Main() {
         e.preventDefault();
       }, 50);
 
-      container.addEventListener('wheel', scroll, false);
+      container.addEventListener("wheel", scroll, false);
 
       return () => {
-        container.removeEventListener('wheel', scroll);
+        container.removeEventListener("wheel", scroll);
       };
     }
   }, [hasProjects]);
@@ -124,15 +124,15 @@ export default memo(function Main() {
     async (values) => {
       if (values.id) {
         // 编辑项目
-        await axios.put('/project', values);
+        await axios.put("/project", values);
 
-        message.success('修改成功');
+        message.success("修改成功");
         fetchProjectList();
       } else {
         // 新增项目
-        const { data } = await axios.post('/project', values);
+        const { data } = await axios.post("/project", values);
 
-        message.success('添加成功');
+        message.success("添加成功");
 
         setActiveProjectId(data.id);
         fetchProjectList();
@@ -151,7 +151,7 @@ export default memo(function Main() {
     async (id: number) => {
       await axios.delete(`/project/${id}`);
 
-      message.success('删除成功');
+      message.success("删除成功");
       fetchProjectList();
     },
     [fetchProjectList],
@@ -171,18 +171,18 @@ export default memo(function Main() {
     setShowEditSceneModal(false);
   }, []);
 
-  const handleSubmitScene: EditSceneProps['onSubmit'] = useCallback(
+  const handleSubmitScene: EditSceneProps["onSubmit"] = useCallback(
     async (data) => {
       if (data.id) {
         // 编辑
-        await axios.put('/app', Object.assign({}, data, { projectId: activeProjectId }));
+        await axios.put("/app", Object.assign({}, data, { projectId: activeProjectId }));
 
-        message.success('应用修改成功');
+        message.success("应用修改成功");
       } else {
         // 新增
-        await axios.post('/app', Object.assign({}, data, { projectId: activeProjectId }));
+        await axios.post("/app", Object.assign({}, data, { projectId: activeProjectId }));
 
-        message.success('应用创建成功');
+        message.success("应用创建成功");
       }
 
       setShowEditSceneModal(false);
@@ -193,10 +193,10 @@ export default memo(function Main() {
     [activeProjectId, fetchSceneList, fetchProjectList],
   );
 
-  const handleModifySceneStatus: SceneProps['onStatusChange'] = useCallback(async (status, id) => {
-    await axios.put('/app/status', { status, id });
+  const handleModifySceneStatus: SceneProps["onStatusChange"] = useCallback(async (status, id) => {
+    await axios.put("/app/status", { status, id });
 
-    message.success('修改成功');
+    message.success("修改成功");
 
     setScenes((scenes) => {
       return scenes.map((scene) => {
@@ -219,7 +219,7 @@ export default memo(function Main() {
   const handledeleteScene = useCallback(
     async (data: SceneShape) => {
       await axios.delete(`/app/${data.id}`);
-      message.success('删除成功');
+      message.success("删除成功");
 
       setScenes((scenes) => {
         return scenes.filter((scene) => scene.id !== data.id);
@@ -231,7 +231,7 @@ export default memo(function Main() {
   );
 
   const handleSelected = useMemoCallback((id) => {
-    sessionStorage.setItem('activeProjectId', id);
+    sessionStorage.setItem("activeProjectId", id);
     setActiveProjectId(id);
   });
 
@@ -255,7 +255,7 @@ export default memo(function Main() {
               );
             })}
           </div>
-          <div className={styles['actions-group']}>
+          <div className={styles["actions-group"]}>
             {/* <div className={styles.mask}></div> */}
             {/* 超管才有权限新增项目 */}
             {isAdmin && (
@@ -284,7 +284,7 @@ export default memo(function Main() {
         <div className={styles.empty}>
           <img src={emptyImage} alt="empty" />
           <div className={styles.desc}>
-            {isAdmin ? '暂无项目，来创建一个吧' : '您没有权限查看项目,请联系系统管理员!'}
+            {isAdmin ? "暂无项目，来创建一个吧" : "您没有权限查看项目,请联系系统管理员!"}
           </div>
           {isAdmin && (
             <Popover
@@ -305,7 +305,7 @@ export default memo(function Main() {
 
       {projects.length > 0 && (
         <div className={styles.content}>
-          <div className={classnames(styles.scenes, { [styles['no-scene']]: scenes.length === 0 })} id="scenes-list">
+          <div className={classnames(styles.scenes, { [styles["no-scene"]]: scenes.length === 0 })} id="scenes-list">
             <div className={classnames(styles.card, styles.scene)}>
               <Button
                 className={styles.btn}

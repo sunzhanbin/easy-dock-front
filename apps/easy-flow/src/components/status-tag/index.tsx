@@ -1,9 +1,9 @@
-import { memo, ReactNode } from 'react';
-import classnames from 'classnames';
-import styles from './index.module.scss';
+import { memo, ReactNode } from "react";
+import classnames from "classnames";
+import styles from "./index.module.scss";
 
 export interface StatusTagProps {
-  status: 'success' | 'primary' | 'error' | 'warning' | 'revoke';
+  status: "success" | "primary" | "error" | "warning" | "revoke";
   children?: ReactNode;
 }
 

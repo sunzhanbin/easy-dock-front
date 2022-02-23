@@ -1,18 +1,19 @@
-import { memo, useMemo } from 'react';
-import { Input } from 'antd';
-import { TextAreaProps } from 'antd/lib/input';
+import { memo, useMemo } from "react";
+import { Input } from "antd";
+import { TextAreaProps } from "antd/lib/input";
 
 const { TextArea } = Input;
 
 const TextareaComponent = (props: TextAreaProps) => {
   const { defaultValue, onChange } = props;
   const propList = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/ban-types
     const prop: { [k: string]: string | number | boolean | undefined | Function } = {
       rows: 4,
       maxLength: 1000, //最大长度200 v1.0.0暂定
       showCount: true,
-      size: 'large',
-      placeholder: '请输入',
+      size: "large",
+      placeholder: "请输入",
       onChange: onChange,
     };
     if (defaultValue) {

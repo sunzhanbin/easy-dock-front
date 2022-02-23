@@ -1,9 +1,9 @@
-import { memo, useRef } from 'react';
-import { DatePicker, DatePickerProps } from 'antd';
-import { Icon } from '@common/components';
-import moment, { Moment } from 'moment';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import { getPopupContainer } from '@utils';
+import { memo } from "react";
+import { DatePicker, DatePickerProps } from "antd";
+import { Icon } from "@common/components";
+import moment, { Moment } from "moment";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { getPopupContainer } from "@utils";
 
 function TimesDatePicker(
   props: {
@@ -14,16 +14,16 @@ function TimesDatePicker(
     type?: string;
   } & DatePickerProps,
 ) {
-  const { value, format, size = 'large', showTime = true, className, onChange, disabledDate, type } = props;
+  const { value, format, size = "large", showTime = true, className, onChange, disabledDate, type } = props;
   const handleChange = useMemoCallback((value: Moment | null) => {
     if (onChange) {
       const time = moment(value).format(format as string);
-      if (type === 'startTime' && format === 'yyyy-MM-DD') {
-        onChange((value && moment(time).startOf('day').valueOf()) || 0);
+      if (type === "startTime" && format === "yyyy-MM-DD") {
+        onChange((value && moment(time).startOf("day").valueOf()) || 0);
         return;
       }
-      if (type === 'endTime' && format === 'yyyy-MM-DD') {
-        onChange((value && moment(time).endOf('day').valueOf()) || 0);
+      if (type === "endTime" && format === "yyyy-MM-DD") {
+        onChange((value && moment(time).endOf("day").valueOf()) || 0);
         return;
       }
       onChange((value && moment(time).valueOf()) || 0);

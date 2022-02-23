@@ -1,35 +1,36 @@
-import React, { Fragment, memo, ReactNode, useEffect, useMemo } from 'react';
-import { Checkbox, Form, Input, InputNumber, Radio, Switch } from 'antd';
-import SelectOptionList from '../select-option-list';
-import SelectDefaultOption from '../select-default-option';
-import DefaultDate from '../default-date';
-import Editor from '../rich-text';
-import FieldManage from '../field-manage';
-import { FormField, SchemaConfigItem } from '@/type';
-import { Store } from 'antd/lib/form/interface';
-import styles from './index.module.scss';
-import { useAppSelector } from '@/app/hooks';
-import { errorSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
-import { Rule } from 'antd/lib/form';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import SelectColumns from '../select-columns';
-import SerialRules from '../serial-rules';
-import NumberOption from '../number-options';
-import AllowDecimal from '../allow-decimal';
-import LimitRange from '../limit-range';
-import DateRange from '../date-range';
-import DateFormat from '../date-format';
-import SubInputNumber from '../sub-input-number';
-import { LABEL_INCLUDE_CHECKBOX, LABEL_LINKED_RULES } from '@utils/const';
-import FilesType from '@/features/bpm-editor/components/panel-components/files-type';
-import { FormInstance } from 'antd/lib/form';
+import React, { Fragment, memo, ReactNode, useEffect, useMemo } from "react";
+import { Checkbox, Form, Input, InputNumber, Radio, Switch } from "antd";
+import SelectOptionList from "../select-option-list";
+import SelectDefaultOption from "../select-default-option";
+import DefaultDate from "../default-date";
+import Editor from "../rich-text";
+import FieldManage from "../field-manage";
+import { FormField, SchemaConfigItem } from "@/type";
+import { Store } from "antd/lib/form/interface";
+import styles from "./index.module.scss";
+import { useAppSelector } from "@/app/hooks";
+import { errorSelector } from "@/features/bpm-editor/form-design/formzone-reducer";
+import { Rule } from "antd/lib/form";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import SelectColumns from "../select-columns";
+import SerialRules from "../serial-rules";
+import NumberOption from "../number-options";
+import AllowDecimal from "../allow-decimal";
+import LimitRange from "../limit-range";
+import DateRange from "../date-range";
+import UrlOption from "../url-option";
+import DateFormat from "../date-format";
+import SubInputNumber from "../sub-input-number";
+import { LABEL_INCLUDE_CHECKBOX, LABEL_LINKED_RULES } from "@utils/const";
+import FilesType from "@/features/bpm-editor/components/panel-components/files-type";
+import { FormInstance } from "antd/lib/form";
 
 interface CompAttrEditorProps {
   config: SchemaConfigItem[];
   initValues: FormField;
   componentId: string;
   componentType: string;
-  onSave: Function;
+  onSave: (...args: any) => any;
 }
 
 interface ComponentProps {
@@ -45,10 +46,10 @@ interface ComponentProps {
 }
 
 const options = [
-  { label: '1/4', value: '1' },
-  { label: '1/2', value: '2' },
-  { label: '3/4', value: '3' },
-  { label: '1', value: '4' },
+  { label: "1/4", value: "1" },
+  { label: "1/2", value: "2" },
+  { label: "3/4", value: "3" },
+  { label: "1", value: "4" },
 ];
 // const rowOptions = [
 //   { label: '1/4', value: '1', disabled: true },
@@ -84,6 +85,7 @@ const componentMap: { [k: string]: (props: { [k: string]: any }) => ReactNode } 
   DefaultDate: (props) => <DefaultDate id={props.componentId} />,
   Editor: () => <Editor />,
   FieldManage: (props) => <FieldManage parentId={props.parentId} />,
+  UrlOption: (props) => <UrlOption id={props.componentId} />,
   SubInputNumber: (props) => <SubInputNumber id={props.componentId} />,
 };
 
@@ -119,7 +121,7 @@ const FormItemWrap = (props: ComponentProps) => {
 
   if (LABEL_INCLUDE_CHECKBOX.includes(type)) {
     return (
-      <Form.Item name={[id, 'enable']} valuePropName="checked" className={styles.formLabel}>
+      <Form.Item name={[id, "enable"]} valuePropName="checked" className={styles.formLabel}>
         <Checkbox>{label}</Checkbox>
       </Form.Item>
     );
@@ -127,7 +129,7 @@ const FormItemWrap = (props: ComponentProps) => {
   if (LABEL_LINKED_RULES.includes(type)) {
     return componentId && formInstance && CheckComponentType[type](id, componentId, formInstance);
   }
-  if (type === 'FieldManage') {
+  if (type === "FieldManage") {
     return (
       <Form.Item
         label={label}
@@ -139,7 +141,7 @@ const FormItemWrap = (props: ComponentProps) => {
           {
             validator(_: any, components: any) {
               if (!components || !components.length) {
-                return Promise.reject(new Error('请选择子控件'));
+                return Promise.reject(new Error("请选择子控件"));
               }
               return Promise.resolve();
             },
@@ -155,8 +157,8 @@ const FormItemWrap = (props: ComponentProps) => {
     <Form.Item
       label={label}
       name={id}
-      valuePropName={type === 'Switch' || type === 'Checkbox' ? 'checked' : 'value'}
-      labelCol={{ span: type === 'Switch' || type === 'Checkbox' ? 12 : 24 }}
+      valuePropName={type === "Switch" || type === "Checkbox" ? "checked" : "value"}
+      labelCol={{ span: type === "Switch" || type === "Checkbox" ? 12 : 24 }}
       labelAlign="left"
       required={required}
       colon={false}

@@ -1,15 +1,15 @@
-import { memo, useMemo, useState, useEffect } from 'react';
-import { Form, Select, Input, InputNumber } from 'antd';
-import classnames from 'classnames';
-import { fieldRule } from '@/type';
-import { symbolMap, dynamicMap, datePropertyMap, flowVarsMap } from '@/utils';
-import { Icon, Loading } from '@common/components';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import MultiText from '@/features/bpm-editor/components/multi-text';
-import NumberRange from '@/features/bpm-editor/components/number-range';
-import TimesDatePicker from '@/features/bpm-editor/components/date-picker';
-import DateRange from '@/features/bpm-editor/components/date-range';
-import styles from './index.module.scss';
+import { memo, useMemo, useState, useEffect } from "react";
+import { Form, Select, Input, InputNumber } from "antd";
+import classnames from "classnames";
+import { fieldRule } from "@/type";
+import { symbolMap, dynamicMap, datePropertyMap, flowVarsMap } from "@/utils";
+import { Icon, Loading } from "@common/components";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import MultiText from "@/features/bpm-editor/components/multi-text";
+import NumberRange from "@/features/bpm-editor/components/number-range";
+import TimesDatePicker from "@/features/bpm-editor/components/date-picker";
+import DateRange from "@/features/bpm-editor/components/date-range";
+import styles from "./index.module.scss";
 
 const { Option } = Select;
 
@@ -100,7 +100,7 @@ const FormList = ({
     return [];
   }, [components]);
   const setDataSource = useMemoCallback((fieldName, fieldType, parentId?) => {
-    if (loadDataSource && (fieldType === 'Select' || fieldType === 'Radio' || fieldType === 'Checkbox')) {
+    if (loadDataSource && (fieldType === "Select" || fieldType === "Radio" || fieldType === "Checkbox")) {
       setLoading(true);
       loadDataSource(fieldName, parentId)
         .then((res) => {
@@ -198,19 +198,19 @@ const FormList = ({
     let symbolList: { value: string; label: string }[] = [];
     if (componentType) {
       switch (componentType as string) {
-        case 'Input':
-        case 'Textarea':
+        case "Input":
+        case "Textarea":
           symbolList = symbolListMap.text;
           break;
-        case 'InputNumber':
+        case "InputNumber":
           symbolList = symbolListMap.number;
           break;
-        case 'Date':
+        case "Date":
           symbolList = isFormRule ? symbolListMap.date : symbolListMap.dateFilter;
           break;
-        case 'Select':
-        case 'Radio':
-        case 'Checkbox':
+        case "Select":
+        case "Radio":
+        case "Checkbox":
           symbolList = symbolListMap.option;
           break;
         default:
@@ -219,7 +219,7 @@ const FormList = ({
       }
     }
     return (
-      <Form.Item name="symbol" rules={[{ required: true, message: '请选择判断符!' }]}>
+      <Form.Item name="symbol" rules={[{ required: true, message: "请选择判断符!" }]}>
         <Select
           placeholder="判断符"
           size="large"
@@ -242,15 +242,15 @@ const FormList = ({
     const component = componentList.find((item) => item.fieldName === fieldName);
     const componentType = component && (component.type as string);
     const multiple = component?.multiple || false;
-    if (symbol === 'null' || symbol === 'notNull') {
+    if (symbol === "null" || symbol === "notNull") {
       return null;
     }
     // 文本类型
-    if (componentType === 'Input' || componentType === 'Textarea') {
+    if (componentType === "Input" || componentType === "Textarea") {
       // 输入单个值
-      if (symbol === 'equal' || symbol === 'unequal' || symbol === 'include' || symbol === 'exclude') {
+      if (symbol === "equal" || symbol === "unequal" || symbol === "include" || symbol === "exclude") {
         return (
-          <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: '请输入!' }]}>
+          <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: "请输入!" }]}>
             <Input
               placeholder="输入值"
               size="large"
@@ -264,9 +264,9 @@ const FormList = ({
         );
       }
       // 输入多个值
-      if (symbol === 'equalAnyOne' || symbol === 'unequalAnyOne') {
+      if (symbol === "equalAnyOne" || symbol === "unequalAnyOne") {
         return (
-          <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: '请输入!' }]}>
+          <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: "请输入!" }]}>
             <MultiText className={styles.value} value={value as string[]} onChange={changeValue} />
           </Form.Item>
         );
@@ -274,17 +274,17 @@ const FormList = ({
       return null;
     }
     // 数字类型
-    if (componentType === 'InputNumber') {
-      if (symbol === 'range') {
+    if (componentType === "InputNumber") {
+      if (symbol === "range") {
         return (
-          <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: '请输入!' }]}>
+          <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: "请输入!" }]}>
             <NumberRange className={styles.value} value={value as [number, number]} onChange={changeValue} />
           </Form.Item>
         );
       }
       if (symbol) {
         return (
-          <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: '请输入!' }]}>
+          <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: "请输入!" }]}>
             <InputNumber
               placeholder="输入值"
               size="large"
@@ -298,11 +298,11 @@ const FormList = ({
       return null;
     }
     // 日期类型
-    if (componentType === 'Date') {
+    if (componentType === "Date") {
       // 动态筛选
-      if (symbol === 'dynamic') {
+      if (symbol === "dynamic") {
         return (
-          <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: '请选择!' }]}>
+          <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: "请选择!" }]}>
             <Select
               placeholder="请选择"
               size="large"
@@ -321,10 +321,10 @@ const FormList = ({
         );
       }
       const format = component && component.format;
-      const showTime = format === 'yyyy-MM-DD HH:mm:ss';
-      if (symbol === 'range') {
+      const showTime = format === "yyyy-MM-DD HH:mm:ss";
+      if (symbol === "range") {
         return (
-          <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: '请选择!' }]}>
+          <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: "请选择!" }]}>
             <DateRange
               format={format}
               showTime={showTime}
@@ -335,13 +335,13 @@ const FormList = ({
           </Form.Item>
         );
       }
-      if (symbol === 'latter' || symbol === 'earlier' || symbol === 'earlierEqual' || symbol === 'latterEqual') {
+      if (symbol === "latter" || symbol === "earlier" || symbol === "earlierEqual" || symbol === "latterEqual") {
         return (
           <>
             <Form.Item
               name="valueType"
               className={styles.valueType}
-              rules={[{ required: true, message: '请选择判断属性!' }]}
+              rules={[{ required: true, message: "请选择判断属性!" }]}
             >
               <Select
                 placeholder="判断属性"
@@ -361,7 +361,7 @@ const FormList = ({
             <Form.Item
               name="value"
               className={styles.valueWrapper}
-              rules={[{ required: true, message: '请选择判断值!' }]}
+              rules={[{ required: true, message: "请选择判断值!" }]}
             >
               <Select
                 placeholder="判断值"
@@ -371,7 +371,7 @@ const FormList = ({
                 onChange={changeValue}
                 getPopupContainer={getPopupContainer}
               >
-                {valueType === 'other'
+                {valueType === "other"
                   ? componentList
                       .filter((item) => item.fieldName !== fieldName)
                       .map(({ fieldName, label }) => (
@@ -391,7 +391,7 @@ const FormList = ({
       }
       if (symbol) {
         return (
-          <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: '请选择!' }]}>
+          <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: "请选择!" }]}>
             <TimesDatePicker
               className={styles.value}
               format={format}
@@ -406,10 +406,10 @@ const FormList = ({
       return null;
     }
     // 选项类型(下拉,单选,多选)
-    if (componentType === 'Select' || componentType === 'Radio' || componentType === 'Checkbox') {
-      if (symbol === 'include' || symbol === 'exclude') {
+    if (componentType === "Select" || componentType === "Radio" || componentType === "Checkbox") {
+      if (symbol === "include" || symbol === "exclude") {
         return (
-          <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: '请输入!' }]}>
+          <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: "请输入!" }]}>
             <Input
               placeholder="输入值"
               size="large"
@@ -422,20 +422,20 @@ const FormList = ({
           </Form.Item>
         );
       }
-      if (symbol === 'equal' || symbol === 'unequal') {
-        const mode: { mode: 'multiple' } | null =
-          componentType === 'Checkbox' || multiple ? { mode: 'multiple' } : null;
-        const sourceType = component?.sourceType || '';
-        if (sourceType === 'interface' || sourceType === undefined) {
-          if (componentType === 'Checkbox' || multiple) {
+      if (symbol === "equal" || symbol === "unequal") {
+        const mode: { mode: "multiple" } | null =
+          componentType === "Checkbox" || multiple ? { mode: "multiple" } : null;
+        const sourceType = component?.sourceType || "";
+        if (sourceType === "interface" || sourceType === undefined) {
+          if (componentType === "Checkbox" || multiple) {
             return (
-              <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: '请输入!' }]}>
+              <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: "请输入!" }]}>
                 <MultiText className={styles.value} value={value as string[]} onChange={changeValue} />
               </Form.Item>
             );
           }
           return (
-            <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: '请输入!' }]}>
+            <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: "请输入!" }]}>
               <Input
                 placeholder="输入值"
                 size="large"
@@ -449,7 +449,7 @@ const FormList = ({
           );
         }
         return (
-          <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: '请选择!' }]}>
+          <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: "请选择!" }]}>
             <Select
               placeholder="请选择"
               size="large"
@@ -469,17 +469,17 @@ const FormList = ({
           </Form.Item>
         );
       }
-      if (symbol === 'equalAnyOne' || symbol === 'unequalAnyOne') {
-        const sourceType = component?.sourceType || '';
-        if (sourceType === 'interface' || sourceType === undefined) {
+      if (symbol === "equalAnyOne" || symbol === "unequalAnyOne") {
+        const sourceType = component?.sourceType || "";
+        if (sourceType === "interface" || sourceType === undefined) {
           return (
-            <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: '请输入!' }]}>
+            <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: "请输入!" }]}>
               <MultiText className={styles.value} value={value as string[]} onChange={changeValue} />
             </Form.Item>
           );
         }
         return (
-          <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: '请选择!' }]}>
+          <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: "请选择!" }]}>
             <Select
               placeholder="请选择"
               mode="multiple"
@@ -506,13 +506,13 @@ const FormList = ({
     return null;
   });
   return (
-    <Form.Item className={classnames(styles.form, className ? className : '')}>
+    <Form.Item className={classnames(styles.form, className ? className : "")}>
       <Form.List name={nameList}>
         {() => {
           return (
             <>
               {loading && <Loading className={styles.loading} />}
-              <Form.Item name="fieldName" rules={[{ required: true, message: '请选择关联字段!' }]}>
+              <Form.Item name="fieldName" rules={[{ required: true, message: "请选择关联字段!" }]}>
                 <Select
                   placeholder="关联字段"
                   size="large"

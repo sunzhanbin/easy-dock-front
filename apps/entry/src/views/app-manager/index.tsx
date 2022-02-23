@@ -1,23 +1,23 @@
+import { useParams } from "react-router-dom";
 import { Layout } from "antd";
-import { useAppSelector } from "@/store";
-import AppManagerSider from "@/containers/app-manager-sider";
-import AppManagerDetails from "@/containers/app-manager-details";
-import { selectCurrentWorkspaceId } from "./index.slice";
+import AppManagerSider from "@containers/app-manager-sider";
+import AppManagerDetails from "@containers/app-manager-details";
+import "@views/app-manager/index.style.scss";
 
 const { Content } = Layout;
 
 const AppManager = () => {
-  const workspaceId = useAppSelector(selectCurrentWorkspaceId);
+  const { projectId, workspaceId } = useParams();
 
   return (
-    <Layout>
-      <AppManagerSider />
-      <Layout className="site-layout">
-        <Content className="site-layout-background">
-          {workspaceId && <AppManagerDetails />}
-        </Content>
+    <div className="app-manager">
+      <Layout>
+        {projectId && <AppManagerSider />}
+        <Layout className="site-layout">
+          <Content className="site-layout-background">{workspaceId && <AppManagerDetails />}</Content>
+        </Layout>
       </Layout>
-    </Layout>
+    </div>
   );
 };
 

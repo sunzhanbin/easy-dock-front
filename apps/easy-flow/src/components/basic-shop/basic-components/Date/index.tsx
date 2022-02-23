@@ -1,10 +1,10 @@
-import { memo, useMemo } from 'react';
-import BaseDate from './base-date';
-import EventHoc from '@components/form-engine/eventHoc';
-import { DatePickerProps } from 'antd/lib/date-picker';
-import { useContainerContext } from '@components/form-engine/context';
-import getDisabledDateRule from './utils';
-import { Moment } from 'moment';
+import { memo, useMemo } from "react";
+import EventHoc from "@components/form-engine/eventHoc";
+import { DatePickerProps } from "antd/lib/date-picker";
+import { useContainerContext } from "@components/form-engine/context";
+import { Moment } from "moment";
+import getDisabledDateRule from "./utils";
+import BaseDate from "./base-date";
 
 const Date = (props: DatePickerProps & { onChange: (v: any) => void } & { [key: string]: any }) => {
   const { form, rules } = useContainerContext();

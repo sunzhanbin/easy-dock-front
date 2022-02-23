@@ -1,17 +1,19 @@
-import { memo, useEffect, useState } from 'react';
-import { useParams, useHistory } from 'react-router';
-import { message } from 'antd';
-import { Loading, AsyncButton } from '@common/components';
-import Header from '@components/header';
-import { runtimeAxios } from '@utils';
-import { dynamicRoutes } from '@consts';
-import { loadFlowData } from '@apis/detail';
-import Detail from './components/detail';
-import Empty from './components/empty';
-import { FormValue, FormMeta, FlowMeta, TaskDetailType, FlowInstance } from '@type/detail';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import ConfirmModal, { ActionType } from './components/confirm-modal';
-import styles from './index.module.scss';
+import { memo, useEffect, useMemo, useState } from "react";
+import { useParams, useHistory, useLocation } from "react-router";
+import { message } from "antd";
+import { Loading, AsyncButton } from "@common/components";
+import Header from "@components/header";
+import { runtimeAxios } from "@utils";
+import { dynamicRoutes } from "@consts";
+import { loadFlowData } from "@apis/detail";
+import Detail from "./components/detail";
+import Empty from "./components/empty";
+import { FormValue, FormMeta, FlowMeta, TaskDetailType, FlowInstance } from "@type/detail";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import ConfirmModal, { ActionType } from "./components/confirm-modal";
+import styles from "./index.module.scss";
+import { useAppSelector } from "@/app/hooks";
+import { modeSelector } from "../task-center/taskcenter-slice";
 
 type DataType = {
   form: {
@@ -47,6 +49,15 @@ function StartDetail() {
   const [showConfirm, setShowConfirm] = useState<boolean>();
   const [loading, setLoading] = useState(false);
   const history = useHistory();
+  const mode = useAppSelector(modeSelector);
+  const location = useLocation();
+  const type = useMemo(() => {
+    if (location.search) {
+      const params = new URLSearchParams(location.search.slice(1));
+      return params.get("type") || "start";
+    }
+    return "start";
+  }, [location.search]);
 
   useEffect(() => {
     (async () => {
@@ -70,13 +81,13 @@ function StartDetail() {
   }, [flowId]);
 
   const handleRevokeTask = useMemoCallback(async (remark: string) => {
-    await runtimeAxios.post(`/process_instance/revoke`, {
+    await runtimeAxios.post("/process_instance/revoke", {
       processInstanceId: flowId,
       remark,
     });
 
     setShowConfirm(false);
-    message.success('撤回成功');
+    message.success("撤回成功");
 
     setTimeout(() => {
       history.replace(`${dynamicRoutes.toTaskCenter(data!.flow.instance.subapp.app.id)}`);
@@ -87,9 +98,11 @@ function StartDetail() {
     <div className={styles.container}>
       {loading && <Loading />}
       <Header className={styles.header} backText="流程详情" backClassName={styles.back}>
-        <AsyncButton size="large" disabled={!canRevoke} onClick={() => setShowConfirm(true)}>
-          撤回
-        </AsyncButton>
+        {type !== "copy" && mode === "running" && (
+          <AsyncButton size="large" disabled={!canRevoke} onClick={() => setShowConfirm(true)}>
+            撤回
+          </AsyncButton>
+        )}
       </Header>
 
       {(data && (

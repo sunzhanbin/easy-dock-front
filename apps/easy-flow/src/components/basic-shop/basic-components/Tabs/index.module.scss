@@ -15,9 +15,11 @@
     width: 100%;
     .title {
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
-      height: 40px;
+      // height: 40px;
       border-bottom: 1px solid rgba(227, 228, 232, 1);
+      overflow: hidden;
       .item {
         position: relative;
         flex: 1;
@@ -25,10 +27,11 @@
         justify-content: center;
         max-width: 180px;
         height: 40px;
-        border-radius: 3px;
+        // border-radius: 3px;
         padding: 9px 16px;
         background: rgba(24, 39, 67, 0.04);
         border-right: 1px solid rgba(227, 228, 232, 1);
+        border-bottom: 1px solid rgba(227, 228, 232, 1);
         cursor: pointer;
         .name {
           width: 100%;
@@ -92,5 +95,18 @@
 :global {
   .ant-popconfirm {
     pointer-events: initial !important;
+  }
+  .pop__title{
+    margin-bottom: 32px;
+    .ant-form-item-explain{
+      position: absolute;
+      top:32px;
+      left:0;
+    }
+  }
+  .title__popup{
+    .ant-popover-message{
+      padding-bottom: 0;
+    }
   }
 }

@@ -1,18 +1,33 @@
 import Cookies from 'js-cookie';
 import xss from 'xss';
 
+type ISSOConfig = {
+    /** 用于登陆的服务器地址，也可以通过 window.SSO_LOGIN_URL 设置 */
+    server?: string;
+    /** appId，也可以通过 window.SSO_LOGIN_APPID 设置*/
+    appId?: string;
+    /** search query key，用于从 search query 中读取用于登录请求参数的 Code */
+    codeKey?: string;
+    /** 设置一个 localStorage key，将登陆后的 token 存入 */
+    authKey?: string;
+    /** 设置一个 cookie key，将登陆后的 token 存入，不设置的情况下存入 localStorage */
+    cookieKey?: string;
+};
+
 /**
  * @interface
  * @ignore
  */
 interface IAuth {
-    /** */
+    /** 获取Token */
     getToken: (needAutoLogin: boolean, host: string) => Promise<unknown>;
-    /** */
+    /** 设置配置项 */
+    setConfig: (config: ISSOConfig) => void;
+    /** 获取登录信息 */
     getAuth: () => string | null;
-    /** */
+    /** 移除登录信息 */
     removeAuth: () => void;
-    /** */
+    /** 退出登录 */
     logout: (redirect: string) => void;
 }
 
@@ -46,6 +61,9 @@ const resetUrl = (codeAttr: string) => {
     let newUrl = window.location.href.split('?')[0];
     if (search.length > 0) {
         newUrl += '?' + search.substring(0, search.length - 1);
+    }
+    if (location.hash) {
+        newUrl += location.hash;
     }
     window.history.pushState({}, '0', newUrl);
 };
@@ -81,7 +99,7 @@ const isValidRedirectUrl: (url?: string) => boolean = (url?: string) => !!url &&
  */
 class Auth implements IAuth {
     /** */
-    appId: string;
+    appId: string | undefined;
     /** */
     server: string | undefined;
     /** */
@@ -94,38 +112,17 @@ class Auth implements IAuth {
     /**
      * @public
      */
-    constructor(server?: string, codeAttr?: string) {
-        const currentScript: HTMLOrSVGScriptElementExt | null = document.currentScript as HTMLOrSVGScriptElementExt;
+    constructor(config: ISSOConfig = {}) {
+        if (window.Auth) {
+            return window.Auth;
+        }
 
-        let appId = currentScript?.getAttribute('appId');
+        const appId = window.SSO_LOGIN_APPID;
         if (!appId) {
-            console.warn('SSO: appId not specified in script tag attribute.');
-            appId = window.SSO_LOGIN_APPID;
-            if (!appId) {
-                console.warn('SSO: appId not specified in window.SSO_LOGIN_APPID.');
-            }
-        }
-        this.appId = appId;
-
-        if (server) {
-            this.server = server;
-        } else {
-            // console.warn('SSO new Auth(server): server is null or undefined.');
-            let src: string | undefined = window.SSO_LOGIN_URL;
-            if (src) {
-                this.server = src;
-            } else {
-                console.warn('SSO: server not specified in window.SSO_LOGIN_URL.');
-                src = currentScript?.src && new URL(currentScript.src).origin;
-                if (src && `${src}`.indexOf('localhost') < 0) {
-                    this.server = src;
-                }
-            }
+            console.warn('SSO: appId not specified in window.SSO_LOGIN_APPID.');
         }
 
-        if (codeAttr) {
-            this.codeAttr = codeAttr;
-        }
+        this.setConfig({ ...config, appId });
 
         if (!window.Auth) {
             window.Auth = this;
@@ -135,9 +132,9 @@ class Auth implements IAuth {
     private setAuth(token: string) {
         if (this.cookieAttr) {
             Cookies.set(this.cookieAttr, token);
+        } else {
+            window.localStorage.setItem(this.authAttr, token);
         }
-
-        window.localStorage.setItem(this.authAttr, token);
     }
 
     /**
@@ -199,7 +196,7 @@ class Auth implements IAuth {
      * @param {object} config
      *  server: 登陆接口地址, appId: appId, codeKey: 在localStorage设置code使用的Key, authKey: 在localStorage设置auth使用的Key, cookieKey: 设置之后会将token放进cookie中
      */
-    public setConfig({ server, appId, codeKey, authKey, cookieKey }: { server?: string; appId?: string; codeKey?: string; authKey?: string; cookieKey?: string }) {
+    public setConfig({ server, appId, codeKey, authKey, cookieKey }: ISSOConfig) {
         if (server) {
             this.setLoginServer(server);
         }
@@ -231,7 +228,7 @@ class Auth implements IAuth {
 
     public getAuth() {
         if (this.cookieAttr) {
-            Cookies.get(this.cookieAttr);
+            return Cookies.get(this.cookieAttr) || null;
         }
 
         return window.localStorage.getItem(this.authAttr);
@@ -246,62 +243,12 @@ class Auth implements IAuth {
     }
 
     /**
-     * fetch("http://10.19.248.238:28017/logout?auth=a4627209f60a42cd9727aaac9a233d21&redirectUri=http%3A%2F%2Flocalhost%3A3000%2F", {
-     *   "headers": {
-     *       "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*\/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-     *       "accept-language": "en-US,en;q=0.9",
-     *       "cache-control": "no-cache",
-     *       "pragma": "no-cache",
-     *       "upgrade-insecure-requests": "1"
-     *   },
-     *   "referrer": "http://localhost:3000/",
-     *   "referrerPolicy": "strict-origin-when-cross-origin",
-     *   "body": null,
-     *   "method": "GET",
-     *   "mode": "cors",
-     *   "credentials": "include"
-     *   });
-     *
-     * fetch("http://10.19.248.238:28017/logout?auth=a4627209f60a42cd9727aaac9a233d21&redirectUri=http%3A%2F%2Flocalhost%3A3000%2F", {
-     *  "headers": {
-     *      "accept": "*\/*",
-     *      "accept-language": "en-US,en;q=0.9",
-     *      "cache-control": "no-cache",
-     *      "pragma": "no-cache"
-     *  },
-     *  "referrer": "http://localhost:3000/",
-     *  "referrerPolicy": "strict-origin-when-cross-origin",
-     *  "body": null,
-     *  "method": "GET",
-     *  "mode": "cors",
-     *  "credentials": "omit"
-     *  });
-     *
-     *
      * @param redirect
-     *
      */
     public logout(redirect?: string | undefined) {
         let auth = this.getAuth();
         if (auth) {
             this.removeAuth();
-
-            // if (redirect) {
-            //     window.location.href = `${this.server}/logout?auth=${auth}&redirectUri=${encodeURIComponent(redirect)}`;
-            // } else {
-            //     console.info(`[SSO] logout fetch credentials: 'include'`);
-            //     redirect = window.location.href;
-
-            //     // fetch 不会发送 cookies。除非你使用了credentials 的初始化选项。（自 2017 年 8 月 25 日以后，默认的 credentials 政策变更为 same-origin。Firefox 也在 61.0b13 版本中进行了修改）
-            //     fetch(`${this.server}/logout?auth=${auth}&redirectUri`, {
-            //         credentials: 'include',
-            //     })
-            //         .then(
-            //             () => {},
-            //             () => {},
-            //         )
-            //         .catch();
-            // }
 
             if (!redirect) {
                 redirect = window.location.href;
@@ -314,5 +261,41 @@ class Auth implements IAuth {
     }
 }
 
+const IIFEEntry = () => {
+    const currentScript: HTMLOrSVGScriptElementExt | null = document.currentScript as HTMLOrSVGScriptElementExt;
+
+    let appId = currentScript?.getAttribute('appId');
+    if (!appId) {
+        console.warn('SSO: appId not specified in script tag attribute.');
+        appId = window.SSO_LOGIN_APPID;
+        if (!appId) {
+            console.warn('SSO: appId not specified in window.SSO_LOGIN_APPID.');
+        }
+    }
+
+    let server: string | undefined;
+    // console.warn('SSO new Auth(server): server is null or undefined.');
+    let src: string | undefined = window.SSO_LOGIN_URL;
+    if (src) {
+        server = src;
+    } else {
+        console.warn('SSO: server not specified in window.SSO_LOGIN_URL.');
+        src = currentScript?.src && new URL(currentScript.src).origin;
+        if (src && `${src}`.indexOf('localhost') < 0) {
+            server = src;
+        } else {
+            console.warn('SSO: cannot login localhost, set login url in window.SSO_LOGIN_URL.');
+        }
+    }
+
+    if (!window.Auth) {
+        window.Auth = new Auth({ server, appId });
+    }
+};
+
+if (document.currentScript) {
+    IIFEEntry();
+}
+
 /** @module @enc/sso */
-export default new Auth();
+export default Auth;

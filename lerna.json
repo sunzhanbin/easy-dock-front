@@ -1,5 +1,5 @@
 {
-  "packages": ["packages/core", "apps/easy-flow", "apps/main"],
+  "packages": ["packages/core", "apps/easy-flow", "apps/main", "apps/entry"],
   "version": "independent",
   "changelog": {
     "labels": {
@@ -16,7 +16,7 @@
     "bootstrap": {
       "npmClient": "yarn",
       "useWorkspaces": true,
-      "npmClientArgs": ["--frozen-lockfile"]
+      "npmClientArgs": ["--production", "--frozen-lockfile", "--ignore-engines"]
     }
   }
 }

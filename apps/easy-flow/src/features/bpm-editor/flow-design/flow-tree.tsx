@@ -1,5 +1,5 @@
-import { memo } from 'react';
-import { AllNode, NodeType } from '@type/flow';
+import { memo } from "react";
+import { AllNode, NodeType } from "@type/flow";
 import {
   StartNode,
   AuditNode,
@@ -10,7 +10,7 @@ import {
   Branch,
   AutoNodePushData,
   AutoNodeTriggerProcess,
-} from './nodes';
+} from "./nodes";
 
 interface FlowTreeProps {
   data: AllNode[];

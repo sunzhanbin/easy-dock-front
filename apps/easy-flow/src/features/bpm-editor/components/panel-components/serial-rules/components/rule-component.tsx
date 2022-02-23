@@ -1,15 +1,14 @@
-import React, { Fragment, memo, useEffect } from 'react';
-import styles from '@/features/bpm-editor/components/panel-components/serial-rules/index.module.scss';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import { Button, Dropdown, Form, Input, Menu } from 'antd';
-import DraggableOption from '@/features/bpm-editor/components/panel-components/serial-rules/drag-options';
-import { Icon } from '@common/components';
-import { RuleOption } from '@type';
-import { getFieldValue } from '@utils';
-import { useAppSelector } from '@app/hooks';
-import { errorSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
+import React, { Fragment, memo, useEffect } from "react";
+import styles from "@/features/bpm-editor/components/panel-components/serial-rules/index.module.scss";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { Button, Dropdown, Form, Input, Menu } from "antd";
+import DraggableOption from "@/features/bpm-editor/components/panel-components/serial-rules/drag-options";
+import { Icon } from "@common/components";
+import { RuleOption } from "@type";
+import { getFieldValue } from "@utils";
+import { useAppSelector } from "@app/hooks";
+import { errorSelector } from "@/features/bpm-editor/form-design/formzone-reducer";
 
-const { SubMenu } = Menu;
 const labelCol = { span: 24 };
 
 interface RuleComponentProps {
@@ -35,7 +34,7 @@ const RuleComponent = (props: RuleComponentProps) => {
     const list = [...rules];
     let ruleItem: RuleOption;
     if (keyPath.length > 1) {
-      const type: 'fixedChars' = keyPath.find((item: any) => item !== key);
+      const type: "fixedChars" = keyPath.find((item: any) => item !== key);
       ruleItem = getFieldValue({ key: type, fieldValue: key });
     } else {
       ruleItem = getFieldValue({ key });
@@ -46,7 +45,7 @@ const RuleComponent = (props: RuleComponentProps) => {
 
   // 添加规则下拉
   const menu = useMemoCallback(() => {
-    const disabledMenu = rules.findIndex((item) => item.type === 'createTime') !== -1;
+    const disabledMenu = rules.findIndex((item) => item.type === "createTime") !== -1;
     // const children = fields.map((item) => <Menu.Item key={item.id}>{item.name}</Menu.Item>);
     return (
       <Menu onClick={handleAdd}>
@@ -62,7 +61,7 @@ const RuleComponent = (props: RuleComponentProps) => {
   });
   const handleDrag = useMemoCallback((sourceIndex: number, targetIndex: number) => {
     const list: RuleOption[] = [...rules];
-    let tmp = list[sourceIndex];
+    const tmp = list[sourceIndex];
     list[sourceIndex] = list[targetIndex];
     list[targetIndex] = tmp;
     onChange && onChange({ type, ruleName, rules: list });
@@ -70,22 +69,22 @@ const RuleComponent = (props: RuleComponentProps) => {
 
   const handleChangeRule = useMemoCallback((ruleData) => {
     let list: RuleOption[] = [...rules];
-    if (ruleData.type === 'fixedChars') {
+    if (ruleData.type === "fixedChars") {
       const { index, chars } = ruleData;
       list[index] = {
-        type: 'fixedChars',
+        type: "fixedChars",
         chars: chars,
       };
-    } else if (ruleData.type === 'createTime') {
+    } else if (ruleData.type === "createTime") {
       const { index, format } = ruleData;
       list[index] = {
-        type: 'createTime',
+        type: "createTime",
         format,
       };
-    } else if (ruleData.type === 'fieldName') {
+    } else if (ruleData.type === "fieldName") {
       const { index, fieldValue } = ruleData;
       list[index] = {
-        type: 'fieldName',
+        type: "fieldName",
         fieldValue,
       };
     } else {
@@ -112,8 +111,8 @@ const RuleComponent = (props: RuleComponentProps) => {
 
   useEffect(() => {
     const isError = errors.find((item) => item.id === id);
-    if (isError && isError.content?.includes('SerialError')) {
-      form.validateFields([['name']]);
+    if (isError && isError.content?.includes("SerialError")) {
+      form.validateFields([["name"]]);
     }
   }, [errors, id, form]);
 
@@ -129,10 +128,10 @@ const RuleComponent = (props: RuleComponentProps) => {
               {
                 validator(_, value) {
                   if (!value) {
-                    return Promise.reject(new Error('请输入规则名称'));
+                    return Promise.reject(new Error("请输入规则名称"));
                   }
                   if (!/^[\u4E00-\u9FA5a-zA-Z0-9_]{1,30}$/.test(value)) {
-                    return Promise.reject(new Error('请输入1-30位的汉字、字母、数字、下划线'));
+                    return Promise.reject(new Error("请输入1-30位的汉字、字母、数字、下划线"));
                   }
                   return Promise.resolve();
                 },
@@ -143,7 +142,7 @@ const RuleComponent = (props: RuleComponentProps) => {
               size="large"
               placeholder="请输入"
               onChange={handleChangeName}
-              disabled={type === 'inject' && editStatus}
+              disabled={type === "inject" && editStatus}
             />
           </Form.Item>
           <Form.Item className={styles.formWrapper} name="rules" label="规则配置" labelCol={labelCol}>
@@ -158,7 +157,7 @@ const RuleComponent = (props: RuleComponentProps) => {
                     onChange={handleChangeRule}
                     onDrag={handleDrag}
                     onDelete={handleDelete}
-                    disabled={type === 'inject' && (editStatus || ruleStatus === 1)}
+                    disabled={type === "inject" && (editStatus || ruleStatus === 1)}
                   />
                 </Fragment>
               ))}
@@ -167,7 +166,7 @@ const RuleComponent = (props: RuleComponentProps) => {
         </Fragment>
       </Form>
       {isError && <span className={styles.errorTips}>请输入编号规则固定字符</span>}
-      {!(type === 'inject' && (editStatus || ruleStatus === 1)) && (
+      {!(type === "inject" && (editStatus || ruleStatus === 1)) && (
         <Dropdown overlay={menu}>
           <Button className={styles.add_custom} size="large">
             <Icon className={styles.iconfont} type="xinzengjiacu" />

@@ -1,0 +1,47 @@
+@import '@common/styles/mixin.scss';
+
+.container {
+  position: relative;
+
+  & > .content {
+    position: relative;
+    height: inherit;
+    min-height: inherit;
+
+    :global {
+      div[id^='__qiankun_microapp_wrapper_for'] {
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1;
+      }
+    }
+  }
+
+  .loading {
+    @include center('absolute');
+  }
+}
+:global {
+  /* 富文本编辑器在微前端中适配 */
+  .bf-modal-root {
+    .bf-modal-mask {
+      opacity: 1;
+    }
+    .bf-modal-content {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+      .bf-item.error {
+        &::before {
+          display: block;
+          content: '\E912';
+        }
+        &::after {
+          background-color: rgba(52, 152, 219, 0.6);
+        }
+      }
+    }
+  }
+}

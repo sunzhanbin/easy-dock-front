@@ -1,29 +1,29 @@
-import { memo, useMemo } from 'react';
-import { Table as TableComponent } from 'antd';
+import { memo, useMemo } from "react";
+import { Table as TableComponent } from "antd";
 
 const Table = () => {
   const columns = useMemo(() => {
     return [
       {
-        title: '字段一',
-        dataIndex: 'id',
-        key: 'id',
+        title: "字段一",
+        dataIndex: "id",
+        key: "id",
         render() {
           return <div></div>;
         },
       },
       {
-        title: '字段二',
-        dataIndex: 'id',
-        key: 'id',
+        title: "字段二",
+        dataIndex: "id",
+        key: "id",
         render() {
           return <div></div>;
         },
       },
       {
-        title: '字段三',
-        dataIndex: 'id',
-        key: 'id',
+        title: "字段三",
+        dataIndex: "id",
+        key: "id",
         render() {
           return <div></div>;
         },

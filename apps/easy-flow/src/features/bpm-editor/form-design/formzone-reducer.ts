@@ -1,5 +1,5 @@
-import { createSelector, PayloadAction, current } from '@reduxjs/toolkit';
-import { uniqueId } from 'lodash';
+import { createSelector, PayloadAction } from "@reduxjs/toolkit";
+import { uniqueId } from "lodash";
 import {
   ErrorItem,
   FieldType,
@@ -10,14 +10,14 @@ import {
   PropertyRuleItem,
   TConfigItem,
   TConfigMap,
-} from '@type';
-import { RootState } from '@/app/store';
-import { formatRules, formatSerialRules } from './validate';
+} from "@type";
+import { RootState } from "@/app/store";
+import { formatRules } from "./validate";
 
 function locateById(target: string, layout: Array<string[]>): [number, number] {
-  let res: [number, number] = [-1, -1];
+  const res: [number, number] = [-1, -1];
   for (let i = 0; i < layout.length; i++) {
-    let row = layout[i];
+    const row = layout[i];
     for (let j = 0; j < row.length; j++) {
       if (row[j] === target) return [i, j];
     }
@@ -37,13 +37,13 @@ const reducers = {
       }
       // 如果有重复的id,则从当前控件id为当前最大的数字+1
       if (state.byId[com.id]) {
-        const numList: number[] = Object.keys(state.byId).map((id) => +id.split('_')[1] || -1);
+        const numList: number[] = Object.keys(state.byId).map((id) => +id.split("_")[1] || -1);
         const max = Math.max(...numList);
         com.id = `${com.type}_${max + 1}`;
       }
       let config = Object.assign({}, com, { fieldName: com.id });
-      if ((com.type as string) === 'DescText') {
-        config = Object.assign({}, config, { label: config.label + com.id?.split('_')[1] });
+      if ((com.type as string) === "DescText") {
+        config = Object.assign({}, config, { label: config.label + com.id?.split("_")[1] });
       }
       state.byId[com.id] = Object.assign({}, com, config);
       // 如果当前选中了某一行，则在当前行之后插入；否则在末尾插入
@@ -70,7 +70,7 @@ const reducers = {
   },
   comDeleted(state: FormDesign, action: PayloadAction<{ id: string }>) {
     const { id } = action.payload;
-    let [row, col] = locateById(id, state.layout);
+    const [row, col] = locateById(id, state.layout);
     if (state.layout[row].length === 1) {
       state.layout.splice(row, 1);
     } else {
@@ -81,7 +81,7 @@ const reducers = {
       state.selectedField = null;
     }
     // 控件删除的时候 如果关联了编号中的表单字段 需要过滤掉
-    formatSerialRules(state.byId, id);
+    // formatSerialRules(state.byId, id);
     // 表单属性关联的该控件规则也需要清空
     formatRules(state.formRules, id);
     formatRules(state.propertyRules, id);
@@ -103,10 +103,10 @@ const reducers = {
   },
   moveUp(state: FormDesign, action: PayloadAction<{ id: string; rowIndex?: number }>) {
     const { id } = action.payload;
-    let [row, col] = locateById(id, state.layout);
+    const [row, col] = locateById(id, state.layout);
     if (!state.byId[id] || row === 0) return state;
-    let rowLayout = state.layout[row];
-    let targetLayout = state.layout[row - 1];
+    const rowLayout = state.layout[row];
+    const targetLayout = state.layout[row - 1];
     if (targetLayout.length >= 4) return state;
     rowLayout.splice(col, 1);
     targetLayout.push(id);
@@ -116,9 +116,9 @@ const reducers = {
   },
   moveDown(state: FormDesign, action: PayloadAction<{ id: string }>) {
     const { id } = action.payload;
-    let [row, col] = locateById(id, state.layout);
+    const [row, col] = locateById(id, state.layout);
     if (!state.byId[id]) return state;
-    let rowLayout = state.layout[row];
+    const rowLayout = state.layout[row];
     if (rowLayout.length === 1) return;
     rowLayout.splice(col, 1);
     state.layout.splice(row, 1, rowLayout);
@@ -137,14 +137,14 @@ const reducers = {
   },
   //exchnage with the com on the left
   exchange(state: FormDesign, action: PayloadAction<{ id: string; direction: string }>) {
-    let [row, col] = locateById(action.payload.id, state.layout);
+    const [row, col] = locateById(action.payload.id, state.layout);
     const { direction } = action.payload;
     if (row === -1 || col === -1) return state;
-    let rowLayout = state.layout[row];
-    if (direction === 'left') {
+    const rowLayout = state.layout[row];
+    if (direction === "left") {
       state.layout[row].splice(col - 1, 2, rowLayout[col], rowLayout[col - 1]);
     }
-    if (direction === 'right') {
+    if (direction === "right") {
       state.layout[row].splice(col, 2, rowLayout[col + 1], rowLayout[col]);
     }
     state.isDirty = true;
@@ -161,7 +161,7 @@ const reducers = {
     action: PayloadAction<{ id: string; config: FormField; isEdit?: boolean; isValidate?: boolean }>,
   ) {
     const { id, config, isEdit, isValidate } = action.payload;
-    state.byId[id] = id.startsWith('DescText') ? Object.assign({}, config, { fieldName: config.id }) : config;
+    state.byId[id] = id.startsWith("DescText") ? Object.assign({}, config, { fieldName: config.id }) : config;
     // 如果改变控件宽度后导致整行的宽度大于100%,则需要改变layout布局以实现换行
     if (isEdit) {
       const [rowIndex, colIndex] = locateById(id, state.layout);
@@ -284,7 +284,7 @@ export const configSelector = createSelector(
     },
   ],
   (schema) => {
-    let config: TConfigMap = {};
+    const config: TConfigMap = {};
     if (!schema) {
       return config;
     }
@@ -307,7 +307,7 @@ export const selectedFieldSelector = createSelector(
     },
   ],
   (formDesign) => {
-    return formDesign.selectedField || '';
+    return formDesign.selectedField || "";
   },
 );
 
@@ -332,7 +332,7 @@ export const componentPropsSelector = createSelector(
   },
 );
 export const subAppSelector = createSelector([(state: RootState) => state.formDesign], (formDesign) => {
-  return formDesign.subAppInfo || { name: '', id: '' };
+  return formDesign.subAppInfo || { name: "", id: "" };
 });
 export const dirtySelector = createSelector([(state: RootState) => state.formDesign], (formDesign) => {
   return formDesign.isDirty;

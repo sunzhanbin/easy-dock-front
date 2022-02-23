@@ -1,29 +1,44 @@
-import { useCallback } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Tabs } from "antd";
-import BasicSetupFormComponent from "./basic-setup-form.component";
-import MenuSetupComponent from "./menu-setup.component";
-import "./index.style";
+import BasicSetupFormComponent from "@containers/app-setup-config/basic-setup-form.component";
+import MenuSetupComponent from "@containers/app-setup-config/menu-setup.component";
+import { useParams } from "react-router-dom";
+import { useWorkspaceDetailQuery } from "@/http";
+import "@containers/app-setup-config/index.style";
 
 const { TabPane } = Tabs;
 
+type BasicSetupFormComponentHandle = React.ElementRef<typeof BasicSetupFormComponent>;
+type WorkspaceItem = {
+  id: number;
+  name: string;
+};
+
 const AppSetupConfig = () => {
-  // 左边预览点击菜单可能需要关联到这里的菜单设置；
-  const handleTasChange = useCallback((activeKey: string) => {
-    console.log("activeKey", activeKey);
-  }, []);
+  const { workspaceId } = useParams();
+  const { data: workspace } = useWorkspaceDetailQuery(Number(workspaceId), {
+    skip: !workspaceId,
+  });
+  const [workspaceList, setWorkspaceList] = useState<WorkspaceItem[]>([]);
+  const formRef = useRef<BasicSetupFormComponentHandle>(null);
+
+  useEffect(() => {
+    if (workspace?.id) {
+      setWorkspaceList([{ id: workspace.id, name: workspace.name }]);
+    }
+  }, [workspace?.id, workspace?.name]);
 
   return (
     <div className="app-setup-config">
-      <Tabs defaultActiveKey="1" onChange={handleTasChange}>
-        <TabPane tab="应用设置" key="1">
-          <BasicSetupFormComponent />
-        </TabPane>
-        <TabPane tab="菜单设置" key="2">
+      <Tabs defaultActiveKey="app">
+        <TabPane tab="菜单设置" key="menu">
           <MenuSetupComponent />
+        </TabPane>
+        <TabPane tab="应用设置" key="app">
+          <BasicSetupFormComponent ref={formRef} workspaceList={workspaceList} />
         </TabPane>
       </Tabs>
     </div>
   );
 };
-
 export default AppSetupConfig;

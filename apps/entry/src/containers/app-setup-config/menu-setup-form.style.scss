@@ -1,3 +1,115 @@
+@import "@common/styles/var.scss";
 .menu-setup-form-component {
   width: 200px;
+  background: rgba(24, 39, 67, 0.04);
+  & > .header {
+    height: 52px;
+    line-height: 52px;
+    padding: 0 12px;
+    font-size: 18px;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.85);
+    border-bottom: 1px solid rgba(24, 31, 67, 0.08);
+  }
+  & > .form {
+    padding: 16px 12px;
+    .asset-item,
+    .app-item {
+      margin-bottom: 12px;
+    }
+    .ant-select-selection-item {
+      display: inline-flex;
+      align-items: center;
+      .sub-app-icon {
+        width: 20px;
+        height: 20px;
+        margin-right: 4px;
+      }
+    }
+    .asset-option {
+      // 覆盖antd默认样式
+      .ant-radio-button-wrapper {
+        padding: 0 11px;
+        font-size: 14px;
+        color: #181f43;
+        background: rgba(24, 39, 67, 0.04);
+        border-left-width: 1px;
+        &:not(:first-child)::before {
+          display: none;
+        }
+        &.ant-radio-button-wrapper-checked {
+          background-color: #fff;
+          color: $primary-color;
+          border-color: $primary-color;
+        }
+        &:first-child {
+          border-radius: 3px 0 0 3px;
+        }
+        &:last-child {
+          border-radius: 0 3px 3px 0;
+        }
+      }
+    }
+    .ant-select-selection-item {
+      display: inline-flex;
+      align-items: center;
+      .sub-app-type {
+        color: rgba(24, 31, 67, 0.75);
+        margin-right: 8px;
+        font-size: 12px;
+        display: inline-block;
+        height: 24px;
+        line-height: 24px;
+        padding: 0 6px;
+        border-radius: 3px;
+        border: 1px solid rgba(24, 31, 67, 0.12);
+      }
+    }
+  }
+  .dropdown-container {
+    .rc-virtual-list-holder-inner {
+      width: 100%;
+      display: grid !important;
+      grid-template-columns: repeat(5, 1fr);
+      row-gap: 2px;
+      column-gap: 2px;
+      .ant-select-item-option {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        min-height: 28px;
+        margin-top: 4px;
+        padding: 4px;
+        svg {
+          font-size: 20px;
+        }
+      }
+      .ant-select-item-option-selected {
+        svg {
+          color: $primary-color;
+        }
+      }
+    }
+  }
+}
+
+.sub-app-option {
+  .ant-select-item-option-content {
+    display: inline-flex;
+    align-items: center;
+    .sub-app-type {
+      color: rgba(24, 31, 67, 0.75);
+      margin-right: 8px;
+      font-size: 12px;
+      display: inline-block;
+      height: 24px;
+      line-height: 24px;
+      padding: 0 6px;
+      border-radius: 3px;
+      border: 1px solid rgba(24, 31, 67, 0.12);
+    }
+  }
+
 }

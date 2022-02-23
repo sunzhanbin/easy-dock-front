@@ -1,17 +1,17 @@
-import React, { useEffect, memo, useMemo, useState, useRef } from 'react';
-import { FormField, RuleOption, SerialNumField, serialRulesItem } from '@type';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import styles from './index.module.scss';
-import classNames from 'classnames';
-import CustomRule from './components/custom-rule';
-import InjectRule from './components/inject-rule';
-import { message } from 'antd';
-import { useSubAppDetail } from '@app/app';
-import { useAppSelector } from '@app/hooks';
-import { getSerialInfo } from '@apis/form';
-import { initialRules, SERIAL_TYPE } from '@utils/const';
-import { componentPropsSelector, errorSelector } from '@/features/bpm-editor/form-design/formzone-reducer';
-import { filterRules } from './utils';
+import { useEffect, memo, useMemo, useState, useRef } from "react";
+import { FormField, RuleOption, SerialNumField, serialRulesItem } from "@type";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import styles from "./index.module.scss";
+import classNames from "classnames";
+import CustomRule from "./components/custom-rule";
+import InjectRule from "./components/inject-rule";
+import { message } from "antd";
+import { useSubAppDetail } from "@app/app";
+import { useAppSelector } from "@app/hooks";
+import { getSerialInfo } from "@apis/form";
+import { initialRules, SERIAL_TYPE } from "@utils/const";
+import { componentPropsSelector, errorSelector } from "@/features/bpm-editor/form-design/formzone-reducer";
+import { filterRules } from "./utils";
 
 interface RulesProps {
   id: string;
@@ -21,25 +21,25 @@ interface RulesProps {
 
 const SerialRules = (props: RulesProps) => {
   const { id, onChange } = props;
-  const [serialId, setSerialId] = useState('');
+  const [serialId, setSerialId] = useState("");
   const customRef = useRef<any>(null);
   const injectRef = useRef<any>(null);
   const { data } = useSubAppDetail();
   const byId = useAppSelector(componentPropsSelector);
   const errors = useAppSelector(errorSelector);
-  const [type, setType] = useState<string>(''); // 编号规则类型
+  const [type, setType] = useState<string>(""); // 编号规则类型
   const [rules, setRules] = useState<RuleOption[]>([]); // 自定义规则
   const [changeRules, setChangeRules] = useState<RuleOption[]>([]); // 已有规则
   const [resetRules, setResetRules] = useState<RuleOption[]>([]); // 取消时重置规则
-  const [resetRuleName, setResetRuleName] = useState<string>('');
-  const [ruleName, setRuleName] = useState<string>('');
-  const [changeRuleName, setChangeRuleName] = useState<string>('');
+  const [resetRuleName, setResetRuleName] = useState<string>("");
+  const [ruleName, setRuleName] = useState<string>("");
+  const [changeRuleName, setChangeRuleName] = useState<string>("");
   const [ruleStatus, setRuleStatus] = useState<number | undefined>(undefined);
   // 是否可编辑   默认不可编辑
   const [editStatus, setEditStatus] = useState<boolean | undefined>(undefined);
   const fields = useMemo<{ id: string; name: string }[]>(() => {
     const componentList = Object.values(byId).map((item: FormField) => item) || [];
-    const compType = ['Date', 'Input', 'Radio', 'InputNumber'];
+    const compType = ["Date", "Input", "Radio", "InputNumber"];
     return componentList
       .filter((com) => compType.includes(com.type) && com.id !== id)
       .map((com) => ({
@@ -57,23 +57,22 @@ const SerialRules = (props: RulesProps) => {
   useEffect(() => {
     if (!fieldSerial) return;
     const { serialId, serialMata } = fieldSerial;
+    setRuleName(serialMata?.ruleName || "");
     setRules(serialMata?.rules || initialRules);
-    const filterMata = filterRules(serialMata?.changeRules, fields);
-    setChangeRules(filterMata || []);
-    setRuleName(serialMata?.ruleName || '');
-    setChangeRuleName(serialMata?.changeRuleName || '');
-    setSerialId(serialId || '');
+    setSerialId(serialId || "");
     setEditStatus(serialMata?.editStatus);
-    setType(serialMata?.type || (serialId ? SERIAL_TYPE.INJECT_TYPE : SERIAL_TYPE.CUSTOM_TYPE));
+    if (!serialId) {
+      setType(SERIAL_TYPE.CUSTOM_TYPE);
+    }
   }, [fieldSerial, fields]);
 
   useEffect(() => {
     const errorList = errors.find((item) => item.id === id);
-    if (errorList && errorList.content.includes('请输入已有规则固定字符')) {
+    if (errorList && errorList.content.includes("请输入已有规则固定字符")) {
       setEditStatus(true);
       setErrors(true);
     }
-    if (errorList && errorList.content.includes('请输入自定义规则固定字符')) {
+    if (errorList && errorList.content.includes("请输入自定义规则固定字符")) {
       setErrorsCustom(true);
     }
   }, [errors, id]);
@@ -81,18 +80,22 @@ const SerialRules = (props: RulesProps) => {
   useEffect(() => {
     (async () => {
       try {
-        if (!serialId) return;
-        const ret = await getSerialInfo(serialId);
+        if (!fieldSerial?.serialId) return;
+        const ret = await getSerialInfo(fieldSerial.serialId);
         const { data } = ret;
         setRuleStatus(data.status === 0 ? 0 : 1);
         const filterMata = filterRules(data.mata, fields);
+        setChangeRules(filterMata);
+        setChangeRuleName(data.name);
         setResetRules(filterMata);
         setResetRuleName(data.name);
+        setType(SERIAL_TYPE.INJECT_TYPE);
       } catch (e) {
         console.log(e);
       }
     })();
-  }, [serialId, fields]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // 自定义规则/引用规则
   const handleTypeChange = (type: string) => {
@@ -104,6 +107,8 @@ const SerialRules = (props: RulesProps) => {
     const filterMata = filterRules(mata, fields);
     setResetRules(filterMata);
     setResetRuleName(name);
+    setChangeRules(filterMata);
+    setChangeRuleName(name);
     setRuleStatus(status);
     setEditStatus(false);
     onChange &&
@@ -131,20 +136,16 @@ const SerialRules = (props: RulesProps) => {
           type,
           ruleName,
           rules,
-          changeRuleName,
-          changeRules,
+          changeRuleName: resetRuleName,
+          changeRules: resetRules,
           editStatus: true,
         },
       });
   };
 
-  const handleOnChange = (serialItem: { type: string; rules: any; ruleName: string }) => {
+  const handleOnChange = (serialItem: { type: string; rules: any; ruleName: string; eventType?: string }) => {
     const { type, rules: formRule, ruleName: formName } = serialItem;
     if (type === SERIAL_TYPE.CUSTOM_TYPE) {
-      const hasChars = formRule.some(
-        (item: { type: string; chars?: string }) => item.type === 'fixedChars' && !item.chars,
-      );
-      setErrorsCustom(hasChars);
       onChange &&
         onChange({
           serialId,
@@ -153,16 +154,14 @@ const SerialRules = (props: RulesProps) => {
             type,
             ruleName: formName,
             rules: formRule,
-            changeRuleName,
-            changeRules,
+            changeRuleName: resetRuleName,
+            changeRules: resetRules,
             editStatus,
           },
         });
     } else {
-      const hasChars = formRule.some(
-        (item: { type: string; chars?: string }) => item.type === 'fixedChars' && !item.chars,
-      );
-      setErrors(hasChars);
+      setChangeRules(formRule);
+      setChangeRuleName(formName);
       onChange &&
         onChange({
           serialId,
@@ -171,8 +170,8 @@ const SerialRules = (props: RulesProps) => {
             type,
             ruleName,
             rules,
-            changeRuleName: formName,
-            changeRules: formRule,
+            changeRuleName: resetRuleName,
+            changeRules: resetRules,
             editStatus,
           },
         });
@@ -180,22 +179,22 @@ const SerialRules = (props: RulesProps) => {
   };
 
   const handleSaveRules = async (type: string, serialMap: any) => {
-    message.success('保存成功');
+    message.success("保存成功");
     const { mata, status, name } = serialMap;
     const filterMata = filterRules(mata, fields);
-
     setResetRules(filterMata);
     setResetRuleName(name);
-    if (type === 'inject') {
+    setChangeRules(filterMata);
+    setChangeRuleName(name);
+    if (type === "inject") {
       setEditStatus(false);
       setErrors(false);
       return;
     }
     customRef.current.reset();
-    handleTypeChange('inject');
+    handleTypeChange("inject");
     setEditStatus(false);
     setErrorsCustom(false);
-
     setRuleStatus(status);
     injectRef.current.reset(name);
     onChange &&
@@ -203,8 +202,8 @@ const SerialRules = (props: RulesProps) => {
         serialId: serialMap.id,
         serialMata: {
           id,
-          type: 'inject',
-          ruleName: '',
+          type: "inject",
+          ruleName: "",
           rules: initialRules,
           changeRuleName: name,
           changeRules: filterMata,
@@ -217,6 +216,8 @@ const SerialRules = (props: RulesProps) => {
     injectRef.current.reset(resetRuleName);
     setEditStatus(false);
     setErrors(false);
+    setChangeRules(resetRules);
+    setChangeRuleName(resetRuleName);
     onChange &&
       onChange({
         serialId,
@@ -233,7 +234,7 @@ const SerialRules = (props: RulesProps) => {
   });
 
   const renderContent = useMemoCallback(() => {
-    if (type === 'custom') {
+    if (type === "custom") {
       return (
         <CustomRule
           ref={customRef}
@@ -249,7 +250,7 @@ const SerialRules = (props: RulesProps) => {
           onSave={handleSaveRules}
         />
       );
-    } else if (type === 'inject') {
+    } else if (type === "inject") {
       return (
         <InjectRule
           ref={injectRef}
@@ -278,17 +279,17 @@ const SerialRules = (props: RulesProps) => {
       <div className={styles.container}>
         <div className={styles.title}>
           <div
-            className={classNames(styles.custom, type === 'custom' ? styles.active : '')}
+            className={classNames(styles.custom, type === "custom" ? styles.active : "")}
             onClick={() => {
-              handleTypeChange('custom');
+              handleTypeChange("custom");
             }}
           >
             自定义规则
           </div>
           <div
-            className={classNames(styles.subapp, type === 'inject' ? styles.active : '')}
+            className={classNames(styles.subapp, type === "inject" ? styles.active : "")}
             onClick={() => {
-              handleTypeChange('inject');
+              handleTypeChange("inject");
             }}
           >
             使用已有规则

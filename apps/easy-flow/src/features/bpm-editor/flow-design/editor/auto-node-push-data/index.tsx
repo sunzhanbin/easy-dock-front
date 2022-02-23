@@ -1,17 +1,16 @@
-import { memo, useMemo } from 'react';
-import { Form, Input } from 'antd';
-import { Rule } from 'antd/lib/form';
-import debounce from 'lodash/debounce';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import ResponseWithMap from '@/features/bpm-editor/components/data-api-config/response-with-map';
-import { AutoNodePushData } from '@type/flow';
-import { useAppDispatch, useAppSelector } from '@/app/hooks';
-import { formMetaSelector, updateNode } from '../../flow-slice';
-import { trimInputValue } from '../../util';
-import { rules } from '../../validators';
-import useValidateForm from '../../hooks/use-validate-form';
-import DataApiConfig from '../../../components/data-api-config';
-import useFieldsTemplate from '../../hooks/use-fields-template';
+import { memo, useMemo } from "react";
+import { Form, Input } from "antd";
+import { Rule } from "antd/lib/form";
+import debounce from "lodash/debounce";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import ResponseWithMap from "@/features/bpm-editor/components/data-api-config/response-with-map";
+import { AutoNodePushData } from "@type/flow";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import { formMetaSelector, updateNode } from "../../flow-slice";
+import { trimInputValue } from "../../util";
+import { rules } from "../../validators";
+import useValidateForm from "../../hooks/use-validate-form";
+import DataApiConfig from "../../../components/data-api-config";
 
 interface AutoNodeEditorProps {
   node: AutoNodePushData;
@@ -48,8 +47,8 @@ function AutoNodeEditor(props: AutoNodeEditorProps) {
 
   const fields = useMemo(() => {
     return (formMeta?.components || [])
-      .filter((item) => !['DescText', 'Tabs'].includes(item.config.type))
-      .map((item) => ({ name: item.config.label as string, id: item.config.id }));
+      .filter((item) => !["DescText", "Tabs"].includes(item.config.type))
+      .map((item) => ({ name: item.config.label as string, id: item.config.fieldName }));
   }, [formMeta]);
 
   return (

@@ -1,13 +1,14 @@
-import { memo, useMemo } from 'react';
-import { Input } from 'antd';
-import { InputProps } from 'antd/lib/input';
+import { memo, useMemo } from "react";
+import { Input } from "antd";
+import { InputProps } from "antd/lib/input";
 
 const InputComponent = (props: InputProps & { unique: boolean }) => {
   const { defaultValue, unique, onChange } = props;
   const propList = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/ban-types
     const prop: { [k: string]: string | boolean | number | undefined | null | Function } = {
-      size: 'large',
-      placeholder: '请输入',
+      size: "large",
+      placeholder: "请输入",
       maxLength: 200, //最大长度200 v1.0.0暂定
       unique: String(unique),
       onChange: onChange,

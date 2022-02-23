@@ -1,0 +1,32 @@
+.app-info-component {
+  height: 136px;
+  padding: 32px 56px;
+  background: url("~@assets/images/AppDetail.png") 0 0 no-repeat;
+  background-size: cover;
+  .header {
+    height: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .base-info {
+      font-size: 24px;
+      font-weight: bold;
+      color: #ffffff;
+      .count {
+        margin-left: 3px;
+        color: rgba(255, 255, 255, 0.55);
+      }
+    }
+    .create {
+      color: rgba(255, 255, 255, 1);
+      border-radius: 3px;
+      border: 1px solid rgba(255, 255, 255, 0.17);
+      .icon {
+        color: rgba(255, 255, 255, 1);
+      }
+      &:hover {
+        border-color: #ffffff;
+      }
+    }
+  }
+}

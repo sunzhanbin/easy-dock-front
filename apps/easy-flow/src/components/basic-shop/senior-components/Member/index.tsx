@@ -1,10 +1,10 @@
-import { memo, ReactNode, useEffect, useMemo, useRef, useState } from 'react';
-import { Select } from 'antd';
-import { SelectProps } from 'antd/lib/select';
-import { Icon } from '@common/components';
-import { runtimeAxios } from '@/utils';
-import useMemoCallback from '@common/hooks/use-memo-callback';
-import { debounce, throttle } from 'lodash';
+import { memo, ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import { Select } from "antd";
+import { SelectProps } from "antd/lib/select";
+import { Icon } from "@common/components";
+import { runtimeAxios } from "@/utils";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { debounce, throttle } from "lodash";
 
 const { Option } = Select;
 
@@ -19,7 +19,7 @@ const Member = (
   const [memberList, setMemberList] = useState([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [memberTotal, setMemberTotal] = useState<number>(0);
-  const [keyword, setKeyword] = useState<string>('');
+  const [keyword, setKeyword] = useState<string>("");
   const memberPageNumberRef = useRef(1);
 
   const handleSearch = useMemoCallback(
@@ -30,15 +30,17 @@ const Member = (
     }, 500),
   );
   const propList = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/ban-types
     const prop: { [k: string]: string | boolean | Function | ReactNode } = {
-      size: 'large',
+      size: "large",
       showSearch: showSearch as boolean,
-      placeholder: '请选择',
+      placeholder: "请选择",
       suffixIcon: <Icon type="xiala" />,
+      // eslint-disable-next-line @typescript-eslint/ban-types
       onChange: onChange as Function,
     };
     if (multiple) {
-      prop.mode = 'multiple';
+      prop.mode = "multiple";
     }
     if (value) {
       if (Array.isArray(value)) {
@@ -60,6 +62,9 @@ const Member = (
     const result = Object.assign({}, props, prop);
     delete result.fieldName;
     delete result.colSpace;
+    if (multiple && result.value === null) {
+      result.value = undefined;
+    }
     return result;
   }, [defaultValue, value, multiple, showSearch, props, handleSearch, onChange]);
 
@@ -67,7 +72,7 @@ const Member = (
     if (projectid && !loading) {
       setLoading(true);
       try {
-        const res = await runtimeAxios.post('/user/search', {
+        const res = await runtimeAxios.post("/user/search", {
           index: pageNum,
           size: 20,
           projectId: projectid,
@@ -109,11 +114,11 @@ const Member = (
   );
 
   useEffect(() => {
-    fetchMembers(1, '');
+    fetchMembers(1, "");
   }, [fetchMembers]);
 
   return (
-    <Select {...propList} style={{ width: '100%' }} optionFilterProp="label" onPopupScroll={handleScroll} allowClear>
+    <Select {...propList} style={{ width: "100%" }} optionFilterProp="label" onPopupScroll={handleScroll} allowClear>
       {(memberList || []).map(({ id, userName }) => (
         <Option key={id} value={id} label={userName}>
           {userName}

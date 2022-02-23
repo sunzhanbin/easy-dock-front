@@ -1,11 +1,11 @@
-import { memo, useCallback, useState, useMemo, FC } from 'react';
-import styled from 'styled-components';
-import { Icon } from '@/components';
-import { Input, Button, Form } from 'antd';
-import FlowImage from '@assets/flow-small.png';
-import ScreenImage from '@assets/screen-small.png';
-import { SubAppTypeEnum } from '@/schema/app';
-import classNames from 'classnames';
+import { memo, useCallback, useState, useMemo, FC } from "react";
+import styled from "styled-components";
+import { Icon } from "@/components";
+import { Input, Button, Form } from "antd";
+import FlowImage from "@assets/flow-small.png";
+import ScreenImage from "@assets/screen-small.png";
+import { SubAppTypeEnum } from "@/schema/app";
+import classNames from "classnames";
 
 const Container = styled.div`
   position: absolute;
@@ -130,18 +130,18 @@ const typeMap: { [k in string]: number } = {
 };
 
 const AppModel: FC<{
-  type: 'create' | 'edit';
-  position: 'left' | 'right';
+  type: "create" | "edit";
+  position: "left" | "right";
   name?: string;
   className?: string;
   onClose: () => void;
   onOk: (name: string, type: number) => void;
 }> = ({ type, position, name, className, onClose, onOk }) => {
   const [form] = Form.useForm();
-  const [appName, setAppName] = useState<string>(name || '');
-  const [selectedType, setSelectedType] = useState<'flow' | 'screen'>();
+  const [appName, setAppName] = useState<string>(name || "");
+  const [selectedType, setSelectedType] = useState<"flow" | "screen">();
   const containerStyle = useMemo(() => {
-    if (position === 'left') {
+    if (position === "left") {
       return { left: 0 };
     }
     return { right: 0 };
@@ -158,14 +158,14 @@ const AppModel: FC<{
 
   return (
     <Container
-      className={classNames(className, 'app-modal')}
+      className={classNames(className, "app-modal")}
       style={containerStyle}
       onClick={(e) => {
         e.stopPropagation();
       }}
     >
       <div className="header">
-        <div className="title">{type === 'create' ? '新建' : '编辑'}子应用</div>
+        <div className="title">{type === "create" ? "新建" : "编辑"}子应用</div>
         <div className="close" onClick={handleClose}>
           <Icon type="guanbi" className="icon" />
         </div>
@@ -178,10 +178,10 @@ const AppModel: FC<{
             required
             initialValue={appName}
             rules={[
-              { required: true, message: '请输入子应用名称' },
+              { required: true, message: "请输入子应用名称" },
               {
                 pattern: /^[\u4e00-\u9fa5_a-zA-Z0-9]{3,20}$/,
-                message: '子应用名称应为3-20位汉字、字母、数字或下划线',
+                message: "子应用名称应为3-20位汉字、字母、数字或下划线",
               },
             ]}
           >
@@ -195,14 +195,14 @@ const AppModel: FC<{
             />
           </Form.Item>
         </Form>
-        {type === 'create' && (
+        {type === "create" && (
           <div className="form-item mt24">
             <div className="label">子应用类型</div>
             <div className="type">
               <div
-                className={classNames('flow', selectedType === 'flow' ? 'active' : '')}
+                className={classNames("flow", selectedType === "flow" ? "active" : "")}
                 onClick={() => {
-                  setSelectedType('flow');
+                  setSelectedType("flow");
                 }}
               >
                 <img src={FlowImage} alt="FlowImage" className="image" />
@@ -211,7 +211,7 @@ const AppModel: FC<{
                   <div className="desc">可配置表单、流程、列表</div>
                 </div>
               </div>
-              <div className={classNames('screen', selectedType === 'screen' ? 'active' : '')}>
+              <div className={classNames("screen", selectedType === "screen" ? "active" : "")}>
                 <img src={ScreenImage} alt="ScreenImage" className="image" />
                 <div className="text">
                   <div className="title">新建大屏子应用</div>

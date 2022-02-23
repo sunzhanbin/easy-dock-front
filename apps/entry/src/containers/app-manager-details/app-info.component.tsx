@@ -1,52 +1,60 @@
-import React, { useCallback } from "react";
-import { Link } from "react-router-dom";
+import { FC, useMemo } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "antd";
-import { useAppSelector } from "@/store";
-import {
-  useFetchWorkspaceListQuery,
-  useModifyAppStatusMutation,
-} from "@/http/app-manager.hooks";
-import {
-  selectCurrentWorkspaceId,
-  selectProjectId,
-} from "@/views/app-manager/index.slice";
-import { CopyToClipboard } from "react-copy-to-clipboard";
-import { workspaceShape } from "@utils/types";
+import { useWorkspaceDetailQuery, useFetchSubAppListQuery } from "@http/app-manager.hooks";
+import { Icon } from "@common/components";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import "@containers/app-manager-details/app-info.style";
 
-const AppInfoComponent: React.FC = () => {
-  const projectId = useAppSelector(selectProjectId);
-  const workspaceId = useAppSelector(selectCurrentWorkspaceId);
+const AppInfoComponent: FC<{ empty?: boolean }> = ({ empty = false }) => {
+  const navigate = useNavigate();
+  const { workspaceId } = useParams();
+  const { data: workspace } = useWorkspaceDetailQuery(Number(workspaceId), {
+    skip: !workspaceId || workspaceId === "undefined",
+  });
+  const { data: subAppList } = useFetchSubAppListQuery(Number(workspaceId), {
+    skip: !workspaceId || workspaceId === "undefined",
+  });
+  const hasPublished = useMemo(() => workspace?.extension, [workspace]);
+  const subAppCount = useMemo(() => subAppList?.length || 0, [subAppList]);
 
-  const { workspace } = useFetchWorkspaceListQuery(projectId, {
-    selectFromResult: ({ data }) => ({
-      workspace: data?.find(
-        (item: workspaceShape) => item.id === Number(workspaceId)
-      ),
-    }),
+  const handleCreate = useMemoCallback(() => {
+    navigate(`./setup`);
   });
 
-  const [modifyAppStatus] = useModifyAppStatusMutation();
-
-  const handleModifyAppStatus = useCallback(() => {
-    modifyAppStatus({ id: workspaceId, status: 1 });
-  }, [modifyAppStatus, workspaceId]);
-
-  const handlePreview = useCallback(() => {
-    console.log("preview");
-  }, []);
-
+  if (empty) {
+    return (
+      <div className="app-info-component">
+        <div className="header">
+          <div className="base-info">
+            <span className="name">请先创建工作区</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
   return (
-    <React.Fragment>
-      这里是应用详情:: {workspace.name}
-      <br />
-      <Link to={`../${workspaceId}`}>编辑应用</Link>
-      <br />
-      <Button onClick={handleModifyAppStatus}>修改状态</Button>
-      <Button onClick={handlePreview}>预览</Button>
-      <CopyToClipboard text={"www.exmple.com"}>
-        <Button>复制链接</Button>
-      </CopyToClipboard>
-    </React.Fragment>
+    <div className="app-info-component">
+      <div className="header">
+        <div className="base-info">
+          <span className="name">{workspace?.name}</span>
+          <span className="count">({subAppCount})</span>
+        </div>
+        {!hasPublished && (
+          <Button
+            className="create"
+            size="large"
+            type="default"
+            ghost
+            icon={<Icon type="xinzeng" className="icon" />}
+            onClick={handleCreate}
+          >
+            创建应用编排
+          </Button>
+        )}
+      </div>
+      {hasPublished && <div className="content"></div>}
+    </div>
   );
 };
 

@@ -1,7 +1,7 @@
-import { memo, FC, useMemo, useState, useEffect } from 'react';
-import { Modal, Popover, Checkbox, message } from 'antd';
-import { Icon, MemberList, Loading } from '@common/components';
-import useMemoCallback from '@common/hooks/use-memo-callback';
+import { memo, FC, useMemo, useState, useEffect } from "react";
+import { Modal, Popover, Checkbox, message } from "antd";
+import { Icon, MemberList, Loading } from "@common/components";
+import useMemoCallback from "@common/hooks/use-memo-callback";
 import {
   SubAppTypeEnum,
   OwnerTypeEnum,
@@ -12,12 +12,12 @@ import {
   RoleOwner,
   Power,
   AuthEnum,
-} from '@/schema/app';
-import { AppAuthParams, assignAppAuth, fetchSubAppPowers, Privilege } from '@/api/auth';
-import Selector from '@common/components/member-selector/selector';
-import styles from './index.module.scss';
-import { ValueType } from '@common/components/member-selector/type';
-import { CheckboxChangeEvent } from 'antd/lib/checkbox';
+} from "@/schema/app";
+import { AppAuthParams, assignAppAuth, fetchSubAppPowers, Privilege } from "@/api/auth";
+import Selector from "@common/components/member-selector/selector";
+import styles from "./index.module.scss";
+import { ValueType } from "@common/components/member-selector/type";
+import { CheckboxChangeEvent } from "antd/lib/checkbox";
 
 type Visitor = {
   members: UserOwner[];
@@ -54,7 +54,7 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: (value: AppAu
       });
   });
   const projectId = useMemo(() => {
-    return project.id || '';
+    return project.id || "";
   }, [project]);
   const flowSubAppList = useMemo(() => {
     return subAppList.filter((subApp) => subApp.type === SubAppTypeEnum.FLOW) || [];
@@ -62,37 +62,33 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: (value: AppAu
   const screenSubAppList = useMemo(() => {
     return subAppList.filter((subApp) => subApp.type === SubAppTypeEnum.SCREEN) || [];
   }, [subAppList]);
-  const getVisitor = useMemoCallback(
-    (powers: Power[]): Visitor => {
-      const powerList = [...powers];
-      const members = powerList
-        .filter((power) => power.ownerType === OwnerTypeEnum.USER)
-        .map((power) => Object.assign(power.owner, { name: (power.owner as UserOwner).userName }));
-      const departs = powerList
-        .filter((power) => power.ownerType === OwnerTypeEnum.DEPARTMENT)
-        .map((power) => power.owner);
-      const roles = powerList.filter((power) => power.ownerType === OwnerTypeEnum.ROLE).map((power) => power.owner);
-      return { members, departs, roles };
-    },
-  );
-  const deletePower = useMemoCallback(
-    (visitor: Visitor, type, visitorId): Visitor => {
-      const { members, departs, roles } = visitor;
-      if (type === 'member') {
-        const index = members.findIndex((member) => member.id === visitorId);
-        members.splice(index, 1);
-      } else if (type === 'dept') {
-        const index = departs.findIndex((dept) => dept.id === visitorId);
-        departs.splice(index, 1);
-      } else if (type === 'role') {
-        const index = roles.findIndex((role) => role.id === visitorId);
-        roles.splice(index, 1);
-      }
-      return { members, departs, roles };
-    },
-  );
+  const getVisitor = useMemoCallback((powers: Power[]): Visitor => {
+    const powerList = [...powers];
+    const members = powerList
+      .filter((power) => power.ownerType === OwnerTypeEnum.USER)
+      .map((power) => Object.assign(power.owner, { name: (power.owner as UserOwner).userName }));
+    const departs = powerList
+      .filter((power) => power.ownerType === OwnerTypeEnum.DEPARTMENT)
+      .map((power) => power.owner);
+    const roles = powerList.filter((power) => power.ownerType === OwnerTypeEnum.ROLE).map((power) => power.owner);
+    return { members, departs, roles };
+  });
+  const deletePower = useMemoCallback((visitor: Visitor, type, visitorId): Visitor => {
+    const { members, departs, roles } = visitor;
+    if (type === "member") {
+      const index = members.findIndex((member) => member.id === visitorId);
+      members.splice(index, 1);
+    } else if (type === "dept") {
+      const index = departs.findIndex((dept) => dept.id === visitorId);
+      departs.splice(index, 1);
+    } else if (type === "role") {
+      const index = roles.findIndex((role) => role.id === visitorId);
+      roles.splice(index, 1);
+    }
+    return { members, departs, roles };
+  });
   const handleDeletePower = useMemoCallback((visitorId, type, id) => {
-    if (id === 'flow') {
+    if (id === "flow") {
       setDataVisitor((visitor) => deletePower(visitor, type, visitorId));
     } else {
       setSubAppVisitorList((list) => {
@@ -111,7 +107,7 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: (value: AppAu
     const members: UserOwner[] = value.members;
     const departs: DepartOwner[] = value.depts;
     const roles: RoleOwner[] = value.roles;
-    if (id === 'flow') {
+    if (id === "flow") {
       setDataVisitor({ members, departs, roles });
     } else {
       setSubAppVisitorList((list) => {
@@ -159,7 +155,7 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: (value: AppAu
       roles: [],
     };
     let openVisit = false;
-    if (id === 'flow') {
+    if (id === "flow") {
       visitor = dataVisitor;
     } else {
       const subAppVisitorInfo = subAppVisitorList.find((item) => item.id === id);
@@ -175,7 +171,7 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: (value: AppAu
             <Checkbox
               className={styles.all}
               checked={openVisit}
-              style={{ opacity: id === 'flow' ? '0' : '1' }}
+              style={{ opacity: id === "flow" ? "0" : "1" }}
               onChange={(e) => {
                 handleChangeOpenVisitor(e, id);
               }}
@@ -190,7 +186,7 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: (value: AppAu
               placement="bottomRight"
               arrowContent={null}
             >
-              <div className={styles.add} style={{ opacity: openVisit ? '0' : '1' }}>
+              <div className={styles.add} style={{ opacity: openVisit ? "0" : "1" }}>
                 <Icon type="xinzeng" className={styles.icon} />
               </div>
             </Popover>
@@ -201,7 +197,7 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: (value: AppAu
             members={members}
             depts={departs}
             roles={roles}
-            className={styles['member-list']}
+            className={styles["member-list"]}
             editable
             onDelete={(visitorId, type) => {
               handleDeletePower(visitorId, type, id);
@@ -235,7 +231,7 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: (value: AppAu
     const value: AppAuthParams = { id: String(appId), dataPrivileges, subapps };
     assignAppAuth(value).then((res) => {
       if (res.resultCode === 0) {
-        message.success('权限设置成功!');
+        message.success("权限设置成功!");
         onOk(value);
       }
     });
@@ -262,7 +258,7 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: (value: AppAu
   }, [subAppList, getVisitor]);
   return (
     <Modal
-      className={styles['auth-modal']}
+      className={styles["auth-modal"]}
       title={`${appName}应用端访问权限`}
       closeIcon={<Icon type="guanbi" className={styles.close} />}
       visible={true}
@@ -279,11 +275,11 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: (value: AppAu
           </div>
           <div className={styles.text}>子应用设置成员或角色后，成员或角色会在应用端看到该菜单</div>
         </div>
-        <div className={styles['auth-list']}>
-          <div className={styles['flow-auth']}>
+        <div className={styles["auth-list"]}>
+          <div className={styles["flow-auth"]}>
             <div className={styles.title}>流程</div>
-            <div className={styles['app-list']}>
-              {renderAppItem('flow', '流程数据管理')}
+            <div className={styles["app-list"]}>
+              {renderAppItem("flow", "流程数据管理")}
               {flowSubAppList.map((subApp) => {
                 const { id, name } = subApp;
                 return renderAppItem(String(id), name);
@@ -291,12 +287,14 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: (value: AppAu
             </div>
           </div>
           {screenSubAppList.length > 0 && (
-            <div className={styles['page-auth']}>
+            <div className={styles["page-auth"]}>
               <div className={styles.title}>页面</div>
-              {screenSubAppList.map((subApp) => {
-                const { id, name } = subApp;
-                return renderAppItem(String(id), name);
-              })}
+              <div className={styles["app-list"]}>
+                {screenSubAppList.map((subApp) => {
+                  const { id, name } = subApp;
+                  return renderAppItem(String(id), name);
+                })}
+              </div>
             </div>
           )}
         </div>

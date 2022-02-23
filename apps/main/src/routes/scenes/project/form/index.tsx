@@ -1,8 +1,8 @@
-import React, { useEffect, useMemo } from 'react';
-import { Form, Input } from 'antd';
-import { FormInstance } from 'antd/lib/form';
-import { ProjectShape } from '../../types';
-import styles from './index.module.scss';
+import React, { useEffect, useMemo } from "react";
+import { Form, Input } from "antd";
+import { FormInstance } from "antd/lib/form";
+import { ProjectShape } from "../../types";
+import styles from "./index.module.scss";
 
 export type FormType = FormInstance<{ name: string }>;
 

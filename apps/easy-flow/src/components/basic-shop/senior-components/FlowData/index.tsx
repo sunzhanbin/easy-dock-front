@@ -1,7 +1,7 @@
-import { memo } from 'react';
-import { Table } from 'antd';
-import { SelectColumnsItem } from '@type';
-import { ConfigMap } from '@components/form-engine';
+import { memo } from "react";
+import { Table } from "antd";
+import { SelectColumnsItem } from "@type";
+import { ConfigMap } from "@components/form-engine";
 
 type TableComponentType = {
   flows: SelectColumnsItem;
@@ -10,12 +10,12 @@ type TableComponentType = {
 
 const TableComponent = (props: TableComponentType) => {
   const { flows, configMap } = props;
-  const TableName = flows.id;
+  const TableName = flows?.id || "";
   const dataSource: any = TableName && configMap?.[TableName]?.tableData;
 
   return (
     <div key={TableName}>
-      <Table columns={flows.columns} dataSource={dataSource} />
+      <Table columns={flows?.columns || []} dataSource={dataSource} />
     </div>
   );
 };

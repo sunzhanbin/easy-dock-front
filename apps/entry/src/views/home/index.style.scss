@@ -1,0 +1,28 @@
+.home_layout {
+  height: 100%;
+  min-height: 930px !important;
+  overflow-y: auto;
+  .home_content {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .home_sider {
+    flex: 0 0 360px !important;
+    width: 360px !important;
+    max-width: 360px !important;
+    min-width: 360px !important;
+    background-color: #fff;
+    box-shadow: 0 2px 20px 0 rgba(24, 39, 67, 0.04);
+    .ant-layout-sider-children {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+  .footer {
+    background-color: #fff;
+    text-align: center;
+    font-size: 12px;
+    color: rgba(24, 31, 67, 0.5);
+  }
+}
