@@ -6,6 +6,7 @@ import { nameRule } from "@/consts";
 import { useAddWorkspaceMutation, useEditWorkspaceMutation } from "@/http";
 import { useAppDispatch } from "@/store";
 import { useNavigate, useParams } from "react-router-dom";
+import "./index.style.scss";
 
 const AddWorkspaceModal = React.forwardRef(function AddWorkspace(_, ref) {
   const dispatch = useAppDispatch();
@@ -71,6 +72,7 @@ const AddWorkspaceModal = React.forwardRef(function AddWorkspace(_, ref) {
       title={`${title}工作区`}
       okText="确定"
       cancelText="取消"
+      wrapClassName="workspace-modal"
       visible={isModalVisible}
       onOk={handleOk}
       onCancel={handleCancel}
