@@ -8,7 +8,7 @@ import { save as saveExtend, setDirty as setExtendDirty } from "@app/app";
 import { save as saveFlow, setDirty as setFlowDirty } from "../flow-design/flow-slice";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { AsyncButton, confirm, Icon } from "@common/components";
-import { axios } from "@utils";
+import { axios, exportJsonFile } from "@utils";
 import Header from "../../../components/header";
 import { layoutSelector, subAppSelector } from "@/features/bpm-editor/form-design/formzone-reducer";
 import { saveForm, setIsDirty as setFormDirty } from "@/features/bpm-editor/form-design/formdesign-slice";
@@ -136,6 +136,21 @@ const EditorHeader: FC = () => {
     }
   }, [dirty, history, showConfirm]);
 
+  const handleExportForm = async () => {
+    const data = await axios.get(`/form/subapp/${bpmId}/export`);
+    exportJsonFile(data, `${appName}_form`);
+  };
+  const handleExportFlow = async () => {
+    const data = await axios.get(`/process/subapp/${bpmId}/export`);
+    exportJsonFile(data, `${appName}_flow`);
+  };
+  const handleImportForm = async () => {
+    console.info("import form");
+  };
+  const handleImportFlow = async () => {
+    console.info("import flow");
+  };
+
   return (
     <div className={styles.header_container} ref={containerRef}>
       <Header backText={appName} className={styles.edit_header} goBack={handleGoBack}>
@@ -202,7 +217,26 @@ const EditorHeader: FC = () => {
           <Button type="primary" ghost className={styles.save} size="large" onClick={handleSave}>
             保存
           </Button>
-
+          {pathName === formDesignPath && (
+            <>
+              <Button type="primary" className={styles.prev} size="large" onClick={handleExportForm}>
+                导出表单
+              </Button>
+              <Button type="primary" className={styles.prev} size="large" onClick={handleImportForm}>
+                导入表单
+              </Button>
+            </>
+          )}
+          {pathName === flowDesignPath && (
+            <>
+              <Button type="primary" className={styles.prev} size="large" onClick={handleExportFlow}>
+                导出流程
+              </Button>
+              <Button type="primary" className={styles.prev} size="large" onClick={handleImportFlow}>
+                导入流程
+              </Button>
+            </>
+          )}
           {pathName === formDesignPath && (
             <Button
               type="primary"
@@ -214,6 +248,7 @@ const EditorHeader: FC = () => {
               下一步
             </Button>
           )}
+
           {pathName === `${match.url}/flow-design` && (
             <AsyncButton
               className={styles.publish}

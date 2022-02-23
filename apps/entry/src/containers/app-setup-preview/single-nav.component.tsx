@@ -116,7 +116,7 @@ const SingleNavComponent = ({ children, extra, dataSource, selectedKey, theme }:
       <div className="right">
         <div className="header">
           <div className="user-container">
-            <UserComponent showProject={true} />
+            <UserComponent showProject={true} theme={theme} />
           </div>
         </div>
         <div className="content">{children}</div>

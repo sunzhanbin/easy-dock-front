@@ -33,6 +33,9 @@ const SelectComponent = (
     }
     const { options, ...others } = props;
     const result = Object.assign({}, others, prop);
+    if (multiple && result.value === null) {
+      result.value = undefined;
+    }
     delete result.fieldName;
     delete result.colSpace;
     delete result.dataSource;

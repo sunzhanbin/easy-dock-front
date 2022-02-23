@@ -1,3 +1,4 @@
+@import "@containers/app-setup-preview/multi-nav.style";
 .app-info {
   background: transparent;
   & > .multi {
@@ -9,6 +10,7 @@
       width: 40px;
       height: 40px;
       object-fit: contain;
+      border-radius: 3px;
       margin-right: 12px;
     }
     & > .app-name {
@@ -31,6 +33,7 @@
       width: 40px;
       height: 40px;
       object-fit: contain;
+      border-radius: 3px;
       margin: 12px auto;
     }
     & > .app-name {
@@ -40,6 +43,11 @@
       font-weight: 500;
       color: rgba(0, 0, 0, 0.85);
       line-height: 32px;
+    }
+  }
+  &.dark{
+    &>.app-name{
+      color: rgba($dark-text-color, 0.85);
     }
   }
 }

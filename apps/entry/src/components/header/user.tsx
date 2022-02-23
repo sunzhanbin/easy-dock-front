@@ -1,5 +1,6 @@
 import { memo, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import classNames from "classnames";
 import { Dropdown, Menu } from "antd";
 import { auth } from "@/consts";
 import { useGetUserInfoQuery } from "@/http";
@@ -12,9 +13,10 @@ import { clearCookies } from "@/utils/utils";
 
 type HeaderUserProps = {
   showProject?: boolean; // 首页不展示用户头像
+  theme?: string;
 };
 
-function HeaderUser({ showProject }: HeaderUserProps) {
+function HeaderUser({ showProject, theme = "light" }: HeaderUserProps) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -79,7 +81,7 @@ function HeaderUser({ showProject }: HeaderUserProps) {
   }, [isAdmin, handleGoAuth, handleLogout]);
 
   return (
-    <div className="user-container-component">
+    <div className={classNames("user-container-component", theme)}>
       {user ? (
         <Dropdown overlay={dropdownOverlay} getPopupContainer={(c) => c} placement="bottomLeft">
           <div className="user">
