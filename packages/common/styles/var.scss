@@ -14,6 +14,7 @@ $title-text-color: var(--custom-title-text-color, #181f43ff);
 $body-text-color: var(--custom-body-text-color, #181f43bf);
 $caption-text-color: var(--custom-caption-text-color, #181f4380);
 $hint-text-color: var(--custom-hint-text-color, #181f434d);
+$svg-color: var(--custom-svg-color, #181f434d);
 $menu-title-text-color: var(--custom-menu-title-text-color, #181f43ff);
 $label-hint-text-color: var(--custom-label-hint-text-color, #181F43D9);
 
@@ -125,6 +126,8 @@ $flow-form-title-color: var(--custom-flow-form-title-color, #000000D9);
 $flow-form-field-name-border-color: var(--custom-flow-form-field-name-border-color, #181F4314);
 $flow-form-symbol-color: var(--custom-flow-form-symbol-color, #181F437F);
 $flow-line-border-color: var(--custom-flow-line-border-color, #181F431F);
+/* 发起流程 */
+$start-flow-border-top-color: var(--custom-start-flow-border-top-color, #06C498FF);
 
 
 // checkbox

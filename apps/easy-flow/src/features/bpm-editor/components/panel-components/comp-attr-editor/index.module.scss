@@ -85,7 +85,7 @@
     :global {
       .ant-select-item-option-content {
         span:nth-child(1) {
-          color: #181f43;
+          color: $title-text-color;
         }
 
         span:nth-child(2) {

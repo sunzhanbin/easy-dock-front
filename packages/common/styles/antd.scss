@@ -232,6 +232,10 @@
   background-color: $input-background-normal-color;
 }
 
+.ant-input-textarea-show-count::after {
+  color: $hint-text-color;
+}
+
 .ant-input, .ant-input-number {
   border-radius: 3px;
   border-color: transparent;
@@ -1243,4 +1247,10 @@
 .ant-tree-checkbox-inner {
   background-color: $checkbox-indeterminate-bg;
   border-color: $checkbox-indeterminate-border-color;
+}
+
+// .ant-upload
+.ant-upload {
+  background-color: $input-background-normal-color !important;
+  color: $body-text-color;
 }

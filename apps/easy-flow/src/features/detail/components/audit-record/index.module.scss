@@ -41,7 +41,7 @@
   .node-name {
     margin-bottom: 13px;
     line-height: 20px;
-    color: #181f43;
+    color: $title-text-color;
     font-size: 12px;
     font-weight: 400;
   }
@@ -65,7 +65,7 @@
       .user-name {
         margin-right: 4px;
         line-height: 22px;
-        color: #181f43;
+        color: $title-text-color;
         font-size: 14px;
         font-weight: 400;
       }

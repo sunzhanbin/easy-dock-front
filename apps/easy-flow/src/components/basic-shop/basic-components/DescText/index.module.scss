@@ -1,13 +1,17 @@
+@import '@common/styles/var.scss';
+
 .container {
   min-height: 22px;
   line-height: 1.25;
 
   .desc {
-    color: #dcdcdc;
+    color: $body-text-color;
   }
+
   img {
     object-fit: contain;
   }
+
   hr {
     height: 1px;
     background-color: rgba(#181f43, 0.08);

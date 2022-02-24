@@ -28,7 +28,7 @@
     align-items: center;
     font-size: 18px;
     font-weight: 600;
-    color: rgba(0, 0, 0, 0.85);
+    color: $label-hint-text-color;
     height: 42px;
   }
 
@@ -55,7 +55,7 @@
         line-height: 28px;
 
         .ant-tabs-tab-btn {
-          color: rgba(0, 0, 0, 0.85);
+          color: $label-hint-text-color;
         }
       }
     }

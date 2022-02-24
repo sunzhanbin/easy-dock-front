@@ -7,7 +7,7 @@
   flex-direction: column;
   height: 100%;
   overflow: hidden;
-  background-color: #fff;
+  background-color: $content-background-color;
 
   .header {
     position: relative;
@@ -23,7 +23,7 @@
     }
 
     & > div.back {
-      color: rgba(0, 0, 0, 0.85);
+      color: $label-hint-text-color;
 
       svg {
         color: inherit;
@@ -111,7 +111,7 @@
 
 .start-form-wrapper {
   flex: 1 1 0;
-  background-color: var(--custom-body-background, #fff);
+  background-color: $content-background-color;
   // margin-top: 36px;
 
   .form {
@@ -122,10 +122,10 @@
     width: 68%;
     margin: 0 16% 24px 16%;
     padding: 32px 0 0 32px;
-    background: var(--custom-component-background, #fff);
+    background: $flow-manage-drawer-bg;
     box-shadow: 0px -32px 32px 0px rgba(24, 31, 67, 0.12);
     border-radius: 2px;
-    border-top: 5px solid #06c498;
+    border-top: 5px solid $start-flow-border-top-color;
     overflow-y: hidden;
 
     .title {
@@ -133,7 +133,7 @@
       margin-right: 32px;
       border-bottom: 1px solid $button-default-border-color;
       line-height: 34px;
-      color: rgba(#000, 0.85);
+      color: $label-hint-text-color;
       font-size: 24px;
       font-weight: bold;
 
