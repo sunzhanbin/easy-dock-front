@@ -17,7 +17,7 @@ import {
   AuthType,
   FieldAuthsMap,
 } from "@type/flow";
-import { FormMeta } from "@type";
+import { ComponentConfig, FormMeta } from "@type";
 import { Api } from "@type/api";
 import { RootState } from "@app/store";
 import { fielduuid, createNode, flowUpdate, branchUpdate, valid, ValidResultType, formatFieldsAuths } from "./util";
@@ -143,6 +143,155 @@ const flow = createSlice({
 const flowActions = flow.actions;
 export const { setLoading, updateNode, delNode, setCacheMembers, setDirty, setSaving, setChoosedNode } = flow.actions;
 
+const getFieldsTemplate = (fields: ComponentConfig[]): FlowType["fieldsTemplate"] => {
+  const fieldsTemplate: FlowType["fieldsTemplate"] = [];
+  fields.forEach((item) => {
+    // Tabs需要设置的是子控件的权限
+    if (item.config.type === "Tabs") {
+      const component = fields.find((field) => field.props.id === item.config.id);
+      if (component?.props?.components && component.props.components.length > 0) {
+        const list = component.props.components.map((com: any) => {
+          const config = com.config;
+          return {
+            name: `${item.config.label}·${config.label}`,
+            id: config.fieldName || config.id,
+            parentId: item.config.fieldName || item.config.id,
+            type: config.type,
+          };
+        });
+        fieldsTemplate.push(...list);
+      }
+    } else {
+      fieldsTemplate.push({
+        name: item.config.label as string,
+        id: item.config.fieldName || item.config.id,
+        type: item.config.type,
+      });
+    }
+  });
+  return fieldsTemplate;
+};
+
+const getCacheMembers = async (
+  fieldsTemplate: FieldTemplate[],
+  flowData: Flow,
+): Promise<{ hasAutoNode: boolean; cacheMembers: FlowType["cacheMembers"] }> => {
+  // 收集流程中所用到的人员
+  const userIds: Set<number | string> = new Set();
+  const deptIds: Set<number | string> = new Set();
+  const roleIds: Set<number | string> = new Set();
+
+  let hasAutoNode = false;
+  const fieldsMap = fieldsTemplate.reduce((curr, prev) => {
+    curr[prev.id] = true;
+    return curr;
+  }, {} as { [key: string]: true });
+
+  flowRecursion(flowData, (node) => {
+    if (
+      node.type === NodeType.FillNode ||
+      node.type === NodeType.AuditNode ||
+      node.type === NodeType.CCNode ||
+      node.type === NodeType.StartNode
+    ) {
+      if (node.type !== NodeType.StartNode) {
+        // 舍弃办理人动态值里的多余字段
+        node.correlationMemberConfig.dynamic = Object.assign({}, node.correlationMemberConfig.dynamic, {
+          fields: (node.correlationMemberConfig.dynamic?.fields || []).filter((field) => fieldsMap[field]),
+        });
+
+        // 提取每个节点的人员
+        (node.correlationMemberConfig.members || []).forEach((member) => {
+          userIds.add(member);
+        });
+
+        // 提取每个节点中的部门
+        (node.correlationMemberConfig.depts || []).forEach((dept) => {
+          deptIds.add(dept);
+        });
+
+        // 提取每个节点中的角色
+        (node.correlationMemberConfig.roles || [])
+          .concat(node.correlationMemberConfig.dynamic?.roles || [])
+          .forEach((role) => {
+            roleIds.add(role);
+          });
+      }
+      if (node.type === NodeType.FillNode || node.type === NodeType.AuditNode) {
+        (node.dueConfig?.notice.users || []).forEach((v) => userIds.add(v));
+      }
+
+      const fieldsAuths: FieldAuthsMap = {};
+      // 舍弃冗余字段
+      fieldsTemplate.forEach((field) => {
+        const { id, parentId } = field;
+        // Tabs等有子组件的权限需要有层级区分,为以下这种形式{fieldsAuths:{Input_1:1,Tabs_2:{Radio:2,Checkbox:1}}}
+        if (parentId) {
+          fieldsAuths[parentId] = fieldsAuths[parentId] || {};
+          if (node.fieldsAuths && node.fieldsAuths[parentId]) {
+            if ((node.fieldsAuths[parentId] as FieldAuthsMap)[id] !== undefined) {
+              (fieldsAuths[parentId] as FieldAuthsMap)[id] = (node.fieldsAuths[parentId] as FieldAuthsMap)[id];
+            } else {
+              (fieldsAuths[parentId] as FieldAuthsMap)[id] = AuthType.View;
+            }
+          } else {
+            (fieldsAuths[parentId] as FieldAuthsMap)[id] = AuthType.View;
+          }
+          return;
+        }
+        if (node.fieldsAuths && node.fieldsAuths[id] !== undefined) {
+          fieldsAuths[id] = node.fieldsAuths[id];
+        } else {
+          fieldsAuths[id] = AuthType.View;
+        }
+      });
+      node.fieldsAuths = fieldsAuths;
+    } else if (node.type === NodeType.BranchNode) {
+      node.branches = node.branches.map((branch) => {
+        return {
+          ...branch,
+          conditions: branch.conditions.map((row) => {
+            return row.filter((col) => fieldsMap[col.fieldName as string]);
+          }),
+        };
+      });
+    } else if (node.type === NodeType.AutoNodePushData && !hasAutoNode) {
+      hasAutoNode = true;
+    }
+  });
+  // 这样设计为了避免用户更新完头像或者名称后不在节点中更新的问题
+  const userResponse = await runtimeAxios.post("/user/query/owner", {
+    deptIds: Array.from(deptIds),
+    userIds: Array.from(userIds),
+    roleIds: Array.from(roleIds),
+  });
+
+  const cacheMembers: FlowType["cacheMembers"] = {};
+
+  (userResponse.data.users || []).forEach((user: { id: number; userName: string; avatar?: string }) => {
+    cacheMembers[user.id] = {
+      id: user.id,
+      name: user.userName,
+      avatar: user.avatar,
+    };
+  });
+
+  (userResponse.data.depts || []).forEach((dept: { id: number; name: string }) => {
+    cacheMembers[dept.id] = {
+      id: dept.id,
+      name: dept.name,
+    };
+  });
+
+  (userResponse.data.roles || []).forEach((role: { id: number; name: string }) => {
+    cacheMembers[role.id] = {
+      id: role.id,
+      name: role.name,
+    };
+  });
+  return { hasAutoNode, cacheMembers };
+};
+
 // 加载应用的流程，对于初始创建的应用是null
 export const load = createAsyncThunk("flow/load", async (appkey: string, { dispatch }) => {
   try {
@@ -157,31 +306,7 @@ export const load = createAsyncThunk("flow/load", async (appkey: string, { dispa
     ]);
 
     const fields = form.meta?.components || [];
-    const fieldsTemplate: FlowType["fieldsTemplate"] = [];
-    fields.forEach((item) => {
-      // Tabs需要设置的是子控件的权限
-      if (item.config.type === "Tabs") {
-        const component = fields.find((field) => field.props.id === item.config.id);
-        if (component?.props?.components && component.props.components.length > 0) {
-          const list = component.props.components.map((com: any) => {
-            const config = com.config;
-            return {
-              name: <string>`${item.config.label}·${config.label}`,
-              id: <string>config.fieldName || config.id,
-              parentId: <string>item.config.fieldName || item.config.id,
-              type: config.type,
-            };
-          });
-          fieldsTemplate.push(...list);
-        }
-      } else {
-        fieldsTemplate.push({
-          name: <string>item.config.label,
-          id: <string>item.config.fieldName || item.config.id,
-          type: item.config.type,
-        });
-      }
-    });
+    const fieldsTemplate = getFieldsTemplate(fields);
 
     let flowData = flowResponse.meta || [];
 
@@ -212,125 +337,10 @@ export const load = createAsyncThunk("flow/load", async (appkey: string, { dispa
 
       flowData = [startNode, fillNode, finishNode];
     } else {
-      // 收集流程中所用到的人员
-      const userIds: Set<number | string> = new Set();
-      const deptIds: Set<number | string> = new Set();
-      const roleIds: Set<number | string> = new Set();
-
-      let hasAutoNode = false;
-      const fieldsMap = fieldsTemplate.reduce((curr, prev) => {
-        curr[prev.id] = true;
-        return curr;
-      }, {} as { [key: string]: true });
-
-      flowRecursion(flowData, (node) => {
-        if (
-          node.type === NodeType.FillNode ||
-          node.type === NodeType.AuditNode ||
-          node.type === NodeType.CCNode ||
-          node.type === NodeType.StartNode
-        ) {
-          if (node.type !== NodeType.StartNode) {
-            // 舍弃办理人动态值里的多余字段
-            node.correlationMemberConfig.dynamic = Object.assign({}, node.correlationMemberConfig.dynamic, {
-              fields: (node.correlationMemberConfig.dynamic?.fields || []).filter((field) => fieldsMap[field]),
-            });
-
-            // 提取每个节点的人员
-            (node.correlationMemberConfig.members || []).forEach((member) => {
-              userIds.add(member);
-            });
-
-            // 提取每个节点中的部门
-            (node.correlationMemberConfig.depts || []).forEach((dept) => {
-              deptIds.add(dept);
-            });
-
-            // 提取每个节点中的角色
-            (node.correlationMemberConfig.roles || [])
-              .concat(node.correlationMemberConfig.dynamic?.roles || [])
-              .forEach((role) => {
-                roleIds.add(role);
-              });
-          }
-          if (node.type === NodeType.FillNode || node.type === NodeType.AuditNode) {
-            (node.dueConfig?.notice.users || []).forEach((v) => userIds.add(v));
-          }
-
-          const fieldsAuths: FieldAuthsMap = {};
-          // 舍弃冗余字段
-          fieldsTemplate.forEach((field) => {
-            const { id, parentId } = field;
-            // Tabs等有子组件的权限需要有层级区分,为以下这种形式{fieldsAuths:{Input_1:1,Tabs_2:{Radio:2,Checkbox:1}}}
-            if (parentId) {
-              fieldsAuths[parentId] = fieldsAuths[parentId] || {};
-              if (node.fieldsAuths && node.fieldsAuths[parentId]) {
-                if ((node.fieldsAuths[parentId] as FieldAuthsMap)[id] !== undefined) {
-                  (fieldsAuths[parentId] as FieldAuthsMap)[id] = (node.fieldsAuths[parentId] as FieldAuthsMap)[id];
-                } else {
-                  (fieldsAuths[parentId] as FieldAuthsMap)[id] = AuthType.View;
-                }
-              } else {
-                (fieldsAuths[parentId] as FieldAuthsMap)[id] = AuthType.View;
-              }
-              return;
-            }
-            if (node.fieldsAuths && node.fieldsAuths[id] !== undefined) {
-              fieldsAuths[id] = node.fieldsAuths[id];
-            } else {
-              fieldsAuths[id] = AuthType.View;
-            }
-          });
-          node.fieldsAuths = fieldsAuths;
-        } else if (node.type === NodeType.BranchNode) {
-          node.branches = node.branches.map((branch) => {
-            return {
-              ...branch,
-              conditions: branch.conditions.map((row) => {
-                return row.filter((col) => fieldsMap[col.fieldName as string]);
-              }),
-            };
-          });
-        } else if (node.type === NodeType.AutoNodePushData && !hasAutoNode) {
-          hasAutoNode = true;
-        }
-      });
-
+      const { hasAutoNode, cacheMembers } = await getCacheMembers(fieldsTemplate, flowData);
       if (hasAutoNode) {
         dispatch(loadApis());
       }
-
-      // 这样设计为了避免用户更新完头像或者名称后不在节点中更新的问题
-      const userResponse = await runtimeAxios.post("/user/query/owner", {
-        deptIds: Array.from(deptIds),
-        userIds: Array.from(userIds),
-        roleIds: Array.from(roleIds),
-      });
-
-      const cacheMembers: FlowType["cacheMembers"] = {};
-
-      (userResponse.data.users || []).forEach((user: { id: number; userName: string; avatar?: string }) => {
-        cacheMembers[user.id] = {
-          id: user.id,
-          name: user.userName,
-          avatar: user.avatar,
-        };
-      });
-
-      (userResponse.data.depts || []).forEach((dept: { id: number; name: string }) => {
-        cacheMembers[dept.id] = {
-          id: dept.id,
-          name: dept.name,
-        };
-      });
-
-      (userResponse.data.roles || []).forEach((role: { id: number; name: string }) => {
-        cacheMembers[role.id] = {
-          id: role.id,
-          name: role.name,
-        };
-      });
-
       dispatch(flowActions.setCacheMembers(cacheMembers));
     }
 
@@ -344,6 +354,36 @@ export const load = createAsyncThunk("flow/load", async (appkey: string, { dispa
     dispatch(setLoading(false));
   }
 });
+
+export const loadFlowData = createAsyncThunk<void, { flowData: Flow; bpmId: string }, { state: RootState }>(
+  "flow/loadData",
+  async ({ flowData, bpmId }, { dispatch }) => {
+    try {
+      dispatch(setLoading(true));
+      dispatch(flowActions.setInitialFlow(flowInitial.data));
+      const form = await builderAxios.get<{ data: { meta: FormMeta } }>(`/form/${bpmId}`);
+      const fields = form.data.meta?.components || [];
+      const fieldsTemplate = getFieldsTemplate(fields);
+      if (flowData.length > 0) {
+        const { hasAutoNode, cacheMembers } = await getCacheMembers(fieldsTemplate, flowData);
+        if (hasAutoNode) {
+          dispatch(loadApis());
+        }
+        dispatch(flowActions.setCacheMembers(cacheMembers));
+        dispatch(flowActions.setFieldsTemplate(fieldsTemplate));
+        dispatch(flowActions.setInitialFlow(flowData));
+        dispatch(flowActions.setForm(form.data.meta));
+        dispatch(flowActions.setInvalidMaps({}));
+        // 导入表单时认为流程发生改变
+        dispatch(flowActions.setDirty(true));
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      dispatch(setLoading(false));
+    }
+  },
+);
 
 export const save = createAsyncThunk<void, { subappId: string; showTip?: boolean }, { state: RootState }>(
   "flow/save",

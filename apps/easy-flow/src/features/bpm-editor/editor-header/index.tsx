@@ -5,13 +5,14 @@ import useMemoCallback from "@common/hooks/use-memo-callback";
 import useConfirmLeave from "@common/hooks/use-confirm-leave";
 import { useHistory, useRouteMatch, NavLink, useLocation, useParams } from "react-router-dom";
 import { save as saveExtend, setDirty as setExtendDirty } from "@app/app";
-import { save as saveFlow, setDirty as setFlowDirty } from "../flow-design/flow-slice";
+import { loadFlowData, save as saveFlow, setDirty as setFlowDirty } from "../flow-design/flow-slice";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { AsyncButton, confirm, Icon } from "@common/components";
 import { axios, exportJsonFile } from "@utils";
 import Header from "../../../components/header";
 import { layoutSelector, subAppSelector } from "@/features/bpm-editor/form-design/formzone-reducer";
-import { saveForm, setIsDirty as setFormDirty } from "@/features/bpm-editor/form-design/formdesign-slice";
+import { loadFormData, saveForm, setIsDirty as setFormDirty } from "@/features/bpm-editor/form-design/formdesign-slice";
+import ImportButton from "../components/import-button";
 import dirtySelector from "../use-dirty-selector";
 import styles from "./index.module.scss";
 
@@ -105,7 +106,6 @@ const EditorHeader: FC = () => {
 
     setTimeout(() => {
       window.close();
-      // window.location.replace(`/main/builder/app/${appId}`);
     }, 1500);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bpmId, dispatch, appId]);
@@ -115,7 +115,7 @@ const EditorHeader: FC = () => {
 
     const beforeLeave = (e: BeforeUnloadEvent) => {
       e.preventDefault();
-      e.returnValue = "编辑的内容尚未保存，请确认是否离开？";
+      e.returnValue = "编辑的内容尚未保,请确认是否离开?";
     };
 
     window.addEventListener("beforeunload", beforeLeave);
@@ -144,11 +144,11 @@ const EditorHeader: FC = () => {
     const data = await axios.get(`/process/subapp/${bpmId}/export`);
     exportJsonFile(data, `${appName}_flow`);
   };
-  const handleImportForm = async () => {
-    console.info("import form");
+  const handleImportForm = async (formData: any) => {
+    await dispatch(loadFormData({ formData, isDirty: true }));
   };
-  const handleImportFlow = async () => {
-    console.info("import flow");
+  const handleImportFlow = async (flowData: any) => {
+    await dispatch(loadFlowData({ flowData, bpmId }));
   };
 
   return (
@@ -222,9 +222,7 @@ const EditorHeader: FC = () => {
               <Button type="primary" className={styles.prev} size="large" onClick={handleExportForm}>
                 导出表单
               </Button>
-              <Button type="primary" className={styles.prev} size="large" onClick={handleImportForm}>
-                导入表单
-              </Button>
+              <ImportButton text="导入表单" className={styles.prev} handleSuccess={handleImportForm} />
             </>
           )}
           {pathName === flowDesignPath && (
@@ -232,9 +230,7 @@ const EditorHeader: FC = () => {
               <Button type="primary" className={styles.prev} size="large" onClick={handleExportFlow}>
                 导出流程
               </Button>
-              <Button type="primary" className={styles.prev} size="large" onClick={handleImportFlow}>
-                导入流程
-              </Button>
+              <ImportButton text="导入流程" className={styles.prev} handleSuccess={handleImportFlow} />
             </>
           )}
           {pathName === formDesignPath && (
