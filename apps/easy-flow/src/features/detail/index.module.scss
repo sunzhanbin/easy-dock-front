@@ -13,6 +13,8 @@
     position: relative;
     flex-shrink: 0;
     z-index: 99;
+    background-color: $start-flow-log-bg;
+    box-shadow: 0px 2px 4px 0px $content-background-color;
 
     & > div:first-child {
       color: #fff;

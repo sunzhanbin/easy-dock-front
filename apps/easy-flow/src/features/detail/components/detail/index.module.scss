@@ -14,7 +14,8 @@
     flex-shrink: 0;
     width: 310px;
     padding: 24px 24px 32px;
-    border-left: 1px solid rgba(#181f43, 0.12);
+    background-color: $start-flow-log-bg;
+    border-left: 1px solid $flow-line-border-color;
     overflow-y: auto;
 
     .record-title {
@@ -50,7 +51,6 @@
           top: 17px;
           bottom: 0;
           width: 5px;
-          background-color: #fff;
         }
       }
     }
