@@ -2,7 +2,8 @@
   "extends": "./tsconfig.base.json",
   "include": [
     "src/**/*",
-    "../../packages/common/**/*"
+    "../../packages/common/**/*",
+    "../../packages/theme/**/*"
   ],
   "exclude": [
     "lib/**",

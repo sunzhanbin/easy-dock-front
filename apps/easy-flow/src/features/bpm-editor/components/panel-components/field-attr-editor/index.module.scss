@@ -1,9 +1,12 @@
+@import '@common/styles/var.scss';
+
 .container {
   .title {
     font-size: 16px;
     font-weight: 600;
     margin-bottom: 4px;
   }
+
   .rules {
     .content {
       .ruleItem {
@@ -23,13 +26,16 @@
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 2;
         overflow: hidden;
+
         .mr4 {
           margin-right: 4px;
         }
+
         .fieldName {
           margin: 0 4px;
-          color: #181f43;
+          color: $title-text-color;
         }
+
         .operation {
           display: none;
           position: absolute;
@@ -37,6 +43,7 @@
           right: 0;
           width: 56px;
           height: 36px;
+
           .edit,
           .delete {
             width: 16px;
@@ -44,14 +51,17 @@
             font-size: 16px;
             margin: 0 8px;
             cursor: pointer;
+
             &:hover {
               color: #4c5cdb;
             }
           }
+
           .edit {
             margin-left: 0;
           }
         }
+
         &:hover {
           .operation {
             display: block;
@@ -59,10 +69,11 @@
         }
       }
     }
+
     .add {
       width: 100%;
       margin-top: 12px;
-      border: 1px dashed rgba(24, 31, 67, 0.3);
+      border: 1px dashed $svg-color;
     }
   }
 }

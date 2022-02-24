@@ -1,0 +1,165 @@
+@import "dark";
+@import "light";
+
+:root {
+  --custom-primary-color: unset;
+  --custom-primary-color-hover: unset;
+  --custom-primary-color-active: unset;
+  --custom-primary-color-outline: unset;
+
+  --custom-menu-title-text: unset;
+  --custom-menu-line: unset;
+  --custom-menu-nav: unset;
+  --custom-menu-nav-active: unset;
+  --custom-dropdown-empty-text: unset;
+  --custom-select-option-bg: unset;
+  --custom-dropdown-header-border: unset;
+  --custom-dropdown-bg: unset;
+  --custom-selected-time-bg: unset;
+  --custom-selected-time-text: unset;
+  --custom-range-hover-bg: unset;
+  --custom-header-background: unset;
+
+  /* 文字颜色 */
+  --custom-title-text-color: unset;
+  --custom-body-text-color: unset;
+  --custom-caption-text-color: unset;
+  --custom-hint-text-color: unset;
+  --custom-menu-title-text-color: unset;
+
+  /* 边框颜色 */
+  --custom-border-normal-color: unset;
+  --custom-border-hover-color: unset;
+  --custom-border-primary-color: unset;
+
+  /* input */
+  --custom-input-background-normal-color: unset;
+  --custom-input-background-hover-color: unset;
+  --custom-input-text-placeholder-color: unset;
+  --custom-input-text-active-color: unset;
+  --custom-input-border-hover-color: unset;
+  --custom-input-shadow-color: unset;
+
+  /* select */
+  --custom-select-background-normal-color: unset;
+  --custom-select-background-hover-color: unset;
+  --custom-select-text-placeholder-color: unset;
+  --custom-select-text-active-color: unset;
+  --custom-select-border-hover-color: unset;
+  --custom-select-shadow-color: unset;
+  /* select-dropdown */
+  --custom-select-dropdown-body-background-color: unset;
+  --custom-select-dropdown-option-hover-color: unset;
+  --custom-select-dropdown-option-active-color: unset;
+  --custom-select-dropdown-text-normal-color: unset;
+  --custom-select-dropdown-text-hover-color: unset;
+
+  /* datepicker */
+  --custom-datepicker-background-normal-color: unset;
+  --custom-datepicker-background-hover-color: unset;
+  --custom-datepicker-text-placeholder-color: unset;
+  --custom-datepicker-text-active-color: unset;
+  --custom-datepicker-border-hover-color: unset;
+  --custom-datepicker-shadow-color: unset;
+  /* datepicker-dropdown */
+  --custom-datepicker-dropdown-body-background-color: unset;
+  --custom-datepicker-dropdown-option-hover-color: unset;
+  --custom-datepicker-dropdown-option-active-color: unset;
+  --custom-datepicker-dropdown-text-normal-color: unset;
+  --custom-datepicker-dropdown-text-hover-color: unset;
+  --custom-datepicker-dropdown-border-normal-color: unset;
+
+  /* table */
+  --custom-table-body-background-hover-color: unset;
+  --custom-table-head-text-color: unset;
+
+  /* 大背景 */
+  --custom-body-background: unset;
+  --custom-body-shadow: unset;
+
+  /* 导航栏背景 */
+  /* --custom-nav-bar-background:; */
+  /* --custom-nav-bar-shadow:; */
+
+  /* 侧边菜单 */
+  --custom-side-menu-bg: unset;
+  --custom-side-menu-popup-bg: unset;
+  --custom-side-menu-item-color: unset;
+  --custom-side-menu-inline-submenu-bg: unset;
+  --custom-side-menu-highlight-color: unset;
+  --custom-side-menu-highlight-danger-color: unset;
+  --custom-side-menu-item-active-bg: unset;
+  --custom-side-menu-item-active-danger-bg: unset;
+  --custom-side-menu-item-group-title-color: unset;
+
+  --custom-side-menu-shadow: unset;
+  --custom-sise-menu-item-shadow: unset;
+
+  /* 导航菜单 */
+  --custom-nav-menu-bg: unset;
+  --custom-nav-menu-popup-bg: unset;
+  --custom-nav-menu-item-color: unset;
+  --custom-nav-menu-inline-submenu-bg: unset;
+  --custom-nav-menu-highlight-color: unset;
+  --custom-nav-menu-highlight-danger-color: unset;
+  --custom-nav-menu-item-active-bg: unset;
+  --custom-nav-menu-item-active-danger-bg: unset;
+  --custom-nav-menu-item-group-title-color: unset;
+
+  --custom-nav-menu-shadow: unset;
+  --custom-nav-menu-item-shadow: unset;
+
+  /* 间隔空间背景 */
+  --custom-divider-space-background: unset;
+  --custom-divider-space-shadow: unset;
+
+  /* 空状态背景图片 */
+  --custom-empty-image: unset;
+  --custom-emtpy-shadow: unset;
+
+  /* 结果反馈页背景 */
+  --custom-result-feedback-background: unset;
+  --custom-result-feedback-shadow: unset;
+
+  /* 结果反馈页图片 */
+  --custom-result-feedback-icon: unset;
+  --custom-result-feedback-icon-shadow: unset;
+
+  /* 按钮 */
+  --custom-btn-shadow: unset;
+  --custom-btn-primary-shadow: unset;
+  --custom-btn-text-shadow: unset;
+
+  --custom-btn-primary-color: unset;
+  --custom-btn-primary-bg: unset;
+
+  --custom-btn-default-color: unset;
+  --custom-btn-default-bg: unset;
+
+  --custom-btn-danger-color: unset;
+  --custom-btn-danger-bg: unset;
+
+  --custom-btn-disable-color: unset;
+  --custom-btn-disable-bg: unset;
+
+  --custom-btn-default-ghost-color: unset;
+  --custom-btn-default-ghost-bg: unset;
+
+  /* 面包屑 */
+  --custom-breadcrumb-base-color: unset;
+  --custom-breadcrumb-last-item-color: unset;
+  --custom-breadcrumb-link-color: unset;
+  --custom-breadcrumb-link-color-hover: unset;
+  --custom-breadcrumb-separator-color: unset;
+
+  /* 抽屉面板 */
+  --custom-drawer-bg: unset;
+  --custom-drawer-shadow: unset;
+
+  /* 卡片 */
+  --custom-card-background: unset;
+  --custom-card-hover-background: unset;
+
+  --custom-card-shadow: unset;
+  --custom-card-hover-shadow: unset;
+}

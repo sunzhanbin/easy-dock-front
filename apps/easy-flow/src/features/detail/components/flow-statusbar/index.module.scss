@@ -52,13 +52,14 @@
       border-right: 1px solid rgba(#181f43, 0.12);
       border-left: 1px solid rgba(#181f43, 0.12);
     }
+
     &:last-of-type {
       border-right-color: transparent;
     }
 
     .time-used {
       line-height: 20px;
-      color: #181f43;
+      color: $title-text-color;
       font-size: 12px;
       font-weight: 400;
     }
@@ -106,14 +107,14 @@
 
     margin-bottom: 4px;
     line-height: 24px;
-    color: rgba(#000, 0.85);
+    color: $label-hint-text-color;
     font-size: 16px;
     font-weight: bold;
   }
 
   .cell-desc {
     line-height: 20px;
-    color: rgba(#181f43, 0.5);
+    color: $flow-form-symbol-color;
     font-size: 12px;
     font-weight: 400;
   }

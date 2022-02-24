@@ -1,12 +1,16 @@
+@import '@common/styles/var.scss';
+
 .image {
   position: relative;
   width: 100%;
   min-height: 114px;
+
   .icon {
-    color: rgba(24, 31, 67, 0.3);
+    color: $svg-color;
     font-size: 32px;
   }
 }
+
 :global {
   .ant-form {
     .ant-upload-list-picture-card {
@@ -17,84 +21,104 @@
         z-index: 8;
         background-color: transparent;
         border-radius: 3px;
-        border: 1px dashed rgba(24, 31, 67, 0.3);
+        border: 1px dashed $svg-color;
       }
+
       .ant-upload-list-item {
         padding: 0;
       }
+
       .ant-upload-list-item-thumbnail {
         object-fit: cover;
         border-radius: 3px;
+
         img {
           object-fit: cover;
           border-radius: 3px;
         }
       }
+
       .ant-upload-list-item-card-actions-btn {
         border-color: transparent !important;
         background-color: transparent !important;
       }
+
       .ant-upload-list-picture-card-container {
         border-radius: 3px;
+
         .ant-upload-list-item-list-type-picture-card {
           border-radius: 4px;
         }
       }
     }
+
     .ant-upload-list-picture-card-container,
     .ant-upload.ant-upload-select-picture-card {
       height: 100px;
+      min-width: 70px;
     }
+
     .col-space-4 {
       .ant-upload-list-picture-card-container,
       .ant-upload.ant-upload-select-picture-card {
         width: calc(12.5% - 8px);
       }
+
       .ant-upload-list-picture-card-container:first-child {
         margin-left: 12.5%;
       }
+
       &.overlay {
         & > .ant-upload-list-picture-card-container:first-child {
           margin-left: 0;
         }
       }
     }
+
     .col-space-3 {
       .ant-upload-list-picture-card-container,
       .ant-upload.ant-upload-select-picture-card {
         width: calc(16.6666% - 8px);
       }
+
       .ant-upload-list-picture-card-container:first-child {
         margin-left: 16.6666%;
       }
+
       &.overlay {
         & > .ant-upload-list-picture-card-container:first-child {
           margin-left: 0;
         }
       }
     }
+
     .col-space-2 {
       .ant-upload-list-picture-card-container,
       .ant-upload.ant-upload-select-picture-card {
         width: calc(25% - 8px);
       }
+
       .ant-upload-list-picture-card-container:first-child {
         margin-left: 25%;
       }
+
       &.overlay {
         & > .ant-upload-list-picture-card-container:first-child {
           margin-left: 0;
         }
       }
     }
+
     .col-space-1 {
       .ant-upload-list-picture-card-container,
       .ant-upload.ant-upload-select-picture-card {
         width: calc(50% - 8px);
       }
+
       .ant-upload-list-picture-card-container:first-child {
         margin-left: 50%;
       }
+
       &.overlay {
         & > .ant-upload-list-picture-card-container:first-child {
           margin-left: 0;

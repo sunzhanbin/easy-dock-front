@@ -1,29 +1,36 @@
+@import '@common/styles/var.scss';
+
 .modal {
   .form {
     display: flex;
     flex-wrap: wrap;
     margin: 0 2px;
+
     .mode {
       width: calc(50% - 12px);
       margin-right: 24px;
     }
+
     .ruleType {
       width: calc(50% - 12px);
     }
+
     .condition,
     .showComponents,
     .hideComponents {
       width: 100%;
     }
   }
+
   :global {
     .ant-modal-content {
       width: 660px;
       padding-right: 0;
+
       .ant-modal-header {
         font-size: 16px;
         font-weight: 500;
-        color: #181f43;
+        color: $title-text-color;
         line-height: 24px;
       }
 
@@ -31,18 +38,21 @@
         min-height: 450px;
         max-height: 450px;
         overflow-y: auto;
+
         .ant-form {
           margin: 24px 0;
+
           .ant-form-item-label {
             font-size: 14px;
             font-weight: 600;
-            color: #181f43;
+            color: $title-text-color;
             line-height: 22px;
             padding-bottom: 4px;
           }
         }
       }
     }
+
     .ant-modal-footer {
       .ant-btn {
         &:first-child {

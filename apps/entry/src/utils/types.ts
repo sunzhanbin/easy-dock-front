@@ -1,5 +1,4 @@
 import { NavModeType, SubAppType, ThemeType } from "@/consts";
-import { SCENE_IAMGES } from "@utils/const";
 
 export type User = {
   avatar: string; // 头像
@@ -13,7 +12,7 @@ export type User = {
 export type AppSchema = {
   id: number;
   name: string;
-  icon: keyof typeof SCENE_IAMGES;
+  icon: string;
   remark: string;
   status: 1 | -1;
   createTime: number;
@@ -138,7 +137,7 @@ export interface workspaceShape {
   name: string;
   id: number;
   status: -1 | 1;
-  icon: keyof typeof SCENE_IAMGES;
+  icon: string;
   remark: string;
   version: {
     id: number;

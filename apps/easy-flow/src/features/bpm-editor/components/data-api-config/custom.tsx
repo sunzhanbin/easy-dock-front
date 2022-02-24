@@ -41,6 +41,7 @@ function Custom(props: CustomProps) {
                               placeholder="请选择"
                               getPopupContainer={getPopupContainer}
                               dropdownMatchSelectWidth={false}
+                              suffixIcon={<Icon type="xiala" />}
                             >
                               {detail?.optionals?.map((param) => {
                                 const name = param.name;

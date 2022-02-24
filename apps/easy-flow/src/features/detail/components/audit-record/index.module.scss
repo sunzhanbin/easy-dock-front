@@ -41,7 +41,7 @@
   .node-name {
     margin-bottom: 13px;
     line-height: 20px;
-    color: #181f43;
+    color: $title-text-color;
     font-size: 12px;
     font-weight: 400;
   }
@@ -65,7 +65,7 @@
       .user-name {
         margin-right: 4px;
         line-height: 22px;
-        color: #181f43;
+        color: $title-text-color;
         font-size: 14px;
         font-weight: 400;
       }
@@ -74,7 +74,7 @@
     .time {
       margin-bottom: 4px;
       line-height: 20px;
-      color: rgba(#181f43, 0.5);
+      color: $flow-form-symbol-color;
       font-size: 12px;
       font-weight: 400;
     }
@@ -94,7 +94,7 @@
       .text {
         flex: 1 1 0;
         line-height: 20px;
-        color: rgba(#181f43, 0.75);
+        color: $flow-form-field-name-text-color;
         font-size: 12px;
         font-weight: 400;
       }

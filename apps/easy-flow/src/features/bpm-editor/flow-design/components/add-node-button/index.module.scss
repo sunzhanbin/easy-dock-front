@@ -10,8 +10,8 @@
     width: 18px;
     height: 18px;
     border-radius: 3px;
-    background-color: #fff;
-    border-color: rgba(#181f43, 0.12);
+    background-color: $flow-manage-drawer-bg;
+    border-color: $border-normal-color;
 
     &.active {
       border-color: $primary-color;
@@ -32,14 +32,14 @@
       margin-bottom: 4px;
       padding: 5px 8px;
       line-height: 22px;
-      color: #181f43;
+      color: $popover-dropdown-text-normal-color;
       font-size: 14px;
       font-weight: 400;
       white-space: nowrap;
       cursor: pointer;
 
       &:hover {
-        background-color: rgba(#181f43, 0.04);
+        background-color: $popover-dropdown-option-hover-color;
       }
 
       &:last-child {
@@ -51,6 +51,7 @@
         margin-right: 4px;
       }
     }
+
     .auto-node {
       position: relative;
 
@@ -60,32 +61,34 @@
         margin-bottom: 4px;
         padding: 5px 8px;
         line-height: 22px;
-        color: #181f43;
+        color: $popover-dropdown-text-normal-color;
         font-size: 14px;
         font-weight: 400;
         white-space: nowrap;
         cursor: pointer;
 
         &:hover {
-          background-color: rgba(#181f43, 0.04);
+          background-color: $popover-dropdown-option-hover-color;
         }
       }
+
       .node-list {
         width: 100px;
+
         & > div {
           @include center('flex');
 
           margin-bottom: 4px;
           padding: 5px 8px;
           line-height: 22px;
-          color: #181f43;
+          color: $popover-dropdown-text-normal-color;
           font-size: 14px;
           font-weight: 400;
           white-space: nowrap;
           cursor: pointer;
 
           &:hover {
-            background-color: rgba(#181f43, 0.04);
+            background-color: $popover-dropdown-option-hover-color;
           }
 
           &:last-child {
