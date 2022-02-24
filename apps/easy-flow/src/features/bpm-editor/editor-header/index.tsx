@@ -1,5 +1,6 @@
 import { FC, memo, useCallback, useMemo, useState, useEffect, useRef } from "react";
 import { Button, Tooltip, message } from "antd";
+import domToImage from "dom-to-image";
 import PreviewModal from "@components/preview-model";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import useConfirmLeave from "@common/hooks/use-confirm-leave";
@@ -136,6 +137,17 @@ const EditorHeader: FC = () => {
     }
   }, [dirty, history, showConfirm]);
 
+  const handleExportFlowImage = async () => {
+    const node = document.getElementById("flow-container");
+    if (node) {
+      const url = await domToImage.toPng(node, { quality: 0.95 });
+      const link = document.createElement("a");
+      link.download = `${appName}_flow.png`;
+      link.href = url;
+      link.click();
+    }
+  };
+
   const handleExportForm = async () => {
     const data = await axios.get(`/form/subapp/${bpmId}/export`);
     exportJsonFile(data, `${appName}_form`);
@@ -227,6 +239,9 @@ const EditorHeader: FC = () => {
           )}
           {pathName === flowDesignPath && (
             <>
+              <Button type="primary" className={styles.prev} size="large" onClick={handleExportFlowImage}>
+                导出流程图
+              </Button>
               <Button type="primary" className={styles.prev} size="large" onClick={handleExportFlow}>
                 导出流程
               </Button>

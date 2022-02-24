@@ -120,7 +120,7 @@ function FlowDesign() {
 
   return (
     <div className={styles["scroll-container"]}>
-      <div className={styles.flow} onClick={handleCloseDrawer}>
+      <div className={styles.flow} onClick={handleCloseDrawer} id="flow-container">
         {loading && <Loading />}
 
         <div className={styles.content} id="flow-design-container">
