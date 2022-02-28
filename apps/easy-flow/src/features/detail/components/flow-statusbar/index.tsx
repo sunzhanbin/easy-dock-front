@@ -115,7 +115,7 @@ function StatusBar(props: StatusBarProps) {
 
     const trackCell = (
       <Cell
-        title={<div className={styles["time-used"]}>{`流程用时 ${timeDiff(Date.now() - flowIns.applyTime)}`}</div>}
+        title={<Text className={styles["time-used"]}>{`流程用时 ${timeDiff(Date.now() - flowIns.applyTime)}`}</Text>}
         desc={trackNode}
       />
     );

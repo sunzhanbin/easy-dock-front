@@ -22,15 +22,15 @@
     }
 
     &.success {
-      background-color: #06c498;
+      background-color: $flow-detail-status-success-color;
     }
 
     &.error {
-      background-color: #ff5568;
+      background-color: $flow-detail-status-error-color;
     }
 
     &.processing {
-      background-color: $primary-color;
+      background-color: $flow-detail-status-processing-color;
     }
   }
 
