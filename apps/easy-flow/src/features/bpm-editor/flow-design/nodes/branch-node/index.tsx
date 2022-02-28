@@ -13,6 +13,7 @@ import {
   setChoosedNode,
   formMetaSelector,
   flowDataSelector,
+  showIconSelector,
 } from "../../flow-slice";
 import AddNodeButton from "../../components/add-node-button";
 import { formatRuleValue } from "@utils";
@@ -36,6 +37,7 @@ type FormFieldMapType = { [key: string]: FormField };
 export const Branch = memo(function Branch(props: BranchProps) {
   const dispatch = useAppDispatch();
   const { invalidNodesMap } = useAppSelector(flowDataSelector);
+  const showIcon = useAppSelector(showIconSelector);
   const { data, parentNode, children } = props;
   const [showDeletePopover, setShowDeletePopover] = useState(false);
   const formMeta = useAppSelector(formMetaSelector);
@@ -126,7 +128,7 @@ export const Branch = memo(function Branch(props: BranchProps) {
               })
             )}
             <div className={styles.desc}>
-              <Icon type="peizhi" />
+              {showIcon && <Icon type="peizhi" />}
               <span>配置筛选条件</span>
             </div>
           </div>
@@ -144,9 +146,7 @@ export const Branch = memo(function Branch(props: BranchProps) {
           </PopoverConfirm>
         </div>
 
-        <div className={styles.footer}>
-          <AddNodeButton prevId={data.id}></AddNodeButton>
-        </div>
+        <div className={styles.footer}>{showIcon ? <AddNodeButton prevId={data.id}></AddNodeButton> : null}</div>
       </div>
 
       {children}
@@ -156,6 +156,7 @@ export const Branch = memo(function Branch(props: BranchProps) {
 
 function BranchNode(props: BranchNodeProps) {
   const { data, children } = props;
+  const showIcon = useAppSelector(showIconSelector);
   const dispatch = useAppDispatch();
   const handleAddBranch = useMemoCallback(() => {
     dispatch(addSubBranch(data));
@@ -163,16 +164,16 @@ function BranchNode(props: BranchNodeProps) {
 
   return (
     <div className={styles["branch-node"]}>
-      <Button
-        className={classnames(styles["add-branch-button"])}
-        type="primary"
-        icon={<Icon type="guanbi" />}
-        onClick={handleAddBranch}
-      />
+      {showIcon && (
+        <Button
+          className={classnames(styles["add-branch-button"])}
+          type="primary"
+          icon={<Icon type="guanbi" />}
+          onClick={handleAddBranch}
+        />
+      )}
       <div className={styles.branchs}>{children}</div>
-      <div className={styles.footer}>
-        <AddNodeButton prevId={data.id}></AddNodeButton>
-      </div>
+      <div className={styles.footer}>{showIcon ? <AddNodeButton prevId={data.id}></AddNodeButton> : null}</div>
     </div>
   );
 }

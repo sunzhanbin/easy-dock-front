@@ -27,6 +27,7 @@ export type FlowType = {
   form: FormMeta | null;
   loading: boolean;
   saving: boolean;
+  showIcon: boolean;
   data: Flow;
   dirty: boolean;
   invalidNodesMap: ValidResultType;
@@ -42,6 +43,7 @@ const flowInitial: FlowType = {
   form: null,
   loading: false,
   saving: false,
+  showIcon: true,
   data: [],
   dirty: false,
   invalidNodesMap: {},
@@ -69,6 +71,9 @@ const flow = createSlice({
   reducers: {
     setSaving(state, { payload }: PayloadAction<boolean>) {
       state.saving = payload;
+    },
+    setShowIcon(state, { payload }: PayloadAction<boolean>) {
+      state.showIcon = payload;
     },
     setFieldsTemplate(state, { payload }: PayloadAction<FlowType["fieldsTemplate"]>) {
       state.fieldsTemplate = payload;
@@ -141,7 +146,8 @@ const flow = createSlice({
 });
 
 const flowActions = flow.actions;
-export const { setLoading, updateNode, delNode, setCacheMembers, setDirty, setSaving, setChoosedNode } = flow.actions;
+export const { setLoading, updateNode, delNode, setCacheMembers, setDirty, setSaving, setShowIcon, setChoosedNode } =
+  flow.actions;
 
 const getFieldsTemplate = (fields: ComponentConfig[]): FlowType["fieldsTemplate"] => {
   const fieldsTemplate: FlowType["fieldsTemplate"] = [];
@@ -517,3 +523,4 @@ export const formMetaSelector = createSelector(
 );
 
 export const apisSelector = createSelector([(state: RootState) => state.flow.apis], (apis) => apis);
+export const showIconSelector = createSelector([(state: RootState) => state.flow.showIcon], (showIcon) => showIcon);

@@ -6,7 +6,13 @@ import useMemoCallback from "@common/hooks/use-memo-callback";
 import useConfirmLeave from "@common/hooks/use-confirm-leave";
 import { useHistory, useRouteMatch, NavLink, useLocation, useParams } from "react-router-dom";
 import { save as saveExtend, setDirty as setExtendDirty } from "@app/app";
-import { loadFlowData, save as saveFlow, setDirty as setFlowDirty } from "../flow-design/flow-slice";
+import {
+  loadFlowData,
+  save as saveFlow,
+  setDirty as setFlowDirty,
+  setLoading,
+  setShowIcon,
+} from "../flow-design/flow-slice";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { AsyncButton, confirm, Icon } from "@common/components";
 import { axios, exportJsonFile, validateFlowData, validateFormData } from "@utils";
@@ -138,13 +144,20 @@ const EditorHeader: FC = () => {
   }, [dirty, history, showConfirm]);
 
   const handleExportFlowImage = async () => {
-    const node = document.getElementById("flow-container");
-    if (node) {
-      const url = await domToImage.toPng(node, { quality: 0.95 });
-      const link = document.createElement("a");
-      link.download = `${appName}_flow.png`;
-      link.href = url;
-      link.click();
+    try {
+      dispatch(setShowIcon(false));
+      const node = document.getElementById("flow-container");
+      if (node) {
+        const url = await domToImage.toPng(node, { quality: 0.95 });
+        const link = document.createElement("a");
+        link.download = `${appName}_flow.png`;
+        link.href = url;
+        link.click();
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      dispatch(setShowIcon(true));
     }
   };
 

@@ -1,7 +1,7 @@
 import { memo, ReactNode, useCallback, useState, useMemo } from "react";
 import classnames from "classnames";
 import { Icon, PopoverConfirm } from "@common/components";
-import { delNode, flowDataSelector, setChoosedNode } from "../../flow-slice";
+import { delNode, flowDataSelector, setChoosedNode, showIconSelector } from "../../flow-slice";
 import { NodeType, AllNode, BranchNode } from "@type/flow";
 import AddNodeButton from "../../components/add-node-button";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
@@ -52,6 +52,7 @@ export const CardHeader = memo(function CardHeader(props: CardHeaderProps) {
 function Base(props: BaseProps) {
   const dispatch = useAppDispatch();
   const { invalidNodesMap } = useAppSelector(flowDataSelector);
+  const showIcon = useAppSelector(showIconSelector);
   const { icon, node, children } = props;
   const { type, name } = node;
   const [showDeletePopover, setShowDeletePopover] = useState(false);
@@ -80,16 +81,14 @@ function Base(props: BaseProps) {
         })}
         onClick={handleNodeClick}
       >
-        <CardHeader icon={icon} type={node.type}>
+        <CardHeader icon={showIcon ? icon : null} type={node.type}>
           {node.name}
         </CardHeader>
         <div className={styles.content}>{children}</div>
       </div>
 
       {type !== NodeType.FinishNode && (
-        <div className={styles.footer}>
-          <AddNodeButton prevId={node.id} />
-        </div>
+        <div className={styles.footer}>{showIcon && <AddNodeButton prevId={node.id} />}</div>
       )}
 
       {showDelete && (
