@@ -25,13 +25,13 @@ interface AppProps {
 }
 
 export async function mount(props?: AppProps) {
-  const { container, basename = "/", appId, mode } = props || {};
+  const { container, basename = "/", appId, mode, theme: themeFromMicroApp } = props || {};
   const history = createBrowserHistory({ basename });
 
   const query = decodeURIComponent(window.location.href.split("?")[1]);
   const themeFromQuery = new URLSearchParams(query).get("theme");
   const themeFromCookie = cookie.get("theme");
-  const theme = themeFromQuery || themeFromCookie;
+  const theme = themeFromMicroApp || themeFromQuery || themeFromCookie;
 
   if (theme) {
     cookie.set("theme", theme);

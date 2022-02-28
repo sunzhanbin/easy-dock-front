@@ -6,13 +6,7 @@ import useMemoCallback from "@common/hooks/use-memo-callback";
 import useConfirmLeave from "@common/hooks/use-confirm-leave";
 import { useHistory, useRouteMatch, NavLink, useLocation, useParams } from "react-router-dom";
 import { save as saveExtend, setDirty as setExtendDirty } from "@app/app";
-import {
-  loadFlowData,
-  save as saveFlow,
-  setDirty as setFlowDirty,
-  setLoading,
-  setShowIcon,
-} from "../flow-design/flow-slice";
+import { loadFlowData, save as saveFlow, setDirty as setFlowDirty, setShowIcon } from "../flow-design/flow-slice";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { AsyncButton, confirm, Icon } from "@common/components";
 import { axios, exportJsonFile, validateFlowData, validateFormData } from "@utils";
