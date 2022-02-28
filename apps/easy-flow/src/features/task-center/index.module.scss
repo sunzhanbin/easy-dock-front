@@ -57,10 +57,10 @@
             line-height: 22px;
             text-align: center;
             border-radius: 11px;
-            background-color: #ff5568;
+            background-color: $danger-color;
             font-size: 12px;
             font-weight: 400;
-            color: rgba(255, 255, 255, 0.95);
+            color: $title-text-color;
           }
         }
       }
@@ -70,7 +70,6 @@
       .startFlow {
         width: 88px;
         height: 40px;
-        background: $primary-color;
         border-radius: 3px;
       }
     }

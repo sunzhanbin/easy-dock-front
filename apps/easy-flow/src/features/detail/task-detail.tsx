@@ -15,6 +15,7 @@ import { FormMeta, FormValue, FlowMeta, FlowInstance, TaskDetailType } from "@ty
 import styles from "./index.module.scss";
 import { useAppSelector } from "@/app/hooks";
 import { modeSelector } from "../task-center/taskcenter-slice";
+import classnames from "classnames";
 
 export type DataType = {
   task: {
@@ -168,7 +169,7 @@ function FlowDetail() {
   return (
     <div className={styles.container}>
       {loading && <Loading />}
-      <Header className={styles.header} backClassName={styles.back} backText="流程详情">
+      <Header className={classnames(styles.header, styles.mainHeader)} backClassName={styles.back} backText="流程详情">
         {mode === "running" && data && (
           <FlowNodeActions
             flowMeta={data.flow.node}

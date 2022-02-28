@@ -1340,10 +1340,10 @@
   resolved "https://registry.npmmirror.com/@emotion/unitless/download/@emotion/unitless-0.7.5.tgz#77211291c1900a700b8a78cfafda3160d76949ed"
   integrity sha1-dyESkcGQCnALinjPr9oxYNdpSe0=
 
-"@enc/sso@0.4.1-beta.2":
-  version "0.4.1-beta.2"
-  resolved "http://10.39.39.153:4837/@enc%2fsso/-/sso-0.4.1-beta.2.tgz#b82c034262d3f5b07f04e3d68a1d5bd2f98cfc9b"
-  integrity sha512-tFgHKvCRGKIUtirhfdbg2ZXfClhNIT4gCVkbVvJ/9kKnbGGFfnpeGkiBhb5Aa+wd08ehg95rjvpQQkk1XDkp2g==
+"@enc/sso@0.4.1-dev":
+  version "0.4.1-dev"
+  resolved "http://10.39.39.153:4837/@enc%2fsso/-/sso-0.4.1-dev.tgz#cdb2818f490505be20c016accbc74b34001ebb89"
+  integrity sha512-p4Ln6VTSTEK10bKs2clGfEenrYiQmk7E4voIr7ER6gXhe/T0V1FJjGUShz+WMhO2rN7RKi5zfnxZjPvLi8UX6A==
   dependencies:
     xss "^1.0.10"
 
@@ -2988,6 +2988,11 @@
     "@types/d3-timer" "*"
     "@types/d3-transition" "*"
     "@types/d3-zoom" "*"
+
+"@types/dom-to-image@^2.6.4":
+  version "2.6.4"
+  resolved "https://registry.npmmirror.com/@types/dom-to-image/-/dom-to-image-2.6.4.tgz#008411e23903cb0ee9e51a42ab8358c609541ee8"
+  integrity sha512-UddUdGF1qulrSDulkz3K2Ypq527MR6ixlgAzqLbxSiQ0icx0XDlIV+h4+edmjq/1dqn0KgN0xGSe1kI9t+vGuw==
 
 "@types/draft-js@*":
   version "0.11.8"
@@ -6797,6 +6802,11 @@ dom-serializer@^1.0.1:
     domelementtype "^2.0.1"
     domhandler "^4.2.0"
     entities "^2.0.0"
+
+dom-to-image@^2.6.0:
+  version "2.6.0"
+  resolved "https://registry.npmmirror.com/dom-to-image/-/dom-to-image-2.6.0.tgz#8a503608088c87b1c22f9034ae032e1898955867"
+  integrity sha512-Dt0QdaHmLpjURjU7Tnu3AgYSF2LuOmksSGsUcE6ItvJoCWTBEmiMXcqBdNSAm9+QbbwD7JMoVsuuKX6ZVQv1qA==
 
 dom7@^3.0.0-alpha.5:
   version "3.0.0"
