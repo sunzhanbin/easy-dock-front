@@ -5,6 +5,7 @@ import BaseNode from "../base-node";
 import { AutoNodePushData as AutoNodeType } from "@type/flow";
 import { apisSelector } from "../../flow-slice";
 import styles from "./index.module.scss";
+import { ApiType } from "@/type/api";
 
 interface AutoNodeProps {
   node: AutoNodeType;
@@ -13,19 +14,23 @@ interface AutoNodeProps {
 function AutoNodePushData(props: AutoNodeProps) {
   const { node } = props;
   const apis = useSelector(apisSelector);
-  const api = node.dataConfig?.id;
+  const dataConfig = useMemo(() => node.dataConfig, [node]);
 
   const apiName = useMemo(() => {
+    const { type, url, id } = dataConfig;
+    if (type === ApiType.CUSTOM) {
+      return url;
+    }
     const target = apis.find((item) => {
-      if (item.id === api) return true;
-
+      if (item.id === id) {
+        return true;
+      }
       return false;
     });
-
     if (target) return target.name;
 
     return "";
-  }, [api, apis]);
+  }, [apis, dataConfig]);
 
   return (
     <BaseNode node={node} icon={<Icon type="shujulianjiedise" />}>

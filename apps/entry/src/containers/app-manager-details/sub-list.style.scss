@@ -6,6 +6,8 @@
   background: #fff;
   border-radius: 6px;
   margin: -46px 56px 0 56px;
+  display: flex;
+  flex-direction: column;
 
   & > .app-info {
     display: flex;
@@ -113,11 +115,11 @@
   }
   // 覆盖ant-tabs的样式
   .ant-tabs {
-    height: calc(100% - 208px);
+    flex:1;
     display: flex;
     flex-direction: column;
     margin-bottom: 24px;
-    overflow: visible;
+    overflow: auto;
     .ant-tabs-nav {
       padding: 20px 24px 0 16px;
       .ant-tabs-nav-list {
