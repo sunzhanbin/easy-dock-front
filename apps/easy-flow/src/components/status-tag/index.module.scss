@@ -11,27 +11,27 @@
   white-space: nowrap;
 
   &.primary {
-    border-color: rgba(#4c5cdb, 0.35);
-    color: #4c5cdb;
+    border-color: $flow-detail-tag-primary-border-color;
+    color: $flow-detail-tag-primary-text-color;
   }
 
   &.success {
-    color: #06c498;
-    border-color: rgba(#06c498, 0.35);
+    border-color: $flow-detail-tag-success-border-color;
+    color: $flow-detail-tag-success-text-color;
   }
 
   &.error {
-    border-color: rgba(#ff5568, 0.3);
-    color: #ff5568;
+    border-color: $flow-detail-tag-error-border-color;
+    color: $flow-detail-tag-error-text-color;
   }
 
   &.warning {
-    border-color: rgba(#ff9900, 0.3);
-    color: #ff9900;
+    border-color: $flow-detail-tag-warning-border-color;
+    color: $flow-detail-tag-warning-text-color;
   }
 
   &.revoke {
-    border-color: rgba($primary-text-color, 0.5);
-    color: $caption-text-color;
+    border-color: $flow-detail-tag-revoke-border-color;
+    color: $flow-detail-tag-revoke-text-color;
   }
 }
