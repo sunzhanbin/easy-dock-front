@@ -17,8 +17,8 @@ import { fetchDataSource } from "@/apis/detail";
 import { useSubAppDetail } from "@/app/app";
 import classnames from "classnames";
 import titleImage from "@/assets/title.png";
-import leftImage from "@assets/background_left.png";
-import rightImage from "@assets/background_right.png";
+import leftImage from "@assets/bannerLightLeft.png";
+import rightImage from "@assets/bannerLightRight.png";
 import styles from "./index.module.scss";
 
 const propsKey = [

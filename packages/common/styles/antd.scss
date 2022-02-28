@@ -1048,11 +1048,6 @@
 /* table style begin */
 .ant-table-wrapper {
   .ant-table {
-    background-color: $content-background-color;
-    .ant-table-container::after{
-      width: 8px;
-      background-color: $content-background-color;
-    }
     // 表头
     .ant-table-thead {
       & > tr {
@@ -1088,7 +1083,7 @@
 
     .ant-table-cell {
       background-color: $content-background-color;
-      color: $caption-text-color;
+      color: $flow-form-field-name-text-color;
       border-color: $border-normal-color;
     }
 

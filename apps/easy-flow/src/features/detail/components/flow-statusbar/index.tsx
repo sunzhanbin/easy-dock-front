@@ -6,11 +6,13 @@ import { timeDiff } from "@utils";
 import { Icon, Text } from "@common/components";
 import { NodeStatusType, FlowInstance } from "@type/detail";
 import styles from "./index.module.scss";
+import { useLocation } from "react-router-dom";
 
 interface CellProps {
   title: string | ReactNode;
   icon?: string;
   desc: string | ReactNode;
+
   getContainer?(): HTMLElement;
 }
 
@@ -42,36 +44,50 @@ interface StatusBarProps {
 }
 
 function StatusBar(props: StatusBarProps) {
+  const location = useLocation();
+  const containerRef = useRef<HTMLDivElement>(null);
   const { flowIns, showCurrentProcessor, className } = props;
   const status = flowIns.state;
-  const containerRef = useRef<HTMLDivElement>(null);
+
+  const theme = useMemo<string>(() => {
+    // 以iframe方式接入,参数在location中
+    if (location.search) {
+      const params = new URLSearchParams(location.search.slice(1));
+      return params.get("theme") || "light";
+    }
+    // 以微前端方式接入,参数在extra中
+    if (appConfig?.extra?.theme) {
+      return appConfig.extra.theme;
+    }
+    return "light";
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.search, appConfig?.extra?.theme]);
+
   const { image, styleName } = useMemo(() => {
     let image = "";
     let styleName = "";
     const publicPath = appConfig.publicPath.replace(/\/$/, "");
-
     if (status === NodeStatusType.Processing) {
-      image = `${publicPath}/images/flow-detail/processing.png`;
+      image = `${publicPath}/images/flow-detail/${theme}-processing.png`;
       styleName = styles.processing;
     } else if (status === NodeStatusType.Undo) {
-      image = `${publicPath}/images/flow-detail/undo.png`;
+      image = `${publicPath}/images/flow-detail/${theme}-undo.png`;
       styleName = styles.undo;
     } else if (status === NodeStatusType.Terminated) {
-      image = `${publicPath}/images/flow-detail/terminated.png`;
+      image = `${publicPath}/images/flow-detail/${theme}-terminated.png`;
       styleName = styles.terminated;
     } else if (status === NodeStatusType.Revert) {
-      image = `${publicPath}/images/flow-detail/revert.png`;
+      image = `${publicPath}/images/flow-detail/${theme}-revert.png`;
       styleName = styles.revert;
     } else if (status === NodeStatusType.Finish) {
-      image = `${publicPath}/images/flow-detail/finish.png`;
+      image = `${publicPath}/images/flow-detail/${theme}-finish.png`;
       styleName = styles.finish;
     } else if (status === NodeStatusType.Waiting) {
-      image = `${publicPath}/images/flow-detail/waiting.png`;
+      image = `${publicPath}/images/flow-detail/${theme}-waiting.png`;
       styleName = styles.processing;
     }
-
     return { image, styleName };
-  }, [status]);
+  }, [status, theme]);
 
   const getContainer = useMemo(() => {
     return () => containerRef.current!;

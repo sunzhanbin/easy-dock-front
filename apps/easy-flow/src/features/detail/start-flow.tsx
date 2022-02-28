@@ -14,8 +14,6 @@ import Form from "@components/form-engine";
 import Header from "@components/header";
 import useSubapp from "@/hooks/use-subapp";
 import titleImage from "@/assets/title.png";
-import leftImage from "@assets/background_left.png";
-import rightImage from "@assets/background_right.png";
 
 import { useLocation } from "react-router-dom";
 import styles from "./index.module.scss";
@@ -196,8 +194,8 @@ function StartFlow() {
         )}
       </Header>
       <div className={styles.background}>
-        <div className={styles.left} style={{ backgroundImage: `url(${leftImage})` }}></div>
-        <div className={styles.right} style={{ backgroundImage: `url(${rightImage})` }}></div>
+        <div className={styles.left} />
+        <div className={styles.right} />
       </div>
       {subApp && (
         <div className={styles["start-form-wrapper"]}>
