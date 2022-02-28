@@ -9,7 +9,7 @@ import { save as saveExtend, setDirty as setExtendDirty } from "@app/app";
 import { loadFlowData, save as saveFlow, setDirty as setFlowDirty } from "../flow-design/flow-slice";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { AsyncButton, confirm, Icon } from "@common/components";
-import { axios, exportJsonFile } from "@utils";
+import { axios, exportJsonFile, validateFlowData, validateFormData } from "@utils";
 import Header from "../../../components/header";
 import { layoutSelector, subAppSelector } from "@/features/bpm-editor/form-design/formzone-reducer";
 import { loadFormData, saveForm, setIsDirty as setFormDirty } from "@/features/bpm-editor/form-design/formdesign-slice";
@@ -157,9 +157,19 @@ const EditorHeader: FC = () => {
     exportJsonFile(data, `${appName}_flow`);
   };
   const handleImportForm = async (formData: any) => {
+    const isValidData = validateFormData(formData);
+    if (!isValidData) {
+      message.warn("请导入正确的表单数据!");
+      return;
+    }
     await dispatch(loadFormData({ formData, isDirty: true }));
   };
   const handleImportFlow = async (flowData: any) => {
+    const isValidData = validateFlowData(flowData);
+    if (!isValidData) {
+      message.warn("请导入正确的流程数据!");
+      return;
+    }
     await dispatch(loadFlowData({ flowData, bpmId }));
   };
 

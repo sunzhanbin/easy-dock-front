@@ -1,5 +1,7 @@
 import moment from "moment";
 import { AbstractTooltipProps } from "antd/lib/tooltip";
+import { FormMeta } from "@/type";
+import { Flow } from "@/type/flow";
 
 export { default as axios, runtimeAxios, builderAxios } from "./axios";
 export { default as history } from "./history";
@@ -157,4 +159,18 @@ export const exportJsonFile = (data: any, fileName: string) => {
     save_link.download = `${fileName}.json`;
   }
   save_link.click();
+};
+
+export const validateFormData = (data: FormMeta): boolean => {
+  if (Array.isArray(data.components) && Array.isArray(data.layout) && data.components.length && data.layout.length) {
+    return true;
+  }
+  return false;
+};
+
+export const validateFlowData = (data: Flow): boolean => {
+  if (Array.isArray(data) && data.every((v) => v.id && v.type)) {
+    return true;
+  }
+  return false;
 };
