@@ -1,5 +1,6 @@
 @import '@common/styles/var.scss';
 @import '@common/styles/mixin.scss';
+
 .row {
   & > .col {
     flex-shrink: 1;
@@ -11,15 +12,18 @@
   &.edit {
     margin-top: 8px;
   }
+
   .container {
     width: 100%;
+
     .title {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       // height: 40px;
-      border-bottom: 1px solid rgba(227, 228, 232, 1);
+      border-bottom: 1px solid $flow-line-border-color;
       overflow: hidden;
+
       .item {
         position: relative;
         flex: 1;
@@ -33,11 +37,13 @@
         border-right: 1px solid rgba(227, 228, 232, 1);
         border-bottom: 1px solid rgba(227, 228, 232, 1);
         cursor: pointer;
+
         .name {
           width: 100%;
           text-align: center;
           @include ellipsis;
         }
+
         .operation {
           display: none;
           position: absolute;
@@ -45,14 +51,17 @@
           right: 8px;
           cursor: pointer;
         }
+
         &:hover {
           .operation {
             display: block;
+
             .icon {
               color: $primary-text-color;
             }
           }
         }
+
         &.active {
           background-color: $white;
           color: $primary-text-color;
@@ -60,6 +69,7 @@
           border-bottom: 1px solid rgba(227, 228, 232, 1);
         }
       }
+
       .add {
         width: 40px;
         height: 40px;
@@ -68,22 +78,26 @@
         background: rgba(24, 39, 67, 0.04);
         border-radius: 0px 2px 0px 0px;
         cursor: pointer;
+
         &:hover {
           .icon {
             color: $primary-text-color;
           }
         }
       }
+
       :global {
         .error {
           border: 1px solid #ff5568 !important;
         }
       }
     }
+
     .content {
       margin-top: 12px;
     }
   }
+
   &.disabled {
     .add,
     .operation {
@@ -96,16 +110,19 @@
   .ant-popconfirm {
     pointer-events: initial !important;
   }
-  .pop__title{
+
+  .pop__title {
     margin-bottom: 32px;
-    .ant-form-item-explain{
+
+    .ant-form-item-explain {
       position: absolute;
-      top:32px;
-      left:0;
+      top: 32px;
+      left: 0;
     }
   }
-  .title__popup{
-    .ant-popover-message{
+
+  .title__popup {
+    .ant-popover-message {
       padding-bottom: 0;
     }
   }

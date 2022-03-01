@@ -30,7 +30,7 @@ function MicroApp(props: MicroAppProps) {
         if (containerRef.current) {
           setLoading(false);
         }
-      }); 
+      });
       */
 
       return () => {
@@ -39,7 +39,7 @@ function MicroApp(props: MicroAppProps) {
     }
   }, [name, entry, basename, extra]);
 
-  return <div ref={containerRef}></div>;
+  return <div ref={containerRef} className="micro-app-container" />;
 }
 
 export default memo(MicroApp);
