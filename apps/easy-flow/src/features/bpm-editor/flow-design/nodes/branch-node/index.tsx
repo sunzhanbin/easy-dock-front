@@ -1,4 +1,5 @@
 import { memo, ReactNode, useState, useMemo } from "react";
+import { useDrop } from "react-dnd";
 import { Button } from "antd";
 import classnames from "classnames";
 import { FormField } from "@type";
@@ -14,8 +15,9 @@ import {
   formMetaSelector,
   flowDataSelector,
   showIconSelector,
+  addNode,
 } from "../../flow-slice";
-import AddNodeButton from "../../components/add-node-button";
+// import AddNodeButton from "../../components/add-node-button";
 import { formatRuleValue } from "@utils";
 import styles from "./index.module.scss";
 
@@ -41,6 +43,21 @@ export const Branch = memo(function Branch(props: BranchProps) {
   const { data, parentNode, children } = props;
   const [showDeletePopover, setShowDeletePopover] = useState(false);
   const formMeta = useAppSelector(formMetaSelector);
+
+  const [, drop] = useDrop(
+    () => ({
+      accept: "flow-node",
+      collect: (monitor) => ({
+        isOver: monitor.isOver(),
+        canDrop: monitor.canDrop(),
+      }),
+      drop: (monitor: { type: any }) => {
+        const { type } = monitor;
+        dispatch(addNode({ prevId: data.id, type }));
+      },
+    }),
+    [data.id],
+  );
 
   const formFieldsMap: FormFieldMapType = useMemo(() => {
     if (!formMeta) return {};
@@ -146,7 +163,7 @@ export const Branch = memo(function Branch(props: BranchProps) {
           </PopoverConfirm>
         </div>
 
-        <div className={styles.footer}>{showIcon ? <AddNodeButton prevId={data.id}></AddNodeButton> : null}</div>
+        <div className={styles.footer} ref={drop}></div>
       </div>
 
       {children}
@@ -161,6 +178,20 @@ function BranchNode(props: BranchNodeProps) {
   const handleAddBranch = useMemoCallback(() => {
     dispatch(addSubBranch(data));
   });
+  const [, drop] = useDrop(
+    () => ({
+      accept: "flow-node",
+      collect: (monitor) => ({
+        isOver: monitor.isOver(),
+        canDrop: monitor.canDrop(),
+      }),
+      drop: (monitor: { type: any }) => {
+        const { type } = monitor;
+        dispatch(addNode({ prevId: data.id, type }));
+      },
+    }),
+    [data.id],
+  );
 
   return (
     <div className={styles["branch-node"]}>
@@ -173,7 +204,7 @@ function BranchNode(props: BranchNodeProps) {
         />
       )}
       <div className={styles.branchs}>{children}</div>
-      <div className={styles.footer}>{showIcon ? <AddNodeButton prevId={data.id}></AddNodeButton> : null}</div>
+      <div className={styles.footer} ref={drop}></div>
     </div>
   );
 }

@@ -1,9 +1,9 @@
 import { memo, ReactNode, useCallback, useState, useMemo } from "react";
+import { useDrop } from "react-dnd";
 import classnames from "classnames";
 import { Icon, PopoverConfirm } from "@common/components";
-import { delNode, flowDataSelector, setChoosedNode, showIconSelector } from "../../flow-slice";
+import { addNode, delNode, flowDataSelector, setChoosedNode, showIconSelector } from "../../flow-slice";
 import { NodeType, AllNode, BranchNode } from "@type/flow";
-import AddNodeButton from "../../components/add-node-button";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import styles from "./index.module.scss";
@@ -56,6 +56,20 @@ function Base(props: BaseProps) {
   const { icon, node, children } = props;
   const { type, name } = node;
   const [showDeletePopover, setShowDeletePopover] = useState(false);
+  const [, drop] = useDrop(
+    () => ({
+      accept: "flow-node",
+      collect: (monitor) => ({
+        isOver: monitor.isOver(),
+        canDrop: monitor.canDrop(),
+      }),
+      drop: (monitor: { type: any }) => {
+        const { type } = monitor;
+        dispatch(addNode({ prevId: node.id, type }));
+      },
+    }),
+    [node.id],
+  );
   const handleDeleteConfirm = useCallback(() => {
     dispatch(delNode(node.id));
   }, [dispatch, node.id]);
@@ -87,9 +101,7 @@ function Base(props: BaseProps) {
         <div className={styles.content}>{children}</div>
       </div>
 
-      {type !== NodeType.FinishNode && (
-        <div className={styles.footer}>{showIcon && <AddNodeButton prevId={node.id} />}</div>
-      )}
+      {type !== NodeType.FinishNode && <div className={styles.footer} ref={drop}></div>}
 
       {showDelete && (
         <div className={classnames(styles.actions, { [styles.show]: showDeletePopover })}>

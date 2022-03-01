@@ -1,9 +1,12 @@
 import { memo, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { Drawer } from "antd";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import { Loading, Icon } from "@common/components";
 import { NodeType } from "@type/flow";
 import { CardHeader } from "./nodes";
+import Toolbox from "./components/toolbox";
 import {
   StartNodeEditor,
   AuditNodeEditor,
@@ -119,47 +122,52 @@ function FlowDesign() {
   }, [choosedNode]);
 
   return (
-    <div className={styles["scroll-container"]}>
-      <div className={styles.flow} onClick={handleCloseDrawer} id="flow-container">
-        {loading && <Loading />}
-
-        <div className={styles.content} id="flow-design-container">
-          <FlowTree data={flow} />
+    <DndProvider backend={HTML5Backend}>
+      <div className={styles["scroll-container"]}>
+        <div className={styles.tool}>
+          <Toolbox />
         </div>
+        <div className={styles.flow} onClick={handleCloseDrawer} id="flow-container">
+          {loading && <Loading />}
+
+          <div className={styles.content} id="flow-design-container">
+            <FlowTree data={flow} />
+          </div>
+        </div>
+        <Drawer
+          width={drawerWidth}
+          visible={!!choosedNode}
+          getContainer={false}
+          onClose={handleCloseDrawer}
+          destroyOnClose
+          closable={false}
+          mask={false}
+        >
+          {drawerHeader}
+
+          <div className={styles.editor}>
+            {choosedNode && choosedNode.type === NodeType.StartNode && <StartNodeEditor node={choosedNode} />}
+
+            {choosedNode && choosedNode.type === NodeType.AuditNode && <AuditNodeEditor node={choosedNode} />}
+
+            {choosedNode && choosedNode.type === NodeType.FillNode && <FillNodeEditor node={choosedNode} />}
+
+            {choosedNode && choosedNode.type === NodeType.CCNode && <CCNodeEditor node={choosedNode} />}
+
+            {choosedNode && choosedNode.type === NodeType.FinishNode && <FinishNodeEditor node={choosedNode} />}
+
+            {choosedNode && choosedNode.type === NodeType.SubBranch && <SubBranchEditor branch={choosedNode} />}
+
+            {choosedNode && choosedNode.type === NodeType.AutoNodePushData && (
+              <AutoNodePushDataEditor node={choosedNode} />
+            )}
+            {choosedNode && choosedNode.type === NodeType.AutoNodeTriggerProcess && (
+              <AutoNodeTriggerProcess node={choosedNode} />
+            )}
+          </div>
+        </Drawer>
       </div>
-      <Drawer
-        width={drawerWidth}
-        visible={!!choosedNode}
-        getContainer={false}
-        onClose={handleCloseDrawer}
-        destroyOnClose
-        closable={false}
-        mask={false}
-      >
-        {drawerHeader}
-
-        <div className={styles.editor}>
-          {choosedNode && choosedNode.type === NodeType.StartNode && <StartNodeEditor node={choosedNode} />}
-
-          {choosedNode && choosedNode.type === NodeType.AuditNode && <AuditNodeEditor node={choosedNode} />}
-
-          {choosedNode && choosedNode.type === NodeType.FillNode && <FillNodeEditor node={choosedNode} />}
-
-          {choosedNode && choosedNode.type === NodeType.CCNode && <CCNodeEditor node={choosedNode} />}
-
-          {choosedNode && choosedNode.type === NodeType.FinishNode && <FinishNodeEditor node={choosedNode} />}
-
-          {choosedNode && choosedNode.type === NodeType.SubBranch && <SubBranchEditor branch={choosedNode} />}
-
-          {choosedNode && choosedNode.type === NodeType.AutoNodePushData && (
-            <AutoNodePushDataEditor node={choosedNode} />
-          )}
-          {choosedNode && choosedNode.type === NodeType.AutoNodeTriggerProcess && (
-            <AutoNodeTriggerProcess node={choosedNode} />
-          )}
-        </div>
-      </Drawer>
-    </div>
+    </DndProvider>
   );
 }
 

@@ -17,6 +17,9 @@ function AutoNodePushData(props: AutoNodeProps) {
   const dataConfig = useMemo(() => node.dataConfig, [node]);
 
   const apiName = useMemo(() => {
+    if (!dataConfig) {
+      return "";
+    }
     const { type, url, id } = dataConfig;
     if (type === ApiType.CUSTOM) {
       return url;

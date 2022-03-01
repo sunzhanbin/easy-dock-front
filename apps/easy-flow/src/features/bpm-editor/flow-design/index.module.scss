@@ -1,11 +1,47 @@
-@import '@common/styles/var.scss';
-@import '@common/styles/mixin.scss';
+@import "@common/styles/var.scss";
+@import "@common/styles/mixin.scss";
 
 .scroll-container {
+  display: flex;
   position: relative;
   height: 100%;
   font-size: 0;
   overflow: auto;
+  background-color: $flow-manage-content-bg;
+
+  & > .tool {
+    width: 200px;
+    height: 100%;
+    background-color: $flow-manage-content-bg;
+  }
+  & > .flow {
+    flex: 1;
+    display: inline-block;
+    min-height: 100%;
+    font-size: 14px;
+    background-color: $flow-manage-content-bg;
+
+    .content {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 95px;
+      padding-bottom: 24px;
+      overflow: hidden;
+
+      &::before {
+        content: "";
+        position: absolute;
+        left: 50%;
+        transform: translate3d(-50%, 0, 0);
+        background-color: $flow-line-border-color;
+        width: 1px;
+        top: 95px;
+        bottom: 24px;
+      }
+    }
+  }
 
   .editor {
     flex: 1 1 0;
@@ -46,35 +82,6 @@
 
     .ant-cascader-menu {
       height: unset;
-    }
-  }
-}
-
-.flow {
-  display: inline-block;
-  min-width: 100%;
-  min-height: 100%;
-  font-size: 14px;
-  background-color: $flow-manage-content-bg;
-
-  .content {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 95px;
-    padding-bottom: 24px;
-    overflow: hidden;
-
-    &::before {
-      content: '';
-      position: absolute;
-      left: 50%;
-      transform: translate3d(-50%, 0, 0);
-      background-color: $flow-line-border-color;
-      width: 1px;
-      top: 95px;
-      bottom: 24px;
     }
   }
 }

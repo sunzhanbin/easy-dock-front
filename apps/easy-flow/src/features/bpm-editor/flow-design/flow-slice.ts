@@ -337,11 +337,11 @@ export const load = createAsyncThunk("flow/load", async (appkey: string, { dispa
         notificationContent: "",
       };
 
-      const fillNode: FillNode = createNode(NodeType.FillNode, "填写节点");
+      // const fillNode: FillNode = createNode(NodeType.FillNode, "填写节点");
 
-      fillNode.fieldsAuths = fieldsAuths;
+      // fillNode.fieldsAuths = fieldsAuths;
 
-      flowData = [startNode, fillNode, finishNode];
+      flowData = [startNode, finishNode];
     } else {
       const { hasAutoNode, cacheMembers } = await getCacheMembers(fieldsTemplate, flowData);
       if (hasAutoNode) {

@@ -1,0 +1,18 @@
+@import "@common/styles/var.scss";
+
+.toolbox-item {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    border: 1px solid $border-normal-color;
+    margin-bottom: 12px;
+    padding: 0 12px;
+    cursor: move;
+    .icon-container {
+        width: 16px;
+    }
+    .name {
+        flex: 1;
+        text-align: center;
+    }
+}
