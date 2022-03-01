@@ -463,7 +463,6 @@
 
   &.ant-picker-disabled {
     color: inherit;
-    background-size: 10px 10px;
     background: $datepicker-background-normal-color linear-gradient(
                     -45deg,
                     $datepicker-background-normal-color 0,
@@ -475,6 +474,7 @@
                     transparent 55%,
                     transparent
     );
+    background-size: 10px 10px;
     border-color: transparent;
 
     &:hover {
