@@ -1,4 +1,5 @@
 import { RuleOption } from "@type";
+import useMemoCallback from "@common/hooks/use-memo-callback";
 
 // 编号规则日期定义
 export const DATE_DEFAULT_FORMAT = "yyyyMMdd";
@@ -74,3 +75,10 @@ export const TASK_STATE_LIST: { key: number; value: string }[] = [
     value: "等待中",
   },
 ];
+
+export const validateRule = (value: string, errorTip: string) => {
+  if (!value) {
+    return Promise.reject(new Error(errorTip));
+  }
+  return Promise.resolve();
+};

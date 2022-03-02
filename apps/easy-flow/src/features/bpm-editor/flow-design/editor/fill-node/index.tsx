@@ -14,6 +14,7 @@ import { trimInputValue } from "../../util";
 import { rules } from "../../validators";
 import useValidateForm from "../../hooks/use-validate-form";
 import styles from "./index.module.scss";
+import MilestoneNodeConfig from "@/features/bpm-editor/components/milestone-node-config";
 
 interface FillNodeEditorProps {
   node: FillNode;
@@ -108,6 +109,7 @@ function FillNodeEditor(props: FillNodeEditorProps) {
       <Form.Item name="dueConfig">
         <DueConfig name="dueConfig" />
       </Form.Item>
+      <MilestoneNodeConfig form={form} />
     </Form>
   );
 }

@@ -11,6 +11,7 @@ import { useAppDispatch } from "@/app/hooks";
 import { trimInputValue } from "../../util";
 import useValidateForm from "../../hooks/use-validate-form";
 import { rules } from "../../validators";
+import MilestoneNodeConfig from "@/features/bpm-editor/components/milestone-node-config";
 
 interface CCNodeEditorProps {
   node: CCNode;
@@ -68,6 +69,7 @@ function CCNodeEditor(props: CCNodeEditorProps) {
       <Form.Item label="字段权限" name="fieldsAuths">
         <FieldAuths max={AuthType.View} />
       </Form.Item>
+      <MilestoneNodeConfig form={form} />
     </Form>
   );
 }
