@@ -2,7 +2,14 @@ import { memo, ReactNode, useCallback, useState, useMemo } from "react";
 import { DropTargetMonitor, useDrop } from "react-dnd";
 import classnames from "classnames";
 import { Icon, PopoverConfirm } from "@common/components";
-import { addNode, delNode, flowDataSelector, setChoosedNode, showIconSelector } from "../../flow-slice";
+import {
+  addNode,
+  delNode,
+  flowDataSelector,
+  isDraggingSelector,
+  setChoosedNode,
+  showIconSelector,
+} from "../../flow-slice";
 import ShadowNode from "../../components/shadow-node";
 import { NodeType, AllNode, BranchNode, AddableNode } from "@type/flow";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
@@ -55,6 +62,7 @@ function Base(props: BaseProps) {
   const dispatch = useAppDispatch();
   const { invalidNodesMap } = useAppSelector(flowDataSelector);
   const showIcon = useAppSelector(showIconSelector);
+  const isDragging = useAppSelector(isDraggingSelector);
   const { icon, node, children } = props;
   const { type, name } = node;
   const [showDeletePopover, setShowDeletePopover] = useState(false);
@@ -116,6 +124,7 @@ function Base(props: BaseProps) {
             styles.footer,
             isOver && styles.over,
             isOver && nodeType === NodeType.BranchNode && styles["sub-branch"],
+            isDragging && styles.isDragging,
           )}
           ref={drop}
         >

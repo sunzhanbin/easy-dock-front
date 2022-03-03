@@ -105,6 +105,9 @@
     &.sub-branch {
       padding: 165px 0;
     }
+    &.isDragging {
+      border: 1px solid #2a2a2a;
+    }
   }
 
   .actions {

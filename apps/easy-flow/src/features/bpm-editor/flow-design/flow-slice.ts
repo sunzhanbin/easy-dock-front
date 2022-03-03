@@ -27,6 +27,7 @@ export type FlowType = {
   loading: boolean;
   saving: boolean;
   showIcon: boolean;
+  isDragging: boolean;
   data: Flow;
   dirty: boolean;
   invalidNodesMap: ValidResultType;
@@ -43,6 +44,7 @@ const flowInitial: FlowType = {
   loading: false,
   saving: false,
   showIcon: true,
+  isDragging: false,
   data: [],
   dirty: false,
   invalidNodesMap: {},
@@ -73,6 +75,9 @@ const flow = createSlice({
     },
     setShowIcon(state, { payload }: PayloadAction<boolean>) {
       state.showIcon = payload;
+    },
+    setIsDragging(state, { payload }: PayloadAction<boolean>) {
+      state.isDragging = payload;
     },
     setFieldsTemplate(state, { payload }: PayloadAction<FlowType["fieldsTemplate"]>) {
       state.fieldsTemplate = payload;
@@ -145,8 +150,17 @@ const flow = createSlice({
 });
 
 const flowActions = flow.actions;
-export const { setLoading, updateNode, delNode, setCacheMembers, setDirty, setSaving, setShowIcon, setChoosedNode } =
-  flow.actions;
+export const {
+  setLoading,
+  updateNode,
+  delNode,
+  setCacheMembers,
+  setDirty,
+  setSaving,
+  setShowIcon,
+  setIsDragging,
+  setChoosedNode,
+} = flow.actions;
 
 const getFieldsTemplate = (fields: ComponentConfig[]): FlowType["fieldsTemplate"] => {
   const fieldsTemplate: FlowType["fieldsTemplate"] = [];
@@ -519,3 +533,7 @@ export const formMetaSelector = createSelector(
 
 export const apisSelector = createSelector([(state: RootState) => state.flow.apis], (apis) => apis);
 export const showIconSelector = createSelector([(state: RootState) => state.flow.showIcon], (showIcon) => showIcon);
+export const isDraggingSelector = createSelector(
+  [(state: RootState) => state.flow.isDragging],
+  (isDragging) => isDragging,
+);

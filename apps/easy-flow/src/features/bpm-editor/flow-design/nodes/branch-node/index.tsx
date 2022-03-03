@@ -16,6 +16,7 @@ import {
   flowDataSelector,
   showIconSelector,
   addNode,
+  isDraggingSelector,
 } from "../../flow-slice";
 // import AddNodeButton from "../../components/add-node-button";
 import { formatRuleValue } from "@utils";
@@ -42,6 +43,7 @@ export const Branch = memo(function Branch(props: BranchProps) {
   const dispatch = useAppDispatch();
   const { invalidNodesMap } = useAppSelector(flowDataSelector);
   const showIcon = useAppSelector(showIconSelector);
+  const isDragging = useAppSelector(isDraggingSelector);
   const { data, parentNode, children } = props;
   const [showDeletePopover, setShowDeletePopover] = useState(false);
   const formMeta = useAppSelector(formMetaSelector);
@@ -177,6 +179,7 @@ export const Branch = memo(function Branch(props: BranchProps) {
             styles.footer,
             isOver && styles.over,
             isOver && nodeType === NodeType.BranchNode && styles["sub-branch"],
+            isDragging && styles.isDragging,
           )}
           ref={drop}
         >
@@ -192,6 +195,7 @@ export const Branch = memo(function Branch(props: BranchProps) {
 function BranchNode(props: BranchNodeProps) {
   const { data, children } = props;
   const showIcon = useAppSelector(showIconSelector);
+  const isDragging = useAppSelector(isDraggingSelector);
   const dispatch = useAppDispatch();
   const handleAddBranch = useMemoCallback(() => {
     dispatch(addSubBranch(data));
@@ -235,6 +239,7 @@ function BranchNode(props: BranchNodeProps) {
           styles.footer,
           isOver && styles.over,
           isOver && nodeType === NodeType.BranchNode && styles["sub-branch"],
+          isDragging && styles.isDragging,
         )}
         ref={drop}
       >
