@@ -1,5 +1,5 @@
 import { memo, useState, FC, useMemo, useCallback, useEffect, useRef } from "react";
-import { Form, Input, Select, Button, DatePicker, Table } from "antd";
+import { Form, Input, Select, Button, DatePicker, Table, Progress } from "antd";
 import moment from "moment";
 import classNames from "classnames";
 import { dynamicRoutes } from "@/consts/route";
@@ -199,6 +199,16 @@ const ToDo: FC = () => {
               {dueState === 1 && <TimeoutState className={styles.timeout} />}
             </div>
           );
+        },
+      },
+      {
+        title: "进度",
+        dataIndex: "progress",
+        key: "progress",
+        width: "15%",
+        render: (text: any) => {
+          console.log(text, "text");
+          return <Progress percent={30} />;
         },
       },
       {

@@ -1269,3 +1269,16 @@
   background-color: $input-background-normal-color !important;
   color: $body-text-color;
 }
+
+// .ant-progress
+.ant-progress {
+  color: $label-hint-text-color;
+
+  .ant-progress-inner {
+    background-color: $input-background-normal-color;
+  }
+
+  .ant-progress-text {
+    color: $label-hint-text-color;
+  }
+}
