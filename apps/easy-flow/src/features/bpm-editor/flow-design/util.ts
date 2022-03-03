@@ -48,15 +48,15 @@ export function createNode(type: NodeType.BranchNode): BranchNode;
 export function createNode(type: NodeType.SubBranch): SubBranch;
 export function createNode(type: NodeType, name?: string) {
   if (type === NodeType.SubBranch) {
-    return <SubBranch>{
+    return {
       id: fielduuid(),
       type,
       conditions: [],
       nodes: [],
-    };
+    } as SubBranch;
   }
   if (type === NodeType.BranchNode) {
-    return <BranchNode>{
+    return {
       type,
       id: fielduuid(),
       branches: [
@@ -73,15 +73,15 @@ export function createNode(type: NodeType, name?: string) {
           type: NodeType.SubBranch,
         },
       ],
-    };
+    } as BranchNode;
   } else if (type === NodeType.AutoNodePushData) {
-    return <AutoNodePushData>{
+    return {
       id: fielduuid(),
       name,
       type,
-    };
+    } as AutoNodePushData;
   } else if (type === NodeType.AutoNodeTriggerProcess) {
-    return <AutoNodeTriggerProcess>{
+    return {
       id: fielduuid(),
       name,
       type,
@@ -89,7 +89,7 @@ export function createNode(type: NodeType, name?: string) {
         isWait: false,
         subapps: [{ id: undefined, name: undefined, starter: { type: 1 }, mapping: [] }],
       },
-    };
+    } as AutoNodeTriggerProcess;
   }
 
   const node = {
@@ -105,7 +105,7 @@ export function createNode(type: NodeType, name?: string) {
   };
 
   if (type === NodeType.AuditNode) {
-    return <AuditNode>{
+    return {
       ...node,
       btnText: {
         approve: { enable: true },
@@ -132,9 +132,9 @@ export function createNode(type: NodeType, name?: string) {
         },
         action: null,
       },
-    };
+    } as AuditNode;
   } else if (type === NodeType.FillNode) {
-    return <FillNode>{
+    return {
       ...node,
       btnText: {
         submit: { enable: true },
@@ -156,9 +156,9 @@ export function createNode(type: NodeType, name?: string) {
           unit: "day",
         },
       },
-    };
+    } as FillNode;
   } else if (type === NodeType.CCNode) {
-    return <CCNode>node;
+    return node as CCNode;
   } else {
     throw new Error("传入类型不正确");
   }
@@ -418,7 +418,7 @@ export function formatFieldsAuths(fieldsTemplate: FieldTemplate[]) {
     }
 
     return fieldsAuths;
-  }, <FieldAuthsMap>{});
+  }, {} as FieldAuthsMap);
 }
 
 export function formatFieldsTemplate(form: FormMeta | null): FieldTemplate[] {

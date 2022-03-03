@@ -9,7 +9,6 @@ import {
   NodeType,
   StartNode,
   FinishNode,
-  FillNode,
   TriggerType,
   Flow,
   FieldTemplate,
@@ -336,10 +335,6 @@ export const load = createAsyncThunk("flow/load", async (appkey: string, { dispa
         name: "结束节点",
         notificationContent: "",
       };
-
-      // const fillNode: FillNode = createNode(NodeType.FillNode, "填写节点");
-
-      // fillNode.fieldsAuths = fieldsAuths;
 
       flowData = [startNode, finishNode];
     } else {

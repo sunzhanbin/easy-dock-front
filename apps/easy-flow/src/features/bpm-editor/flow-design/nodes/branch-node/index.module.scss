@@ -239,5 +239,12 @@ $line-color: #e3e4e8;
     width: 100%;
     padding-top: 32px;
     padding-bottom: 32px;
+    z-index: 8;
+    &.over {
+      padding: 110px 0;
+    }
+    &.sub-branch{
+      padding: 165px 0;
+    }
   }
 }

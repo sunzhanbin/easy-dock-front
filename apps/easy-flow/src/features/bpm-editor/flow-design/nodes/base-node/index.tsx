@@ -1,9 +1,10 @@
-import { memo, ReactNode, useCallback, useState, useMemo } from "react";
-import { useDrop } from "react-dnd";
+import { memo, ReactNode, useCallback, useState, useMemo, useEffect } from "react";
+import { DropTargetMonitor, useDrop } from "react-dnd";
 import classnames from "classnames";
 import { Icon, PopoverConfirm } from "@common/components";
 import { addNode, delNode, flowDataSelector, setChoosedNode, showIconSelector } from "../../flow-slice";
-import { NodeType, AllNode, BranchNode } from "@type/flow";
+import ShadowNode from "../../components/shadow-node";
+import { NodeType, AllNode, BranchNode, AddableNode } from "@type/flow";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import styles from "./index.module.scss";
@@ -56,16 +57,19 @@ function Base(props: BaseProps) {
   const { icon, node, children } = props;
   const { type, name } = node;
   const [showDeletePopover, setShowDeletePopover] = useState(false);
-  const [, drop] = useDrop(
+  const [collectProps, drop] = useDrop(
     () => ({
       accept: "flow-node",
-      collect: (monitor) => ({
-        isOver: monitor.isOver(),
-        canDrop: monitor.canDrop(),
-      }),
-      drop: (monitor: { type: any }) => {
-        const { type } = monitor;
-        dispatch(addNode({ prevId: node.id, type }));
+      collect: (monitor: DropTargetMonitor) => {
+        const item = monitor.getItem<{ type: AddableNode["type"] }>();
+        return {
+          isOver: monitor.isOver(),
+          type: item?.type,
+        };
+      },
+      drop: (v, monitor: DropTargetMonitor) => {
+        const item = monitor.getItem<{ type: AddableNode["type"] }>();
+        dispatch(addNode({ prevId: node.id, type: item?.type }));
       },
     }),
     [node.id],
@@ -76,6 +80,10 @@ function Base(props: BaseProps) {
   const handleNodeClick = useMemoCallback(() => {
     dispatch(setChoosedNode(node));
   });
+  // 当前拖拽元素是否与放置区重叠
+  const isOver = useMemo(() => collectProps.isOver, [collectProps.isOver]);
+  // 当前拖拽元素的节点类型
+  const nodeType = useMemo(() => collectProps.type, [collectProps.type]);
 
   const showDelete = useMemo(() => {
     return (
@@ -100,8 +108,17 @@ function Base(props: BaseProps) {
         </CardHeader>
         <div className={styles.content}>{children}</div>
       </div>
-
-      {type !== NodeType.FinishNode && <div className={styles.footer} ref={drop}></div>}
+      {isOver && <ShadowNode type={nodeType} className={styles["temp-node"]} />}
+      {type !== NodeType.FinishNode && (
+        <div
+          className={classnames(
+            styles.footer,
+            isOver && styles.over,
+            isOver && nodeType === NodeType.BranchNode && styles["sub-branch"],
+          )}
+          ref={drop}
+        ></div>
+      )}
 
       {showDelete && (
         <div className={classnames(styles.actions, { [styles.show]: showDeletePopover })}>

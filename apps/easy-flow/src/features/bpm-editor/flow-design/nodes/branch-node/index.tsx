@@ -1,9 +1,9 @@
 import { memo, ReactNode, useState, useMemo } from "react";
-import { useDrop } from "react-dnd";
+import { DropTargetMonitor, useDrop } from "react-dnd";
 import { Button } from "antd";
 import classnames from "classnames";
 import { FormField } from "@type";
-import { BranchNode as BranchNodeType } from "@type/flow";
+import { AddableNode, BranchNode as BranchNodeType, NodeType } from "@type/flow";
 import { Icon, PopoverConfirm } from "@common/components";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
@@ -20,6 +20,7 @@ import {
 // import AddNodeButton from "../../components/add-node-button";
 import { formatRuleValue } from "@utils";
 import styles from "./index.module.scss";
+import ShadowNode from "../../components/shadow-node";
 
 type BranchType = BranchNodeType["branches"][number];
 
@@ -44,20 +45,27 @@ export const Branch = memo(function Branch(props: BranchProps) {
   const [showDeletePopover, setShowDeletePopover] = useState(false);
   const formMeta = useAppSelector(formMetaSelector);
 
-  const [, drop] = useDrop(
+  const [collectProps, drop] = useDrop(
     () => ({
       accept: "flow-node",
-      collect: (monitor) => ({
-        isOver: monitor.isOver(),
-        canDrop: monitor.canDrop(),
-      }),
-      drop: (monitor: { type: any }) => {
-        const { type } = monitor;
-        dispatch(addNode({ prevId: data.id, type }));
+      collect: (monitor: DropTargetMonitor) => {
+        const item = monitor.getItem<{ type: AddableNode["type"] }>();
+        return {
+          isOver: monitor.isOver(),
+          type: item?.type,
+        };
+      },
+      drop: (v, monitor: DropTargetMonitor) => {
+        const item = monitor.getItem<{ type: AddableNode["type"] }>();
+        dispatch(addNode({ prevId: data.id, type: item?.type }));
       },
     }),
     [data.id],
   );
+  // 当前拖拽元素是否与放置区重叠
+  const isOver = useMemo(() => collectProps.isOver, [collectProps.isOver]);
+  // 当前拖拽元素的节点类型
+  const nodeType = useMemo(() => collectProps.type, [collectProps.type]);
 
   const formFieldsMap: FormFieldMapType = useMemo(() => {
     if (!formMeta) return {};
@@ -162,8 +170,15 @@ export const Branch = memo(function Branch(props: BranchProps) {
             </div>
           </PopoverConfirm>
         </div>
-
-        <div className={styles.footer} ref={drop}></div>
+        {isOver && <ShadowNode type={nodeType} parentType="branch" className={styles["temp-node"]} />}
+        <div
+          className={classnames(
+            styles.footer,
+            isOver && styles.over,
+            isOver && nodeType === NodeType.BranchNode && styles["sub-branch"],
+          )}
+          ref={drop}
+        ></div>
       </div>
 
       {children}
@@ -178,20 +193,27 @@ function BranchNode(props: BranchNodeProps) {
   const handleAddBranch = useMemoCallback(() => {
     dispatch(addSubBranch(data));
   });
-  const [, drop] = useDrop(
+  const [collectProps, drop] = useDrop(
     () => ({
       accept: "flow-node",
-      collect: (monitor) => ({
-        isOver: monitor.isOver(),
-        canDrop: monitor.canDrop(),
-      }),
-      drop: (monitor: { type: any }) => {
-        const { type } = monitor;
-        dispatch(addNode({ prevId: data.id, type }));
+      collect: (monitor: DropTargetMonitor) => {
+        const item = monitor.getItem<{ type: AddableNode["type"] }>();
+        return {
+          isOver: monitor.isOver(),
+          type: item?.type,
+        };
+      },
+      drop: (v, monitor: DropTargetMonitor) => {
+        const item = monitor.getItem<{ type: AddableNode["type"] }>();
+        dispatch(addNode({ prevId: data.id, type: item?.type }));
       },
     }),
     [data.id],
   );
+  // 当前拖拽元素是否与放置区重叠
+  const isOver = useMemo(() => collectProps.isOver, [collectProps.isOver]);
+  // 当前拖拽元素的节点类型
+  const nodeType = useMemo(() => collectProps.type, [collectProps.type]);
 
   return (
     <div className={styles["branch-node"]}>
@@ -204,7 +226,15 @@ function BranchNode(props: BranchNodeProps) {
         />
       )}
       <div className={styles.branchs}>{children}</div>
-      <div className={styles.footer} ref={drop}></div>
+      {isOver && <ShadowNode type={nodeType} parentType="branch-node" className={styles["temp-node"]} />}
+      <div
+        className={classnames(
+          styles.footer,
+          isOver && styles.over,
+          isOver && nodeType === NodeType.BranchNode && styles["sub-branch"],
+        )}
+        ref={drop}
+      ></div>
     </div>
   );
 }

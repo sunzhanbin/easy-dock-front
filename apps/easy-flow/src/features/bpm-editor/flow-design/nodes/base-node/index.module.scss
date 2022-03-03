@@ -1,5 +1,5 @@
-@import '@common/styles/var.scss';
-@import '@common/styles/mixin.scss';
+@import "@common/styles/var.scss";
+@import "@common/styles/mixin.scss";
 
 .header {
   padding: 12px;
@@ -49,6 +49,7 @@
 .node {
   width: 248px;
   position: relative;
+  z-index: 9;
   user-select: none;
 
   &:hover {
@@ -72,7 +73,7 @@
       box-shadow: 0 0 0 4px rgba(#ff5568, 0.12);
 
       &::after {
-        content: '';
+        content: "";
         position: absolute;
         top: 0;
         left: 0;
@@ -99,10 +100,16 @@
     align-items: center;
     justify-content: center;
     padding: 32px 0;
+    &.over {
+      padding: 110px 0;
+    }
+    &.sub-branch{
+      padding: 165px 0;
+    }
   }
 
   .actions {
-    @include center('flex');
+    @include center("flex");
 
     position: absolute;
     top: 0;
