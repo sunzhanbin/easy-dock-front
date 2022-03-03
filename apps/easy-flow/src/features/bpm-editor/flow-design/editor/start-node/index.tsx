@@ -11,6 +11,7 @@ import { trimInputValue } from "../../util";
 import useValidateForm from "../../hooks/use-validate-form";
 import DatePicker from "@/features/bpm-editor/components/date-picker";
 import DateRange from "@/features/bpm-editor/components/date-range";
+import MilestoneNodeConfig from "@/features/bpm-editor/components/milestone-node-config";
 import Frequency from "./frequency";
 import Trigger from "./trigger";
 import FieldAuths from "../../components/field-auths";
@@ -174,6 +175,8 @@ function StartNodeEditor(props: StartNodeEditorProps) {
           </Form.Item>
         </>
       )}
+
+      <MilestoneNodeConfig form={form} />
     </Form>
   );
 }

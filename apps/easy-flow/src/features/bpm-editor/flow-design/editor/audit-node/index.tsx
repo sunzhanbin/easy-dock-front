@@ -16,7 +16,9 @@ import usePrevNodes from "../../hooks/use-prev-nodes";
 import RevertCascader from "./revert-cascader";
 import { rules } from "../../validators";
 import styles from "./index.module.scss";
+import { validateRule } from "@utils/const";
 import DueConfig from "@/features/bpm-editor/components/due-config";
+import MilestoneNodeConfig from "@/features/bpm-editor/components/milestone-node-config";
 
 interface AuditNodeEditorProps {
   node: AuditNode;
@@ -92,13 +94,6 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
       );
     }, 100),
   );
-
-  const validateRule = useMemoCallback((value: string, errorTip: string) => {
-    if (!value) {
-      return Promise.reject(new Error(errorTip));
-    }
-    return Promise.resolve();
-  });
 
   const nameRules: Rule[] = useMemo(() => {
     return [rules.name];
@@ -242,6 +237,7 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
       <Form.Item name="dueConfig">
         <DueConfig name="dueConfig" showAction={true} />
       </Form.Item>
+      <MilestoneNodeConfig form={form} />
     </Form>
   );
 }

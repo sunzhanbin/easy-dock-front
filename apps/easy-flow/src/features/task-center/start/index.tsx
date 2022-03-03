@@ -1,5 +1,5 @@
 import { memo, FC, useState, useMemo, useCallback, useEffect, useRef } from "react";
-import { Form, Input, Select, Button, DatePicker, Table, Popover } from "antd";
+import { Form, Input, Select, Button, DatePicker, Table, Popover, Progress } from "antd";
 import { getStayTime, getPassedTime, runtimeAxios } from "@/utils";
 import { useHistory, useLocation } from "react-router-dom";
 import moment from "moment";
@@ -160,6 +160,16 @@ const Start: FC = () => {
               </div>
             );
           }
+        },
+      },
+      {
+        title: "进度",
+        dataIndex: "progress",
+        key: "progress",
+        width: "15%",
+        render: (text: any) => {
+          console.log(text, "text");
+          return <Progress percent={30} />;
         },
       },
       {
