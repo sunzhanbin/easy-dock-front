@@ -21,6 +21,7 @@ import {
 import { formatRuleValue } from "@utils";
 import styles from "./index.module.scss";
 import ShadowNode from "../../components/shadow-node";
+import AddNodeButton from "../../components/add-node-button";
 
 type BranchType = BranchNodeType["branches"][number];
 
@@ -178,7 +179,9 @@ export const Branch = memo(function Branch(props: BranchProps) {
             isOver && nodeType === NodeType.BranchNode && styles["sub-branch"],
           )}
           ref={drop}
-        ></div>
+        >
+          {showIcon ? <AddNodeButton prevId={data.id}></AddNodeButton> : null}
+        </div>
       </div>
 
       {children}
@@ -234,7 +237,9 @@ function BranchNode(props: BranchNodeProps) {
           isOver && nodeType === NodeType.BranchNode && styles["sub-branch"],
         )}
         ref={drop}
-      ></div>
+      >
+        {showIcon ? <AddNodeButton prevId={data.id}></AddNodeButton> : null}
+      </div>
     </div>
   );
 }

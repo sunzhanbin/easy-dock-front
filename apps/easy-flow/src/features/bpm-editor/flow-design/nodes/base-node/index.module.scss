@@ -49,7 +49,6 @@
 .node {
   width: 248px;
   position: relative;
-  z-index: 9;
   user-select: none;
 
   &:hover {
@@ -103,7 +102,7 @@
     &.over {
       padding: 110px 0;
     }
-    &.sub-branch{
+    &.sub-branch {
       padding: 165px 0;
     }
   }

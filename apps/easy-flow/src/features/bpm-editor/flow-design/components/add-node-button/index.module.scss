@@ -1,11 +1,15 @@
-@import '@common/styles/var.scss';
-@import '@common/styles/mixin.scss';
+@import "@common/styles/var.scss";
+@import "@common/styles/mixin.scss";
 
 .container {
   line-height: 1;
 }
 
 .popover {
+  position: absolute;
+  top: 32px;
+  transform: translateY(-50%);
+  z-index: 88;
   .add-button {
     width: 18px;
     height: 18px;
@@ -27,7 +31,7 @@
 
   .add-list {
     & > div {
-      @include center('flex');
+      @include center("flex");
 
       margin-bottom: 4px;
       padding: 5px 8px;
@@ -56,7 +60,7 @@
       position: relative;
 
       & > div {
-        @include center('flex');
+        @include center("flex");
 
         margin-bottom: 4px;
         padding: 5px 8px;
@@ -76,7 +80,7 @@
         width: 100px;
 
         & > div {
-          @include center('flex');
+          @include center("flex");
 
           margin-bottom: 4px;
           padding: 5px 8px;

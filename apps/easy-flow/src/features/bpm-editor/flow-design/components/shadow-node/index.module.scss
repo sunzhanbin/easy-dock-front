@@ -7,16 +7,17 @@
     }
     &.branch {
         transform: translate(0, 20px);
-        .image{
+        .image {
             position: relative;
             left: 29%;
         }
     }
     &.branch-node {
+        height: fit-content;
         left: 50%;
-        top: 64%;
+        top: calc(100% - 156px);
         transform: translateX(-50%);
-        .image{
+        .image {
             position: relative;
             left: 29%;
             top: -20px;

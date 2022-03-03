@@ -1,4 +1,4 @@
-import { memo, ReactNode, useCallback, useState, useMemo, useEffect } from "react";
+import { memo, ReactNode, useCallback, useState, useMemo } from "react";
 import { DropTargetMonitor, useDrop } from "react-dnd";
 import classnames from "classnames";
 import { Icon, PopoverConfirm } from "@common/components";
@@ -8,6 +8,7 @@ import { NodeType, AllNode, BranchNode, AddableNode } from "@type/flow";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import styles from "./index.module.scss";
+import AddNodeButton from "../../components/add-node-button";
 
 interface BaseProps {
   icon: ReactNode;
@@ -117,7 +118,9 @@ function Base(props: BaseProps) {
             isOver && nodeType === NodeType.BranchNode && styles["sub-branch"],
           )}
           ref={drop}
-        ></div>
+        >
+          {showIcon && <AddNodeButton prevId={node.id} />}
+        </div>
       )}
 
       {showDelete && (
