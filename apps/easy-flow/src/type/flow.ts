@@ -30,6 +30,7 @@ export enum AuthType {
   Edit = 2,
   Required = 3,
 }
+
 // 节点基本类型
 export interface BaseNode {
   id: string;
@@ -40,6 +41,11 @@ export interface BaseNode {
 export type ButtonAuth = {
   enable?: boolean;
   text?: string;
+};
+
+export type MilestonePercentType = {
+  enable: boolean;
+  percent: number;
 };
 
 export enum RevertType {
@@ -64,6 +70,7 @@ export type CorrelationMemberConfig = {
     fields: CorrelationMemberConfigKey[];
   };
 };
+
 // 审批节点
 export interface UserNode extends BaseNode {
   correlationMemberConfig: CorrelationMemberConfig;
@@ -124,12 +131,14 @@ export interface AuditNode extends UserNode {
     count: number;
     percent: number;
   };
+  progress?: MilestonePercentType;
   dueConfig: IDueConfig;
 }
 
 export interface FillNode extends UserNode {
   type: NodeType.FillNode;
   dueConfig?: IDueConfig;
+  progress?: MilestonePercentType;
   btnText: {
     submit: ButtonAuth;
     save: ButtonAuth;
@@ -143,6 +152,7 @@ export interface SubBranch {
   nodes: AllNode[];
   conditions: FieldRule[][];
 }
+
 export interface BranchNode {
   id: string;
   type: NodeType.BranchNode;
@@ -175,10 +185,12 @@ export type TimingTrigger = {
     unit: string;
   };
 };
+
 // 流程类型，起点是申请人节点，一个流程只能有一个
 export interface StartNode extends BaseNode {
   type: NodeType.StartNode;
   fieldsAuths: FieldAuthsMap;
+  progress?: MilestonePercentType;
   trigger:
     | {
         type: TriggerType.MANUAL;
@@ -193,11 +205,13 @@ export interface StartNode extends BaseNode {
 export interface CCNode extends BaseNode {
   type: NodeType.CCNode;
   correlationMemberConfig: CorrelationMemberConfig;
+  progress?: MilestonePercentType;
   fieldsAuths: FieldAuthsMap;
 }
 
 export interface AutoNodePushData extends BaseNode {
   type: NodeType.AutoNodePushData;
+  progress?: MilestonePercentType;
   dataConfig: DataConfig;
 }
 
@@ -221,6 +235,7 @@ export interface TriggerConfig {
 
 export interface AutoNodeTriggerProcess extends BaseNode {
   type: NodeType.AutoNodeTriggerProcess;
+  progress?: MilestonePercentType;
   triggerConfig: {
     isWait: boolean;
     subapps: TriggerConfig[];

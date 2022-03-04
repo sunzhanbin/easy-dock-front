@@ -104,9 +104,7 @@ function FlowDetail() {
       formData: formValues,
       taskId,
     });
-
     message.success("提交成功");
-
     setTimeout(() => {
       history.replace(dynamicRoutes.toTaskCenter(appId!));
     }, 1500);

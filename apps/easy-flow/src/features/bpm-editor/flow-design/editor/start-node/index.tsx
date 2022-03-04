@@ -22,7 +22,7 @@ interface StartNodeEditorProps {
   node: StartNode;
 }
 
-type FormValuesType = Pick<StartNode, "name" | "trigger" | "fieldsAuths">;
+type FormValuesType = Pick<StartNode, "name" | "trigger" | "fieldsAuths" | "progress">;
 
 function StartNodeEditor(props: StartNodeEditorProps) {
   const { node } = props;
@@ -82,6 +82,7 @@ function StartNodeEditor(props: StartNodeEditorProps) {
       name: node.name,
       trigger: node.trigger,
       fieldsAuths: node.fieldsAuths,
+      progress: node.progress,
     });
   }, [node, form]);
 
@@ -176,7 +177,9 @@ function StartNodeEditor(props: StartNodeEditorProps) {
         </>
       )}
 
-      <MilestoneNodeConfig form={form} />
+      <Form.Item name="progress">
+        <MilestoneNodeConfig form={form} />
+      </Form.Item>
     </Form>
   );
 }

@@ -33,6 +33,7 @@ type FormValuesType = {
   };
   fieldsAuths: AuditNode["fieldsAuths"];
   countersign: AuditNode["countersign"];
+  progress: AuditNode["progress"];
   dueConfig: AuditNode["dueConfig"];
 };
 
@@ -72,6 +73,7 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
       },
       fieldsAuths: node.fieldsAuths,
       countersign: node.countersign,
+      progress: node.progress,
       dueConfig: node.dueConfig || defaultDueConfig,
     };
   }, [node]);
@@ -89,6 +91,7 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
           revert: allValues.btnConfigs.revert,
           fieldsAuths: allValues.fieldsAuths,
           countersign: allValues.countersign,
+          progress: allValues.progress,
           dueConfig: allValues.dueConfig,
         }),
       );
@@ -237,7 +240,9 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
       <Form.Item name="dueConfig">
         <DueConfig name="dueConfig" showAction={true} />
       </Form.Item>
-      <MilestoneNodeConfig form={form} />
+      <Form.Item name="progress">
+        <MilestoneNodeConfig form={form} />
+      </Form.Item>
     </Form>
   );
 }

@@ -206,9 +206,9 @@ const ToDo: FC = () => {
         dataIndex: "progress",
         key: "progress",
         width: "15%",
-        render: (text: any) => {
-          console.log(text, "text");
-          return <Progress percent={30} />;
+        render: (_: string, record: TodoItem) => {
+          const { progress } = record;
+          return <Progress percent={progress || 0} />;
         },
       },
       {
@@ -337,7 +337,7 @@ const ToDo: FC = () => {
           columns={columns}
           dataSource={data}
           onChange={handleTableChange}
-        ></Table>
+        />
       </div>
     </div>
   );

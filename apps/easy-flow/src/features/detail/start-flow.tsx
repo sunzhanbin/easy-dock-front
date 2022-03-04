@@ -19,6 +19,7 @@ import { useLocation } from "react-router-dom";
 import styles from "./index.module.scss";
 import { useAppSelector } from "@/app/hooks";
 import { modeSelector } from "../task-center/taskcenter-slice";
+import appConfig from "@/init";
 
 type DataType = {
   processMeta: StartNode;
@@ -86,7 +87,6 @@ function StartFlow() {
 
   useEffect(() => {
     if (!data || !subApp) return;
-
     loadDatasource(data.formMeta, data.processMeta.fieldsAuths, subApp.version.id, "").then((values) => {
       serDatasource(values);
     });
@@ -110,6 +110,25 @@ function StartFlow() {
     );
   }, [data, datasource, projectId]);
 
+  const theme = useMemo<string>(() => {
+    // 以iframe方式接入,参数在location中
+    if (location.search) {
+      const params = new URLSearchParams(location.search.slice(1));
+      return params.get("theme") || "light";
+    }
+    // 以微前端方式接入,参数在extra中
+    if (appConfig?.extra?.theme) {
+      return appConfig.extra.theme;
+    }
+    return "light";
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.search, appConfig?.extra?.theme]);
+
+  const backgroundImage = useMemoCallback((position) => {
+    const publicPath = appConfig.publicPath.replace(/\/$/, "");
+    return `${publicPath}/images/flow-detail//${theme}-${position}.png`;
+  });
+
   const handleSubmit = useMemoCallback(
     debounce(async () => {
       if (!formRef.current || !subApp) return;
@@ -121,9 +140,7 @@ function StartFlow() {
         formData: formValues,
         versionId: subApp.version.id,
       });
-
       message.success("提交成功");
-
       setTimeout(() => {
         if (type === "app") {
           history.goBack();
@@ -140,12 +157,10 @@ function StartFlow() {
       if (!formRef.current || !subApp) return;
       const values = await formRef.current.getFieldsValue(true);
       const formValues = await uploadFile(values);
-
       await runtimeAxios.post("/task/draft/add", {
         formData: formValues,
         subappId: subApp.id,
       });
-
       message.success("保存成功");
     }, 500),
   );
@@ -194,8 +209,8 @@ function StartFlow() {
         )}
       </Header>
       <div className={styles.background}>
-        <div className={styles.left} />
-        <div className={styles.right} />
+        <div className={styles.left} style={{ backgroundImage: `url(${backgroundImage("left")})` }} />
+        <div className={styles.right} style={{ backgroundImage: `url(${backgroundImage("right")})` }} />
       </div>
       {subApp && (
         <div className={styles["start-form-wrapper"]}>

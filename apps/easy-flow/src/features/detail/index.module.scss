@@ -100,10 +100,9 @@
       left: 0;
       width: 710px;
       height: 490px;
-      //background-image: var(--groundImage, url('~@/assets/aaa.png'));
-      background-image: $start-flow-banner-bg-left;
       background-repeat: no-repeat;
       background-size: contain;
+
     }
 
     .right {
@@ -112,7 +111,6 @@
       right: 0;
       width: 698px;
       height: 380px;
-      background-image: $start-flow-banner-bg-right;
       background-size: contain;
       background-repeat: no-repeat;
     }
