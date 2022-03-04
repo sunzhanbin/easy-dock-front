@@ -8,6 +8,7 @@
     "@rescripts/cli": "^0.0.16",
     "@types/classnames": "^2.3.1",
     "@types/draftjs-to-html": "^0.8.0",
+    "@types/dom-to-image": "^2.6.4",
     "@types/html-to-draftjs": "^1.4.0",
     "@types/js-cookie": "^2.2.6",
     "@types/lodash": "^4.14.168",
@@ -77,8 +78,5 @@
       "not dead",
       "not op_mini all"
     ]
-  },
-  "devDependencies": {
-    "@types/dom-to-image": "^2.6.4"
   }
 }
