@@ -96,7 +96,8 @@ function AddNodeButton(props: AddNodeButtonProps) {
   return (
     <Popover
       className={styles.popover}
-      getPopupContainer={getPopupContainer}
+      overlayClassName={styles["popover-content"]}
+      // getPopupContainer={getPopupContainer}
       placement="rightTop"
       arrowContent={null}
       visible={showAddPopover}
