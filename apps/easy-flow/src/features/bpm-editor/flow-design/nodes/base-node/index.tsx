@@ -139,6 +139,7 @@ function Base(props: BaseProps) {
             onConfirm={handleDeleteConfirm}
             visible={showDeletePopover}
             onVisibleChange={setShowDeletePopover}
+            getPopupContainer={() => document.body}
             trigger="click"
             content={`确认删除 ${name} 吗？`}
           >

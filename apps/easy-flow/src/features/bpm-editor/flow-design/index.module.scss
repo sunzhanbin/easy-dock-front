@@ -17,6 +17,7 @@
     height: 100%;
     overflow-y: auto;
     background-color: $flow-manage-content-bg;
+    border-right: 1px solid $border-normal-color;
   }
   & > .flow {
     position: absolute;

@@ -1,25 +1,25 @@
-import React, { useCallback, useMemo, useRef, useState, useEffect } from 'react';
-import { Tooltip, TooltipProps } from 'antd';
-import classnames from 'classnames';
-import { getContainer as commonGetContainer } from '../../utils';
-import styles from './index.module.scss';
+import React, { useCallback, useMemo, useRef, useState, useEffect } from "react";
+import { Tooltip, TooltipProps } from "antd";
+import classnames from "classnames";
+import { getContainer as commonGetContainer } from "../../utils";
+import styles from "./index.module.scss";
 
 interface TextProps {
   className?: string;
   text?: string;
-  placement?: TooltipProps['placement'];
+  placement?: TooltipProps["placement"];
   children?: React.ReactNode;
   zIndex?: number;
   delay?: number;
-  getContainer?: TooltipProps['getTooltipContainer'] | false;
+  getContainer?: TooltipProps["getTooltipContainer"] | false;
 }
 
 function Text(props: TextProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { className, getContainer, text, placement = 'top', children, zIndex = 3000, delay = 300 } = props;
+  const { className, getContainer, text, placement = "top", children, zIndex = 3000, delay = 300 } = props;
   const [showTooltip, setShowTooltip] = useState(false);
   const showTooltipTimerRef = useRef<NodeJS.Timeout>();
-  const getTooltipContainer: TooltipProps['getTooltipContainer'] = useMemo(() => {
+  const getTooltipContainer: TooltipProps["getTooltipContainer"] = useMemo(() => {
     // 插入body
     if (getContainer === false) return undefined;
 

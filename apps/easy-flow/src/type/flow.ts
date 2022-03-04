@@ -20,6 +20,8 @@ export enum NodeType {
   AutoNodePushData = 8,
   // 自动节点_触发流程
   AutoNodeTriggerProcess = 9,
+  // 插件节点
+  PluginNode = 10,
 }
 
 export enum AuthType {
@@ -247,3 +249,16 @@ export type AddableNode =
   | SubBranch
   | AutoNodePushData
   | AutoNodeTriggerProcess;
+
+export interface PluginItem {
+  code: string;
+  enabled: boolean;
+  group: {
+    id: number;
+    name: string;
+  };
+  icon: string;
+  id: number;
+  name: string;
+  type: string;
+}

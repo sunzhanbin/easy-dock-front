@@ -1,6 +1,6 @@
 import { memo, FC, useEffect } from "react";
 import { DragSourceMonitor, useDrag } from "react-dnd";
-import { Icon } from "@common/components";
+import { Icon, Text } from "@common/components";
 import { NodeType } from "@/type/flow";
 import styles from "./index.module.scss";
 import { useAppDispatch } from "@/app/hooks";
@@ -36,7 +36,9 @@ const ToolboxItem: FC<ToolboxItemProps> = ({ icon, type, name }) => {
           <Icon type={icon} className={styles.icon} />
         </div>
       )}
-      <div className={styles.name}>{name}</div>
+      <div className={styles.name}>
+        <Text text={name} />
+      </div>
     </div>
   );
 };

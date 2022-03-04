@@ -492,7 +492,7 @@ export const addNode = createAsyncThunk<void, { prevId: string; type: AddableNod
         dispatch(loadApis());
       }
     } else if (type === NodeType.AutoNodeTriggerProcess) {
-      tmpNode = createNode(type, "自动节点_触发流程");
+      tmpNode = createNode(type, "自动节点_流程触发");
     } else {
       if (type === NodeType.AuditNode) {
         tmpNode = createNode(type, "审批节点");
