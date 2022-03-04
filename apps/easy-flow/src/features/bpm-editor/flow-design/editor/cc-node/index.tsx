@@ -71,7 +71,9 @@ function CCNodeEditor(props: CCNodeEditorProps) {
       <Form.Item label="字段权限" name="fieldsAuths">
         <FieldAuths max={AuthType.View} />
       </Form.Item>
-      <MilestoneNodeConfig form={form} />
+      <Form.Item name="progress">
+        <MilestoneNodeConfig form={form} />
+      </Form.Item>
     </Form>
   );
 }

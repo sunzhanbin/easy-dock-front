@@ -288,7 +288,6 @@ export function valid(data: AllNode[], validRes: ValidResultType) {
     }
 
     const errors = [];
-
     if (!node.name) {
       errors.push("未输入节点名称");
     } else {
@@ -339,6 +338,19 @@ export function valid(data: AllNode[], validRes: ValidResultType) {
       const triggerConfigValidMessage = validators.config(node.triggerConfig.subapps);
       if (triggerConfigValidMessage) {
         errors.push(triggerConfigValidMessage);
+      }
+    }
+
+    if (
+      node.type === NodeType.AuditNode ||
+      node.type === NodeType.FillNode ||
+      node.type === NodeType.CCNode ||
+      node.type === NodeType.StartNode ||
+      node.type === NodeType.AutoNodePushData ||
+      node.type === NodeType.AutoNodeTriggerProcess
+    ) {
+      if (node.progress && node.progress.enable) {
+        errors.push("流程里程碑百分比不能为空");
       }
     }
 

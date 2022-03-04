@@ -111,7 +111,9 @@ function FillNodeEditor(props: FillNodeEditorProps) {
       <Form.Item name="dueConfig">
         <DueConfig name="dueConfig" />
       </Form.Item>
-      <MilestoneNodeConfig form={form} />
+      <Form.Item name="progress">
+        <MilestoneNodeConfig form={form} />
+      </Form.Item>
     </Form>
   );
 }

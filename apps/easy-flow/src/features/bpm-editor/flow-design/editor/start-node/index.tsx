@@ -177,7 +177,9 @@ function StartNodeEditor(props: StartNodeEditorProps) {
         </>
       )}
 
-      <MilestoneNodeConfig form={form} />
+      <Form.Item name="progress">
+        <MilestoneNodeConfig form={form} />
+      </Form.Item>
     </Form>
   );
 }

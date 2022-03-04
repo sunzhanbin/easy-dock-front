@@ -69,7 +69,9 @@ function AutoNodeEditor(props: AutoNodeEditorProps) {
           <ResponseWithMap label="返回参数" />
         </DataApiConfig>
       </Form.Item>
-      <MilestoneNodeConfig form={form} />
+      <Form.Item name="progress">
+        <MilestoneNodeConfig form={form} />
+      </Form.Item>
     </Form>
   );
 }

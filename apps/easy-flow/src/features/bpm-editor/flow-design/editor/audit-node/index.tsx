@@ -240,7 +240,9 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
       <Form.Item name="dueConfig">
         <DueConfig name="dueConfig" showAction={true} />
       </Form.Item>
-      <MilestoneNodeConfig form={form} />
+      <Form.Item name="progress">
+        <MilestoneNodeConfig form={form} />
+      </Form.Item>
     </Form>
   );
 }

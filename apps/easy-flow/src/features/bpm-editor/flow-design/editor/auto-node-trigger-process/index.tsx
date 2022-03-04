@@ -66,7 +66,9 @@ function AutoNodeTriggerProcessEditor(props: AutoNodeEditorProps) {
       <Form.Item noStyle name={["triggerConfig", "subapps"]}>
         <TriggerProcessConfig name={["triggerConfig", "subapps"]} />
       </Form.Item>
-      <MilestoneNodeConfig form={form} />
+      <Form.Item name="progress">
+        <MilestoneNodeConfig form={form} />
+      </Form.Item>
     </Form>
   );
 }
