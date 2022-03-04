@@ -16,6 +16,9 @@ export const homeManageBuilder = baseFetch.injectEndpoints({
             ]
           : [{ type: "Project", id: "LIST" }],
     }),
+    getTenantList: build.query({
+      query: () => "/project/list/tenant/all",
+    }),
     newProject: build.mutation({
       query: (params: { name: string }) => ({
         url: "/project",
@@ -57,6 +60,7 @@ export const homeManageBuilder = baseFetch.injectEndpoints({
 
 export const {
   useGetProjectListQuery,
+  useGetTenantListQuery,
   useLazyFetchProjectPowersQuery,
   useNewProjectMutation,
   useGetRecentListMutation,

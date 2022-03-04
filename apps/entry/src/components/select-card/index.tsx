@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, ReactNode } from "react";
 import { Select, Button, Input, Form } from "antd";
 import { Icon, Text } from "@common/components";
 import { getPopupContainer } from "@utils/utils";
 import "@components/select-card/index.style.scss";
 import ProjectOption from "@components/select-card/project-option";
-import NewProjectModalComponent from "@components/header/new-project-modal.component";
 import classnames from "classnames";
 import { nameRule } from "@/consts";
 import useMemoCallback from "@common/hooks/use-memo-callback";
@@ -20,14 +19,25 @@ type SelectCardProps = {
   list: { [key: string]: any }[] | [];
   onSelect?: (v: string | number) => void;
   onAdd?: (v: { name: string; isEdit: boolean; id?: number }) => any;
+  onShowProjectModal?: () => any;
   onDelete?: (v: number) => any;
   selectedId?: string | number;
   isAdmin?: boolean;
+  children?: ReactNode;
 };
-const SelectCard = ({ type, list, onSelect, selectedId, onAdd, onDelete, isAdmin }: SelectCardProps) => {
+const SelectCard = ({
+  type,
+  list,
+  onSelect,
+  selectedId,
+  onAdd,
+  onDelete,
+  isAdmin,
+  onShowProjectModal,
+  children,
+}: SelectCardProps) => {
   const [fieldName, setFieldName] = useState<string>(""); // 新增字段名称
   const [showButton, setShowButton] = useState<boolean>(true); // 判断是否显示新增工作区按钮
-  const [showProjectModal, setShowProjectModal] = useState<boolean>(false); // 判断是否显示新增项目弹框
   const [showDropdown, setShowDropdown] = useState<boolean>(false); // 判断是否显示下拉
   const [form] = Form.useForm<FormValuesType>();
   const [fieldList, setFieldList] = useState<any[]>([]); // 字段list
@@ -51,20 +61,11 @@ const SelectCard = ({ type, list, onSelect, selectedId, onAdd, onDelete, isAdmin
   // 新增option
   const addField = (e: React.MouseEvent) => {
     e.stopPropagation();
-    console.log(11111);
     if (type.key === "project") {
-      setShowProjectModal(true);
+      onShowProjectModal && onShowProjectModal();
     } else {
       setShowButton(false);
     }
-  };
-
-  //
-  const handleCancelProjectModal = () => {
-    setShowProjectModal(false);
-  };
-  const handleSubmitProject = () => {
-    setShowProjectModal(false);
   };
 
   // 获得焦点时
@@ -180,11 +181,7 @@ const SelectCard = ({ type, list, onSelect, selectedId, onAdd, onDelete, isAdmin
           </Form.Item>
         </Form>
       )}
-      <NewProjectModalComponent
-        onCancel={handleCancelProjectModal}
-        visible={showProjectModal}
-        onOk={handleSubmitProject}
-      />
+      {children}
     </div>
   );
 
