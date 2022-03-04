@@ -154,7 +154,7 @@ function SubAppExtend() {
       <Form.Item
         className={styles["webhook-config"]}
         label="流程里程碑进度设置"
-        name={["config", "meta", "progress", "enable"]}
+        name={["config", "meta", "progress"]}
         valuePropName="checked"
       >
         <Switch />

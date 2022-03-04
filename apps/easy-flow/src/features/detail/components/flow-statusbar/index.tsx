@@ -7,17 +7,19 @@ import { Icon, Text } from "@common/components";
 import { NodeStatusType, FlowInstance } from "@type/detail";
 import styles from "./index.module.scss";
 import { useLocation } from "react-router-dom";
+import { Progress } from "antd";
 
 interface CellProps {
   title: string | ReactNode;
   icon?: string;
   desc: string | ReactNode;
+  children?: ReactNode;
 
   getContainer?(): HTMLElement;
 }
 
 const Cell = memo(function Cell(props: CellProps) {
-  const { title, icon, desc, getContainer } = props;
+  const { title, icon, desc, getContainer, children } = props;
 
   return (
     <div className={styles.cell}>
@@ -30,7 +32,7 @@ const Cell = memo(function Cell(props: CellProps) {
         ) : (
           <div className={styles["cell-title"]}>{title}</div>
         )}
-
+        {children}
         <div className={styles["cell-desc"]}>{desc}</div>
       </div>
     </div>
@@ -107,7 +109,6 @@ function StatusBar(props: StatusBarProps) {
       return (
         <div className={classnames(styles.status, styles.finish)}>
           <Cell title={timeDiff(flowIns.endTime - flowIns.applyTime)} desc="流程耗时" />
-
           <div>{trackNode}</div>
         </div>
       );
@@ -117,7 +118,9 @@ function StatusBar(props: StatusBarProps) {
       <Cell
         title={<Text className={styles["time-used"]}>{`流程用时 ${timeDiff(Date.now() - flowIns.applyTime)}`}</Text>}
         desc={trackNode}
-      />
+      >
+        <Progress percent={30} />
+      </Cell>
     );
 
     if (flowIns.state === NodeStatusType.Waiting) {
@@ -144,12 +147,10 @@ function StatusBar(props: StatusBarProps) {
             title={formatAllMembers(flowIns).join(",")}
             desc="当前处理人"
           />
-
           {trackCell}
         </div>
       );
     }
-
     return (
       <div className={styles.status}>
         <Cell icon="dangqianchuliren" title={flowIns.applyUser.name} desc="申请人" />
@@ -159,7 +160,6 @@ function StatusBar(props: StatusBarProps) {
           desc="申请时间"
           getContainer={getContainer}
         />
-
         {trackCell}
       </div>
     );
