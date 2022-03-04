@@ -21,6 +21,7 @@ type FormValuesType = {
   name: string;
   correlationMemberConfig: CCNode["correlationMemberConfig"];
   fieldsAuths: CCNode["fieldsAuths"];
+  progress: CCNode["progress"];
 };
 
 function CCNodeEditor(props: CCNodeEditorProps) {
@@ -35,6 +36,7 @@ function CCNodeEditor(props: CCNodeEditorProps) {
       name: node.name,
       correlationMemberConfig: node.correlationMemberConfig,
       fieldsAuths: node.fieldsAuths,
+      progress: node.progress,
     };
   }, [node]);
 

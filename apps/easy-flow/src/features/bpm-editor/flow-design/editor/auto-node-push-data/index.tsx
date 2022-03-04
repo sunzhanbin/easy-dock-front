@@ -11,6 +11,7 @@ import { trimInputValue } from "../../util";
 import { rules } from "../../validators";
 import useValidateForm from "../../hooks/use-validate-form";
 import DataApiConfig from "../../../components/data-api-config";
+import MilestoneNodeConfig from "@/features/bpm-editor/components/milestone-node-config";
 
 interface AutoNodeEditorProps {
   node: AutoNodePushData;
@@ -32,6 +33,7 @@ function AutoNodeEditor(props: AutoNodeEditorProps) {
     return {
       name: node.name,
       dataConfig: node.dataConfig,
+      progress: node.progress,
     };
   }, [node]);
 
@@ -67,6 +69,7 @@ function AutoNodeEditor(props: AutoNodeEditorProps) {
           <ResponseWithMap label="返回参数" />
         </DataApiConfig>
       </Form.Item>
+      <MilestoneNodeConfig form={form} />
     </Form>
   );
 }

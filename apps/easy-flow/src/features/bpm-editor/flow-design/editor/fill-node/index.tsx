@@ -25,6 +25,7 @@ type FormValuesType = {
   correlationMemberConfig: FillNode["correlationMemberConfig"];
   btnText: FillNode["btnText"];
   fieldsAuths: FillNode["fieldsAuths"];
+  progress: FillNode["progress"];
 };
 
 const defaultDueConfig = {
@@ -58,6 +59,7 @@ function FillNodeEditor(props: FillNodeEditorProps) {
       correlationMemberConfig: node.correlationMemberConfig,
       btnText: node.btnText,
       fieldsAuths: node.fieldsAuths,
+      progress: node.progress,
       dueConfig: node?.dueConfig || defaultDueConfig,
     };
   }, [node]);

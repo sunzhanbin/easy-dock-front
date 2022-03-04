@@ -167,9 +167,9 @@ const Start: FC = () => {
         dataIndex: "progress",
         key: "progress",
         width: "15%",
-        render: (text: any) => {
-          console.log(text, "text");
-          return <Progress percent={30} />;
+        render: (_: string, record: StartItem) => {
+          const { progress } = record;
+          return <Progress percent={progress || 0} />;
         },
       },
       {
