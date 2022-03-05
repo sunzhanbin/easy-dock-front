@@ -11,6 +11,7 @@ import {
   StartNodeEditor,
   AuditNodeEditor,
   FillNodeEditor,
+  PluginNodeEditor,
   CCNodeEditor,
   FinishNodeEditor,
   SubBranchEditor,
@@ -110,6 +111,12 @@ function FlowDesign() {
           自动节点_触发流程
         </CardHeader>
       );
+    } else if (choosedNode.type === NodeType.PluginNode) {
+      return (
+        <CardHeader icon={<Icon type="liuchengchufadise" />} type={choosedNode.type}>
+          插件节点
+        </CardHeader>
+      );
     }
   }, [choosedNode]);
 
@@ -155,6 +162,8 @@ function FlowDesign() {
             {choosedNode && choosedNode.type === NodeType.CCNode && <CCNodeEditor node={choosedNode} />}
 
             {choosedNode && choosedNode.type === NodeType.FinishNode && <FinishNodeEditor node={choosedNode} />}
+
+            {choosedNode && choosedNode.type === NodeType.PluginNode && <PluginNodeEditor node={choosedNode} />}
 
             {choosedNode && choosedNode.type === NodeType.SubBranch && <SubBranchEditor branch={choosedNode} />}
 

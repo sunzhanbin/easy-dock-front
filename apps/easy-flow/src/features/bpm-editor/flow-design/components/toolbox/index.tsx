@@ -25,13 +25,13 @@ const commonNodeList: ToolboxItemProps[] = [
 // 给插件分组
 const groupPluginList = (pluginList: PluginItem[]): NodeTypeList[] => {
   const groupMap: { [k: number]: NodeTypeList } = {};
-  pluginList.forEach(({ group, name, icon, enabled }) => {
+  pluginList.forEach(({ group, name, enabled, id }) => {
     // 过滤禁用的插件
     if (!enabled) {
       return;
     }
     const { id: groupId, name: groupName } = group;
-    const node = { name, icon, type: NodeType.PluginNode };
+    const node = { name, id, type: NodeType.PluginNode };
     if (!groupMap[groupId]) {
       groupMap[groupId] = {
         id: String(groupId),
@@ -81,8 +81,8 @@ const Toolbox: FC = () => {
               className={styles.panel}
             >
               <div className={styles["node-container"]}>
-                {nodeList.map(({ icon, type, name }) => (
-                  <ToolboxItem icon={icon} name={name} type={type} key={name} />
+                {nodeList.map(({ icon, id, type, name }) => (
+                  <ToolboxItem icon={icon} name={name} id={id} type={type} key={name} />
                 ))}
               </div>
             </Panel>

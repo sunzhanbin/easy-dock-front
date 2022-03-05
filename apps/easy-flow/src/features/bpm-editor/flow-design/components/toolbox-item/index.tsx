@@ -8,23 +8,24 @@ import { setIsDragging } from "../../flow-slice";
 
 export interface ToolboxItemProps {
   icon?: string;
+  id?: number;
   type: NodeType;
   name: string;
 }
 
-const ToolboxItem: FC<ToolboxItemProps> = ({ icon, type, name }) => {
+const ToolboxItem: FC<ToolboxItemProps> = ({ icon, id, type, name }) => {
   const dispatch = useAppDispatch();
   const [collectProps, drag] = useDrag(
     () => ({
       type: "flow-node",
       item: () => {
-        return { type };
+        return { type, id };
       },
       collect: (monitor: DragSourceMonitor) => {
         return { isDragging: monitor.isDragging() };
       },
     }),
-    [type],
+    [type, id],
   );
   useEffect(() => {
     dispatch(setIsDragging(collectProps.isDragging));

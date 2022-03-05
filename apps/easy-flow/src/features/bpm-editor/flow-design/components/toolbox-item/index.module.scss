@@ -20,6 +20,8 @@
         }
     }
     .name {
-        width: 70px;
+        flex:1;
+        max-width: 100%;
+        text-align: center;
     }
 }

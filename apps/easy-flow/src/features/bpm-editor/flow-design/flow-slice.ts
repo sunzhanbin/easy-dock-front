@@ -476,46 +476,49 @@ export const delSubBranch = createAsyncThunk<void, { branchNode: BranchNode; tar
   },
 );
 
-export const addNode = createAsyncThunk<void, { prevId: string; type: AddableNode["type"] }, { state: RootState }>(
-  "flow/create-node",
-  ({ prevId, type }, { getState, dispatch }) => {
-    let tmpNode;
-    const { flow } = getState();
+export const addNode = createAsyncThunk<
+  void,
+  { prevId: string; type: AddableNode["type"]; id?: number },
+  { state: RootState }
+>("flow/create-node", ({ prevId, type }, { getState, dispatch }) => {
+  let tmpNode;
+  const { flow } = getState();
 
-    if (type === NodeType.BranchNode) {
-      tmpNode = createNode(type);
-    } else if (type === NodeType.AutoNodePushData) {
-      tmpNode = createNode(type, "自动节点_数据连接");
+  if (type === NodeType.BranchNode) {
+    tmpNode = createNode(type);
+  } else if (type === NodeType.AutoNodePushData) {
+    tmpNode = createNode(type, "自动节点_数据连接");
 
-      // 如果添加了自动节点判断下服务编排里的接口有没有被加载进来
-      if (flow.apis.length === 0) {
-        dispatch(loadApis());
-      }
-    } else if (type === NodeType.AutoNodeTriggerProcess) {
-      tmpNode = createNode(type, "自动节点_流程触发");
+    // 如果添加了自动节点判断下服务编排里的接口有没有被加载进来
+    if (flow.apis.length === 0) {
+      dispatch(loadApis());
+    }
+  } else if (type === NodeType.AutoNodeTriggerProcess) {
+    tmpNode = createNode(type, "自动节点_流程触发");
+  } else if (type === NodeType.PluginNode) {
+    tmpNode = createNode(type, "插件节点");
+  } else {
+    if (type === NodeType.AuditNode) {
+      tmpNode = createNode(type, "审批节点");
+    } else if (type === NodeType.FillNode) {
+      tmpNode = createNode(type, "填写节点");
+    } else if (type === NodeType.CCNode) {
+      tmpNode = createNode(type, "抄送节点");
     } else {
-      if (type === NodeType.AuditNode) {
-        tmpNode = createNode(type, "审批节点");
-      } else if (type === NodeType.FillNode) {
-        tmpNode = createNode(type, "填写节点");
-      } else if (type === NodeType.CCNode) {
-        tmpNode = createNode(type, "抄送节点");
-      } else {
-        throw Error("传入类型不正确");
-      }
-
-      tmpNode.fieldsAuths = formatFieldsAuths(flow.fieldsTemplate);
+      throw Error("传入类型不正确");
     }
 
-    // 给新节点设置初始字段权限
-    dispatch(
-      flowActions.addNode({
-        prevId,
-        node: tmpNode,
-      }),
-    );
-  },
-);
+    tmpNode.fieldsAuths = formatFieldsAuths(flow.fieldsTemplate);
+  }
+
+  // 给新节点设置初始字段权限
+  dispatch(
+    flowActions.addNode({
+      prevId,
+      node: tmpNode,
+    }),
+  );
+});
 
 export default flow;
 

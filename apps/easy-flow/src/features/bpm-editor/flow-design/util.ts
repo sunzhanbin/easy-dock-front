@@ -15,6 +15,7 @@ import {
   FieldAuthsMap,
   FieldTemplate,
   CorrelationMemberConfig,
+  PluginNode,
 } from "@type/flow";
 import { FormMeta } from "@type";
 import { validators } from "./validators";
@@ -42,6 +43,7 @@ export function branchuuid(group = 3) {
 export function createNode(type: NodeType.AuditNode, name: string): AuditNode;
 export function createNode(type: NodeType.FillNode, name: string): FillNode;
 export function createNode(type: NodeType.CCNode, name: string): CCNode;
+export function createNode(type: NodeType.PluginNode, name: string): PluginNode;
 export function createNode(type: NodeType.AutoNodePushData, name: string): AutoNodePushData;
 export function createNode(type: NodeType.AutoNodeTriggerProcess, name: string): AutoNodeTriggerProcess;
 export function createNode(type: NodeType.BranchNode): BranchNode;
@@ -90,6 +92,36 @@ export function createNode(type: NodeType, name?: string) {
         subapps: [{ id: undefined, name: undefined, starter: { type: 1 }, mapping: [] }],
       },
     } as AutoNodeTriggerProcess;
+  } else if (type === NodeType.PluginNode) {
+    return {
+      id: fielduuid(),
+      type,
+      name,
+      dataConfig: {
+        type: "http",
+        code: "",
+        name: "寻找最近巡检员",
+        meta: {
+          url: "",
+          method: "GET",
+          paths: [],
+          headers: [],
+          querys: [],
+          body: [],
+          responses: [],
+        },
+      },
+      nextAction: {
+        type: 1,
+        conditions: [],
+        failConfig: {
+          type: 1,
+          revert: {
+            type: 1,
+          },
+        },
+      },
+    } as PluginNode;
   }
 
   const node = {

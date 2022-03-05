@@ -1,5 +1,5 @@
 import { fieldRule as FieldRule, FieldType } from "./index";
-import { DataConfig } from "@type/api";
+import { DataConfig, MethodType } from "@type/api";
 
 export enum NodeType {
   // 开始节点
@@ -215,6 +215,56 @@ export interface AutoNodePushData extends BaseNode {
   dataConfig: DataConfig;
 }
 
+export interface PluginHttpParam {
+  name: string;
+  key: string;
+  map: number | string | null;
+}
+export interface PluginMeta {
+  url: string;
+  method: MethodType;
+  paths: PluginHttpParam[];
+  headers: PluginHttpParam[];
+  querys: PluginHttpParam[];
+  body: PluginHttpParam[];
+  responses: PluginHttpParam[];
+}
+
+export enum NextActionType {
+  Continue = 1, //无条件流转到下个节点
+  Condition = 2, //依据条件判断是否继续流转
+}
+
+export enum FailAction {
+  Finish = 1, //失败后结束流程
+  Revert = 2, //失败后驳回到指定节点
+}
+
+export interface NextAction {
+  type: NextActionType;
+  conditions: FieldRule[][];
+  failConfig: {
+    type: FailAction;
+    revert: {
+      type: RevertType;
+      nodeId?: string;
+    };
+  };
+}
+
+export interface PluginDataConfig {
+  type: "http"; //暂时只支持http类型
+  code: string;
+  name: string;
+  meta: PluginMeta;
+}
+
+export interface PluginNode extends BaseNode {
+  type: NodeType.PluginNode;
+  dataConfig: PluginDataConfig;
+  nextAction: NextAction;
+}
+
 export enum StarterEnum {
   FlowStarter = 1, //当前流程发起人
   Admin = 2, //系统发起
@@ -249,6 +299,7 @@ export type AllNode =
   | BranchNode
   | FinishNode
   | CCNode
+  | PluginNode
   | AutoNodePushData
   | AutoNodeTriggerProcess;
 
@@ -262,6 +313,7 @@ export type AddableNode =
   | BranchNode
   | CCNode
   | SubBranch
+  | PluginNode
   | AutoNodePushData
   | AutoNodeTriggerProcess;
 
