@@ -1,0 +1,26 @@
+@import "@common/styles/var.scss";
+
+.params-config {
+    display: flex;
+    .required{
+        width: 10px;
+        text-align: center;
+        color: $flow-detail-status-error-color;
+        height: 40px;
+        line-height: 40px;
+        margin: 0 4px;
+        font-size: 16px;
+    }
+    .name {
+        flex: 1;
+    }
+    .text {
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        margin: 0 8px;
+    }
+    .map {
+        flex: 1;
+    }
+}

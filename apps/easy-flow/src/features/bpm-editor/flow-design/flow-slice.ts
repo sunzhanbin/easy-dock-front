@@ -15,6 +15,7 @@ import {
   RevertType,
   AuthType,
   FieldAuthsMap,
+  PluginMeta,
 } from "@type/flow";
 import { ComponentConfig, FormMeta } from "@type";
 import { Api } from "@type/api";
@@ -480,7 +481,7 @@ export const addNode = createAsyncThunk<
   void,
   { prevId: string; type: AddableNode["type"]; id?: number },
   { state: RootState }
->("flow/create-node", ({ prevId, type }, { getState, dispatch }) => {
+>("flow/create-node", async ({ prevId, type, id }, { getState, dispatch }) => {
   let tmpNode;
   const { flow } = getState();
 
@@ -496,7 +497,35 @@ export const addNode = createAsyncThunk<
   } else if (type === NodeType.AutoNodeTriggerProcess) {
     tmpNode = createNode(type, "自动节点_流程触发");
   } else if (type === NodeType.PluginNode) {
-    tmpNode = createNode(type, "插件节点");
+    const {
+      version,
+      name,
+      code,
+      type: pluginType,
+    } = await builderAxios.get<{
+      name: string;
+      code: string;
+      type: string;
+      version: { meta: PluginMeta };
+    }>(`/plugin/${id}`);
+    const metaConfig = version.meta;
+    // querys: [{ name: "告警ID", key: "alertId", map: "", required: false }],
+    const meta = {
+      url: metaConfig.url,
+      method: metaConfig.method,
+      paths: metaConfig.paths,
+      headers: metaConfig.headers,
+      querys: metaConfig.querys,
+      bodys: metaConfig.bodys,
+      responses: metaConfig.responses,
+    };
+    const dataConfig = {
+      name,
+      code,
+      meta,
+      type: pluginType || "http",
+    };
+    tmpNode = createNode(type, "插件节点", dataConfig);
   } else {
     if (type === NodeType.AuditNode) {
       tmpNode = createNode(type, "审批节点");

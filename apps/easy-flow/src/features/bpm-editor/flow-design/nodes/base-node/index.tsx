@@ -78,7 +78,7 @@ function Base(props: BaseProps) {
       },
       drop: (v, monitor: DropTargetMonitor) => {
         const item = monitor.getItem<{ type: AddableNode["type"]; id?: number }>();
-        dispatch(addNode({ prevId: node.id, type: item?.type }));
+        dispatch(addNode({ prevId: node.id, type: item?.type, id: item.id }));
       },
     }),
     [node.id],
