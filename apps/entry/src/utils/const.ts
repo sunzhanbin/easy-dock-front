@@ -287,3 +287,27 @@ export enum AuthEnum {
   DATA = 2, //数据权限
   VISIT = 4, //访问权限
 }
+
+export enum AssetCentreEnum {
+  DATA_SOURCE = "data-source",
+  DATA_ASSET = "data-asset",
+  PLUGINS_MANAGE = "plugins-manage",
+}
+
+export const ASSET_CENTRE_MENU = [
+  {
+    name: "数据源",
+    icon: "shujuyuan",
+    type: AssetCentreEnum.DATA_SOURCE,
+  },
+  {
+    name: "数据资产",
+    icon: "xiangmutubiao",
+    type: AssetCentreEnum.DATA_ASSET,
+  },
+  {
+    name: "插件管理",
+    icon: "chajian",
+    type: AssetCentreEnum.PLUGINS_MANAGE,
+  },
+];
