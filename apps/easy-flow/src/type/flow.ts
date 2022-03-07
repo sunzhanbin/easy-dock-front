@@ -218,7 +218,8 @@ export interface AutoNodePushData extends BaseNode {
 export interface PluginHttpParam {
   name: string;
   key: string;
-  map: number | string | null;
+  map?: string;
+  required?: boolean;
 }
 export interface PluginMeta {
   url: string;
@@ -226,7 +227,7 @@ export interface PluginMeta {
   paths: PluginHttpParam[];
   headers: PluginHttpParam[];
   querys: PluginHttpParam[];
-  body: PluginHttpParam[];
+  bodys: PluginHttpParam[];
   responses: PluginHttpParam[];
 }
 
@@ -253,7 +254,7 @@ export interface NextAction {
 }
 
 export interface PluginDataConfig {
-  type: "http"; //暂时只支持http类型
+  type: string; //暂时只支持http类型
   code: string;
   name: string;
   meta: PluginMeta;

@@ -4,8 +4,9 @@ import { Rule } from "antd/lib/form";
 import debounce from "lodash/debounce";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import { PluginNode } from "@type/flow";
-import { useAppDispatch, useAppSelector } from "@/app/hooks";
-import { formMetaSelector, updateNode } from "../../flow-slice";
+import { useAppDispatch } from "@/app/hooks";
+import PluginDataConfig from "@/features/bpm-editor/components/plugin-data-config";
+import { updateNode } from "../../flow-slice";
 import { trimInputValue } from "../../util";
 import { rules } from "../../validators";
 import useValidateForm from "../../hooks/use-validate-form";
@@ -17,7 +18,6 @@ type FormValuesType = {
 function AutoNodeEditor(props: { node: PluginNode }) {
   const dispatch = useAppDispatch();
   const { node } = props;
-  const formMeta = useAppSelector(formMetaSelector);
   const [form] = Form.useForm<FormValuesType>();
 
   useValidateForm<FormValuesType>(form, node.id);
@@ -25,7 +25,7 @@ function AutoNodeEditor(props: { node: PluginNode }) {
   const formInitialValues = useMemo(() => {
     return {
       name: node.name,
-      pluginName: node.dataConfig.name,
+      dataConfig: node.dataConfig,
     };
   }, [node]);
 
@@ -39,14 +39,6 @@ function AutoNodeEditor(props: { node: PluginNode }) {
     return [rules.name];
   }, []);
 
-  const fields = useMemo(() => {
-    return (formMeta?.components || [])
-      .filter((item) => !["DescText", "Tabs"].includes(item.config.type))
-      .map((item) => ({ name: item.config.label as string, id: item.config.fieldName }));
-  }, [formMeta]);
-
-  console.info(node, "node");
-
   return (
     <Form
       form={form}
@@ -58,8 +50,8 @@ function AutoNodeEditor(props: { node: PluginNode }) {
       <Form.Item label="节点名称" name="name" rules={nameRules} getValueFromEvent={trimInputValue} required>
         <Input size="large" placeholder="请输入节点名称" />
       </Form.Item>
-      <Form.Item label="插件名称" name="pluginName">
-        <Input size="large" placeholder="请输入节点名称" disabled />
+      <Form.Item name="dataConfig">
+        <PluginDataConfig name="dataConfig" />
       </Form.Item>
     </Form>
   );
