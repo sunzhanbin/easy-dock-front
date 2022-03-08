@@ -1,0 +1,81 @@
+@import "@common/styles/var.scss";
+.type {
+    display: flex;
+    max-width: 320px;
+
+    :global {
+        .ant-radio-button-wrapper {
+            flex: 1;
+            background: $input-background-normal-color;
+            border-radius: 3px;
+            border-color: transparent;
+            text-align: center;
+            font-size: 14px;
+
+            &:hover {
+                color: rgba(76, 92, 219, 1);
+            }
+
+            &.ant-radio-button-wrapper-checked {
+                background: $button-default-background-color !important;
+                border-radius: 3px 0px 0px 3px;
+                border: 1px solid $button-default-border-color;
+                color: $button-primary-ghost-text-color !important;
+            }
+
+            &:focus-within {
+                box-shadow: none;
+            }
+        }
+
+        .ant-radio-button-wrapper:not(:first-child)::before {
+            display: none;
+        }
+
+        .ant-radio-button-wrapper-checked:not([class*=" ant-radio-button-wrapper-disabled"]).ant-radio-button-wrapper:first-child {
+            border-right-color: $button-default-border-color;
+        }
+    }
+}
+.rule-block {
+    border-bottom: 1px solid $border-normal-color;
+    padding: 12px 0;
+    .condition {
+        display: flex;
+        .fieldName {
+            flex: 1;
+        }
+        .symbol {
+            width: 100px;
+            margin: 0 8px;
+        }
+        .value {
+            flex: 1;
+        }
+        .delete {
+            visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 40px;
+            cursor: pointer;
+        }
+        &:hover {
+            .delete {
+                visibility: visible;
+            }
+        }
+    }
+    :global {
+        .ant-form-item {
+            margin-bottom: 8px;
+        }
+    }
+}
+.or {
+    margin-top: 12px;
+}
+.mb12{
+    margin-bottom: 12px;
+}

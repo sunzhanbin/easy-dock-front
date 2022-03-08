@@ -121,7 +121,10 @@ function FlowDesign() {
   }, [choosedNode]);
 
   const drawerWidth = useMemo(() => {
-    if (choosedNode && choosedNode.type === NodeType.SubBranch) {
+    if (
+      choosedNode &&
+      [NodeType.SubBranch, NodeType.AutoNodePushData, NodeType.PluginNode].includes(choosedNode.type)
+    ) {
       return 600;
     }
 

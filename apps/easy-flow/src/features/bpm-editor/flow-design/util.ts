@@ -17,6 +17,7 @@ import {
   CorrelationMemberConfig,
   PluginNode,
   PluginDataConfig,
+  NextAction,
 } from "@type/flow";
 import { FormMeta } from "@type";
 import { validators } from "./validators";
@@ -40,6 +41,17 @@ export function branchuuid(group = 3) {
   // 应后端要求字段id不能以数字开头
   return `flow-branch-${uuid(group)}`;
 }
+
+const nextAction: NextAction = {
+  type: 1,
+  conditions: [[{ fieldName: undefined, symbol: undefined }]],
+  failConfig: {
+    type: 1,
+    revert: {
+      type: 1,
+    },
+  },
+};
 
 export function createNode(type: NodeType.AuditNode, name: string): AuditNode;
 export function createNode(type: NodeType.FillNode, name: string): FillNode;
@@ -82,6 +94,7 @@ export function createNode(type: NodeType, name?: string, dataConfig?: PluginDat
       id: fielduuid(),
       name,
       type,
+      nextAction,
     } as AutoNodePushData;
   } else if (type === NodeType.AutoNodeTriggerProcess) {
     return {
@@ -99,16 +112,7 @@ export function createNode(type: NodeType, name?: string, dataConfig?: PluginDat
       type,
       name,
       dataConfig,
-      nextAction: {
-        type: 1,
-        conditions: [],
-        failConfig: {
-          type: 1,
-          revert: {
-            type: 1,
-          },
-        },
-      },
+      nextAction,
     } as PluginNode;
   }
 

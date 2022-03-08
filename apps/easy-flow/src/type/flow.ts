@@ -213,6 +213,7 @@ export interface AutoNodePushData extends BaseNode {
   type: NodeType.AutoNodePushData;
   progress?: MilestonePercentType;
   dataConfig: DataConfig;
+  nextAction: NextAction;
 }
 
 export interface PluginHttpParam {
