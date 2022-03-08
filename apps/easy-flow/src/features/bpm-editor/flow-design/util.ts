@@ -374,7 +374,9 @@ export function valid(data: AllNode[], validRes: ValidResultType) {
       node.type === NodeType.AutoNodeTriggerProcess
     ) {
       if (node.progress && node.progress.enable) {
-        errors.push("流程里程碑百分比不能为空");
+        if (!node.progress.percent) {
+          errors.push("流程里程碑百分比不能为空");
+        }
       }
     }
 

@@ -1,0 +1,31 @@
+
+.plugin-manager-container {
+  padding: 24px;
+
+  .operation-wrapper {
+    display: flex;
+  }
+
+  .title {
+    width: 100px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #000000D9;
+    margin-right: 32px;
+  }
+
+  .auth-config {
+    .text-name {
+      padding-left: 4px;
+      padding-right: 8px;
+    }
+
+    .text-selected {
+      color: #181F4380;
+    }
+
+    span {
+      color: #181F43FF;
+    }
+  }
+}
