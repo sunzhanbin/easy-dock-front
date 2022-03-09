@@ -1,8 +1,13 @@
 import React, { memo, useState, useMemo } from "react";
-import { Input, Layout, Select, Form, Button, Table, TableProps } from "antd";
-import "@containers/plugin-manager/index.style.scss";
-import { Icon } from "@common/components";
+import { Input, Layout, Select, Form, Button, Table, TableProps, message } from "antd";
 import useMemoCallback from "@common/hooks/use-memo-callback";
+import { useAddPluginsMutation, useEditPluginsMutation, useGetPluginsListQuery } from "@/http";
+import { Icon } from "@common/components";
+import UploadJsonModalComponent from "@containers/plugin-manager/upload-json-modal.component";
+import NewPluginsModalComponent from "@containers/plugin-manager/new-plugins-modal.component";
+import "@containers/plugin-manager/index.style.scss";
+import { selectJsonMeta } from "@views/asset-centre/index.slice";
+import { useAppSelector } from "@/store";
 
 const { Content } = Layout;
 const { Option } = Select;
@@ -14,9 +19,30 @@ type TableColumnsProps = {
   public: boolean;
 };
 const PluginManager = () => {
-  const [loading, setLoading] = useState(false);
-  const [dataSource, setDataSource] = useState([]);
+  const jsonMeta = useAppSelector(selectJsonMeta);
+  const { pluginsList, isLoading } = useGetPluginsListQuery("", {
+    selectFromResult: ({ data, isLoading }) => ({
+      pluginsList: data,
+      isLoading,
+    }),
+  });
+  const [addPlugins] = useAddPluginsMutation();
+  const [editPlugins] = useEditPluginsMutation();
   const [form] = Form.useForm();
+  const [showJsonModal, setShowJsonModal] = useState<boolean>(false);
+  const [showAddModal, setShowAddModal] = useState<boolean>(false);
+
+  const rowSelection: any = {
+    onChange: (selectedRowKeys: any, selectedRows: any) => {
+      console.log(`selectedRowKeys: ${selectedRowKeys}`, "selectedRows: ", selectedRows);
+    },
+    onSelect: (record: any, selected: any, selectedRows: any) => {
+      console.log(record, selected, selectedRows);
+    },
+    onSelectAll: (selected: any, selectedRows: any, changeRows: any) => {
+      console.log(selected, selectedRows, changeRows);
+    },
+  };
   const handleSearch = useMemoCallback(() => {
     const values = form.getFieldsValue();
     console.log(values, "value");
@@ -38,13 +64,19 @@ const PluginManager = () => {
       {
         key: "state",
         dataIndex: "state",
-        title: "公开",
+        title: "是否公开",
         width: 100,
       },
       {
         key: "state",
         dataIndex: "state",
-        title: "流程状态",
+        title: "是否启用",
+        width: 100,
+      },
+      {
+        key: "state",
+        dataIndex: "state",
+        title: "",
         width: 100,
       },
     ];
@@ -52,7 +84,28 @@ const PluginManager = () => {
   const handleGroupChange = () => {
     console.log(1111);
   };
-  const handleAddPlugin = () => {};
+  const handleShowJson = () => {
+    setShowJsonModal(true);
+  };
+  const handleCancelJson = () => {
+    setShowJsonModal(false);
+  };
+  const handleNext = () => {
+    console.log(jsonMeta, "jsonMeta");
+    if (!jsonMeta?.meta) {
+      message.error("请上传json文件！");
+      return;
+    }
+    setShowAddModal(true);
+  };
+  const handleCancelAdd = () => {
+    setShowJsonModal(true);
+    setShowAddModal(false);
+  };
+  const handleConfirmAdd = () => {
+    setShowAddModal(false);
+    setShowJsonModal(false);
+  };
   const handleTableChange = () => {};
   return (
     <div className="plugin-manager-container">
@@ -92,20 +145,23 @@ const PluginManager = () => {
                 />
               </Form.Item>
             </Form>
-            <Button type="primary" size="large" className="button" onClick={handleAddPlugin}>
+            <Button type="primary" size="large" className="button" onClick={handleShowJson}>
               新建插件
             </Button>
           </div>
           <div className="table-container">
             <Table
               rowKey=""
-              loading={loading}
+              loading={isLoading}
               pagination={false}
+              rowSelection={rowSelection}
               columns={tableColumns}
-              dataSource={dataSource}
+              dataSource={pluginsList}
               onChange={handleTableChange}
             />
           </div>
+          <UploadJsonModalComponent visible={showJsonModal} onCancel={handleCancelJson} onOK={handleNext} />
+          <NewPluginsModalComponent visible={showAddModal} onOK={handleConfirmAdd} onCancel={handleCancelAdd} />
         </Content>
       </Layout>
     </div>

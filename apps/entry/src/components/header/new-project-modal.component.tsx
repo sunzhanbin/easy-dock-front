@@ -19,8 +19,6 @@ const NewProjectModalComponent = ({ visible, onOk, onCancel }: modalProps) => {
         code: tenant.link ? tenant.code : null,
         name,
       };
-      console.log(params, "rrrr");
-
       onOk && onOk(params);
       form.resetFields();
     } catch (e) {
