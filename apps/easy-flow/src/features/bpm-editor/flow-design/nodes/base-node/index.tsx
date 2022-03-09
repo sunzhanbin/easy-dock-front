@@ -31,23 +31,20 @@ interface CardHeaderProps {
   type: NodeType;
 }
 
+const typeClassMap: any = {
+  [NodeType.AuditNode]: styles["audit-node"],
+  [NodeType.FillNode]: styles["fill-node"],
+  [NodeType.CCNode]: styles["cc-node"],
+  [NodeType.AutoNodePushData]: styles["auto-node"],
+  [NodeType.AutoNodeTriggerProcess]: styles["auto-node"],
+  [NodeType.PluginNode]: styles["plugin-node"],
+};
+
 export const CardHeader = memo(function CardHeader(props: CardHeaderProps) {
   const { icon, children, className, type } = props;
 
-  const typeClass = useMemo(() => {
-    if (type === NodeType.AuditNode) {
-      return styles["audit-node"];
-    } else if (type === NodeType.FillNode) {
-      return styles["fill-node"];
-    } else if (type === NodeType.CCNode) {
-      return styles["cc-node"];
-    } else if (type === NodeType.AutoNodePushData) {
-      return styles["auto-node"];
-    } else if (type === NodeType.AutoNodeTriggerProcess) {
-      return styles["auto-node"];
-    }
-
-    return "";
+  const typeClass = useMemo<string>(() => {
+    return typeClassMap[type] || "";
   }, [type]);
 
   return (
@@ -95,13 +92,14 @@ function Base(props: BaseProps) {
   const nodeType = useMemo(() => collectProps.type, [collectProps.type]);
 
   const showDelete = useMemo(() => {
-    return (
-      type === NodeType.AuditNode ||
-      type === NodeType.FillNode ||
-      type === NodeType.CCNode ||
-      type === NodeType.AutoNodePushData ||
-      type === NodeType.AutoNodeTriggerProcess
-    );
+    return [
+      NodeType.AuditNode,
+      NodeType.FillNode,
+      NodeType.CCNode,
+      NodeType.AutoNodePushData,
+      NodeType.AutoNodeTriggerProcess,
+      NodeType.PluginNode,
+    ].includes(type);
   }, [type]);
 
   return (

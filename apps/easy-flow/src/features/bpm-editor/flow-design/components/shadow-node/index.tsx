@@ -8,6 +8,7 @@ import CCNodeImage from "@assets/CCNode.png";
 import DataPushNodeImage from "@assets/DataPushNode.png";
 import fillNodeImage from "@assets/FillNode.png";
 import processNodeImage from "@assets/ProcessNode.png";
+import pluginNodeImage from "@assets/PluginNode.png";
 
 interface ShadowNodeProps {
   type: NodeType;
@@ -18,22 +19,25 @@ interface ShadowNodeProps {
 const ShadowNode: FC<ShadowNodeProps> = ({ type, parentType = "common", className }) => {
   const content = useMemo(() => {
     if (type === NodeType.AuditNode) {
-      return <img src={auditNodeImage} alt="branch" />;
+      return <img src={auditNodeImage} alt="image" />;
     }
     if (type === NodeType.FillNode) {
-      return <img src={fillNodeImage} alt="branch" />;
+      return <img src={fillNodeImage} alt="image" />;
     }
     if (type === NodeType.CCNode) {
-      return <img src={CCNodeImage} alt="branch" />;
+      return <img src={CCNodeImage} alt="image" />;
     }
     if (type === NodeType.BranchNode) {
-      return <img src={branchNodeImage} alt="branch" className={styles.image} />;
+      return <img src={branchNodeImage} alt="image" className={styles.image} />;
     }
     if (type === NodeType.AutoNodePushData) {
-      return <img src={DataPushNodeImage} alt="branch" />;
+      return <img src={DataPushNodeImage} alt="image" />;
     }
     if (type === NodeType.AutoNodeTriggerProcess) {
-      return <img src={processNodeImage} alt="branch" />;
+      return <img src={processNodeImage} alt="image" />;
+    }
+    if (type === NodeType.PluginNode) {
+      return <img src={pluginNodeImage} alt="image" />;
     }
     return null;
   }, [type]);

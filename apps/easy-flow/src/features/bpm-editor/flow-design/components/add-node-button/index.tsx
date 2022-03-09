@@ -55,13 +55,13 @@ function AddNodeButton(props: AddNodeButtonProps) {
   const addPopoverContent = useMemo(() => {
     return (
       <div className={styles["add-list"]}>
-        <div onClick={() => handleAddNode(NodeType.AuditNode)}>
-          <Icon type="lineshenpijiedian" />
-          <span>添加审批节点</span>
-        </div>
         <div onClick={() => handleAddNode(NodeType.FillNode)}>
           <Icon type="linetianxiejiedian" />
           <span>添加填写节点</span>
+        </div>
+        <div onClick={() => handleAddNode(NodeType.AuditNode)}>
+          <Icon type="lineshenpijiedian" />
+          <span>添加审批节点</span>
         </div>
 
         <div onClick={() => handleAddNode(NodeType.BranchNode)}>

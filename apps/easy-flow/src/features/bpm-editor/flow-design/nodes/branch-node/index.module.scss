@@ -76,7 +76,7 @@ $line-color: #e3e4e8;
 
   .branchs {
     display: flex;
-    background-color: $flow-manage-content-bg;
+    background-color: $branch-nodes-background-color;
   }
 
   .branch {
@@ -246,8 +246,8 @@ $line-color: #e3e4e8;
     &.sub-branch {
       padding: 165px 0;
     }
-    &.isDragging {
-      background-color: rgba(215,215,215,0.6);
-    }
+    // &.isDragging {
+    //   background-color: rgba(215,215,215,0.6);
+    // }
   }
 }

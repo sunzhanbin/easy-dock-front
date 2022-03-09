@@ -113,7 +113,7 @@ function FlowDesign() {
       );
     } else if (choosedNode.type === NodeType.PluginNode) {
       return (
-        <CardHeader icon={<Icon type="liuchengchufadise" />} type={choosedNode.type}>
+        <CardHeader icon={<Icon type="chajian" />} type={choosedNode.type}>
           插件节点
         </CardHeader>
       );
@@ -121,11 +121,11 @@ function FlowDesign() {
   }, [choosedNode]);
 
   const drawerWidth = useMemo(() => {
-    if (
-      choosedNode &&
-      [NodeType.SubBranch, NodeType.AutoNodePushData, NodeType.PluginNode].includes(choosedNode.type)
-    ) {
+    if (choosedNode && NodeType.SubBranch === choosedNode.type) {
       return 600;
+    }
+    if (choosedNode && [NodeType.AutoNodePushData, NodeType.PluginNode].includes(choosedNode.type)) {
+      return 400;
     }
 
     return 368;
