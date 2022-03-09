@@ -5,7 +5,7 @@ import { Icon } from "@common/components";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import FileImage from "@assets/images/assets/file.png";
 import UploadImage from "@assets/images/assets/upload.png";
-import { PluginMeta } from "@common/type";
+import { PluginDataConfig } from "@common/type";
 
 interface UploadJSONProps {
   file: RcFile;
@@ -13,7 +13,7 @@ interface UploadJSONProps {
 }
 
 type UploadJsonProps = {
-  onSuccess: (v: PluginMeta) => void;
+  onSuccess: (v: PluginDataConfig) => void;
 };
 
 const UploadJsonComponent = ({ onSuccess }: UploadJsonProps) => {

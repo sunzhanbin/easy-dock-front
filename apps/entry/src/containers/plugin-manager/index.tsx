@@ -1,10 +1,13 @@
 import React, { memo, useState, useMemo } from "react";
-import { Input, Layout, Select, Form, Button, Table, TableProps } from "antd";
+import { Input, Layout, Select, Form, Button, Table, TableProps, message } from "antd";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import { useAddPluginsMutation, useEditPluginsMutation, useGetPluginsListQuery } from "@/http";
 import { Icon } from "@common/components";
 import UploadJsonModalComponent from "@containers/plugin-manager/upload-json-modal.component";
+import NewPluginsModalComponent from "@containers/plugin-manager/new-plugins-modal.component";
 import "@containers/plugin-manager/index.style.scss";
+import { selectJsonMeta } from "@views/asset-centre/index.slice";
+import { useAppSelector } from "@/store";
 
 const { Content } = Layout;
 const { Option } = Select;
@@ -16,6 +19,7 @@ type TableColumnsProps = {
   public: boolean;
 };
 const PluginManager = () => {
+  const jsonMeta = useAppSelector(selectJsonMeta);
   const { pluginsList, isLoading } = useGetPluginsListQuery("", {
     selectFromResult: ({ data, isLoading }) => ({
       pluginsList: data,
@@ -25,6 +29,7 @@ const PluginManager = () => {
   const [addPlugins] = useAddPluginsMutation();
   const [editPlugins] = useEditPluginsMutation();
   const [form] = Form.useForm();
+  const [showJsonModal, setShowJsonModal] = useState<boolean>(false);
   const [showAddModal, setShowAddModal] = useState<boolean>(false);
 
   const rowSelection: any = {
@@ -79,14 +84,27 @@ const PluginManager = () => {
   const handleGroupChange = () => {
     console.log(1111);
   };
-  const handleShowAdd = () => {
+  const handleShowJson = () => {
+    setShowJsonModal(true);
+  };
+  const handleCancelJson = () => {
+    setShowJsonModal(false);
+  };
+  const handleNext = () => {
+    console.log(jsonMeta, "jsonMeta");
+    if (!jsonMeta?.meta) {
+      message.error("请上传json文件！");
+      return;
+    }
     setShowAddModal(true);
   };
   const handleCancelAdd = () => {
+    setShowJsonModal(true);
     setShowAddModal(false);
   };
-  const handleNext = () => {
+  const handleConfirmAdd = () => {
     setShowAddModal(false);
+    setShowJsonModal(false);
   };
   const handleTableChange = () => {};
   return (
@@ -127,7 +145,7 @@ const PluginManager = () => {
                 />
               </Form.Item>
             </Form>
-            <Button type="primary" size="large" className="button" onClick={handleShowAdd}>
+            <Button type="primary" size="large" className="button" onClick={handleShowJson}>
               新建插件
             </Button>
           </div>
@@ -142,7 +160,8 @@ const PluginManager = () => {
               onChange={handleTableChange}
             />
           </div>
-          <UploadJsonModalComponent visible={showAddModal} onCancel={handleCancelAdd} onOK={handleNext} />
+          <UploadJsonModalComponent visible={showJsonModal} onCancel={handleCancelJson} onOK={handleNext} />
+          <NewPluginsModalComponent visible={showAddModal} onOK={handleConfirmAdd} onCancel={handleCancelAdd} />
         </Content>
       </Layout>
     </div>

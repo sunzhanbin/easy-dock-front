@@ -2,24 +2,29 @@ import React, { memo, useState } from "react";
 import { Modal } from "antd";
 import UploadJsonComponent from "@containers/plugin-manager/upload-json.component";
 import "@containers/plugin-manager/upload-json-component.style.scss";
-import { PluginMeta } from "@common/type";
+import { PluginDataConfig } from "@common/type";
+import { setJSONMeta } from "@views/asset-centre/index.slice";
+import { useAppDispatch } from "@/store";
+import useMemoCallback from "@common/hooks/use-memo-callback";
 
 type ModalProps = {
   visible: boolean;
-  onOK: (v: any) => void;
+  onOK: () => void;
   onCancel: () => void;
 };
 
 const UploadJsonModalComponent = ({ visible, onCancel, onOK }: ModalProps) => {
+  const dispatch = useAppDispatch();
+
   const handleCancel = () => {
     onCancel && onCancel();
   };
   const handleOk = () => {
-    onOK && onOK(11);
+    onOK && onOK();
   };
-  const handleSuccess = (values: PluginMeta) => {
-    console.log(values, "-----");
-  };
+  const handleSuccess = useMemoCallback((values: PluginDataConfig) => {
+    dispatch(setJSONMeta(values));
+  });
   return (
     <Modal
       title="新建插件"
@@ -27,8 +32,8 @@ const UploadJsonModalComponent = ({ visible, onCancel, onOK }: ModalProps) => {
       centered={true}
       onCancel={handleCancel}
       onOk={handleOk}
-      okText="下一步"
       destroyOnClose={true}
+      okText="下一步"
       width={400}
       maskClosable={false}
     >

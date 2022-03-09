@@ -36,8 +36,8 @@ export interface PluginMeta {
 }
 
 export interface PluginDataConfig {
-  type: string; //暂时只支持http类型
-  code: string;
-  name: string;
-  meta: PluginMeta;
+  type?: string; //暂时只支持http类型
+  code?: string;
+  name?: string;
+  meta?: PluginMeta;
 }
