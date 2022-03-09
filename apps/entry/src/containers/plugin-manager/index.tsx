@@ -4,7 +4,7 @@ import useMemoCallback from "@common/hooks/use-memo-callback";
 import { useAddPluginsMutation, useEditPluginsMutation, useGetPluginsListQuery } from "@/http";
 import { Icon } from "@common/components";
 import UploadJsonModalComponent from "@containers/plugin-manager/upload-json-modal.component";
-import NewPluginsModalComponent from "@containers/plugin-manager/new-plugins-modal.component";
+import NewPluginsModalComponent from "@containers/plugin-manager/new-plugins-modal-component";
 import "@containers/plugin-manager/index.style.scss";
 import { selectJsonMeta } from "@views/asset-centre/index.slice";
 import { useAppSelector } from "@/store";
@@ -145,7 +145,16 @@ const PluginManager = () => {
                 />
               </Form.Item>
             </Form>
-            <Button type="primary" size="large" className="button" onClick={handleShowJson}>
+            <Button size="large" icon={<Icon type="yihangduolie" />} className="button">
+              管理分组
+            </Button>
+            <Button
+              type="primary"
+              size="large"
+              icon={<Icon type="xinzeng" />}
+              className="button"
+              onClick={handleShowJson}
+            >
               新建插件
             </Button>
           </div>

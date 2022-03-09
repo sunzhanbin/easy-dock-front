@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useCallback, ReactNode } from "react";
-import { Select, Button, Input, Form } from "antd";
+import { Select, Form } from "antd";
 import { Icon, Text } from "@common/components";
 import { getPopupContainer } from "@utils/utils";
 import "@components/select-card/index.style.scss";
-import ProjectOption from "@components/select-card/project-option";
 import classnames from "classnames";
-import { nameRule } from "@/consts";
 import useMemoCallback from "@common/hooks/use-memo-callback";
+import DropdownMenuComponent from "@components/select-card/dropdown-menu-component";
 
 const { Option } = Select;
 
@@ -14,7 +13,7 @@ type FormValuesType = {
   fieldName: string;
 };
 
-type SelectCardProps = {
+export type SelectCardProps = {
   type: { key: string; label: string };
   list: { [key: string]: any }[] | [];
   onSelect?: (v: string | number) => void;
@@ -25,18 +24,8 @@ type SelectCardProps = {
   isAdmin?: boolean;
   children?: ReactNode;
 };
-const SelectCard = ({
-  type,
-  list,
-  onSelect,
-  selectedId,
-  onAdd,
-  onDelete,
-  isAdmin,
-  onShowProjectModal,
-  children,
-}: SelectCardProps) => {
-  const [fieldName, setFieldName] = useState<string>(""); // 新增字段名称
+const SelectCard = (props: SelectCardProps) => {
+  const { type, list, onSelect, selectedId, onAdd, isAdmin, onShowProjectModal } = props;
   const [showButton, setShowButton] = useState<boolean>(true); // 判断是否显示新增工作区按钮
   const [showDropdown, setShowDropdown] = useState<boolean>(false); // 判断是否显示下拉
   const [form] = Form.useForm<FormValuesType>();
@@ -46,11 +35,6 @@ const SelectCard = ({
     if (!list) return;
     setFieldList(list as any);
   }, [list]);
-
-  // 新增字段名change
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFieldName(e.target.value);
-  };
 
   // option不支持编辑功能的选中
   const handleSelectField = (field: string | number) => {
@@ -82,10 +66,6 @@ const SelectCard = ({
     }));
     setFieldList(list);
   });
-  // option删除
-  const deleteField = (item: { id: number }) => {
-    onDelete && onDelete(item.id);
-  };
 
   // option新增字段名确认
   const handleAddName = useCallback(async () => {
@@ -104,15 +84,6 @@ const SelectCard = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form]);
 
-  // option编辑字段名确认
-  const handleEditProjectName = (values: any) => {
-    const params = {
-      name: values.fieldName,
-      isEdit: true,
-      id: values.id,
-    };
-    onAdd?.(params);
-  };
   // option编辑字段名撤销
   const handleResetProjectName = useMemoCallback(() => {
     const list = fieldList.map((field) => ({
@@ -135,54 +106,19 @@ const SelectCard = ({
   };
 
   const renderMenu = (menu: React.ReactNode) => (
-    <div className="dropdown-select-card">
-      {type.key === "project" && isAdmin ? (
-        <ProjectOption
-          onDelete={deleteField}
-          onEdit={editField}
-          fieldList={fieldList}
-          onConfirm={handleEditProjectName}
-          onRevert={handleResetProjectName}
-          onSelect={handleSelectProject}
-          setShowDropdown={setShowDropdown}
-        />
-      ) : (
-        menu
-      )}
-      {((isAdmin && type.key === "project") || type.key !== "project") && (
-        <Form form={form} name={type.key} className="footer_select">
-          <Form.Item>
-            {showButton ? (
-              <Form.Item noStyle>
-                <Button className="btn_add_field" size="large" icon={<Icon type="xinzengjiacu" />} onClick={addField}>
-                  创建{type.label}
-                </Button>
-              </Form.Item>
-            ) : (
-              <Form.Item noStyle name="fieldName" rules={[nameRule]}>
-                <Input
-                  size="large"
-                  onChange={handleNameChange}
-                  placeholder={`请输入${type.label}名称`}
-                  autoFocus
-                  suffix={
-                    <>
-                      <Icon
-                        className={classnames("tick_icon", !fieldName ? "disabled" : "")}
-                        type="gou"
-                        onClick={handleAddName}
-                      />
-                      <Icon className="close" type="fanhuichexiao" onClick={handleRevert} />
-                    </>
-                  }
-                />
-              </Form.Item>
-            )}
-          </Form.Item>
-        </Form>
-      )}
-      {children}
-    </div>
+    <DropdownMenuComponent
+      {...props}
+      showButton={showButton}
+      onEdit={editField}
+      fieldList={fieldList}
+      onReset={handleResetProjectName}
+      onSelect={handleSelectProject}
+      setShowDropdown={setShowDropdown}
+      onAddName={handleAddName}
+      addField={addField}
+      onRevert={handleRevert}
+      menu={menu}
+    />
   );
 
   // 下拉显隐控制
