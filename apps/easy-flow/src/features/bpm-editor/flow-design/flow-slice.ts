@@ -18,7 +18,7 @@ import {
   PluginMeta,
 } from "@type/flow";
 import { ComponentConfig, FormMeta } from "@type";
-import { Api } from "@type/api";
+import { Api, MethodType } from "@type/api";
 import { RootState } from "@app/store";
 import { fielduuid, createNode, flowUpdate, branchUpdate, valid, ValidResultType, formatFieldsAuths } from "./util";
 import { queryApis } from "../components/data-api-config/util";
@@ -497,19 +497,36 @@ export const addNode = createAsyncThunk<
   } else if (type === NodeType.AutoNodeTriggerProcess) {
     tmpNode = createNode(type, "自动节点_流程触发");
   } else if (type === NodeType.PluginNode) {
-    const {
-      version,
-      name,
-      code,
-      type: pluginType,
-    } = await builderAxios.get<{
-      name: string;
-      code: string;
-      type: string;
-      version: { meta: PluginMeta };
-    }>(`/plugin/${id}`);
+    // const {
+    //   version,
+    //   name,
+    //   code,
+    //   type: pluginType,
+    // } = await builderAxios.get<{
+    //   name: string;
+    //   code: string;
+    //   type: string;
+    //   version: { meta: PluginMeta };
+    // }>(`/plugin/${id}`);
+    // 没有数据,暂时写死
+    const version: { meta: PluginMeta } = {
+      meta: {
+        url: "http://example.com/api/find/alertId",
+        method: MethodType.GET,
+        paths: [{ name: "告警ID", key: "alertId", required: true }],
+        headers: [{ name: "认证Token", key: "auth", required: true }],
+        querys: [],
+        bodys: [
+          { name: "查询页", key: "pageIndex" },
+          { name: "分页条数", key: "pageSize" },
+        ],
+        responses: [{ name: "用户ID", key: "data.user.id" }],
+      },
+    };
+    const name = "寻找最近巡检员";
+    const code = "code_findNearestUser";
+    const pluginType = "http";
     const metaConfig = version.meta;
-    // querys: [{ name: "告警ID", key: "alertId", map: "", required: false }],
     const meta = {
       url: metaConfig.url,
       method: metaConfig.method,

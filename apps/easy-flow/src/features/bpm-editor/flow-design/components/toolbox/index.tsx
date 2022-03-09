@@ -1,4 +1,4 @@
-import { memo, FC, useState, useEffect } from "react";
+import { memo, FC, useState, useEffect, useMemo } from "react";
 import { Collapse } from "antd";
 import { Icon } from "@common/components";
 import useMemoCallback from "@common/hooks/use-memo-callback";
@@ -17,7 +17,7 @@ interface NodeTypeList {
 const commonNodeList: ToolboxItemProps[] = [
   { name: "填写节点", icon: "linetianxiejiedian", type: NodeType.FillNode },
   { name: "审批节点", icon: "lineshenpijiedian", type: NodeType.AuditNode },
-  { name: "子分支节点", icon: "jicheng", type: NodeType.BranchNode },
+  { name: "子分支", icon: "jicheng", type: NodeType.BranchNode },
   { name: "抄送节点", icon: "chaosongjiedian", type: NodeType.CCNode },
   { name: "数据连接", icon: "shujulianjie", type: NodeType.AutoNodePushData },
   { name: "流程触发", icon: "liuchengchufa", type: NodeType.AutoNodeTriggerProcess },
@@ -31,7 +31,7 @@ const groupPluginList = (pluginList: PluginItem[]): NodeTypeList[] => {
       return;
     }
     const { id: groupId, name: groupName } = group;
-    const node = { name, id, type: NodeType.PluginNode };
+    const node = { name, id, type: NodeType.PluginNode, icon: "chajianxian" };
     if (!groupMap[groupId]) {
       groupMap[groupId] = {
         id: String(groupId),
@@ -63,26 +63,30 @@ const Toolbox: FC = () => {
     }
   };
   const getExpandIcon = useMemoCallback((panelProps) => {
-    return <Icon type={panelProps.isActive ? "xiala" : "jinru"} className={styles.icon} />;
+    return <Icon type={panelProps.isActive ? "xiasanjiao" : "yousanjiao"} className={styles.icon} />;
   });
+  const activeKey = useMemo(() => {
+    return group.map((v) => v.id);
+  }, [group]);
   useEffect(() => {
     fetchPlugin();
   }, []);
   return (
     <div className={styles.toolbox}>
-      <Collapse defaultActiveKey="common" ghost expandIcon={getExpandIcon}>
-        {group.map(({ id, name, nodeList }) => {
+      <Collapse defaultActiveKey={activeKey} ghost expandIcon={getExpandIcon}>
+        {group.map(({ id: groupId, name, nodeList }) => {
           return (
-            <Panel
-              header={name}
-              key={id}
-              collapsible={id === "common" ? "disabled" : "header"}
-              showArrow={id !== "common"}
-              className={styles.panel}
-            >
+            <Panel header={name} key={groupId} className={styles.panel}>
               <div className={styles["node-container"]}>
                 {nodeList.map(({ icon, id, type, name }) => (
-                  <ToolboxItem icon={icon} name={name} id={id} type={type} key={name} />
+                  <ToolboxItem
+                    icon={icon}
+                    name={name}
+                    id={id}
+                    type={type}
+                    key={name}
+                    shape={groupId === "common" ? "square" : "rect"}
+                  />
                 ))}
               </div>
             </Panel>

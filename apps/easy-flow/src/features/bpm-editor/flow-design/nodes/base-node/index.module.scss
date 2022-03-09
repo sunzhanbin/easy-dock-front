@@ -26,6 +26,10 @@
     background-color: rgba(#2f9ddd, 0.8);
   }
 
+  &.plugin-node{
+    background-color: rgba(250, 153, 8, 0.8);
+  }
+
   .icon-box {
     display: flex;
     align-items: center;
@@ -105,9 +109,9 @@
     &.sub-branch {
       padding: 165px 0;
     }
-    &.isDragging {
-      background-color: rgba(215,215,215,0.6);
-    }
+    // &.isDragging {
+    //   background-color: rgba(215,215,215,0.6);
+    // }
   }
 
   .actions {
