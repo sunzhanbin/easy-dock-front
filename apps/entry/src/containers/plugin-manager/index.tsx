@@ -1,5 +1,5 @@
 import React, { memo, useState, useMemo } from "react";
-import { Input, Layout, Select, Form, Button, Table, TableProps, message } from "antd";
+import { Input, Layout, Dropdown, Select, Form, Button, Table, TableProps, message } from "antd";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import { useAddPluginsMutation, useEditPluginsMutation, useGetPluginsListQuery } from "@/http";
 import { Icon } from "@common/components";
@@ -8,6 +8,7 @@ import NewPluginsModalComponent from "@containers/plugin-manager/new-plugins-mod
 import "@containers/plugin-manager/index.style.scss";
 import { selectJsonMeta } from "@views/asset-centre/index.slice";
 import { useAppSelector } from "@/store";
+import GroupManageComponent from "@containers/plugin-manager/group-manage-component";
 
 const { Content } = Layout;
 const { Option } = Select;
@@ -107,6 +108,7 @@ const PluginManager = () => {
     setShowJsonModal(false);
   };
   const handleTableChange = () => {};
+
   return (
     <div className="plugin-manager-container">
       <Layout>
@@ -145,9 +147,7 @@ const PluginManager = () => {
                 />
               </Form.Item>
             </Form>
-            <Button size="large" icon={<Icon type="yihangduolie" />} className="button">
-              管理分组
-            </Button>
+            <GroupManageComponent />
             <Button
               type="primary"
               size="large"
@@ -160,7 +160,7 @@ const PluginManager = () => {
           </div>
           <div className="table-container">
             <Table
-              rowKey=""
+              rowKey="id"
               loading={isLoading}
               pagination={false}
               rowSelection={rowSelection}

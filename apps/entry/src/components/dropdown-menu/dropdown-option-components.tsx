@@ -3,8 +3,10 @@ import { Form, Input, message } from "antd";
 import { PopoverConfirm, Icon, Text } from "@common/components";
 import classnames from "classnames";
 import { nameRule } from "@/consts";
+import "@components/select-card/index.style.scss";
 
 type OptionProps = {
+  type: { [key in string]: string };
   fieldList: any[];
   onDelete: (item: any) => void;
   onEdit: (e: React.MouseEvent, item: any) => void;
@@ -17,7 +19,8 @@ type OptionProps = {
 type FormValuesType = {
   fieldName: string;
 };
-const ProjectOption = ({
+const DropdownOptionComponents = ({
+  type,
   fieldList,
   onDelete,
   onEdit,
@@ -29,6 +32,7 @@ const ProjectOption = ({
   const [activeIndex, setActiveIndex] = useState(-1);
   const [form] = Form.useForm<FormValuesType>();
 
+  console.log(fieldList, "----------");
   // option支持编辑
   const handleEdit = useCallback((e, item) => {
     form.setFieldsValue({ fieldName: item.name });
@@ -62,15 +66,15 @@ const ProjectOption = ({
   };
 
   return (
-    <div className="dropdown-select-project">
+    <div className="dropdown-select-menu">
       {fieldList.map((item, index) => (
         <div key={index} className={classnames("field-option", activeIndex === index ? "active" : "")}>
           {item.editable ? (
-            <Form form={form} name="editProject" style={{ width: "100%" }} initialValues={{ fieldName: item.name }}>
+            <Form form={form} name={type.key} style={{ width: "100%" }} initialValues={{ fieldName: item.name }}>
               <Form.Item name="fieldName" rules={[nameRule]} noStyle>
                 <Input
                   autoFocus
-                  placeholder="请输入项目名称"
+                  placeholder={`请输入${type.label}名称`}
                   className="input-name"
                   suffix={
                     <>
@@ -90,8 +94,9 @@ const ProjectOption = ({
               <Icon className="edit-icon" type="bianji" onClick={(e) => handleEdit(e, item)} />
               <PopoverConfirm
                 title="提示"
+                overlayClassName="dropdown-popover-delete"
                 placement="bottom"
-                content="删除后不可恢复,请确认是否删除该项目?"
+                content={`删除后不可恢复,请确认是否删除该${type.label}?`}
                 getPopupContainer={() => document.getElementById("root")!}
                 onConfirm={() => onDelete(item)}
               >
@@ -105,4 +110,4 @@ const ProjectOption = ({
   );
 };
 
-export default memo(ProjectOption);
+export default memo(DropdownOptionComponents);
