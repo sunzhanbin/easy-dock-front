@@ -1,7 +1,47 @@
-import { memo } from "react";
+import React, { memo, useMemo } from "react";
+import { Button, Dropdown, message } from "antd";
+import DropdownCard from "@components/dropdown-card";
+import { useAddGroupsMutation, useDeleteGroupsMutation, useEditGroupsMutation, useGetGroupsListQuery } from "@/http";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+
+const DROPDOWN_CARD_TYPE = {
+  key: "plugins",
+  label: "分组管理",
+};
 
 const GroupManageComponent = () => {
-  return <>111</>;
+  const [addGroups] = useAddGroupsMutation();
+  const [editGroups] = useEditGroupsMutation();
+  const [deleteGroups] = useDeleteGroupsMutation();
+  const { groupList } = useGetGroupsListQuery("", {
+    selectFromResult: ({ data }) => ({
+      groupList: data,
+    }),
+  });
+  const handleChangeGroups = useMemoCallback(async ({ name, isEdit, id }) => {
+    if (!isEdit) {
+      await addGroups({ name }).unwrap();
+      message.success("创建成功");
+    } else {
+      await editGroups({ name, id }).unwrap();
+      message.success("修改成功");
+    }
+  });
+
+  const handleDeleteGroups = useMemoCallback(async (id: number) => {
+    await deleteGroups(id).unwrap();
+    message.success("删除成功");
+  });
+  return (
+    <div className="group-manage-btn">
+      <DropdownCard
+        type={DROPDOWN_CARD_TYPE}
+        list={groupList}
+        onAdd={handleChangeGroups}
+        onDelete={handleDeleteGroups}
+      />
+    </div>
+  );
 };
 
 export default memo(GroupManageComponent);

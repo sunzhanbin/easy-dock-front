@@ -1,9 +1,10 @@
 import React, { memo, useState } from "react";
 import { Button, Input, Form } from "antd";
-import ProjectOption from "@components/select-card/project-option";
+import DropdownOptionComponents from "@components/dropdown-menu/dropdown-option-components";
 import { nameRule } from "@/consts";
 import classnames from "classnames";
 import { Icon } from "@common/components";
+import "@components/select-card/index.style.scss";
 
 const DropdownMenuComponent = ({
   showButton,
@@ -47,8 +48,9 @@ const DropdownMenuComponent = ({
 
   return (
     <div className="dropdown-select-card">
-      {type.key === "project" && isAdmin ? (
-        <ProjectOption
+      {(type.key === "project" && isAdmin) || type.key === "plugins" ? (
+        <DropdownOptionComponents
+          type={type}
           onDelete={deleteField}
           onEdit={onEdit}
           fieldList={fieldList}

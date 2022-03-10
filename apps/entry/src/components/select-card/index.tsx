@@ -5,7 +5,7 @@ import { getPopupContainer } from "@utils/utils";
 import "@components/select-card/index.style.scss";
 import classnames from "classnames";
 import useMemoCallback from "@common/hooks/use-memo-callback";
-import DropdownMenuComponent from "@components/select-card/dropdown-menu-component";
+import DropdownMenuComponent from "@components/dropdown-menu/dropdown-menu-component";
 
 const { Option } = Select;
 
@@ -25,7 +25,7 @@ export type SelectCardProps = {
   children?: ReactNode;
 };
 const SelectCard = (props: SelectCardProps) => {
-  const { type, list, onSelect, selectedId, onAdd, isAdmin, onShowProjectModal } = props;
+  const { type, list, onSelect, onDelete, selectedId, onAdd, isAdmin, onShowProjectModal } = props;
   const [showButton, setShowButton] = useState<boolean>(true); // 判断是否显示新增工作区按钮
   const [showDropdown, setShowDropdown] = useState<boolean>(false); // 判断是否显示下拉
   const [form] = Form.useForm<FormValuesType>();
@@ -75,6 +75,7 @@ const SelectCard = (props: SelectCardProps) => {
         name: values.fieldName,
         isEdit: false,
       };
+      console.log(values, "sssss");
       await onAdd?.(params);
       form.setFieldsValue({ fieldName: "" });
       setShowButton(true);
@@ -105,11 +106,13 @@ const SelectCard = (props: SelectCardProps) => {
     setShowDropdown(false);
   };
 
-  const renderMenu = (menu: React.ReactNode) => (
+  const renderMenu = useMemoCallback((menu: React.ReactNode) => (
     <DropdownMenuComponent
       {...props}
+      form={form}
       showButton={showButton}
       onEdit={editField}
+      onDelete={onDelete}
       fieldList={fieldList}
       onReset={handleResetProjectName}
       onSelect={handleSelectProject}
@@ -119,7 +122,7 @@ const SelectCard = (props: SelectCardProps) => {
       onRevert={handleRevert}
       menu={menu}
     />
-  );
+  ));
 
   // 下拉显隐控制
   const handleDropdownVisibleChange = useMemoCallback(async (status) => {

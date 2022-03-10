@@ -4,17 +4,23 @@ import { ExclamationCircleFilled } from "@ant-design/icons";
 import { AbstractTooltipProps } from "antd/lib/tooltip";
 import AsyncButton from "../async-button";
 import styles from "./index.module.scss";
+import classnames from "classnames";
 
 interface PopoverProps {
   title: string;
+  overlayClassName?: string;
   children: React.ReactNode;
   content?: React.ReactNode;
   okText?: string;
+
   onConfirm?(): Promise<void> | void;
+
   placement?: AbstractTooltipProps["placement"];
   trigger?: AbstractTooltipProps["trigger"];
   visible?: boolean;
+
   onVisibleChange?(visible: boolean): void;
+
   getPopupContainer?: AbstractTooltipProps["getTooltipContainer"];
 }
 
@@ -22,6 +28,7 @@ const defaultGetPopupContainer: AbstractTooltipProps["getTooltipContainer"] = (c
 
 function EnnPopover(props: PopoverProps) {
   const {
+    overlayClassName,
     title,
     children,
     okText = "确认",
@@ -104,9 +111,10 @@ function EnnPopover(props: PopoverProps) {
       getPopupContainer={getPopupContainer}
       onVisibleChange={isControlled ? onVisibleChange : setShowPopover}
       content={popoverContent}
+      overlayClassName={overlayClassName}
       destroyTooltipOnHide
       placement={placement}
-      className={styles.popover}
+      className={classnames(styles.popover)}
     >
       {children}
     </Popover>
