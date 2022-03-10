@@ -24,7 +24,7 @@ type FormValuesType = {
 
 const initialNextAction: NextAction = {
   type: 1,
-  conditions: [],
+  conditions: [[{}]],
   failConfig: {
     type: 1,
     revert: {
@@ -78,7 +78,7 @@ function AutoNodeEditor(props: AutoNodeEditorProps) {
         <Input size="large" placeholder="请输入节点名称" />
       </Form.Item>
       <Form.Item name="dataConfig" label="选择要推送数据的接口" required>
-        <DataApiConfig name="dataConfig" label="推送参数" maxWidth="320px" fields={fields}>
+        <DataApiConfig name="dataConfig" label="推送参数" fields={fields}>
           <ResponseWithMap label="返回参数" />
         </DataApiConfig>
       </Form.Item>

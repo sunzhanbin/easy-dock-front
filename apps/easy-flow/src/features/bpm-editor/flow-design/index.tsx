@@ -125,7 +125,7 @@ function FlowDesign() {
       return 600;
     }
     if (choosedNode && [NodeType.AutoNodePushData, NodeType.PluginNode].includes(choosedNode.type)) {
-      return 400;
+      return 500;
     }
 
     return 368;

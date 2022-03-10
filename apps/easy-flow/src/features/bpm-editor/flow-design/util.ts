@@ -44,7 +44,7 @@ export function branchuuid(group = 3) {
 
 const nextAction: NextAction = {
   type: 1,
-  conditions: [[{ fieldName: undefined, symbol: undefined }]],
+  conditions: [[{}]],
   failConfig: {
     type: 1,
     revert: {
@@ -478,3 +478,51 @@ export function dynamicIsEmpty(data?: CorrelationMemberConfig["dynamic"]) {
 
   return false;
 }
+
+// 获取对象的某个深层次属性
+export const getProperty = (origin: any, nameList: string[]) => {
+  if (!origin || !nameList?.length) {
+    return null;
+  }
+  let result = null;
+  let target = Object.assign({}, origin);
+  while (nameList.length) {
+    const name = nameList.shift()!;
+    if (target && name) {
+      result = target[name];
+      target = result;
+    } else {
+      break;
+    }
+  }
+  return result;
+};
+
+export const conditionSymbolMap = {
+  equal: { value: "equal", label: "等于" },
+  unequal: { value: "unequal", label: "不等于" },
+  greater: { value: "greater", label: "大于" },
+  greaterOrEqual: { value: "greaterOrEqual", label: "大于等于" },
+  less: { value: "less", label: "小于" },
+  lessOrEqual: { value: "lessOrEqual", label: "小于等于" },
+  earlier: { value: "earlier", label: "小于" },
+  earlierEqual: { value: "earlierEqual", label: "小于等于" },
+  latter: { value: "latter", label: "大于" },
+  latterEqual: { value: "latterEqual", label: "大于等于" },
+  include: { value: "include", label: "包含" },
+  exclude: { value: "exclude", label: "不包含" },
+  null: { value: "null", label: "为空" },
+  notNull: { value: "notNull", label: "不为空" },
+  stringLength: { value: "stringLength", label: "字符长度" },
+  arrayLength: { value: "arrayLength", label: "数据个数" },
+  true: { value: "true", label: "是" },
+  false: { value: "false", label: "否" },
+  before: { value: "before", label: "早于" },
+  after: { value: "after", label: "晚于" },
+  year: { value: "year", label: "所在年为" },
+  month: { value: "month", label: "所在月为" },
+  day: { value: "day", label: "所在日为" },
+  hour: { value: "hour", label: "所在时为" },
+  minute: { value: "minute", label: "所在分为" },
+  second: { value: "second", label: "所在秒为" },
+};

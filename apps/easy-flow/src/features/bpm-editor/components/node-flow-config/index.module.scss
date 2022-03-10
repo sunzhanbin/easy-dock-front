@@ -1,7 +1,7 @@
 @import "@common/styles/var.scss";
 .type {
     display: flex;
-    max-width: 320px;
+    max-width: 500px;
 
     :global {
         .ant-radio-button-wrapper {
@@ -42,9 +42,6 @@
     padding: 12px 0;
     .condition {
         display: flex;
-        .fieldName {
-            flex: 1;
-        }
         .symbol {
             width: 100px;
             margin: 0 8px;
@@ -60,6 +57,12 @@
             width: 32px;
             height: 40px;
             cursor: pointer;
+            &.disabled {
+                cursor: not-allowed;
+                svg {
+                    color: $hint-text-color;
+                }
+            }
         }
         &:hover {
             .delete {
@@ -76,6 +79,12 @@
 .or {
     margin-top: 12px;
 }
-.mb12{
+.mb12 {
     margin-bottom: 12px;
+}
+.text{
+    height: 22px;
+    line-height: 22px;
+    color: $body-text-color;
+    margin-bottom: 4px;
 }

@@ -242,9 +242,16 @@ export enum FailAction {
   Revert = 2, //失败后驳回到指定节点
 }
 
+export interface ConditionItem {
+  params?: string;
+  type?: string;
+  symbol?: string;
+  value?: string;
+}
+
 export interface NextAction {
   type: NextActionType;
-  conditions: FieldRule[][];
+  conditions: ConditionItem[][];
   failConfig: {
     type: FailAction;
     revert: {

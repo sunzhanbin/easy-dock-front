@@ -43,8 +43,8 @@ const NodeFlowConfig: FC<NodeFlowConfigProps> = ({ name, nodeId }) => {
                       <Form.Item name={[name, "conditions"]}>
                         <Condition name={[name, "conditions"]} />
                       </Form.Item>
-                      <div>则流转到下个节点;</div>
-                      <div>否则</div>
+                      <div className={styles.text}>则流转到下个节点;</div>
+                      <div className={styles.text}>否则</div>
                       <div>
                         <Form.Item name={[name, "failConfig", "type"]}>
                           <Radio.Group
