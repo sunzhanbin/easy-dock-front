@@ -247,3 +247,18 @@ export declare type QueryReturnValue<T = unknown, E = unknown, M = unknown> =
       resultCode?: undefined;
       resultMessage?: undefined;
     };
+
+export type GroupItem = { name: string; id: number };
+
+export interface GroupListProps {
+  groupList: GroupItem[];
+}
+
+export type TableColumnsProps = {
+  name: string;
+  code: string;
+  enabled: boolean;
+  openVisit: boolean;
+  group: { id: number; name: string };
+  public: boolean;
+};

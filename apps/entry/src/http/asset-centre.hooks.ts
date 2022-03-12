@@ -71,6 +71,11 @@ export const assetCentreBuilder = baseFetch.injectEndpoints({
       query: (id: number) => ({ url: `/plugin/group/${id}`, method: "delete" }),
       invalidatesTags: [{ type: "Plugins", id: "Groups" }],
     }),
+
+    // 通过code获取插件
+    getEditPlugins: build.mutation({
+      query: (code: string) => ({ url: `/plugin/code/${code}`, method: "get" }),
+    }),
   }),
   // overrideExisting: false,
 });
@@ -83,4 +88,5 @@ export const {
   useEditPluginsMutation,
   useGetPluginsListQuery,
   useDeleteGroupsMutation,
+  useGetEditPluginsMutation,
 } = assetCentreBuilder;

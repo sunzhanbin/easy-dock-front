@@ -3,21 +3,18 @@ import { Button, Dropdown, message } from "antd";
 import DropdownCard from "@components/dropdown-card";
 import { useAddGroupsMutation, useDeleteGroupsMutation, useEditGroupsMutation, useGetGroupsListQuery } from "@/http";
 import useMemoCallback from "@common/hooks/use-memo-callback";
+import { GroupListProps } from "@utils/types";
 
 const DROPDOWN_CARD_TYPE = {
   key: "plugins",
   label: "分组管理",
 };
 
-const GroupManageComponent = () => {
+const GroupManageComponent = ({ groupList }: GroupListProps) => {
   const [addGroups] = useAddGroupsMutation();
   const [editGroups] = useEditGroupsMutation();
   const [deleteGroups] = useDeleteGroupsMutation();
-  const { groupList } = useGetGroupsListQuery("", {
-    selectFromResult: ({ data }) => ({
-      groupList: data,
-    }),
-  });
+
   const handleChangeGroups = useMemoCallback(async ({ name, isEdit, id }) => {
     if (!isEdit) {
       await addGroups({ name }).unwrap();
