@@ -1,5 +1,5 @@
-import React, { memo, ReactNode, useCallback, useEffect, useMemo, useState } from "react";
-import { Button, Dropdown, Form, Menu } from "antd";
+import React, { ReactNode, useCallback, useEffect, useState } from "react";
+import { Button, Dropdown, Form } from "antd";
 import { Icon } from "@common/components";
 import DropdownMenuComponent from "@components/dropdown-menu/dropdown-menu-component";
 import useMemoCallback from "@common/hooks/use-memo-callback";
@@ -21,7 +21,7 @@ type FormValuesType = {
 };
 
 const DropDownCard = (props: DropdownCardProps) => {
-  const { type, list, onAdd } = props;
+  const { list, onAdd } = props;
   const [showButton, setShowButton] = useState<boolean>(true); // 判断是否显示新增按钮
   const [showDropdown, setShowDropdown] = useState<boolean>(false); // 判断是否显示下拉
 

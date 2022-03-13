@@ -1,5 +1,5 @@
-import { createSlice, current, PayloadAction } from "@reduxjs/toolkit";
-import { PluginDataConfig, PluginJsonMeta } from "@common/type";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { PluginJsonMeta } from "@common/type";
 import { RootState } from "@/store";
 import { assetCentreBuilder } from "@/http";
 import { TableColumnsProps, GroupItem } from "@utils/types";

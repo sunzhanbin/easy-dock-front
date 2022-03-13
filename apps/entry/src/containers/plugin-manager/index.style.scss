@@ -5,6 +5,12 @@
   .operation-wrapper {
     display: flex;
     align-items: center;
+    justify-content: space-between;
+
+    .right-container {
+      display: inline-flex;
+      align-items: center;
+    }
   }
 
   .table-container {
@@ -58,18 +64,37 @@
     }
   }
 
-  .title {
-    width: 100px;
-    font-size: 24px;
-    font-weight: bold;
-    color: #000000D9;
-    margin-right: 32px;
-  }
-
   .auth-config {
+    display: inline-flex;
+    align-items: center;
+
+    .title {
+      width: 100px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #000000D9;
+      margin-right: 20px;
+    }
+
     .text-name {
+      color: #181F434D;
+      cursor: pointer;
       padding-left: 4px;
       padding-right: 8px;
+    }
+
+    svg {
+      color: #181F434D;
+    }
+
+    .selected-name {
+      svg {
+        color: #181F43BF;
+      }
+
+      .text-name {
+        color: #181F43FF;
+      }
     }
 
     .text-selected {

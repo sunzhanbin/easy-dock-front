@@ -1,7 +1,7 @@
-import React, { memo, useMemo } from "react";
-import { Button, Dropdown, message } from "antd";
+import React, { memo } from "react";
+import { message } from "antd";
 import DropdownCard from "@components/dropdown-card";
-import { useAddGroupsMutation, useDeleteGroupsMutation, useEditGroupsMutation, useGetGroupsListQuery } from "@/http";
+import { useAddGroupsMutation, useDeleteGroupsMutation, useEditGroupsMutation } from "@/http";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import { GroupListProps } from "@utils/types";
 

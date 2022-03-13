@@ -75,16 +75,30 @@ export const assetCentreBuilder = baseFetch.injectEndpoints({
       query: (id: number) => ({ url: `/plugin/group/${id}`, method: "delete" }),
       invalidatesTags: [{ type: "Plugins", id: "Groups" }],
     }),
-
     // 通过code获取插件
     getEditPlugins: build.mutation({
       query: (code: string) => ({ url: `/plugin/code/${code}`, method: "get" }),
     }),
-
     //  升级插件版本
     upgradePlugins: build.mutation({
       query: (params: any) => ({
         url: "/plugin/version",
+        method: "post",
+        body: params,
+      }),
+    }),
+    // 批量授权
+    batchAssignAuth: build.mutation({
+      query: (params: any) => ({
+        url: "/plugin/batch/binding",
+        method: "post",
+        body: params,
+      }),
+    }),
+    // 指定授权
+    singleAssignAuth: build.mutation({
+      query: (params: any) => ({
+        url: "/plugin/binding",
         method: "post",
         body: params,
       }),
@@ -103,4 +117,6 @@ export const {
   useDeleteGroupsMutation,
   useGetEditPluginsMutation,
   useUpgradePluginsMutation,
+  useBatchAssignAuthMutation,
+  useSingleAssignAuthMutation,
 } = assetCentreBuilder;

@@ -1,5 +1,5 @@
 import React, { memo, useState, useMemo, useEffect } from "react";
-import { Input, Layout, Select, Form, Button, Table, TableProps, message, Switch } from "antd";
+import { Input, Layout, Select, Form, Button, message } from "antd";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import {
   useUpgradePluginsMutation,
@@ -7,15 +7,21 @@ import {
   useEditPluginsMutation,
   useGetGroupsListQuery,
   useLazyGetPluginsListQuery,
+  useBatchAssignAuthMutation,
+  useSingleAssignAuthMutation,
 } from "@/http";
 import { Icon } from "@common/components";
+import classnames from "classnames";
 import UploadJsonModalComponent from "@containers/plugin-manager/upload-json-modal.component";
 import NewPluginsModalComponent from "@containers/plugin-manager/new-plugins-modal-component";
 import "@containers/plugin-manager/index.style.scss";
 import { selectJsonMeta, selectPluginsList } from "@views/asset-centre/index.slice";
 import { useAppSelector } from "@/store";
 import GroupManageComponent from "@containers/plugin-manager/group-manage-component";
+import PluginsListTableComponent from "@containers/plugin-manager/plugins-list-table.component";
+import AuthTenantModalComponent from "@containers/plugin-manager/auth-tenant-modal.component";
 import { TableColumnsProps } from "@utils/types";
+import { AssignAuthType } from "@utils/const";
 
 const { Content } = Layout;
 const { Option } = Select;
@@ -26,6 +32,8 @@ const PluginManager = () => {
   const [getPluginsList, { isLoading }] = useLazyGetPluginsListQuery();
   const [addPlugins] = useAddPluginsMutation();
   const [editPlugins] = useEditPluginsMutation();
+  const [batchAssignAuth] = useBatchAssignAuthMutation();
+  const [singleAssignAuth] = useSingleAssignAuthMutation();
   const [upgradePlugins] = useUpgradePluginsMutation();
   const { groupList } = useGetGroupsListQuery("", {
     selectFromResult: ({ data }) => ({
@@ -35,108 +43,44 @@ const PluginManager = () => {
   const [form] = Form.useForm();
   const [showJsonModal, setShowJsonModal] = useState<boolean>(false);
   const [showAddModal, setShowAddModal] = useState<boolean>(false);
+  const [showTenantModal, setShowTenantModal] = useState<boolean>(false);
   const [currentPlugins, setCurrentPlugins] = useState<TableColumnsProps | null>(null);
-
+  const [selectedRows, setSelectedRows] = useState<TableColumnsProps[]>([]);
+  const [assignType, setAssignType] = useState<AssignAuthType>();
   useEffect(() => {
     getPluginsList({});
   }, [getPluginsList]);
 
-  const rowSelection: any = {
-    onChange: (selectedRowKeys: any, selectedRows: any) => {
-      console.log(`selectedRowKeys: ${selectedRowKeys}`, "selectedRows: ", selectedRows);
-    },
-    onSelect: (record: any, selected: any, selectedRows: any) => {
-      console.log(record, selected, selectedRows);
-    },
-    onSelectAll: (selected: any, selectedRows: any, changeRows: any) => {
-      console.log(selected, selectedRows, changeRows);
-    },
-  };
+  // 全选、单选
+  const rowSelection: any = useMemo(() => {
+    return {
+      onSelect: (record: TableColumnsProps, selected: boolean, selectedRows: TableColumnsProps[]) => {
+        setSelectedRows(selectedRows);
+      },
+      onSelectAll: (selected: boolean, selectedRows: TableColumnsProps[]) => {
+        setSelectedRows(selectedRows);
+      },
+    };
+  }, []);
 
+  // 编辑插件
   const handleEdit = useMemoCallback((columnItem: TableColumnsProps) => {
     setShowAddModal(true);
     setCurrentPlugins(columnItem);
   });
 
+  // 升级插件
   const handleUpgrade = useMemoCallback((columnItem: TableColumnsProps) => {
     setShowJsonModal(true);
     setCurrentPlugins(columnItem);
   });
-
-  const tableColumns: TableProps<TableColumnsProps>["columns"] = useMemo(() => {
-    return [
-      {
-        key: "name",
-        dataIndex: "name",
-        title: "插件名称",
-      },
-      {
-        key: "state",
-        dataIndex: "state",
-        title: "插件分组",
-        render(_, data: TableColumnsProps) {
-          const { group } = data;
-          return <span>{group?.name}</span>;
-        },
-      },
-      {
-        key: "code",
-        dataIndex: "code",
-        title: "code",
-      },
-      {
-        key: "openVisit",
-        dataIndex: "openVisit",
-        title: "是否公开",
-        render(_, data: TableColumnsProps) {
-          const { openVisit } = data;
-          return <Switch defaultChecked={openVisit} />;
-        },
-      },
-      {
-        key: "enabled",
-        dataIndex: "enabled",
-        title: "是否启用",
-        render(_, data: TableColumnsProps) {
-          const { enabled } = data;
-          return <Switch defaultChecked={enabled} />;
-        },
-      },
-      {
-        key: "operation",
-        dataIndex: "operation",
-        title: "",
-        width: 150,
-        render(_, data: TableColumnsProps) {
-          return (
-            <div className="operation-btn-wrapper">
-              <div className="box-placeholder" />
-              <div className="box-btn">
-                <span title="指定租户">
-                  <Icon type="jibenxinxi" />
-                </span>
-                <span title="升级">
-                  <Icon type="shengji" onClick={() => handleUpgrade(data)} />
-                </span>
-                <span title="编辑插件" onClick={() => handleEdit(data)}>
-                  <Icon type="bianji" />
-                </span>
-                <span title="查看json">
-                  <Icon type="biaoliulanliang" />
-                </span>
-              </div>
-            </div>
-          );
-        },
-      },
-    ];
-  }, [handleEdit, handleUpgrade]);
 
   // 搜索查询
   const handleSearch = useMemoCallback(() => {
     const { groupId, name } = form.getFieldsValue();
     getPluginsList({ name, groupId });
   });
+
   // 选择分组查询
   const handleGroupChange = useMemoCallback(() => {
     const { name, groupId } = form.getFieldsValue();
@@ -147,11 +91,13 @@ const PluginManager = () => {
   const handleShowJson = useMemoCallback(() => {
     setShowJsonModal(true);
   });
+
   // 取消上传json
   const handleCancelJson = useMemoCallback(() => {
     setShowJsonModal(false);
     setCurrentPlugins(null);
   });
+
   // 确认上传json
   const handleNext = useMemoCallback(async () => {
     if (!jsonMeta?.meta) {
@@ -175,11 +121,15 @@ const PluginManager = () => {
       setShowAddModal(true);
     }
   });
+
+  // 取消新增插件
   const handleCancelAdd = useMemoCallback(() => {
     setShowAddModal(false);
     !currentPlugins && setShowJsonModal(true);
     setCurrentPlugins(null);
   });
+
+  // 确认新增插件
   const handleConfirmAdd = useMemoCallback(async (values: any) => {
     try {
       if (currentPlugins) {
@@ -196,81 +146,119 @@ const PluginManager = () => {
       console.log(e);
     }
   });
-  const handleTableChange = () => {};
 
-  const handleRowMouseEvent: any = () => {
-    return {
-      onMouseEnter: (event: React.MouseEvent) => {
-        const target = event.target as HTMLDivElement;
-        target.parentElement?.classList.add("table-row-active");
-      },
-      onMouseLeave: (event: React.MouseEvent) => {
-        const target = event.target as HTMLDivElement;
-        target.parentElement?.classList.remove("table-row-active");
-        target.parentElement?.parentElement?.parentElement?.classList.remove("table-row-active");
-      },
-    };
+  // 批量授权弹框
+  const handleShowTenant = () => {
+    if (!selectedRows.length) {
+      message.error("请选择要授权的插件！");
+      return;
+    }
+    setAssignType(AssignAuthType.BATCH);
+    setShowTenantModal(true);
   };
+
+  // 指定授权弹框
+  const handleAssignTenant = useMemoCallback((columnItem: TableColumnsProps) => {
+    setAssignType(AssignAuthType.SINGLE);
+    setShowTenantModal(true);
+    setCurrentPlugins(columnItem);
+  });
+
+  // 取消授权
+  const handleCancelTenant = useMemoCallback(() => {
+    setShowTenantModal(false);
+    assignType === AssignAuthType.SINGLE && setCurrentPlugins(null);
+  });
+
+  // 确认授权
+  const handleConfirmTenant = useMemoCallback(async (projectIds: string[]) => {
+    try {
+      if (assignType === AssignAuthType.BATCH) {
+        const values = {
+          projectIds,
+          pluginIds: pluginsList.map((item) => item.id),
+        };
+        await batchAssignAuth(values).unwrap();
+      } else {
+        const values = {
+          projectIds,
+          pluginId: currentPlugins?.id,
+        };
+        await singleAssignAuth(values).unwrap();
+        setCurrentPlugins(null);
+      }
+      message.success("授权成功");
+      setShowTenantModal(false);
+    } catch (e) {
+      console.log(e);
+    }
+  });
+
   return (
     <div className="plugin-manager-container">
       <Layout>
         <Content>
           <div className="operation-wrapper">
-            <div className="title">插件管理</div>
             <div className="auth-config">
-              <Icon type="quanxianshezhi" />
-              <span className="text-name">批量授权</span>
-              <span className="text-selected">已选222</span>
+              <div className="title">插件管理</div>
+              <span className={classnames(selectedRows.length ? "selected-name" : "")}>
+                <Icon type="quanxianshezhi" />
+                <span className="text-name" onClick={handleShowTenant}>
+                  批量授权
+                </span>
+              </span>
+
+              {selectedRows.length ? <span className="text-selected">已选{selectedRows.length}</span> : null}
             </div>
-            <Form form={form} layout="inline">
-              <Form.Item name="groupId">
-                <Select
-                  size="large"
-                  placeholder="请选择插件分组"
-                  allowClear
-                  style={{ width: 200 }}
-                  onChange={handleGroupChange}
-                  suffixIcon={<Icon type="xiala" />}
-                >
-                  {groupList?.map(({ id, name }: { id: number; name: string }) => (
-                    <Option key={id} value={id}>
-                      {name}
-                    </Option>
-                  ))}
-                </Select>
-              </Form.Item>
-              <Form.Item name="name">
-                <Input
-                  size="large"
-                  bordered={false}
-                  className="input"
-                  placeholder="请输入插件名称"
-                  prefix={<Icon type="sousuo" className="search-icon" onClick={handleSearch} />}
-                  onPressEnter={handleSearch}
-                />
-              </Form.Item>
-            </Form>
-            {groupList && <GroupManageComponent groupList={groupList} />}
-            <Button
-              type="primary"
-              size="large"
-              icon={<Icon type="xinzeng" />}
-              className="button"
-              onClick={handleShowJson}
-            >
-              新建插件
-            </Button>
+            <div className="right-container">
+              <Form form={form} layout="inline">
+                <Form.Item name="groupId">
+                  <Select
+                    size="large"
+                    placeholder="请选择插件分组"
+                    allowClear
+                    style={{ width: 200 }}
+                    onChange={handleGroupChange}
+                    suffixIcon={<Icon type="xiala" />}
+                  >
+                    {groupList?.map(({ id, name }: { id: number; name: string }) => (
+                      <Option key={id} value={id}>
+                        {name}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+                <Form.Item name="name">
+                  <Input
+                    size="large"
+                    bordered={false}
+                    className="input"
+                    placeholder="请输入插件名称"
+                    prefix={<Icon type="sousuo" className="search-icon" onClick={handleSearch} />}
+                    onPressEnter={handleSearch}
+                  />
+                </Form.Item>
+              </Form>
+              {groupList && <GroupManageComponent groupList={groupList} />}
+              <Button
+                type="primary"
+                size="large"
+                icon={<Icon type="xinzeng" />}
+                className="button"
+                onClick={handleShowJson}
+              >
+                新建插件
+              </Button>
+            </div>
           </div>
           <div className="table-container">
-            <Table
-              rowKey="id"
-              loading={isLoading}
-              pagination={false}
-              onRow={handleRowMouseEvent}
+            <PluginsListTableComponent
               rowSelection={rowSelection}
-              columns={tableColumns}
-              dataSource={pluginsList}
-              onChange={handleTableChange}
+              loading={isLoading}
+              onEdit={handleEdit}
+              onUpgrade={handleUpgrade}
+              onAssignTenant={handleAssignTenant}
+              pluginsList={pluginsList}
             />
           </div>
           <UploadJsonModalComponent
@@ -288,6 +276,12 @@ const PluginManager = () => {
               onCancel={handleCancelAdd}
             />
           )}
+          <AuthTenantModalComponent
+            type={assignType}
+            visible={showTenantModal}
+            onCancel={handleCancelTenant}
+            onOK={handleConfirmTenant}
+          />
         </Content>
       </Layout>
     </div>

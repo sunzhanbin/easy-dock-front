@@ -288,6 +288,11 @@ export enum AuthEnum {
   VISIT = 4, //访问权限
 }
 
+export enum AssignAuthType {
+  BATCH = 1, // 批量授权
+  SINGLE = 2, // 指定单个授权
+}
+
 export enum AssetCentreEnum {
   DATA_SOURCE = "data-source",
   DATA_ASSET = "data-asset",

@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { memo } from "react";
 import { Modal } from "antd";
 import UploadJsonComponent from "@containers/plugin-manager/upload-json.component";
 import "@containers/plugin-manager/upload-json-component.style.scss";
