@@ -1,12 +1,18 @@
-import React, { memo, useState, useMemo } from "react";
+import React, { memo, useState, useMemo, useEffect } from "react";
 import { Input, Layout, Select, Form, Button, Table, TableProps, message, Switch } from "antd";
 import useMemoCallback from "@common/hooks/use-memo-callback";
-import { useAddPluginsMutation, useEditPluginsMutation, useGetGroupsListQuery, useGetPluginsListQuery } from "@/http";
+import {
+  useUpgradePluginsMutation,
+  useAddPluginsMutation,
+  useEditPluginsMutation,
+  useGetGroupsListQuery,
+  useLazyGetPluginsListQuery,
+} from "@/http";
 import { Icon } from "@common/components";
 import UploadJsonModalComponent from "@containers/plugin-manager/upload-json-modal.component";
 import NewPluginsModalComponent from "@containers/plugin-manager/new-plugins-modal-component";
 import "@containers/plugin-manager/index.style.scss";
-import { selectJsonMeta } from "@views/asset-centre/index.slice";
+import { selectJsonMeta, selectPluginsList } from "@views/asset-centre/index.slice";
 import { useAppSelector } from "@/store";
 import GroupManageComponent from "@containers/plugin-manager/group-manage-component";
 import { TableColumnsProps } from "@utils/types";
@@ -16,14 +22,11 @@ const { Option } = Select;
 
 const PluginManager = () => {
   const jsonMeta = useAppSelector(selectJsonMeta);
-  const { pluginsList, isLoading } = useGetPluginsListQuery("", {
-    selectFromResult: ({ data, isLoading }) => ({
-      pluginsList: data,
-      isLoading,
-    }),
-  });
+  const pluginsList = useAppSelector(selectPluginsList);
+  const [getPluginsList, { isLoading }] = useLazyGetPluginsListQuery();
   const [addPlugins] = useAddPluginsMutation();
   const [editPlugins] = useEditPluginsMutation();
+  const [upgradePlugins] = useUpgradePluginsMutation();
   const { groupList } = useGetGroupsListQuery("", {
     selectFromResult: ({ data }) => ({
       groupList: data,
@@ -33,6 +36,10 @@ const PluginManager = () => {
   const [showJsonModal, setShowJsonModal] = useState<boolean>(false);
   const [showAddModal, setShowAddModal] = useState<boolean>(false);
   const [currentPlugins, setCurrentPlugins] = useState<TableColumnsProps | null>(null);
+
+  useEffect(() => {
+    getPluginsList({});
+  }, [getPluginsList]);
 
   const rowSelection: any = {
     onChange: (selectedRowKeys: any, selectedRows: any) => {
@@ -45,15 +52,17 @@ const PluginManager = () => {
       console.log(selected, selectedRows, changeRows);
     },
   };
-  const handleSearch = useMemoCallback(() => {
-    const values = form.getFieldsValue();
-    console.log(values, "value");
-  });
 
   const handleEdit = useMemoCallback((columnItem: TableColumnsProps) => {
     setShowAddModal(true);
     setCurrentPlugins(columnItem);
   });
+
+  const handleUpgrade = useMemoCallback((columnItem: TableColumnsProps) => {
+    setShowJsonModal(true);
+    setCurrentPlugins(columnItem);
+  });
+
   const tableColumns: TableProps<TableColumnsProps>["columns"] = useMemo(() => {
     return [
       {
@@ -107,7 +116,7 @@ const PluginManager = () => {
                   <Icon type="jibenxinxi" />
                 </span>
                 <span title="升级">
-                  <Icon type="shengji" />
+                  <Icon type="shengji" onClick={() => handleUpgrade(data)} />
                 </span>
                 <span title="编辑插件" onClick={() => handleEdit(data)}>
                   <Icon type="bianji" />
@@ -121,23 +130,50 @@ const PluginManager = () => {
         },
       },
     ];
-  }, [handleEdit]);
+  }, [handleEdit, handleUpgrade]);
 
-  const handleGroupChange = () => {
-    console.log(1111);
-  };
+  // 搜索查询
+  const handleSearch = useMemoCallback(() => {
+    const { groupId, name } = form.getFieldsValue();
+    getPluginsList({ name, groupId });
+  });
+  // 选择分组查询
+  const handleGroupChange = useMemoCallback(() => {
+    const { name, groupId } = form.getFieldsValue();
+    getPluginsList({ name, groupId });
+  });
+
+  // 上传json弹框显示
   const handleShowJson = useMemoCallback(() => {
     setShowJsonModal(true);
   });
+  // 取消上传json
   const handleCancelJson = useMemoCallback(() => {
     setShowJsonModal(false);
+    setCurrentPlugins(null);
   });
-  const handleNext = useMemoCallback(() => {
+  // 确认上传json
+  const handleNext = useMemoCallback(async () => {
     if (!jsonMeta?.meta) {
       message.error("请上传json文件！");
       return;
     }
-    setShowAddModal(true);
+    if (currentPlugins) {
+      try {
+        const values = {
+          meta: { ...jsonMeta?.meta },
+          id: currentPlugins?.id,
+        };
+        await upgradePlugins(values).unwrap();
+        message.success("升级成功");
+        setCurrentPlugins(null);
+        setShowJsonModal(false);
+      } catch (e) {
+        console.log(e);
+      }
+    } else {
+      setShowAddModal(true);
+    }
   });
   const handleCancelAdd = useMemoCallback(() => {
     setShowAddModal(false);
@@ -154,7 +190,6 @@ const PluginManager = () => {
         await addPlugins(values).unwrap();
         message.success("新建成功");
       }
-
       setShowAddModal(false);
       setShowJsonModal(false);
     } catch (e) {
@@ -171,7 +206,6 @@ const PluginManager = () => {
       },
       onMouseLeave: (event: React.MouseEvent) => {
         const target = event.target as HTMLDivElement;
-        console.log(event.target, "============");
         target.parentElement?.classList.remove("table-row-active");
         target.parentElement?.parentElement?.parentElement?.classList.remove("table-row-active");
       },
@@ -189,11 +223,12 @@ const PluginManager = () => {
               <span className="text-selected">已选222</span>
             </div>
             <Form form={form} layout="inline">
-              <Form.Item name="group">
+              <Form.Item name="groupId">
                 <Select
                   size="large"
                   placeholder="请选择插件分组"
                   allowClear
+                  style={{ width: 200 }}
                   onChange={handleGroupChange}
                   suffixIcon={<Icon type="xiala" />}
                 >
@@ -238,7 +273,12 @@ const PluginManager = () => {
               onChange={handleTableChange}
             />
           </div>
-          <UploadJsonModalComponent visible={showJsonModal} onCancel={handleCancelJson} onOK={handleNext} />
+          <UploadJsonModalComponent
+            visible={showJsonModal}
+            editItem={currentPlugins}
+            onCancel={handleCancelJson}
+            onOK={handleNext}
+          />
           {groupList && (
             <NewPluginsModalComponent
               visible={showAddModal}

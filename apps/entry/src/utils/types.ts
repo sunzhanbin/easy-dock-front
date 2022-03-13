@@ -255,6 +255,7 @@ export interface GroupListProps {
 }
 
 export type TableColumnsProps = {
+  id: number;
   name: string;
   code: string;
   enabled: boolean;

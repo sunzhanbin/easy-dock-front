@@ -17,13 +17,6 @@ type ModalProps = {
 
 const { Option } = Select;
 
-type ParamsProp = {
-  name?: string;
-  group?: number;
-  openVisit?: boolean;
-  enabled?: boolean;
-};
-
 const NewPluginsModalComponent = ({ groupList, editItem, visible, onCancel, onOK }: ModalProps) => {
   const [form] = Form.useForm();
   const jsonMeta = useAppSelector(selectJsonMeta);
@@ -40,6 +33,7 @@ const NewPluginsModalComponent = ({ groupList, editItem, visible, onCancel, onOK
     });
     return values;
   }, [editItem, jsonMeta]);
+
   const handleCancel = () => {
     onCancel && onCancel();
   };
@@ -53,14 +47,11 @@ const NewPluginsModalComponent = ({ groupList, editItem, visible, onCancel, onOK
       };
       delete params.group;
       params.groupId = values?.group?.value;
-      console.log(params, "==========");
       onOK && onOK(params);
     } catch (e) {
       console.log(e);
     }
   };
-
-  console.log(initialValues, "----");
 
   return (
     <Modal

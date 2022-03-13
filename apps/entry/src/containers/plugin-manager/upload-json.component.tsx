@@ -5,7 +5,7 @@ import { Icon } from "@common/components";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import FileImage from "@assets/images/assets/file.png";
 import UploadImage from "@assets/images/assets/upload.png";
-import { PluginDataConfig } from "@common/type";
+import { PluginJsonMeta } from "@common/type";
 
 interface UploadJSONProps {
   file: RcFile;
@@ -13,7 +13,7 @@ interface UploadJSONProps {
 }
 
 type UploadJsonProps = {
-  onSuccess: (v: PluginDataConfig) => void;
+  onSuccess: (v: PluginJsonMeta) => void;
 };
 
 const UploadJsonComponent = ({ onSuccess }: UploadJsonProps) => {
@@ -22,7 +22,7 @@ const UploadJsonComponent = ({ onSuccess }: UploadJsonProps) => {
     setFileList([]);
   });
   const handleUploadFile = ({ file, fileList }: UploadJSONProps) => {
-    if (file) {
+    if (file && fileList.length) {
       if (file.type !== "application/json") {
         message.error("文件类型错误,请上传json文件!");
         return;

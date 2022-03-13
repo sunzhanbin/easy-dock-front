@@ -6,14 +6,16 @@ import { PluginDataConfig } from "@common/type";
 import { setJSONMeta } from "@views/asset-centre/index.slice";
 import { useAppDispatch } from "@/store";
 import useMemoCallback from "@common/hooks/use-memo-callback";
+import { TableColumnsProps } from "@utils/types";
 
 type ModalProps = {
+  editItem?: TableColumnsProps | null;
   visible: boolean;
   onOK: () => void;
   onCancel: () => void;
 };
 
-const UploadJsonModalComponent = ({ visible, onCancel, onOK }: ModalProps) => {
+const UploadJsonModalComponent = ({ editItem, visible, onCancel, onOK }: ModalProps) => {
   const dispatch = useAppDispatch();
 
   const handleCancel = () => {
@@ -27,13 +29,13 @@ const UploadJsonModalComponent = ({ visible, onCancel, onOK }: ModalProps) => {
   });
   return (
     <Modal
-      title="新建插件"
+      title={editItem ? "升级" : "新建插件"}
       visible={visible}
       centered={true}
       onCancel={handleCancel}
       onOk={handleOk}
       destroyOnClose={true}
-      okText="下一步"
+      okText={editItem ? "确认" : "下一步"}
       width={400}
       maskClosable={false}
     >

@@ -13,7 +13,11 @@ export const assetCentreBuilder = baseFetch.injectEndpoints({
     }),
     // 获取插件列表
     getPluginsList: build.query({
-      query: () => "/plugin/list/all",
+      query: (params: any) => ({
+        url: "/plugin/list/condition/get",
+        method: "post",
+        body: params,
+      }),
       providesTags: (result) =>
         result
           ? [
@@ -76,6 +80,15 @@ export const assetCentreBuilder = baseFetch.injectEndpoints({
     getEditPlugins: build.mutation({
       query: (code: string) => ({ url: `/plugin/code/${code}`, method: "get" }),
     }),
+
+    //  升级插件版本
+    upgradePlugins: build.mutation({
+      query: (params: any) => ({
+        url: "/plugin/version",
+        method: "post",
+        body: params,
+      }),
+    }),
   }),
   // overrideExisting: false,
 });
@@ -86,7 +99,8 @@ export const {
   useGetGroupsListQuery,
   useAddPluginsMutation,
   useEditPluginsMutation,
-  useGetPluginsListQuery,
+  useLazyGetPluginsListQuery,
   useDeleteGroupsMutation,
   useGetEditPluginsMutation,
+  useUpgradePluginsMutation,
 } = assetCentreBuilder;

@@ -35,9 +35,19 @@ export interface PluginMeta {
   responses: PluginHttpParam[];
 }
 
+export interface PluginJsonMeta {
+  meta?: PluginMeta;
+  type?: string; //暂时只支持http类型
+  code?: string;
+  name?: string;
+}
+
 export interface PluginDataConfig {
   type?: string; //暂时只支持http类型
   code?: string;
   name?: string;
+  id?: number;
+  enabled?: boolean;
+  openVisit?: boolean;
   meta?: PluginMeta;
 }
