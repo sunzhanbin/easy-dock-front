@@ -21,9 +21,7 @@ const BackFillComponent: FC<BackFillComponentProps> = ({ value, onChange }) => {
       .filter((v) => v.type === "InputNumber");
   }, [formMeta]);
   const handleChange = useMemoCallback((val) => {
-    if (val) {
-      onChange && onChange(val);
-    }
+    onChange && onChange(val);
   });
   return (
     <div className={styles.container}>
