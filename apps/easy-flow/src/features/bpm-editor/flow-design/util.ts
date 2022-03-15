@@ -283,17 +283,13 @@ export function valid(data: AllNode[], validRes: ValidResultType) {
 
         const isInvalid = branch.conditions.some((row) => {
           return row.some((col) => {
-            for (const key in col) {
-              if (
-                (col[key as keyof typeof col] === null || col[key as keyof typeof col] === undefined) &&
-                !["parentId", "valueType"].includes(key)
-              ) {
+            for (const key of ["fieldName", "symbol", "value"]) {
+              const val = col[key as keyof typeof col];
+              if (val === null || val === undefined || (typeof val === "string" && val.trim() === "")) {
                 errors.push("条件配置不合法");
-
                 return true;
               }
             }
-
             return false;
           });
         });
@@ -341,7 +337,7 @@ export function valid(data: AllNode[], validRes: ValidResultType) {
           }
         }
       }
-      // 审批节点和抄送节点需要进行超时配置
+      // 审批节点和填写节点需要进行超时配置
       if (node.type !== NodeType.CCNode) {
         const timeoutValidMessage = validators.timeoutConfig(node.dueConfig!);
         if (timeoutValidMessage) {
@@ -358,20 +354,34 @@ export function valid(data: AllNode[], validRes: ValidResultType) {
       if (dataPushValidMessage) {
         errors.push(dataPushValidMessage);
       }
+      const nextActionMessage = validators.validateNextAction(node.nextAction);
+      if (nextActionMessage) {
+        errors.push(nextActionMessage);
+      }
     } else if (node.type === NodeType.AutoNodeTriggerProcess) {
       const triggerConfigValidMessage = validators.config(node.triggerConfig.subapps);
       if (triggerConfigValidMessage) {
         errors.push(triggerConfigValidMessage);
       }
+    } else if (node.type === NodeType.PluginNode) {
+      const pluginParamsValidMessage = validators.validatePluginParams(node.dataConfig);
+      if (pluginParamsValidMessage) {
+        errors.push(pluginParamsValidMessage);
+      }
+      const nextActionMessage = validators.validateNextAction(node.nextAction);
+      if (nextActionMessage) {
+        errors.push(nextActionMessage);
+      }
     }
-
+    // 流程里程碑百分比校验
     if (
       node.type === NodeType.AuditNode ||
       node.type === NodeType.FillNode ||
       node.type === NodeType.CCNode ||
       node.type === NodeType.StartNode ||
       node.type === NodeType.AutoNodePushData ||
-      node.type === NodeType.AutoNodeTriggerProcess
+      node.type === NodeType.AutoNodeTriggerProcess ||
+      node.type === NodeType.PluginNode
     ) {
       if (node.progress && node.progress.enable) {
         if (!node.progress.percent) {

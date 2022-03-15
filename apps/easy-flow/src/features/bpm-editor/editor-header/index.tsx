@@ -178,26 +178,19 @@ const EditorHeader: FC = () => {
             to={`${match.url}/form-design`}
             activeClassName={styles.active}
           >
-            <span className={styles.number}>01</span>
             <span>表单设计</span>
           </NavLink>
-          <div className={styles.separator}>
-            <Icon className={styles.iconfont} type="jinru" />
-          </div>
+
           <NavLink
             className={styles.step}
             replace={true}
             to={`${match.url}/flow-design`}
             activeClassName={styles.active}
           >
-            <span className={styles.number}>02</span>
             <span>流程设计</span>
           </NavLink>
-          <div className={styles.separator}>
-            <Icon className={styles.iconfont} type="jinru" />
-          </div>
+
           <NavLink className={styles.step} replace={true} to={extendPath} activeClassName={styles.active}>
-            <span className={styles.number}>03</span>
             <span>扩展功能</span>
           </NavLink>
         </div>
@@ -238,7 +231,7 @@ const EditorHeader: FC = () => {
               </div>
               <div className={styles["save-image"]} onClick={handleExportFlowImage}>
                 <Icon type="tupian" className={styles.icon} />
-                <span className={styles.text}>保存图片</span>
+                <span className={styles.text}>保存流程图</span>
               </div>
             </>
           )}

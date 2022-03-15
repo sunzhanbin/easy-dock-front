@@ -35,7 +35,7 @@ const PluginDataConfig: FC<PluginDataConfigProps> = ({ name, value, onChange }) 
         {value?.meta?.paths?.length ? <PluginHttpParams name={[name, "meta", "paths"]} label="路径" /> : null}
       </Form.Item>
       {value?.meta.responses.length ? (
-        <Form.Item label="返回参数配置" name={[name, "meta", "responses"]}>
+        <Form.Item label="返回参数配置" name={[name, "meta", "responses"]} style={{ marginBottom: "0" }}>
           <PluginHttpParams name={[name, "meta", "responses"]} text="更新" />
         </Form.Item>
       ) : null}

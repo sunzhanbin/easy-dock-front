@@ -26,6 +26,7 @@
         font-weight: 400;
         color: $menu-title-text-color;
         white-space: nowrap;
+        margin-left: 32px;
 
         .number {
           font-size: 18px;
@@ -143,6 +144,6 @@
 }
 .save-image {
   .text {
-    width: 56px;
+    width: 70px;
   }
 }

@@ -56,14 +56,15 @@ type RemoveFn = (index: number) => void;
 const Condition: FC<ConditionProps> = ({ name }) => {
   const handleTypeChange = (form: FormInstance, blockIndex: number, ruleIndex: number, type: string) => {
     const conditions = form.getFieldValue([...name]);
-    const oldRule = conditions[blockIndex];
-    const ruleItem = {
+    const oldRuleBlock = conditions[blockIndex];
+    const oldRuleItem = oldRuleBlock[ruleIndex];
+    const ruleItem = Object.assign({}, oldRuleItem, {
       type,
       symbol: undefined,
       value: undefined,
-    };
-    oldRule.splice(ruleIndex, 1, ruleItem);
-    conditions.splice(blockIndex, 1, oldRule);
+    });
+    oldRuleBlock.splice(ruleIndex, 1, ruleItem);
+    conditions.splice(blockIndex, 1, oldRuleBlock);
     form.setFieldsValue({ [name[0]]: { [name[1]]: conditions } });
   };
   const handleSymbolChange = (
@@ -74,14 +75,15 @@ const Condition: FC<ConditionProps> = ({ name }) => {
     symbol: string,
   ) => {
     const conditions = form.getFieldValue([...name]);
-    const oldRule = conditions[blockIndex];
-    const ruleItem = {
+    const oldRuleBlock = conditions[blockIndex];
+    const oldRuleItem = oldRuleBlock[ruleIndex];
+    const ruleItem = Object.assign({}, oldRuleItem, {
       type,
       symbol,
       value: undefined,
-    };
-    oldRule.splice(ruleIndex, 1, ruleItem);
-    conditions.splice(blockIndex, 1, oldRule);
+    });
+    oldRuleBlock.splice(ruleIndex, 1, ruleItem);
+    conditions.splice(blockIndex, 1, oldRuleBlock);
     form.setFieldsValue({ [name[0]]: { [name[1]]: conditions } });
   };
   const handleRemoveRule = (
@@ -123,10 +125,38 @@ const Condition: FC<ConditionProps> = ({ name }) => {
                                   {fields.map((field, fieldIndex) => {
                                     return (
                                       <div key={field.key} className={styles.condition}>
-                                        <Form.Item name={[field.name, "fieldName"]} className={styles.value}>
+                                        <Form.Item
+                                          name={[field.name, "fieldName"]}
+                                          className={styles.value}
+                                          rules={[
+                                            {
+                                              validator(_, val: string) {
+                                                if (!val || val.trim() === "") {
+                                                  return Promise.reject(new Error("参数不能为空"));
+                                                }
+
+                                                return Promise.resolve();
+                                              },
+                                            },
+                                          ]}
+                                        >
                                           <Input size="large" placeholder="请输入参数" />
                                         </Form.Item>
-                                        <Form.Item name={[field.name, "type"]} className={styles.symbol}>
+                                        <Form.Item
+                                          name={[field.name, "type"]}
+                                          className={styles.symbol}
+                                          rules={[
+                                            {
+                                              validator(_, val: string) {
+                                                if (!val) {
+                                                  return Promise.reject(new Error("参数类型不能为空"));
+                                                }
+
+                                                return Promise.resolve();
+                                              },
+                                            },
+                                          ]}
+                                        >
                                           <Select
                                             size="large"
                                             placeholder="参数类型"
@@ -150,7 +180,21 @@ const Condition: FC<ConditionProps> = ({ name }) => {
                                               conditionList?.length === 1 && conditionBlock?.length === 1;
                                             return (
                                               <>
-                                                <Form.Item name={[field.name, "symbol"]} className={styles.symbol}>
+                                                <Form.Item
+                                                  name={[field.name, "symbol"]}
+                                                  className={styles.symbol}
+                                                  rules={[
+                                                    {
+                                                      validator(_, val: string) {
+                                                        if (!val) {
+                                                          return Promise.reject(new Error("判断符不能为空"));
+                                                        }
+
+                                                        return Promise.resolve();
+                                                      },
+                                                    },
+                                                  ]}
+                                                >
                                                   <Select
                                                     size="large"
                                                     placeholder="判断符"
@@ -167,7 +211,21 @@ const Condition: FC<ConditionProps> = ({ name }) => {
                                                     })}
                                                   </Select>
                                                 </Form.Item>
-                                                <Form.Item name={[field.name, "value"]} className={styles.value}>
+                                                <Form.Item
+                                                  name={[field.name, "value"]}
+                                                  className={styles.value}
+                                                  rules={[
+                                                    {
+                                                      validator(_, val: string) {
+                                                        if (!val || val.trim() === "") {
+                                                          return Promise.reject(new Error("判断值不能为空"));
+                                                        }
+
+                                                        return Promise.resolve();
+                                                      },
+                                                    },
+                                                  ]}
+                                                >
                                                   <Input size="large" placeholder="请输入判断值" />
                                                 </Form.Item>
                                                 <Tooltip title="删除">

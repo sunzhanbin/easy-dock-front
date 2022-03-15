@@ -55,7 +55,7 @@ const PluginHttpParams: FC<PluginHttpParamsProps> = ({ name, label, text = "来�
                             {
                               validator(_, val: string) {
                                 if (!val && required) {
-                                  return Promise.reject(new Error("映射字段不能为空"));
+                                  return Promise.reject(new Error("不能为空"));
                                 }
 
                                 return Promise.resolve();
