@@ -12,6 +12,7 @@ import Main from "@views/main";
 import "@/App.scss";
 import cookie from "js-cookie";
 import { registerTheme } from "@enc/theme-scheme/dist/utils.esm";
+import "jsoneditor/dist/jsoneditor.min.css";
 import Empty from "@common/components/empty";
 import { auth } from "./consts";
 import { useAppSelector } from "@/store";

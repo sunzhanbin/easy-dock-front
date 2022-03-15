@@ -13,7 +13,7 @@ const MilestonePercent = ({ form }: MilestonePercentProps) => {
   if (!enable) return null;
   return (
     <>
-      <span>当流程通过该节点时，进度值为</span>
+      <span>当流程到达该节点时，进度值为</span>
       <Form.Item
         name={["progress", "percent"]}
         required

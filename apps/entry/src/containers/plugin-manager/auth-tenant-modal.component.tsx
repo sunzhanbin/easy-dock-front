@@ -1,9 +1,10 @@
-import { memo } from "react";
+import { memo, useEffect } from "react";
 import { Form, Modal, Select } from "antd";
 import { Icon } from "@common/components";
 import { useAppSelector } from "@/store";
 import { AssignAuthType } from "@utils/const";
 import { selectProjectList } from "@views/home/index.slice";
+import { selectBindingTenantList } from "@views/asset-centre/index.slice";
 
 type TenantModalProps = {
   visible: boolean;
@@ -16,8 +17,13 @@ const { Option } = Select;
 
 const AuthTenantModalComponent = ({ type, visible, onOK, onCancel }: TenantModalProps) => {
   const projectList = useAppSelector(selectProjectList);
-
+  const bindingTenantList = useAppSelector(selectBindingTenantList);
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    const projectIds = bindingTenantList?.map((item) => String(item.id));
+    form.setFieldsValue({ projectIds });
+  }, [bindingTenantList, form]);
 
   const handleCancel = () => {
     onCancel && onCancel();
@@ -41,17 +47,7 @@ const AuthTenantModalComponent = ({ type, visible, onOK, onCancel }: TenantModal
       maskClosable={false}
     >
       <Form form={form} className="form" layout="vertical" autoComplete="off" preserve={false}>
-        <Form.Item
-          label="选择租户"
-          name="projectIds"
-          required
-          rules={[
-            {
-              required: true,
-              message: "请选择租户",
-            },
-          ]}
-        >
+        <Form.Item label="选择租户" name="projectIds">
           <Select
             mode="tags"
             tokenSeparators={[","]}

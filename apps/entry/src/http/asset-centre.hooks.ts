@@ -103,6 +103,30 @@ export const assetCentreBuilder = baseFetch.injectEndpoints({
         body: params,
       }),
     }),
+    // 查询当前插件已绑定的租户
+    getBindingTenant: build.query({
+      query: (id: number) => `/plugin/binding/${id}`,
+    }),
+    // 启用禁用插件
+    enablePlugins: build.query({
+      query: (params: { id: number; flag: boolean }) => ({
+        url: "/plugin/enable",
+        method: "get",
+        params,
+      }),
+    }),
+    // 公开不公开插件
+    openVisitPlugins: build.query({
+      query: (params: { id: number; flag: boolean }) => ({
+        url: "/plugin/open/visit",
+        method: "get",
+        params,
+      }),
+    }),
+    // 查看json
+    getJson: build.query({
+      query: (code: string) => `/plugin/code/${code}`,
+    }),
   }),
   // overrideExisting: false,
 });
@@ -119,4 +143,8 @@ export const {
   useUpgradePluginsMutation,
   useBatchAssignAuthMutation,
   useSingleAssignAuthMutation,
+  useLazyGetBindingTenantQuery,
+  useLazyEnablePluginsQuery,
+  useLazyOpenVisitPluginsQuery,
+  useLazyGetJsonQuery,
 } = assetCentreBuilder;

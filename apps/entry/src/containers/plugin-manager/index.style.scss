@@ -45,6 +45,11 @@
             display: inline-flex;
             align-items: center;
             cursor: pointer;
+
+            .not-openVisit {
+              color: #181F434D;
+              cursor: not-allowed;
+            }
           }
 
           span {
