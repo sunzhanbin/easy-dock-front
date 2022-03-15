@@ -1,4 +1,4 @@
-@import '@common/styles/var.scss';
+@import "@common/styles/var.scss";
 
 .header_container {
   display: flex;
@@ -111,5 +111,38 @@
         }
       }
     }
+  }
+}
+
+.export,
+.save-image {
+  display: flex;
+  align-items: center;
+  padding: 5px 8px;
+  cursor: pointer;
+  .icon {
+    width: 16px;
+    font-size: 16px;
+    margin-right: 4px;
+    color: $body-text-color;
+  }
+  .text {
+    width: 28px;
+    font-size: 14px;
+    color: $body-text-color;
+  }
+  &:hover {
+    color: $primary-color;
+    .icon {
+      color: $primary-color;
+    }
+    .text{
+      color: $primary-color;
+    }
+  }
+}
+.save-image {
+  .text {
+    width: 56px;
   }
 }

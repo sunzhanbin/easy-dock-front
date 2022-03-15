@@ -1,11 +1,12 @@
 import { memo, FC, useRef, useEffect } from "react";
 import classNames from "classnames";
-import { Button, message } from "antd";
+import { message } from "antd";
 import styles from "./index.module.scss";
+import { Icon } from "@common/components";
 
 interface ImportButtonProps {
   text: string;
-  className: string;
+  className?: string;
   handleSuccess: (content: any) => void;
   handleBefore?: () => void;
 }
@@ -56,14 +57,10 @@ const ImportButton: FC<ImportButtonProps> = ({ text, className, handleBefore, ha
   }, []);
   return (
     <div className={styles.container}>
-      <Button
-        type="primary"
-        size="large"
-        className={classNames("button", className && className)}
-        onClick={handleClick}
-      >
-        {text}
-      </Button>
+      <div className={classNames(styles.import, className && className)} onClick={handleClick}>
+        <Icon type="zhucexinjiekou" className={styles.icon} />
+        <span className={styles.text}>{text}</span>
+      </div>
       <input type="file" name="importFile" id="importFile" accept=".json" className={styles.file} ref={inputRef} />
     </div>
   );

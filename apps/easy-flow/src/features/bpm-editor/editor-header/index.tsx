@@ -11,7 +11,7 @@ import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { AsyncButton, confirm, Icon } from "@common/components";
 import { axios, exportJsonFile, validateFlowData, validateFormData } from "@utils";
 import Header from "../../../components/header";
-import { layoutSelector, subAppSelector } from "@/features/bpm-editor/form-design/formzone-reducer";
+import { subAppSelector } from "@/features/bpm-editor/form-design/formzone-reducer";
 import { loadFormData, saveForm, setIsDirty as setFormDirty } from "@/features/bpm-editor/form-design/formdesign-slice";
 import ImportButton from "../components/import-button";
 import dirtySelector from "../use-dirty-selector";
@@ -22,7 +22,6 @@ const EditorHeader: FC = () => {
   const [showModel, setShowModel] = useState<boolean>(false);
   const { name: appName, appId } = useAppSelector(subAppSelector);
   const dirty = useAppSelector(dirtySelector);
-  const layout = useAppSelector(layoutSelector);
   const history = useHistory();
   const { bpmId } = useParams<{ bpmId: string }>();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -60,13 +59,6 @@ const EditorHeader: FC = () => {
   const handlePreview = useCallback(() => {
     setShowModel(true);
   }, []);
-  const handlePrev = useCallback(() => {
-    if (pathName === flowDesignPath) {
-      history.replace(formDesignPath);
-    } else if (pathName === extendPath) {
-      history.replace(flowDesignPath);
-    }
-  }, [pathName, history, formDesignPath, flowDesignPath, extendPath]);
 
   const handleSave = useMemoCallback(async () => {
     if (pathName === formDesignPath) {
@@ -81,14 +73,6 @@ const EditorHeader: FC = () => {
       return await dispatch(saveExtend());
     }
   });
-
-  const handleNext = useCallback(() => {
-    if (pathName === formDesignPath) {
-      history.replace(flowDesignPath);
-    } else {
-      history.replace(extendPath);
-    }
-  }, [pathName, history, formDesignPath, flowDesignPath, extendPath]);
 
   const handlePublish = useCallback(async () => {
     const flowResponse = await dispatch(saveFlow({ subappId: bpmId }));
@@ -235,51 +219,32 @@ const EditorHeader: FC = () => {
               </span>
             </Tooltip>
           )}
-          {pathName !== formDesignPath && (
-            <Button className={styles.prev} size="large" onClick={handlePrev}>
-              上一步
-            </Button>
-          )}
 
+          {pathName === formDesignPath && (
+            <>
+              <ImportButton text="导入" handleSuccess={handleImportForm} />
+              <div className={styles.export} onClick={handleExportForm}>
+                <Icon type="daochu" className={styles.icon} />
+                <span className={styles.text}>导出</span>
+              </div>
+            </>
+          )}
           {pathName === flowDesignPath && (
-            <Button className={styles.prev} size="large" onClick={handleNext}>
-              下一步
-            </Button>
+            <>
+              <ImportButton text="导入" handleSuccess={handleImportFlow} />
+              <div className={styles.export} onClick={handleExportFlow}>
+                <Icon type="daochu" className={styles.icon} />
+                <span className={styles.text}>导出</span>
+              </div>
+              <div className={styles["save-image"]} onClick={handleExportFlowImage}>
+                <Icon type="tupian" className={styles.icon} />
+                <span className={styles.text}>保存图片</span>
+              </div>
+            </>
           )}
-
           <Button type="primary" ghost className={styles.save} size="large" onClick={handleSave}>
             保存
           </Button>
-          {pathName === formDesignPath && (
-            <>
-              <Button type="primary" className={styles.prev} size="large" onClick={handleExportForm}>
-                导出表单
-              </Button>
-              <ImportButton text="导入表单" className={styles.prev} handleSuccess={handleImportForm} />
-            </>
-          )}
-          {pathName === flowDesignPath && (
-            <>
-              <Button type="primary" className={styles.prev} size="large" onClick={handleExportFlowImage}>
-                导出流程图
-              </Button>
-              <Button type="primary" className={styles.prev} size="large" onClick={handleExportFlow}>
-                导出流程
-              </Button>
-              <ImportButton text="导入流程" className={styles.prev} handleSuccess={handleImportFlow} />
-            </>
-          )}
-          {pathName === formDesignPath && (
-            <Button
-              type="primary"
-              className={styles.next}
-              size="large"
-              onClick={handleNext}
-              disabled={layout.length === 0}
-            >
-              下一步
-            </Button>
-          )}
 
           {pathName === `${match.url}/flow-design` && (
             <AsyncButton
