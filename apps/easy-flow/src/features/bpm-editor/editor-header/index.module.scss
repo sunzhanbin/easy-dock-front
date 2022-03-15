@@ -24,7 +24,7 @@
         line-height: 56px;
         font-size: 16px;
         font-weight: 400;
-        color: $menu-title-text-color;
+        color: $caption-text-color;
         white-space: nowrap;
         margin-left: 32px;
 
@@ -35,7 +35,7 @@
         }
 
         &.active {
-          color: $menu-title-text-color;
+          color: $title-text-color;
           border-bottom: 5px solid $primary-color;
         }
       }
