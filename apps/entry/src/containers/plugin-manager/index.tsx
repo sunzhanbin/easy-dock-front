@@ -1,4 +1,4 @@
-import React, { memo, useState, useMemo, useEffect } from "react";
+import React, { memo, useState, useCallback, useMemo, useEffect, useRef } from "react";
 import { Input, Layout, Select, Form, Button, message } from "antd";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import {
@@ -7,21 +7,32 @@ import {
   useEditPluginsMutation,
   useGetGroupsListQuery,
   useLazyGetPluginsListQuery,
+  useLazyGetBindingTenantQuery,
   useBatchAssignAuthMutation,
   useSingleAssignAuthMutation,
+  useLazyEnablePluginsQuery,
+  useLazyOpenVisitPluginsQuery,
+  useLazyGetJsonQuery,
 } from "@/http";
 import { Icon } from "@common/components";
 import classnames from "classnames";
 import UploadJsonModalComponent from "@containers/plugin-manager/upload-json-modal.component";
 import NewPluginsModalComponent from "@containers/plugin-manager/new-plugins-modal-component";
 import "@containers/plugin-manager/index.style.scss";
-import { selectJsonMeta, selectPluginsList } from "@views/asset-centre/index.slice";
-import { useAppSelector } from "@/store";
+import {
+  selectJsonMeta,
+  selectPluginsList,
+  setPluginsList,
+  setBindingTenantList,
+} from "@views/asset-centre/index.slice";
+import { useAppDispatch, useAppSelector } from "@/store";
 import GroupManageComponent from "@containers/plugin-manager/group-manage-component";
 import PluginsListTableComponent from "@containers/plugin-manager/plugins-list-table.component";
 import AuthTenantModalComponent from "@containers/plugin-manager/auth-tenant-modal.component";
+import CheckJsonModalComponent from "@containers/plugin-manager/check-json-modal.component";
 import { TableColumnsProps } from "@utils/types";
 import { AssignAuthType } from "@utils/const";
+import JsonEditorComponent from "@components/json-editor";
 
 const { Content } = Layout;
 const { Option } = Select;
@@ -29,7 +40,12 @@ const { Option } = Select;
 const PluginManager = () => {
   const jsonMeta = useAppSelector(selectJsonMeta);
   const pluginsList = useAppSelector(selectPluginsList);
+  const dispatch = useAppDispatch();
   const [getPluginsList, { isLoading }] = useLazyGetPluginsListQuery();
+  const [getBindingTenantList] = useLazyGetBindingTenantQuery();
+  const [enablePlugins] = useLazyEnablePluginsQuery();
+  const [openVisitPlugins] = useLazyOpenVisitPluginsQuery();
+  const [getJson] = useLazyGetJsonQuery();
   const [addPlugins] = useAddPluginsMutation();
   const [editPlugins] = useEditPluginsMutation();
   const [batchAssignAuth] = useBatchAssignAuthMutation();
@@ -41,8 +57,10 @@ const PluginManager = () => {
     }),
   });
   const [form] = Form.useForm();
+  const editorRef = useRef<any>(null);
   const [showJsonModal, setShowJsonModal] = useState<boolean>(false);
   const [showAddModal, setShowAddModal] = useState<boolean>(false);
+  const [showCheckJsonModal, setShowCheckJsonModal] = useState<boolean>(false);
   const [showTenantModal, setShowTenantModal] = useState<boolean>(false);
   const [currentPlugins, setCurrentPlugins] = useState<TableColumnsProps | null>(null);
   const [selectedRows, setSelectedRows] = useState<TableColumnsProps[]>([]);
@@ -67,6 +85,46 @@ const PluginManager = () => {
   const handleEdit = useMemoCallback((columnItem: TableColumnsProps) => {
     setShowAddModal(true);
     setCurrentPlugins(columnItem);
+  });
+
+  // 启用禁用插件
+  const handleEnable = useMemoCallback(async (columnItem: TableColumnsProps) => {
+    try {
+      const params = {
+        id: columnItem.id,
+        flag: columnItem.enabled,
+      };
+      await enablePlugins(params).unwrap();
+      dispatch(setPluginsList({ pluginsList, columnItem, type: "enabled" }));
+    } catch (e) {
+      console.log(e);
+    }
+  });
+
+  // 查看json
+  const handleCheckJson = useMemoCallback(async (columnItem: TableColumnsProps) => {
+    setShowCheckJsonModal(true);
+    const result = await getJson(columnItem.code).unwrap();
+    editorRef.current?.add(result);
+    // editorRef.current?.expandAll();
+  });
+
+  const handleCancelCheckJson = () => {
+    setShowCheckJsonModal(false);
+  };
+
+  // 公开不公开插件
+  const handleOpenVisit = useMemoCallback(async (columnItem: TableColumnsProps) => {
+    try {
+      const params = {
+        id: columnItem.id,
+        flag: columnItem.enabled,
+      };
+      await openVisitPlugins(params).unwrap();
+      dispatch(setPluginsList({ pluginsList, columnItem, type: "openVisit" }));
+    } catch (e) {
+      console.log(e);
+    }
   });
 
   // 升级插件
@@ -158,15 +216,17 @@ const PluginManager = () => {
   };
 
   // 指定授权弹框
-  const handleAssignTenant = useMemoCallback((columnItem: TableColumnsProps) => {
+  const handleAssignTenant = useMemoCallback(async (columnItem: TableColumnsProps) => {
+    await getBindingTenantList(columnItem.id);
     setAssignType(AssignAuthType.SINGLE);
-    setShowTenantModal(true);
     setCurrentPlugins(columnItem);
+    setShowTenantModal(true);
   });
 
   // 取消授权
   const handleCancelTenant = useMemoCallback(() => {
     setShowTenantModal(false);
+    dispatch(setBindingTenantList([]));
     assignType === AssignAuthType.SINGLE && setCurrentPlugins(null);
   });
 
@@ -186,6 +246,7 @@ const PluginManager = () => {
         };
         await singleAssignAuth(values).unwrap();
         setCurrentPlugins(null);
+        dispatch(setBindingTenantList([]));
       }
       message.success("授权成功");
       setShowTenantModal(false);
@@ -256,6 +317,9 @@ const PluginManager = () => {
               rowSelection={rowSelection}
               loading={isLoading}
               onEdit={handleEdit}
+              onEnable={handleEnable}
+              onCheckJson={handleCheckJson}
+              onOpenVisit={handleOpenVisit}
               onUpgrade={handleUpgrade}
               onAssignTenant={handleAssignTenant}
               pluginsList={pluginsList}
@@ -282,6 +346,9 @@ const PluginManager = () => {
             onCancel={handleCancelTenant}
             onOK={handleConfirmTenant}
           />
+          <CheckJsonModalComponent visible={showCheckJsonModal} onCancel={handleCancelCheckJson}>
+            <JsonEditorComponent ref={editorRef} />
+          </CheckJsonModalComponent>
         </Content>
       </Layout>
     </div>

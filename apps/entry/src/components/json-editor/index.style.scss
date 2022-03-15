@@ -1,0 +1,9 @@
+@import "@common/styles/var.scss";
+
+.json-editor-container {
+  height: 500px;
+
+  .jsoneditor {
+    border: 1px solid $button-default-border-color;
+  }
+}

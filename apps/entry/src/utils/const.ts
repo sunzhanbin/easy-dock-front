@@ -300,16 +300,16 @@ export enum AssetCentreEnum {
 }
 
 export const ASSET_CENTRE_MENU = [
-  {
-    name: "数据源",
-    icon: "shujuyuan",
-    type: AssetCentreEnum.DATA_SOURCE,
-  },
-  {
-    name: "数据资产",
-    icon: "xiangmutubiao",
-    type: AssetCentreEnum.DATA_ASSET,
-  },
+  // {
+  //   name: "数据源",
+  //   icon: "shujuyuan",
+  //   type: AssetCentreEnum.DATA_SOURCE,
+  // },
+  // {
+  //   name: "数据资产",
+  //   icon: "xiangmutubiao",
+  //   type: AssetCentreEnum.DATA_ASSET,
+  // },
   {
     name: "插件管理",
     icon: "chajian",
