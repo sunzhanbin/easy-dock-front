@@ -31,7 +31,7 @@ const groupPluginList = (pluginList: PluginItem[]): NodeTypeList[] => {
       return;
     }
     const { id: groupId, name: groupName } = group;
-    const node = { name, id, type: NodeType.PluginNode, icon: "chajianxian" };
+    const node = { name, id, type: NodeType.PluginNode, icon: "chajiandise" };
     if (!groupMap[groupId]) {
       groupMap[groupId] = {
         id: String(groupId),

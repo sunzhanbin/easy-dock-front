@@ -113,7 +113,7 @@ function FlowDesign() {
       );
     } else if (choosedNode.type === NodeType.PluginNode) {
       return (
-        <CardHeader icon={<Icon type="chajian" />} type={choosedNode.type}>
+        <CardHeader icon={<Icon type="chajiandise" />} type={choosedNode.type}>
           插件节点
         </CardHeader>
       );

@@ -6,6 +6,8 @@ import useMemoCallback from "@common/hooks/use-memo-callback";
 import { PluginNode } from "@type/flow";
 import { useAppDispatch } from "@/app/hooks";
 import PluginDataConfig from "@/features/bpm-editor/components/plugin-data-config";
+import NodeFloeConfig from "@/features/bpm-editor/components/node-flow-config";
+import MilestoneNodeConfig from "@/features/bpm-editor/components/milestone-node-config";
 import { updateNode } from "../../flow-slice";
 import { trimInputValue } from "../../util";
 import { rules } from "../../validators";
@@ -26,6 +28,8 @@ function AutoNodeEditor(props: { node: PluginNode }) {
     return {
       name: node.name,
       dataConfig: node.dataConfig,
+      nextAction: node.nextAction,
+      progress: node.progress,
     };
   }, [node]);
 
@@ -52,6 +56,12 @@ function AutoNodeEditor(props: { node: PluginNode }) {
       </Form.Item>
       <Form.Item name="dataConfig">
         <PluginDataConfig name="dataConfig" />
+      </Form.Item>
+      <Form.Item name="nextAction" label="节点流转设置">
+        <NodeFloeConfig name="nextAction" nodeId={node.id} />
+      </Form.Item>
+      <Form.Item name="progress">
+        <MilestoneNodeConfig form={form} />
       </Form.Item>
     </Form>
   );

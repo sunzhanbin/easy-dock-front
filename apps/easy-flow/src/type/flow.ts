@@ -272,6 +272,7 @@ export interface PluginNode extends BaseNode {
   type: NodeType.PluginNode;
   dataConfig: PluginDataConfig;
   nextAction: NextAction;
+  progress?: MilestonePercentType;
 }
 
 export enum StarterEnum {
