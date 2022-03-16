@@ -120,7 +120,9 @@ const validatePluginParams = (value: PluginDataConfig) => {
   if (meta) {
     const { headers, bodys, querys, paths, responses } = meta;
     const allParams = [...headers, ...bodys, ...querys, ...paths, ...responses];
-    const isValidate = allParams.filter((v) => v.required).some((v) => v.map === undefined || v.map.trim() === "");
+    const isValidate = allParams
+      .filter((v) => v.required)
+      .some((v) => v.map === undefined || (typeof v.map === "string" && v.map.trim() === ""));
     if (isValidate) {
       return "数据填写不完整";
     }
@@ -128,12 +130,18 @@ const validatePluginParams = (value: PluginDataConfig) => {
   return "";
 };
 
-const validateNextAction = (value: NextAction) => {
+const validateNextAction = (value: NextAction): string => {
   const { type, conditions } = value;
   if (type === NextActionType.Condition) {
-    const nullCondition = conditions.flat(2).some((v) => !v.params || !v.symbol || !v.type || !v.value);
+    const nullCondition = conditions
+      .flat(2)
+      .some(
+        (v) => !v.params || !v.symbol || !v.type || !v.value || (typeof v.value === "string" && v.value.trim() === ""),
+      );
     if (nullCondition) {
       return "条件配置不完整";
+    } else {
+      return "";
     }
   }
   return "";

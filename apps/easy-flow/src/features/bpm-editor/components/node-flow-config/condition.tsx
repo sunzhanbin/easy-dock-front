@@ -126,7 +126,7 @@ const Condition: FC<ConditionProps> = ({ name }) => {
                                     return (
                                       <div key={field.key} className={styles.condition}>
                                         <Form.Item
-                                          name={[field.name, "fieldName"]}
+                                          name={[field.name, "params"]}
                                           className={styles.value}
                                           rules={[
                                             {

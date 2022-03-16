@@ -283,12 +283,22 @@ export function valid(data: AllNode[], validRes: ValidResultType) {
 
         const isInvalid = branch.conditions.some((row) => {
           return row.some((col) => {
-            for (const key of ["fieldName", "symbol", "value"]) {
+            for (const key of ["fieldName", "symbol"]) {
               const val = col[key as keyof typeof col];
               if (val === null || val === undefined || (typeof val === "string" && val.trim() === "")) {
                 errors.push("条件配置不合法");
                 return true;
               }
+            }
+            if (
+              col.symbol !== "null" &&
+              col.symbol !== "notNull" &&
+              (col.value === null ||
+                col.value === undefined ||
+                (typeof col.value === "string" && col.value.trim() === ""))
+            ) {
+              errors.push("条件配置不合法");
+              return true;
             }
             return false;
           });
@@ -369,6 +379,7 @@ export function valid(data: AllNode[], validRes: ValidResultType) {
         errors.push(pluginParamsValidMessage);
       }
       const nextActionMessage = validators.validateNextAction(node.nextAction);
+      console.info(nextActionMessage);
       if (nextActionMessage) {
         errors.push(nextActionMessage);
       }
