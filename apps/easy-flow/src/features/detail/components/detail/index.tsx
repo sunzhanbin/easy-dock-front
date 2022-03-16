@@ -73,7 +73,6 @@ const Detail = forwardRef(function Detail(props: DetailProps, ref: React.Forward
       }
       return field;
     });
-    console.log(valueMap, "valueMap", dateFields);
     return valueMap;
   }, [form.value, form.meta]);
   return (

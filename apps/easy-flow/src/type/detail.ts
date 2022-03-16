@@ -85,6 +85,7 @@ export enum AuditRecordType {
   RUNNING = "RUNNING",
   AUTO_PROCESS_TRIGGER = "AUTO_PROCESS_TRIGGER",
   AUTO_INTERFACE_PUSH = "AUTO_INTERFACE_PUSH",
+  AUTO_PLUGIN = "AUTO_PLUGIN",
 }
 
 export type AuditRecordSchema = {
@@ -95,6 +96,10 @@ export type AuditRecordSchema = {
       actionName: AuditRecordType;
       commit?: string;
       targetUser?: User;
+      autoPushDataResult?: {
+        resultCode: number;
+        resultMessage: string;
+      };
     };
     nodeName: string;
     taskId: string;
