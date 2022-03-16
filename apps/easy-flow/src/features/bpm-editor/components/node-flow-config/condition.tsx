@@ -214,6 +214,7 @@ const Condition: FC<ConditionProps> = ({ name }) => {
                                                 <Form.Item
                                                   name={[field.name, "value"]}
                                                   className={styles.value}
+                                                  style={{ marginRight: 0 }}
                                                   rules={[
                                                     {
                                                       validator(_, val: string) {

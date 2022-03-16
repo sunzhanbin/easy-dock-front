@@ -44,10 +44,11 @@
         display: flex;
         .symbol {
             width: 100px;
-            margin: 0 8px;
+            margin-right: 8px;
         }
         .value {
             flex: 1;
+            margin-right: 8px;
         }
         .delete {
             visibility: hidden;
@@ -82,9 +83,16 @@
 .mb12 {
     margin-bottom: 12px;
 }
+.mb0{
+    margin-bottom: 0;
+}
 .text{
     height: 22px;
     line-height: 22px;
     color: $body-text-color;
     margin-bottom: 4px;
+}
+
+.conditions{
+    margin-top: 8px;
 }

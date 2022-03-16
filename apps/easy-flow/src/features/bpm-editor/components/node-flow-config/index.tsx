@@ -30,7 +30,7 @@ const NodeFlowConfig: FC<NodeFlowConfigProps> = ({ name, nodeId }) => {
       {() => {
         return (
           <>
-            <Form.Item name={[name, "type"]} className={styles.mb12}>
+            <Form.Item name={[name, "type"]} className={styles.mb0}>
               <Radio.Group optionType="button" size="large" options={typeOptions} className={styles.type}></Radio.Group>
             </Form.Item>
             <Form.Item noStyle shouldUpdate={(prev, current) => prev[name]["type"] !== current[name]["type"]}>
@@ -46,7 +46,7 @@ const NodeFlowConfig: FC<NodeFlowConfigProps> = ({ name, nodeId }) => {
                       <div className={styles.text}>则流转到下个节点;</div>
                       <div className={styles.text}>否则</div>
                       <div>
-                        <Form.Item name={[name, "failConfig", "type"]}>
+                        <Form.Item name={[name, "failConfig", "type"]} className={styles.mb0}>
                           <Radio.Group
                             optionType="button"
                             size="large"
@@ -77,6 +77,7 @@ const NodeFlowConfig: FC<NodeFlowConfigProps> = ({ name, nodeId }) => {
                                       },
                                     },
                                   ]}
+                                  style={{ marginBottom: 0, marginTop: "12px" }}
                                 >
                                   <RevertCascader prevNodes={prevNodes} />
                                 </Form.Item>
