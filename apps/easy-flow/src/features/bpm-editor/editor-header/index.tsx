@@ -145,11 +145,11 @@ const EditorHeader: FC = () => {
 
   const handleExportForm = async () => {
     const data = await axios.get(`/form/subapp/${bpmId}/export`);
-    exportJsonFile(data, `${appName}_form`);
+    exportJsonFile(data, `${appName}_表单`);
   };
   const handleExportFlow = async () => {
     const data = await axios.get(`/process/subapp/${bpmId}/export`);
-    exportJsonFile(data, `${appName}_flow`);
+    exportJsonFile(data, `${appName}_流程`);
   };
   const handleImportForm = async (formData: any) => {
     const isValidData = validateFormData(formData);
