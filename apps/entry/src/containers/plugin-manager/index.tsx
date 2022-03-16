@@ -1,4 +1,4 @@
-import React, { memo, useState, useCallback, useMemo, useEffect, useRef } from "react";
+import React, { memo, useState, useMemo, useEffect, useRef } from "react";
 import { Input, Layout, Select, Form, Button, message } from "antd";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import {
@@ -65,6 +65,8 @@ const PluginManager = () => {
   const [currentPlugins, setCurrentPlugins] = useState<TableColumnsProps | null>(null);
   const [selectedRows, setSelectedRows] = useState<TableColumnsProps[]>([]);
   const [assignType, setAssignType] = useState<AssignAuthType>();
+
+  // 查询插件列表
   useEffect(() => {
     getPluginsList({});
   }, [getPluginsList]);
@@ -96,6 +98,7 @@ const PluginManager = () => {
       };
       await enablePlugins(params).unwrap();
       dispatch(setPluginsList({ pluginsList, columnItem, type: "enabled" }));
+      message.success(`${params.flag ? "启用" : "禁用"}成功`);
     } catch (e) {
       console.log(e);
     }
@@ -109,6 +112,7 @@ const PluginManager = () => {
     // editorRef.current?.expandAll();
   });
 
+  // 取消查看json
   const handleCancelCheckJson = () => {
     setShowCheckJsonModal(false);
   };
@@ -122,6 +126,7 @@ const PluginManager = () => {
       };
       await openVisitPlugins(params).unwrap();
       dispatch(setPluginsList({ pluginsList, columnItem, type: "openVisit" }));
+      message.success(`插件已${params.flag ? "公开" : "取消公开"}`);
     } catch (e) {
       console.log(e);
     }

@@ -6,6 +6,6 @@
   min-height: inherit;
 }
 
-.ant-progress-success-bg, .ant-progress-bg {
+.ant-progress-success-bg, .ant-progress-bg, .ant-progress-status-success .ant-progress-bg {
   background-color: var(--custom-progress-status-bg, #24B493FF);
 }

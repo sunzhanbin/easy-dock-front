@@ -27,6 +27,7 @@ const UploadJsonComponent = ({ onSuccess }: UploadJsonProps) => {
         message.error("文件类型错误,请上传json文件!");
         return;
       }
+      console.log(file, fileList, "-----------");
       const fileListWithUrl = fileList.map((item) => ({
         ...item,
         thumbUrl: FileImage,
