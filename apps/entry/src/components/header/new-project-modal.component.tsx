@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { Modal, Form, Input, message, Radio } from "antd";
+import { Modal, Form, Input, Radio } from "antd";
 import { nameRule } from "@/consts";
 import LinkedUserComponent from "@components/header/linked-user.component";
 

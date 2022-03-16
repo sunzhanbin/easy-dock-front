@@ -75,7 +75,6 @@ const SelectCard = (props: SelectCardProps) => {
         name: values.fieldName,
         isEdit: false,
       };
-      console.log(values, "sssss");
       await onAdd?.(params);
       form.setFieldsValue({ fieldName: "" });
       setShowButton(true);

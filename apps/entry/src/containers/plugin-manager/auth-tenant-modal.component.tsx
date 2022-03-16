@@ -43,6 +43,7 @@ const AuthTenantModalComponent = ({ type, visible, onOK, onCancel }: TenantModal
       onCancel={handleCancel}
       onOk={handleOk}
       width={400}
+      getContainer={false}
       destroyOnClose={true}
       maskClosable={false}
     >

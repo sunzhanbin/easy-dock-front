@@ -23,8 +23,6 @@ type FormValuesType = {
 const DropDownCard = (props: DropdownCardProps) => {
   const { list, onAdd } = props;
   const [showButton, setShowButton] = useState<boolean>(true); // 判断是否显示新增按钮
-  const [showDropdown, setShowDropdown] = useState<boolean>(false); // 判断是否显示下拉
-
   const [form] = Form.useForm<FormValuesType>();
   const [fieldList, setFieldList] = useState<any[]>([]); // 字段list
 
@@ -36,6 +34,11 @@ const DropDownCard = (props: DropdownCardProps) => {
   // 新增option
   const addField = (e: React.MouseEvent) => {
     e.stopPropagation();
+    const list = fieldList.map((field) => ({
+      ...field,
+      editable: false,
+    }));
+    setFieldList(list);
     setShowButton(false);
   };
 
@@ -47,6 +50,7 @@ const DropDownCard = (props: DropdownCardProps) => {
       editable: field.id === item.id,
     }));
     setFieldList(list);
+    setShowButton(true);
   });
 
   // option新增字段名确认
@@ -109,7 +113,6 @@ const DropDownCard = (props: DropdownCardProps) => {
         onAddName={handleAddName}
         addField={addField}
         onRevert={handleNewRevertName}
-        setShowDropdown={setShowDropdown}
       />
     );
   });

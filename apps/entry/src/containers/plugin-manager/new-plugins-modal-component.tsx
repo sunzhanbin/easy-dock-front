@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useState } from "react";
+import React, { memo, useEffect, useMemo } from "react";
 import { Form, Input, Modal, Select, Switch } from "antd";
 import { nameRule } from "@/consts";
 import { Icon } from "@common/components";
@@ -16,22 +16,33 @@ type ModalProps = {
 };
 
 const { Option } = Select;
-
+type FormValuesType = {
+  name: string;
+  group: any;
+  openVisit: boolean;
+  enabled: boolean;
+};
 const NewPluginsModalComponent = ({ groupList, editItem, visible, onCancel, onOK }: ModalProps) => {
-  const [form] = Form.useForm();
+  const [form] = Form.useForm<FormValuesType>();
   const jsonMeta = useAppSelector(selectJsonMeta);
-  const [initialValues, setInitialValues] = useState({});
+  // const [initialValues, setInitialValues] = useState({});
 
-  const pluginsParams: any = useMemo(() => {
+  useEffect(() => {
     const values: any = editItem || jsonMeta;
+
     const group = values?.group;
-    setInitialValues({
+
+    form.setFieldsValue({
       name: values?.name,
       group: group ? { value: group?.id } : undefined,
       openVisit: values?.openVisit || false,
       enabled: values?.enabled || false,
     });
-    return values;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editItem, jsonMeta]);
+
+  const pluginsParams: any = useMemo(() => {
+    return editItem || jsonMeta;
   }, [editItem, jsonMeta]);
 
   const handleCancel = () => {
@@ -64,20 +75,14 @@ const NewPluginsModalComponent = ({ groupList, editItem, visible, onCancel, onOK
       onOk={handleOk}
       width={400}
       destroyOnClose={true}
+      getContainer={false}
       maskClosable={false}
     >
       <div className="json-info">
         <p className="code-text">插件code：{pluginsParams?.code}</p>
       </div>
 
-      <Form
-        initialValues={initialValues}
-        form={form}
-        className="form"
-        layout="vertical"
-        autoComplete="off"
-        preserve={false}
-      >
+      <Form form={form} className="form" layout="vertical" autoComplete="off" preserve={false}>
         <Form.Item label="插件名称" name="name" required rules={[nameRule]}>
           <Input placeholder="请输入" size="large" />
         </Form.Item>

@@ -13,7 +13,7 @@ type OptionProps = {
   onConfirm: (v: any) => void;
   onSelect: (v: any) => void;
   onRevert: () => void;
-  setShowDropdown: (v: boolean) => void;
+  setShowDropdown?: (v: boolean) => void;
 };
 
 type FormValuesType = {
@@ -32,13 +32,13 @@ const DropdownOptionComponents = ({
   const [activeIndex, setActiveIndex] = useState(-1);
   const [form] = Form.useForm<FormValuesType>();
 
-  console.log(fieldList, "----------");
   // option支持编辑
   const handleEdit = useCallback((e, item) => {
     form.setFieldsValue({ fieldName: item.name });
     onEdit(e, item);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   // option确认编辑
   const handleConfirm = useCallback(
     async (item) => {
@@ -62,7 +62,7 @@ const DropdownOptionComponents = ({
   // 删除option
   const handlePopOver = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setShowDropdown(true);
+    setShowDropdown && setShowDropdown(true);
   };
 
   return (

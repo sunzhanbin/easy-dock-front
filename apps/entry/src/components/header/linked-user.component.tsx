@@ -1,5 +1,5 @@
-import React, { memo, useEffect, useState } from "react";
-import { Form, Input, Select } from "antd";
+import React, { memo } from "react";
+import { Form, Select } from "antd";
 import { FormInstance } from "antd/es";
 import { Icon } from "@common/components";
 import { useGetTenantListQuery } from "@/http";
