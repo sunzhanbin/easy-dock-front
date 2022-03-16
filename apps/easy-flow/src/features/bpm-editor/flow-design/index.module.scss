@@ -52,6 +52,11 @@
         bottom: 24px;
       }
     }
+    &.saving{
+      width: 100vw;
+      height: fit-content;
+      background-color: $branch-nodes-background-color;
+    }
   }
 
   .editor {

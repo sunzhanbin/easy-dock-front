@@ -76,7 +76,7 @@ function RevertCascader(props: RevertCascaderProps) {
     <Cascader
       className={styles.cascader}
       onChange={handleRevertNodeChange}
-      getPopupContainer={(c) => c}
+      // getPopupContainer={(c) => c}
       options={options}
       value={cascaderValue}
       expandTrigger="hover"
