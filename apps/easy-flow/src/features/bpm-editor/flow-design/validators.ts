@@ -131,7 +131,7 @@ const validatePluginParams = (value: PluginDataConfig) => {
 };
 
 const validateNextAction = (value: NextAction): string => {
-  const { type, conditions } = value;
+  const { type, conditions } = value ?? {};
   if (type === NextActionType.Condition) {
     const nullCondition = conditions
       .flat(2)
