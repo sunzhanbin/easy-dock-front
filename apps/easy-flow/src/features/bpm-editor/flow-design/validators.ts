@@ -118,7 +118,7 @@ const timeoutConfig = (value: IDueConfig) => {
 const validatePluginParams = (value: PluginDataConfig) => {
   const { meta } = value;
   if (meta) {
-    const { headers, bodys, querys, paths, responses } = meta;
+    const { headers = [], bodys = [], querys = [], paths = [], responses = [] } = meta;
     const allParams = [...headers, ...bodys, ...querys, ...paths, ...responses];
     const isValidate = allParams
       .filter((v) => v.required)
