@@ -116,10 +116,10 @@ function StatusBar(props: StatusBarProps) {
 
     const trackCell = (
       <Cell
-        title={<Text className={styles["time-used"]}>{`流程用时 ${timeDiff(Date.now() - flowIns.applyTime)}`}</Text>}
+        title={<Text className={styles["time-used"]}>{`用时 ${timeDiff(Date.now() - flowIns.applyTime)}`}</Text>}
         desc={trackNode}
       >
-        <Progress percent={30} />
+        <Progress percent={flowIns.progress * 100} className={styles["flow-progress"]} />
       </Cell>
     );
 

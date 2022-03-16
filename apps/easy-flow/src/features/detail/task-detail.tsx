@@ -39,6 +39,7 @@ const loadData = async function (taskId: string): Promise<DataType> {
   const flowInstance = data.processInstance;
   const [formMeta, formValue, node] = await loadFlowData(flowInstance);
 
+  console.log(flowInstance, "flowInstance");
   return {
     task: {
       id: data.id,
@@ -68,7 +69,6 @@ function FlowDetail() {
 
   useEffect(() => {
     setLoading(true);
-
     loadData(taskId)
       .then((data) => {
         setData(data);

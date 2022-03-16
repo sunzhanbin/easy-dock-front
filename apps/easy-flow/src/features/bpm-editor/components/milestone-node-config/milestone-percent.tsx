@@ -20,14 +20,13 @@ const MilestonePercent = ({ form }: MilestonePercentProps) => {
         rules={[
           {
             validator(_, value) {
-              console.log("--------------");
               return validateRule(value, "百分比不能为空");
             },
           },
         ]}
         noStyle
       >
-        <InputNumber size="large" min={1} max={99} placeholder="请输入" />
+        <InputNumber size="large" min={1} max={99} placeholder="请输入" precision={0} />
       </Form.Item>
       <span>%</span>
     </>

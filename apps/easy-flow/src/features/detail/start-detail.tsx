@@ -63,6 +63,7 @@ function StartDetail() {
     (async () => {
       setLoading(true);
 
+      console.log(1111);
       try {
         await Promise.all([
           loadData(flowId).then((data) => {

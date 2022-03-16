@@ -58,11 +58,13 @@
     }
 
     .time-used {
+      padding-left: 35px;
       line-height: 20px;
       color: $title-text-color;
       font-size: 12px;
       font-weight: 400;
     }
+
   }
 
   // 流程办结状态栏
@@ -93,6 +95,32 @@
     margin-left: 4px;
     font-size: 12px;
   }
+}
+
+.flow-progress {
+
+  position: relative;
+  line-height: 0 !important;
+  margin-bottom: 6px;
+
+  :global {
+    .ant-progress-text {
+      position: absolute;
+      left: -8px;
+      top: -21px;
+      font-size: 16px;
+      color: $flow-form-title-color;
+    }
+
+    .ant-progress-bg {
+      height: 4px !important;
+    }
+
+    .ant-progress-outer {
+      padding-right: 0;
+    }
+  }
+
 }
 
 .cell {
@@ -128,5 +156,6 @@
 
   .cell-content {
     overflow: hidden;
+    font-size: 0;
   }
 }

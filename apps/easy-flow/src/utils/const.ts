@@ -77,7 +77,6 @@ export const TASK_STATE_LIST: { key: number; value: string }[] = [
 ];
 
 export const validateRule = (value: string, errorTip: string) => {
-  console.log(value, "rrrr");
   if (!value) {
     return Promise.reject(new Error(errorTip));
   }

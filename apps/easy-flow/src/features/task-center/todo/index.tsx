@@ -208,7 +208,7 @@ const ToDo: FC = () => {
         width: "15%",
         render: (_: string, record: TodoItem) => {
           const { progress } = record;
-          return <Progress percent={progress || 0} />;
+          return <Progress percent={progress * 100 || 0} />;
         },
       },
       {

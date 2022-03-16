@@ -92,7 +92,7 @@ const PluginManager = () => {
     try {
       const params = {
         id: columnItem.id,
-        flag: columnItem.enabled,
+        flag: !columnItem.enabled,
       };
       await enablePlugins(params).unwrap();
       dispatch(setPluginsList({ pluginsList, columnItem, type: "enabled" }));
@@ -118,7 +118,7 @@ const PluginManager = () => {
     try {
       const params = {
         id: columnItem.id,
-        flag: columnItem.enabled,
+        flag: !columnItem.enabled,
       };
       await openVisitPlugins(params).unwrap();
       dispatch(setPluginsList({ pluginsList, columnItem, type: "openVisit" }));
@@ -293,10 +293,10 @@ const PluginManager = () => {
                   <Input
                     size="large"
                     bordered={false}
-                    className="input"
                     placeholder="请输入插件名称"
+                    allowClear={true}
                     prefix={<Icon type="sousuo" className="search-icon" onClick={handleSearch} />}
-                    onPressEnter={handleSearch}
+                    onChange={handleSearch}
                   />
                 </Form.Item>
               </Form>
