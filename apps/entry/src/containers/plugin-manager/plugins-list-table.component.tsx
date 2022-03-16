@@ -112,12 +112,14 @@ const PluginsListTableComponent = ({
     return {
       onMouseEnter: (event: React.MouseEvent) => {
         const target = event.target as HTMLDivElement;
-        target.parentElement?.classList.add("table-row-active");
+        console.log(target.parentElement, "========");
+        if (target.parentElement?.classList.contains("ant-table-row")) {
+          target.parentElement?.classList.add("table-row-active");
+        }
       },
       onMouseLeave: (event: React.MouseEvent) => {
         const target = event.target as HTMLDivElement;
         target.parentElement?.classList.remove("table-row-active");
-        target.parentElement?.parentElement?.parentElement?.classList.remove("table-row-active");
       },
     };
   };

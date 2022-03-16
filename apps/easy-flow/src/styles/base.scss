@@ -1,6 +1,11 @@
 @import '@common/styles/global.scss';
+@import "./var";
 
 #easy-flow-root {
   height: 100%;
   min-height: inherit;
+}
+
+.ant-progress-success-bg, .ant-progress-bg {
+  background-color: var(--custom-progress-status-bg, #24B493FF);
 }

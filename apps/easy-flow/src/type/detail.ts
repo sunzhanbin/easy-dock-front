@@ -56,6 +56,7 @@ export type FlowInstance = {
   currentNodeId?: string;
   currentNodeName?: string;
   processInstanceId: string;
+  progress: number;
   // 与currentNodeId互斥 我的发起时有值
   currentNodeList?: {
     currentNodeId: string;
