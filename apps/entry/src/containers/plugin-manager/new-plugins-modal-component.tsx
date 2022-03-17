@@ -25,13 +25,10 @@ type FormValuesType = {
 const NewPluginsModalComponent = ({ groupList, editItem, visible, onCancel, onOK }: ModalProps) => {
   const [form] = Form.useForm<FormValuesType>();
   const jsonMeta = useAppSelector(selectJsonMeta);
-  // const [initialValues, setInitialValues] = useState({});
 
   useEffect(() => {
     const values: any = editItem || jsonMeta;
-
     const group = values?.group;
-
     form.setFieldsValue({
       name: values?.name,
       group: group ? { value: group?.id } : undefined,

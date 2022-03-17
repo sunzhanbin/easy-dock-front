@@ -40,11 +40,7 @@ const UploadJsonComponent = ({ onSuccess }: UploadJsonProps) => {
         try {
           const result = typeof content === "string" && JSON.parse(content);
           if (result) {
-            onSuccess &&
-              onSuccess({
-                ...result,
-                name: file.name,
-              });
+            onSuccess && onSuccess(result);
           }
         } catch (error) {
           console.error(error);
