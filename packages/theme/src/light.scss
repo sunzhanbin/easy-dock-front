@@ -231,33 +231,20 @@
 
   // form
   --custom-form-item-label-text-color: #181F43FF;
-  --custom-flow-form-field-name-text-color: #181F43BF;
-  --custom-flow-form-field-name-border-color: #181F4314;
-  --custom-flow-form-title-color: #000000D9;
-  --custom-flow-form-symbol-color: #181F437F;
-  --custom-flow-line-border-color: #181F431F;
-  --custom-flow-detail-status-success-color: #06C498FF;
-  --custom-flow-detail-status-error-color: #FF5568FF;
-  --custom-flow-detail-status-processing-color: #4C5CDBFF;
-  --custom-flow-detail-tag-warning-border-color: #FF99004D;
-  --custom-flow-detail-tag-warning-text-color: #FF9900FF;
-  --custom-flow-detail-tag-success-border-color: #06C4984D;
-  --custom-flow-detail-tag-success-text-color: #06C498FF;
-  --custom-flow-detail-tag-error-border-color: #FF55684D;
-  --custom-flow-detail-tag-error-text-color: #FF5568FF;
-  --custom-flow-detail-tag-primary-border-color: #4C5CDB4D;
-  --custom-flow-detail-tag-primary-text-color: #4C5CDBFF;
-  --custom-flow-detail-tag-revoke-border-color: #181F431F;
-  --custom-flow-detail-tag-revoke-text-color: #181F4380;
-  // 发起流程
-  --custom-start-flow-border-top-color: #06C498FF;
-  --custom-start-flow-log-bg: #ffffffff;
-  --custom-start-flow-status-processing-bg: #4C5CDB14;
-  --custom-start-flow-status-revert-bg: #FF990014;
-  --custom-start-flow-status-undo-bg: #1827430A;
-  --custom-start-flow-status-terminated-bg: #FF556814;
-  --custom-start-flow-status-finish-bg: #06C49814;
-  --custom-start-flow-shadow-color: #181F4314;
-  --custom-start-flow-banner-linear-bg: linear-gradient(319deg, #5A69E0 0%, #7389F8 100%);
+  --custom-form-field-name-text-color: #181F43BF;
+  --custom-form-field-name-border-color: #181F4314;
+  --custom-form-title-color: #000000D9;
+  --custom-form-symbol-color: #181F437F;
 
+  // tag
+  --custom-tag-warning-border-color: #FF99004D;
+  --custom-tag-warning-text-color: #FF9900FF;
+  --custom-tag-success-border-color: #06C4984D;
+  --custom-tag-success-text-color: #06C498FF;
+  --custom-tag-error-border-color: #FF55684D;
+  --custom-tag-error-text-color: #FF5568FF;
+  --custom-tag-primary-border-color: #4C5CDB4D;
+  --custom-tag-primary-text-color: #4C5CDBFF;
+  --custom-tag-revoke-border-color: #181F431F;
+  --custom-tag-revoke-text-color: #181F4380;
 }

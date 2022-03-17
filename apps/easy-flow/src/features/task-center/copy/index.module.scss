@@ -1,5 +1,4 @@
 @import "@common/styles/var.scss";
-@import "@common/styles/theme-color.scss";
 
 .container {
   .header {
@@ -208,7 +207,7 @@
       .name {
         font-size: 14px;
         font-weight: 400;
-        color: $flow-form-field-name-text-color;
+        color: $form-field-name-text-color;
         margin-right: 16px;
       }
     }

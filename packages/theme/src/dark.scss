@@ -226,34 +226,22 @@
 
   // form 表单
   --custom-form-item-label-text-color: #FFFFFFBF;
-  --custom-flow-form-field-name-text-color: #FFFFFF8C;
-  --custom-flow-form-field-name-border-color: #FFFFFF1A;
-  --custom-flow-form-title-color: #FFFFFFBF;
-  --custom-flow-form-symbol-color: #FFFFFF66;
-  --custom-flow-line-border-color: #FFFFFF2B;
-  --custom-flow-detail-status-success-color: #1FC9A2FF;
-  --custom-flow-detail-status-error-color: #FF6576FF;
-  --custom-flow-detail-status-processing-color: #5D6CDEFF;
-  --custom-flow-detail-tag-warning-border-color: #FFA3194D;
-  --custom-flow-detail-tag-warning-text-color: #FFA319FF;
-  --custom-flow-detail-tag-success-border-color: #1FC9A24D;
-  --custom-flow-detail-tag-success-text-color: #1FC9A2FF;
-  --custom-flow-detail-tag-error-border-color: #FF65764D;
-  --custom-flow-detail-tag-error-text-color: #FF6576FF;
-  --custom-flow-detail-tag-primary-border-color: #4C5CDB4D;
-  --custom-flow-detail-tag-primary-text-color: #5D6CDEFF;
-  --custom-flow-detail-tag-revoke-border-color: #FFFFFF2B;
-  --custom-flow-detail-tag-revoke-text-color: #FFFFFF66;
-  // 发起流程
-  --custom-start-flow-border-top-color: #1FC9A2CC;
-  --custom-start-flow-log-bg: #FFFFFF0F;
-  --custom-start-flow-status-processing-bg: #7F95FF40;
-  --custom-start-flow-status-revert-bg: #E1A95540;
-  --custom-start-flow-status-undo-bg: #FFFFFF33;
-  --custom-start-flow-status-terminated-bg: #D8647140;
-  --custom-start-flow-status-finish-bg: #61C8B140;
-  --custom-start-flow-shadow-color: #202023FF;
-  --custom-start-flow-banner-linear-bg: linear-gradient(319deg, rgba(90, 105, 224, 0.2), rgba(115, 137, 248, 0.2) 20%);
+  --custom-form-field-name-text-color: #FFFFFF8C;
+  --custom-form-field-name-border-color: #FFFFFF1A;
+  --custom-form-title-color: #FFFFFFBF;
+  --custom-form-symbol-color: #FFFFFF66;
+
+  // tag
+  --custom-tag-warning-border-color: #FFA3194D;
+  --custom-tag-warning-text-color: #FFA319FF;
+  --custom-tag-success-border-color: #1FC9A24D;
+  --custom-tag-success-text-color: #1FC9A2FF;
+  --custom-tag-error-border-color: #FF65764D;
+  --custom-tag-error-text-color: #FF6576FF;
+  --custom-tag-primary-border-color: #4C5CDB4D;
+  --custom-tag-primary-text-color: #5D6CDEFF;
+  --custom-tag-revoke-border-color: #FFFFFF2B;
+  --custom-tag-revoke-text-color: #FFFFFF66;
 
   // popover
   --popover-dropdown-bg: #363639FF;

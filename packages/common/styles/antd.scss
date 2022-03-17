@@ -101,8 +101,8 @@
   }
 
   &.ant-btn-dangerous {
-    background-color: $flow-detail-status-error-color;
-    border-color: $flow-detail-status-error-color;
+    background-color: $tag-error-text-color;
+    border-color: $tag-error-text-color;
   }
 
   svg {
@@ -167,11 +167,11 @@
       padding: 32px 32px 12px;
       background-color: $content-background-color;
       color: $label-hint-text-color;
-      border-bottom: 1px solid $flow-form-field-name-border-color;
+      border-bottom: 1px solid $form-field-name-border-color;
 
       .ant-modal-title {
         line-height: 24px;
-        color: $flow-form-field-name-text-color;
+        color: $form-field-name-text-color;
         font-size: 16px;
         font-weight: 500;
       }
@@ -207,7 +207,7 @@
     margin-right: -32px;
     padding: 0 64px;
     background-color: $input-background-normal-color;
-    border-color: $flow-form-field-name-border-color;
+    border-color: $form-field-name-border-color;
 
     .ant-btn + .ant-btn:not(.ant-dropdown-trigger) {
       margin-left: 16px;
@@ -378,7 +378,7 @@
 }
 
 .ant-checkbox-wrapper {
-  color: $flow-form-field-name-text-color;
+  color: $form-field-name-text-color;
 
   .ant-checkbox-inner {
     background-color: $checkbox-indeterminate-bg;
@@ -389,7 +389,7 @@
 .ant-checkbox-group {
   .ant-checkbox-wrapper {
     margin-bottom: 12px;
-    color: $flow-form-field-name-text-color;
+    color: $form-field-name-text-color;
   }
 }
 
@@ -1094,7 +1094,7 @@
 
     .ant-table-cell {
       background-color: $content-background-color;
-      color: $flow-form-field-name-text-color;
+      color: $form-field-name-text-color;
       border-color: $border-normal-color;
     }
 
@@ -1246,6 +1246,10 @@
 // ant-tabs
 .ant-tabs-top > .ant-tabs-nav::before, .ant-tabs-bottom > .ant-tabs-nav::before, .ant-tabs-top > div > .ant-tabs-nav::before, .ant-tabs-bottom > div > .ant-tabs-nav::before {
   border-color: $datepicker-dropdown-border-normal-color;
+}
+
+.ant-tabs {
+  color: $title-text-color;
 }
 
 // ant-tree

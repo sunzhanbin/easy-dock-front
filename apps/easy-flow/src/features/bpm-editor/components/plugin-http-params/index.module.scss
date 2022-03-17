@@ -1,39 +1,44 @@
 @import "@common/styles/var.scss";
 
 .label {
-    margin-bottom: 8px;
+  margin-bottom: 8px;
 }
 
 .params-config {
-    display: flex;
-    position: relative;
-    .required {
-        position: absolute;
-        top: 0;
-        right: 100%;
-        width: 8px;
-        text-align: center;
-        color: $flow-detail-status-error-color;
-        height: 40px;
-        line-height: 40px;
-        margin: 0 4px;
-        font-size: 16px;
+  display: flex;
+  position: relative;
+
+  .required {
+    position: absolute;
+    top: 0;
+    right: 100%;
+    width: 8px;
+    text-align: center;
+    color: $tag-error-text-color;
+    height: 40px;
+    line-height: 40px;
+    margin: 0 4px;
+    font-size: 16px;
+  }
+
+  .name {
+    flex: 1;
+  }
+
+  .text {
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    margin: 0 8px;
+  }
+
+  .map {
+    flex: 1;
+  }
+
+  :global {
+    .ant-form-item {
+      margin-bottom: 8px;
     }
-    .name {
-        flex: 1;
-    }
-    .text {
-        width: 40px;
-        height: 40px;
-        line-height: 40px;
-        margin: 0 8px;
-    }
-    .map {
-        flex: 1;
-    }
-    :global {
-        .ant-form-item {
-            margin-bottom: 8px;
-        }
-    }
+  }
 }

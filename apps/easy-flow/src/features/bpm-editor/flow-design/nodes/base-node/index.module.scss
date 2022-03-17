@@ -26,7 +26,7 @@
     background-color: rgba(#2f9ddd, 0.8);
   }
 
-  &.plugin-node{
+  &.plugin-node {
     background-color: rgba(250, 153, 8, 0.8);
   }
 
@@ -69,7 +69,7 @@
     background-color: #fff;
 
     &:hover {
-      box-shadow: 0 6px 24px 0 $flow-line-border-color;
+      box-shadow: 0 6px 24px 0 $border-normal-color;
     }
 
     &.invalid {
@@ -103,12 +103,15 @@
     align-items: center;
     justify-content: center;
     padding: 32px 0;
+
     &.over {
       padding: 110px 0;
     }
+
     &.sub-branch {
       padding: 165px 0;
     }
+
     // &.isDragging {
     //   background-color: rgba(215,215,215,0.6);
     // }

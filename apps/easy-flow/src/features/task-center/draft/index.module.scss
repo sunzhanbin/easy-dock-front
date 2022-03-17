@@ -1,5 +1,4 @@
 @import '@common/styles/var.scss';
-@import '@common/styles/theme-color.scss';
 
 .link {
   color: inherit;
@@ -8,8 +7,10 @@
     color: $primary-color;
   }
 }
+
 .name {
   cursor: pointer;
+
   &:hover {
     color: $primary-color;
   }
