@@ -2,7 +2,8 @@ import { memo, FC, useState, useEffect, useMemo } from "react";
 import { Collapse } from "antd";
 import { Icon } from "@common/components";
 import useMemoCallback from "@common/hooks/use-memo-callback";
-import { NodeType, PluginItem } from "@/type/flow";
+import { NodeType, PluginGroupItem } from "@/type/flow";
+import { useSubAppDetail } from "@/app/app";
 import { builderAxios } from "@/utils";
 import ToolboxItem, { ToolboxItemProps } from "../toolbox-item";
 import styles from "./index.module.scss";
@@ -23,26 +24,14 @@ const commonNodeList: ToolboxItemProps[] = [
   { name: "流程触发", icon: "liuchengchufa", type: NodeType.AutoNodeTriggerProcess },
 ];
 // 给插件分组
-const groupPluginList = (pluginList: PluginItem[]): NodeTypeList[] => {
-  const groupMap: { [k: number]: NodeTypeList } = {};
-  pluginList.forEach(({ group, name, enabled, id }) => {
-    // 过滤禁用的插件
-    if (!enabled) {
-      return;
-    }
-    const { id: groupId, name: groupName } = group;
-    const node = { name, id, type: NodeType.PluginNode, icon: "chajiandise" };
-    if (!groupMap[groupId]) {
-      groupMap[groupId] = {
-        id: String(groupId),
-        name: groupName,
-        nodeList: [node],
-      };
-    } else {
-      groupMap[groupId].nodeList.push(node);
-    }
+const groupPluginList = (groupList: PluginGroupItem[]): NodeTypeList[] => {
+  const groups = groupList.map(({ id, name, plugins }) => {
+    const nodeList = plugins
+      .filter((plugin) => plugin.enabled)
+      .map(({ id, name }) => ({ name, id, type: NodeType.PluginNode, icon: "chajiandise" }));
+    return { id: String(id), name, nodeList };
   });
-  return Object.values(groupMap);
+  return groups;
 };
 
 const initialGroup: NodeTypeList[] = [
@@ -55,13 +44,18 @@ const initialGroup: NodeTypeList[] = [
 
 const Toolbox: FC = () => {
   const [group, setGroup] = useState(initialGroup);
-  const fetchPlugin = async () => {
-    const { data: pluginList } = await builderAxios.get<{ data: PluginItem[] }>("/plugin/list/all");
-    if (pluginList.length > 0) {
-      const group = groupPluginList(pluginList);
-      setGroup((v) => v.concat(group));
+  const subAppDetail = useSubAppDetail();
+  const projectId = useMemo(() => {
+    if (subAppDetail && subAppDetail.data && subAppDetail.data.app) {
+      console.info(subAppDetail.data.app.project.id);
+      return subAppDetail.data.app.project.id;
     }
-  };
+  }, [subAppDetail]);
+  const fetchPlugin = useMemoCallback(async () => {
+    const { data: groupList } = await builderAxios.get<{ data: PluginGroupItem[] }>(`/plugin/project/${projectId}`);
+    const group = groupPluginList(groupList);
+    setGroup((v) => v.concat(group));
+  });
   const getExpandIcon = useMemoCallback((panelProps) => {
     return <Icon type={panelProps.isActive ? "xiasanjiao" : "yousanjiao"} className={styles.icon} />;
   });
@@ -69,8 +63,11 @@ const Toolbox: FC = () => {
     return group.map((v) => v.id);
   }, [group]);
   useEffect(() => {
-    fetchPlugin();
-  }, []);
+    if (projectId) {
+      fetchPlugin();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projectId]);
   return (
     <div className={styles.toolbox}>
       <Collapse defaultActiveKey={activeKey} ghost expandIcon={getExpandIcon}>

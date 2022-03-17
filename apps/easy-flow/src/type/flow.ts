@@ -339,3 +339,9 @@ export interface PluginItem {
   name: string;
   type: string;
 }
+
+export interface PluginGroupItem {
+  id: number;
+  name: string;
+  plugins: Array<{ code: string; enabled: boolean; id: number; name: string }>;
+}
