@@ -112,10 +112,10 @@ const NewPluginsModalComponent = ({ groupList, editItem, visible, onCancel, onOK
             ))}
           </Select>
         </Form.Item>
-        <Form.Item label="是否启用" name="enabled" valuePropName="checked" className="switch-container">
+        <Form.Item label="是否公开" name="openVisit" valuePropName="checked" className="switch-container">
           <Switch defaultChecked={false} />
         </Form.Item>
-        <Form.Item label="是否公开" name="openVisit" valuePropName="checked" className="switch-container">
+        <Form.Item label="是否启用" name="enabled" valuePropName="checked" className="switch-container">
           <Switch defaultChecked={false} />
         </Form.Item>
       </Form>

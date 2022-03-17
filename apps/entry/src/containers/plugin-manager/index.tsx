@@ -167,6 +167,10 @@ const PluginManager = () => {
       message.error("请上传json文件！");
       return;
     }
+    if (!jsonMeta?.code) {
+      message.error("code不能为空，请修改后重新上传！");
+      return;
+    }
     if (currentPlugins) {
       try {
         const values = {
