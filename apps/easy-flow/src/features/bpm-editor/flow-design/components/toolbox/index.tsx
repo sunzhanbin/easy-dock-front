@@ -47,7 +47,6 @@ const Toolbox: FC = () => {
   const subAppDetail = useSubAppDetail();
   const projectId = useMemo(() => {
     if (subAppDetail && subAppDetail.data && subAppDetail.data.app) {
-      console.info(subAppDetail.data.app.project.id);
       return subAppDetail.data.app.project.id;
     }
   }, [subAppDetail]);
