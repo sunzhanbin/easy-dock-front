@@ -160,6 +160,7 @@ const Condition: FC<ConditionProps> = ({ name }) => {
                                             placeholder="参数类型"
                                             onChange={(type) => handleTypeChange(form, blockIndex, fieldIndex, type)}
                                             getPopupContainer={(node) => node}
+                                            suffixIcon={<Icon type="xiala" />}
                                           >
                                             {typeList.map(({ value, label }) => {
                                               return (
@@ -201,6 +202,7 @@ const Condition: FC<ConditionProps> = ({ name }) => {
                                                       handleSymbolChange(form, blockIndex, fieldIndex, type, symbol)
                                                     }
                                                     getPopupContainer={(node) => node}
+                                                    suffixIcon={<Icon type="xiala" />}
                                                   >
                                                     {symbolList.map(({ value, label }) => {
                                                       return (
@@ -272,7 +274,7 @@ const Condition: FC<ConditionProps> = ({ name }) => {
                                       </div>
                                     );
                                   })}
-                                  <Button className={styles.and} onClick={() => add()}>
+                                  <Button className={styles.and} onClick={() => add({})}>
                                     且条件
                                   </Button>
                                 </>
