@@ -108,7 +108,7 @@ const PluginManager = () => {
   const handleCheckJson = useMemoCallback(async (columnItem: TableColumnsProps) => {
     setShowCheckJsonModal(true);
     const result = await getJson(columnItem.code).unwrap();
-    editorRef.current?.add(result);
+    editorRef.current?.add(result?.version?.meta);
     // editorRef.current?.expandAll();
   });
 
