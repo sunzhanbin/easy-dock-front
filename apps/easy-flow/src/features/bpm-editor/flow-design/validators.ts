@@ -138,11 +138,15 @@ const validatePluginParams = (value: PluginDataConfig) => {
 const validateNextAction = (value: NextAction): string => {
   const { type, conditions } = value ?? {};
   if (type === NextActionType.Condition) {
-    const nullCondition = conditions
-      .flat(2)
-      .some(
-        (v) => !v.params || !v.symbol || !v.type || !v.value || (typeof v.value === "string" && v.value.trim() === ""),
-      );
+    const nullCondition = conditions.flat(2).some(({ params, type, symbol, value }) => {
+      if (!params || !type || !symbol) {
+        return true;
+      }
+      if (!(type === "bool" || ["null", "notNull"].includes(symbol)) && (!value || value.trim() === "")) {
+        return true;
+      }
+      return false;
+    });
     if (nullCondition) {
       return "条件配置不完整";
     } else {

@@ -282,20 +282,14 @@ export function valid(data: AllNode[], validRes: ValidResultType) {
         const errors: string[] = [];
 
         const isInvalid = branch.conditions.some((row) => {
-          return row.some((col) => {
-            for (const key of ["fieldName", "symbol"]) {
-              const val = col[key as keyof typeof col];
-              if (val === null || val === undefined || (typeof val === "string" && val.trim() === "")) {
-                errors.push("条件配置不合法");
-                return true;
-              }
+          return row.some(({ fieldName, symbol, value }) => {
+            if (!fieldName || !symbol) {
+              errors.push("条件配置不合法");
+              return true;
             }
             if (
-              col.symbol !== "null" &&
-              col.symbol !== "notNull" &&
-              (col.value === null ||
-                col.value === undefined ||
-                (typeof col.value === "string" && col.value.trim() === ""))
+              !["null", "notNull"].includes(symbol) &&
+              (value === null || value === undefined || (typeof value === "string" && value.trim() === ""))
             ) {
               errors.push("条件配置不合法");
               return true;
