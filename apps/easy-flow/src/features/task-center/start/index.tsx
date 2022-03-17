@@ -169,7 +169,7 @@ const Start: FC = () => {
         width: "15%",
         render: (_: string, record: StartItem) => {
           const { progress } = record;
-          return <Progress percent={progress * 100 || 0} />;
+          return <Progress percent={parseFloat(Number(progress * 100).toFixed(2)) || 0} />;
         },
       },
       {

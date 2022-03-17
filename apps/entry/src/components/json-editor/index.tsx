@@ -13,6 +13,7 @@ const JsonEditor = (_: any, ref: any) => {
       mode: "code",
       mainMenuBar: false,
       navigationBar: false,
+      onEditable: () => false,
     };
     const jsonEditor = new JSONEditor(containerRef.current!, options);
     setEditor(jsonEditor);

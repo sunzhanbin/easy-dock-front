@@ -18,6 +18,19 @@
     }
   }
 
+  .ant-upload-list-picture-card .ant-upload-list-item:hover .ant-upload-list-item-info::before {
+    opacity: 0;
+  }
+
+  .ant-upload-list-item-card-actions-btn.ant-btn-sm {
+    border: 0 none;
+  }
+
+  .ant-upload-list-picture-card .ant-upload-list-item-actions {
+    top: 12px;
+    right: -6px;
+    left: unset;
+  }
 
   .ant-upload-list-item-info {
 
