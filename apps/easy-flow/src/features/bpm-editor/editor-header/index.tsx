@@ -129,7 +129,7 @@ const EditorHeader: FC = () => {
         node.style.overflow = "initial";
         const url = await domToImage.toPng(node, { quality: 0.95 });
         const link = document.createElement("a");
-        link.download = `${appName}_flow.png`;
+        link.download = `${appName}.png`;
         link.href = url;
         link.click();
       }

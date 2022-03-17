@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { Drawer } from "antd";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import classNames from "classnames";
 import { Loading, Icon } from "@common/components";
 import { NodeType } from "@type/flow";
 import { CardHeader } from "./nodes";
@@ -19,7 +20,7 @@ import {
   AutoNodeTriggerProcess,
 } from "./editor";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
-import { load, flowDataSelector, save, setChoosedNode } from "./flow-slice";
+import { load, flowDataSelector, save, setChoosedNode, showIconSelector } from "./flow-slice";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import FlowTree from "./flow-tree";
 import styles from "./index.module.scss";
@@ -27,6 +28,7 @@ import styles from "./index.module.scss";
 function FlowDesign() {
   const dispatch = useAppDispatch();
   const { bpmId } = useParams<{ bpmId: string }>();
+  const showIcon = useAppSelector(showIconSelector);
   const { loading, data: flow, choosedNode } = useAppSelector(flowDataSelector);
   const handleCloseDrawer = useMemoCallback(() => {
     if (choosedNode) {
@@ -137,7 +139,11 @@ function FlowDesign() {
         <div className={styles.tool}>
           <Toolbox />
         </div>
-        <div className={styles.flow} onClick={handleCloseDrawer} id="flow-container">
+        <div
+          className={classNames(styles.flow, !showIcon && styles.saving)}
+          onClick={handleCloseDrawer}
+          id="flow-container"
+        >
           {loading && <Loading />}
 
           <div className={styles.content} id="flow-design-container">
