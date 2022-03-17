@@ -39,12 +39,11 @@ const NodeFlowConfig: FC<NodeFlowConfigProps> = ({ name, nodeId }) => {
                 if (type === 2) {
                   return (
                     <div className={styles.conditions}>
-                      <div>如果</div>
+                      <div>如果满足条件</div>
                       <Form.Item name={[name, "conditions"]}>
                         <Condition name={[name, "conditions"]} />
                       </Form.Item>
-                      <div className={styles.text}>则流转到下个节点;</div>
-                      <div className={styles.text}>否则</div>
+                      <div className={styles.text}>则流转到下个节点;否则</div>
                       <div>
                         <Form.Item name={[name, "failConfig", "type"]} className={styles.mb0}>
                           <Radio.Group

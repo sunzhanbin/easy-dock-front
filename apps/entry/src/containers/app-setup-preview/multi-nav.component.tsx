@@ -106,7 +106,7 @@ const MultiNavComponent = ({ children, extra, dataSource, selectedKey, theme }: 
           >
             {dataSource.map((menu) => (
               <Menu.Item key={menu.id} icon={renderIcon(menu?.form?.icon)}>
-                <Text>{menu.name}</Text>
+                <Text className="menu-text">{menu.name}</Text>
               </Menu.Item>
             ))}
           </Menu>

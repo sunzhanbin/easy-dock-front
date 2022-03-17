@@ -37,7 +37,7 @@
             font-size: 20px;
           }
           &:hover {
-            color: $primary-color  !important;
+            color: $primary-color !important;
             .ant-menu-item-icon {
               color: $primary-color !important;
             }
@@ -58,6 +58,9 @@
             color: $primary-color;
           }
         }
+      }
+      .menu-text {
+        color: inherit;
       }
     }
   }
@@ -181,7 +184,7 @@
 }
 
 .ant-modal-content {
-  .single-nav-component{
+  .single-nav-component {
     .header {
       padding-right: 60px;
     }

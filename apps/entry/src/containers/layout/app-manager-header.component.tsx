@@ -104,7 +104,7 @@ const AppManagerHeader: FC<EditHeaderProps> = ({ className }) => {
       <div className="left" onClick={handleBack}>
         <Icon type="fanhui" className="back" />
         <div className="workspace-name">
-          <Text text={workspace?.name} />
+          <Text text={workspace?.name} className="text" />
         </div>
       </div>
       {/* 只有一个应用编排,暂时干掉 */}
