@@ -65,7 +65,6 @@ const Condition: FC<ConditionProps> = ({ name }) => {
     });
     oldRuleBlock.splice(ruleIndex, 1, ruleItem);
     conditions.splice(blockIndex, 1, oldRuleBlock);
-    form.setFieldsValue({ [name[0]]: { [name[1]]: conditions } });
   };
   const handleSymbolChange = (
     form: FormInstance,
@@ -84,7 +83,6 @@ const Condition: FC<ConditionProps> = ({ name }) => {
     });
     oldRuleBlock.splice(ruleIndex, 1, ruleItem);
     conditions.splice(blockIndex, 1, oldRuleBlock);
-    form.setFieldsValue({ [name[0]]: { [name[1]]: conditions } });
   };
   const handleRemoveRule = (
     form: FormInstance,

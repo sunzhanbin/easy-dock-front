@@ -118,8 +118,13 @@ const timeoutConfig = (value: IDueConfig) => {
 const validatePluginParams = (value: PluginDataConfig) => {
   const { meta } = value;
   if (meta) {
-    const { headers = [], bodys = [], querys = [], paths = [], responses = [] } = meta;
-    const allParams = [...headers, ...bodys, ...querys, ...paths, ...responses];
+    const { headers, bodys, querys, paths, responses } = meta;
+    const headerParams = Array.isArray(headers) ? headers : [];
+    const bodyParams = Array.isArray(bodys) ? bodys : [];
+    const queryParams = Array.isArray(querys) ? querys : [];
+    const pathParams = Array.isArray(paths) ? paths : [];
+    const responseParams = Array.isArray(responses) ? responses : [];
+    const allParams = [...headerParams, ...bodyParams, ...queryParams, ...pathParams, ...responseParams];
     const isValidate = allParams
       .filter((v) => v.required)
       .some((v) => v.map === undefined || (typeof v.map === "string" && v.map.trim() === ""));
