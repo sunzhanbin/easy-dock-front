@@ -164,12 +164,10 @@ const PluginManager = () => {
   // 确认上传json
   const handleNext = useMemoCallback(async () => {
     if (!jsonMeta?.meta) {
-      message.error("请上传json文件！");
-      return;
+      return message.error("请上传json文件！");
     }
     if (!jsonMeta?.code) {
-      message.error("code不能为空，请修改后重新上传！");
-      return;
+      return message.error("code不能为空，请修改后重新上传！");
     }
     if (currentPlugins) {
       try {
