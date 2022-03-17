@@ -21,7 +21,7 @@ $line-color: #e3e4e8;
   &::before,
   &::after {
     content: "";
-    background-color: $flow-line-border-color;
+    background-color: $border-normal-color;
     position: absolute;
     width: $width;
     height: 1px;
@@ -53,7 +53,7 @@ $line-color: #e3e4e8;
       left: 50%;
       width: 1px;
       transform: translateX(-50%);
-      background-color: $flow-line-border-color;
+      background-color: $border-normal-color;
       z-index: -1;
     }
   }
@@ -175,7 +175,7 @@ $line-color: #e3e4e8;
               .symbol {
                 margin-left: 4px;
                 margin-right: 4px;
-                color: $flow-form-symbol-color;
+                color: $form-symbol-color;
                 white-space: nowrap;
               }
             }
@@ -223,13 +223,13 @@ $line-color: #e3e4e8;
       left: 50%;
       transform: translate3d(-50%, 0, 0);
       width: 1px;
-      background-color: $flow-line-border-color;
+      background-color: $border-normal-color;
     }
 
     .stretch {
       flex: 1 1 0;
       width: 1px;
-      background-color: $flow-line-border-color;
+      background-color: $border-normal-color;
     }
   }
 
@@ -240,12 +240,15 @@ $line-color: #e3e4e8;
     width: 100%;
     padding-top: 32px;
     padding-bottom: 32px;
+
     &.over {
       padding: 110px 0;
     }
+
     &.sub-branch {
       padding: 165px 0;
     }
+
     // &.isDragging {
     //   background-color: rgba(215,215,215,0.6);
     // }

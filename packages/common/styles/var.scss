@@ -8,7 +8,7 @@ $side-background-color: var(--custom-side-background, #1827430a);
 $content-background-color: var(--custom-body-background, #ffffffff);
 $flow-manage-content-bg: var(--custom-flow-manage-content-bg, #F6F7F8FF);
 $flow-manage-drawer-bg: var(--custom-flow-manage-drawer-bg, #ffffffff);
-$branch-nodes-background-color:var(--custom-branch-background, #edeff1);
+$branch-nodes-background-color: var(--custom-branch-background, #edeff1);
 
 // 文字颜色
 $title-text-color: var(--custom-title-text-color, #181f43ff);
@@ -120,40 +120,24 @@ $button-primary-ghost-border-hover-color: var(--custom-btn-primary-ghost-border-
 $button-primary-ghost-disabled-border-color: var(--custom-btn-primary-ghost-disabled-border-color, #4C5CDB80);
 $button-primary-ghost-disabled-text-color: var(--custom-btn-primary-ghost-disabled-text-color, #4C5CDB80);
 
+// tag
+$tag-warning-border-color: var(--custom-tag-warning-border-color, #FF99004D);
+$tag-warning-text-color: var(--custom-tag-warning-text-color, #FF9900FF);
+$tag-success-border-color: var(--custom-tag-success-border-color, #06C4984D);
+$tag-success-text-color: var(--custom-tag-success-text-color, #06C498FF);
+$tag-error-border-color: var(--custom-tag-error-border-color, #FF55684D);
+$tag-error-text-color: var(--custom-tag-error-text-color, #FF5568FF);
+$tag-primary-border-color: var(--custom-tag-primary-border-color, #4C5CDB4D);
+$tag-primary-text-color: var(--custom-tag-primary-text-color, #4C5CDBFF);
+$tag-revoke-border-color: var(--custom-tag-revoke-border-color, #181F431F);
+$tag-revoke-text-color: var(--custom-tag-revoke-text-color, #181F4380);
+
 // flow-form
 $form-item-label-text-color: var(--custom-form-item-label-text-color, #181F43FF);
-$flow-form-field-name-text-color: var(--custom-flow-form-field-name-text-color, #181F43BF);
-$flow-form-title-color: var(--custom-flow-form-title-color, #000000D9);
-$flow-form-field-name-border-color: var(--custom-flow-form-field-name-border-color, #181F4314);
-$flow-form-symbol-color: var(--custom-flow-form-symbol-color, #181F437F);
-$flow-line-border-color: var(--custom-flow-line-border-color, #181F431F);
-$flow-detail-status-success-color: var(--custom-flow-detail-status-success-color, #06C498FF);
-$flow-detail-status-error-color: var(--custom-flow-detail-status-error-color, #FF5568FF);
-$flow-detail-status-processing-color: var(--custom-flow-detail-status-processing-color, #4C5CDBFF);
-$flow-detail-tag-warning-border-color: var(--custom-flow-detail-tag-warning-border-color, #FF99004D);
-$flow-detail-tag-warning-text-color: var(--custom-flow-detail-tag-warning-text-color, #FF9900FF);
-$flow-detail-tag-success-border-color: var(--custom-flow-detail-tag-success-border-color, #06C4984D);
-$flow-detail-tag-success-text-color: var(--custom-flow-detail-tag-success-text-color, #06C498FF);
-$flow-detail-tag-error-border-color: var(--custom-flow-detail-tag-error-border-color, #FF55684D);
-$flow-detail-tag-error-text-color: var(--custom-flow-detail-tag-error-text-color, #FF5568FF);
-$flow-detail-tag-primary-border-color: var(--custom-flow-detail-tag-primary-border-color, #4C5CDB4D);
-$flow-detail-tag-primary-text-color: var(--custom-flow-detail-tag-primary-text-color, #4C5CDBFF);
-$flow-detail-tag-revoke-border-color: var(--custom-flow-detail-tag-revoke-border-color, #181F431F);
-$flow-detail-tag-revoke-text-color: var(--custom-flow-detail-tag-revoke-text-color, #181F4380);
-/* 发起流程 */
-$start-flow-border-top-color: var(--custom-start-flow-border-top-color, #06C498FF);
-$start-flow-log-bg: var(--custom-start-flow-log-bg, #ffffffff);
-$start-flow-status-processing-bg: var(--custom-start-flow-status-processing-bg, #ffffffff);
-$start-flow-status-revert-bg: var(--custom-start-flow-status-revert-bg, #ffffffff);
-$start-flow-status-undo-bg: var(--custom-start-flow-status-undo-bg, #ffffffff);
-$start-flow-status-terminated-bg: var(--custom-start-flow-status-terminated-bg, #ffffffff);
-$start-flow-status-finish-bg: var(--custom-start-flow-status-finish-bg, #06C49814);
-$start-flow-header-shadow-color: var(--custom-start-flow-shadow-color, #181F4314);
-
-$start-flow-banner-linear-bg: var(--custom-start-flow-banner-linear-bg, linear-gradient(319deg, #5A69E0 0%, #7389F8 100%));
-$start-flow-banner-bg-left: var(--custom-start-flow-banner-bg-left, "url(~@/assets/backgroundLightLeft.png)");
-$start-flow-banner-bg-right: var(--custom-start-flow-banner-bg-right, "url(~@/assets/backgroundLightRight.png)");
-
+$form-field-name-text-color: var(--custom-form-field-name-text-color, #181F43BF);
+$form-title-color: var(--custom-form-title-color, #000000D9);
+$form-field-name-border-color: var(--custom-form-field-name-border-color, #181F4314);
+$form-symbol-color: var(--custom-form-symbol-color, #181F437F);
 
 // checkbox
 $checkbox-checked-bg: var(--custom-checkbox-checked-bg, #4C5CDBFF);

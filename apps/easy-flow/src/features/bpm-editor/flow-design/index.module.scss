@@ -20,6 +20,7 @@
     border-right: 1px solid $border-normal-color;
     padding: 0;
   }
+
   & > .flow {
     position: absolute;
     top: 0;
@@ -46,13 +47,14 @@
         position: absolute;
         left: 50%;
         transform: translate3d(-50%, 0, 0);
-        background-color: $flow-line-border-color;
+        background-color: $border-normal-color;
         width: 1px;
         top: 95px;
         bottom: 24px;
       }
     }
-    &.saving{
+
+    &.saving {
       width: 100vw;
       height: fit-content;
       background-color: $branch-nodes-background-color;
@@ -106,7 +108,7 @@
   padding: 24px;
   padding-bottom: 0;
   line-height: 28px;
-  color: $flow-form-title-color;
+  color: $form-title-color;
   font-size: 18px;
   font-weight: bold;
 }

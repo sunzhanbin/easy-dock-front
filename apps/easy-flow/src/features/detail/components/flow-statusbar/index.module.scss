@@ -1,5 +1,6 @@
 @import '@common/styles/var.scss';
 @import '@common/styles/mixin.scss';
+@import '@/styles/var.scss';
 
 .statusbar {
   position: relative;
@@ -49,8 +50,8 @@
     flex: 1 1 0;
 
     &:nth-of-type(2) {
-      border-right: 1px solid $flow-line-border-color;
-      border-left: 1px solid $flow-line-border-color;
+      border-right: 1px solid $border-normal-color;
+      border-left: 1px solid $border-normal-color;
     }
 
     &:last-of-type {
@@ -87,7 +88,7 @@
   display: inline-flex;
   align-items: center;
   padding: 2px 8px;
-  border: 1px solid $flow-line-border-color;
+  border: 1px solid $border-normal-color;
   border-radius: 4px;
   cursor: not-allowed;
 
@@ -109,7 +110,7 @@
       left: -8px;
       top: -21px;
       font-size: 16px;
-      color: $flow-form-title-color;
+      color: $form-title-color;
     }
 
     .ant-progress-bg {
@@ -142,7 +143,7 @@
 
   .cell-desc {
     line-height: 20px;
-    color: $flow-form-symbol-color;
+    color: $form-symbol-color;
     font-size: 12px;
     font-weight: 400;
   }

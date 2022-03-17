@@ -1,5 +1,4 @@
 @import "@common/styles/var.scss";
-@import "@common/styles/theme-color.scss";
 
 .container {
   .header {
@@ -99,6 +98,11 @@
         flex: 0 0 32px;
         margin-left: 8px;
       }
+    }
+
+    .progress-wrapper {
+      display: flex;
+      align-items: center;
     }
   }
 }

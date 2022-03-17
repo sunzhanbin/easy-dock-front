@@ -208,7 +208,12 @@ const ToDo: FC = () => {
         width: "15%",
         render: (_: string, record: TodoItem) => {
           const { progress } = record;
-          return <Progress percent={progress * 100 || 0} />;
+          return (
+            <div className={styles["progress-wrapper"]}>
+              <Progress percent={parseFloat(Number(progress * 100).toFixed(2)) || 0} showInfo={false} />
+              <span>{parseFloat(Number(progress * 100).toFixed(2)) || 0}%</span>
+            </div>
+          );
         },
       },
       {
@@ -314,7 +319,7 @@ const ToDo: FC = () => {
                 onChange={() => {
                   fetchData();
                 }}
-              ></RangePicker>
+              />
             </Form.Item>
           </Form>
         </div>
