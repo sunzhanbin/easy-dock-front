@@ -159,6 +159,7 @@ const Condition: FC<ConditionProps> = ({ name }) => {
                                             size="large"
                                             placeholder="参数类型"
                                             onChange={(type) => handleTypeChange(form, blockIndex, fieldIndex, type)}
+                                            getPopupContainer={(node) => node}
                                           >
                                             {typeList.map(({ value, label }) => {
                                               return (
@@ -199,6 +200,7 @@ const Condition: FC<ConditionProps> = ({ name }) => {
                                                     onChange={(symbol) =>
                                                       handleSymbolChange(form, blockIndex, fieldIndex, type, symbol)
                                                     }
+                                                    getPopupContainer={(node) => node}
                                                   >
                                                     {symbolList.map(({ value, label }) => {
                                                       return (
@@ -209,23 +211,40 @@ const Condition: FC<ConditionProps> = ({ name }) => {
                                                     })}
                                                   </Select>
                                                 </Form.Item>
-                                                <Form.Item
-                                                  name={[field.name, "value"]}
-                                                  className={styles.value}
-                                                  style={{ marginRight: 0 }}
-                                                  rules={[
-                                                    {
-                                                      validator(_, val: string) {
-                                                        if (!val || val.trim() === "") {
-                                                          return Promise.reject(new Error("判断值不能为空"));
-                                                        }
+                                                <Form.Item noStyle shouldUpdate>
+                                                  {(form: FormInstance) => {
+                                                    const symbol = form.getFieldValue([
+                                                      ...name,
+                                                      blockIndex,
+                                                      fieldIndex,
+                                                      "symbol",
+                                                    ]);
+                                                    const shouldHidden =
+                                                      ["null", "notNull"].includes(symbol) || type === "bool";
+                                                    return (
+                                                      <Form.Item
+                                                        name={[field.name, "value"]}
+                                                        className={styles.value}
+                                                        style={{
+                                                          marginRight: 0,
+                                                          visibility: shouldHidden ? "hidden" : "visible",
+                                                        }}
+                                                        rules={[
+                                                          {
+                                                            validator(_, val: string) {
+                                                              if (!shouldHidden && (!val || val.trim() === "")) {
+                                                                return Promise.reject(new Error("判断值不能为空"));
+                                                              }
 
-                                                        return Promise.resolve();
-                                                      },
-                                                    },
-                                                  ]}
-                                                >
-                                                  <Input size="large" placeholder="请输入判断值" />
+                                                              return Promise.resolve();
+                                                            },
+                                                          },
+                                                        ]}
+                                                      >
+                                                        <Input size="large" placeholder="请输入判断值" />
+                                                      </Form.Item>
+                                                    );
+                                                  }}
                                                 </Form.Item>
                                                 <Tooltip title="删除">
                                                   <span
