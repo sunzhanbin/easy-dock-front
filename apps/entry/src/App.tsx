@@ -12,6 +12,7 @@ import Main from "@views/main";
 import "@/App.scss";
 import cookie from "js-cookie";
 import { registerTheme } from "@enc/theme-scheme/dist/utils.esm";
+import "jsoneditor/dist/jsoneditor.min.css";
 import Empty from "@common/components/empty";
 import { auth } from "./consts";
 import { useAppSelector } from "@/store";
@@ -55,7 +56,7 @@ const App: React.FC = () => {
           />
           {/* 超级管理员才可以进行权限设置 */}
           {isAdmin && <Route path="user-auth" element={<SuspenseWrap render={<Auth />} />} />}
-          <Route path="asset-centre" element={<SuspenseWrap render={<AssetCentre />} />} />
+          <Route path="asset-centre/*" element={<SuspenseWrap render={<AssetCentre />} />} />
           {/* 超级管理员不能去运行端  只有普通租户可以 */}
           {!isAdmin && <Route path="runtime" element={<SuspenseWrap render={<RuntimeRoot />} />} />}{" "}
           <Route path="app-manager/project/:projectId/workspace/:workspaceId">

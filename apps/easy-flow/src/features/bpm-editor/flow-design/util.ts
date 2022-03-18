@@ -15,6 +15,9 @@ import {
   FieldAuthsMap,
   FieldTemplate,
   CorrelationMemberConfig,
+  PluginNode,
+  PluginDataConfig,
+  NextAction,
 } from "@type/flow";
 import { FormMeta } from "@type";
 import { validators } from "./validators";
@@ -39,24 +42,36 @@ export function branchuuid(group = 3) {
   return `flow-branch-${uuid(group)}`;
 }
 
+const nextAction: NextAction = {
+  type: 1,
+  conditions: [[{}]],
+  failConfig: {
+    type: 1,
+    revert: {
+      type: 1,
+    },
+  },
+};
+
 export function createNode(type: NodeType.AuditNode, name: string): AuditNode;
 export function createNode(type: NodeType.FillNode, name: string): FillNode;
 export function createNode(type: NodeType.CCNode, name: string): CCNode;
+export function createNode(type: NodeType.PluginNode, name: string, dataConfig: PluginDataConfig): PluginNode;
 export function createNode(type: NodeType.AutoNodePushData, name: string): AutoNodePushData;
 export function createNode(type: NodeType.AutoNodeTriggerProcess, name: string): AutoNodeTriggerProcess;
 export function createNode(type: NodeType.BranchNode): BranchNode;
 export function createNode(type: NodeType.SubBranch): SubBranch;
-export function createNode(type: NodeType, name?: string) {
+export function createNode(type: NodeType, name?: string, dataConfig?: PluginDataConfig) {
   if (type === NodeType.SubBranch) {
-    return <SubBranch>{
+    return {
       id: fielduuid(),
       type,
       conditions: [],
       nodes: [],
-    };
+    } as SubBranch;
   }
   if (type === NodeType.BranchNode) {
-    return <BranchNode>{
+    return {
       type,
       id: fielduuid(),
       branches: [
@@ -73,15 +88,16 @@ export function createNode(type: NodeType, name?: string) {
           type: NodeType.SubBranch,
         },
       ],
-    };
+    } as BranchNode;
   } else if (type === NodeType.AutoNodePushData) {
-    return <AutoNodePushData>{
+    return {
       id: fielduuid(),
       name,
       type,
-    };
+      nextAction,
+    } as AutoNodePushData;
   } else if (type === NodeType.AutoNodeTriggerProcess) {
-    return <AutoNodeTriggerProcess>{
+    return {
       id: fielduuid(),
       name,
       type,
@@ -89,7 +105,15 @@ export function createNode(type: NodeType, name?: string) {
         isWait: false,
         subapps: [{ id: undefined, name: undefined, starter: { type: 1 }, mapping: [] }],
       },
-    };
+    } as AutoNodeTriggerProcess;
+  } else if (type === NodeType.PluginNode) {
+    return {
+      id: fielduuid(),
+      type,
+      name,
+      dataConfig,
+      nextAction,
+    } as PluginNode;
   }
 
   const node = {
@@ -105,7 +129,7 @@ export function createNode(type: NodeType, name?: string) {
   };
 
   if (type === NodeType.AuditNode) {
-    return <AuditNode>{
+    return {
       ...node,
       btnText: {
         approve: { enable: true },
@@ -132,9 +156,9 @@ export function createNode(type: NodeType, name?: string) {
         },
         action: null,
       },
-    };
+    } as AuditNode;
   } else if (type === NodeType.FillNode) {
-    return <FillNode>{
+    return {
       ...node,
       btnText: {
         submit: { enable: true },
@@ -156,9 +180,9 @@ export function createNode(type: NodeType, name?: string) {
           unit: "day",
         },
       },
-    };
+    } as FillNode;
   } else if (type === NodeType.CCNode) {
-    return <CCNode>node;
+    return node as CCNode;
   } else {
     throw new Error("传入类型不正确");
   }
@@ -258,18 +282,18 @@ export function valid(data: AllNode[], validRes: ValidResultType) {
         const errors: string[] = [];
 
         const isInvalid = branch.conditions.some((row) => {
-          return row.some((col) => {
-            for (const key in col) {
-              if (
-                (col[key as keyof typeof col] === null || col[key as keyof typeof col] === undefined) &&
-                !["parentId", "valueType"].includes(key)
-              ) {
-                errors.push("条件配置不合法");
-
-                return true;
-              }
+          return row.some(({ fieldName, symbol, value }) => {
+            if (!fieldName || !symbol) {
+              errors.push("条件配置不合法");
+              return true;
             }
-
+            if (
+              !["null", "notNull"].includes(symbol) &&
+              (value === null || value === undefined || (typeof value === "string" && value.trim() === ""))
+            ) {
+              errors.push("条件配置不合法");
+              return true;
+            }
             return false;
           });
         });
@@ -288,7 +312,6 @@ export function valid(data: AllNode[], validRes: ValidResultType) {
     }
 
     const errors = [];
-
     if (!node.name) {
       errors.push("未输入节点名称");
     } else {
@@ -318,7 +341,7 @@ export function valid(data: AllNode[], validRes: ValidResultType) {
           }
         }
       }
-      // 审批节点和抄送节点需要进行超时配置
+      // 审批节点和填写节点需要进行超时配置
       if (node.type !== NodeType.CCNode) {
         const timeoutValidMessage = validators.timeoutConfig(node.dueConfig!);
         if (timeoutValidMessage) {
@@ -335,10 +358,40 @@ export function valid(data: AllNode[], validRes: ValidResultType) {
       if (dataPushValidMessage) {
         errors.push(dataPushValidMessage);
       }
+      const nextActionMessage = validators.validateNextAction(node.nextAction);
+      if (nextActionMessage) {
+        errors.push(nextActionMessage);
+      }
     } else if (node.type === NodeType.AutoNodeTriggerProcess) {
       const triggerConfigValidMessage = validators.config(node.triggerConfig.subapps);
       if (triggerConfigValidMessage) {
         errors.push(triggerConfigValidMessage);
+      }
+    } else if (node.type === NodeType.PluginNode) {
+      const pluginParamsValidMessage = validators.validatePluginParams(node.dataConfig);
+      if (pluginParamsValidMessage) {
+        errors.push(pluginParamsValidMessage);
+      }
+      const nextActionMessage = validators.validateNextAction(node.nextAction);
+      console.info(nextActionMessage);
+      if (nextActionMessage) {
+        errors.push(nextActionMessage);
+      }
+    }
+    // 流程里程碑百分比校验
+    if (
+      node.type === NodeType.AuditNode ||
+      node.type === NodeType.FillNode ||
+      node.type === NodeType.CCNode ||
+      node.type === NodeType.StartNode ||
+      node.type === NodeType.AutoNodePushData ||
+      node.type === NodeType.AutoNodeTriggerProcess ||
+      node.type === NodeType.PluginNode
+    ) {
+      if (node.progress && node.progress.enable) {
+        if (!node.progress.percent) {
+          errors.push("流程里程碑百分比不能为空");
+        }
       }
     }
 
@@ -418,7 +471,7 @@ export function formatFieldsAuths(fieldsTemplate: FieldTemplate[]) {
     }
 
     return fieldsAuths;
-  }, <FieldAuthsMap>{});
+  }, {} as FieldAuthsMap);
 }
 
 export function formatFieldsTemplate(form: FormMeta | null): FieldTemplate[] {
@@ -440,3 +493,47 @@ export function dynamicIsEmpty(data?: CorrelationMemberConfig["dynamic"]) {
 
   return false;
 }
+
+// 获取对象的某个深层次属性
+export const getProperty = (origin: any, nameList: string[]) => {
+  if (!origin || !nameList?.length) {
+    return null;
+  }
+  let result = null;
+  let target = Object.assign({}, origin);
+  while (nameList.length) {
+    const name = nameList.shift()!;
+    if (target && name) {
+      result = target[name];
+      target = result;
+    } else {
+      break;
+    }
+  }
+  return result;
+};
+
+export const conditionSymbolMap = {
+  equal: { value: "equal", label: "等于" },
+  unequal: { value: "unequal", label: "不等于" },
+  greater: { value: "greater", label: "大于" },
+  greaterOrEqual: { value: "greaterOrEqual", label: "大于等于" },
+  less: { value: "less", label: "小于" },
+  lessOrEqual: { value: "lessOrEqual", label: "小于等于" },
+  include: { value: "include", label: "包含" },
+  exclude: { value: "exclude", label: "不包含" },
+  null: { value: "null", label: "为空" },
+  notNull: { value: "notNull", label: "不为空" },
+  stringLength: { value: "stringLength", label: "字符长度" },
+  arrayLength: { value: "arrayLength", label: "数据个数" },
+  true: { value: "true", label: "是" },
+  false: { value: "false", label: "否" },
+  before: { value: "before", label: "早于" },
+  after: { value: "after", label: "晚于" },
+  year: { value: "year", label: "所在年为" },
+  month: { value: "month", label: "所在月为" },
+  day: { value: "day", label: "所在日为" },
+  hour: { value: "hour", label: "所在时为" },
+  minute: { value: "minute", label: "所在分为" },
+  second: { value: "second", label: "所在秒为" },
+};

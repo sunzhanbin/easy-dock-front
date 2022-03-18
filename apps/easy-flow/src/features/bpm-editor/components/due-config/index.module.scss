@@ -1,23 +1,29 @@
+@import '@common/styles/var.scss';
+
 .timeout,
 .cycle {
   display: flex;
   height: 40px;
   align-items: center;
   margin-bottom: 12px;
+
   .text {
     font-size: 14px;
     font-weight: 500;
-    color: #181f43;
+    color: $caption-text-color;
     margin-right: 8px;
   }
+
   .checkbox {
     margin-right: 8px;
   }
+
   .num {
     width: 80px;
     flex: 0 0 80px;
     margin-right: 8px;
   }
+
   .unit {
     width: 72px;
     flex: 0 0 72px;
@@ -27,6 +33,7 @@
 
 .cycle {
   margin-top: 24px;
+  margin-bottom: 0;
 }
 
 .tip {
@@ -35,4 +42,7 @@
 
 .notice {
   margin-bottom: 8px;
+}
+.timeout{
+  margin-top: 8px;
 }

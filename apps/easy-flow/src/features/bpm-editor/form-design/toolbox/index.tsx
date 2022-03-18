@@ -6,7 +6,7 @@ import Loading from "@components/loading";
 import { map } from "lodash";
 import styles from "./index.module.scss";
 
-const ToolBox: FC<any> = () => {
+const ToolBox: FC = () => {
   const components = useAppSelector(toolboxSelector);
   const comGroups = map(components, (value, key) => {
     return (

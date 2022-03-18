@@ -17,6 +17,7 @@ module.exports = {
       options: {
         include: [
           path.resolve(__dirname, "../../packages/common"),
+          path.resolve(__dirname, "../../packages/theme"),
           path.resolve(__dirname, "src"),
         ],
       },
@@ -36,25 +37,23 @@ module.exports = {
   ],
   webpack: {
     alias: {
-      ["@"]: path.resolve(__dirname, "src"),
-      ["@components"]: path.resolve(__dirname, "src/components"),
-      ["@containers"]: path.resolve(__dirname, "src/containers"),
-      ["@utils"]: path.resolve(__dirname, "src/utils"),
-      ["@http"]: path.resolve(__dirname, "src/http"),
-      ["@routes"]: path.resolve(__dirname, "src/routes"),
-      ["@views"]: path.resolve(__dirname, "src/views"),
-      ["@assets"]: path.resolve(__dirname, "src/assets"),
-      ["@styles"]: path.resolve(__dirname, "src/styles"),
-      ["@consts"]: path.resolve(__dirname, "src/consts"),
-      ["@common"]: path.resolve(__dirname, "../../packages/common"),
+      "@": path.resolve(__dirname, "src"),
+      "@components": path.resolve(__dirname, "src/components"),
+      "@containers": path.resolve(__dirname, "src/containers"),
+      "@utils": path.resolve(__dirname, "src/utils"),
+      "@http": path.resolve(__dirname, "src/http"),
+      "@routes": path.resolve(__dirname, "src/routes"),
+      "@views": path.resolve(__dirname, "src/views"),
+      "@assets": path.resolve(__dirname, "src/assets"),
+      "@styles": path.resolve(__dirname, "src/styles"),
+      "@consts": path.resolve(__dirname, "src/consts"),
+      "@common": path.resolve(__dirname, "../../packages/common"),
+      "@theme": path.resolve(__dirname, "../../packages/theme"),
     },
     // configure: { /* Any webpack configuration options: https://webpack.js.org/configuration */ },
     configure: (webpackConfig, { env, paths }) => {
       // 配置扩展扩展名
-      webpackConfig.resolve.extensions = [
-        ...webpackConfig.resolve.extensions,
-        ...[".scss", ".css"],
-      ];
+      webpackConfig.resolve.extensions = [...webpackConfig.resolve.extensions, ...[".scss", ".css"]];
 
       if (env !== "development") {
         webpackConfig.plugins = webpackConfig.plugins.concat(
@@ -79,10 +78,7 @@ module.exports = {
                 archive: [
                   {
                     source: `zip`,
-                    destination: path.relative(
-                      __dirname,
-                      `../../${name}-${version}-SNAPSHOT.tar.gz`
-                    ),
+                    destination: path.relative(__dirname, `../../${name}-${version}-SNAPSHOT.tar.gz`),
                     format: "tar",
                     options: {
                       gzip: true,
@@ -99,7 +95,7 @@ module.exports = {
               },
             },
             runTasksInSeries: true,
-          })
+          }),
         );
       }
       return webpackConfig;

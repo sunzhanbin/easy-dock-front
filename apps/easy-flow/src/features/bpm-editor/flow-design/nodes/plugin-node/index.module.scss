@@ -1,0 +1,17 @@
+@import '@common/styles/var.scss';
+
+.text {
+  line-height: 22px;
+  font-size: 14px;
+  word-break: break-all;
+  font-size: 12px;
+
+  .desc {
+    margin-right: 4px;
+    color: $caption-text-color;
+  }
+
+  .name {
+    color: $title-text-color;
+  }
+}

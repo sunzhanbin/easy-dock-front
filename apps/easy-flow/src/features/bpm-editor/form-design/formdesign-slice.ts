@@ -19,7 +19,16 @@ import {
   setSubComponentConfig as setSubComponentConfigReducer,
   editSubComponentProps as editSubComponentPropsReducer,
 } from "./formzone-reducer";
-import { ConfigItem, ErrorItem, FieldType, FormDesign, FormField, FormMeta } from "@/type";
+import {
+  ComponentConfig,
+  ConfigItem,
+  ErrorItem,
+  FieldType,
+  FormDesign,
+  FormField,
+  FormFieldMap,
+  FormMeta,
+} from "@/type";
 import { loadComponents } from "./toolbox/toolbox-reducer";
 import {
   validateFieldName,
@@ -155,7 +164,7 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
     // 组装控件属性
     layout.forEach((row) => {
       row.forEach((id: string) => {
-        const type = <FieldType>formDesign.byId[id].type || "";
+        const type = (formDesign.byId[id].type as FieldType) || "";
         const version = schema[type]?.baseInfo.version || "";
         const componentConfig =
           type === "DescText"
@@ -212,9 +221,48 @@ export const saveForm = createAsyncThunk<void, SaveParams, { state: RootState }>
     isShowTip && message.success("保存成功!");
   },
 );
+export const loadFormData = createAsyncThunk<void, { formData: FormMeta; isDirty: boolean }, { state: RootState }>(
+  "form/load",
+  async ({ formData, isDirty }, { dispatch }) => {
+    if (formData) {
+      const { layout, components, formRules, propertyRules } = formData;
+      const byId: { [k: string]: ConfigItem } = {};
+      const selectFieldId = (layout.length > 0 && layout[0].length > 0 && layout[0][0]) || "";
+      // 解析控件属性配置
+      components.forEach(({ config, props }: ComponentConfig) => {
+        const { id } = config;
+        const type = byId[id]?.type || "";
+        const componentConfig: ConfigItem = { type, id };
+        const excludeKeys = ["version", "rules", "canSubmit"];
+        Object.keys(props).forEach((key) => {
+          componentConfig[key] = props[key];
+        });
+        Object.keys(config).forEach((key) => {
+          if (!excludeKeys.includes(key)) {
+            componentConfig[key] = config[key];
+          }
+        });
+        byId[id] = componentConfig;
+      });
+      dispatch(setFormRules({ formRules }));
+      dispatch(setPropertyRules({ propertyRules }));
+      dispatch(setById({ byId: byId as FormFieldMap }));
+      dispatch(setLayout({ layout }));
+      selectFieldId && dispatch(selectField({ id: selectFieldId }));
+    } else {
+      dispatch(setFormRules({ formRules: [] }));
+      dispatch(setPropertyRules({ propertyRules: [] }));
+      dispatch(setById({ byId: {} }));
+      dispatch(setLayout({ layout: [] }));
+      dispatch(selectField({ id: "" }));
+    }
+    dispatch(setErrors({ errors: [] }));
+    dispatch(setIsDirty({ isDirty }));
+  },
+);
 
 export const moveUpAction = createAsyncThunk<void, { id: string; rowIndex: number }, { state: RootState }>(
-  "component/moveUp",
+  "action/moveUp",
   async ({ id, rowIndex }, { getState, dispatch }) => {
     dispatch(moveUp({ id }));
     const { formDesign } = getState();
@@ -238,7 +286,7 @@ export const moveUpAction = createAsyncThunk<void, { id: string; rowIndex: numbe
   },
 );
 export const moveDownAction = createAsyncThunk<void, { id: string; rowIndex: number }, { state: RootState }>(
-  "component/moveUp",
+  "action/moveUp",
   async ({ id, rowIndex }, { getState, dispatch }) => {
     dispatch(moveDown({ id }));
     const { formDesign } = getState();

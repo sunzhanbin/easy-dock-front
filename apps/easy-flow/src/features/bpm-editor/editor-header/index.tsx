@@ -1,17 +1,19 @@
 import { FC, memo, useCallback, useMemo, useState, useEffect, useRef } from "react";
 import { Button, Tooltip, message } from "antd";
+import domToImage from "dom-to-image";
 import PreviewModal from "@components/preview-model";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import useConfirmLeave from "@common/hooks/use-confirm-leave";
 import { useHistory, useRouteMatch, NavLink, useLocation, useParams } from "react-router-dom";
 import { save as saveExtend, setDirty as setExtendDirty } from "@app/app";
-import { save as saveFlow, setDirty as setFlowDirty } from "../flow-design/flow-slice";
+import { loadFlowData, save as saveFlow, setDirty as setFlowDirty, setShowIcon } from "../flow-design/flow-slice";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { AsyncButton, confirm, Icon } from "@common/components";
-import { axios } from "@utils";
+import { axios, exportJsonFile, validateFlowData, validateFormData } from "@utils";
 import Header from "../../../components/header";
-import { layoutSelector, subAppSelector } from "@/features/bpm-editor/form-design/formzone-reducer";
-import { saveForm, setIsDirty as setFormDirty } from "@/features/bpm-editor/form-design/formdesign-slice";
+import { subAppSelector } from "@/features/bpm-editor/form-design/formzone-reducer";
+import { loadFormData, saveForm, setIsDirty as setFormDirty } from "@/features/bpm-editor/form-design/formdesign-slice";
+import ImportButton from "../components/import-button";
 import dirtySelector from "../use-dirty-selector";
 import styles from "./index.module.scss";
 
@@ -20,7 +22,6 @@ const EditorHeader: FC = () => {
   const [showModel, setShowModel] = useState<boolean>(false);
   const { name: appName, appId } = useAppSelector(subAppSelector);
   const dirty = useAppSelector(dirtySelector);
-  const layout = useAppSelector(layoutSelector);
   const history = useHistory();
   const { bpmId } = useParams<{ bpmId: string }>();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -58,13 +59,6 @@ const EditorHeader: FC = () => {
   const handlePreview = useCallback(() => {
     setShowModel(true);
   }, []);
-  const handlePrev = useCallback(() => {
-    if (pathName === flowDesignPath) {
-      history.replace(formDesignPath);
-    } else if (pathName === extendPath) {
-      history.replace(flowDesignPath);
-    }
-  }, [pathName, history, formDesignPath, flowDesignPath, extendPath]);
 
   const handleSave = useMemoCallback(async () => {
     if (pathName === formDesignPath) {
@@ -79,14 +73,6 @@ const EditorHeader: FC = () => {
       return await dispatch(saveExtend());
     }
   });
-
-  const handleNext = useCallback(() => {
-    if (pathName === formDesignPath) {
-      history.replace(flowDesignPath);
-    } else {
-      history.replace(extendPath);
-    }
-  }, [pathName, history, formDesignPath, flowDesignPath, extendPath]);
 
   const handlePublish = useCallback(async () => {
     const flowResponse = await dispatch(saveFlow({ subappId: bpmId }));
@@ -105,7 +91,6 @@ const EditorHeader: FC = () => {
 
     setTimeout(() => {
       window.close();
-      // window.location.replace(`/main/builder/app/${appId}`);
     }, 1500);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bpmId, dispatch, appId]);
@@ -115,7 +100,7 @@ const EditorHeader: FC = () => {
 
     const beforeLeave = (e: BeforeUnloadEvent) => {
       e.preventDefault();
-      e.returnValue = "编辑的内容尚未保存，请确认是否离开？";
+      e.returnValue = "编辑的内容尚未保,请确认是否离开?";
     };
 
     window.addEventListener("beforeunload", beforeLeave);
@@ -136,6 +121,54 @@ const EditorHeader: FC = () => {
     }
   }, [dirty, history, showConfirm]);
 
+  const handleExportFlowImage = async () => {
+    const node = document.getElementById("flow-container");
+    try {
+      dispatch(setShowIcon(false));
+      if (node) {
+        const childNode = document.getElementById("flow-design-container");
+        node.style.width = `${parseInt(getComputedStyle(childNode!).width) * 1.4}px`;
+        const url = await domToImage.toPng(node, { quality: 0.95 });
+        const link = document.createElement("a");
+        link.download = `${appName}.png`;
+        link.href = url;
+        link.click();
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      if (node) {
+        node.style.width = `calc(100% - 288px)`;
+      }
+      dispatch(setShowIcon(true));
+    }
+  };
+
+  const handleExportForm = async () => {
+    const data = await axios.get(`/form/subapp/${bpmId}/export`);
+    exportJsonFile(data, `${appName}_表单`);
+  };
+  const handleExportFlow = async () => {
+    const data = await axios.get(`/process/subapp/${bpmId}/export`);
+    exportJsonFile(data, `${appName}_流程`);
+  };
+  const handleImportForm = async (formData: any) => {
+    const isValidData = validateFormData(formData);
+    if (!isValidData) {
+      message.warn("请导入正确的表单数据!");
+      return;
+    }
+    await dispatch(loadFormData({ formData, isDirty: true }));
+  };
+  const handleImportFlow = async (flowData: any) => {
+    const isValidData = validateFlowData(flowData);
+    if (!isValidData) {
+      message.warn("请导入正确的流程数据!");
+      return;
+    }
+    await dispatch(loadFlowData({ flowData, bpmId }));
+  };
+
   return (
     <div className={styles.header_container} ref={containerRef}>
       <Header backText={appName} className={styles.edit_header} goBack={handleGoBack}>
@@ -146,26 +179,19 @@ const EditorHeader: FC = () => {
             to={`${match.url}/form-design`}
             activeClassName={styles.active}
           >
-            <span className={styles.number}>01</span>
             <span>表单设计</span>
           </NavLink>
-          <div className={styles.separator}>
-            <Icon className={styles.iconfont} type="jinru" />
-          </div>
+
           <NavLink
             className={styles.step}
             replace={true}
             to={`${match.url}/flow-design`}
             activeClassName={styles.active}
           >
-            <span className={styles.number}>02</span>
             <span>流程设计</span>
           </NavLink>
-          <div className={styles.separator}>
-            <Icon className={styles.iconfont} type="jinru" />
-          </div>
+
           <NavLink className={styles.step} replace={true} to={extendPath} activeClassName={styles.active}>
-            <span className={styles.number}>03</span>
             <span>扩展功能</span>
           </NavLink>
         </div>
@@ -187,33 +213,33 @@ const EditorHeader: FC = () => {
               </span>
             </Tooltip>
           )}
-          {pathName !== formDesignPath && (
-            <Button className={styles.prev} size="large" onClick={handlePrev}>
-              上一步
-            </Button>
-          )}
 
+          {pathName === formDesignPath && (
+            <>
+              <ImportButton text="导入" handleSuccess={handleImportForm} />
+              <div className={styles.export} onClick={handleExportForm}>
+                <Icon type="daochu" className={styles.icon} />
+                <span className={styles.text}>导出</span>
+              </div>
+            </>
+          )}
           {pathName === flowDesignPath && (
-            <Button className={styles.prev} size="large" onClick={handleNext}>
-              下一步
-            </Button>
+            <>
+              <ImportButton text="导入" handleSuccess={handleImportFlow} />
+              <div className={styles.export} onClick={handleExportFlow}>
+                <Icon type="daochu" className={styles.icon} />
+                <span className={styles.text}>导出</span>
+              </div>
+              <div className={styles["save-image"]} onClick={handleExportFlowImage}>
+                <Icon type="tupian" className={styles.icon} />
+                <span className={styles.text}>保存流程图</span>
+              </div>
+            </>
           )}
-
           <Button type="primary" ghost className={styles.save} size="large" onClick={handleSave}>
             保存
           </Button>
 
-          {pathName === formDesignPath && (
-            <Button
-              type="primary"
-              className={styles.next}
-              size="large"
-              onClick={handleNext}
-              disabled={layout.length === 0}
-            >
-              下一步
-            </Button>
-          )}
           {pathName === `${match.url}/flow-design` && (
             <AsyncButton
               className={styles.publish}

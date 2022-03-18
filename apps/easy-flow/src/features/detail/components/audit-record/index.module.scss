@@ -1,13 +1,13 @@
-@import '@common/styles/var.scss';
-@import '@common/styles/mixin.scss';
+@import "@common/styles/var.scss";
+@import "@common/styles/mixin.scss";
 
 .container {
-  @include center('flex');
+  @include center("flex");
 
   align-items: flex-start;
 
   .icon {
-    @include center('flex');
+    @include center("flex");
 
     justify-content: center;
     width: 16px;
@@ -22,15 +22,15 @@
     }
 
     &.success {
-      background-color: #06c498;
+      background-color: $tag-success-text-color;
     }
 
     &.error {
-      background-color: #ff5568;
+      background-color: $tag-error-text-color;
     }
 
     &.processing {
-      background-color: $primary-color;
+      background-color: $tag-primary-text-color;
     }
   }
 
@@ -41,7 +41,7 @@
   .node-name {
     margin-bottom: 13px;
     line-height: 20px;
-    color: #181f43;
+    color: $title-text-color;
     font-size: 12px;
     font-weight: 400;
   }
@@ -65,7 +65,7 @@
       .user-name {
         margin-right: 4px;
         line-height: 22px;
-        color: #181f43;
+        color: $title-text-color;
         font-size: 14px;
         font-weight: 400;
       }
@@ -74,13 +74,13 @@
     .time {
       margin-bottom: 4px;
       line-height: 20px;
-      color: rgba(#181f43, 0.5);
+      color: $form-symbol-color;
       font-size: 12px;
       font-weight: 400;
     }
 
     .comment {
-      @include center('flex');
+      @include center("flex");
 
       align-items: flex-start;
 
@@ -94,7 +94,7 @@
       .text {
         flex: 1 1 0;
         line-height: 20px;
-        color: rgba(#181f43, 0.75);
+        color: $form-field-name-text-color;
         font-size: 12px;
         font-weight: 400;
       }
@@ -108,4 +108,14 @@
 
 .container + .container {
   margin-top: 25px;
+}
+
+.action-result {
+  display: flex;
+  font-size: 12px;
+  color: $caption-text-color;
+
+  .result {
+    color: $title-text-color;
+  }
 }

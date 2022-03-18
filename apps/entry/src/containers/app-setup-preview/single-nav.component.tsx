@@ -102,7 +102,7 @@ const SingleNavComponent = ({ children, extra, dataSource, selectedKey, theme }:
                   } else {
                     return (
                       <Menu.Item key={menu.id} icon={renderIcon(menu.form?.icon)} onClick={handleSubMenuClick}>
-                        <Text>{menu.name}</Text>
+                        <Text className="menu-text">{menu.name}</Text>
                       </Menu.Item>
                     );
                   }

@@ -1,0 +1,47 @@
+import { memo, FC, useMemo } from "react";
+import classNames from "classnames";
+import { NodeType } from "@type/flow";
+import styles from "./index.module.scss";
+import auditNodeImage from "@assets/AuditNode.png";
+import branchNodeImage from "@assets/BranchNode.png";
+import CCNodeImage from "@assets/CCNode.png";
+import DataPushNodeImage from "@assets/DataPushNode.png";
+import fillNodeImage from "@assets/FillNode.png";
+import processNodeImage from "@assets/ProcessNode.png";
+import pluginNodeImage from "@assets/PluginNode.png";
+
+interface ShadowNodeProps {
+  type: NodeType;
+  parentType?: string;
+  className?: string;
+}
+
+const ShadowNode: FC<ShadowNodeProps> = ({ type, parentType = "common", className }) => {
+  const content = useMemo(() => {
+    if (type === NodeType.AuditNode) {
+      return <img src={auditNodeImage} alt="image" />;
+    }
+    if (type === NodeType.FillNode) {
+      return <img src={fillNodeImage} alt="image" />;
+    }
+    if (type === NodeType.CCNode) {
+      return <img src={CCNodeImage} alt="image" />;
+    }
+    if (type === NodeType.BranchNode) {
+      return <img src={branchNodeImage} alt="image" className={styles.image} />;
+    }
+    if (type === NodeType.AutoNodePushData) {
+      return <img src={DataPushNodeImage} alt="image" />;
+    }
+    if (type === NodeType.AutoNodeTriggerProcess) {
+      return <img src={processNodeImage} alt="image" />;
+    }
+    if (type === NodeType.PluginNode) {
+      return <img src={pluginNodeImage} alt="image" />;
+    }
+    return null;
+  }, [type]);
+  return <div className={classNames(styles["shadow-node"], styles[parentType], className && className)}>{content}</div>;
+};
+
+export default memo(ShadowNode);

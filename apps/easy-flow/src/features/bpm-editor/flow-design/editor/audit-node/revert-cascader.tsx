@@ -3,10 +3,12 @@ import { Cascader } from "antd";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import { AuditNode, AllNode, BranchNode, RevertType } from "@type/flow";
 import styles from "./index.module.scss";
+import { Icon } from "@common/components";
 
 interface RevertCascaderProps {
   prevNodes: Exclude<AllNode, BranchNode>[];
   value?: AuditNode["revert"];
+
   onChange?(value: this["value"]): void;
 }
 
@@ -74,11 +76,12 @@ function RevertCascader(props: RevertCascaderProps) {
     <Cascader
       className={styles.cascader}
       onChange={handleRevertNodeChange}
-      getPopupContainer={(c) => c}
+      // getPopupContainer={(c) => c}
       options={options}
       value={cascaderValue}
       expandTrigger="hover"
       displayRender={cascaderValueDisplay}
+      suffixIcon={<Icon type="xiala" />}
       size="large"
       allowClear={false}
     />

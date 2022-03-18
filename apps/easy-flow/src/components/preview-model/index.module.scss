@@ -1,8 +1,13 @@
+@import '@common/styles/var.scss';
+@import '@/styles/var.scss';
+
 .container {
   width: 100%;
+
   .loading {
     z-index: 8888;
   }
+
   .background {
     position: absolute;
     top: 0;
@@ -11,31 +16,33 @@
     display: flex;
     width: 100%;
     height: 380px;
-    background: linear-gradient(319deg, #5a69e0 0%, #7389f8 100%);
+    background: $start-flow-banner-linear-bg;
+
     .left {
       position: absolute;
       top: 0;
       left: 0;
       width: 710px;
       height: 490px;
-      background-image: url('~@/assets/background_left.png');
       background-size: contain;
       background-repeat: no-repeat;
     }
+
     .right {
       position: absolute;
       top: 0;
       right: 0;
       width: 698px;
       height: 380px;
-      background-image: url('~@/assets/background_right.png');
       background-size: contain;
       background-repeat: no-repeat;
     }
   }
+
   .start-form-wrapper {
     flex: 1 1 0;
-    background-color: var(--custom-body-background, #fff);
+    background-color: $content-background-color;
+
     .form {
       display: flex;
       flex-direction: column;
@@ -44,27 +51,31 @@
       width: 68%;
       margin: 0 16% 24px 16%;
       padding: 32px 0 0 32px;
-      background: var(--custom-component-background, #fff);
+      background: $flow-manage-drawer-bg;
       box-shadow: 0px -32px 32px 0px rgba(24, 31, 67, 0.12);
       border-radius: 2px;
-      border-top: 5px solid #06c498;
+      border-top: 5px solid $start-flow-border-top-color;
       overflow-y: hidden;
+
       .title {
         padding-bottom: 24px;
         margin-right: 32px;
-        border-bottom: 1px solid rgba(24, 31, 67, 0.12);
+        border-bottom: 1px solid $button-default-border-color;
         line-height: 34px;
-        color: rgba(#000, 0.85);
+        color: $label-hint-text-color;
         font-size: 24px;
         font-weight: bold;
+
         .image {
           width: 46px;
           margin-right: 12px;
         }
       }
+
       .form-wrap {
         overflow-y: auto;
         padding-left: 4px;
+
         .form-engine {
           padding: 24px 32px 32px 0;
           margin-bottom: 0;
@@ -72,12 +83,14 @@
       }
     }
   }
+
   :global {
     .ant-modal {
       width: 100% !important;
       max-width: 100%;
       margin: 0;
       top: 0;
+
       .ant-modal-close {
         display: none;
       }
@@ -85,10 +98,12 @@
       .ant-modal-content {
         height: 100vh;
         padding: 0;
+
         .ant-modal-header {
           padding-bottom: 0;
           height: 56px;
           border-bottom: none;
+
           .header {
             position: fixed;
             top: 0;
@@ -99,12 +114,14 @@
             line-height: 56px;
             background: transparent;
             padding: 0 68px;
+
             .title {
               float: left;
               font-size: 18px;
               font-weight: 400;
-              color: rgba(0, 0, 0, 0.85);
+              color: $label-hint-text-color;
             }
+
             .close {
               float: right;
               width: 20px;
@@ -112,6 +129,7 @@
               line-height: 20px;
               margin-top: 22px;
               cursor: pointer;
+
               .iconfont {
                 font-size: 20px;
                 color: #fff;
@@ -119,28 +137,34 @@
             }
           }
         }
+
         .ant-modal-body {
           padding: 0;
           max-height: calc(100vh - 56px);
           overflow-y: auto;
+
           & > .content {
             margin: 0 0 24px 0;
+
             .title {
               height: 34px;
               font-size: 24px;
               font-weight: bold;
-              color: rgba(0, 0, 0, 0.85);
+              color: $label-hint-text-color;
               line-height: 34px;
             }
+
             .form_row {
               display: flex;
               padding: 0 12px;
+
               .form_item {
                 position: relative;
                 display: inline-block;
                 padding: 12px 16px;
                 border-radius: 3px;
                 border: 1px solid transparent;
+
                 .label_container {
                   .label {
                     font-size: 12px;
@@ -149,6 +173,7 @@
                     line-height: 20px;
                     margin-bottom: 2px;
                   }
+
                   .tip {
                     font-size: 12px;
                     font-weight: 400;
@@ -159,6 +184,7 @@
                 }
               }
             }
+
             .empty_tip {
               text-align: center;
               line-height: 200px;

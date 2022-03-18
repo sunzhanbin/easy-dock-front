@@ -11,6 +11,7 @@ import { useAppDispatch } from "@/app/hooks";
 import { trimInputValue } from "../../util";
 import useValidateForm from "../../hooks/use-validate-form";
 import { rules } from "../../validators";
+import MilestoneNodeConfig from "@/features/bpm-editor/components/milestone-node-config";
 
 interface CCNodeEditorProps {
   node: CCNode;
@@ -20,6 +21,7 @@ type FormValuesType = {
   name: string;
   correlationMemberConfig: CCNode["correlationMemberConfig"];
   fieldsAuths: CCNode["fieldsAuths"];
+  progress: CCNode["progress"];
 };
 
 function CCNodeEditor(props: CCNodeEditorProps) {
@@ -34,6 +36,7 @@ function CCNodeEditor(props: CCNodeEditorProps) {
       name: node.name,
       correlationMemberConfig: node.correlationMemberConfig,
       fieldsAuths: node.fieldsAuths,
+      progress: node.progress,
     };
   }, [node]);
 
@@ -67,6 +70,9 @@ function CCNodeEditor(props: CCNodeEditorProps) {
       </Form.Item>
       <Form.Item label="字段权限" name="fieldsAuths">
         <FieldAuths max={AuthType.View} />
+      </Form.Item>
+      <Form.Item name="progress">
+        <MilestoneNodeConfig form={form} />
       </Form.Item>
     </Form>
   );

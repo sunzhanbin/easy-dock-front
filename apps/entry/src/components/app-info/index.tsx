@@ -63,7 +63,7 @@ const AppInfo = ({
       <div className={navModeClassName}>
         <img className="app-logo" src={src} alt="logo" />
         <div className="app-name">
-          <Text text={appName} />
+          <Text text={appName} className="text" />
         </div>
       </div>
     );

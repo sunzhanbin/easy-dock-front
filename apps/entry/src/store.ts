@@ -7,12 +7,14 @@ import homeManageSlice from "@views/home/index.slice";
 import basicSetupSlice from "@views/app-setup/basic-setup.slice";
 import menuSetupSlice from "@views/app-setup/menu-setup.slice";
 import workspaceSlice from "@views/workspace/index.slice";
+import assetCentreSlice from "@views/asset-centre/index.slice";
 
 export const store = configureStore({
   reducer: {
     [appsOrchestrationApi.reducerPath]: appsOrchestrationApi.reducer,
     [appsOrchestrationRuntimeApi.reducerPath]: appsOrchestrationRuntimeApi.reducer,
     appManager: appManagerSlice,
+    assetCentre: assetCentreSlice,
     basicSetup: basicSetupSlice,
     menuSetup: menuSetupSlice,
     workspace: workspaceSlice,

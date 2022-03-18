@@ -50,7 +50,6 @@ const Detail = forwardRef(function Detail(props: DetailProps, ref: React.Forward
 
   useEffect(() => {
     if (!flow || !form) return;
-    console.log(form.value, "form.meta");
     loadDatasource(
       form.meta,
       flow.node.fieldsAuths,
@@ -73,7 +72,6 @@ const Detail = forwardRef(function Detail(props: DetailProps, ref: React.Forward
       }
       return field;
     });
-    console.log(valueMap, "valueMap", dateFields);
     return valueMap;
   }, [form.value, form.meta]);
   return (

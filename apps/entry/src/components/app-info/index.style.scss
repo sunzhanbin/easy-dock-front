@@ -19,6 +19,9 @@
       font-size: 18px;
       font-weight: 600;
       color: rgba(0, 0, 0, 0.85);
+      .text{
+        color: inherit;
+      }
     }
   }
   & > .single {
@@ -43,6 +46,9 @@
       font-weight: 500;
       color: rgba(0, 0, 0, 0.85);
       line-height: 32px;
+      .text{
+        color: inherit ;
+      }
     }
   }
   &.dark{

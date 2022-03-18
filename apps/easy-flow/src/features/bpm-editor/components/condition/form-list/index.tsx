@@ -250,7 +250,21 @@ const FormList = ({
       // 输入单个值
       if (symbol === "equal" || symbol === "unequal" || symbol === "include" || symbol === "exclude") {
         return (
-          <Form.Item name="value" className={styles.valueWrapper} rules={[{ required: true, message: "请输入!" }]}>
+          <Form.Item
+            name="value"
+            className={styles.valueWrapper}
+            rules={[
+              {
+                validator(_, val: string) {
+                  if (!val || val.trim() === "") {
+                    return Promise.reject(new Error("请输入"));
+                  }
+
+                  return Promise.resolve();
+                },
+              },
+            ]}
+          >
             <Input
               placeholder="输入值"
               size="large"

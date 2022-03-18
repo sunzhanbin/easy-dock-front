@@ -15,6 +15,7 @@ import { FormMeta, FormValue, FlowMeta, FlowInstance, TaskDetailType } from "@ty
 import styles from "./index.module.scss";
 import { useAppSelector } from "@/app/hooks";
 import { modeSelector } from "../task-center/taskcenter-slice";
+import classnames from "classnames";
 
 export type DataType = {
   task: {
@@ -38,6 +39,7 @@ const loadData = async function (taskId: string): Promise<DataType> {
   const flowInstance = data.processInstance;
   const [formMeta, formValue, node] = await loadFlowData(flowInstance);
 
+  console.log(flowInstance, "flowInstance");
   return {
     task: {
       id: data.id,
@@ -67,7 +69,6 @@ function FlowDetail() {
 
   useEffect(() => {
     setLoading(true);
-
     loadData(taskId)
       .then((data) => {
         setData(data);
@@ -103,9 +104,7 @@ function FlowDetail() {
       formData: formValues,
       taskId,
     });
-
     message.success("提交成功");
-
     setTimeout(() => {
       history.replace(dynamicRoutes.toTaskCenter(appId!));
     }, 1500);
@@ -168,7 +167,7 @@ function FlowDetail() {
   return (
     <div className={styles.container}>
       {loading && <Loading />}
-      <Header className={styles.header} backClassName={styles.back} backText="流程详情">
+      <Header className={classnames(styles.header, styles.mainHeader)} backClassName={styles.back} backText="流程详情">
         {mode === "running" && data && (
           <FlowNodeActions
             flowMeta={data.flow.node}

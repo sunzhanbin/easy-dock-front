@@ -1,19 +1,23 @@
+@import '@common/styles/var.scss';
+
 .fields {
   .add_custom {
     height: 40px;
     line-height: 40px;
     text-align: center;
     border-radius: 3px;
-    border: 1px solid rgba(24, 31, 67, 0.12);
+    border: 1px solid $button-default-border-color;
     font-size: 14px;
     font-weight: 400;
     color: rgba(24, 31, 67, 0.95);
     cursor: pointer;
+
     .iconfont {
       font-size: 14px;
       margin-right: 4px;
     }
   }
+
   :global {
     .ant-dropdown {
       max-height: 300px;
@@ -31,15 +35,18 @@
   line-height: 40px;
   margin-bottom: 12px;
   border-radius: 3px;
-  border: 1px solid rgba(24, 31, 67, 0.12);
+  border: 1px solid $button-default-border-color;
   cursor: pointer;
+
   .name {
     flex: 1;
     display: flex;
     align-items: center;
+
     .icon {
       flex: 0 0 40px;
     }
+
     .text {
       flex: 1;
       text-align: center;
@@ -48,23 +55,28 @@
       color: rgba(24, 31, 67, 0.95);
     }
   }
+
   .operation {
     flex: 0 0 80px;
     display: flex;
     align-items: center;
+
     .delete {
       flex: 0 0 40px;
       text-align: center;
     }
+
     .move {
       flex: 0 0 40px;
       text-align: center;
       cursor: move;
     }
+
     .iconfont {
       font-size: 14px;
     }
   }
+
   &.error {
     border: 1px solid #ff5568;
   }
@@ -77,11 +89,13 @@
       display: flex;
       align-items: center;
       padding: 8px;
+
       .icon {
         width: 24px;
         text-align: center;
         font-size: 16px;
       }
+
       .name {
         margin-left: 8px;
       }

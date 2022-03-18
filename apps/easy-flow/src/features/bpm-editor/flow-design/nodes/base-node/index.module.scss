@@ -1,5 +1,5 @@
-@import '@common/styles/var.scss';
-@import '@common/styles/mixin.scss';
+@import "@common/styles/var.scss";
+@import "@common/styles/mixin.scss";
 
 .header {
   padding: 12px;
@@ -24,6 +24,10 @@
 
   &.auto-node {
     background-color: rgba(#2f9ddd, 0.8);
+  }
+
+  &.plugin-node {
+    background-color: rgba(250, 153, 8, 0.8);
   }
 
   .icon-box {
@@ -65,14 +69,14 @@
     background-color: #fff;
 
     &:hover {
-      box-shadow: 0 6px 24px 0 rgba(#181f43, 0.12);
+      box-shadow: 0 6px 24px 0 $border-normal-color;
     }
 
     &.invalid {
       box-shadow: 0 0 0 4px rgba(#ff5568, 0.12);
 
       &::after {
-        content: '';
+        content: "";
         position: absolute;
         top: 0;
         left: 0;
@@ -87,8 +91,8 @@
   .content {
     padding: 12px;
     line-height: 20px;
-    color: rgba($color: #181f43, $alpha: 0.95);
-    background-color: #fff;
+    color: $form-item-label-text-color;
+    background-color: $flow-manage-drawer-bg;
     font-size: 12px;
     font-weight: 400;
   }
@@ -98,11 +102,23 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 16px 0;
+    padding: 32px 0;
+
+    &.over {
+      padding: 110px 0;
+    }
+
+    &.sub-branch {
+      padding: 165px 0;
+    }
+
+    // &.isDragging {
+    //   background-color: rgba(215,215,215,0.6);
+    // }
   }
 
   .actions {
-    @include center('flex');
+    @include center("flex");
 
     position: absolute;
     top: 0;

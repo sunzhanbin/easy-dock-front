@@ -1,0 +1,32 @@
+@import "@common/styles/var.scss";
+.container {
+    display: inline-block;
+    .file {
+        display: none;
+    }
+    .import {
+        display: flex;
+        align-items: center;
+        padding: 5px 8px;
+        cursor: pointer;
+        .icon {
+            width: 16px;
+            font-size: 16px;
+            margin-right: 4px;
+            color: $body-text-color;
+        }
+        .text {
+            width: 28px;
+            font-size: 14px;
+            color: $body-text-color;
+        }
+        &:hover {
+            .icon {
+                color: $primary-color;
+            }
+            .text {
+                color: $primary-color;
+            }
+        }
+    }
+}

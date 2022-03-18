@@ -1,36 +1,41 @@
+@import "@common/styles/var.scss";
+
 .home_header {
   background: transparent;
+
   &.main-header {
     //position: ;
     //top: 0;
     //left: 0;
     width: 100%;
   }
+
   .nav_menu {
     flex: 1 1 0;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 500;
-    color: var(--custom-nav-menu-item-color, #181f43);
+    color: #181f43;
     height: 100%;
 
     .nav {
-      color: var(--custom-nav-menu-item-color, #181f43);
+      color: #181f43;
       padding: 16px;
       line-height: 20px;
       height: 100%;
+
       .icon {
         font-size: 20px;
-        display:  inline-block;
+        display: inline-block;
         vertical-align: middle;
         margin-right: 4px;
       }
     }
 
     .active {
-      color: var(--custom-nav-menu-highlight-color);
-      background: var(--custom-nav-menu-item-active-bg, #f0f0f6);
+      color: #181f43;
+      background: #f0f0f6;
       font-weight: 500;
     }
   }

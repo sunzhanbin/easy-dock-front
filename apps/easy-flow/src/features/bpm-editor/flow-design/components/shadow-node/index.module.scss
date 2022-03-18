@@ -1,0 +1,26 @@
+.shadow-node {
+    position: absolute;
+    top: 48%;
+    opacity: 0.3;
+    .image {
+        transform: translate(-156px, -52px);
+    }
+    &.branch {
+        transform: translate(0, 20px);
+        .image {
+            position: relative;
+            left: 29%;
+        }
+    }
+    &.branch-node {
+        height: fit-content;
+        left: 50%;
+        top: calc(100% - 156px);
+        transform: translateX(-50%);
+        .image {
+            position: relative;
+            left: 29%;
+            top: -20px;
+        }
+    }
+}

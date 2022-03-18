@@ -41,21 +41,6 @@ export const NavMenu = [
   },
 ];
 
-export const SCENE_IAMGES = {
-  scene1: "scene1",
-  scene2: "scene2",
-  scene3: "scene3",
-  scene4: "scene4",
-  scene5: "scene5",
-  scene6: "scene6",
-  scene7: "scene7",
-  scene8: "scene8",
-  scene9: "scene9",
-  scene10: "scene10",
-  scene11: "scene11",
-  scene12: "scene12",
-};
-
 export const ImageMap: { [k: number]: string } = {
   [HomeSubAppType.CANVAS]: CanvasImage,
   [HomeSubAppType.CHART]: ChartImage,
@@ -302,3 +287,32 @@ export enum AuthEnum {
   DATA = 2, //数据权限
   VISIT = 4, //访问权限
 }
+
+export enum AssignAuthType {
+  BATCH = 1, // 批量授权
+  SINGLE = 2, // 指定单个授权
+}
+
+export enum AssetCentreEnum {
+  DATA_SOURCE = "data-source",
+  DATA_ASSET = "data-asset",
+  PLUGINS_MANAGE = "plugins-manage",
+}
+
+export const ASSET_CENTRE_MENU = [
+  // {
+  //   name: "数据源",
+  //   icon: "shujuyuan",
+  //   type: AssetCentreEnum.DATA_SOURCE,
+  // },
+  // {
+  //   name: "数据资产",
+  //   icon: "xiangmutubiao",
+  //   type: AssetCentreEnum.DATA_ASSET,
+  // },
+  {
+    name: "插件管理",
+    icon: "chajian",
+    type: AssetCentreEnum.PLUGINS_MANAGE,
+  },
+];

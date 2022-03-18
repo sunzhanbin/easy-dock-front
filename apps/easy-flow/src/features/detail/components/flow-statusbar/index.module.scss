@@ -1,5 +1,6 @@
 @import '@common/styles/var.scss';
 @import '@common/styles/mixin.scss';
+@import '@/styles/var.scss';
 
 .statusbar {
   position: relative;
@@ -7,23 +8,23 @@
   justify-content: center;
 
   &.processing {
-    background-color: rgba(#4c5cdb, 0.08);
+    background-color: $start-flow-status-processing-bg;
   }
 
   &.revert {
-    background-color: rgba(#ff9900, 0.08);
+    background-color: $start-flow-status-revert-bg;
   }
 
   &.undo {
-    background-color: rgba(#182743, 0.04);
+    background-color: $start-flow-status-undo-bg;
   }
 
   &.terminated {
-    background-color: rgba(#ff5568, 0.08);
+    background-color: $start-flow-status-terminated-bg;
   }
 
   &.finish {
-    background-color: rgba(#06c498, 0.08);
+    background-color: $start-flow-status-finish-bg;
   }
 
   .content {
@@ -49,19 +50,22 @@
     flex: 1 1 0;
 
     &:nth-of-type(2) {
-      border-right: 1px solid rgba(#181f43, 0.12);
-      border-left: 1px solid rgba(#181f43, 0.12);
+      border-right: 1px solid $border-normal-color;
+      border-left: 1px solid $border-normal-color;
     }
+
     &:last-of-type {
       border-right-color: transparent;
     }
 
     .time-used {
+      padding-left: 35px;
       line-height: 20px;
-      color: #181f43;
+      color: $title-text-color;
       font-size: 12px;
       font-weight: 400;
     }
+
   }
 
   // 流程办结状态栏
@@ -84,7 +88,7 @@
   display: inline-flex;
   align-items: center;
   padding: 2px 8px;
-  border: 1px solid rgba(#181f43, 0.12);
+  border: 1px solid $border-normal-color;
   border-radius: 4px;
   cursor: not-allowed;
 
@@ -92,6 +96,32 @@
     margin-left: 4px;
     font-size: 12px;
   }
+}
+
+.flow-progress {
+
+  position: relative;
+  line-height: 0 !important;
+  margin-bottom: 6px;
+
+  :global {
+    .ant-progress-text {
+      position: absolute;
+      left: -8px;
+      top: -21px;
+      font-size: 16px;
+      color: $form-title-color;
+    }
+
+    .ant-progress-bg {
+      height: 4px !important;
+    }
+
+    .ant-progress-outer {
+      padding-right: 0;
+    }
+  }
+
 }
 
 .cell {
@@ -106,14 +136,14 @@
 
     margin-bottom: 4px;
     line-height: 24px;
-    color: rgba(#000, 0.85);
+    color: $label-hint-text-color;
     font-size: 16px;
     font-weight: bold;
   }
 
   .cell-desc {
     line-height: 20px;
-    color: rgba(#181f43, 0.5);
+    color: $form-symbol-color;
     font-size: 12px;
     font-weight: 400;
   }
@@ -127,5 +157,6 @@
 
   .cell-content {
     overflow: hidden;
+    font-size: 0;
   }
 }

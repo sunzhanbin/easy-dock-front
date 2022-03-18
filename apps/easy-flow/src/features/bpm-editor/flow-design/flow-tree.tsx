@@ -5,6 +5,7 @@ import {
   AuditNode,
   FillNode,
   FinishNode,
+  PluginNode,
   CCNode,
   BranchNode,
   Branch,
@@ -41,6 +42,10 @@ function FlowTree(props: FlowTreeProps) {
 
           case NodeType.FinishNode: {
             return <FinishNode key={node.id} node={node} />;
+          }
+
+          case NodeType.PluginNode: {
+            return <PluginNode key={node.id} node={node} />;
           }
 
           case NodeType.AutoNodePushData: {

@@ -1,4 +1,4 @@
-import { memo, useMemo } from "react";
+import { memo, ReactNode, useMemo } from "react";
 import classnames from "classnames";
 import moment from "moment";
 import { Icon, Avatar } from "@common/components";
@@ -76,6 +76,12 @@ function mapActionInfo(type: AuditRecordType): { text: string; status: StatusTag
       status: "primary",
     };
   }
+  if (type === AuditRecordType.AUTO_PLUGIN) {
+    return {
+      text: "插件节点",
+      status: "primary",
+    };
+  }
 
   return null as never;
 }
@@ -114,6 +120,26 @@ function NodeActionRecord(props: NodeActionRecordProps) {
     };
   }, [data]);
 
+  const renderActionResult = (
+    auditType: AuditRecordType,
+    name: string | undefined,
+    result: number | undefined,
+  ): ReactNode => {
+    if (
+      auditType === AuditRecordType.AUTO_INTERFACE_PUSH ||
+      auditType === AuditRecordType.AUTO_PLUGIN ||
+      auditType === AuditRecordType.AUTO_PROCESS_TRIGGER
+    ) {
+      return (
+        <div className={styles["action-result"]}>
+          <div className={styles["action-name"]}>{name}</div>
+          <div className={styles.result}>{result === 0 ? "成功" : "失败"}</div>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <div className={classnames(styles.container, className)}>
       <div className={classnames(styles.icon, icon.className)}>
@@ -146,6 +172,12 @@ function NodeActionRecord(props: NodeActionRecordProps) {
                   <Icon type="xiangqing" />
                   <div className={styles.text}>{record.comments.commit}</div>
                 </div>
+              )}
+
+              {renderActionResult(
+                record.auditType,
+                record.comments?.actionName,
+                record.comments?.autoPushDataResult?.resultCode,
               )}
             </div>
           );

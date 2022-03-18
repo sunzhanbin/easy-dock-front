@@ -56,7 +56,7 @@
         width: 100%;
         border-color: transparent;
         border-radius: 0;
-        background-color: rgba(#182743, 0.04);
+        background-color: $button-default-disabled-background-color;
       }
     }
 
@@ -110,6 +110,7 @@
         max-height: 180px;
       }
     }
+
     .ant-cascader-menus-hidden {
       display: none;
     }

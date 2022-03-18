@@ -1,0 +1,12 @@
+@import "theme";
+
+/* 发起流程 */
+$start-flow-border-top-color: var(--custom-start-flow-border-top-color, #06C498FF);
+$start-flow-log-bg: var(--custom-start-flow-log-bg, #ffffffff);
+$start-flow-status-processing-bg: var(--custom-start-flow-status-processing-bg, #ffffffff);
+$start-flow-status-revert-bg: var(--custom-start-flow-status-revert-bg, #ffffffff);
+$start-flow-status-undo-bg: var(--custom-start-flow-status-undo-bg, #ffffffff);
+$start-flow-status-terminated-bg: var(--custom-start-flow-status-terminated-bg, #ffffffff);
+$start-flow-status-finish-bg: var(--custom-start-flow-status-finish-bg, #06C49814);
+$start-flow-header-shadow-color: var(--custom-start-flow-shadow-color, #181F4314);
+$start-flow-banner-linear-bg: var(--custom-start-flow-banner-linear-bg, linear-gradient(319deg, #5A69E0 0%, #7389F8 100%));

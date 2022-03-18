@@ -23,7 +23,7 @@ const units = [
 const DueConfig = ({ name, showAction = false }: DueConfigProps) => {
   return (
     <>
-      <Form.Item name={[name, "enable"]} valuePropName="checked" style={{ marginBottom: "12px" }}>
+      <Form.Item name={[name, "enable"]} valuePropName="checked" style={{ marginBottom: "0" }}>
         <Checkbox>节点超时通知</Checkbox>
       </Form.Item>
       <Form.Item noStyle shouldUpdate>
