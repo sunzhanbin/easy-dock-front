@@ -43,7 +43,7 @@ const symbolListMap: { [k: string]: { value: string; label: string }[] } = {
   bool: [conditionSymbolMap.true, conditionSymbolMap.false, conditionSymbolMap.null, notNull],
   date: [equal, unequal, before, after, year, month, day, conditionSymbolMap.null, notNull],
   time: [equal, unequal, before, after, hour, minute, second, conditionSymbolMap.null, notNull],
-  dateTime: [equal, unequal, before, after, year, month, day, minute, second, conditionSymbolMap.null, notNull],
+  dateTime: [equal, unequal, before, after, year, month, day, hour, minute, second, conditionSymbolMap.null, notNull],
   array: [include, exclude, arrayLength, conditionSymbolMap.null, notNull],
 };
 

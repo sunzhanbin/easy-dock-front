@@ -1,6 +1,6 @@
 import { memo, FC, useState, useEffect, useMemo } from "react";
 import { Collapse } from "antd";
-import { Icon } from "@common/components";
+import { Icon, Text } from "@common/components";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import { NodeType, PluginGroupItem } from "@/type/flow";
 import { useSubAppDetail } from "@/app/app";
@@ -72,7 +72,7 @@ const Toolbox: FC = () => {
       <Collapse defaultActiveKey={activeKey} ghost expandIcon={getExpandIcon}>
         {group.map(({ id: groupId, name, nodeList }) => {
           return (
-            <Panel header={name} key={groupId} className={styles.panel}>
+            <Panel header={<Text text={name} />} key={groupId} className={styles.panel}>
               <div className={styles["node-container"]}>
                 {nodeList.map(({ icon, id, type, name }) => (
                   <ToolboxItem
