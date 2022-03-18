@@ -1,8 +1,8 @@
-import React, { memo } from "react";
+import React, { memo, useEffect } from "react";
 import { Form, Select } from "antd";
 import { FormInstance } from "antd/es";
 import { Icon } from "@common/components";
-import { useGetTenantListQuery } from "@/http";
+import { useLazyGetTenantListQuery } from "@/http";
 
 type LinkedUserProps = {
   form: FormInstance<any>;
@@ -10,11 +10,11 @@ type LinkedUserProps = {
 
 const { Option } = Select;
 const LinkedUser = ({ form }: LinkedUserProps) => {
-  const { tenantList } = useGetTenantListQuery("", {
-    selectFromResult: ({ data }) => ({
-      tenantList: data?.filter(Boolean),
-    }),
-  });
+  const [getTenantList, { data }] = useLazyGetTenantListQuery();
+  useEffect(() => {
+    getTenantList();
+  }, [getTenantList]);
+
   return (
     <>
       {form.getFieldValue(["tenant", "link"]) === "2" && (
@@ -30,7 +30,7 @@ const LinkedUser = ({ form }: LinkedUserProps) => {
           ]}
         >
           <Select size="large" placeholder="请选择" suffixIcon={<Icon type="xiala" />}>
-            {(tenantList ?? []).map(({ code, name }: { code: string; name: string }) => (
+            {(data ?? []).map(({ code, name }: { code: string; name: string }) => (
               <Option key={code} value={code}>
                 {name}
               </Option>
