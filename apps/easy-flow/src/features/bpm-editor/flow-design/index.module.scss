@@ -55,9 +55,11 @@
     }
 
     &.saving {
+      min-width: 100vw;
       width: 100vw;
       height: fit-content;
       background-color: $branch-nodes-background-color;
+      overflow: initial;
     }
   }
 

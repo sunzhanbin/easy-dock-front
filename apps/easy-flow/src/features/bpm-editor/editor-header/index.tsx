@@ -126,7 +126,8 @@ const EditorHeader: FC = () => {
     try {
       dispatch(setShowIcon(false));
       if (node) {
-        node.style.overflow = "initial";
+        const childNode = document.getElementById("flow-design-container");
+        node.style.width = `${parseInt(getComputedStyle(childNode!).width) * 1.4}px`;
         const url = await domToImage.toPng(node, { quality: 0.95 });
         const link = document.createElement("a");
         link.download = `${appName}.png`;
@@ -137,7 +138,7 @@ const EditorHeader: FC = () => {
       console.error(error);
     } finally {
       if (node) {
-        node.style.overflow = "auto";
+        node.style.width = `calc(100% - 288px)`;
       }
       dispatch(setShowIcon(true));
     }
