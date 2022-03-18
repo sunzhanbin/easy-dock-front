@@ -68,6 +68,16 @@
     overflow-x: hidden;
 
     :global {
+      .ant-form {
+        & > .ant-form-item {
+          & > .ant-form-item-label {
+            & > label {
+              font-weight: 600;
+              color: $title-text-color;
+            }
+          }
+        }
+      }
       .ant-form-item-label {
         padding-bottom: 12px;
 
