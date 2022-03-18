@@ -123,6 +123,11 @@ export type ProjectPower = {
   status: number;
 };
 
+export type Tenant = {
+  code: string;
+  name: string;
+};
+
 export type SubAppPower = {
   createTime: number;
   id: number;

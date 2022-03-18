@@ -20,8 +20,7 @@ const AssetCentreSider = () => {
   useEffect(() => {
     navigate(`./${AssetCentreEnum.PLUGINS_MANAGE}`);
     setActiveMenu(AssetCentreEnum.PLUGINS_MANAGE);
-    // eslint-disable-next-line
-  }, []);
+  }, [navigate]);
 
   const renderIcon = (icon: string) => {
     return <Icon type={icon} />;

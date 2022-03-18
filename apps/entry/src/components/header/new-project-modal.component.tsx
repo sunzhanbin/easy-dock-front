@@ -20,7 +20,7 @@ const NewProjectModalComponent = ({ visible, onOk, onCancel }: modalProps) => {
         name,
       };
       onOk && onOk(params);
-      form.resetFields();
+      // form.resetFields();
     } catch (e) {
       console.log(e);
     }
