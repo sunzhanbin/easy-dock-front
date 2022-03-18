@@ -36,7 +36,7 @@ const UploadJsonModalComponent = ({ editItem, visible, onCancel, onOK }: ModalPr
       onOk={handleOk}
       destroyOnClose={true}
       okText={editItem ? "确认" : "下一步"}
-      width={500}
+      width={400}
       maskClosable={false}
     >
       <div className="upload-json-container">
