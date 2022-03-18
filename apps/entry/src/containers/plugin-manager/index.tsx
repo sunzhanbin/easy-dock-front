@@ -122,7 +122,7 @@ const PluginManager = () => {
     try {
       const params = {
         id: columnItem.id,
-        flag: !columnItem.enabled,
+        flag: !columnItem.openVisit,
       };
       await openVisitPlugins(params).unwrap();
       dispatch(setPluginsList({ pluginsList, columnItem, type: "openVisit" }));

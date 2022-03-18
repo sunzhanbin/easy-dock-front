@@ -1,12 +1,14 @@
 import React from "react";
 import classnames from "classnames";
 import "./iconfont";
+import "./iconfont-dark";
 import styles from "./index.module.scss";
 
 interface IconProps {
   type: string;
   className?: string;
   style?: React.CSSProperties;
+
   onClick?(event: React.MouseEvent): void;
 }
 
