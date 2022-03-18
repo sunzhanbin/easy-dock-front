@@ -88,7 +88,7 @@ const PluginsListTableComponent = ({
             <div className="operation-btn-wrapper">
               <div className="box-placeholder" />
               <div className="box-btn">
-                <span title="指定租户" onClick={() => !openVisit && onAssignTenant(data)}>
+                <span title="指定项目" onClick={() => !openVisit && onAssignTenant(data)}>
                   <Icon className={classnames(openVisit ? "not-openVisit" : "")} type="jibenxinxi" />
                 </span>
                 <span title="升级" onClick={() => onUpgrade(data)}>

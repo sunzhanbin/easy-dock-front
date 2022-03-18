@@ -134,6 +134,10 @@
     }
   }
 
+  .ant-modal-body {
+    max-height: 400px;
+  }
+
   .switch-container {
     display: flex;
     flex-direction: row;

@@ -37,7 +37,7 @@ const AuthTenantModalComponent = ({ type, visible, onOK, onCancel }: TenantModal
 
   return (
     <Modal
-      title={`${type === AssignAuthType.BATCH ? "批量授权" : "指定租户"}`}
+      title={`${type === AssignAuthType.BATCH ? "批量授权" : "指定项目"}`}
       visible={visible}
       centered={true}
       onCancel={handleCancel}
@@ -48,11 +48,11 @@ const AuthTenantModalComponent = ({ type, visible, onOK, onCancel }: TenantModal
       maskClosable={false}
     >
       <Form form={form} className="form" layout="vertical" autoComplete="off" preserve={false}>
-        <Form.Item label="选择租户" name="projectIds">
+        <Form.Item label="选择项目" name="projectIds">
           <Select
             mode="tags"
             tokenSeparators={[","]}
-            placeholder="请选择租户"
+            placeholder="请选择项目"
             size="large"
             allowClear
             suffixIcon={<Icon type="xiala" />}
