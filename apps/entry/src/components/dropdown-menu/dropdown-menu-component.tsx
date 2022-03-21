@@ -31,6 +31,14 @@ const DropdownMenuComponent = ({
     setFieldName(e.target.value);
   };
 
+  // enter新增
+  const handleEnter: React.KeyboardEventHandler<HTMLInputElement> = (e: any) => {
+    if (e.target) {
+      setFieldName(e.target.value);
+      onAddName && onAddName();
+    }
+  };
+
   // option删除
   const deleteField = (item: { id: number }) => {
     onDelete && onDelete(item.id);
@@ -76,6 +84,7 @@ const DropdownMenuComponent = ({
                 <Input
                   size="large"
                   onChange={handleNameChange}
+                  onPressEnter={handleEnter}
                   placeholder={`请输入${type.label}名称`}
                   autoFocus
                   suffix={

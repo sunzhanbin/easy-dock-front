@@ -11,9 +11,6 @@ export type DropdownCardProps = {
   list: { [key: string]: any }[] | [];
   onAdd?: (v: { name: string; isEdit: boolean; id?: number }) => any;
   onDelete?: (v: number) => any;
-  selectedId?: string | number;
-  isAdmin?: boolean;
-  children?: ReactNode;
 };
 
 type FormValuesType = {
