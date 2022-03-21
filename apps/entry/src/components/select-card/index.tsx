@@ -71,6 +71,7 @@ const SelectCard = (props: SelectCardProps) => {
   const handleAddName = useCallback(async () => {
     try {
       const values = await form.validateFields();
+      console.log(values, "--------");
       const params = {
         name: values.fieldName,
         isEdit: false,
@@ -157,10 +158,8 @@ const SelectCard = (props: SelectCardProps) => {
         suffixIcon={<Icon type="xiala" />}
       >
         {fieldList?.map((item: any) => (
-          <Option key={item.id} value={item.id} label={item.name}>
-            {(type.key !== "project" || (type.key === "project" && !isAdmin)) && (
-              <Text text={item.name} className="option-name" />
-            )}
+          <Option key={item.id} value={item.id} label={item.name} className="option-name">
+            {(type.key !== "project" || (type.key === "project" && !isAdmin)) && item.name}
           </Option>
         ))}
       </Select>
