@@ -14,7 +14,7 @@
     position: relative;
     flex-shrink: 0;
     z-index: 99;
-    background-color: $button-default-background-color;
+    // background-color: $button-default-background-color;
 
     &.mainHeader {
       background-color: $start-flow-log-bg;
@@ -30,7 +30,7 @@
     }
 
     & > div.back {
-      color: $label-hint-text-color;
+      color: white;
 
       svg {
         color: inherit;
