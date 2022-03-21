@@ -21,7 +21,7 @@ type FormValuesType = {
   fieldName: string;
 };
 
-const DropdownMenuComponent = forwardRef(function A(props: DropdownMenuProps, ref) {
+const DropdownMenuComponent = forwardRef(function DropdownMenu(props: DropdownMenuProps, ref) {
   const {
     onEdit,
     fieldList,
