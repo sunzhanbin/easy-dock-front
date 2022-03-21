@@ -188,7 +188,7 @@ function StartFlow() {
     <div className={styles.container}>
       {loading && <Loading />}
 
-      <Header className={styles.header} backText="发起流程">
+      <Header className={styles.header} backClassName={styles.back} backText="发起流程">
         {mode === "running" && (
           <div className={styles.btns}>
             {showDelete && (
