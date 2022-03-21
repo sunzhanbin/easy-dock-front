@@ -31,13 +31,16 @@
         vertical-align: middle;
         margin-right: 4px;
       }
+      &.disabled {
+        color: $caption-text-color;
+        cursor: not-allowed;
+      }
     }
 
     .active {
       color: #181f43;
       background: #f0f0f6;
-      font-weight: 500;
+      font-weight: 600;
     }
   }
-
 }

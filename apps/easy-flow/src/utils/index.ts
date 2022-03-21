@@ -62,12 +62,12 @@ export function getPassedTime(startTime: number) {
     return `${Math.floor(passedTime / hourTime)}小时前`;
   }
   // 昨天发起的，显示昨天 时:分；
-  if (passedTime >= dayTime && passedTime < 2 * dayTime) {
+  if (passedTime >= 0 && passedTime < dayTime) {
     const time = moment(startTime).format("HH:mm");
     return `昨天 ${time}`;
   }
   // 前天发起的，显示前天 时:分；
-  if (passedTime >= 2 * dayTime && passedTime < 3 * dayTime) {
+  if (passedTime >= dayTime && passedTime < 2 * dayTime) {
     const time = moment(startTime).format("HH:mm");
     return `前天 ${time}`;
   }
