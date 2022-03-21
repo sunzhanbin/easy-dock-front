@@ -125,7 +125,7 @@ const DropDownCard = (props: DropdownCardProps) => {
       getPopupContainer={getPopupContainer}
     >
       <Button size="large" icon={<Icon type="yihangduolie" />} className="button">
-        管理分组
+        分组管理
       </Button>
     </Dropdown>
   );
