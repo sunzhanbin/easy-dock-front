@@ -1,4 +1,4 @@
-import React, { memo, ReactNode, useState } from "react";
+import React, { memo, forwardRef, useImperativeHandle, ReactNode, useCallback, useState } from "react";
 import { Button, Input, Form } from "antd";
 import DropdownOptionComponents from "@components/dropdown-menu/dropdown-option-components";
 import { nameRule } from "@/consts";
@@ -7,53 +7,92 @@ import { Icon } from "@common/components";
 import "@components/select-card/index.style.scss";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import { CardOptionProps } from "@utils/types";
-import { FormInstance } from "antd/es";
 
 type DropdownMenuProps = CardOptionProps & {
-  showButton: boolean;
   onReset?: () => void;
-  addField?: (e: React.MouseEvent) => void;
-  onAddName?: () => void;
+  onShowProjectModal?: () => any;
   menu?: ReactNode;
   onAdd?: (v: any) => void;
   isAdmin?: boolean;
   children?: ReactNode;
-  form: FormInstance;
 };
 
-const DropdownMenuComponent = (props: DropdownMenuProps) => {
+type FormValuesType = {
+  fieldName: string;
+};
+
+const DropdownMenuComponent = forwardRef(function A(props: DropdownMenuProps, ref) {
   const {
-    showButton,
     onEdit,
     fieldList,
     onReset,
     onSelect,
-    addField,
     setShowDropdown,
-    onAddName,
-    onRevert,
+    onShowProjectModal,
     menu,
     type,
     onAdd,
     onDelete,
     isAdmin,
     children,
-    form,
   } = props;
   const [fieldName, setFieldName] = useState<string>(""); // 新增字段名称
+  const [showButton, setShowButton] = useState<boolean>(true); // 判断是否显示新增按钮
+  const [form] = Form.useForm<FormValuesType>();
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      formReset: () => {
+        form.resetFields();
+      },
+      setButtonStatus: () => {
+        setShowButton(true);
+      },
+    }),
+    [form],
+  );
+
+  // 新增option
+  const addField = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (type.key === "project") {
+      onShowProjectModal && onShowProjectModal();
+    } else {
+      setShowButton(false);
+    }
+  };
 
   // 新增字段名change
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFieldName(e.target.value);
   };
 
-  // enter新增
-  const handleEnter: React.KeyboardEventHandler<HTMLInputElement> = (e: any) => {
-    if (e.target) {
-      setFieldName(e.target.value);
-      onAddName && onAddName();
+  // option新增字段名确认
+  const handleAddName = useCallback(async () => {
+    try {
+      const values = await form.validateFields();
+      const params = {
+        name: values.fieldName,
+        isEdit: false,
+      };
+      await onAdd?.(params);
+      form.setFieldsValue({ fieldName: "" });
+      setShowButton(true);
+    } catch (e) {
+      console.log(e);
     }
-  };
+  }, [form, onAdd]);
+
+  // enter新增
+  const handleEnter = useMemoCallback((e: any) => {
+    if (e.target) {
+      // 此处需阻止冒泡 避免和select选中事件误判
+      e.stopPropagation();
+      setFieldName(e.target.value);
+      handleAddName();
+    }
+  });
 
   // option删除
   const deleteField = useMemoCallback((item: { id: number }) => {
@@ -69,6 +108,12 @@ const DropdownMenuComponent = (props: DropdownMenuProps) => {
     };
     onAdd?.(params);
   });
+
+  // 新增字段名撤销
+  const handleRevert = useCallback(async () => {
+    await form.resetFields();
+    setShowButton(true);
+  }, [form]);
 
   return (
     <div className="dropdown-select-card">
@@ -108,9 +153,9 @@ const DropdownMenuComponent = (props: DropdownMenuProps) => {
                       <Icon
                         className={classnames("tick_icon", !fieldName ? "disabled" : "")}
                         type="gou"
-                        onClick={onAddName}
+                        onClick={handleAddName}
                       />
-                      <Icon className="close" type="fanhuichexiao" onClick={onRevert} />
+                      <Icon className="close" type="fanhuichexiao" onClick={handleRevert} />
                     </>
                   }
                 />
@@ -122,6 +167,6 @@ const DropdownMenuComponent = (props: DropdownMenuProps) => {
       {children}
     </div>
   );
-};
+});
 
 export default memo(DropdownMenuComponent);

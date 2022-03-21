@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback, ReactNode } from "react";
-import { Select, Form } from "antd";
+import React, { useState, useEffect, useRef, ReactNode } from "react";
+import { Select } from "antd";
 import { Icon } from "@common/components";
 import { getPopupContainer } from "@utils/utils";
 import "@components/select-card/index.style.scss";
@@ -8,10 +8,6 @@ import useMemoCallback from "@common/hooks/use-memo-callback";
 import DropdownMenuComponent from "@components/dropdown-menu/dropdown-menu-component";
 
 const { Option } = Select;
-
-type FormValuesType = {
-  fieldName: string;
-};
 
 export type SelectCardProps = {
   type: { key: string; label: string };
@@ -26,10 +22,9 @@ export type SelectCardProps = {
 };
 
 const SelectCard = (props: SelectCardProps) => {
-  const { type, list, onSelect, onDelete, selectedId, onAdd, isAdmin, onShowProjectModal } = props;
-  const [showButton, setShowButton] = useState<boolean>(true); // 判断是否显示新增按钮
+  const { type, list, onSelect, onDelete, selectedId, isAdmin } = props;
+  const menuRef = useRef<any>(null);
   const [showDropdown, setShowDropdown] = useState<boolean>(false); // 判断是否显示下拉
-  const [form] = Form.useForm<FormValuesType>();
   const [fieldList, setFieldList] = useState<any[]>([]); // 字段list
 
   useEffect(() => {
@@ -41,16 +36,6 @@ const SelectCard = (props: SelectCardProps) => {
   const handleSelectField = (field: string | number) => {
     setShowDropdown(false);
     onSelect && onSelect(field);
-  };
-
-  // 新增option
-  const addField = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (type.key === "project") {
-      onShowProjectModal && onShowProjectModal();
-    } else {
-      setShowButton(false);
-    }
   };
 
   // 获得焦点时
@@ -66,25 +51,8 @@ const SelectCard = (props: SelectCardProps) => {
       editable: field.id === item.id,
     }));
     setFieldList(list);
+    menuRef.current.setButtonStatus();
   });
-
-  // option新增字段名确认
-  const handleAddName = useCallback(async () => {
-    try {
-      const values = await form.validateFields();
-      console.log(values, "--------");
-      const params = {
-        name: values.fieldName,
-        isEdit: false,
-      };
-      await onAdd?.(params);
-      form.setFieldsValue({ fieldName: "" });
-      setShowButton(true);
-    } catch (e) {
-      console.log(e);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [form]);
 
   // option编辑字段名撤销
   const handleResetProjectName = useMemoCallback(() => {
@@ -95,12 +63,6 @@ const SelectCard = (props: SelectCardProps) => {
     setFieldList(list);
   });
 
-  // 新增字段名撤销
-  const handleRevert = useCallback(async () => {
-    await form.resetFields();
-    setShowButton(true);
-  }, [form]);
-
   // option支持编辑功能选中
   const handleSelectProject = (item: any) => {
     onSelect && onSelect(item.id);
@@ -110,17 +72,13 @@ const SelectCard = (props: SelectCardProps) => {
   const renderMenu = useMemoCallback((menu: React.ReactNode) => (
     <DropdownMenuComponent
       {...props}
-      form={form}
-      showButton={showButton}
+      ref={menuRef}
       onEdit={editField}
       onDelete={onDelete}
       fieldList={fieldList}
       onReset={handleResetProjectName}
       onSelect={handleSelectProject}
       setShowDropdown={setShowDropdown}
-      onAddName={handleAddName}
-      addField={addField}
-      onRevert={handleRevert}
       menu={menu}
     />
   ));
@@ -134,8 +92,8 @@ const SelectCard = (props: SelectCardProps) => {
         editable: false,
       }));
       setFieldList(list);
-      await form.resetFields();
-      setShowButton(true);
+      await menuRef.current.formReset();
+      menuRef.current.setButtonStatus();
     } else {
       setShowDropdown(true);
     }
