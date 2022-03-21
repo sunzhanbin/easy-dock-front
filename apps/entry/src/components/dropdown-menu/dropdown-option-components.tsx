@@ -4,58 +4,42 @@ import { PopoverConfirm, Icon, Text } from "@common/components";
 import classnames from "classnames";
 import { nameRule } from "@/consts";
 import "@components/select-card/index.style.scss";
-
-type OptionProps = {
-  type: { [key in string]: string };
-  fieldList: any[];
-  onDelete: (item: any) => void;
-  onEdit: (e: React.MouseEvent, item: any) => void;
-  onConfirm: (v: any) => void;
-  onSelect: (v: any) => void;
-  onRevert: () => void;
-  setShowDropdown?: (v: boolean) => void;
-};
+import { CardOptionProps } from "@utils/types";
+import useMemoCallback from "@common/hooks/use-memo-callback";
 
 type FormValuesType = {
   fieldName: string;
 };
-const DropdownOptionComponents = ({
-  type,
-  fieldList,
-  onDelete,
-  onEdit,
-  onConfirm,
-  onRevert,
-  onSelect,
-  setShowDropdown,
-}: OptionProps) => {
+const DropdownOptionComponents = (props: CardOptionProps) => {
+  const { type, fieldList, onDelete, onEdit, onConfirm, onRevert, onSelect, setShowDropdown } = props;
   const [activeIndex, setActiveIndex] = useState(-1);
   const [form] = Form.useForm<FormValuesType>();
 
   // option支持编辑
-  const handleEdit = useCallback((e, item) => {
-    form.setFieldsValue({ fieldName: item.name });
-    onEdit(e, item);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const handleEdit = useCallback(
+    (e, item) => {
+      form.setFieldsValue({ fieldName: item.name });
+      onEdit && onEdit(e, item);
+    },
+    [form, onEdit],
+  );
 
   // option确认编辑
   const handleConfirm = useCallback(
     async (item) => {
       try {
         const values = await form.validateFields();
-        onConfirm({ ...values, id: item.id });
+        onConfirm && onConfirm({ ...values, id: item.id });
       } catch (e) {
         message.error("请输入3-20位的汉字、字母、数字、下划线");
         console.log(e);
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [form],
+    [form, onConfirm],
   );
   // option选中
   const handleSelectField = (item: any, index: number) => {
-    onSelect(item);
+    onSelect && onSelect(item);
     setActiveIndex(index);
   };
 
@@ -64,6 +48,11 @@ const DropdownOptionComponents = ({
     e.stopPropagation();
     setShowDropdown && setShowDropdown(true);
   };
+
+  // 编辑回车
+  const handleEnter = useMemoCallback((item: any) => {
+    handleConfirm(item);
+  });
 
   return (
     <div className="dropdown-select-menu">
@@ -76,6 +65,7 @@ const DropdownOptionComponents = ({
                   autoFocus
                   placeholder={`请输入${type.label}名称`}
                   className="input-name"
+                  onPressEnter={() => handleEnter(item)}
                   suffix={
                     <>
                       <Icon className={classnames("tick_icon")} type="gou" onClick={() => handleConfirm(item)} />
@@ -98,7 +88,7 @@ const DropdownOptionComponents = ({
                 placement="bottom"
                 content={`删除后不可恢复,请确认是否删除该${type.label}?`}
                 getPopupContainer={() => document.getElementById("root")!}
-                onConfirm={() => onDelete(item)}
+                onConfirm={() => onDelete && onDelete(item)}
               >
                 <Icon className="delete-icon" type="shanchu" onClick={(e) => handlePopOver(e)} />
               </PopoverConfirm>

@@ -1,4 +1,4 @@
-import React, { ReactNode, useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Button, Dropdown, Form } from "antd";
 import { Icon } from "@common/components";
 import DropdownMenuComponent from "@components/dropdown-menu/dropdown-menu-component";
@@ -64,8 +64,7 @@ const DropDownCard = (props: DropdownCardProps) => {
     } catch (e) {
       console.log(e);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [form]);
+  }, [form, onAdd]);
 
   // option编辑字段名撤销
   const handleEditResetName = useMemoCallback(() => {
@@ -85,7 +84,6 @@ const DropDownCard = (props: DropdownCardProps) => {
   // 下拉显隐控制
   const handleDropdownVisibleChange = useMemoCallback(async (status) => {
     if (status === false) {
-      // setShowDropdown(false);
       const list = fieldList.map((field) => ({
         ...field,
         editable: false,
@@ -93,8 +91,6 @@ const DropDownCard = (props: DropdownCardProps) => {
       setFieldList(list);
       await form.resetFields();
       setShowButton(true);
-    } else {
-      // setShowDropdown(true);
     }
   });
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, ReactNode } from "react";
 import { Select, Form } from "antd";
-import { Icon, Text } from "@common/components";
+import { Icon } from "@common/components";
 import { getPopupContainer } from "@utils/utils";
 import "@components/select-card/index.style.scss";
 import classnames from "classnames";
@@ -24,9 +24,10 @@ export type SelectCardProps = {
   isAdmin?: boolean;
   children?: ReactNode;
 };
+
 const SelectCard = (props: SelectCardProps) => {
   const { type, list, onSelect, onDelete, selectedId, onAdd, isAdmin, onShowProjectModal } = props;
-  const [showButton, setShowButton] = useState<boolean>(true); // 判断是否显示新增工作区按钮
+  const [showButton, setShowButton] = useState<boolean>(true); // 判断是否显示新增按钮
   const [showDropdown, setShowDropdown] = useState<boolean>(false); // 判断是否显示下拉
   const [form] = Form.useForm<FormValuesType>();
   const [fieldList, setFieldList] = useState<any[]>([]); // 字段list

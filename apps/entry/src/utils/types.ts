@@ -1,4 +1,5 @@
 import { NavModeType, SubAppType, ThemeType } from "@/consts";
+import React from "react";
 
 export type User = {
   avatar: string; // 头像
@@ -267,4 +268,15 @@ export type TableColumnsProps = {
   openVisit: boolean;
   group: { id: number; name: string };
   public: boolean;
+};
+
+export type CardOptionProps = {
+  type: { [key in string]: string };
+  fieldList: any[];
+  onDelete?: (item: any) => void;
+  onEdit?: (e: React.MouseEvent, item: any) => void;
+  onConfirm?: (v: any) => void;
+  onSelect?: (v: any) => void;
+  onRevert?: () => void;
+  setShowDropdown?: (v: boolean) => void;
 };

@@ -1,29 +1,45 @@
-import React, { memo, useState } from "react";
+import React, { memo, ReactNode, useState } from "react";
 import { Button, Input, Form } from "antd";
 import DropdownOptionComponents from "@components/dropdown-menu/dropdown-option-components";
 import { nameRule } from "@/consts";
 import classnames from "classnames";
 import { Icon } from "@common/components";
 import "@components/select-card/index.style.scss";
+import useMemoCallback from "@common/hooks/use-memo-callback";
+import { CardOptionProps } from "@utils/types";
+import { FormInstance } from "antd/es";
 
-const DropdownMenuComponent = ({
-  showButton,
-  onEdit,
-  fieldList,
-  onReset,
-  onSelect,
-  addField,
-  setShowDropdown,
-  onAddName,
-  onRevert,
-  menu,
-  type,
-  onAdd,
-  onDelete,
-  isAdmin,
-  children,
-  form,
-}: any) => {
+type DropdownMenuProps = CardOptionProps & {
+  showButton: boolean;
+  onReset?: () => void;
+  addField?: (e: React.MouseEvent) => void;
+  onAddName?: () => void;
+  menu?: ReactNode;
+  onAdd?: (v: any) => void;
+  isAdmin?: boolean;
+  children?: ReactNode;
+  form: FormInstance;
+};
+
+const DropdownMenuComponent = (props: DropdownMenuProps) => {
+  const {
+    showButton,
+    onEdit,
+    fieldList,
+    onReset,
+    onSelect,
+    addField,
+    setShowDropdown,
+    onAddName,
+    onRevert,
+    menu,
+    type,
+    onAdd,
+    onDelete,
+    isAdmin,
+    children,
+    form,
+  } = props;
   const [fieldName, setFieldName] = useState<string>(""); // 新增字段名称
 
   // 新增字段名change
@@ -40,19 +56,19 @@ const DropdownMenuComponent = ({
   };
 
   // option删除
-  const deleteField = (item: { id: number }) => {
+  const deleteField = useMemoCallback((item: { id: number }) => {
     onDelete && onDelete(item.id);
-  };
+  });
 
   // option编辑字段名确认
-  const handleEditProjectName = (values: any) => {
+  const handleEditProjectName = useMemoCallback((values: any) => {
     const params = {
       name: values.fieldName,
       isEdit: true,
       id: values.id,
     };
     onAdd?.(params);
-  };
+  });
 
   return (
     <div className="dropdown-select-card">
