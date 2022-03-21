@@ -211,7 +211,7 @@ const ToDo: FC = () => {
           return (
             <div className={styles["progress-wrapper"]}>
               <Progress percent={parseFloat(Number(progress * 100).toFixed(2)) || 0} showInfo={false} />
-              <span>{parseFloat(Number(progress * 100).toFixed(2)) || 0}%</span>
+              <span className={styles["text-progress"]}>{parseFloat(Number(progress * 100).toFixed(2)) || 0}%</span>
             </div>
           );
         },

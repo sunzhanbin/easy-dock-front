@@ -70,7 +70,7 @@ const NewPluginsModalComponent = ({ groupList, editItem, visible, onCancel, onOK
       zIndex={10000}
       onCancel={handleCancel}
       onOk={handleOk}
-      width={600}
+      width={400}
       destroyOnClose={true}
       getContainer={false}
       maskClosable={false}
@@ -97,7 +97,6 @@ const NewPluginsModalComponent = ({ groupList, editItem, visible, onCancel, onOK
           <Select
             size="large"
             placeholder="请选择插件分组"
-            allowClear
             getPopupContainer={getPopupContainer}
             suffixIcon={<Icon type="xiala" />}
             labelInValue={true}

@@ -7,7 +7,7 @@ import { GroupListProps } from "@utils/types";
 
 const DROPDOWN_CARD_TYPE = {
   key: "plugins",
-  label: "分组管理",
+  label: "分组",
 };
 
 const GroupManageComponent = ({ groupList }: GroupListProps) => {
