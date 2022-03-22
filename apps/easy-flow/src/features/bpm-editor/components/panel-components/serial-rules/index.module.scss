@@ -45,7 +45,7 @@
       text-align: center;
       font-size: 14px;
       font-weight: 400;
-      color: rgba(24, 31, 67, 0.95);
+      color: $form-item-label-text-color;
       cursor: pointer;
 
       .labelStr {
@@ -115,7 +115,7 @@
       font-size: 14px;
       font-weight: 400;
       //padding-left: 12px;
-      color: rgba(24, 31, 67, 0.95);
+      color: $form-item-label-text-color;
       cursor: pointer;
 
       .labelStr {
@@ -220,13 +220,14 @@
     border-radius: 3px;
     font-size: 14px;
     font-weight: 400;
-    color: rgba(24, 31, 67, 0.95);
+    color: $form-item-label-text-color;
 
     > div {
       flex: 1;
       text-align: center;
       cursor: pointer;
       position: relative;
+      background-color: $select-background-normal-color;
 
       &:not(.active) {
         &::after {
@@ -265,7 +266,7 @@
   margin-bottom: 0;
 }
 
-.add_custom, {
+.add_custom {
   width: 55%;
   border: 1px dashed $svg-color;
   vertical-align: middle;

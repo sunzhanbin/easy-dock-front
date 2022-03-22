@@ -128,8 +128,16 @@ export const assetCentreBuilder = baseFetch.injectEndpoints({
       query: (code: string) => `/plugin/code/${code}`,
     }),
     // 验证插件code是否唯一
-    verifyCode: build.query({
-      query: (code: string) => `/plugin/verify/${code}`,
+    verifyCodeUnique: build.query({
+      query: (code: string) => `/plugin/add/verify/${code}`,
+    }),
+    //  验证插件code是否一致
+    verifyCodeConsistent: build.mutation({
+      query: (params: any) => ({
+        url: "plugin/upgrade/verify",
+        method: "post",
+        body: params,
+      }),
     }),
   }),
   // overrideExisting: false,
@@ -151,5 +159,6 @@ export const {
   useLazyEnablePluginsQuery,
   useLazyOpenVisitPluginsQuery,
   useLazyGetJsonQuery,
-  useLazyVerifyCodeQuery,
+  useLazyVerifyCodeUniqueQuery,
+  useVerifyCodeConsistentMutation,
 } = assetCentreBuilder;

@@ -761,6 +761,9 @@
 }
 
 // 定制radio
+.ant-radio-wrapper {
+  color: $form-field-name-text-color;
+}
 
 .ant-radio-input:focus + .ant-radio-inner {
   box-shadow: none;
@@ -798,11 +801,11 @@
 }
 
 .ant-radio-group {
-  color: $form-item-label-text-color;
+  color: $form-field-name-text-color;
 
   .ant-radio-button-wrapper {
     span {
-      color: $form-item-label-text-color;
+      color: $form-field-name-text-color;
     }
 
     &.ant-radio-button-wrapper-checked {
@@ -812,7 +815,7 @@
 
   .ant-radio-wrapper {
     margin-bottom: 12px;
-    color: $label-hint-text-color;
+    color: $form-field-name-text-color;
   }
 }
 

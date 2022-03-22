@@ -79,79 +79,63 @@
   }
 }
 
-.footer {
-  .model {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    z-index: 88;
-    transform: translate(-50%, -50%);
-    width: 880px;
-    height: 286px;
-    background: $flow-manage-drawer-bg;
-    border-radius: 3px;
-    margin: 43px auto;
-    padding: 32px;
+.startFlowModel {
+  width: 880px;
+  height: 286px;
+  background: $flow-manage-drawer-bg;
+  border-radius: 3px;
+  padding: 32px;
 
-    .header {
+  .header {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 12px;
+    border-bottom: 1px solid $button-default-border-color;
+
+    .left {
       display: flex;
-      justify-content: space-between;
-      padding-bottom: 12px;
-      border-bottom: 1px solid $button-default-border-color;
+      flex: 1;
 
-      .left {
-        display: flex;
-        flex: 1;
-
-        .title {
-          width: 72px;
-          height: 24px;
-          font-size: 16px;
-          font-weight: 600;
-          color: $form-field-name-text-color;
-          line-height: 24px;
-        }
-
-        .search {
-          width: 200px;
-          background-color: transparent;
-        }
+      .title {
+        width: 72px;
+        height: 24px;
+        font-size: 16px;
+        font-weight: 600;
+        color: $form-field-name-text-color;
+        line-height: 24px;
       }
 
-      .right {
-        flex: 0 0 20px;
-        height: 20px;
-        line-height: 20px;
-        text-align: center;
-        font-size: 18px;
-        cursor: pointer;
-        color: #818a9e;
+      .search {
+        width: 200px;
+        background-color: transparent;
       }
     }
 
-    .content {
-      display: flex;
-      height: 174px;
-      flex-wrap: wrap;
-      margin: 24px 0;
-      overflow-y: auto;
-
-      .card {
-        margin-right: 12px;
-        margin-bottom: 12px;
-
-        &:nth-child(3n) {
-          margin-right: 0;
-        }
-      }
+    .right {
+      flex: 0 0 20px;
+      height: 20px;
+      line-height: 20px;
+      text-align: center;
+      font-size: 18px;
+      cursor: pointer;
+      color: #818a9e;
     }
   }
 
-  .mask {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 66;
-    background: $svg-color;
+  .content {
+    display: flex;
+    height: 174px;
+    flex-wrap: wrap;
+    margin: 24px 0;
+    overflow-y: auto;
+
+    .card {
+      margin-right: 12px;
+      margin-bottom: 12px;
+
+      &:nth-child(3n) {
+        margin-right: 0;
+      }
+    }
   }
 }

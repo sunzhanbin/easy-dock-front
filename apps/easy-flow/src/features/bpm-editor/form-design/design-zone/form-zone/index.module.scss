@@ -31,7 +31,7 @@
           }
 
           &.active {
-            border: 1px dashed #818a9e;
+            border: 1px dashed $caption-text-color;
 
             .operation,
             .moveUp,
