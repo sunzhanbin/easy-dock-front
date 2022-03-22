@@ -6,7 +6,7 @@ import { PluginDataConfig } from "@common/type";
 import { setJSONMeta } from "@views/asset-centre/index.slice";
 import { useAppDispatch } from "@/store";
 import useMemoCallback from "@common/hooks/use-memo-callback";
-import { useLazyVerifyCodeQuery } from "@/http";
+import { useLazyVerifyCodeUniqueQuery, useVerifyCodeConsistentMutation } from "@/http";
 import { TableColumnsProps } from "@utils/types";
 
 type ModalProps = {
@@ -18,7 +18,8 @@ type ModalProps = {
 
 const UploadJsonModalComponent = ({ editItem, visible, onCancel, onOK }: ModalProps) => {
   const dispatch = useAppDispatch();
-  const [verifyCode] = useLazyVerifyCodeQuery();
+  const [verifyCodeUnique] = useLazyVerifyCodeUniqueQuery();
+  const [verifyCodeConsistent] = useVerifyCodeConsistentMutation();
   const [checkCode, setCheckCode] = useState(false);
 
   const handleCancel = useMemoCallback(() => {
@@ -34,11 +35,20 @@ const UploadJsonModalComponent = ({ editItem, visible, onCancel, onOK }: ModalPr
   // 上传成功校验code是否唯一
   const handleSuccess = useMemoCallback(async (values: PluginDataConfig) => {
     try {
-      if (values?.code) {
-        const result = await verifyCode(values?.code).unwrap();
+      console.log(values, "=============");
+      if (!values?.code) return;
+      if (editItem?.id) {
+        const params = {
+          id: editItem.id,
+          code: values.code,
+        };
+        const result = await verifyCodeConsistent(params).unwrap();
         setCheckCode(result);
-        dispatch(setJSONMeta(values));
+      } else {
+        const result = await verifyCodeUnique(values?.code).unwrap();
+        setCheckCode(result);
       }
+      dispatch(setJSONMeta(values));
     } catch (e) {
       console.log(e);
       setCheckCode(false);
