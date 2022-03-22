@@ -79,7 +79,7 @@ const DropdownOptionComponents = (props: CardOptionProps) => {
           ) : (
             <React.Fragment key={item.id}>
               <span className="option-name" onClick={() => handleSelectField(item, index)}>
-                <Text text={item.name} />
+                <Text text={item.name} getContainer={false} />
               </span>
               <Icon className="edit-icon" type="bianji" onClick={(e) => handleEdit(e, item)} />
               <PopoverConfirm

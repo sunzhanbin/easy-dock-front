@@ -87,7 +87,7 @@ const DropdownMenuComponent = forwardRef(function DropdownMenu(props: DropdownMe
   // enter新增
   const handleEnter = useMemoCallback((e: any) => {
     if (e.target) {
-      // 此处需阻止冒泡 避免和select选中事件误判
+      // 此处需阻止冒泡 避免和select选中事件冲突
       e.stopPropagation();
       setFieldName(e.target.value);
       handleAddName();

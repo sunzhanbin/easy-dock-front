@@ -32,6 +32,11 @@
 }
 
 .dropdown-select-card {
+  .dropdown-select-menu {
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
   .tick_icon {
     width: 20px;
     height: 20px;

@@ -76,7 +76,7 @@ const NewPluginsModalComponent = ({ groupList, editItem, visible, onCancel, onOK
       maskClosable={false}
     >
       <div className="json-info">
-        <p className="code-text">插件code：{pluginsParams?.code}</p>
+        <p className="code-text">插件编码：{pluginsParams?.code}</p>
       </div>
 
       <Form form={form} className="form" layout="vertical" autoComplete="off" preserve={false}>
