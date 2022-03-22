@@ -74,9 +74,17 @@ const NewPluginsModalComponent = ({ groupList, editItem, visible, onCancel, onOK
       destroyOnClose={true}
       getContainer={false}
       maskClosable={false}
+      okButtonProps={{ size: "large" }}
+      cancelButtonProps={{ size: "large" }}
     >
       <div className="json-info">
-        <p className="code-text">插件code：{pluginsParams?.code}</p>
+        {!editItem && (
+          <p>
+            <Icon type="wendangshangchuan" />
+            <span>{jsonMeta?.name}</span>
+          </p>
+        )}
+        <p className="code-text">插件编码：{pluginsParams?.code}</p>
       </div>
 
       <Form form={form} className="form" layout="vertical" autoComplete="off" preserve={false}>

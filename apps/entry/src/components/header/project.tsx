@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import SelectCard from "@components/select-card";
 import {
   useGetProjectListQuery,
@@ -54,7 +54,7 @@ const ProjectComponent = () => {
         }
       });
   });
-  const handleNewProject = useMemoCallback(async ({ name, id }) => {
+  const handleEditProject = useMemoCallback(async ({ name, id }) => {
     try {
       await editProject({ name, id }).unwrap();
       message.success("修改成功");
@@ -93,7 +93,7 @@ const ProjectComponent = () => {
       list={projectList}
       onSelect={handleSelectProject}
       selectedId={selectedProjectId}
-      onAdd={handleNewProject}
+      onAdd={handleEditProject}
       onShowProjectModal={handleShowProjectModal}
       onDelete={handleDeleteProject}
       isAdmin={isAdmin}
