@@ -127,6 +127,10 @@ export const assetCentreBuilder = baseFetch.injectEndpoints({
     getJson: build.query({
       query: (code: string) => `/plugin/code/${code}`,
     }),
+    // 验证插件code是否唯一
+    verifyCode: build.query({
+      query: (code: string) => `/plugin/verify/${code}`,
+    }),
   }),
   // overrideExisting: false,
 });
@@ -147,4 +151,5 @@ export const {
   useLazyEnablePluginsQuery,
   useLazyOpenVisitPluginsQuery,
   useLazyGetJsonQuery,
+  useLazyVerifyCodeQuery,
 } = assetCentreBuilder;
