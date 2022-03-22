@@ -1,5 +1,7 @@
 @import "theme";
 
+$source-box-hover-operation-bg: var(--custom-source-box-hover-operation-bg, #8B8FA1FF);
+
 /* 发起流程 */
 $start-flow-border-top-color: var(--custom-start-flow-border-top-color, #06C498FF);
 $start-flow-log-bg: var(--custom-start-flow-log-bg, #ffffffff);
