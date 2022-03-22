@@ -254,6 +254,8 @@ const AuthModal: FC<{ appInfo: AppInfo; onClose: () => void; onOk: (value: AppAu
       width={600}
       onCancel={onClose}
       onOk={handleOk}
+      okButtonProps={{ size: "large" }}
+      cancelButtonProps={{ size: "large" }}
     >
       {isLoading && <Loading />}
       <div className="content">

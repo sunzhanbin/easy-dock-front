@@ -17,6 +17,7 @@ import { ImageMap, NameMap } from "@utils/const";
 import { JumpLinkToUrl } from "@utils/utils";
 import NoImage from "@assets/images/home/no-app.png";
 import useMemoCallback from "@common/hooks/use-memo-callback";
+import { message } from "antd/es";
 
 type ListItemType = {
   id: number;
@@ -67,6 +68,10 @@ const HomeWorkspaceList = () => {
     })();
   });
   const toAppManage = useMemoCallback(() => {
+    if (!projectId) {
+      message.error("请先选择项目");
+      return;
+    }
     navigate(`/app-manager/project/${projectId}/workspace/${workspaceId}`);
   });
   const handleLinkTo = useMemoCallback(async (item: ListItemType) => {

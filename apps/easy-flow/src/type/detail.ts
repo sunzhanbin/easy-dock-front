@@ -89,19 +89,25 @@ export enum AuditRecordType {
   AUTO_PLUGIN = "AUTO_PLUGIN",
 }
 
+export type Comments = {
+  actionName: AuditRecordType;
+  commit?: string;
+  targetUser?: User;
+  autoPushDataResult?: {
+    resultCode: number;
+    resultMessage: string;
+  };
+  autoTriggerResults?: {
+    resultCode: number;
+    resultMessage: string;
+  };
+};
+
 export type AuditRecordSchema = {
   auditRecordList: {
     auditTime: number;
     auditType: AuditRecordType;
-    comments?: {
-      actionName: AuditRecordType;
-      commit?: string;
-      targetUser?: User;
-      autoPushDataResult?: {
-        resultCode: number;
-        resultMessage: string;
-      };
-    };
+    comments?: Comments;
     nodeName: string;
     taskId: string;
     userList?: User[];

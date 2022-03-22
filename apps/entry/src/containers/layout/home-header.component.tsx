@@ -19,6 +19,11 @@ const HomeHeader: React.FC = () => {
   });
   const location = useLocation();
   const mainEntry = location.pathname === "/";
+  const handleClick = (e: React.MouseEvent) => {
+    if (!projectId) {
+      e.preventDefault();
+    }
+  };
   return (
     <div className={classnames("home_header", mainEntry ? "main-header" : "")}>
       <Header>
@@ -30,8 +35,11 @@ const HomeHeader: React.FC = () => {
             资产中心
           </NavLink>
           <NavLink
-            className={() => classnames({ nav: true, active: location.pathname.startsWith("/app-manager") })}
+            className={() =>
+              classnames({ nav: true, active: location.pathname.startsWith("/app-manager"), disabled: !projectId })
+            }
             to={`/app-manager/project/${projectId}/workspace/${workspaceId}`}
+            onClick={handleClick}
           >
             应用管理
           </NavLink>

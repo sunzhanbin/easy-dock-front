@@ -39,6 +39,8 @@ const NewProjectModalComponent = ({ visible, onOk, onCancel }: modalProps) => {
       destroyOnClose={true}
       width={400}
       maskClosable={false}
+      okButtonProps={{ size: "large" }}
+      cancelButtonProps={{ size: "large" }}
     >
       <Form
         form={form}

@@ -3,7 +3,7 @@ import classnames from "classnames";
 import moment from "moment";
 import { Icon, Avatar } from "@common/components";
 import Tag, { StatusTagProps } from "@components/status-tag";
-import { AuditRecordType, AuditRecordSchema } from "@type/detail";
+import { AuditRecordType, AuditRecordSchema, Comments } from "@type/detail";
 import styles from "./index.module.scss";
 
 function mapActionInfo(type: AuditRecordType): { text: string; status: StatusTagProps["status"] } {
@@ -122,14 +122,23 @@ function NodeActionRecord(props: NodeActionRecordProps) {
 
   const renderActionResult = (
     auditType: AuditRecordType,
-    name: string | undefined,
-    result: number | undefined,
+    // name: string | undefined,
+    // result: number | undefined,
+    comments: Comments | undefined,
   ): ReactNode => {
+    if (!comments) {
+      return null;
+    }
     if (
       auditType === AuditRecordType.AUTO_INTERFACE_PUSH ||
       auditType === AuditRecordType.AUTO_PLUGIN ||
       auditType === AuditRecordType.AUTO_PROCESS_TRIGGER
     ) {
+      const name = comments.actionName;
+      const result =
+        auditType === AuditRecordType.AUTO_PROCESS_TRIGGER
+          ? comments.autoTriggerResults?.resultCode
+          : comments.autoPushDataResult?.resultCode;
       return (
         <div className={styles["action-result"]}>
           <div className={styles["action-name"]}>{name}</div>
@@ -174,11 +183,7 @@ function NodeActionRecord(props: NodeActionRecordProps) {
                 </div>
               )}
 
-              {renderActionResult(
-                record.auditType,
-                record.comments?.actionName,
-                record.comments?.autoPushDataResult?.resultCode,
-              )}
+              {renderActionResult(record.auditType, record.comments)}
             </div>
           );
         })}
