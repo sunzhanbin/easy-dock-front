@@ -100,7 +100,11 @@ export type Comments = {
   autoTriggerResults?: {
     resultCode: number;
     resultMessage: string;
-  };
+    processInfo: {
+      id: number;
+      name: string;
+    };
+  }[];
 };
 
 export type AuditRecordSchema = {
