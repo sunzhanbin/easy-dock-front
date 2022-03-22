@@ -46,6 +46,8 @@ const AuthTenantModalComponent = ({ type, visible, onOK, onCancel }: TenantModal
       getContainer={false}
       destroyOnClose={true}
       maskClosable={false}
+      okButtonProps={{ size: "large" }}
+      cancelButtonProps={{ size: "large" }}
     >
       <Form form={form} className="form" layout="vertical" autoComplete="off" preserve={false}>
         <Form.Item label="选择项目" name="projectIds">

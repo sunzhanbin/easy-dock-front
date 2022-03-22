@@ -46,7 +46,7 @@ const PluginsListTableComponent = ({
       {
         key: "code",
         dataIndex: "code",
-        title: "code",
+        title: "插件编码",
       },
       {
         key: "openVisit",
