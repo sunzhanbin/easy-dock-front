@@ -45,7 +45,7 @@
       flex-wrap: wrap;
 
       & .ant-upload-list-item-list-type-picture {
-        background: rgba(24, 39, 67, 0.04);
+        background: $input-background-normal-color;
         border-color: transparent;
         border-radius: 3px;
       }

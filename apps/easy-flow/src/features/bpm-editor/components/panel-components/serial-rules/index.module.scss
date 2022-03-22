@@ -82,7 +82,7 @@
   line-height: 40px;
   margin-bottom: 12px;
   border-radius: 3px;
-  background-color: rgba(24, 39, 67, 0.04);
+  background-color: $input-background-normal-color;
 
   .name {
     flex: 1;
@@ -138,7 +138,7 @@
 
       &.labelDisable {
         display: inline-block;
-        background: linear-gradient(-45deg, rgba(24, 39, 67, 0.04) 0, rgba(24, 39, 67, 0.04) 5%, transparent 5%, transparent 50%, rgba(24, 39, 67, 0.04) 50%, rgba(24, 39, 67, 0.04) 55%, transparent 55%, transparent);
+        background: linear-gradient(-45deg, $input-background-normal-color 0, $input-background-normal-color 5%, transparent 5%, transparent 50%, $input-background-normal-color 50%, $input-background-normal-color 55%, transparent 55%, transparent);
         background-size: 10px 10px;
         cursor: not-allowed;
 
@@ -216,7 +216,6 @@
     align-items: center;
     height: 40px;
     line-height: 40px;
-    background: rgba(24, 39, 67, 0.04);
     border-radius: 3px;
     font-size: 14px;
     font-weight: 400;
@@ -227,32 +226,15 @@
       text-align: center;
       cursor: pointer;
       position: relative;
-      background-color: $select-background-normal-color;
-
-      &:not(.active) {
-        &::after {
-          content: '';
-          width: 1px;
-          height: 34px;
-          position: absolute;
-          top: 3px;
-          right: 0;
-          background-color: #e3e4e8;
-        }
-      }
-
-      &:last-child {
-        &::after {
-          width: 0;
-        }
-      }
+      background-color: $input-background-normal-color;
+      border: 1px solid transparent;
 
       &.active {
-        background: #ffffff;
+        background: $button-default-background-color;
         border-radius: 3px 0 0 3px;
         border: 1px solid $button-default-border-color;
         font-weight: 500;
-        color: #4c5cdb;
+        color: $primary-color;
       }
     }
   }
@@ -268,7 +250,7 @@
 
 .add_custom {
   width: 55%;
-  border: 1px dashed $svg-color;
+  border: 1px dashed $form-field-name-border-color;
   vertical-align: middle;
   margin-right: 12px;
 }
@@ -301,7 +283,7 @@
 }
 
 .add_inject, .add_change {
-  border: 1px dashed;
+  border: 1px dashed $caption-text-color;
 }
 
 .add_change {
