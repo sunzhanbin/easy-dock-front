@@ -130,7 +130,23 @@
     }
 
     .code-text {
-      margin: 10px 0 15px 0;
+      color: #181F4380;
+      margin-top: 10px;
+      font-size: 12px;
+
+      .json-code {
+        font-size: 18px;
+        color: #000000D9;
+        font-weight: 500;
+
+        &.padding-code {
+          padding-left: 24px;
+        }
+      }
+    }
+
+    .ant-divider-horizontal {
+      margin: 10px 0;
     }
   }
 

@@ -14,12 +14,14 @@ interface UploadJSONProps {
 
 type UploadJsonProps = {
   onSuccess: (v: PluginJsonMeta) => void;
+  onRemove: () => void;
 };
 
-const UploadJsonComponent = ({ onSuccess }: UploadJsonProps) => {
+const UploadJsonComponent = ({ onSuccess, onRemove }: UploadJsonProps) => {
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const handleRemove = useMemoCallback(() => {
     setFileList([]);
+    onRemove && onRemove();
   });
   const handleUploadFile = ({ file, fileList }: UploadJSONProps) => {
     if (file && fileList.length) {
@@ -27,7 +29,6 @@ const UploadJsonComponent = ({ onSuccess }: UploadJsonProps) => {
         message.error("文件类型错误,请上传json文件!");
         return;
       }
-      console.log(file, fileList, "-----------");
       const fileListWithUrl = fileList.map((item) => ({
         ...item,
         thumbUrl: FileImage,
@@ -40,7 +41,7 @@ const UploadJsonComponent = ({ onSuccess }: UploadJsonProps) => {
         try {
           const result = typeof content === "string" && JSON.parse(content);
           if (result) {
-            onSuccess && onSuccess(result);
+            onSuccess && onSuccess({ ...result, fileName: file.name });
           }
         } catch (error) {
           console.error(error);
