@@ -120,31 +120,37 @@ function NodeActionRecord(props: NodeActionRecordProps) {
     };
   }, [data]);
 
-  const renderActionResult = (
-    auditType: AuditRecordType,
-    // name: string | undefined,
-    // result: number | undefined,
-    comments: Comments | undefined,
-  ): ReactNode => {
+  const renderActionResult = (auditType: AuditRecordType, comments: Comments | undefined): ReactNode => {
     if (!comments) {
       return null;
     }
-    if (
-      auditType === AuditRecordType.AUTO_INTERFACE_PUSH ||
-      auditType === AuditRecordType.AUTO_PLUGIN ||
-      auditType === AuditRecordType.AUTO_PROCESS_TRIGGER
-    ) {
+    if (auditType === AuditRecordType.AUTO_INTERFACE_PUSH || auditType === AuditRecordType.AUTO_PLUGIN) {
       const name = comments.actionName;
-      const result =
-        auditType === AuditRecordType.AUTO_PROCESS_TRIGGER
-          ? comments.autoTriggerResults?.resultCode
-          : comments.autoPushDataResult?.resultCode;
+      const result = comments.autoPushDataResult?.resultCode || -1;
       return (
         <div className={styles["action-result"]}>
           <div className={styles["action-name"]}>{name}</div>
-          <div className={styles.result}>{result === 0 ? "成功" : "失败"}</div>
+          <div className={classnames(styles.result, result === 0 ? styles.success : styles.failed)}>
+            {result === 0 ? "成功" : "失败"}
+          </div>
         </div>
       );
+    }
+    if (auditType === AuditRecordType.AUTO_PROCESS_TRIGGER) {
+      const resultList = comments.autoTriggerResults || [];
+      return resultList.map(({ processInfo, resultCode }, index) => {
+        return (
+          <div className={styles["action-result"]} key={index}>
+            <div className={styles["action-name"]}>
+              <span>触发流程</span>
+              <span className={styles.name}>{processInfo.name}</span>
+            </div>
+            <div className={classnames(styles.result, resultCode === 0 ? styles.success : styles.failed)}>
+              {resultCode === 0 ? "成功" : "失败"}
+            </div>
+          </div>
+        );
+      });
     }
     return null;
   };
