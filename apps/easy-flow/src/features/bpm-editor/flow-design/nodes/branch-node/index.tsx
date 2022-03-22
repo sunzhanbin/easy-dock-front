@@ -59,8 +59,8 @@ export const Branch = memo(function Branch(props: BranchProps) {
         };
       },
       drop: (v, monitor: DropTargetMonitor) => {
-        const item = monitor.getItem<{ type: AddableNode["type"] }>();
-        dispatch(addNode({ prevId: data.id, type: item?.type }));
+        const item = monitor.getItem<{ type: AddableNode["type"]; id?: number }>();
+        dispatch(addNode({ prevId: data.id, type: item?.type, id: item.id }));
       },
     }),
     [data.id],
@@ -211,8 +211,8 @@ function BranchNode(props: BranchNodeProps) {
         };
       },
       drop: (v, monitor: DropTargetMonitor) => {
-        const item = monitor.getItem<{ type: AddableNode["type"] }>();
-        dispatch(addNode({ prevId: data.id, type: item?.type }));
+        const item = monitor.getItem<{ type: AddableNode["type"]; id?: number }>();
+        dispatch(addNode({ prevId: data.id, type: item?.type, id: item.id }));
       },
     }),
     [data.id],
