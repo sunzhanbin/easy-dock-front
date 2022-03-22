@@ -1,5 +1,4 @@
 import React, { useMemo } from "react";
-import { useLocation } from "react-router-dom";
 import classnames from "classnames";
 import cookie from "js-cookie";
 import "./iconfont-light";
@@ -17,10 +16,10 @@ interface IconProps {
 export default function Icon(props: IconProps) {
   const { type, className, style, onClick } = props;
 
-  const location = useLocation();
+  const location = window.location;
 
   const theme = useMemo<string>(() => {
-    if (location.search) {
+    if (location?.search) {
       const params = new URLSearchParams(location.search.slice(1));
       return params.get("theme") || "light";
     }
