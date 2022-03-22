@@ -195,6 +195,17 @@
 
     .ant-form {
       margin-bottom: -24px;
+
+      .ant-form-item-label {
+        overflow: visible;
+      }
+
+      .ant-form-item-required {
+        &::before {
+          position: absolute;
+          left: -10px;
+        }
+      }
     }
   }
 
@@ -1288,3 +1299,5 @@
     color: $label-hint-text-color;
   }
 }
+
+

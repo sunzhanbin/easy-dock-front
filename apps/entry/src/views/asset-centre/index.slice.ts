@@ -5,7 +5,7 @@ import { assetCentreBuilder } from "@/http";
 import { TableColumnsProps, GroupItem } from "@utils/types";
 
 export interface AssetCentreState {
-  JSONMeta?: PluginJsonMeta;
+  JSONMeta: PluginJsonMeta;
   groupList: GroupItem[];
   pluginsList: TableColumnsProps[];
   bindingTenantList: { id: number; name: string }[];
