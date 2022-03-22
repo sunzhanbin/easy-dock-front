@@ -126,7 +126,7 @@ function NodeActionRecord(props: NodeActionRecordProps) {
     }
     if (auditType === AuditRecordType.AUTO_INTERFACE_PUSH || auditType === AuditRecordType.AUTO_PLUGIN) {
       const name = comments.actionName;
-      const result = comments.autoPushDataResult?.resultCode || -1;
+      const result = comments.autoPushDataResult?.resultCode ?? -1;
       return (
         <div className={styles["action-result"]}>
           <div className={styles["action-name"]}>{name}</div>
