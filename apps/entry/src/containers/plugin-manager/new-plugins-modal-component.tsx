@@ -3,10 +3,9 @@ import { Form, Input, Modal, Select, Switch, Divider } from "antd";
 import { nameRule } from "@/consts";
 import { Icon } from "@common/components";
 import { useAppSelector } from "@/store";
-import { selectJsonMeta, setJSONMeta } from "@views/asset-centre/index.slice";
+import { selectJsonMeta } from "@views/asset-centre/index.slice";
 import { GroupItem, TableColumnsProps } from "@utils/types";
 import { getPopupContainer } from "@utils/utils";
-import { useDispatch } from "react-redux";
 import classnames from "classnames";
 
 type ModalProps = {
@@ -25,7 +24,6 @@ type FormValuesType = {
   enabled: boolean;
 };
 const NewPluginsModalComponent = ({ groupList, editItem, visible, onCancel, onOK }: ModalProps) => {
-  const dispatch = useDispatch();
   const [form] = Form.useForm<FormValuesType>();
   const jsonMeta = useAppSelector(selectJsonMeta);
 
@@ -35,8 +33,8 @@ const NewPluginsModalComponent = ({ groupList, editItem, visible, onCancel, onOK
     form.setFieldsValue({
       name: values?.name,
       group: group ? { value: group?.id } : undefined,
-      openVisit: values?.openVisit || false,
-      enabled: values?.enabled || false,
+      openVisit: values?.openVisit,
+      enabled: values?.enabled,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editItem, jsonMeta]);
@@ -59,7 +57,6 @@ const NewPluginsModalComponent = ({ groupList, editItem, visible, onCancel, onOK
       delete params.group;
       params.groupId = values?.group?.value;
       onOK && onOK(params);
-      dispatch(setJSONMeta({}));
     } catch (e) {
       console.log(e);
     }
@@ -71,7 +68,7 @@ const NewPluginsModalComponent = ({ groupList, editItem, visible, onCancel, onOK
       title={`${editItem ? "编辑" : "新增"}插件`}
       visible={visible}
       centered={true}
-      zIndex={10000}
+      zIndex={11}
       onCancel={handleCancel}
       onOk={handleOk}
       width={400}
@@ -124,10 +121,10 @@ const NewPluginsModalComponent = ({ groupList, editItem, visible, onCancel, onOK
           </Select>
         </Form.Item>
         <Form.Item label="是否公开" name="openVisit" valuePropName="checked" className="switch-container">
-          <Switch defaultChecked={false} />
+          <Switch defaultChecked={true} />
         </Form.Item>
         <Form.Item label="是否启用" name="enabled" valuePropName="checked" className="switch-container">
-          <Switch defaultChecked={false} />
+          <Switch defaultChecked={true} />
         </Form.Item>
       </Form>
     </Modal>

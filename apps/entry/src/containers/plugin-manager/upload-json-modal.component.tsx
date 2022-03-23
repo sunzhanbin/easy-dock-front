@@ -1,10 +1,10 @@
 import React, { memo, useState } from "react";
-import { Modal } from "antd";
+import { message, Modal } from "antd";
 import UploadJsonComponent from "@containers/plugin-manager/upload-json.component";
 import "@containers/plugin-manager/upload-json-component.style.scss";
 import { PluginDataConfig } from "@common/type";
-import { setJSONMeta } from "@views/asset-centre/index.slice";
-import { useAppDispatch } from "@/store";
+import { selectJsonMeta, setJSONMeta } from "@views/asset-centre/index.slice";
+import { useAppDispatch, useAppSelector } from "@/store";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import { useLazyVerifyCodeUniqueQuery, useVerifyCodeConsistentMutation } from "@/http";
 import { TableColumnsProps } from "@utils/types";
@@ -18,40 +18,51 @@ type ModalProps = {
 
 const UploadJsonModalComponent = ({ editItem, visible, onCancel, onOK }: ModalProps) => {
   const dispatch = useAppDispatch();
+  const jsonMeta = useAppSelector(selectJsonMeta);
   const [verifyCodeUnique] = useLazyVerifyCodeUniqueQuery();
   const [verifyCodeConsistent] = useVerifyCodeConsistentMutation();
-  const [checkCode, setCheckCode] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleCancel = useMemoCallback(() => {
     onCancel && onCancel();
     dispatch(setJSONMeta({}));
-    setCheckCode(false);
   });
 
   const handleOk = useMemoCallback(() => {
-    checkCode && onOK && onOK();
+    if (!Object.keys(jsonMeta).length) {
+      return message.error("请上传json文件！");
+    }
+    if (!jsonMeta?.code) {
+      return message.error("插件编码不能为空，请修改后重新上传！");
+    }
+    if (!jsonMeta.meta || !jsonMeta.name) {
+      return message.error("插件文件内容错误，请修改后重新上传！");
+    }
+    if (errorMessage) {
+      return message.error(errorMessage);
+    }
+    onOK && onOK();
   });
 
   // 上传成功校验code是否唯一
   const handleSuccess = useMemoCallback(async (values: PluginDataConfig) => {
     try {
-      console.log(values, "=============");
-      if (!values?.code) return;
+      dispatch(setJSONMeta(values));
+      if (!values?.code) {
+        return message.error("code不能为空，请修改后重新上传！");
+      }
       if (editItem?.id) {
         const params = {
           id: editItem.id,
           code: values.code,
         };
-        const result = await verifyCodeConsistent(params).unwrap();
-        setCheckCode(result);
+        await verifyCodeConsistent(params).unwrap();
       } else {
-        const result = await verifyCodeUnique(values?.code).unwrap();
-        setCheckCode(result);
+        await verifyCodeUnique(values?.code).unwrap();
       }
-      dispatch(setJSONMeta(values));
+      setErrorMessage("");
     } catch (e) {
-      console.log(e);
-      setCheckCode(false);
+      setErrorMessage(e.resultMessage);
     }
   });
 
@@ -65,6 +76,7 @@ const UploadJsonModalComponent = ({ editItem, visible, onCancel, onOK }: ModalPr
       centered={true}
       onCancel={handleCancel}
       onOk={handleOk}
+      zIndex={10}
       destroyOnClose={true}
       okButtonProps={{ size: "large" }}
       cancelButtonProps={{ size: "large" }}
