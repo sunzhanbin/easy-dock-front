@@ -2,7 +2,7 @@
 
 .loading {
   &.loading {
-    @include center('absolute');
+    @include center('absolute',999);
   }
 
   z-index: 1000;
