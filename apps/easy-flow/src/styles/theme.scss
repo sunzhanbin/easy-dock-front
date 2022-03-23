@@ -1,6 +1,7 @@
 :root[theme='dark'] {
   --custom-progress-status-bg: #1FC9A2FF;
   --custom-source-box-hover-operation-bg: #454548FF;
+  --custom-source-box-hover-operation-svg-color: #B1B1B2FF;
 
   // 发起流程
   --custom-start-flow-border-top-color: #1FC9A2CC;
@@ -17,6 +18,7 @@
 :root[theme='light'] {
   --custom-progress-status-bg: #24B493FF;
   --custom-source-box-hover-operation-bg: #8B8FA1FF;
+  --custom-source-box-hover-operation-svg-color: #fff;
 
   // 发起流程
   --custom-start-flow-border-top-color: #06C498FF;

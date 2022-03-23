@@ -64,6 +64,12 @@
           background-color: $button-default-background-color;
           color: $form-item-label-text-color;
           border: 1px dashed $caption-text-color;
+
+          .name {
+            > div {
+              color: $primary-color !important;
+            }
+          }
         }
       }
 

@@ -43,7 +43,7 @@
       height: 16px;
       line-height: 16px;
       font-size: 16px;
-      color: #fff;
+      color: $source-box-hover-operation-svg-color;
       cursor: pointer;
 
       &:hover {
@@ -63,7 +63,7 @@
     height: 18px;
     line-height: 18px;
     text-align: center;
-    background: #ffffff;
+    background: $content-background-color;
     border-radius: 3px;
     border: 1px solid $primary-color;
     cursor: pointer;
