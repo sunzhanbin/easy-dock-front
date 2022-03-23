@@ -66,7 +66,7 @@ const Detail = forwardRef(function Detail(props: DetailProps, ref: React.Forward
     const valueMap = { ...form.value };
     Object.values(dateFields).map((field) => {
       // form.value有可能为null或undefined
-      if (form.value && !Object.keys(form.value).includes(field)) {
+      if (valueMap[field] === null || valueMap[field] === undefined) {
         valueMap[field] = moment().valueOf();
       }
       if (typeof valueMap[field] === "string") {

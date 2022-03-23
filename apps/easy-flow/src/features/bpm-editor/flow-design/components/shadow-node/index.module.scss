@@ -1,26 +1,22 @@
 .shadow-node {
     position: absolute;
-    top: 48%;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%);
     opacity: 0.3;
-    .image {
-        transform: translate(-153px, -52px);
+    .branch-node {
+        position: relative;
+        top: -55px;
     }
     &.branch {
-        transform: translate(0, 20px);
-        .image {
-            position: relative;
-            left: 29%;
-        }
+        top: 55%;
     }
     &.branch-node {
         height: fit-content;
-        left: 50%;
         top: calc(100% - 156px);
-        transform: translateX(-50%);
-        .image {
+        .branch-node {
             position: relative;
-            left: 29%;
-            top: -20px;
+            top: -110px;
         }
     }
 }

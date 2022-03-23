@@ -2,8 +2,8 @@ import { memo, FC, useMemo } from "react";
 import classNames from "classnames";
 import { NodeType } from "@type/flow";
 import styles from "./index.module.scss";
-import branchNodeImage from "@assets/BranchNode.png";
 import BaseNode from "./base-node";
+import BranchNode from "./branch-node";
 import { Icon } from "@common/components";
 
 interface ShadowNodeProps {
@@ -24,7 +24,7 @@ const ShadowNode: FC<ShadowNodeProps> = ({ type, parentType = "common", classNam
       return <BaseNode icon={<Icon type="chaosongdise" />} type={NodeType.CCNode} text="抄送节点" />;
     }
     if (type === NodeType.BranchNode) {
-      return <img src={branchNodeImage} alt="image" className={styles.image} />;
+      return <BranchNode className={styles["branch-node"]} />;
     }
     if (type === NodeType.AutoNodePushData) {
       return (
