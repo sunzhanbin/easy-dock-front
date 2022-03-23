@@ -33,7 +33,7 @@ const UploadJsonModalComponent = ({ editItem, visible, onCancel, onOK }: ModalPr
       return message.error("请上传json文件！");
     }
     if (!jsonMeta?.code) {
-      return message.error("code不能为空，请修改后重新上传！");
+      return message.error("插件编码不能为空，请修改后重新上传！");
     }
     if (!jsonMeta.meta || !jsonMeta.name) {
       return message.error("插件文件内容错误，请修改后重新上传！");
