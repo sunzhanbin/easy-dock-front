@@ -127,7 +127,7 @@ const validatePluginParams = (value: PluginDataConfig) => {
     const allParams = [...headerParams, ...bodyParams, ...queryParams, ...pathParams, ...responseParams];
     const isValidate = allParams
       .filter((v) => v.required)
-      .some((v) => v.map === undefined || (typeof v.map === "string" && v.map.trim() === ""));
+      .some((v) => v.map === undefined || v.map === null || (typeof v.map === "string" && v.map.trim() === ""));
     if (isValidate) {
       return "数据填写不完整";
     }
