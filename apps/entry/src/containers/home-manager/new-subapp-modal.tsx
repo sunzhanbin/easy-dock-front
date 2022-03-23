@@ -77,6 +77,8 @@ const NewSubAppModal = ({ modalInfo, visible, onOk, onCancel }: ModalProps) => {
       destroyOnClose={true}
       width={400}
       maskClosable={false}
+      okButtonProps={{ size: "large" }}
+      cancelButtonProps={{ size: "large" }}
     >
       <Form form={form} className="form" layout="vertical" autoComplete="off" preserve={false}>
         <Form.Item label={`${modalInfo.name}名称`} name="name" required rules={[nameRule]}>

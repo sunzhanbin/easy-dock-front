@@ -63,6 +63,9 @@ const App: React.FC = () => {
             <Route index element={<SuspenseWrap render={<AppManager />} />} />
             <Route path="setup/*" element={<SuspenseWrap render={<AppSetup />} />} />
           </Route>
+          <Route path="app-manager/project/:projectId/workspace/">
+            <Route index element={<SuspenseWrap render={<AppManager />} />} />
+          </Route>
           {/*因为要支持新窗口打开流程子应用,故加这么一个路由  */}
           <Route path="app/:appId/flow-app/:subAppId" element={<SuspenseWrap render={<FlowApp />} />} />
           {/*因为要支持新窗口打开空状态的应用，故加这么一个路由  */}

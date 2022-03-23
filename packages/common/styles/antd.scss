@@ -8,7 +8,7 @@
   font-size: 14px;
   font-weight: 400;
   background-color: $button-default-background-color;
-  color: $title-text-color;
+  color: $menu-title-text-color;
   border-color: $button-default-border-color;
 
   svg {
@@ -32,12 +32,12 @@
   &.ant-btn-background-ghost {
     background-color: transparent;
     border-color: $border-normal-color;
-    color: $title-text-color;
+    color: $menu-title-text-color;
 
     &:hover,
     &:focus {
       border-color: $border-hover-color;
-      color: $title-text-color;
+      color: $menu-title-text-color;
     }
 
     &:active {
@@ -195,6 +195,17 @@
 
     .ant-form {
       margin-bottom: -24px;
+
+      .ant-form-item-label {
+        overflow: visible;
+      }
+
+      .ant-form-item-required {
+        &::before {
+          position: absolute;
+          left: -10px;
+        }
+      }
     }
   }
 
@@ -554,7 +565,7 @@
         .ant-picker-body {
           .ant-picker-content {
             th {
-              color: $title-text-color;
+              color: $menu-title-text-color;
             }
 
             .ant-picker-cell {
@@ -750,6 +761,9 @@
 }
 
 // 定制radio
+.ant-radio-wrapper {
+  color: $form-field-name-text-color;
+}
 
 .ant-radio-input:focus + .ant-radio-inner {
   box-shadow: none;
@@ -787,11 +801,11 @@
 }
 
 .ant-radio-group {
-  color: $form-item-label-text-color;
+  color: $form-field-name-text-color;
 
   .ant-radio-button-wrapper {
     span {
-      color: $form-item-label-text-color;
+      color: $form-field-name-text-color;
     }
 
     &.ant-radio-button-wrapper-checked {
@@ -801,7 +815,7 @@
 
   .ant-radio-wrapper {
     margin-bottom: 12px;
-    color: $label-hint-text-color;
+    color: $form-field-name-text-color;
   }
 }
 
@@ -1059,6 +1073,13 @@
 /* table style begin */
 .ant-table-wrapper {
   .ant-table {
+    background-color: $content-background-color;
+
+    .ant-table-container::after {
+      width: 8px;
+      background-color: $content-background-color;
+    }
+
     // 表头
     .ant-table-thead {
       & > tr {
@@ -1249,7 +1270,7 @@
 }
 
 .ant-tabs {
-  color: $title-text-color;
+  color: $menu-title-text-color;
 }
 
 // ant-tree
@@ -1288,3 +1309,5 @@
     color: $label-hint-text-color;
   }
 }
+
+

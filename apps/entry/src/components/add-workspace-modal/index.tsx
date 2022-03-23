@@ -77,6 +77,8 @@ const AddWorkspaceModal = React.forwardRef(function AddWorkspace(_, ref) {
       onOk={handleOk}
       onCancel={handleCancel}
       destroyOnClose={true}
+      okButtonProps={{ size: "large" }}
+      cancelButtonProps={{ size: "large" }}
     >
       <Form form={form} autoComplete="off">
         <Form.Item name="name" label="工作区名称" required rules={[nameRule]}>

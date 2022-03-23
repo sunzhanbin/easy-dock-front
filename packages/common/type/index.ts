@@ -40,6 +40,7 @@ export interface PluginJsonMeta {
   type?: string; //暂时只支持http类型
   code?: string;
   name?: string;
+  fileName?: string;
 }
 
 export interface PluginDataConfig {

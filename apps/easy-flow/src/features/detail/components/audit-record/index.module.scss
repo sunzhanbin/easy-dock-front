@@ -115,7 +115,17 @@
   font-size: 12px;
   color: $caption-text-color;
 
-  .result {
+  .name {
     color: $title-text-color;
+  }
+
+  .result {
+    margin-left: 2px;
+    &.success {
+      color: $tag-success-text-color;
+    }
+    &.failed {
+      color: $tag-error-text-color;
+    }
   }
 }

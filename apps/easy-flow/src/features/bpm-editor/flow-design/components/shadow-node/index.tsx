@@ -2,13 +2,9 @@ import { memo, FC, useMemo } from "react";
 import classNames from "classnames";
 import { NodeType } from "@type/flow";
 import styles from "./index.module.scss";
-import auditNodeImage from "@assets/AuditNode.png";
 import branchNodeImage from "@assets/BranchNode.png";
-import CCNodeImage from "@assets/CCNode.png";
-import DataPushNodeImage from "@assets/DataPushNode.png";
-import fillNodeImage from "@assets/FillNode.png";
-import processNodeImage from "@assets/ProcessNode.png";
-import pluginNodeImage from "@assets/PluginNode.png";
+import BaseNode from "./base-node";
+import { Icon } from "@common/components";
 
 interface ShadowNodeProps {
   type: NodeType;
@@ -19,25 +15,33 @@ interface ShadowNodeProps {
 const ShadowNode: FC<ShadowNodeProps> = ({ type, parentType = "common", className }) => {
   const content = useMemo(() => {
     if (type === NodeType.AuditNode) {
-      return <img src={auditNodeImage} alt="image" />;
+      return <BaseNode icon={<Icon type="shenhejiedian" />} type={NodeType.AuditNode} text="审批节点" />;
     }
     if (type === NodeType.FillNode) {
-      return <img src={fillNodeImage} alt="image" />;
+      return <BaseNode icon={<Icon type="tianxiejiedian" />} type={NodeType.FillNode} text="填写节点" />;
     }
     if (type === NodeType.CCNode) {
-      return <img src={CCNodeImage} alt="image" />;
+      return <BaseNode icon={<Icon type="chaosongdise" />} type={NodeType.CCNode} text="抄送节点" />;
     }
     if (type === NodeType.BranchNode) {
       return <img src={branchNodeImage} alt="image" className={styles.image} />;
     }
     if (type === NodeType.AutoNodePushData) {
-      return <img src={DataPushNodeImage} alt="image" />;
+      return (
+        <BaseNode icon={<Icon type="shujulianjiedise" />} type={NodeType.AutoNodePushData} text="自动节点-数据连接" />
+      );
     }
     if (type === NodeType.AutoNodeTriggerProcess) {
-      return <img src={processNodeImage} alt="image" />;
+      return (
+        <BaseNode
+          icon={<Icon type="liuchengchufadise" />}
+          type={NodeType.AutoNodeTriggerProcess}
+          text="自动节点-触发流程"
+        />
+      );
     }
     if (type === NodeType.PluginNode) {
-      return <img src={pluginNodeImage} alt="image" />;
+      return <BaseNode icon={<Icon type="chajiandise" />} type={NodeType.PluginNode} text="插件节点" />;
     }
     return null;
   }, [type]);

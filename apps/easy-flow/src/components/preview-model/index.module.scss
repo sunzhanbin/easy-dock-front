@@ -169,7 +169,7 @@
                   .label {
                     font-size: 12px;
                     font-weight: 500;
-                    color: rgba(24, 31, 67, 0.95);
+                    color: $menu-title-text-color;
                     line-height: 20px;
                     margin-bottom: 2px;
                   }
@@ -177,7 +177,7 @@
                   .tip {
                     font-size: 12px;
                     font-weight: 400;
-                    color: rgba(24, 31, 67, 0.5);
+                    color: $caption-text-color;
                     line-height: 20px;
                     word-break: break-all;
                   }

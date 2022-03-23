@@ -7,14 +7,16 @@ import "@views/app-manager/index.style.scss";
 const { Content } = Layout;
 
 const AppManager = () => {
-  const { projectId, workspaceId } = useParams();
+  const { projectId } = useParams();
 
   return (
     <div className="app-manager">
       <Layout>
         {projectId && <AppManagerSider />}
         <Layout className="site-layout">
-          <Content className="site-layout-background">{workspaceId && <AppManagerDetails />}</Content>
+          <Content className="site-layout-background">
+            <AppManagerDetails />
+          </Content>
         </Layout>
       </Layout>
     </div>

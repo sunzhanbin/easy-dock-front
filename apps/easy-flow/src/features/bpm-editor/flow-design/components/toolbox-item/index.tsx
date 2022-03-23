@@ -17,7 +17,7 @@ export interface ToolboxItemProps {
 
 const ToolboxItem: FC<ToolboxItemProps> = ({ icon, id, type, name, shape = "square" }) => {
   const dispatch = useAppDispatch();
-  const [collectProps, drag] = useDrag(
+  const [collectProps, drag, preview] = useDrag(
     () => ({
       type: "flow-node",
       item: () => {
@@ -33,14 +33,26 @@ const ToolboxItem: FC<ToolboxItemProps> = ({ icon, id, type, name, shape = "squa
     dispatch(setIsDragging(collectProps.isDragging));
   }, [collectProps.isDragging, dispatch]);
   return (
-    <div className={classNames(styles["toolbox-item"], styles[shape])} ref={drag}>
-      {icon && (
-        <div className={styles["icon-container"]}>
-          <Icon type={icon} className={styles.icon} />
+    <div className={styles.container}>
+      <div className={classNames(styles["toolbox-item"], styles[shape])} ref={drag}>
+        {icon && (
+          <div className={styles["icon-container"]}>
+            <Icon type={icon} className={styles.icon} />
+          </div>
+        )}
+        <div className={styles.name}>
+          <Text text={name} />
         </div>
-      )}
-      <div className={styles.name}>
-        <Text text={name} />
+      </div>
+      <div className={classNames(styles["toolbox-item"], styles[shape], styles.preview)} ref={preview}>
+        {icon && (
+          <div className={styles["icon-container"]}>
+            <Icon type={icon} className={styles.icon} />
+          </div>
+        )}
+        <div className={styles.name}>
+          <Text text={name} />
+        </div>
       </div>
     </div>
   );

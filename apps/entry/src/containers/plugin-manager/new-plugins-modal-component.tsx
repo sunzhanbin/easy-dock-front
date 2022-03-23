@@ -1,11 +1,13 @@
 import React, { memo, useEffect, useMemo } from "react";
-import { Form, Input, Modal, Select, Switch } from "antd";
+import { Form, Input, Modal, Select, Switch, Divider } from "antd";
 import { nameRule } from "@/consts";
 import { Icon } from "@common/components";
 import { useAppSelector } from "@/store";
-import { selectJsonMeta } from "@views/asset-centre/index.slice";
+import { selectJsonMeta, setJSONMeta } from "@views/asset-centre/index.slice";
 import { GroupItem, TableColumnsProps } from "@utils/types";
 import { getPopupContainer } from "@utils/utils";
+import { useDispatch } from "react-redux";
+import classnames from "classnames";
 
 type ModalProps = {
   groupList: GroupItem[];
@@ -23,6 +25,7 @@ type FormValuesType = {
   enabled: boolean;
 };
 const NewPluginsModalComponent = ({ groupList, editItem, visible, onCancel, onOK }: ModalProps) => {
+  const dispatch = useDispatch();
   const [form] = Form.useForm<FormValuesType>();
   const jsonMeta = useAppSelector(selectJsonMeta);
 
@@ -56,6 +59,7 @@ const NewPluginsModalComponent = ({ groupList, editItem, visible, onCancel, onOK
       delete params.group;
       params.groupId = values?.group?.value;
       onOK && onOK(params);
+      dispatch(setJSONMeta({}));
     } catch (e) {
       console.log(e);
     }
@@ -74,11 +78,22 @@ const NewPluginsModalComponent = ({ groupList, editItem, visible, onCancel, onOK
       destroyOnClose={true}
       getContainer={false}
       maskClosable={false}
+      okButtonProps={{ size: "large" }}
+      cancelButtonProps={{ size: "large" }}
     >
       <div className="json-info">
-        <p className="code-text">插件code：{pluginsParams?.code}</p>
+        {!editItem && (
+          <p>
+            <Icon type="wendangshangchuan" />
+            <span>{jsonMeta.fileName}</span>
+          </p>
+        )}
+        <p className="code-text">
+          <span className={classnames("json-code", !editItem ? "padding-code" : "")}>{pluginsParams?.code}</span> ·
+          插件编码
+        </p>
+        <Divider />
       </div>
-
       <Form form={form} className="form" layout="vertical" autoComplete="off" preserve={false}>
         <Form.Item label="插件名称" name="name" required rules={[nameRule]}>
           <Input placeholder="请输入" size="large" />

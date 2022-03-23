@@ -17,7 +17,6 @@ import { ImageMap, NameMap } from "@utils/const";
 import { JumpLinkToUrl } from "@utils/utils";
 import NoImage from "@assets/images/home/no-app.png";
 import useMemoCallback from "@common/hooks/use-memo-callback";
-import { message } from "antd/es";
 
 type ListItemType = {
   id: number;
@@ -68,10 +67,6 @@ const HomeWorkspaceList = () => {
     })();
   });
   const toAppManage = useMemoCallback(() => {
-    if (!projectId) {
-      message.error("请先选择项目");
-      return;
-    }
     navigate(`/app-manager/project/${projectId}/workspace/${workspaceId}`);
   });
   const handleLinkTo = useMemoCallback(async (item: ListItemType) => {
@@ -101,10 +96,12 @@ const HomeWorkspaceList = () => {
     <div className="bottom_sider">
       <div className="workspace_info">
         <p className="text_recent_app">最近更新</p>
-        <p className="operation_all" onClick={toAppManage}>
-          <span className="text">全部</span>
-          <Icon className="icon" type="jinrujiantou" />
-        </p>
+        {projectId ? (
+          <p className="operation_all" onClick={toAppManage}>
+            <span className="text">全部</span>
+            <Icon className="icon" type="jinrujiantou" />
+          </p>
+        ) : null}
       </div>
       <div className="workspace_list">
         {loading ? (
