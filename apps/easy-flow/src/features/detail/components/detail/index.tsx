@@ -31,6 +31,8 @@ interface DetailProps {
   type?: TaskDetailType;
 }
 
+// const dateReg = /^\d{4}(-|\/|)$/
+
 const Detail = forwardRef(function Detail(props: DetailProps, ref: React.ForwardedRef<FormInstance<FormValue>>) {
   const { flow, form, type, className } = props;
   const [auditRecords, setAuditRecords] = useState<AuditRecordSchema[]>([]);
@@ -68,7 +70,12 @@ const Detail = forwardRef(function Detail(props: DetailProps, ref: React.Forward
         valueMap[field] = moment().valueOf();
       }
       if (typeof valueMap[field] === "string") {
-        valueMap[field] = Number(valueMap[field]);
+        if (Number(valueMap[field])) {
+          valueMap[field] = Number(valueMap[field]);
+        } else {
+          const time = valueMap[field].replace(/年|月/g, "-").replace(/时|分/g, ":").replace(/日|秒/g, "");
+          valueMap[field] = moment(time).valueOf();
+        }
       }
       return field;
     });
