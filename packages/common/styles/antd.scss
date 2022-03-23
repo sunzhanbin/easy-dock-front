@@ -46,8 +46,16 @@
   }
 
   &[disabled] {
-    background-color: $button-default-disabled-background-color;
+    background-color: $input-background-hover-color;
     color: $button-default-disabled-text-color;
+    border-color: $border-normal-color;
+
+    &:hover,
+    &:focus {
+      background-color: $input-background-hover-color;
+      border-color: $tag-revoke-border-color;
+      color: $svg-color;
+    }
   }
 }
 
@@ -809,7 +817,7 @@
     }
 
     &.ant-radio-button-wrapper-checked {
-      background-color: red;
+      color: $primary-color;
     }
   }
 
@@ -1295,6 +1303,10 @@
 .ant-upload {
   background-color: $input-background-normal-color !important;
   color: $body-text-color;
+}
+
+.ant-upload-list {
+  color: $label-hint-text-color;
 }
 
 // .ant-progress

@@ -13,6 +13,18 @@
   --custom-start-flow-status-finish-bg: #61C8B140;
   --custom-start-flow-shadow-color: #202023FF;
   --custom-start-flow-banner-linear-bg: linear-gradient(319deg, rgba(90, 105, 224, 0.2), rgba(115, 137, 248, 0.2) 20%);
+
+  //  流程详情
+  --custom-flow-detail-status-doing-bg: #4C5CDB1F;
+  --custom-flow-detail-status-doing-text-color: #7582E3FF;
+  --custom-flow-detail-status-stop-bg: #FF65761F;
+  --custom-flow-detail-status-stop-text-color: #FF7C8AFF;
+  --custom-flow-detail-status-reject-bg: #FFA3191F;
+  --custom-flow-detail-status-reject-text-color: #FFB13BFF;
+  --custom-flow-detail-status-done-bg: #1FC9A21F;
+  --custom-flow-detail-status-done-text-color: #40D1B0FF;
+  --custom-flow-detail-status-recall-bg: #FFFFFF1A;
+  --custom-flow-detail-status-recall-text-color: #FFFFFF66;
 }
 
 :root[theme='light'] {
@@ -30,6 +42,18 @@
   --custom-start-flow-status-finish-bg: #06C49814;
   --custom-start-flow-shadow-color: #181F4314;
   --custom-start-flow-banner-linear-bg: linear-gradient(319deg, #5A69E0 0%, #7389F8 100%);
+
+  //  流程详情
+  --custom-flow-detail-status-doing-bg: #4C5CDB1F;
+  --custom-flow-detail-status-doing-text-color: #3546C8FF;
+  --custom-flow-detail-status-stop-bg: #FF55681F;
+  --custom-flow-detail-status-stop-text-color: #EB2E43FF;
+  --custom-flow-detail-status-reject-bg: #FF99001F;
+  --custom-flow-detail-status-reject-text-color: #F67A00FF;
+  --custom-flow-detail-status-done-bg: #06C4981F;
+  --custom-flow-detail-status-done-text-color: #03A882FF;
+  --custom-flow-detail-status-recall-bg: #EDEDF0FF;
+  --custom-flow-detail-status-recall-text-color: #181F4380;
 }
 
 
