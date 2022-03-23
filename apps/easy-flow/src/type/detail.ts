@@ -94,6 +94,7 @@ export type Comments = {
   commit?: string;
   targetUser?: User;
   autoPushDataResult?: {
+    detailMessage: string;
     resultCode: number;
     resultMessage: string;
   };

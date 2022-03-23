@@ -124,19 +124,29 @@ function NodeActionRecord(props: NodeActionRecordProps) {
     if (!comments) {
       return null;
     }
-    if (auditType === AuditRecordType.AUTO_INTERFACE_PUSH || auditType === AuditRecordType.AUTO_PLUGIN) {
+    if (comments.autoPushDataResult) {
       const name = comments.actionName;
       const result = comments.autoPushDataResult?.resultCode ?? -1;
+      const reason = comments.autoPushDataResult?.detailMessage;
       return (
-        <div className={styles["action-result"]}>
-          <div className={styles["action-name"]}>{name}</div>
-          <div className={classnames(styles.result, result === 0 ? styles.success : styles.failed)}>
-            {result === 0 ? "成功" : "失败"}
+        <>
+          <div className={styles["action-result"]}>
+            <div className={styles["action-name"]}>{name}</div>
+            <div className={classnames(styles.result, result === 0 ? styles.success : styles.failed)}>
+              {result === 0 ? "成功" : "失败"}
+            </div>
           </div>
-        </div>
+          {result !== 0 && (
+            <div className={styles["action-result"]}>
+              <div className={styles["action-name"]}>
+                <span className={styles.name}>{reason}</span>
+              </div>
+            </div>
+          )}
+        </>
       );
     }
-    if (auditType === AuditRecordType.AUTO_PROCESS_TRIGGER) {
+    if (comments.autoTriggerResults) {
       const resultList = comments.autoTriggerResults || [];
       return resultList.map(({ processInfo, resultCode }, index) => {
         return (
