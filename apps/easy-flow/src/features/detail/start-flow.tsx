@@ -33,6 +33,7 @@ function StartFlow() {
   const location = useLocation();
   const [data, setData] = useState<DataType>();
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState<boolean>(false);
   const { data: subApp } = useSubapp(subAppId);
   const formRef = useRef<FormInstance<FormValue>>(null);
   const [datasource, serDatasource] = useState<Datasource>();
@@ -132,24 +133,33 @@ function StartFlow() {
   const handleSubmit = useMemoCallback(
     debounce(async () => {
       if (!formRef.current || !subApp) return;
-      validateTabs(formRef.current);
-      const values = await formRef.current.validateFields();
-      const formValues = await uploadFile(values);
-      // 上传文件成功之后再提交表单
-      await runtimeAxios.post("/process_instance/start", {
-        formData: formValues,
-        versionId: subApp.version.id,
-      });
-      message.success("提交成功");
-      setTimeout(() => {
-        if (type === "app") {
-          history.goBack();
-        } else {
-          // 回任务中心我的发起
-          history.replace(`${dynamicRoutes.toTaskCenter(subApp.app.id)}/start`);
-        }
-      }, 1000);
-    }, 500),
+      try {
+        setSubmitting(true);
+        validateTabs(formRef.current);
+        const values = await formRef.current.validateFields();
+        const formValues = await uploadFile(values);
+        // 上传文件成功之后再提交表单
+        await runtimeAxios.post("/process_instance/start", {
+          formData: formValues,
+          versionId: subApp.version.id,
+        });
+        message.success("提交成功");
+        setTimeout(() => {
+          if (type === "app") {
+            history.goBack();
+          } else {
+            // 回任务中心我的发起
+            history.replace(`${dynamicRoutes.toTaskCenter(subApp.app.id)}/start`);
+          }
+        }, 1500);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setTimeout(() => {
+          setSubmitting(false);
+        }, 1500);
+      }
+    }, 1500),
   );
 
   const handleSave = useMemoCallback(
@@ -168,9 +178,7 @@ function StartFlow() {
   const handleDeleteDraft = useMemoCallback(
     debounce(async () => {
       await deleteDraft(subAppId);
-
       message.success("删除成功");
-
       if (subApp) {
         setTimeout(() => {
           if (type === "app") {
@@ -179,7 +187,7 @@ function StartFlow() {
             // 回任务中心草稿列表
             history.replace(`${dynamicRoutes.toTaskCenter(subApp.app.id)}/draft`);
           }
-        }, 1500);
+        }, 500);
       }
     }, 500),
   );
@@ -202,7 +210,13 @@ function StartFlow() {
               保存
             </AsyncButton>
 
-            <AsyncButton disabled={!data} className={styles.submit} onClick={handleSubmit} size="large">
+            <AsyncButton
+              disabled={!data}
+              loading={submitting}
+              className={styles.submit}
+              onClick={handleSubmit}
+              size="large"
+            >
               提交
             </AsyncButton>
           </div>

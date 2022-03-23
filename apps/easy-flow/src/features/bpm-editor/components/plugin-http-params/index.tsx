@@ -54,7 +54,7 @@ const PluginHttpParams: FC<PluginHttpParamsProps> = ({ name, label, text = "来�
                           rules={[
                             {
                               validator(_, val: string) {
-                                if (!val && required) {
+                                if (required && (!val || !val.trim())) {
                                   return Promise.reject(new Error("不能为空"));
                                 }
 
