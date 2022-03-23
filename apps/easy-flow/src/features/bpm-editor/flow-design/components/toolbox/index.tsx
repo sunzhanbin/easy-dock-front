@@ -28,7 +28,7 @@ const groupPluginList = (groupList: PluginGroupItem[]): NodeTypeList[] => {
   const groups = groupList.map(({ id, name, plugins }) => {
     const nodeList = plugins
       .filter((plugin) => plugin.enabled)
-      .map(({ id, name }) => ({ name, id, type: NodeType.PluginNode, icon: "chajiandise" }));
+      .map(({ id, name }) => ({ name, id, type: NodeType.PluginNode, icon: "chajianxian" }));
     return { id: String(id), name, nodeList };
   });
   return groups;
