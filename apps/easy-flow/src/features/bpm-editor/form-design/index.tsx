@@ -9,9 +9,11 @@ import { axios } from "@/utils";
 import styles from "./index.module.scss";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import useBuildTheme from "../flow-design/hooks/use-build-theme";
 
 const FormDesign: FC<any> = () => {
   const dispatch = useAppDispatch();
+  useBuildTheme();
   const { bpmId: subAppId } = useParams<{ bpmId: string }>();
 
   useEffect(() => {
