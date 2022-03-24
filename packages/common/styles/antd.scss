@@ -846,7 +846,9 @@
     }
 
     &.ant-radio-button-wrapper-checked {
-      color: $primary-color;
+      span {
+        color: $primary-color !important;
+      }
     }
   }
 
