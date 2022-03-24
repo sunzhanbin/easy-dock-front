@@ -1,8 +1,10 @@
 import { memo, FC, ReactNode } from "react";
 import { Button } from "antd";
+import classNames from "classnames";
 import { Icon } from "@common/components";
 import { NodeType } from "@/type/flow";
 import styles from "./branch-node.module.scss";
+import AddNodeButton from "../add-node-button";
 
 const branches = [
   {
@@ -35,14 +37,17 @@ function Branch() {
             </div>
           </div>
         </div>
+        <div className={styles.footer}>
+          <AddNodeButton prevId="111"></AddNodeButton>
+        </div>
       </div>
     </div>
   );
 }
 
-const BranchNode: FC<{ children?: ReactNode }> = ({ children }) => {
+const BranchNode: FC<{ children?: ReactNode; className?: string }> = ({ children, className }) => {
   return (
-    <div className={styles["branch-node"]}>
+    <div className={classNames(styles["branch-node"], className && className)}>
       <Button className={styles["add-branch-button"]} type="primary" icon={<Icon type="guanbi" />} />
       <div className={styles.branchs}>
         {branches.map((branch) => (
