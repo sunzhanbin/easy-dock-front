@@ -14,7 +14,7 @@
 
   hr {
     height: 1px;
-    background-color: rgba(#181f43, 0.08);
+    background-color: $form-field-name-border-color;
     border: none;
   }
 }

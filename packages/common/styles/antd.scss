@@ -390,8 +390,24 @@
 
 .ant-checkbox {
   &.ant-checkbox-disabled {
+    &.ant-checkbox-checked {
+      .ant-checkbox-inner {
+        background-color: $button-primary-disabled-background-color;
+        border-color: $button-primary-disabled-background-color !important;
+
+        &::after {
+          border-color: $checkbox-disabled-checked-border-color !important;
+        }
+      }
+    }
+
+    .ant-checkbox-inner {
+      border-color: $border-normal-color !important;
+      background-color: $form-field-name-border-color;
+    }
+
     & + span {
-      color: #181f43;
+      color: $form-item-label-text-color;
     }
   }
 }
@@ -400,7 +416,7 @@
   color: $form-field-name-text-color;
 
   .ant-checkbox-inner {
-    background-color: $checkbox-indeterminate-bg;
+    background-color: $button-default-background-color;
     border-color: $checkbox-indeterminate-border-color;
   }
 }
@@ -443,14 +459,6 @@
 .ant-checkbox-input:focus + .ant-checkbox-inner,
 .ant-checkbox-checked::after {
   border-color: $checkbox-checked-bg;
-}
-
-.ant-checkbox-disabled.ant-checkbox-checked .ant-checkbox-inner {
-  background-color: #ededf0;
-
-  &::after {
-    border-color: #aeb1bd;
-  }
 }
 
 // 定制tooltip
@@ -780,6 +788,12 @@
 .ant-radio {
   color: $label-hint-text-color;
 
+  &:hover {
+    .ant-radio-inner {
+      border-color: $border-primary-color;
+    }
+  }
+
   .ant-radio-inner {
     background-color: $content-background-color;
     border-color: $border-normal-color;
@@ -800,10 +814,25 @@
     }
   }
 
-  //禁用样式
   &.ant-radio-disabled {
+    &.ant-radio-checked {
+      .ant-radio-inner {
+        background-color: $button-primary-disabled-background-color;
+        border-color: $button-primary-disabled-background-color !important;
+
+        &::after {
+          background-color: $checkbox-disabled-checked-border-color !important;
+        }
+      }
+    }
+
+    .ant-radio-inner {
+      border-color: $border-normal-color !important;
+      background-color: $form-field-name-border-color;
+    }
+
     & + span {
-      color: #181f43;
+      color: $form-item-label-text-color;
     }
   }
 }
@@ -817,7 +846,9 @@
     }
 
     &.ant-radio-button-wrapper-checked {
-      color: $primary-color;
+      span {
+        color: $primary-color !important;
+      }
     }
   }
 
@@ -1307,6 +1338,10 @@
 
 .ant-upload-list {
   color: $label-hint-text-color;
+
+  .ant-upload-list-item-card-actions .anticon {
+    color: $svg-color;
+  }
 }
 
 // .ant-progress
