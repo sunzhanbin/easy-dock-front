@@ -24,6 +24,7 @@ import { load, flowDataSelector, save, setChoosedNode, showIconSelector } from "
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import FlowTree from "./flow-tree";
 import styles from "./index.module.scss";
+import useBuildTheme from "./hooks/use-build-theme";
 
 function FlowDesign() {
   const dispatch = useAppDispatch();
@@ -35,6 +36,8 @@ function FlowDesign() {
       dispatch(setChoosedNode(null));
     }
   });
+
+  useBuildTheme();
 
   useEffect(() => {
     dispatch(load(bpmId));
