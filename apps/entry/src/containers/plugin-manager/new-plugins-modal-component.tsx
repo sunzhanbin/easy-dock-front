@@ -56,8 +56,7 @@ const NewPluginsModalComponent = ({ groupList, editItem, visible, onCancel, onOK
       };
       delete params.group;
       params.groupId = values?.group?.value;
-      console.log(params, "---------");
-      // onOK && onOK(params);
+      onOK && onOK(params);
     } catch (e) {
       console.log(e);
     }
