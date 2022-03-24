@@ -11,16 +11,21 @@
   background-color: var(--custom-progress-status-bg, #24B493FF);
 }
 
-.bf-container .DraftEditor-editorContainer {
+// 富文本编辑器样式
+.bf-container {
+  .bf-controlbar .control-item.button.active {
+    color: $primary-color;
+  }
 
-  .bf-hr {
+  .DraftEditor-editorContainer {
+    .bf-hr {
+      &:hover::before {
+        background-color: $border-primary-color;
+      }
 
-    &:hover::before {
-      background-color: $border-primary-color;
-    }
-
-    &::before {
-      background-color: $form-field-name-border-color;
+      &::before {
+        background-color: $form-field-name-border-color;
+      }
     }
   }
 }
