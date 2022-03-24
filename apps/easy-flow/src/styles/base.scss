@@ -10,3 +10,17 @@
 .ant-progress-success-bg, .ant-progress-bg, .ant-progress-status-success .ant-progress-bg {
   background-color: var(--custom-progress-status-bg, #24B493FF);
 }
+
+.bf-container .DraftEditor-editorContainer {
+
+  .bf-hr {
+
+    &:hover::before {
+      background-color: $border-primary-color;
+    }
+
+    &::before {
+      background-color: $form-field-name-border-color;
+    }
+  }
+}
