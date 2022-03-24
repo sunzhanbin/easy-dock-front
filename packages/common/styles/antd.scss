@@ -462,14 +462,21 @@
 }
 
 // 定制tooltip
-.ant-tooltip-inner {
-  line-height: 22px;
-  border-radius: 3px;
-  color: #fff;
-  background-color: rgba(#1a1b1e, 0.85);
-  font-size: 14px;
-  font-weight: 400;
+.ant-tooltip {
+  .ant-tooltip-inner {
+    line-height: 22px;
+    border-radius: 3px;
+    color: $toolTip-dropdown-text-color;
+    background-color: $toolTip-dropdown-bg;
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  .ant-tooltip-arrow-content {
+    background-color: $toolTip-dropdown-bg;
+  }
 }
+
 
 /* datepicker style begin */
 .ant-picker {

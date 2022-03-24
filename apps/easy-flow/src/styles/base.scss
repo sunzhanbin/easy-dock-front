@@ -17,6 +17,11 @@
     color: $primary-color;
   }
 
+  .bf-controlbar [data-title]:after {
+    background-color: $toolTip-dropdown-bg;
+    color: $toolTip-dropdown-text-color;
+  }
+
   .DraftEditor-editorContainer {
     .bf-hr {
       &:hover::before {
@@ -25,6 +30,18 @@
 
       &::before {
         background-color: $form-field-name-border-color;
+      }
+
+      .bf-media-toolbar {
+        background-color: $toolTip-dropdown-bg;
+
+        a {
+          color: $toolTip-dropdown-text-color;
+        }
+
+        &::before {
+          border-top-color: $toolTip-dropdown-bg;
+        }
       }
     }
   }
