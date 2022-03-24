@@ -18,7 +18,7 @@
     max-height: calc(100vh - 160px);
     overflow-y: auto;
     overflow-x: hidden;
-    
+
     .ant-table-cell:last-child {
       padding: 0;
       //background: #fff !important;
@@ -86,7 +86,7 @@
 
     .text-name {
       color: #181F434D;
-      cursor: pointer;
+      cursor: not-allowed;
       padding-left: 4px;
       padding-right: 8px;
     }
@@ -101,6 +101,7 @@
       }
 
       .text-name {
+        cursor: pointer;
         color: #181F43FF;
       }
     }
