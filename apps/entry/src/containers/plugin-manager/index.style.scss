@@ -15,7 +15,10 @@
 
   .table-container {
     margin-top: 20px;
-
+    max-height: calc(100vh - 160px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    
     .ant-table-cell:last-child {
       padding: 0;
       //background: #fff !important;
