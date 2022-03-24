@@ -127,7 +127,7 @@ function NodeActionRecord(props: NodeActionRecordProps) {
     if (comments.autoPushDataResult) {
       const name = comments.actionName;
       const result = comments.autoPushDataResult?.resultCode ?? -1;
-      const reason = comments.autoPushDataResult?.detailMessage;
+      // const reason = comments.autoPushDataResult?.detailMessage;
       return (
         <>
           <div className={styles["action-result"]}>
@@ -136,13 +136,13 @@ function NodeActionRecord(props: NodeActionRecordProps) {
               {result === 0 ? "成功" : "失败"}
             </div>
           </div>
-          {result !== 0 && (
+          {/* {result !== 0 && (
             <div className={styles["action-result"]}>
               <div className={styles["action-name"]}>
                 <span className={styles.name}>{reason}</span>
               </div>
             </div>
-          )}
+          )} */}
         </>
       );
     }
