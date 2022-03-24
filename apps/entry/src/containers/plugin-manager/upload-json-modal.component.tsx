@@ -49,7 +49,7 @@ const UploadJsonModalComponent = ({ editItem, visible, onCancel, onOK }: ModalPr
     try {
       dispatch(setJSONMeta(values));
       if (!values?.code) {
-        return message.error("code不能为空，请修改后重新上传！");
+        return message.error("插件编码不能为空，请修改后重新上传！");
       }
       if (editItem?.id) {
         const params = {

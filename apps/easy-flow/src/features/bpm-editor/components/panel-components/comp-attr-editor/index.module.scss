@@ -42,7 +42,7 @@
       }
 
       .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
-        color: $primary-color;
+        //color: $primary-color;
         background-image: url(~@/assets/selected.png);
         background-position: top right;
         background-repeat: no-repeat;
