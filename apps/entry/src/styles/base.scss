@@ -7,6 +7,16 @@
   margin: 0 auto;
 }
 
+.ant-modal-footer {
+  .ant-btn {
+    &:first-child {
+      border: none;
+      background-color: transparent;
+      box-shadow: none;
+    }
+  }
+}
+
 @media screen and (max-width: 1365px) {
   .easy-dock-content {
     width: 1230px;
