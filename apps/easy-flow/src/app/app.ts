@@ -21,14 +21,18 @@ export interface SubAppState {
     };
     visits?: Visits;
   };
+  theme: string;
 }
 
 const subapp = createSlice({
   name: "subapp",
-  initialState: { loading: false } as SubAppState,
+  initialState: { loading: false, theme: "light" } as SubAppState,
   reducers: {
     setLoading(state, { payload }: PayloadAction<boolean>) {
       state.loading = payload;
+    },
+    setTheme(state, { payload }: PayloadAction<string>) {
+      state.theme = payload;
     },
     setApp(state, { payload }: PayloadAction<SubApp>) {
       state.data = payload;
@@ -42,7 +46,7 @@ const subapp = createSlice({
   },
 });
 
-export const { setLoading, setApp, setExtend, setDirty } = subapp.actions;
+export const { setLoading, setApp, setExtend, setDirty, setTheme } = subapp.actions;
 
 export const loadApp = createAsyncThunk<Promise<SubAppState["data"]>, string>(
   "subapp/load",

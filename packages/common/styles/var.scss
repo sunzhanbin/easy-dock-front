@@ -56,6 +56,9 @@ $popover-dropdown-bg: var(--popover-dropdown-bg, #ffffffff);
 $popover-dropdown-option-hover-color: var(--custom-popover-dropdown-option-hover-color, #1827430a);
 $popover-dropdown-text-normal-color: var(--custom-popover-dropdown-text-normal-color, #181f43ff);
 
+// toolTip
+$toolTip-dropdown-bg: var(--toolTip-dropdown-bg, #181F43D9);
+$toolTip-dropdown-text-color: var(--toolTip-dropdown-text-color, #ffffffff);
 
 // datepicker
 $datepicker-background-normal-color: var(--custom-datepicker-background-normal-color, #1827430a);
