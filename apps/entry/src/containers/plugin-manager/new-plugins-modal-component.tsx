@@ -33,8 +33,8 @@ const NewPluginsModalComponent = ({ groupList, editItem, visible, onCancel, onOK
     form.setFieldsValue({
       name: values?.name,
       group: group ? { value: group?.id } : undefined,
-      openVisit: values?.openVisit,
-      enabled: values?.enabled,
+      openVisit: values?.openVisit === false ? values?.openVisit : true,
+      enabled: values?.enabled === false ? values?.enabled : true,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editItem, jsonMeta]);
@@ -56,7 +56,8 @@ const NewPluginsModalComponent = ({ groupList, editItem, visible, onCancel, onOK
       };
       delete params.group;
       params.groupId = values?.group?.value;
-      onOK && onOK(params);
+      console.log(params, "---------");
+      // onOK && onOK(params);
     } catch (e) {
       console.log(e);
     }
