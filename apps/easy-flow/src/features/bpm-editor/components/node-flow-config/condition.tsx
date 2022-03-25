@@ -274,7 +274,7 @@ const Condition: FC<ConditionProps> = ({ name }) => {
                                       </div>
                                     );
                                   })}
-                                  <Button className={styles.and} onClick={() => add({})}>
+                                  <Button icon={<Icon type="xinzeng" />} className={styles.and} onClick={() => add({})}>
                                     且条件
                                   </Button>
                                 </>
@@ -287,7 +287,7 @@ const Condition: FC<ConditionProps> = ({ name }) => {
                   </Form.Item>
                 );
               })}
-              <Button className={styles.or} onClick={() => addBlock([{}])}>
+              <Button icon={<Icon type="xinzeng" />} className={styles.or} onClick={() => addBlock([{}])}>
                 或条件
               </Button>
             </>
