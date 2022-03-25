@@ -118,7 +118,7 @@ export const JumpLinkToUrl = async (
     if (!spaceData) return;
     window.open(`${SPACE_ENTRY}/#/scene/${spaceData.refId}`);
   } else if (type === HomeSubAppType.FLOW) {
-    window.open(`${MAIN_ENTRY}/main/builder/flow/bpm-editor/${id}/form-design`);
+    window.open(`${MAIN_ENTRY}/main/builder/flow/bpm-editor/${id}/form-design?theme=light`);
   } else if (type === HomeSubAppType.FORM) {
     // window.open(`${MAIN_ENTRY}/builder/flow/bpm-editor/${id}/form-design`);
   } else if (type === HomeSubAppType.DEVICE) {
