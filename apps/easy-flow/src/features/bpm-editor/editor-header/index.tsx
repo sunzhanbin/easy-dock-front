@@ -26,7 +26,15 @@ const EditorHeader: FC = () => {
   const { bpmId } = useParams<{ bpmId: string }>();
   const containerRef = useRef<HTMLDivElement>(null);
   const match = useRouteMatch();
-  const { pathname: pathName } = useLocation<{ pathname: string }>();
+  const location = useLocation<{ pathname: string }>();
+  const pathName = useMemo(() => location.pathname, [location.pathname]);
+  const theme = useMemo<string>(() => {
+    if (location?.search) {
+      const params = new URLSearchParams(location.search.slice(1));
+      return params.get("theme") || "light";
+    }
+    return window.sessionStorage.getItem("theme") || "light";
+  }, [location.search]);
   const showConfirm = useMemoCallback((go) => {
     confirm({
       okText: "保存更改",
@@ -176,7 +184,7 @@ const EditorHeader: FC = () => {
           <NavLink
             className={styles.step}
             replace={true}
-            to={`${match.url}/form-design`}
+            to={`${match.url}/form-design?theme=${theme}`}
             activeClassName={styles.active}
           >
             <span>表单设计</span>
@@ -185,13 +193,18 @@ const EditorHeader: FC = () => {
           <NavLink
             className={styles.step}
             replace={true}
-            to={`${match.url}/flow-design`}
+            to={`${match.url}/flow-design?theme=${theme}`}
             activeClassName={styles.active}
           >
             <span>流程设计</span>
           </NavLink>
 
-          <NavLink className={styles.step} replace={true} to={extendPath} activeClassName={styles.active}>
+          <NavLink
+            className={styles.step}
+            replace={true}
+            to={`${match.url}/extend?theme=${theme}`}
+            activeClassName={styles.active}
+          >
             <span>扩展功能</span>
           </NavLink>
         </div>
