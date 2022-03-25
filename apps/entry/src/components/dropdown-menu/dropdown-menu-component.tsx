@@ -54,14 +54,15 @@ const DropdownMenuComponent = forwardRef(function DropdownMenu(props: DropdownMe
   );
 
   // 新增option
-  const addField = (e: React.MouseEvent) => {
+  const addField = useMemoCallback((e: React.MouseEvent) => {
     e.stopPropagation();
     if (type.key === "project") {
       onShowProjectModal && onShowProjectModal();
     } else {
       setShowButton(false);
+      onReset && onReset();
     }
-  };
+  });
 
   // 新增字段名change
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
