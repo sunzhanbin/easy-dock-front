@@ -15,13 +15,16 @@ export default function useBuildTheme() {
       const params = new URLSearchParams(location.search.slice(1));
       return params.get("theme") || "light";
     }
-    return subApp.theme || "light";
+    return window.sessionStorage.getItem("theme") || subApp.theme || "light";
   }, [location.search, subApp.theme]);
 
   useEffect(() => {
-    dispatch(setTheme(theme));
-    registerTheme({
-      theme,
-    });
+    if (theme) {
+      window.sessionStorage.setItem("theme", theme);
+      dispatch(setTheme(theme));
+      registerTheme({
+        theme,
+      });
+    }
   }, [theme, dispatch]);
 }
