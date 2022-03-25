@@ -25,6 +25,7 @@ import useMemoCallback from "@common/hooks/use-memo-callback";
 import FlowTree from "./flow-tree";
 import styles from "./index.module.scss";
 import useBuildTheme from "./hooks/use-build-theme";
+import useFlowMode from "./hooks/use-flow-mode";
 
 function FlowDesign() {
   const dispatch = useAppDispatch();
@@ -38,6 +39,8 @@ function FlowDesign() {
   });
 
   useBuildTheme();
+
+  const flowMode = useFlowMode();
 
   useEffect(() => {
     dispatch(load(bpmId));
@@ -139,11 +142,13 @@ function FlowDesign() {
   return (
     <DndProvider backend={HTML5Backend}>
       <div className={styles["scroll-container"]}>
-        <div className={styles.tool}>
-          <Toolbox />
-        </div>
+        {flowMode !== "preview" && (
+          <div className={styles.tool}>
+            <Toolbox />
+          </div>
+        )}
         <div
-          className={classNames(styles.flow, !showIcon && styles.saving)}
+          className={classNames(styles.flow, !showIcon && styles.saving, flowMode === "preview" && styles.preview)}
           onClick={handleCloseDrawer}
           id="flow-container"
         >
@@ -153,40 +158,42 @@ function FlowDesign() {
             <FlowTree data={flow} />
           </div>
         </div>
-        <Drawer
-          width={drawerWidth}
-          visible={!!choosedNode}
-          getContainer={false}
-          onClose={handleCloseDrawer}
-          destroyOnClose
-          closable={false}
-          mask={false}
-        >
-          {drawerHeader}
+        {flowMode !== "preview" && (
+          <Drawer
+            width={drawerWidth}
+            visible={!!choosedNode}
+            getContainer={false}
+            onClose={handleCloseDrawer}
+            destroyOnClose
+            closable={false}
+            mask={false}
+          >
+            {drawerHeader}
 
-          <div className={styles.editor}>
-            {choosedNode && choosedNode.type === NodeType.StartNode && <StartNodeEditor node={choosedNode} />}
+            <div className={styles.editor}>
+              {choosedNode && choosedNode.type === NodeType.StartNode && <StartNodeEditor node={choosedNode} />}
 
-            {choosedNode && choosedNode.type === NodeType.AuditNode && <AuditNodeEditor node={choosedNode} />}
+              {choosedNode && choosedNode.type === NodeType.AuditNode && <AuditNodeEditor node={choosedNode} />}
 
-            {choosedNode && choosedNode.type === NodeType.FillNode && <FillNodeEditor node={choosedNode} />}
+              {choosedNode && choosedNode.type === NodeType.FillNode && <FillNodeEditor node={choosedNode} />}
 
-            {choosedNode && choosedNode.type === NodeType.CCNode && <CCNodeEditor node={choosedNode} />}
+              {choosedNode && choosedNode.type === NodeType.CCNode && <CCNodeEditor node={choosedNode} />}
 
-            {choosedNode && choosedNode.type === NodeType.FinishNode && <FinishNodeEditor node={choosedNode} />}
+              {choosedNode && choosedNode.type === NodeType.FinishNode && <FinishNodeEditor node={choosedNode} />}
 
-            {choosedNode && choosedNode.type === NodeType.PluginNode && <PluginNodeEditor node={choosedNode} />}
+              {choosedNode && choosedNode.type === NodeType.PluginNode && <PluginNodeEditor node={choosedNode} />}
 
-            {choosedNode && choosedNode.type === NodeType.SubBranch && <SubBranchEditor branch={choosedNode} />}
+              {choosedNode && choosedNode.type === NodeType.SubBranch && <SubBranchEditor branch={choosedNode} />}
 
-            {choosedNode && choosedNode.type === NodeType.AutoNodePushData && (
-              <AutoNodePushDataEditor node={choosedNode} />
-            )}
-            {choosedNode && choosedNode.type === NodeType.AutoNodeTriggerProcess && (
-              <AutoNodeTriggerProcess node={choosedNode} />
-            )}
-          </div>
-        </Drawer>
+              {choosedNode && choosedNode.type === NodeType.AutoNodePushData && (
+                <AutoNodePushDataEditor node={choosedNode} />
+              )}
+              {choosedNode && choosedNode.type === NodeType.AutoNodeTriggerProcess && (
+                <AutoNodeTriggerProcess node={choosedNode} />
+              )}
+            </div>
+          </Drawer>
+        )}
       </div>
     </DndProvider>
   );

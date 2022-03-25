@@ -10,11 +10,15 @@ import { axios } from "@/utils";
 import { setAppInfo } from "./form-design/formdesign-slice";
 import { loadApp } from "@app/app";
 import styles from "./index.module.scss";
+import useFlowMode from "./flow-design/hooks/use-flow-mode";
 
 const BpmEditor: FC = () => {
   const match = useRouteMatch();
   const dispatch = useAppDispatch();
   const { bpmId } = useParams<{ bpmId: string }>();
+
+  const flowMode = useFlowMode();
+
   useEffect(() => {
     bpmId &&
       axios.get(`/subapp/${bpmId}`).then((res) => {
@@ -35,7 +39,7 @@ const BpmEditor: FC = () => {
 
   return (
     <div className={styles.container}>
-      <EditorHeader></EditorHeader>
+      {flowMode !== "preview" && <EditorHeader></EditorHeader>}
       <div className={styles["bmp-editor-content"]}>
         <Switch>
           <Route path={`${match.path}/form-design`} component={FormDesign} />

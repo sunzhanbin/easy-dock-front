@@ -23,6 +23,7 @@ import { formatRuleValue } from "@utils";
 import styles from "./index.module.scss";
 import ShadowNode from "../../components/shadow-node";
 import AddNodeButton from "../../components/add-node-button";
+import useFlowMode from "../../hooks/use-flow-mode";
 
 type BranchType = BranchNodeType["branches"][number];
 
@@ -47,6 +48,7 @@ export const Branch = memo(function Branch(props: BranchProps) {
   const { data, parentNode, children } = props;
   const [showDeletePopover, setShowDeletePopover] = useState(false);
   const formMeta = useAppSelector(formMetaSelector);
+  const flowMode = useFlowMode();
 
   const [collectProps, drop] = useDrop(
     () => ({
@@ -160,18 +162,20 @@ export const Branch = memo(function Branch(props: BranchProps) {
               <span>配置筛选条件</span>
             </div>
           </div>
-          <PopoverConfirm
-            onConfirm={handleDeleteBranch}
-            title="确认删除"
-            visible={showDeletePopover}
-            onVisibleChange={setShowDeletePopover}
-            trigger="click"
-            content={"确认删除该分支吗？"}
-          >
-            <div className={styles.action}>
-              <Icon type="shanchu" className={styles.icon} />
-            </div>
-          </PopoverConfirm>
+          {flowMode !== "preview" && (
+            <PopoverConfirm
+              onConfirm={handleDeleteBranch}
+              title="确认删除"
+              visible={showDeletePopover}
+              onVisibleChange={setShowDeletePopover}
+              trigger="click"
+              content={"确认删除该分支吗？"}
+            >
+              <div className={styles.action}>
+                <Icon type="shanchu" className={styles.icon} />
+              </div>
+            </PopoverConfirm>
+          )}
         </div>
         {isOver && <ShadowNode type={nodeType} parentType="branch" className={styles["temp-node"]} />}
         <div
@@ -183,7 +187,7 @@ export const Branch = memo(function Branch(props: BranchProps) {
           )}
           ref={drop}
         >
-          {showIcon ? <AddNodeButton prevId={data.id}></AddNodeButton> : null}
+          {flowMode !== "preview" && showIcon ? <AddNodeButton prevId={data.id}></AddNodeButton> : null}
         </div>
       </div>
 
@@ -196,6 +200,7 @@ function BranchNode(props: BranchNodeProps) {
   const { data, children } = props;
   const showIcon = useAppSelector(showIconSelector);
   const isDragging = useAppSelector(isDraggingSelector);
+  const flowMode = useFlowMode();
   const dispatch = useAppDispatch();
   const handleAddBranch = useMemoCallback(() => {
     dispatch(addSubBranch(data));
@@ -224,7 +229,7 @@ function BranchNode(props: BranchNodeProps) {
 
   return (
     <div className={styles["branch-node"]}>
-      {showIcon && (
+      {flowMode !== "preview" && showIcon && (
         <Button
           className={classnames(styles["add-branch-button"])}
           type="primary"
@@ -243,7 +248,7 @@ function BranchNode(props: BranchNodeProps) {
         )}
         ref={drop}
       >
-        {showIcon ? <AddNodeButton prevId={data.id}></AddNodeButton> : null}
+        {flowMode !== "preview" && showIcon ? <AddNodeButton prevId={data.id}></AddNodeButton> : null}
       </div>
     </div>
   );
