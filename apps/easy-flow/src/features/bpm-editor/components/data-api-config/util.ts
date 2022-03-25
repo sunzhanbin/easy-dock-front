@@ -99,6 +99,7 @@ export async function queryApis(): Promise<Api[]> {
   return axios
     .get<{ data: Api[] }>(`${orchPrefix}/listInfoForAll`, {
       baseURL,
+      silence: true,
     })
     .then(({ data }) => {
       return data;
