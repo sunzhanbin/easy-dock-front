@@ -61,6 +61,11 @@
       background-color: $branch-nodes-background-color;
       overflow: initial;
     }
+
+    &.preview {
+      left: 0;
+      width: 100%;
+    }
   }
 
   .editor {

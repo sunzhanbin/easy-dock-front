@@ -16,6 +16,7 @@ import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import styles from "./index.module.scss";
 import AddNodeButton from "../../components/add-node-button";
+import useFlowMode from "../../hooks/use-flow-mode";
 
 interface BaseProps {
   icon: ReactNode;
@@ -60,6 +61,7 @@ function Base(props: BaseProps) {
   const { invalidNodesMap } = useAppSelector(flowDataSelector);
   const showIcon = useAppSelector(showIconSelector);
   const isDragging = useAppSelector(isDraggingSelector);
+  const flowMode = useFlowMode();
   const { icon, node, children } = props;
   const { type, name } = node;
   const [showDeletePopover, setShowDeletePopover] = useState(false);
@@ -126,11 +128,11 @@ function Base(props: BaseProps) {
           )}
           ref={drop}
         >
-          {showIcon && <AddNodeButton prevId={node.id} />}
+          {flowMode !== "preview" && showIcon && <AddNodeButton prevId={node.id} />}
         </div>
       )}
 
-      {showDelete && (
+      {flowMode !== "preview" && showDelete && (
         <div className={classnames(styles.actions, { [styles.show]: showDeletePopover })}>
           <PopoverConfirm
             title="确认删除"
