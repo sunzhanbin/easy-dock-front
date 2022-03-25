@@ -76,11 +76,11 @@ const TaskCenter: FC = () => {
     dispatch(setMode(mode));
   }, [theme, mode, dispatch]);
 
-  useEffect(() => {
-    registerTheme({
-      theme,
-    });
-  }, [theme]);
+  // useEffect(() => {
+  //   registerTheme({
+  //     theme
+  //   });
+  // }, [theme]);
   return (
     <div className={classNames(styles.container, styles[theme])}>
       <div className={styles.header}>
@@ -154,7 +154,7 @@ const TaskCenter: FC = () => {
           bodyStyle={{ padding: 0 }}
           centered={true}
           footer={null}
-          width={900}
+          width={880}
           maskClosable={false}
           closeIcon={<Icon type="guanbi" className={styles.close} />}
           onCancel={() => setIsShowDrawer(false)}
