@@ -1,11 +1,155 @@
+// 通用样式
 $primary-color: var(--ant-primary-color, #4c5cdb);
-$primary-color-custom: #4c5cdb;
 $main-content-min-height: calc(100vh - 65px);
+
+// 背景颜色
+$header-background-color: var(--custom-header-background, #ffffffff);
+$side-background-color: var(--custom-side-background, #1827430a);
+$content-background-color: var(--custom-body-background, #ffffffff);
+$flow-manage-content-bg: var(--custom-flow-manage-content-bg, #F6F7F8FF);
+$flow-manage-drawer-bg: var(--custom-flow-manage-drawer-bg, #ffffffff);
+$branch-nodes-background-color: var(--custom-branch-background, #edeff1);
+
+// 文字颜色
+$title-text-color: var(--custom-title-text-color, #181f43ff);
+$body-text-color: var(--custom-body-text-color, #181f43bf);
+$caption-text-color: var(--custom-caption-text-color, #181f4380);
+$hint-text-color: var(--custom-hint-text-color, #181f434d);
+$svg-color: var(--custom-svg-color, #181f434d);
+$menu-title-text-color: var(--custom-menu-title-text-color, #181f43ff);
+$label-hint-text-color: var(--custom-label-hint-text-color, #181F43D9);
+
+// 边框颜色
+$border-normal-color: var(--custom-border-normal-color, #181f431f);
+$border-hover-color: var(--custom-border-hover-color, #181f434d);
+$border-primary-color: var(--custom-border-primary-color, $primary-color);
+
+// input
+$input-background-normal-color: var(--custom-input-background-normal-color, #1827430a);
+$input-background-hover-color: var(--custom-input-background-hover-color, #ffffffff);
+$input-text-placeholder-color: var(--custom-input-text-placeholder-color, #181f434d);
+$input-text-active-color: var(--custom-input-text-active-color, #181f43ff);
+$input-border-hover-color: var(--custom-input-border-hover-color, #4c5cdbcc);
+$input-border-active-color: var(--custom-input-border-hover-color, #4c5cdbcc);
+$input-shadow-color: var(--custom-input-shadow-color, #4c5cdb1f);
+
+// modal
+$modal-mask-bg: var(--custom-modal-mask-bg, #181F438C);
+
+// select
+$select-background-normal-color: var(--custom-select-background-normal-color, #1827430a);
+$select-background-hover-color: var(--custom-select-background-hover-color, #ffffffff);
+$select-text-placeholder-color: var(--custom-select-text-placeholder-color, #181f434d);
+$select-text-active-color: var(--custom-select-text-active-color, #181f43ff);
+$select-border-hover-color: var(--custom-select-border-hover-color, #4c5cdbcc);
+$select-border-active-color: var(--custom-select-border-hover-color, #4c5cdbcc);
+$select-shadow-color: var(--custom-select-shadow-color, #4c5cdb1f);
+// select-dropdown
+$select-dropdown-body-background-color: var(--custom-select-dropdown-body-background-color, #ffffffff);
+$select-dropdown-option-hover-color: var(--custom-select-dropdown-option-hover-color, #1827430a);
+$select-dropdown-option-active-color: var(--custom-select-dropdown-option-active-color, #4c5cdb14);
+$select-dropdown-text-normal-color: var(--custom-select-dropdown-text-normal-color, #181f43ff);
+$select-dropdown-text-active-color: var(--custom-select-dropdown-text-hover-color, #4c5cdbff);
+
+// popover
+$popover-dropdown-bg: var(--popover-dropdown-bg, #ffffffff);
+$popover-dropdown-option-hover-color: var(--custom-popover-dropdown-option-hover-color, #1827430a);
+$popover-dropdown-text-normal-color: var(--custom-popover-dropdown-text-normal-color, #181f43ff);
+
+// toolTip
+$toolTip-dropdown-bg: var(--toolTip-dropdown-bg, #181F43D9);
+$toolTip-dropdown-text-color: var(--toolTip-dropdown-text-color, #ffffffff);
+
+// datepicker
+$datepicker-background-normal-color: var(--custom-datepicker-background-normal-color, #1827430a);
+$datepicker-background-hover-color: var(--custom-datepicker-background-hover-color, #ffffffff);
+$datepicker-text-placeholder-color: var(--custom-datepicker-text-placeholder-color, #181f434d);
+$datepicker-text-active-color: var(--custom-datepicker-text-active-color, #181f43ff);
+$datepicker-border-hover-color: var(--custom-datepicker-border-hover-color, #4c5cdbcc);
+$datepicker-border-active-color: var(--custom-datepicker-border-hover-color, #4c5cdbcc);
+$datepicker-shadow-color: var(--custom-datepicker-shadow-color, #4c5cdb1f);
+// datepicker-dropdown
+$datepicker-dropdown-body-background-color: var(--custom-datepicker-dropdown-body-background-color, #ffffffff);
+$datepicker-dropdown-option-hover-color: var(--custom-datepicker-dropdown-option-hover-color, #1827430a);
+$datepicker-dropdown-option-active-color: var(--custom-datepicker-dropdown-option-active-color, #4c5cdb14);
+$datepicker-dropdown-text-normal-color: var(--custom-datepicker-dropdown-text-normal-color, #181f43ff);
+$datepicker-dropdown-border-normal-color: var(--custom-datepicker-dropdown-border-normal-color, #181F4314);
+$datepicker-dropdown-text-active-color: var(--custom-datepicker-dropdown-text-hover-color, #4c5cdbff);
+
+// table
+$table-body-background-hover-color: var(--custom-table-body-background-hover-color, #4c5cdb0f);
+$table-head-text-color: var(--custom-table-head-text-color, #000000d8);
+
+// 任务中心header
+$menu-title-text-color: var(--custom-menu-title-text, #000000d9);
+$menu-line-color: var(--custom-menu-line, #181f431f);
+$nav-color: var(--custom-menu-nav, #181f43bf);
+$nav-active-color: var(--custom-menu-nav-active, #000000d8);
+
+// datepicker dropdown
+$dropdown-border-shadow-color: #181f431a;
+$dropdown-header-border-color: var(--custom-dropdown-header-border, #f0f0f0);
+$btn-primary-text-color: var(--custom-btn-primary-color, #fff);
+$disabled-primary-bg: var(--custom-btn-disable-bg, #4c5cdb80);
+$disabled-primary-color: var(--custom-btn-disable-color, #ffffff7f);
+$time-selected-bg: var(--custom-selected-time-bg, #4c5cdb1f);
+$time-selected-text-color: var(--custom-selected-time-text, #4c5cdb);
+$time-range-hover-bg: var(--custom-range-hover-bg, #ffffff0f);
+
+//$dropdown
+$dropdown-body-background-color: var(--custom-dropdown-bg, #ffffffff);
+
+// button
+$button-default-background-color: var(--custom-btn-default-bg, #fff);
+$button-default-disabled-background-color: var(--custom-btn-disabled-default-bg, #1827430A);
+$button-default-text-hover-color: var(--custom-btn-default-text-hover-color, #4C5CDBFF);
+$button-default-disabled-text-color: var(--custom-btn-default-disabled-text-color, #181F434D);
+$button-default-border-color: var(--custom-btn-default-border-color, #181F431F);
+$button-default-border-hover-color: var(--custom-default-btn-border-hover-color, #4C5CDBCC);
+$button-default-ghost-border-color: var(--custom-btn-default-ghost-border-color, #181F431F);
+$button-default-ghost-border-hover-color: var(--custom-btn-default-ghost-border-hover-color, #181F434D);
+$button-default-ghost-shadow-active-color: var(--custom-btn-default-ghost-shadow-active-color, #1827430A);
+
+
+$button-primary-background-color: var(--custom-btn-primary-bg, #4C5CDBFF);
+$button-primary-disabled-background-color: var(--custom-btn-primary-disabled-bg, #4C5CDB80);
+$button-primary-background-hover-color: var(--custom-btn-primary-hover-bg, #4C5CDBCC);
+$button-primary-text-color: var(--custom-btn-primary-text-color, #ffffffff);
+$button-primary-text-disabled-color: var(--custom-btn-primary-text-disabled-color, #ffffffff);
+$button-primary-ghost-text-color: var(--custom-btn-primary-ghost-text-color, #4c5cdbff);
+$button-primary-ghost-border-color: var(--custom-btn-primary-ghost-border-color, #4C5CDBCC);
+$button-primary-ghost-text-hover-color: var(--custom-btn-primary-ghost-text-hover-color, #4C5CDBCC);
+$button-primary-ghost-border-hover-color: var(--custom-btn-primary-ghost-border-hover-color, #4C5CDB80);
+$button-primary-ghost-disabled-border-color: var(--custom-btn-primary-ghost-disabled-border-color, #4C5CDB80);
+$button-primary-ghost-disabled-text-color: var(--custom-btn-primary-ghost-disabled-text-color, #4C5CDB80);
+
+// tag
+$tag-warning-border-color: var(--custom-tag-warning-border-color, #FF99004D);
+$tag-warning-text-color: var(--custom-tag-warning-text-color, #FF9900FF);
+$tag-success-border-color: var(--custom-tag-success-border-color, #06C4984D);
+$tag-success-text-color: var(--custom-tag-success-text-color, #06C498FF);
+$tag-error-border-color: var(--custom-tag-error-border-color, #FF55684D);
+$tag-error-text-color: var(--custom-tag-error-text-color, #FF5568FF);
+$tag-primary-border-color: var(--custom-tag-primary-border-color, #4C5CDB4D);
+$tag-primary-text-color: var(--custom-tag-primary-text-color, #4C5CDBFF);
+$tag-revoke-border-color: var(--custom-tag-revoke-border-color, #181F431F);
+$tag-revoke-text-color: var(--custom-tag-revoke-text-color, #181F4380);
+
+// flow-form
+$form-item-label-text-color: var(--custom-form-item-label-text-color, #181F43FF);
+$form-field-name-text-color: var(--custom-form-field-name-text-color, #181F43BF);
+$form-title-color: var(--custom-form-title-color, #000000D9);
+$form-field-name-border-color: var(--custom-form-field-name-border-color, #181F4314);
+$form-symbol-color: var(--custom-form-symbol-color, #181F437F);
+
+// checkbox
+$checkbox-checked-bg: var(--custom-checkbox-checked-bg, #4C5CDBFF);
+$checkbox-indeterminate-bg: var(--custom-checkbox-indeterminate-bg, #ffffffff);
+$checkbox-indeterminate-border-color: var(--custom-checkbox-indeterminate-border-color, #181F431F);
+$checkbox-disabled-checked-border-color: var(--custom-checkbox-disabled-checked-border-color, #ffffffff);
+
+$primary-color-custom: #4c5cdb;
 $primary-text-color: #181f43;
-$title-text-color: rgba($primary-text-color, 1);
-$body-text-color: rgba($primary-text-color, 0.75);
-$caption-text-color: rgba($primary-text-color, 0.5);
-$hint-color: rgba($primary-text-color, 0.3);
 $border-color: rgba($primary-text-color, 0.12);
 $background-gray: rgba($primary-text-color, 0.08);
 $background-light: rgba($primary-text-color, 0.04);

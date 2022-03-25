@@ -1,55 +1,259 @@
+/* >>> Common */
+$border-width-base: var(--custom-border-width-base);
+$border-style-base: var(--custom-border-style-base);
+
+
+/* >>> Buttons 按钮  */
+$btn-color: var(--custom-btn-color);
+$btn-background: var(--custom-btn-bg);
+$btn-font-weight: var(--custom-btn-font-weight);
+$btn-font-size: var(--custom-btn-font-size);
+$btn-border-width: var(--custom-btn-border-width);
+$btn-border-style: var(--custom-btn-border-style);
+$btn-border-color: var(--custom-btn-border-color);
+$btn-border-radius: var(--custom-btn-border-radius-base);
+$btn-border-image: var(--custom-btn-border-image);
+$btn-outline: var(--custom-btn-outline);
+$btn-box-shadow: var(--custom-btn-shadow);
+$btn-text-shadow: var(--custom-btn-text-shadow);
 .ant-btn {
-  color: var();
-  background: var();
-  box-shadow: var();
+  color: $btn-color;
+  background: $btn-background;
+  font-weight: $btn-font-weight;
+  font-size: $btn-font-size;
+  border: $btn-border-width $btn-border-style $btn-border-color;
+  border-radius: $btn-border-radius;
+  border-image: $btn-border-image;
+  outline: $btn-outline;
+  box-shadow: $btn-box-shadow;
+  text-shadow: $btn-text-shadow;
 
-  &:hover {
+  &-primary {
     color: var();
     background: var();
-    box-shadow: var();
-  }
-  &:active {
-    color: var();
-    background: var();
-    box-shadow: var();
-  }
-
-  &[disabled] {
-    color: var();
-    background: var();
-    box-shadow: var();
-    &:hover {
-      color: var();
-      background: var();
-      box-shadow: var();
+    border: var();
+    border-image: var();
+    &:hover {}
+    &:active {}
+    &[disabled] {
+      &:hover {}
+      &:active {}
     }
   }
 }
 
-.ant-btn-primary {
-  color: var();
-  background: var();
-  box-shadow: var();
+/* >>> Checkbox 多选框*/
+$checkbox-size: var(--custom-checkbox-size);
+$checkbox-color: var(--custom-checkbox-color);
+$checkbox-check-bg: var(--custom-checkbox-check-bg);
+$checkbox-border-radius: var(--custom-checkbox-border-radius);
+.ant-checkbox {
+  &-inner {
+    width: $checkbox-size;
+    height: $checkbox-size;
+    background-color: $checkbox-check-bg;
+    border-radius: $checkbox-border-radius;
 
-  &:hover {
-    color: var();
-    background: var();
-    box-shadow: var();
+    &::after {
+      $check-width: ($checkbox-size / 14) * 5px;
+      $heck-height: ($checkbox-size / 14) * 8px;
+      width: $check-width;
+      height: $heck-height;
+    }
   }
-  &:active {
-    color: var();
-    background: var();
-    box-shadow: var();
+  &-input:focus + &-inner {
+    border-color: $checkbox-color;
   }
 
-  &[disabled] {
-    color: var();
-    background: var();
-    box-shadow: var();
-    &:hover {
-      color: var();
-      background: var();
-      box-shadow: var();
+  &-checked::after {
+    border: 1px solid $checkbox-color;
+  }
+}
+.ant-checkbox-checked {
+  .ant-checkbox-inner {
+    background-color: $checkbox-color;
+    border-color: $checkbox-color;
+  }
+}
+.ant-checkbox-indeterminate {
+  .ant-checkbox-inner {
+    background-color: $checkbox-check-bg;
+  }
+  .ant-checkbox-inner::after {
+    $indeterminate-width: $checkbox-size - 8px;
+    $indeterminate-height: $checkbox-size - 8px;
+
+    width: $indeterminate-width;
+    height: $indeterminate-height;
+    background-color: $checkbox-color;
+  }
+}
+
+/* >>> Menu 菜单 */
+$menu-bg: var(--custom-menu-bg);
+$menu-item-font-size: var(--custom-menu-item-font-size);
+$menu-item-color: var(--custom-menu-item-color);
+$menu-item-height: var(--custom-menu-item-height);
+$menu-item-active-bg: var(--custom-menu-item-active-bg);
+$menu-item-header-color: var(--custom-table-header-color);
+.ant-menu {
+  color: $menu-item-color;
+  background: $menu-bg;
+  font-size: $menu-item-font-size;
+
+  &-item a {
+    color: $menu-item-color;
+  }
+
+  &-item > .ant-badge a {
+    color: $menu-item-color;
+  }
+
+  &-submenu {
+    &-expand-icon,
+    &-arrow {
+      color: $menu-item-color;
+    }
+  }
+
+  &-horizontal {
+    > .menu-item {
+      a {
+        color: $menu-item-color;
+      }
+    }
+  }
+
+  &-inline {
+    .menu-item,
+    .menu-submenu-title {
+      height: $menu-item-height;
+      line-height: $menu-item-height;
+    }
+  }
+
+  &&-inline-collapsed  {
+
+    > .menu-item,
+    > .menu-item-group
+      > .menu-item-group-list
+      > .menu-item,
+    > .menu-item-group
+      > .menu-item-group-list
+      > .menu-submenu
+      > .menu-submenu-title,
+    > .menu-submenu > .menu-submenu-title {
+      .menu-item-icon,
+      .anticon {
+        line-height: $menu-item-height;
+      }
+    }
+  }
+
+  &-sub&-inline {
+    & > .menu-item,
+    & > .menu-submenu > .menu-submenu-title {
+      height: $menu-item-height;
+      line-height: $menu-item-height;
+    }
+  }
+
+  &-item:active,
+  &-submenu-title:active {
+    background: $menu-item-active-bg;
+  }
+
+  &:not(&-horizontal) &-item-selected {
+    background-color: $menu-item-active-bg;
+  }
+}
+
+/* >>> Table 表格*/
+$table-font-size: var(--custom-table-font-size);
+$table-bg: var(--custom-table-bg);
+$table-header-bg: var(--custom-table-header-bg);
+$table-header-color: var(--custom-table-header-color);
+$table-footer-bg: var(--custom-table-footer-bg);
+$table-footer-color: var(--custom-table-footer-color);
+$table-header-sort-bg: var(--custom-table-header-sort-bg);
+$table-body-sort-bg: var(--custom-table-body-sort-bg);
+$table-selected-row-bg: var(--custom-table-selected-row-bg);
+$table-border-color: var(--custom-table-border-color);
+$table-border-radius-base: var(--custom-table-border-radius-base);
+$table-row-hover-bg: var(--custom-table-row-hover-bg);
+.ant-table {
+  font-size: $table-font-size;
+  background: $table-bg;
+  border-radius: $table-border-radius-base;
+  table {
+    border-radius: $table-border-radius-base $table-border-radius-base 0 0;
+  }
+  &-summary {
+    background: $table-bg;
+
+    div& {
+      box-shadow: 0 -$border-width-base 0 $table-border-color;
+    }
+
+    > tr {
+      > th,
+      > td {
+        border-bottom: $border-width-base $border-style-base $table-border-color;
+      }
+    }
+  }
+  &-cell-fix-left,
+  &-cell-fix-right {
+    background: $table-bg;
+  }
+  &-thead {
+    > tr {
+      > th {
+        color: $table-header-color;
+        background: $table-header-bg;
+        border-bottom: $border-width-base $border-style-base $table-border-color;
+      }
+    }
+  }
+  &-thead th.ant-table-column-sort {
+    background: $table-header-sort-bg;
+  }
+  td&-column-sort {
+    background: $table-body-sort-bg;
+  }
+  &-tbody {
+    > tr {
+      > td {
+        border-bottom: $border-width-base $border-style-base $table-border-color;
+      }
+
+      &.ant-table-row:hover > td,
+      > td.ant-table-cell-row-hover {
+        background: $table-row-hover-bg;
+      }
+
+      &.ant-table-row-selected {
+        > td {
+          background: $table-selected-row-bg;
+        }
+      }
+    }
+  }
+  &-footer {
+    color: $table-footer-color;
+    background: $table-footer-bg;
+  }
+  &-filter-dropdown {
+    &-btns {
+      border-top: $border-width-base $border-style-base $table-border-color;
+    }
+  }
+  &-row-expand-icon {
+    border: $border-width-base $border-style-base $table-border-color;
+  }
+  &-sticky {
+    &-scroll {
+      border-top: 1px solid $table-border-color;
     }
   }
 }

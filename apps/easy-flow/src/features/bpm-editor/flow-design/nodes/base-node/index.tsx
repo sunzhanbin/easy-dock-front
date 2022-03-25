@@ -1,12 +1,22 @@
 import { memo, ReactNode, useCallback, useState, useMemo } from "react";
+import { DropTargetMonitor, useDrop } from "react-dnd";
 import classnames from "classnames";
 import { Icon, PopoverConfirm } from "@common/components";
-import { delNode, flowDataSelector, setChoosedNode } from "../../flow-slice";
-import { NodeType, AllNode, BranchNode } from "@type/flow";
-import AddNodeButton from "../../components/add-node-button";
+import {
+  addNode,
+  delNode,
+  flowDataSelector,
+  isDraggingSelector,
+  setChoosedNode,
+  showIconSelector,
+} from "../../flow-slice";
+import ShadowNode from "../../components/shadow-node";
+import { NodeType, AllNode, BranchNode, AddableNode } from "@type/flow";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import styles from "./index.module.scss";
+import AddNodeButton from "../../components/add-node-button";
+import useFlowMode from "../../hooks/use-flow-mode";
 
 interface BaseProps {
   icon: ReactNode;
@@ -22,23 +32,20 @@ interface CardHeaderProps {
   type: NodeType;
 }
 
+const typeClassMap: any = {
+  [NodeType.AuditNode]: styles["audit-node"],
+  [NodeType.FillNode]: styles["fill-node"],
+  [NodeType.CCNode]: styles["cc-node"],
+  [NodeType.AutoNodePushData]: styles["auto-node"],
+  [NodeType.AutoNodeTriggerProcess]: styles["auto-node"],
+  [NodeType.PluginNode]: styles["plugin-node"],
+};
+
 export const CardHeader = memo(function CardHeader(props: CardHeaderProps) {
   const { icon, children, className, type } = props;
 
-  const typeClass = useMemo(() => {
-    if (type === NodeType.AuditNode) {
-      return styles["audit-node"];
-    } else if (type === NodeType.FillNode) {
-      return styles["fill-node"];
-    } else if (type === NodeType.CCNode) {
-      return styles["cc-node"];
-    } else if (type === NodeType.AutoNodePushData) {
-      return styles["auto-node"];
-    } else if (type === NodeType.AutoNodeTriggerProcess) {
-      return styles["auto-node"];
-    }
-
-    return "";
+  const typeClass = useMemo<string>(() => {
+    return typeClassMap[type] || "";
   }, [type]);
 
   return (
@@ -52,24 +59,49 @@ export const CardHeader = memo(function CardHeader(props: CardHeaderProps) {
 function Base(props: BaseProps) {
   const dispatch = useAppDispatch();
   const { invalidNodesMap } = useAppSelector(flowDataSelector);
+  const showIcon = useAppSelector(showIconSelector);
+  const isDragging = useAppSelector(isDraggingSelector);
+  const flowMode = useFlowMode();
   const { icon, node, children } = props;
   const { type, name } = node;
   const [showDeletePopover, setShowDeletePopover] = useState(false);
+  const [collectProps, drop] = useDrop(
+    () => ({
+      accept: "flow-node",
+      collect: (monitor: DropTargetMonitor) => {
+        const item = monitor.getItem<{ type: AddableNode["type"] }>();
+        return {
+          isOver: monitor.isOver(),
+          type: item?.type,
+        };
+      },
+      drop: (v, monitor: DropTargetMonitor) => {
+        const item = monitor.getItem<{ type: AddableNode["type"]; id?: number }>();
+        dispatch(addNode({ prevId: node.id, type: item?.type, id: item.id }));
+      },
+    }),
+    [node.id],
+  );
   const handleDeleteConfirm = useCallback(() => {
     dispatch(delNode(node.id));
   }, [dispatch, node.id]);
   const handleNodeClick = useMemoCallback(() => {
     dispatch(setChoosedNode(node));
   });
+  // 当前拖拽元素是否与放置区重叠
+  const isOver = useMemo(() => collectProps.isOver, [collectProps.isOver]);
+  // 当前拖拽元素的节点类型
+  const nodeType = useMemo(() => collectProps.type, [collectProps.type]);
 
   const showDelete = useMemo(() => {
-    return (
-      type === NodeType.AuditNode ||
-      type === NodeType.FillNode ||
-      type === NodeType.CCNode ||
-      type === NodeType.AutoNodePushData ||
-      type === NodeType.AutoNodeTriggerProcess
-    );
+    return [
+      NodeType.AuditNode,
+      NodeType.FillNode,
+      NodeType.CCNode,
+      NodeType.AutoNodePushData,
+      NodeType.AutoNodeTriggerProcess,
+      NodeType.PluginNode,
+    ].includes(type);
   }, [type]);
 
   return (
@@ -80,25 +112,34 @@ function Base(props: BaseProps) {
         })}
         onClick={handleNodeClick}
       >
-        <CardHeader icon={icon} type={node.type}>
+        <CardHeader icon={showIcon ? icon : null} type={node.type}>
           {node.name}
         </CardHeader>
         <div className={styles.content}>{children}</div>
       </div>
-
+      {isOver && <ShadowNode type={nodeType} className={styles["temp-node"]} />}
       {type !== NodeType.FinishNode && (
-        <div className={styles.footer}>
-          <AddNodeButton prevId={node.id} />
+        <div
+          className={classnames(
+            styles.footer,
+            isOver && styles.over,
+            isOver && nodeType === NodeType.BranchNode && styles["sub-branch"],
+            isDragging && styles.isDragging,
+          )}
+          ref={drop}
+        >
+          {flowMode !== "preview" && showIcon && <AddNodeButton prevId={node.id} />}
         </div>
       )}
 
-      {showDelete && (
+      {flowMode !== "preview" && showDelete && (
         <div className={classnames(styles.actions, { [styles.show]: showDeletePopover })}>
           <PopoverConfirm
             title="确认删除"
             onConfirm={handleDeleteConfirm}
             visible={showDeletePopover}
             onVisibleChange={setShowDeletePopover}
+            getPopupContainer={() => document.body}
             trigger="click"
             content={`确认删除 ${name} 吗？`}
           >

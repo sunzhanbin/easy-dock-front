@@ -1,34 +1,41 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Popover, Button } from 'antd';
-import { ExclamationCircleFilled } from '@ant-design/icons';
-import { AbstractTooltipProps } from 'antd/lib/tooltip';
-import AsyncButton from '../async-button';
-import styles from './index.module.scss';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Popover, Button } from "antd";
+import { ExclamationCircleFilled } from "@ant-design/icons";
+import { AbstractTooltipProps } from "antd/lib/tooltip";
+import AsyncButton from "../async-button";
+import styles from "./index.module.scss";
+import classnames from "classnames";
 
 interface PopoverProps {
   title: string;
+  overlayClassName?: string;
   children: React.ReactNode;
   content?: React.ReactNode;
   okText?: string;
+
   onConfirm?(): Promise<void> | void;
-  placement?: AbstractTooltipProps['placement'];
-  trigger?: AbstractTooltipProps['trigger'];
+
+  placement?: AbstractTooltipProps["placement"];
+  trigger?: AbstractTooltipProps["trigger"];
   visible?: boolean;
+
   onVisibleChange?(visible: boolean): void;
-  getPopupContainer?: AbstractTooltipProps['getTooltipContainer'];
+
+  getPopupContainer?: AbstractTooltipProps["getTooltipContainer"];
 }
 
-const defaultGetPopupContainer: AbstractTooltipProps['getTooltipContainer'] = (c) => c;
+const defaultGetPopupContainer: AbstractTooltipProps["getTooltipContainer"] = (c) => c;
 
 function EnnPopover(props: PopoverProps) {
   const {
+    overlayClassName,
     title,
     children,
-    okText = '确认',
+    okText = "确认",
     onConfirm,
     content,
     placement,
-    trigger = 'click',
+    trigger = "click",
     onVisibleChange,
     visible,
     getPopupContainer = defaultGetPopupContainer,
@@ -42,20 +49,23 @@ function EnnPopover(props: PopoverProps) {
     };
   }, []);
 
-  const handleCancel = useCallback((e) => {
-    e.stopPropagation();
-    if (onVisibleChange) {
-      onVisibleChange(false);
-    } else {
-      setShowPopover(false);
-    }
-  }, [onVisibleChange]);
+  const handleCancel = useCallback(
+    (e) => {
+      e.stopPropagation();
+      if (onVisibleChange) {
+        onVisibleChange(false);
+      } else {
+        setShowPopover(false);
+      }
+    },
+    [onVisibleChange],
+  );
 
   const handleClickOk = useMemo(() => {
     if (onConfirm) {
       return async () => {
         const confirmReturn = onConfirm();
-        if (hasUnmounted.current || !confirmReturn || typeof confirmReturn.then !== 'function') {
+        if (hasUnmounted.current || !confirmReturn || typeof confirmReturn.then !== "function") {
           return;
         }
         if (onVisibleChange) {
@@ -71,7 +81,7 @@ function EnnPopover(props: PopoverProps) {
 
   const popoverContent = useMemo(() => {
     return (
-      <div className={styles.container} onClick={(e: React.MouseEvent)=> e.stopPropagation()}>
+      <div className={styles.container} onClick={(e: React.MouseEvent) => e.stopPropagation()}>
         <div className={styles.header}>
           <ExclamationCircleFilled className={styles.icon} />
           <div className={styles.content}>
@@ -92,7 +102,7 @@ function EnnPopover(props: PopoverProps) {
   }, [content, handleCancel, okText, handleClickOk, title]);
 
   // 受控模式下由外层接管
-  const isControlled = typeof onVisibleChange === 'function';
+  const isControlled = typeof onVisibleChange === "function";
 
   return (
     <Popover
@@ -101,9 +111,10 @@ function EnnPopover(props: PopoverProps) {
       getPopupContainer={getPopupContainer}
       onVisibleChange={isControlled ? onVisibleChange : setShowPopover}
       content={popoverContent}
+      overlayClassName={overlayClassName}
       destroyTooltipOnHide
       placement={placement}
-      className={styles.popover}
+      className={classnames(styles.popover)}
     >
       {children}
     </Popover>

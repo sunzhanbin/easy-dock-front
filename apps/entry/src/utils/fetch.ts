@@ -5,7 +5,7 @@ import { builderQueryWithIntercept, runtimeQueryWithIntercept } from "@utils/int
 export default createApi({
   reducerPath: "appsOrchestrationApi",
   baseQuery: builderQueryWithIntercept,
-  tagTypes: ["Workspace", "SubApps", "Project"],
+  tagTypes: ["Workspace", "SubApps", "Project", "Plugins"],
   endpoints: () => ({}),
 });
 
@@ -18,6 +18,6 @@ export const axios = axiosInstance({
 export const runTime = createApi({
   reducerPath: "appsOrchestrationRuntimeApi",
   baseQuery: runtimeQueryWithIntercept,
-  tagTypes: ["Workspace", "SubApps", "Project"],
+  tagTypes: ["Workspace", "SubApps", "Project", "Plugins"],
   endpoints: () => ({}),
 });

@@ -1,0 +1,112 @@
+@import "@common/styles/var.scss";
+
+.type {
+    display: flex;
+    max-width: 500px;
+
+    :global {
+        .ant-radio-button-wrapper {
+            flex: 1;
+            background: $input-background-normal-color;
+            border-radius: 3px;
+            border-color: transparent;
+            text-align: center;
+            font-size: 14px;
+
+            &:hover {
+                color: rgba(76, 92, 219, 1);
+            }
+
+            &.ant-radio-button-wrapper-checked {
+                background: $button-default-background-color !important;
+                border-radius: 3px 0px 0px 3px;
+                border: 1px solid $button-default-border-color;
+                //color: $button-primary-ghost-text-color !important;
+            }
+
+            &:focus-within {
+                box-shadow: none;
+            }
+        }
+
+        .ant-radio-button-wrapper:not(:first-child)::before {
+            display: none;
+        }
+
+        .ant-radio-button-wrapper-checked:not([class*=" ant-radio-button-wrapper-disabled"]).ant-radio-button-wrapper:first-child {
+            border-right-color: $button-default-border-color;
+        }
+    }
+}
+
+.rule-block {
+    border-bottom: 1px solid $border-normal-color;
+    padding: 12px 0;
+
+    .condition {
+        display: flex;
+
+        .symbol {
+            width: 100px;
+            margin-right: 8px;
+        }
+
+        .value {
+            flex: 1;
+            margin-right: 8px;
+        }
+
+        .delete {
+            // visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 40px;
+            cursor: pointer;
+
+            &.disabled {
+                cursor: not-allowed;
+
+                svg {
+                    color: $hint-text-color;
+                }
+            }
+        }
+
+        // &:hover {
+        //     .delete {
+        //         visibility: visible;
+        //     }
+        // }
+    }
+
+    :global {
+        .ant-form-item {
+            margin-bottom: 8px;
+        }
+    }
+}
+
+.or {
+    margin-top: 12px;
+}
+
+.mb12 {
+    margin-bottom: 12px;
+}
+
+.mb0 {
+    margin-bottom: 0;
+}
+
+.text {
+    height: 22px;
+    line-height: 22px;
+    color: $body-text-color;
+    margin-bottom: 4px;
+}
+
+.conditions {
+    margin-top: 8px;
+}

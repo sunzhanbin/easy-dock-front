@@ -1,5 +1,7 @@
 import moment from "moment";
 import { AbstractTooltipProps } from "antd/lib/tooltip";
+import { FormMeta } from "@/type";
+import { Flow } from "@/type/flow";
 
 export { default as axios, runtimeAxios, builderAxios } from "./axios";
 export { default as history } from "./history";
@@ -60,12 +62,12 @@ export function getPassedTime(startTime: number) {
     return `${Math.floor(passedTime / hourTime)}小时前`;
   }
   // 昨天发起的，显示昨天 时:分；
-  if (passedTime >= dayTime && passedTime < 2 * dayTime) {
+  if (passedTime >= 0 && passedTime < dayTime) {
     const time = moment(startTime).format("HH:mm");
     return `昨天 ${time}`;
   }
   // 前天发起的，显示前天 时:分；
-  if (passedTime >= 2 * dayTime && passedTime < 3 * dayTime) {
+  if (passedTime >= dayTime && passedTime < 2 * dayTime) {
     const time = moment(startTime).format("HH:mm");
     return `前天 ${time}`;
   }
@@ -138,3 +140,37 @@ export const formatNumber = (value: any, fieldValue: { enable: boolean; precisio
 };
 
 export const nameRegexp = /^[\u4e00-\u9fa5_a-zA-Z0-9]{1,30}$/; //请输入1-30位的汉字、字母、数字、下划线
+
+export const exportJsonFile = (data: any, fileName: string) => {
+  if (!data) {
+    console.warn("导出的数据为空");
+    return;
+  }
+  if (!fileName) fileName = "demo";
+  if (typeof data === "object") {
+    data = JSON.stringify(data, undefined, 4);
+  }
+  const blob = new Blob([data], { type: "text/json" });
+  const urlObject = window.URL || window.webkitURL || window;
+  const save_link = document.createElementNS("http://www.w3.org/1999/xhtml", "a") as HTMLAnchorElement;
+
+  save_link.href = urlObject.createObjectURL(blob);
+  if (fileName) {
+    save_link.download = `${fileName}.json`;
+  }
+  save_link.click();
+};
+
+export const validateFormData = (data: FormMeta): boolean => {
+  if (Array.isArray(data.components) && Array.isArray(data.layout) && data.components.length && data.layout.length) {
+    return true;
+  }
+  return false;
+};
+
+export const validateFlowData = (data: Flow): boolean => {
+  if (Array.isArray(data) && data.every((v) => v.id && v.type)) {
+    return true;
+  }
+  return false;
+};

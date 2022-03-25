@@ -1,17 +1,22 @@
 @import '@common/styles/var.scss';
+@import '@/styles/var.scss';
+
 .container {
   padding: 12px 16px;
   cursor: move;
+
   div {
     &:first-child {
       pointer-events: none;
     }
   }
+
   &:hover {
     .operation {
       display: block;
     }
   }
+
   .operation {
     position: absolute;
     top: 0;
@@ -19,29 +24,34 @@
     display: none;
     width: 60px;
     height: 22px;
-    background: #8b8fa1;
+    background: $source-box-hover-operation-bg;
     border-radius: 0px 3px 0px 3px;
+
     span {
       &:first-child {
         margin: 3px 12px 3px 4px;
       }
+
       &:last-child {
         margin: 3px 4px 3px 0;
       }
     }
+
     .iconfont {
       display: inline-block;
       width: 16px;
       height: 16px;
       line-height: 16px;
       font-size: 16px;
-      color: #fff;
+      color: $source-box-hover-operation-svg-color;
       cursor: pointer;
+
       &:hover {
         color: $primary-color;
       }
     }
   }
+
   .moveUp,
   .moveDown,
   .moveLeft,
@@ -53,10 +63,11 @@
     height: 18px;
     line-height: 18px;
     text-align: center;
-    background: #ffffff;
+    background: $content-background-color;
     border-radius: 3px;
     border: 1px solid $primary-color;
     cursor: pointer;
+
     .iconfont {
       position: absolute;
       top: 50%;
@@ -69,21 +80,25 @@
       transform: translate(-50%, -50%);
     }
   }
+
   .moveUp {
     top: -9px;
     left: 50%;
     transform: translateX(-9px);
   }
+
   .moveDown {
     bottom: -9px;
     left: 50%;
     transform: translateX(-9px);
   }
+
   .moveLeft {
     top: 50%;
     left: -9px;
     transform: translateY(-9px);
   }
+
   .moveRight {
     top: 50%;
     right: -9px;

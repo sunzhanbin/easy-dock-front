@@ -4,6 +4,7 @@
   .select_project {
     min-width: 200px;
     max-width: 264px;
+
     &:before {
       content: '';
       position: absolute;
@@ -13,14 +14,17 @@
       height: 16px;
       border: 1px solid rgba(24, 31, 67, 0.12);
     }
+
     &.ant-select-selector {
       border: 1px solid transparent;
     }
+
     &.ant-select:not(.ant-select-disabled):hover .ant-select-selector, &.ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector,
     {
       box-shadow: none;
       border: 1px solid transparent;
     }
+
     &.ant-select.ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
       background-color: transparent !important;
     }
@@ -28,6 +32,11 @@
 }
 
 .dropdown-select-card {
+  .dropdown-select-menu {
+    max-height: 300px;
+    overflow-y: auto;
+  }
+
   .tick_icon {
     width: 20px;
     height: 20px;
@@ -36,7 +45,7 @@
     border-radius: 3px;
     margin-right: 10px;
     font-size: 12px;
-    color: #fff;
+    color: #fff !important;
     cursor: pointer;
 
     &.disabled {
@@ -44,14 +53,19 @@
       background-color: rgba(6, 196, 152, 0.3);
     }
   }
+
   .close {
     font-size: 12px;
     cursor: pointer;
+
     &:hover {
       color: #4C5CDB;
     }
   }
-  .dropdown-select-project {
+
+  .dropdown-select-menu {
+
+    text-align: left;
 
     .field-option {
       height: 32px;
@@ -63,58 +77,79 @@
         color: #4C5CDB;
         background: rgba(76, 92, 219, 0.08);
       }
+
       .tick_icon {
         width: 18px;
         height: 18px;
         line-height: 21px;
       }
+
       .input-name {
         background-color: transparent;
       }
+
       &:hover {
         .option-name {
           max-width: calc(100% - 52px);
         }
+
         background: rgba(24, 39, 67, 0.04);
+
         .edit-icon, .delete-icon {
           display: inline-block;
         }
       }
+
       .option-name {
         max-width: 100%;
         padding: 0 8px;
         flex: 1;
       }
+
       .edit-icon {
         cursor: pointer;
         color: $icon-color;
         display: none;
         margin-right: 12px;
+
         &:hover {
           color: #4C5CDB;
         }
       }
+
       .delete-icon {
         display: none;
         margin-right: 8px;
         color: $icon-color;
         cursor: pointer;
+
         &:hover {
           color: #4C5CDB;
         }
       }
     }
   }
+
   .footer_select {
     display: flex;
     margin-top: 10px !important;
+
     .ant-row.ant-form-item {
       margin-bottom: 0;
       width: 100%;
+
       .btn_add_field {
         width: 100%;
       }
     }
   }
 }
+
+.ant-popover {
+  &.dropdown-popover-delete {
+    z-index: 10000;
+  }
+}
+
+
 

@@ -1,9 +1,11 @@
+@import "@common/styles/var.scss";
 .container {
   position: relative;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   opacity: 0.999;
+  color: $body-text-color;
 
   &:hover {
     opacity: 1;

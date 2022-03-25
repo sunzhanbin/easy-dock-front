@@ -1,5 +1,5 @@
 import { NavModeType, SubAppType, ThemeType } from "@/consts";
-import { SCENE_IAMGES } from "@utils/const";
+import React from "react";
 
 export type User = {
   avatar: string; // 头像
@@ -13,7 +13,7 @@ export type User = {
 export type AppSchema = {
   id: number;
   name: string;
-  icon: keyof typeof SCENE_IAMGES;
+  icon: string;
   remark: string;
   status: 1 | -1;
   createTime: number;
@@ -124,6 +124,11 @@ export type ProjectPower = {
   status: number;
 };
 
+export type Tenant = {
+  code: string;
+  name: string;
+};
+
 export type SubAppPower = {
   createTime: number;
   id: number;
@@ -138,7 +143,7 @@ export interface workspaceShape {
   name: string;
   id: number;
   status: -1 | 1;
-  icon: keyof typeof SCENE_IAMGES;
+  icon: string;
   remark: string;
   version: {
     id: number;
@@ -248,3 +253,30 @@ export declare type QueryReturnValue<T = unknown, E = unknown, M = unknown> =
       resultCode?: undefined;
       resultMessage?: undefined;
     };
+
+export type GroupItem = { name: string; id: number };
+
+export interface GroupListProps {
+  groupList: GroupItem[];
+}
+
+export type TableColumnsProps = {
+  id: number;
+  name: string;
+  code: string;
+  enabled: boolean;
+  openVisit: boolean;
+  group: { id: number; name: string };
+  public: boolean;
+};
+
+export type CardOptionProps = {
+  type: { [key in string]: string };
+  fieldList: any[];
+  onDelete?: (item: any) => void;
+  onEdit?: (e: React.MouseEvent, item: any) => void;
+  onConfirm?: (v: any) => void;
+  onSelect?: (v: any) => void;
+  onRevert?: () => void;
+  setShowDropdown?: (v: boolean) => void;
+};

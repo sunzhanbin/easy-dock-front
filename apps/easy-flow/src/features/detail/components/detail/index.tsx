@@ -31,6 +31,8 @@ interface DetailProps {
   type?: TaskDetailType;
 }
 
+// const dateReg = /^\d{4}(-|\/|)$/
+
 const Detail = forwardRef(function Detail(props: DetailProps, ref: React.ForwardedRef<FormInstance<FormValue>>) {
   const { flow, form, type, className } = props;
   const [auditRecords, setAuditRecords] = useState<AuditRecordSchema[]>([]);
@@ -50,7 +52,6 @@ const Detail = forwardRef(function Detail(props: DetailProps, ref: React.Forward
 
   useEffect(() => {
     if (!flow || !form) return;
-    console.log(form.value, "form.meta");
     loadDatasource(
       form.meta,
       flow.node.fieldsAuths,
@@ -65,15 +66,19 @@ const Detail = forwardRef(function Detail(props: DetailProps, ref: React.Forward
     const valueMap = { ...form.value };
     Object.values(dateFields).map((field) => {
       // form.value有可能为null或undefined
-      if (form.value && !Object.keys(form.value).includes(field)) {
+      if (valueMap[field] === null || valueMap[field] === undefined) {
         valueMap[field] = moment().valueOf();
       }
       if (typeof valueMap[field] === "string") {
-        valueMap[field] = Number(valueMap[field]);
+        if (Number(valueMap[field])) {
+          valueMap[field] = Number(valueMap[field]);
+        } else {
+          const time = valueMap[field].replace(/年|月/g, "-").replace(/时|分/g, ":").replace(/日|秒/g, "");
+          valueMap[field] = moment(time).valueOf();
+        }
       }
       return field;
     });
-    console.log(valueMap, "valueMap", dateFields);
     return valueMap;
   }, [form.value, form.meta]);
   return (

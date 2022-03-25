@@ -1,5 +1,5 @@
 import baseFetch, { runTime } from "@utils/fetch";
-import { AssignAuthParams, ProjectPower, RevokeAuthParams } from "@utils/types";
+import { AssignAuthParams, ProjectPower, RevokeAuthParams, Tenant } from "@utils/types";
 
 export const homeManageBuilder = baseFetch.injectEndpoints({
   endpoints: (build) => ({
@@ -15,6 +15,9 @@ export const homeManageBuilder = baseFetch.injectEndpoints({
               { type: "Project", id: "LIST" },
             ]
           : [{ type: "Project", id: "LIST" }],
+    }),
+    getTenantList: build.query<Tenant[], void>({
+      query: () => ({ url: "/project/list/tenant/all", method: "get" }),
     }),
     newProject: build.mutation({
       query: (params: { name: string }) => ({
@@ -57,6 +60,7 @@ export const homeManageBuilder = baseFetch.injectEndpoints({
 
 export const {
   useGetProjectListQuery,
+  useLazyGetTenantListQuery,
   useLazyFetchProjectPowersQuery,
   useNewProjectMutation,
   useGetRecentListMutation,

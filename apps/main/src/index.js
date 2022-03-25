@@ -15,6 +15,15 @@ auth.setConfig({ server: window.SSO_LOGIN_URL });
   // window.Auth.setConfig({ server: window.SSO_LOGIN_URL, cookieKey: 'cookie-auth' });;
   // const token = await window.Auth.getToken(true, window.EASY_DOCK_BASE_SERVICE_ENDPOINT);
 
+  const { pathname, search } = window.location;
+
+  const flowMode = new URLSearchParams(search.slice(1)).get("mode") || "edit";
+
+  if (pathname.endsWith("/flow-design") && flowMode === "preview") {
+    require("./app.tsx");
+    return;
+  }
+
   // import 方式加载 sso.js
   const token = await auth.getToken(true, window.EASY_DOCK_BASE_SERVICE_ENDPOINT);
 

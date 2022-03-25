@@ -4,13 +4,15 @@ import { Rule } from "antd/lib/form";
 import debounce from "lodash/debounce";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import ResponseWithMap from "@/features/bpm-editor/components/data-api-config/response-with-map";
-import { AutoNodePushData } from "@type/flow";
+import NodeFloeConfig from "@/features/bpm-editor/components/node-flow-config";
+import { AutoNodePushData, NextAction } from "@type/flow";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { formMetaSelector, updateNode } from "../../flow-slice";
 import { trimInputValue } from "../../util";
 import { rules } from "../../validators";
 import useValidateForm from "../../hooks/use-validate-form";
 import DataApiConfig from "../../../components/data-api-config";
+import MilestoneNodeConfig from "@/features/bpm-editor/components/milestone-node-config";
 
 interface AutoNodeEditorProps {
   node: AutoNodePushData;
@@ -18,6 +20,17 @@ interface AutoNodeEditorProps {
 
 type FormValuesType = {
   name: string;
+};
+
+const initialNextAction: NextAction = {
+  type: 1,
+  conditions: [[{}]],
+  failConfig: {
+    type: 1,
+    revert: {
+      type: 1,
+    },
+  },
 };
 
 function AutoNodeEditor(props: AutoNodeEditorProps) {
@@ -32,6 +45,8 @@ function AutoNodeEditor(props: AutoNodeEditorProps) {
     return {
       name: node.name,
       dataConfig: node.dataConfig,
+      nextAction: node?.nextAction || initialNextAction,
+      progress: node.progress,
     };
   }, [node]);
 
@@ -66,6 +81,12 @@ function AutoNodeEditor(props: AutoNodeEditorProps) {
         <DataApiConfig name="dataConfig" label="推送参数" fields={fields}>
           <ResponseWithMap label="返回参数" />
         </DataApiConfig>
+      </Form.Item>
+      <Form.Item name="nextAction" label="节点流转设置">
+        <NodeFloeConfig name="nextAction" nodeId={node.id} />
+      </Form.Item>
+      <Form.Item name="progress">
+        <MilestoneNodeConfig form={form} />
       </Form.Item>
     </Form>
   );

@@ -56,6 +56,7 @@ export type FlowInstance = {
   currentNodeId?: string;
   currentNodeName?: string;
   processInstanceId: string;
+  progress: number;
   // 与currentNodeId互斥 我的发起时有值
   currentNodeList?: {
     currentNodeId: string;
@@ -85,17 +86,33 @@ export enum AuditRecordType {
   RUNNING = "RUNNING",
   AUTO_PROCESS_TRIGGER = "AUTO_PROCESS_TRIGGER",
   AUTO_INTERFACE_PUSH = "AUTO_INTERFACE_PUSH",
+  AUTO_PLUGIN = "AUTO_PLUGIN",
 }
+
+export type Comments = {
+  actionName: AuditRecordType;
+  commit?: string;
+  targetUser?: User;
+  autoPushDataResult?: {
+    detailMessage: string;
+    resultCode: number;
+    resultMessage: string;
+  };
+  autoTriggerResults?: {
+    resultCode: number;
+    resultMessage: string;
+    processInfo: {
+      id: number;
+      name: string;
+    };
+  }[];
+};
 
 export type AuditRecordSchema = {
   auditRecordList: {
     auditTime: number;
     auditType: AuditRecordType;
-    comments?: {
-      actionName: AuditRecordType;
-      commit?: string;
-      targetUser?: User;
-    };
+    comments?: Comments;
     nodeName: string;
     taskId: string;
     userList?: User[];

@@ -1,5 +1,14 @@
 import { Rule } from "antd/lib/form";
-import { CorrelationMemberConfig, AuditNode, RevertType, TriggerConfig, IDueConfig } from "@type/flow";
+import {
+  CorrelationMemberConfig,
+  AuditNode,
+  RevertType,
+  TriggerConfig,
+  IDueConfig,
+  PluginDataConfig,
+  NextAction,
+  NextActionType,
+} from "@type/flow";
 import { ApiType, DataConfig } from "@type/api";
 import { validName } from "@common/rule";
 import { dynamicIsEmpty } from "./util";
@@ -106,13 +115,56 @@ const timeoutConfig = (value: IDueConfig) => {
   return "";
 };
 
+const validatePluginParams = (value: PluginDataConfig) => {
+  const { meta } = value;
+  if (meta) {
+    const { headers, bodys, querys, paths, responses } = meta;
+    const headerParams = Array.isArray(headers) ? headers : [];
+    const bodyParams = Array.isArray(bodys) ? bodys : [];
+    const queryParams = Array.isArray(querys) ? querys : [];
+    const pathParams = Array.isArray(paths) ? paths : [];
+    const responseParams = Array.isArray(responses) ? responses : [];
+    const allParams = [...headerParams, ...bodyParams, ...queryParams, ...pathParams, ...responseParams];
+    const isValidate = allParams
+      .filter((v) => v.required)
+      .some((v) => v.map === undefined || v.map === null || (typeof v.map === "string" && v.map.trim() === ""));
+    if (isValidate) {
+      return "数据填写不完整";
+    }
+  }
+  return "";
+};
+
+const validateNextAction = (value: NextAction): string => {
+  const { type, conditions } = value ?? {};
+  if (type === NextActionType.Condition) {
+    const nullCondition = conditions.flat(2).some(({ params, type, symbol, value }) => {
+      if (!params || !type || !symbol) {
+        return true;
+      }
+      if (!(type === "bool" || ["null", "notNull"].includes(symbol)) && (!value || value.trim() === "")) {
+        return true;
+      }
+      return false;
+    });
+    if (nullCondition) {
+      return "条件配置不完整";
+    } else {
+      return "";
+    }
+  }
+  return "";
+};
+
 export const validators = {
   member,
   timeoutConfig,
+  validatePluginParams,
+  validateNextAction,
+  revert,
   name: validName,
   data: dataPushConfig,
   config: triggerConfig,
-  revert: revert,
 };
 
 function handleValidWithMessage(message: string) {

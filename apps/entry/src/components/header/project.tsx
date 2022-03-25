@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import SelectCard from "@components/select-card";
 import {
   useGetProjectListQuery,
@@ -13,6 +13,7 @@ import { message } from "antd";
 import { RoleEnum } from "@utils/types";
 import useMemoCallback from "@common/hooks/use-memo-callback";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import NewProjectModalComponent from "@components/header/new-project-modal.component";
 
 const SELECT_CARD_TYPE = {
   key: "project",
@@ -33,13 +34,15 @@ const ProjectComponent = () => {
   const [updateWorkspaceList] = useUpdateWorkspaceListMutation();
   const [deleteProject] = useDeleteProjectMutation();
   const projectId = useAppSelector(selectProjectId);
+  const userInfo = useAppSelector(selectUserInfo);
+  const [showProjectModal, setShowProjectModal] = useState<boolean>(false); // 判断是否显示新增项目弹框
+
   const selectedProjectId = useMemo(() => {
     if (location.pathname.startsWith("/app-manager")) {
       return Number(param);
     }
     return projectId;
   }, [location, param, projectId]);
-  const userInfo = useAppSelector(selectUserInfo);
   const handleSelectProject = useMemoCallback((projectId) => {
     dispatch(setProjectId(projectId));
     updateWorkspaceList(projectId)
@@ -51,19 +54,35 @@ const ProjectComponent = () => {
         }
       });
   });
-  const handleNewProject = useMemoCallback(async ({ name, isEdit, id }) => {
-    if (!isEdit) {
-      await addProject({ name }).unwrap();
-      message.success("创建成功");
-    } else {
+  const handleEditProject = useMemoCallback(async ({ name, id }) => {
+    try {
       await editProject({ name, id }).unwrap();
       message.success("修改成功");
+    } catch (e) {
+      console.log(e);
     }
   });
   const handleDeleteProject = useMemoCallback(async (id: number) => {
     await deleteProject(id).unwrap();
     message.success("删除成功");
   });
+  const handleShowProjectModal = () => {
+    setShowProjectModal(true);
+  };
+  // 取消创建项目
+  const handleCancelProjectModal = () => {
+    setShowProjectModal(false);
+  };
+  // 创建项目
+  const handleSubmitProject = async (values: any) => {
+    try {
+      await addProject(values).unwrap();
+      message.success("创建成功");
+      setShowProjectModal(false);
+    } catch (e) {
+      console.log(e);
+    }
+  };
   const isAdmin = useMemo(() => {
     const power = userInfo?.power || 0;
     return (power & RoleEnum.ADMIN) === RoleEnum.ADMIN;
@@ -74,10 +93,17 @@ const ProjectComponent = () => {
       list={projectList}
       onSelect={handleSelectProject}
       selectedId={selectedProjectId}
-      onAdd={handleNewProject}
+      onAdd={handleEditProject}
+      onShowProjectModal={handleShowProjectModal}
       onDelete={handleDeleteProject}
       isAdmin={isAdmin}
-    />
+    >
+      <NewProjectModalComponent
+        onCancel={handleCancelProjectModal}
+        visible={showProjectModal}
+        onOk={handleSubmitProject}
+      />
+    </SelectCard>
   );
 };
 

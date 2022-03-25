@@ -63,6 +63,7 @@ function StartDetail() {
     (async () => {
       setLoading(true);
 
+      console.log(1111);
       try {
         await Promise.all([
           loadData(flowId).then((data) => {
@@ -97,7 +98,7 @@ function StartDetail() {
   return (
     <div className={styles.container}>
       {loading && <Loading />}
-      <Header className={styles.header} backText="流程详情" backClassName={styles.back}>
+      <Header className={styles.header} backText="流程详情">
         {type !== "copy" && mode === "running" && (
           <AsyncButton size="large" disabled={!canRevoke} onClick={() => setShowConfirm(true)}>
             撤回

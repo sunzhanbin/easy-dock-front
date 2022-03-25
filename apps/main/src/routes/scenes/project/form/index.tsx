@@ -19,7 +19,7 @@ function EditProjectForm(props: EditProjectFormProps) {
       {
         validator(_: any, value: string) {
           if (value.length < 3 || value.length > 20 || /[^\u4e00-\u9fa5_\d\w]/.test(value)) {
-            return Promise.reject(new Error('项目名为3-20位汉字、字母、数字、下划线'));
+            return Promise.reject(new Error("项目名为3-20位汉字、字母、数字、下划线"));
           } else {
             return Promise.resolve();
           }

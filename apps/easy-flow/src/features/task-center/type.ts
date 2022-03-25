@@ -12,6 +12,7 @@ export type TodoItem = {
   starter: string;
   dueState: 0 | 1 | 2; // 0-未配置超时信息   1-超时   2-未超时
   taskCreateTime: number;
+  progress: number;
   taskDefKey: string;
   taskId: string;
   taskName: string;
@@ -47,6 +48,7 @@ export type StartItem = {
   processInstanceId: string;
   processName: string;
   startTime: number;
+  progress: number;
   state: number;
 };
 

@@ -11,6 +11,7 @@ import { rules } from "../../validators";
 import useValidateForm from "../../hooks/use-validate-form";
 import TriggerProcessConfig from "../../../components/trigger-process-config";
 import styles from "./index.module.scss";
+import MilestoneNodeConfig from "@/features/bpm-editor/components/milestone-node-config";
 
 interface AutoNodeEditorProps {
   node: AutoNodeTriggerProcess;
@@ -31,6 +32,7 @@ function AutoNodeTriggerProcessEditor(props: AutoNodeEditorProps) {
     return {
       name: node.name,
       triggerConfig: node.triggerConfig,
+      progress: node.progress,
     };
   }, [node]);
 
@@ -63,6 +65,9 @@ function AutoNodeTriggerProcessEditor(props: AutoNodeEditorProps) {
       </Form.Item>
       <Form.Item noStyle name={["triggerConfig", "subapps"]}>
         <TriggerProcessConfig name={["triggerConfig", "subapps"]} />
+      </Form.Item>
+      <Form.Item name="progress">
+        <MilestoneNodeConfig form={form} />
       </Form.Item>
     </Form>
   );

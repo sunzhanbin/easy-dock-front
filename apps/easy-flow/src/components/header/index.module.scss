@@ -1,3 +1,4 @@
+@import '@common/styles/var.scss';
 @import '@common/styles/mixin.scss';
 
 .header {
@@ -12,7 +13,7 @@
     @include center('flex');
 
     line-height: 28px;
-    color: rgba(#000, 0.85);
+    color: $menu-title-text-color;
     font-size: 18px;
     font-weight: 400;
     cursor: pointer;

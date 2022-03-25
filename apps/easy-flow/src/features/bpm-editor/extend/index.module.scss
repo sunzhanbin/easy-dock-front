@@ -4,7 +4,7 @@
 .form {
   width: 600px;
   margin: auto;
-  padding-top: 36px;
+  padding: 36px 0;
 
   :global {
     .ant-form-item-no-colon {
@@ -46,6 +46,7 @@
     margin-bottom: 24px;
     font-size: 24px;
     font-weight: bold;
+    color: $label-hint-text-color;
   }
 
   .visits-icon {
@@ -53,7 +54,7 @@
     height: 24px;
     margin-right: 4px;
     padding: 5px;
-    border: 1px solid rgba(#181f43, 0.12);
+    border: 1px solid $border-normal-color;
     border-radius: 50%;
     color: $primary-color;
   }

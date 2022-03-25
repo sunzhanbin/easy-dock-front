@@ -1,5 +1,5 @@
 import { memo, useState, FC, useMemo, useCallback, useEffect, useRef } from "react";
-import { Form, Input, Select, Button, DatePicker, Table } from "antd";
+import { Form, Input, Select, Button, DatePicker, Table, Progress } from "antd";
 import moment from "moment";
 import classNames from "classnames";
 import { dynamicRoutes } from "@/consts/route";
@@ -202,6 +202,21 @@ const ToDo: FC = () => {
         },
       },
       {
+        title: "进度",
+        dataIndex: "progress",
+        key: "progress",
+        width: "15%",
+        render: (_: string, record: TodoItem) => {
+          const { progress } = record;
+          return (
+            <div className={styles["progress-wrapper"]}>
+              <Progress percent={parseFloat(Number(progress * 100).toFixed(2)) || 0} showInfo={false} />
+              <span className={styles["text-progress"]}>{parseFloat(Number(progress * 100).toFixed(2)) || 0}%</span>
+            </div>
+          );
+        },
+      },
+      {
         title: "发起人",
         dataIndex: "starter",
         key: "starter",
@@ -304,7 +319,7 @@ const ToDo: FC = () => {
                 onChange={() => {
                   fetchData();
                 }}
-              ></RangePicker>
+              />
             </Form.Item>
           </Form>
         </div>
@@ -327,7 +342,7 @@ const ToDo: FC = () => {
           columns={columns}
           dataSource={data}
           onChange={handleTableChange}
-        ></Table>
+        />
       </div>
     </div>
   );

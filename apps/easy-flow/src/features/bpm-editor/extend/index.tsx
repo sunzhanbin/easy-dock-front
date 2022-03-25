@@ -123,7 +123,7 @@ function SubAppExtend() {
         name={["config", "meta", "webhookConfig", "enable"]}
         valuePropName="checked"
       >
-        <Checkbox />
+        <Switch />
       </Form.Item>
 
       <Form.Item shouldUpdate noStyle>
@@ -148,6 +148,23 @@ function SubAppExtend() {
         </li>
         <li className={styles["webhook-help__item"]}>
           2.使用者通过配置接收地址即可接收来自零达下发的流程数据及填报的业务数据（POST请求），从而方便第三方系统的业务处理。
+        </li>
+      </ol>
+      <br />
+      <Form.Item
+        className={styles["webhook-config"]}
+        label="流程里程碑进度设置"
+        name={["config", "meta", "progress"]}
+        valuePropName="checked"
+      >
+        <Switch />
+      </Form.Item>
+      <ol className={styles["webhook-help"]}>
+        <li className={styles["webhook-help__item"]}>1.勾选启用后，请至【流程设计】中将里程碑节点进行进度预设值设置</li>
+        <li className={styles["webhook-help__item"]}>2.流程通过无预设值的节点后，整体进度将保持不变</li>
+        <li className={styles["webhook-help__item"]}>3.进度初始值默认为0%；到达结束节点的流程进度为100%</li>
+        <li className={styles["webhook-help__item"]}>
+          4.如果未启用里程碑进度设置，或启用设置但未配置任何节点，流程进度将按系统默认逻辑计算。
         </li>
       </ol>
     </Form>

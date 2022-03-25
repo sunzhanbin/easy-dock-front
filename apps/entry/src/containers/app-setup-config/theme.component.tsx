@@ -27,8 +27,8 @@ const Theme: FC<ThemeProps> = ({ value, onChange }) => {
     return [
       { key: ThemeType.LIGHT, label: "浅色", image: lightTheme },
       { key: ThemeType.DARK, label: "深色", image: darkTheme },
-      { key: ThemeType.ORANGE, label: "活力橙", image: orangeTheme },
-      { key: ThemeType.BLUE, label: "商务蓝", image: blueTheme },
+      // { key: ThemeType.ORANGE, label: "活力橙", image: orangeTheme },
+      // { key: ThemeType.BLUE, label: "商务蓝", image: blueTheme },
     ];
   }, []);
   const handleChangeTheme = useMemoCallback((theme) => {

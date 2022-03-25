@@ -1,3 +1,6 @@
+@import '@common/styles/var.scss';
+@import '@/styles/var.scss';
+
 .status {
   width: 52px;
   height: 20px;
@@ -5,24 +8,29 @@
   text-align: center;
   border-radius: 3px;
   font-size: 12px;
+
   &.doing {
-    background: rgba(76, 92, 219, 0.12);
-    color: #3546c8;
+    background: $flow-detail-status-doing-bg;
+    color: $flow-detail-status-doing-text-color;
   }
+
   &.stop {
-    background: rgba(255, 85, 104, 0.12);
-    color: #eb2e43;
+    background: $flow-detail-status-stop-bg;
+    color: $flow-detail-status-stop-text-color;
   }
+
   &.reject {
-    background: rgba(255, 153, 0, 0.12);
-    color: #f67a00;
+    background: $flow-detail-status-reject-bg;
+    color: $flow-detail-status-reject-text-color;
   }
+
   &.done {
-    background: rgba(6, 196, 152, 0.12);
-    color: #03a882;
+    background: $flow-detail-status-done-bg;
+    color: $flow-detail-status-done-text-color;
   }
+
   &.recall {
-    background: #ededf0;
-    color: #181f43;
+    background: $flow-detail-status-recall-bg;
+    color: $flow-detail-status-recall-text-color;
   }
 }

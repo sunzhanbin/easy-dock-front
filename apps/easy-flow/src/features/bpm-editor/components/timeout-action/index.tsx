@@ -14,10 +14,10 @@ const TimeoutAction = ({ hasRequired = false, value, onChange }: TimeoutActionPr
   const [autoBack, setAutoBack] = useState<boolean>(value === "back");
   const handleChangeSubmit = useMemoCallback((checked) => {
     setAutoSubmit(checked);
-    if (autoBack) {
-      setAutoBack(false);
-    }
     if (checked) {
+      if (autoBack) {
+        setAutoBack(false);
+      }
       onChange && onChange("submit");
     } else {
       if (!autoBack) {

@@ -11,6 +11,7 @@ import { trimInputValue } from "../../util";
 import useValidateForm from "../../hooks/use-validate-form";
 import DatePicker from "@/features/bpm-editor/components/date-picker";
 import DateRange from "@/features/bpm-editor/components/date-range";
+import MilestoneNodeConfig from "@/features/bpm-editor/components/milestone-node-config";
 import Frequency from "./frequency";
 import Trigger from "./trigger";
 import FieldAuths from "../../components/field-auths";
@@ -21,7 +22,7 @@ interface StartNodeEditorProps {
   node: StartNode;
 }
 
-type FormValuesType = Pick<StartNode, "name" | "trigger" | "fieldsAuths">;
+type FormValuesType = Pick<StartNode, "name" | "trigger" | "fieldsAuths" | "progress">;
 
 function StartNodeEditor(props: StartNodeEditorProps) {
   const { node } = props;
@@ -81,6 +82,7 @@ function StartNodeEditor(props: StartNodeEditorProps) {
       name: node.name,
       trigger: node.trigger,
       fieldsAuths: node.fieldsAuths,
+      progress: node.progress,
     });
   }, [node, form]);
 
@@ -174,6 +176,10 @@ function StartNodeEditor(props: StartNodeEditorProps) {
           </Form.Item>
         </>
       )}
+
+      <Form.Item name="progress">
+        <MilestoneNodeConfig form={form} />
+      </Form.Item>
     </Form>
   );
 }

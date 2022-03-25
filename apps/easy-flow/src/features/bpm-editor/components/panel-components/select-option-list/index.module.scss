@@ -1,20 +1,23 @@
 @import '@common/styles/var.scss';
+
 .container {
   .title {
     display: flex;
     align-items: center;
     height: 40px;
     line-height: 40px;
-    background: rgba(24, 39, 67, 0.04);
     border-radius: 3px;
     font-size: 14px;
     font-weight: 400;
-    color: rgba(24, 31, 67, 0.95);
+    color: $form-item-label-text-color;
+
     > div {
       flex: 1;
       text-align: center;
       cursor: pointer;
       position: relative;
+      background-color: $input-background-normal-color;
+
       &:not(.active) {
         &::after {
           content: '';
@@ -23,30 +26,37 @@
           position: absolute;
           top: 3px;
           right: 0;
-          background-color: #e3e4e8;
+          background-color: $button-default-border-color;
         }
       }
+
       &:last-child {
         &::after {
           width: 0;
         }
       }
+
       &.active {
-        background: #ffffff;
-        border: 1px solid rgba(24, 31, 67, 0.12);
+        background: $button-default-background-color;
+        border-radius: 3px 0 0 3px;
+        border: 1px solid $button-default-border-color;
         font-weight: 500;
         color: $primary-color;
+
         &:first-child {
           border-radius: 3px 0 0 3px;
         }
+
         &:last-child {
           border-radius: 0 3px 3px 0;
         }
       }
     }
   }
+
   .custom_list {
     padding: 12px 0;
+
     .custom_item {
       position: relative;
       height: 40px;
@@ -55,7 +65,8 @@
       margin-bottom: 12px;
       font-size: 14px;
       font-weight: 400;
-      color: rgba(24, 31, 67, 0.95);
+      color: $form-item-label-text-color;
+
       .delete,
       .move {
         position: absolute;
@@ -65,48 +76,58 @@
         height: 40px;
         line-height: 40px;
         text-align: center;
+
         .iconfont {
           color: #818a9e;
         }
       }
+
       .move {
         right: 0;
+
         .iconfont {
           cursor: move;
         }
       }
+
       .delete {
         right: 29px;
-        border-right: 1px solid rgba(24, 31, 67, 0.12);
+        border-right: 1px solid $button-default-border-color;
+
         .iconfont {
           cursor: pointer;
         }
       }
     }
+
     .add_custom {
       height: 40px;
       line-height: 40px;
       text-align: center;
       border-radius: 3px;
-      border: 1px solid rgba(24, 31, 67, 0.12);
+      border: 1px solid $button-default-border-color;
       font-size: 14px;
       font-weight: 400;
-      color: rgba(24, 31, 67, 0.95);
+      color: $form-item-label-text-color;
       cursor: pointer;
+
       .iconfont {
         font-size: 14px;
         margin-right: 4px;
       }
     }
   }
+
   .dict_content {
     padding: 12px 0;
   }
+
   .content {
     .form {
       flex-direction: column;
       margin-top: 24px;
       margin-bottom: 0;
+
       .apiConfig {
         & > div {
           &:last-child {
@@ -114,6 +135,7 @@
           }
         }
       }
+
       :global {
         .ant-form-item-label {
           text-align: left;

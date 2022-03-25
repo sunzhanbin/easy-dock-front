@@ -96,10 +96,12 @@ const HomeWorkspaceList = () => {
     <div className="bottom_sider">
       <div className="workspace_info">
         <p className="text_recent_app">最近更新</p>
-        <p className="operation_all" onClick={toAppManage}>
-          <span className="text">全部</span>
-          <Icon className="icon" type="jinrujiantou" />
-        </p>
+        {projectId ? (
+          <p className="operation_all" onClick={toAppManage}>
+            <span className="text">全部</span>
+            <Icon className="icon" type="jinrujiantou" />
+          </p>
+        ) : null}
       </div>
       <div className="workspace_list">
         {loading ? (

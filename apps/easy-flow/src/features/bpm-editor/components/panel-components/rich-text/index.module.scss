@@ -1,38 +1,48 @@
+@import '@common/styles/var.scss';
+
 .container {
   .controlBar {
     display: flex;
     flex-wrap: wrap;
     padding: 0;
-    border: 1px solid #f1f1f1;
+    border: 1px solid $border-normal-color;
+
     :global {
       .control-item.button {
         min-width: 30px;
         padding: 0 4px;
       }
+
       .dropdown-handler {
         .bfi-drop-down {
           width: 16px;
         }
       }
+
       .headings-dropdown {
         min-width: 60px;
       }
+
       .bf-font-size-dropdown {
         position: relative;
         min-width: 70px;
+
         .dropdown-content {
           margin-left: 0 !important;
           left: -120px;
           transform: none;
         }
       }
+
       .text-color-dropdown {
         position: relative;
+
         .dropdown-content {
           width: 210px;
           left: 0;
           transform: none;
           margin-left: 0 !important;
+
           .bf-colors {
             display: flex;
             flex-wrap: wrap;
@@ -42,15 +52,19 @@
           }
         }
       }
+
       .link-editor-dropdown {
         position: relative;
+
         .dropdown-content {
           width: 210px;
           left: -88px;
           transform: none;
           margin-left: 0 !important;
+
           .bf-link-editor {
             width: 210px;
+
             .buttons {
               .pull-right {
                 padding: 0 10px;
@@ -61,14 +75,16 @@
       }
     }
   }
+
   .content {
     height: auto;
     line-height: 32px;
     min-height: 64px;
     max-height: 640px;
     overflow-y: auto;
-    border: 1px solid #f1f1f1;
+    border: 1px solid $border-normal-color;
     margin-top: 12px;
+
     :global {
       .bf-media {
         .bf-media-toolbar {
@@ -77,6 +93,7 @@
           margin-left: 0 !important;
           transform: scale(0.88);
         }
+
         img {
           object-fit: contain;
         }
@@ -93,6 +110,7 @@
           display: block;
           content: '\E912';
         }
+
         &::after {
           background-color: rgba(52, 152, 219, 0.6);
         }

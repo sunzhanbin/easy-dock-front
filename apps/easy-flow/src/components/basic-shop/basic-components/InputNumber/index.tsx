@@ -25,8 +25,6 @@ const InputNumberContainer = (props: InputNumberProps & { [key: string]: any }) 
         onChange && onChange(0);
       }
     }, 0);
-
-    console.log(prop);
     return prop;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form, props, refresh, rules]);

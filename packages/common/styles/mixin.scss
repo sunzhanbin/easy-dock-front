@@ -40,16 +40,16 @@
 
 @mixin inputtheme($border-color) {
   border-color: transparent !important;
-  background-color: rgba(#182743, 0.04) !important;
+  background-color: $input-background-normal-color !important;
 
   &:hover {
-    border-color: rgba($border-color, 0.85) !important;
-    background-color: transparent !important;
+    border-color: $input-border-hover-color;
+    background-color: transparent;
   }
 
   &:focus {
-    border-color: rgba($border-color, 0.85) !important;
-    box-shadow: 0 0 0 3px rgba($border-color, 0.2) !important;
+    border-color: $input-border-hover-color !important;
+    box-shadow: 0 0 0 3px $input-shadow-color !important;
     background-color: transparent !important;
   }
 }

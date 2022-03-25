@@ -11,27 +11,27 @@
   white-space: nowrap;
 
   &.primary {
-    border-color: rgba(#4c5cdb, 0.35);
-    color: #4c5cdb;
+    border-color: $tag-primary-border-color;
+    color: $tag-primary-text-color;
   }
 
   &.success {
-    color: #06c498;
-    border-color: rgba(#06c498, 0.35);
+    border-color: $tag-success-border-color;
+    color: $tag-success-text-color;
   }
 
   &.error {
-    border-color: rgba(#ff5568, 0.3);
-    color: #ff5568;
+    border-color: $tag-error-border-color;
+    color: $tag-error-text-color;
   }
 
   &.warning {
-    border-color: rgba(#ff9900, 0.3);
-    color: #ff9900;
+    border-color: $tag-warning-border-color;
+    color: $tag-warning-text-color;
   }
 
   &.revoke {
-    border-color: rgba($primary-text-color, 0.5);
-    color: $caption-text-color;
+    border-color: $tag-revoke-border-color;
+    color: $tag-revoke-text-color;
   }
 }

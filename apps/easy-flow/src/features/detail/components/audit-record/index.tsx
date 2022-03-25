@@ -1,9 +1,9 @@
-import { memo, useMemo } from "react";
+import { memo, ReactNode, useMemo } from "react";
 import classnames from "classnames";
 import moment from "moment";
 import { Icon, Avatar } from "@common/components";
 import Tag, { StatusTagProps } from "@components/status-tag";
-import { AuditRecordType, AuditRecordSchema } from "@type/detail";
+import { AuditRecordType, AuditRecordSchema, Comments } from "@type/detail";
 import styles from "./index.module.scss";
 
 function mapActionInfo(type: AuditRecordType): { text: string; status: StatusTagProps["status"] } {
@@ -65,14 +65,20 @@ function mapActionInfo(type: AuditRecordType): { text: string; status: StatusTag
 
   if (type === AuditRecordType.AUTO_PROCESS_TRIGGER) {
     return {
-      text: "自动节点-流程触发",
+      text: "流程触发",
       status: "primary",
     };
   }
 
   if (type === AuditRecordType.AUTO_INTERFACE_PUSH) {
     return {
-      text: "自动节点-数据连接",
+      text: "数据连接",
+      status: "primary",
+    };
+  }
+  if (type === AuditRecordType.AUTO_PLUGIN) {
+    return {
+      text: "插件节点",
       status: "primary",
     };
   }
@@ -114,6 +120,51 @@ function NodeActionRecord(props: NodeActionRecordProps) {
     };
   }, [data]);
 
+  const renderActionResult = (auditType: AuditRecordType, comments: Comments | undefined): ReactNode => {
+    if (!comments) {
+      return null;
+    }
+    if (comments.autoPushDataResult) {
+      const name = comments.actionName;
+      const result = comments.autoPushDataResult?.resultCode ?? -1;
+      // const reason = comments.autoPushDataResult?.detailMessage;
+      return (
+        <>
+          <div className={styles["action-result"]}>
+            <div className={styles["action-name"]}>{name}</div>
+            <div className={classnames(styles.result, result === 0 ? styles.success : styles.failed)}>
+              {result === 0 ? "成功" : "失败"}
+            </div>
+          </div>
+          {/* {result !== 0 && (
+            <div className={styles["action-result"]}>
+              <div className={styles["action-name"]}>
+                <span className={styles.name}>{reason}</span>
+              </div>
+            </div>
+          )} */}
+        </>
+      );
+    }
+    if (comments.autoTriggerResults) {
+      const resultList = comments.autoTriggerResults || [];
+      return resultList.map(({ processInfo, resultCode }, index) => {
+        return (
+          <div className={styles["action-result"]} key={index}>
+            <div className={styles["action-name"]}>
+              <span>触发流程</span>
+              <span className={styles.name}>{processInfo.name}</span>
+            </div>
+            <div className={classnames(styles.result, resultCode === 0 ? styles.success : styles.failed)}>
+              {resultCode === 0 ? "成功" : "失败"}
+            </div>
+          </div>
+        );
+      });
+    }
+    return null;
+  };
+
   return (
     <div className={classnames(styles.container, className)}>
       <div className={classnames(styles.icon, icon.className)}>
@@ -147,6 +198,8 @@ function NodeActionRecord(props: NodeActionRecordProps) {
                   <div className={styles.text}>{record.comments.commit}</div>
                 </div>
               )}
+
+              {renderActionResult(record.auditType, record.comments)}
             </div>
           );
         })}

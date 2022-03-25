@@ -17,9 +17,10 @@ import { fetchDataSource } from "@/apis/detail";
 import { useSubAppDetail } from "@/app/app";
 import classnames from "classnames";
 import titleImage from "@/assets/title.png";
-import leftImage from "@assets/background_left.png";
-import rightImage from "@assets/background_right.png";
 import styles from "./index.module.scss";
+import appConfig from "@/init";
+import { useLocation } from "react-router-dom";
+import useMemoCallback from "@common/hooks/use-memo-callback";
 
 const propsKey = [
   "defaultValue",
@@ -40,6 +41,7 @@ const propsKey = [
 type Key = keyof FormField;
 
 const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, onClose }) => {
+  const location = useLocation();
   const { name: appName } = useAppSelector(subAppSelector);
   const layout = useAppSelector(layoutSelector);
   const byId: FormFieldMap = useAppSelector(componentPropsSelector);
@@ -113,7 +115,24 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
       </div>
     );
   }, [onClose]);
+  const theme = useMemo<string>(() => {
+    // 以iframe方式接入,参数在location中
+    if (location.search) {
+      const params = new URLSearchParams(location.search.slice(1));
+      return params.get("theme") || "light";
+    }
+    // 以微前端方式接入,参数在extra中
+    if (appConfig?.extra?.theme) {
+      return appConfig.extra.theme;
+    }
+    return "light";
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.search, appConfig?.extra?.theme]);
 
+  const backgroundImage = useMemoCallback((position) => {
+    const publicPath = appConfig.publicPath.replace(/\/$/, "");
+    return `${publicPath}/images/flow-detail/${theme}-${position}.png`;
+  });
   useEffect(() => {
     const components = Object.values(byId).filter((component) => {
       const { type } = component;
@@ -144,8 +163,8 @@ const PreviewModal: FC<{ visible: boolean; onClose: () => void }> = ({ visible, 
       {loading && <Loading className={styles.loading} />}
       <div className="content">
         <div className={styles.background}>
-          <div className={styles.left} style={{ backgroundImage: `url(${leftImage})` }} />
-          <div className={styles.right} style={{ backgroundImage: `url(${rightImage})` }} />
+          <div className={styles.left} style={{ backgroundImage: `url(${backgroundImage("left")})` }} />
+          <div className={styles.right} style={{ backgroundImage: `url(${backgroundImage("right")})` }} />
         </div>
         <div className={styles["start-form-wrapper"]}>
           <div className={classnames(styles.form)} style={{ height: `${document.body.clientHeight - 124}px` }}>

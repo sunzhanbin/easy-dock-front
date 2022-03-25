@@ -1,19 +1,22 @@
-@import '@common/styles/var.scss';
-@import '@common/styles/theme-color.scss';
+@import "@common/styles/var.scss";
+
 .container {
   .header {
     .search {
       :global {
         #todo_form {
           width: 100%;
+
           .name {
             flex: 1;
             margin-right: 40px;
           }
+
           .starter {
             flex: 1;
             margin-right: 40px;
           }
+
           .timeRange {
             flex: 2;
             margin-right: 0;
@@ -21,12 +24,15 @@
         }
       }
     }
+
     .operationContainer {
       display: flex;
       flex-direction: row-reverse;
       margin-top: 12px;
+
       .operation {
         display: flex;
+
         .search {
           flex: 0 0 60px;
           border-radius: 3px;
@@ -35,27 +41,26 @@
           font-weight: 400;
           color: $primary-color;
           margin-right: 12px;
+
           &:hover {
             border: 1px solid rgba(76, 92, 219, 0.5);
             color: rgba(76, 92, 219, 0.8);
           }
         }
+
         .reset {
           flex: 0 0 60px;
           border-radius: 3px;
-          border: 1px solid rgba(24, 31, 67, 0.12);
           font-size: 14px;
           font-weight: 400;
-          color: rgba(24, 31, 67, 0.95);
           // margin-right: 12px;
-          &:hover {
-            border: 1px solid rgba(24, 31, 67, 0.3);
-          }
         }
+
         .unfold {
           height: 32px;
           line-height: 32px;
           cursor: pointer;
+
           .icon {
             display: inline-block;
             width: 16px;
@@ -63,235 +68,46 @@
             color: #818a9e;
             margin-right: 4px;
           }
+
           .text {
             font-size: 14px;
             font-weight: 400;
-            color: rgba(24, 31, 67, 0.95);
+            color: $menu-title-text-color;
           }
         }
       }
     }
   }
+
   .content {
     margin-top: 24px;
+
     .name {
       cursor: pointer;
+
       &:hover {
         color: $primary-color;
       }
     }
+
     .stayTime {
       display: flex;
       align-items: center;
+
       .timeout {
         flex: 0 0 32px;
         margin-left: 8px;
       }
     }
-  }
-  &.dark {
-    :global {
-      .ant-select-dropdown,
-      .ant-select-clear {
-        background-color: rgba($dark-content-background-color, 1) !important;
-        .ant-empty-description {
-          color: rgba($dark-text-color, 0.55) !important;
-        }
-      }
-      .ant-select-item-option,
-      .ant-select-selection-item,
-      .ant-select-clear {
-        color: rgba($dark-text-color, 0.55) !important;
-      }
-      .ant-select-item-option-active {
-        background-color: rgba(76, 92, 219, 0.08) !important;
-      }
 
-      .ant-picker-range, .ant-picker-input > input {
-        color: rgba($dark-text-color, 0.8) !important;
-      }
-      .ant-picker-panel-container {
-        background-color: rgba($dark-header-background-color, 1) !important;
-        box-shadow: 0px 6px 24px 0px rgba($light-text-color, 0.1);
-        .ant-picker-panel, .ant-picker-header, .ant-picker-datetime-panel .ant-picker-time-panel, .ant-picker-time-panel-column:not(:first-child) {
-          border-color: rgba($dark-text-color, 0.1) !important;
-        }
-        .ant-picker-content{
-          &>thead>tr{
-            th {
-              color: rgba($dark-text-color, 0.8) !important;
-            }
-          }
-        }
-        .ant-picker-time-panel-column > li.ant-picker-time-panel-cell-selected .ant-picker-time-panel-cell-inner {
-          background-color: rgba($dark-second-background-color, 0.12);
-        }
-
-        .ant-picker-time-panel-column > li.ant-picker-time-panel-cell .ant-picker-time-panel-cell-inner:hover {
-          background-color: rgba($dark-second-background-color, 0.12);
-          color: $dark-btn-background-color !important;
-        }
-        .ant-picker-cell-inner, .ant-picker-time-panel-cell-inner {
-          color: rgba($dark-text-color, 0.8) !important;
-        }
-        .ant-picker-year-btn, .ant-picker-month-btn, .ant-picker-header-view {
-          color: rgba($dark-text-color, 0.8) !important;
-        }
-        .ant-picker-cell-today .ant-picker-cell-inner {
-          color: $dark-btn-background-color !important;
-          &::before {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            right: 0;
-            top: 0;
-            left: auto;
-            background-color: $dark-btn-background-color;
-            border: 0 none;
-          }
-        }
-        .ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner, .ant-picker-cell-in-view.ant-picker-cell-range-start .ant-picker-cell-inner, .ant-picker-cell-in-view.ant-picker-cell-range-end .ant-picker-cell-inner {
-          background-color: $dark-btn-background-color !important;
-
-        }
-        .ant-picker-cell:hover:not(.ant-picker-cell-in-view) .ant-picker-cell-inner, .ant-picker-cell:hover:not(.ant-picker-cell-selected):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end):not(.ant-picker-cell-range-hover-start):not(.ant-picker-cell-range-hover-end) .ant-picker-cell-inner {
-          background-color: $dark-btn-background-color !important;
-          .ant-picker-cell-inner {
-            color: rgba($dark-text-color, 0.8) !important;
-          }
-        }
-        .ant-btn-primary {
-          background: $dark-btn-background-color;
-          color: $dark-text-color !important;
-        }
-        .ant-btn-primary[disabled] {
-          border: 0 none;
-          background-color: rgba($dark-second-background-color, 0.5);
-          color: rgba($dark-text-color, 0.5) !important;
-        }
-
-        .ant-picker-cell-in-view.ant-picker-cell-in-range::before {
-          background-color: rgba($dark-second-background-color, 0.12);
-        }
-        .ant-picker-cell-in-view.ant-picker-cell-range-hover-start:not(.ant-picker-cell-in-range):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end)::after, .ant-picker-cell-in-view.ant-picker-cell-range-hover-end:not(.ant-picker-cell-in-range):not(.ant-picker-cell-range-start):not(.ant-picker-cell-range-end)::after, .ant-picker-cell-in-view.ant-picker-cell-range-hover-start.ant-picker-cell-range-start-single::after, .ant-picker-cell-in-view.ant-picker-cell-range-hover-start.ant-picker-cell-range-start.ant-picker-cell-range-end.ant-picker-cell-range-end-near-hover::after, .ant-picker-cell-in-view.ant-picker-cell-range-hover-end.ant-picker-cell-range-start.ant-picker-cell-range-end.ant-picker-cell-range-start-near-hover::after, .ant-picker-cell-in-view.ant-picker-cell-range-hover-end.ant-picker-cell-range-end-single::after, .ant-picker-cell-in-view.ant-picker-cell-range-hover:not(.ant-picker-cell-in-range)::after {
-          border-color: rgba($dark-second-background-color, 0.12);
-        }
-
-        .ant-picker-cell-in-view.ant-picker-cell-range-start:not(.ant-picker-cell-range-start-single)::before, .ant-picker-cell-in-view.ant-picker-cell-range-end:not(.ant-picker-cell-range-end-single)::before {
-          background-color: transparent;
-        }
-        .ant-picker-cell-in-view.ant-picker-cell-in-range.ant-picker-cell-range-hover::before, .ant-picker-cell-in-view.ant-picker-cell-range-start.ant-picker-cell-range-hover::before, .ant-picker-cell-in-view.ant-picker-cell-range-end.ant-picker-cell-range-hover::before, .ant-picker-cell-in-view.ant-picker-cell-range-start:not(.ant-picker-cell-range-start-single).ant-picker-cell-range-hover-start::before, .ant-picker-cell-in-view.ant-picker-cell-range-end:not(.ant-picker-cell-range-end-single).ant-picker-cell-range-hover-end::before, .ant-picker-panel > :not(.ant-picker-date-panel) .ant-picker-cell-in-view.ant-picker-cell-in-range.ant-picker-cell-range-hover-start::before, .ant-picker-panel > :not(.ant-picker-date-panel) .ant-picker-cell-in-view.ant-picker-cell-in-range.ant-picker-cell-range-hover-end::before {
-          
-
-          background: rgba(255, 255, 255, 0.06);
-        }
-        .ant-picker-date-panel .ant-picker-cell-in-view.ant-picker-cell-in-range.ant-picker-cell-range-hover-start .ant-picker-cell-inner::after, .ant-picker-date-panel .ant-picker-cell-in-view.ant-picker-cell-in-range.ant-picker-cell-range-hover-end .ant-picker-cell-inner::after {
-          background-color: transparent;
-        }
-
-        .ant-picker-cell-disabled {
-          cursor: not-allowed;
-          &::before {
-            background-color: transparent !important;
-          }
-          .ant-picker-cell-inner {
-            cursor: not-allowed;
-            color: rgba($dark-text-color, 0.35) !important;
-          }
-        }
-
-        .ant-picker-decade-panel .ant-picker-cell-disabled .ant-picker-cell-inner, .ant-picker-year-panel .ant-picker-cell-disabled .ant-picker-cell-inner, .ant-picker-quarter-panel .ant-picker-cell-disabled .ant-picker-cell-inner, .ant-picker-month-panel .ant-picker-cell-disabled .ant-picker-cell-inner {
-          background: transparent;
-          cursor: not-allowed;
-          color: rgba($dark-text-color, 0.35) !important;
-        }
-        .ant-picker-prev-icon::before, .ant-picker-next-icon::before, .ant-picker-super-prev-icon::before, .ant-picker-super-next-icon::before {
-          border: rgba($dark-text-color, 0.65) !important;
-        }
-      }
+    .progress-wrapper {
+      display: flex;
+      align-items: center;
     }
-    .header {
-      .search {
-        :global {
-          #todo_form {
-            .ant-form-item-label > label {
-              color: rgba($dark-text-color, 0.8);
-            }
-            .ant-input,
-            .ant-picker,
-            .ant-select.ant-select-single:not(.ant-select-customize-input) .ant-select-selector {
-              background-color: rgba($dark-text-color, 0.04);
-            }
-            .ant-picker-separator {
-              color: rgba($dark-text-color, 0.8);
-            }
-          }
-        }
-      }
-      .operationContainer {
-        .operation {
-          .reset {
-            border-color: rgba($dark-text-color, 0.12);
-            color: rgba($dark-text-color, 0.8);
-            &:hover {
-              border-color: rgba($dark-text-color, 0.3);
-            }
-          }
-        }
-      }
-    }
-    .content {
-      :global {
-        .ant-table-wrapper {
-          color: rgba($dark-text-color, 0.55);
-          .ant-table-cell {
-            background-color: $dark-content-background-color;
-            color: rgba($dark-text-color, 0.55);
-            border-color: rgba($dark-text-color, 0.1);
-          }
-          .ant-pagination-item-link {
-            border-color: transparent;
-            background-color: transparent;
-            color: rgba($dark-text-color, 0.55);
-          }
-          .ant-pagination-item {
-            border-color: transparent;
-            background-color: transparent;
-            color: rgba($dark-text-color, 0.55);
-            a {
-              color: inherit;
-            }
-            &.ant-pagination-item-active,
-            &:hover {
-              background: rgba(76, 92, 219, 0.12);
-            }
-          }
-          .ant-pagination-options-size-changer {
-            color: rgba($dark-text-color, 0.55);
-            &.ant-select-focused {
-              .ant-select-selector {
-                background-color: transparent;
-              }
-            }
-            .ant-select-selector {
-              background-color: transparent;
-              border-color: transparent;
-              box-shadow: none;
-            }
-          }
-          .ant-select.ant-select-single:not(.ant-select-customize-input) {
-            .ant-select-selector {
-              &:hover,
-              &:active {
-                background-color: transparent;
-              }
-            }
-          }
-          .ant-empty-description {
-            color: rgba($dark-text-color, 0.55);
-          }
-        }
-      }
+
+    .text-progress {
+      flex: 0 0 50px;
+      padding-left: 6px;
     }
   }
 }

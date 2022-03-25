@@ -1,5 +1,5 @@
-@import '@common/styles/var.scss';
-@import '@common/styles/mixin.scss';
+@import "@common/styles/var.scss";
+@import "@common/styles/mixin.scss";
 
 $line-color: #e3e4e8;
 
@@ -8,9 +8,9 @@ $line-color: #e3e4e8;
   $right: unset;
   $width: 50%;
 
-  @if $location == 'left' {
+  @if $location == "left" {
     $right: 0;
-  } @else if $location == 'right' {
+  } @else if $location == "right" {
     $left: 0;
   } @else {
     $left: 0;
@@ -20,8 +20,8 @@ $line-color: #e3e4e8;
 
   &::before,
   &::after {
-    content: '';
-    background-color: $line-color;
+    content: "";
+    background-color: $border-normal-color;
     position: absolute;
     width: $width;
     height: 1px;
@@ -46,14 +46,14 @@ $line-color: #e3e4e8;
     position: relative;
 
     &::after {
-      content: '';
+      content: "";
       position: absolute;
       top: 0;
       bottom: 0;
       left: 50%;
       width: 1px;
       transform: translateX(-50%);
-      background-color: $line-color;
+      background-color: $border-normal-color;
       z-index: -1;
     }
   }
@@ -76,11 +76,11 @@ $line-color: #e3e4e8;
 
   .branchs {
     display: flex;
-    background-color: #f6f7f8;
+    background-color: $branch-nodes-background-color;
   }
 
   .branch {
-    @include insert-lines('middle');
+    @include insert-lines("middle");
 
     display: flex;
     flex-direction: column;
@@ -88,11 +88,11 @@ $line-color: #e3e4e8;
     position: relative;
 
     &:first-child {
-      @include insert-lines('left');
+      @include insert-lines("left");
     }
 
     &:last-child {
-      @include insert-lines('right');
+      @include insert-lines("right");
     }
 
     .main {
@@ -100,15 +100,15 @@ $line-color: #e3e4e8;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 30px;
-      padding-bottom: 0;
+      padding: 30px 30px 0;
 
       .content {
         position: relative;
         width: 248px;
-        background-color: #fff;
+        height: auto;
+        background-color: $flow-manage-drawer-bg;
         border-radius: 3px;
-        color: #181f43;
+        color: $form-item-label-text-color;
         z-index: 1;
         cursor: pointer;
 
@@ -135,7 +135,7 @@ $line-color: #e3e4e8;
             box-shadow: 0 0 0 4px rgba(#ff5568, 0.12);
 
             &::after {
-              content: '';
+              content: "";
               position: absolute;
               top: 0;
               left: 0;
@@ -147,10 +147,10 @@ $line-color: #e3e4e8;
           }
 
           .or {
-            background-color: rgba(#182743, 0.04);
+            background-color: $input-background-normal-color;
 
             &::after {
-              content: '或';
+              content: "或";
               display: block;
               padding-top: 4px;
               margin-bottom: 4px;
@@ -162,7 +162,7 @@ $line-color: #e3e4e8;
               margin-bottom: 16px;
 
               &::after {
-                content: '';
+                content: "";
                 display: none;
               }
             }
@@ -170,12 +170,12 @@ $line-color: #e3e4e8;
             .and {
               padding: 8px;
               line-height: 22px;
-              color: #181f43;
+              color: $form-item-label-text-color;
 
               .symbol {
                 margin-left: 4px;
                 margin-right: 4px;
-                color: rgba(#181f43, 0.5);
+                color: $form-symbol-color;
                 white-space: nowrap;
               }
             }
@@ -183,7 +183,7 @@ $line-color: #e3e4e8;
         }
 
         .desc {
-          @include center('flex');
+          @include center("flex");
 
           line-height: 20px;
           font-size: 12px;
@@ -223,20 +223,34 @@ $line-color: #e3e4e8;
       left: 50%;
       transform: translate3d(-50%, 0, 0);
       width: 1px;
-      background-color: $line-color;
+      background-color: $border-normal-color;
     }
 
     .stretch {
       flex: 1 1 0;
       width: 1px;
-      background-color: $line-color;
+      background-color: $border-normal-color;
     }
   }
 
   .footer {
+    position: relative;
     display: flex;
     justify-content: center;
-    padding-top: 16px;
-    padding-bottom: 16px;
+    width: 100%;
+    padding-top: 32px;
+    padding-bottom: 32px;
+    // background-color: white;
+    &.over {
+      padding: 110px 0;
+    }
+
+    &.sub-branch {
+      padding: 165px 0;
+    }
+
+    // &.isDragging {
+    //   background-color: rgba(215,215,215,0.6);
+    // }
   }
 }

@@ -1,3 +1,6 @@
+@import '@common/styles/var.scss';
+@import '@/styles/var.scss';
+
 .main {
   display: flex;
 
@@ -11,15 +14,15 @@
   .flow {
     flex-shrink: 0;
     width: 310px;
-    padding: 24px;
-    padding-bottom: 32px;
-    border-left: 1px solid rgba(#181f43, 0.12);
+    padding: 24px 24px 32px;
+    background-color: $start-flow-log-bg;
+    border-left: 1px solid $border-normal-color;
     overflow-y: auto;
 
     .record-title {
       margin-bottom: 28px;
       line-height: 28px;
-      color: rgba(#000, 0.85);
+      color: $label-hint-text-color;
       font-size: 18px;
       font-weight: bold;
     }
@@ -32,10 +35,10 @@
         position: absolute;
         left: 8px;
         top: 2px;
-        bottom: 0;
-        z-index: -1;
+        bottom: 40px;
+        z-index: 0;
         width: 1px;
-        background-color: rgba(#181f43, 0.12);
+        background-color: $border-normal-color;
         transform: translateX(-50%);
       }
 
@@ -49,7 +52,6 @@
           top: 17px;
           bottom: 0;
           width: 5px;
-          background-color: #fff;
         }
       }
     }
@@ -63,7 +65,7 @@
     .title {
       margin-bottom: 24px;
       line-height: 34px;
-      color: rgba(#000, 0.85);
+      color: $label-hint-text-color;
       font-size: 24px;
       font-weight: bold;
     }

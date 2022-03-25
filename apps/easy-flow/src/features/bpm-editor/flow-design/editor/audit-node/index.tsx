@@ -16,7 +16,9 @@ import usePrevNodes from "../../hooks/use-prev-nodes";
 import RevertCascader from "./revert-cascader";
 import { rules } from "../../validators";
 import styles from "./index.module.scss";
+import { validateRule } from "@utils/const";
 import DueConfig from "@/features/bpm-editor/components/due-config";
+import MilestoneNodeConfig from "@/features/bpm-editor/components/milestone-node-config";
 
 interface AuditNodeEditorProps {
   node: AuditNode;
@@ -31,6 +33,7 @@ type FormValuesType = {
   };
   fieldsAuths: AuditNode["fieldsAuths"];
   countersign: AuditNode["countersign"];
+  progress: AuditNode["progress"];
   dueConfig: AuditNode["dueConfig"];
 };
 
@@ -70,6 +73,7 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
       },
       fieldsAuths: node.fieldsAuths,
       countersign: node.countersign,
+      progress: node.progress,
       dueConfig: node.dueConfig || defaultDueConfig,
     };
   }, [node]);
@@ -87,18 +91,12 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
           revert: allValues.btnConfigs.revert,
           fieldsAuths: allValues.fieldsAuths,
           countersign: allValues.countersign,
+          progress: allValues.progress,
           dueConfig: allValues.dueConfig,
         }),
       );
     }, 100),
   );
-
-  const validateRule = useMemoCallback((value: string, errorTip: string) => {
-    if (!value) {
-      return Promise.reject(new Error(errorTip));
-    }
-    return Promise.resolve();
-  });
 
   const nameRules: Rule[] = useMemo(() => {
     return [rules.name];
@@ -241,6 +239,9 @@ function AuditNodeEditor(props: AuditNodeEditorProps) {
       </Form.Item>
       <Form.Item name="dueConfig">
         <DueConfig name="dueConfig" showAction={true} />
+      </Form.Item>
+      <Form.Item name="progress">
+        <MilestoneNodeConfig form={form} />
       </Form.Item>
     </Form>
   );

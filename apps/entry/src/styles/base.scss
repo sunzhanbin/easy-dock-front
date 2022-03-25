@@ -3,9 +3,18 @@
 @import "@common/styles/var.scss";
 @import "@common/styles/mixin.scss";
 
-/* 美化浏览器滚动条样式  ---end--- */
 .easy-dock-content {
   margin: 0 auto;
+}
+
+.ant-modal-footer {
+  .ant-btn {
+    &:first-child {
+      border: none;
+      background-color: transparent;
+      box-shadow: none;
+    }
+  }
 }
 
 @media screen and (max-width: 1365px) {

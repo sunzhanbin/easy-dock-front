@@ -62,6 +62,7 @@ export const HomeManagerSlice = createSlice({
 export const { setProjectId, logout } = HomeManagerSlice.actions;
 
 export const selectProjectId = (state: RootState) => state.home.projectId;
+export const selectProjectList = (state: RootState) => state.home.projectList;
 export const selectUserInfo = (state: RootState) => state.home.userInfo;
 export const selectIsAdmin = (state: RootState) => state.home.isAdmin;
 export const selectProjectAuthList = (state: RootState) => state.home.projectAuthList;
