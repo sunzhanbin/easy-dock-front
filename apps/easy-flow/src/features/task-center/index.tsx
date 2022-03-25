@@ -18,6 +18,7 @@ import { todoNumSelector } from "./taskcenter-reducer";
 import { loadApp, setMode, setTheme } from "./taskcenter-slice";
 import { SubAppItem } from "./type";
 import appConfig from "@/init";
+import { registerTheme } from "@theme/src/utils";
 
 const TaskCenter: FC = () => {
   const dispatch = useAppDispatch();
@@ -74,6 +75,12 @@ const TaskCenter: FC = () => {
     dispatch(setTheme(theme));
     dispatch(setMode(mode));
   }, [theme, mode, dispatch]);
+
+  useEffect(() => {
+    registerTheme({
+      theme,
+    });
+  }, [theme]);
   return (
     <div className={classNames(styles.container, styles[theme])}>
       <div className={styles.header}>
