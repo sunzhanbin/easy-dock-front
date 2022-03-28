@@ -15,6 +15,7 @@
     "@types/react-redux": "^7.1.0",
     "animejs": "3.0.1",
     "antd": "^4.16.13",
+    "cross-env": "^7.0.3",
     "d3": "5.9.1",
     "history": "5",
     "jsoneditor": "^9.7.3",
